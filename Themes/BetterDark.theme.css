@@ -1,0 +1,129 @@
+//META{"name":"BetterDarkMode","description":"A better dark mode theme :) user the themesettings Plugin or CustomCSS here the codes: --Accent-color: (YOUR COLOR), --mentioned-color: (YOUR COLOR), --mentioned-background: (YOUR BACKGROUNDCOLOR)","author":"Strencher_","version":"1.0.0"}*//{}
+
+:root {
+  --Accent-color: #9900FF; /*The account color. [default = #34F141]*/
+  --Mentioned-color: red; /*The color if you get mentioned. [default = #34F141]*/
+  --Mentioned-background: rgba(52,241,65,.05); /*The backgroundcolor from the mentioned message. [default = rgba(52,241,65,.05)]*/
+  --link-color: #34F141; /*The color of links like https://BetterDiscord.net [default = #34F141]*/
+  --Mentioned-text-Font: Arial;/*The font of the mentioned messages inline included Role-mentionations. [default = Arial]*/
+}
+
+
+/*@Start*/
+
+/*TextArea*/
+.inner-zqa7da {
+  border-radius: 20px !important;
+}
+.textArea-2Spzkt {
+  background-color: #222222 !important;
+  color: white !important;
+  border-color: #222222 !important;
+}
+.attachButton-1UjEWA {
+  background-color: #1B1B1B !important;
+  border-top-left-radius: 20px !important;
+  border-bottom-left-radius: 20px !important;
+}
+.buttonContainer-21MN7J, .buttons-205you {
+  background-color: #1B1B1B !important;
+  border-top-right-radius: 20px !important;
+  border-bottom-right-radius: 20px !important;
+}
+.textArea-2Spzkt {
+  color: white !important;
+}
+
+/*SearchArea*/
+.theme-dark .searchBar-3dMhjb {
+  color: white !important;
+  background-color: #222222 !important;
+  border-top-left-radius: 20px !important;
+  border-top-right-radius: 20px !important;
+  border-bottom-left-radius: 20px !important;
+  border-bottom-right-radius: 20px !important;
+}
+
+
+
+/*ChannelList*/
+.theme-dark .name-3_Dsmg, .theme-light .name-3_Dsmg {
+  color: white !important;
+}
+.channels-Ie2l6A {
+  background-color: #252525 !important;
+}
+.flexChild-faoVW3, .da-flexChild {
+  background-color: #222222 !important;
+}
+.theme-dark .menu-Sp6bN1 {
+  background-color: #101010 !important;
+}
+.theme-dark:hover .menu-Sp6bN1:hover {
+  background-color: #101010 !important;
+}
+.popoutBottom-2GAFPg.noArrow-2foL9g, .popoutBottomLeft-1pG8B4.noArrow-2foL9g, .popoutBottomRight-2Rno5S.noArrow-2foL9g {
+  border-radius: 20px;
+}
+.theme-dark .markup-2BOw-j code, .theme-dark .markup-2BOw-j code.inline {
+  background:black !important;
+  border-color: grey !important;
+
+}
+.isMentionedCozy-3isp7y {
+  background: var(--Mentioned-background) !important;
+  border-left-color: var(--Accent-color) !important;
+}
+.isMentionedCozy-3isp7y:after {
+  border-left-color: var(--Mentioned-color) !important;
+}
+.theme-dark .messagesWrapper-3lZDfY {
+  background-color: #252525 !important;
+}
+
+
+
+/*Memberlist*/
+ {
+  background-color: rgba(#1A1919, 1) !important;
+}
+.theme-dark .container-1r6BKw {
+  background-color: #1B1B1B !important;
+}
+.scroller-2FKFPG {
+  background-color: #252525 !important;
+}
+.theme-dark .chat-3bRxxu, .theme-dark .chat-3bRxxu form, .theme-dark .content-yTz4x3 {
+  background-color: #222222 !important;
+}
+.theme-dark, .textArea-2Spzkt, .textArea-2Spzkt::-webkit-input-placeholder{
+  color: white !important;
+}
+.lookFilled-1Gx00P.colorBrand-3pXr91 {
+  background-color: #101010 !important;
+  border-radius: 10px;
+}
+#bd-settingspane-container .ui-switch-item .ui-switch-wrapper .ui-switch.checked {
+  background-color: var(--Accent-color) !important;
+}
+.bda-slist .bda-footer button {
+  background-color: var(--Accent-color) !important;
+}
+.bd-pfbtn {
+  background-color: var(--Accent-color) !important;
+}
+.theme-dark .typing-2GQL18 {
+  background-color: #252525 !important;
+}
+.themeDefault-24hCdX, .sizeDefault-2YlOZr {
+  background-color: #1A1919 !important;
+}
+.themeDefault-24hCdX.valueChecked-m-4IJZ {
+  background-color: var(--Accent-color) !important;
+}
+.headerTop-3C2Zn0 {
+  background-color: #252525 !important;
+}
+.message-1PNnaP {
+  font-family: var(--Mentioned-text-Font) !important;
+}
