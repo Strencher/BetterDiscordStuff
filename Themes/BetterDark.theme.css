@@ -1,4 +1,4 @@
-//META{"name":"BetterDarkMode","description":"A better dark mode theme :)  Requires 'normalize classes'; User the themesettings Plugin or CustomCSS here the codes: --Accent-color: (YOUR COLOR), --mentioned-color: (YOUR COLOR), --mentioned-background: (YOUR BACKGROUNDCOLOR)","author":"Strencher_","version":"1.0.0"}*//{}
+//META{"name":"BetterDarkMode","description":"A better dark mode theme :)  Requires 'normalize classes'; User the themesettings Plugin or CustomCSS here the codes: --Accent-color: (YOUR COLOR), --mentioned-color: (YOUR COLOR), --mentioned-background: (YOUR BACKGROUNDCOLOR)","author":"Strencher_","version":"1.0.3"}*//{}
 
 :root {
   --Accent-color: #9900FF; /*The account color. [default = #34F141]*/
@@ -6,8 +6,12 @@
   --Mentioned-background: rgba(52,241,65,.05); /*The backgroundcolor from the mentioned message. [default = rgba(52,241,65,.05)]*/
   --link-color: #34F141; /*The color of links like https://BetterDiscord.net [default = #34F141]*/
   --Mentioned-text-Font: Arial; /*The font of the mentioned messages inline included Role-mentionations. [default = Arial]*/
+  --Channels-Color: #8e9297; /*Color of Channels (voice & text). [default = #8E9297]*/
+  --Unred-Messages-Wrapper: grey; /*Background color of the "New unred messsages wrapper". [default = grey]*/
+  --Code-Block: black; /* Background of the code blocks. [default = black]*/
+  --Channel-Background: rgba(235, 3, 3, .2); /*Color of an #channel message. [default = rgba(235,3,3,.1)]*/
+  --Channel-Color: white; /*Background of an #channel message. [default = white]*/
 }
-
 
 /*@Start*/
 
@@ -30,9 +34,6 @@
   border-top-right-radius: 20px !important;
   border-bottom-right-radius: 20px !important;
 }
-.textArea-2Spzkt {
-  color: white !important;
-}
 
 /*SearchArea*/
 .theme-dark .searchBar-3dMhjb {
@@ -48,7 +49,7 @@
 
 /*ChannelList*/
 .theme-dark .name-3_Dsmg, .theme-light .name-3_Dsmg {
-  color: white !important;
+  color: var(--Channels-Color) !important;
 }
 .channels-Ie2l6A {
   background-color: #252525 !important;
@@ -66,7 +67,7 @@
   border-radius: 20px;
 }
 .theme-dark .markup-2BOw-j code, .theme-dark .markup-2BOw-j code.inline {
-  background:black !important;
+  background: var(--Code-Block) !important;
   border-color: grey !important;
 
 }
@@ -100,7 +101,7 @@
   color: white !important;
 }
 .lookFilled-1Gx00P.colorBrand-3pXr91 {
-  background-color: #101010 !important;
+  background-color: var(--Accent-color) !important;
   border-radius: 10px;
 }
 #bd-settingspane-container .ui-switch-item .ui-switch-wrapper .ui-switch.checked {
@@ -132,4 +133,33 @@
 }
 .theme-dark .footer-3rDWdC {
   background-color: #252525 !important;
+}
+.theme-dark .markup-2BOw-j a {
+  color: var(--link-color) !important;
+}
+.theme-dark #bd-settings-sidebar .ui-tab-bar-item.selected {
+  background-color: var(--Accent-color) !important;
+}
+a {
+  color: var(--Accent-color) !important;
+}
+.checkbox-3kaeSU .checkboxInner-3yjcPe .checkboxElement-1qV33p:checked+span {
+  background-color: var(--Accent-color) !important;
+  border-color: var(--Accent-color) !important;
+}
+.header-2o-2hj {
+  background-color: #101010 !important;
+}
+.container-3baos1 {
+  background-color: #101010 !important;
+}
+.unreadBar-3YD_k9 {
+  background-color: var(--Unred-Messages-Wrapper) !important;
+}
+.modeUnread-1zpFdA {
+  color: white !important;
+}
+.theme-dark .wrapper-3WhCwL {
+  color: var(--Channel-Color) !important;
+  background-color: var(--Channel-Background) !important;
 }
