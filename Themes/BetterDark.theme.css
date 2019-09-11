@@ -1,4 +1,4 @@
-//META{"name":"BetterDarkMode","description":"A better dark mode theme :)  Requires 'normalize classes'; User the themesettings Plugin or CustomCSS here the codes: --Accent-color: (YOUR COLOR), --mentioned-color: (YOUR COLOR), --mentioned-background: (YOUR BACKGROUNDCOLOR)","author":"Strencher_","version":"1.0.3"}*//{}
+//META{"name":"BetterDarkMode","description":"A better dark mode theme. Requires 'normalize classes'! User the ThemeSettings Plugin to customize the Theme.","author":"Strencher_","version":"1.0.3"}*//{}
 
 :root {
   --Accent-color: #9900FF; /*The account color. [default = #34F141]*/
@@ -15,6 +15,11 @@
 
 /*@Start*/
 
+#bd-settingspane-container .content-column.default .bda-slist::before {
+  content: "Please download the ThemeSettings Plugin. Link: https://github.com/mwittrien/BetterDiscordAddons/blob/master/Plugins/ThemeSettings/ThemeSettings.plugin.js If you alredy download it, ignore this." !important;
+  color: red !important;
+  font-weight: bold !important;
+}
 /*TextArea*/
 .inner-zqa7da {
   border-radius: 20px !important;
@@ -162,4 +167,13 @@ a {
 .theme-dark .wrapper-3WhCwL {
   color: var(--Channel-Color) !important;
   background-color: var(--Channel-Background) !important;
+}
+.inner-zqa7da {
+  background-color: #1A1919 !important;
+}
+.theme-dark .BDFDB-modal .tabBarContainer-1s1u-z {
+  background-color: #1A1919 !important;
+}
+.inner-ZyuQk0 {
+  background-color: #222222 !important;
 }
