@@ -1,7 +1,7 @@
 //META{"name":"CustomTitleTag","description":"Allow's you to specific a Custom Discord title Tag","author":"Strencher_","version":"1.0.1"}*//{}
 
 :root {
-  --Text: "STRENCHER"; /* Use you own text. [default = "DISCORD"]*/
+  --Text: "DISCORD"; /* Use you own text. [default = "DISCORD"]*/
   --Bold-or-not: bold; /*Bold  or not if not, chance to none. [default = bold]*/
   --Color: #fff; /*Color of the CustomTag. [default = white / #fff]*/
   --Font-size: 15px; /*The font size of the CustomTitleTag. [default = 15px]*/
