@@ -1,4 +1,4 @@
-//META{"name":"BetterDarkMode","description":"A better dark mode theme. Requires 'normalize classes'! User the ThemeSettings Plugin to customize the Theme.","author":"Strencher_","version":"1.0.4"}*//{}
+//META{"name":"BetterDarkMode","description":"A better dark mode theme. Requires 'normalize classes'! User the ThemeSettings Plugin to customize the Theme.","author":"Strencher_","version":"1.0.5"}*//{}
 
 :root {
   --Accent-color: #9900FF; /*The account color. [default = #34F141]*/
@@ -9,7 +9,7 @@
   --Channels-Color: #8e9297; /*Color of Channels (voice & text). [default = #8E9297]*/
   --Unred-Messages-Wrapper: grey; /*Background color of the "New unred messsages wrapper". [default = grey]*/
   --Code-Block: black; /* Background of the code blocks. [default = black]*/
-  --Channel-Background: rgba(235, 3, 3, .2); /*Color of an #channel message. [default = rgba(235,3,3,.1)]*/
+  --Channel-Background: rgba(235,3,3,.2); /*Color of an #channel message. [default = rgba(235,3,3,.1)]*/
   --Channel-Color: white; /*Background of an #channel message. [default = white]*/
   --Important: !important; /*Clear the field if you dont want to add !Important to Codes. [default = !important]*/
 }
@@ -80,8 +80,8 @@
   border-color: grey var(--Important);
 
 }
-.isMentionedCozy-3isp7y {
-  background: var(--Mentioned-background) var(--Important);
+.theme-dark .isMentioned-N-h9aa {
+  background-color: var(--Mentioned-background) var(--Important);
   border-left-color: var(--Accent-color) var(--Important);
 }
 .isMentionedCozy-3isp7y:after {
@@ -156,7 +156,7 @@ a {
   background-color: var(--Accent-color) var(--Important);
   border-color: var(--Accent-color) var(--Important);
 }
-.header-2o-2hj {
+.header-2o-2hj, .header-2o-2hj:hover {
   background-color: #101010 var(--Important);
 }
 .container-3baos1 {
@@ -183,4 +183,13 @@ a {
 }
 .newMessagesBar-mujexs {
   background-color: var(--Accent-color) var(--Important);
+}
+.autocompleteInner-zh20B_ {
+  background-color: #1B1B1B var(--Important);
+}
+.theme-dark .selectorSelected-1_M1WV {
+  background-color: #222222 var(--Important);
+}
+.selectable-3dP3y- {
+  background-color: #222222 var(--Important);
 }
