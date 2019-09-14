@@ -1,4 +1,4 @@
-//META{"name":"BetterDarkMode","description":"A better dark mode theme. Requires 'normalize classes'! User the ThemeSettings Plugin to customize the Theme.","author":"Strencher_","version":"1.0.5"}*//{}
+//META{"name":"BetterDarkMode","description":"A better dark mode theme. Requires 'normalize classes'! User the ThemeSettings Plugin to customize the Theme.","author":"Strencher_","version":"1.0.6"}*//{}
 
 :root {
   --Accent-color: #9900FF; /*The account color. [default = #34F141]*/
@@ -21,7 +21,6 @@
   color: red !important;
   font-weight: bold !important;
 }
-/*TextArea*/
 .inner-zqa7da {
   border-radius: 20px var(--Important);
 }
@@ -41,7 +40,6 @@
   border-bottom-right-radius: 20px var(--Important);
 }
 
-/*SearchArea*/
 .theme-dark .searchBar-3dMhjb {
   color: white var(--Important);
   background-color: #222222 var(--Important);
@@ -56,7 +54,6 @@
 
 
 
-/*ChannelList*/
 .theme-dark .name-3_Dsmg, .theme-light .name-3_Dsmg {
   color: var(--Channels-Color) var(--Important);
 }
@@ -93,7 +90,6 @@
 
 
 
-/*Memberlist*/
  {
   background-color: rgba(#1A1919, 1) var(--Important);
 }
@@ -192,4 +188,55 @@ a {
 }
 .selectable-3dP3y- {
   background-color: #222222 var(--Important);
+}
+.contextMenu-HLZMGh {
+  background-color: #1A1919 var(--Important);
+}
+.theme-dark .header-ykumBX {
+  background-color: #1A1919 var(--Important);
+}
+.resultsGroup-r_nuzN {
+  background-color: #1A1919 var(--Important);
+}
+.container-1giJp5 {
+  background-color: #1A1919 var(--Important);
+}
+.theme-dark .container-2x5lvQ section {
+  background-color: #1B1B1B var(--Important);
+}
+.theme-dark .container-2x5lvQ .header-2C89wJ {
+  background-color: #1A1919 var(--Important);
+}
+.container-3cGP6G {
+  background-color: #1A1919 var(--Important);
+}
+.theme-dark .footer-1kmXd4 {
+  background-color: #1A1919 var(--Important);
+}
+.theme-dark .searchHeader-1l-wpR {
+  background-color: #1A1919 var(--Important);
+}
+.theme-dark .datePicker--XZbmJ {
+  background-color: #222222 var(--Important);
+}
+.theme-dark .calendarPicker-2yf6Ci .react-datepicker {
+  background-color: #1A1919 var(--Important);
+}
+.theme-dark .focused-2bY0OD {
+  background-color: #1A1919 var(--Important);
+}
+.theme-dark .calendarPicker-2yf6Ci .react-datepicker__header {
+  background-color: #1A1919 var(--Important);
+}
+.theme-dark .card-FDVird:before {
+  background-color: #1A1919 var(--Important);
+}
+.uploadModal-2ifh8j, .uploadModal-2ifh8j .footer-3mqk7D {
+  background-color: black var(--Important);
+}
+.checkbox-1ix_J3 {
+  border-color: var(--Accent-color) var(--Important);
+}
+.attachPopout-1n-ZKM {
+  background-color: #1A1919 var(--Important);
 }
