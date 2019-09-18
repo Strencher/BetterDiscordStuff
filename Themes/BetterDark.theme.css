@@ -1,4 +1,4 @@
-//META{"name":"BetterDarkMode","description":"A better dark mode theme. Requires 'normalize classes'! User the ThemeSettings Plugin to customize the Theme.","author":"Strencher_","version":"1.0.6"}*//{}
+//META{"name":"BetterDarkMode","description":"A better dark mode theme. Requires 'normalize classes'! User the ThemeSettings Plugin to customize the Theme.","author":"Strencher_", "version":"1.0.6 b-1"}*//{}
 
 :root {
   --Accent-color: #9900ff; /*The account color. [default = #34F141]*/
@@ -316,4 +316,19 @@ a {
 
 .role-2irmRk .roleCircle-3xAZ1j svg {
   visibility: hidden;
+}
+::-webkit-scrollbar {
+  background-color: #222222 !important;
+}
+::-webkit-scrollbar-button {
+  background-color: #222222;
+}
+::-webkit-scrollbar-thumb {
+  background-color: #1a1919 !important;
+  border-radius: 10px !important;
+  border-color: #1a1919 !important;
+}
+::-webkit-scrollbar-track-piece {
+  background-color: #222222 !important;
+  border-color: #222222 !important;
 }
