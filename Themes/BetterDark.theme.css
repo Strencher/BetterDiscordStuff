@@ -1,4 +1,4 @@
-//META{"name":"BetterDarkMode","description":"A better dark mode theme. Requires 'normalize classes'! User the ThemeSettings Plugin to customize the Theme. Thanks for Gibbu's help","author":"Strencher_", "version":"1.0.6 b-1"}*//{}
+//META{"name":"BetterDarkMode","description":"A better dark mode theme. Requires 'normalize classes'! User the ThemeSettings Plugin to customize the Theme.","author":"Strencher_", "version":"1.0.6 b-2"}*//{}
 
 :root {
   --Accent-color: #9900ff; /*The account color. [default = #34F141]*/
@@ -148,7 +148,7 @@ a {
   background-color: var(--Accent-color) var(--Important);
   border-color: var(--Accent-color) var(--Important);
 }
-.header-2o-2hj, .header-2o-2hj:hover {
+.header-2o-2hj, .header-2o-2hj:hover, .clickable-2ap7je:hover  {
   background-color: #101010 var(--Important);
 }
 .container-3baos1 {
@@ -163,6 +163,9 @@ a {
 .theme-dark .wrapper-3WhCwL {
   color: var(--Channel-Color) var(--Important);
   background-color: var(--Channel-Background) var(--Important);
+}
+.theme-dark .wrapper-3WhCwL:hover {
+  background-color: rgba(224, 1, 1, 0.774) var(--Important);
 }
 .inner-zqa7da {
   background-color: #1A1919 var(--Important);
@@ -331,4 +334,37 @@ a {
 ::-webkit-scrollbar-track-piece {
   background-color: #222222 !important;
   border-color: #222222 !important;
+}
+.theme-dark .messagesPopout-24nkyi {
+  background-color: #222222 var(--Important);
+}
+.theme-dark .tierBody-x9kBBp {
+  background-color: #222222 var(--Important);
+}
+.tierHeaderContent-2-YfvN {
+  background-color: #1A1919 var(--Important);
+}
+.children-19S4PO:after {
+  display: none var(--Important);
+}
+.theme-dark .calendarPicker-2yf6Ci .react-datepicker__day--outside-month, .theme-dark .calendarPicker-2yf6Ci .react-datepicker__day.react-datepicker__day--disabled {
+  background-color: #131313 var(--Important);
+}
+.theme-dark .option-96V44q:after {
+  display: none;
+}
+.inner-3ErfOT {
+  background-color: #1a1919 var(--Important);
+}
+.childWrapper-anI2G9 {
+  background-color: #131313 var(--Important);
+}
+.theme-dark .option-96V44q.selected-rZcOL-:hover {
+  background-color: #131313 var(--Important);
+} 
+.header-1TOWci {
+  background-color: #1A1919 var(--Important);
+}
+.container-2jxBbw {
+  background-color: #222222 var(--Important);
 }
