@@ -1,4 +1,4 @@
-//META{"name":"BetterDarkMode","description":"A better dark mode theme. Requires 'normalize classes'! User the ThemeSettings Plugin to customize the Theme.","author":"Strencher_", "version":"1.0.6 b-3"}*//{}
+//META{"name":"BetterDarkMode","description":"A better dark mode theme. Requires 'normalize classes'! User the ThemeSettings Plugin to customize the Theme.","author":"Strencher_", "version":"1.0.6 b-4"}*//{}
 
 :root {
   --Accent-color: #9900ff; /*The account color. [default = #34F141]*/
@@ -13,6 +13,7 @@
   --Channel-Color: white; /*Background of an #channel message. [default = white]*/
   --Important: !important; /*Clear the field if you dont want to add !Important to Codes. [default = !important]*/
   --Background-color: #222222; /*The background color of all. [default = #222222]*/
+  --Block-Quotes: #9900ff; /*Color of the edge of BlockQuotes. [default = #9900ff*/
 }
 
 /*@Start*/
@@ -77,6 +78,10 @@
   background: var(--Code-Block) var(--Important);
   border-color: grey var(--Important);
 
+}
+.langlbl {
+  background-color: var(--Code-Block) var(--important);
+  color: white var(--Important);
 }
 .theme-dark .isMentioned-N-h9aa {
   background-color: var(--Mentioned-background) var(--Important);
@@ -379,4 +384,10 @@ a {
 }
 .wrapper-1BJsBx.selected-bZ3Lue .childWrapper-anI2G9, .wrapper-1BJsBx:hover .childWrapper-anI2G9 {
   background-color: var(--Accent-color) var(--Important);
+}
+.blockquoteDivider-2hH8H6 {
+  background-color: var(--Block-Quotes) var(--Important);
+}
+#dv-mount {
+  background-color: transparent var(--Important);
 }
