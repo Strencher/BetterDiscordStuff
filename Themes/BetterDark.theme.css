@@ -1,4 +1,4 @@
-//META{"name":"BetterDarkMode","description":"A better dark mode theme. Requires 'normalize classes'! User the ThemeSettings Plugin to customize the Theme.","author":"Strencher_", "version":"1.0.6 b-2"}*//{}
+//META{"name":"BetterDarkMode","description":"A better dark mode theme. Requires 'normalize classes'! User the ThemeSettings Plugin to customize the Theme.","author":"Strencher_", "version":"1.0.6 b-3"}*//{}
 
 :root {
   --Accent-color: #9900ff; /*The account color. [default = #34F141]*/
@@ -18,7 +18,7 @@
 /*@Start*/
 
 #bd-settingspane-container .content-column.default .bda-slist::before {
-  content: "Please download the ThemeSettings Plugin. Link: https://github.com/mwittrien/BetterDiscordAddons/blob/master/Plugins/ThemeSettings/ThemeSettings.plugin.js If you alredy download it, ignore this." !important;
+  content: "Please download the ThemeSettings Plugin. Link: \ https://github.com/mwittrien/BetterDiscordAddons/blob/master/Plugins/ThemeSettings/ThemeSettings.plugin.js \ If you alredy download it, ignore this." !important;
   color: red !important;
   font-weight: bold !important;
 }
@@ -92,7 +92,7 @@
 .theme-dark .container-1r6BKw {
   background-color: #1B1B1B var(--Important);
 }
-.scroller-2FKFPG {
+.scroller-2FKFPG, .theme-dark .bodyInner-245q0L {
   background-color: #252525 var(--Important);
 }
 .theme-dark .chat-3bRxxu, .theme-dark .chat-3bRxxu form, .theme-dark .content-yTz4x3 {
@@ -367,4 +367,16 @@ a {
 }
 .container-2jxBbw {
   background-color: #222222 var(--Important);
+}
+.modeSelected-1zApJ_ .content-3at_AU, .modeSelected-1zApJ_:hover .content-3at_AU {
+  background-color: #101010 var(--Important);
+}
+.item-PXvHYJ da-item {
+  background-color: var(--Accent-color) var(--Important);
+}
+.popout-2iWAc-.popout-googletranslate .themedPopout-1TrfdI {
+  background-color: #222222 var(--Important);
+}
+.wrapper-1BJsBx.selected-bZ3Lue .childWrapper-anI2G9, .wrapper-1BJsBx:hover .childWrapper-anI2G9 {
+  background-color: var(--Accent-color) var(--Important);
 }
