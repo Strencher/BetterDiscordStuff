@@ -1,5 +1,10 @@
-//META{"name":"BetterDarkMode","description":"A better dark mode theme. Requires 'normalize classes'! User the ThemeSettings Plugin to customize the Theme.","author":"Strencher_", "version":"1.0.6 b-4"}*//{}
-
+/**
+ * @name BetterDarkMode
+ * @author Strencher
+ * @version 1.0.7
+ * @description A better dark mode theme. Requires 'normalize classes'! User the ThemeSettings Plugin to customize the Theme.
+ * @source https://github.com/Strencher/BetterDiscordStuff/blob/master/Themes/BetterDark.theme.css
+*/
 :root {
   --Accent-color: #9900ff; /*The account color. [default = #34F141]*/
   --Mentioned-color: red; /*The color if you get mentioned. [default = #34F141]*/
@@ -366,7 +371,7 @@ a {
 }
 .theme-dark .option-96V44q.selected-rZcOL-:hover {
   background-color: #131313 var(--Important);
-} 
+}
 .header-1TOWci {
   background-color: #1A1919 var(--Important);
 }
@@ -380,7 +385,6 @@ a {
   background-color: var(--Accent-color) var(--Important);
 }
 .popout-2iWAc-.popout-googletranslate .themedPopout-1TrfdI {
-  background-color: #222222 var(--Important);
 }
 .wrapper-1BJsBx.selected-bZ3Lue .childWrapper-anI2G9, .wrapper-1BJsBx:hover .childWrapper-anI2G9 {
   background-color: var(--Accent-color) var(--Important);
@@ -390,4 +394,20 @@ a {
 }
 #dv-mount {
   background-color: transparent var(--Important);
+}
+.animatedContainer-1pJv5C {
+  z-index: 10;
+}
+.hasBanner-14PPlG .header-2o-2hj, .hasBanner-14PPlG .header-2o-2hj:hover {
+  z-index: 100;
+}
+.jumpButton-3DTcS_ .loading-2bJK5L {
+  background-color: #1a1919 var(--Important);
+}
+.theme-dark #MemberCount {
+    background-color: transparent var(--Important);
+}
+.theme-dark .closeButton-1tv5uR, .theme-dark .keybind-KpFkfr {
+  border-color: #bbbbbb var(--Important);
+  color: #bbbbbb var(--Important);
 }
