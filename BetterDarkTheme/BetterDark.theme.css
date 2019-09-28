@@ -1,9 +1,9 @@
 /**
  * @name BetterDarkMode
  * @author Strencher
- * @version 1.0.8
+ * @version 1.0.9
  * @description A better dark mode theme. Requires 'normalize classes'! User the ThemeSettings Plugin to customize the Theme.
- * @source https://github.com/Strencher/BetterDiscordStuff/blob/master/Themes/BetterDark.theme.css
+ * @source https://github.com/Strencher/BetterDiscordStuff/blob/master/BetterDarkTheme/BetterDark.theme.css
 */
 :root {
   --Accent-color: #9900ff; /*The account color. [default = #34F141]*/
@@ -19,14 +19,16 @@
   --Important: !important; /*Clear the field if you dont want to add !Important to Codes. [default = !important]*/
   --Block-Quotes: #9900ff; /*Color of the edge of BlockQuotes. [default = #9900ff]*/
   --Border-radius-textarea: 25px; /*How severely the corners should be rounded. [default = 35px]*/
+  --Already-Theme-Settings: none; /*If you already installt the ThemeSettings, set this to "none" without quotation marks.*/
 }
 
-/*@Start*/
+/*@Start@*/
 
 #bd-settingspane-container .content-column.default .bda-slist::before {
   content: "Please download the ThemeSettings Plugin. Link: \ https://github.com/mwittrien/BetterDiscordAddons/blob/master/Plugins/ThemeSettings/ThemeSettings.plugin.js \ If you alredy download it, ignore this." !important;
   color: red !important;
   font-weight: bold !important;
+  display: var(--Already-Theme-Settings);
 }
 .inner-zqa7da {
   border-radius: 11px var(--Important);
