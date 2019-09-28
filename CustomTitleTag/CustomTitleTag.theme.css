@@ -1,17 +1,25 @@
-//META{"name":"CustomTitleTag","description":"Allow's you to specific a Custom Discord title Tag","author":"Strencher_","version":"1.0.1"}*//{}
-
+/**
+ * @name CustomTitleTag
+ * @author Strencher
+ * @version 1.0.2
+ * @description Allow's you to specific a Custom Discord title Tag,
+ * @source https://github.com/Strencher/BetterDiscordStuff/blob/master/CustomTitleTag/CustomTitleTag.theme.css
+*/
 :root {
-  --Text: "DISCORD"; /* Use you own text. [default = "DISCORD"]*/
-  --Bold-or-not: bold; /*Bold  or not if not, chance to none. [default = bold]*/
-  --Color: #fff; /*Color of the CustomTag. [default = white / #fff]*/
+  --Text: "STRENCHER"; /* Use you own text. [default = "DISCORD"]*/
+  --Bold-or-not: bold; /*Bold or not if not, chance to none. [default = bold]*/
+  --Color: rgba(255,255,255,1); /*Color of the CustomTag. [default = white / #fff]*/
   --Font-size: 15px; /*The font size of the CustomTitleTag. [default = 15px]*/
-  --Important:  /*Clear the field if you dont want to add !Important to Codes. [default = !important]*/
+  --Important: !important; /*Clear the field if you dont want to add !Important to Codes. [default = !important]*/
+  --Already-Theme-Settings: none; /*If you already installt the ThemeSettings, set this to "none" without quotation marks.*/
 }
 
 #bd-settingspane-container .content-column.default .bda-slist::before {
-  content: "Please download the ThemeSettings Plugin. Link: https://github.com/mwittrien/BetterDiscordAddons/blob/master/Plugins/ThemeSettings/ThemeSettings.plugin.js If you alredy download it, ignore this."
-  color: red
-  font-weight: bold var(--Important);
+  content: "Please download the ThemeSettings Plugin. Link: \ https://github.com/mwittrien/BetterDiscordAddons/blob/master/Plugins/ThemeSettings/ThemeSettings.plugin.js \ If you alredy download it, ignore this." !important;
+  color: red !important;
+  font-weight: bold !important;
+  display: var(--Already-Theme-Settings);
+
 }
 
 .wordmark-2iDDfm {
