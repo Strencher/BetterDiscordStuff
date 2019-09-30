@@ -1,7 +1,7 @@
 /**
  * @name BetterDarkMode
  * @author Strencher
- * @version 1.0.9
+ * @version 1.1.0
  * @description A better dark mode theme. Requires 'normalize classes'! User the ThemeSettings Plugin to customize the Theme.
  * @source https://github.com/Strencher/BetterDiscordStuff/blob/master/BetterDarkTheme/BetterDark.theme.css
 */
@@ -22,7 +22,7 @@
   --Already-Theme-Settings: none; /*If you already installt the ThemeSettings, set this to "none" without quotation marks.*/
 }
 
-/*@Start@*/
+/*@Start*/
 
 #bd-settingspane-container .content-column.default .bda-slist::before {
   content: "Please download the ThemeSettings Plugin. Link: \ https://github.com/mwittrien/BetterDiscordAddons/blob/master/Plugins/ThemeSettings/ThemeSettings.plugin.js \ If you alredy download it, ignore this." !important;
@@ -410,7 +410,7 @@ a {
   background-color: #131313 var(--Important);
 }
 .bf-toolbar .bf-arrow {
-  background-image: url(https://strencher.github.io/bf-fix.png);
+  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAZCAYAAADE6YVjAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAALiIAAC4iAari3ZIAAAAZdEVYdENvbW1lbnQAQ3JlYXRlZCB3aXRoIEdJTVBXgQ4XAAAAB3RJTUUH4wkaDjcw0vCrlAAAAYRJREFUSEvtk71Lw1AUxTNU0cnBwcFBXAQdFHQWF2cHRXB2cHSXov4HdXBwdhBJnYot6OBeU8HJoQiCQ2htu9h8Nh/V89LjKwGLVis45Achefeee3Lv4z0lIeF/oKrqSLlcXuBy8DSbzWXf9x/egOd5V5VKZYqpwWDb9l4QBKH4wQdY11zXXafk5zQajckwDC/p+ynIH2Wz2SGW9IdlWWsw0OklwVa5/JRgGzXTNOdZ+jWlUinlOE6G9TFgdFCtVqeRP2dIgoZMNLBDm94YhjHXarVuWSeBwRNyq5RFCENhTIkE8TO8xiiLA/Ptdrv92pF2QdGFruvjlMUQW4QDcEepBLFHTLtCmaIgloLRaSfdBUIX3e9S1pNCoTCMU3bMMgkaDuGbjkSY4IZxCX5wX6/XlyLBN8Ex38QBqNFCAv9DMUkMdHWSy+VGWdsX4oKiwWtaReASP4tJMhhNmL+gmy3qfwV89uHr4Qkw3UYULBaLi/l8fiJaDAhN02bgO8tlQsKfoCjvD179CqD5kFoAAAAASUVORK5CYII=) !important;
   fill: white var(--Important);
 }
 .listeningAlong-30wH70 {
@@ -418,5 +418,11 @@ a {
 }
 ::selection {
   background-color: var(--Accent-color);
+}
+.quickswitcher-3JagVE {
+  background-color: #1a1919 var(--Important);
+}
+.input-2VB9rf {
+  background-color: #1B1B1B var(--Important);
 }
 /*@end@*/
