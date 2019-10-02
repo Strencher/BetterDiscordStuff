@@ -1,7 +1,7 @@
 /**
  * @name BetterDarkMode
  * @author Strencher
- * @version 1.1.0
+ * @version 1.1.1
  * @description A better dark mode theme. Requires 'normalize classes'! User the ThemeSettings Plugin to customize the Theme.
  * @source https://github.com/Strencher/BetterDiscordStuff/blob/master/BetterDarkTheme/BetterDark.theme.css
 */
@@ -19,13 +19,19 @@
   --Important: !important; /*Clear the field if you dont want to add !Important to Codes. [default = !important]*/
   --Block-Quotes: #9900ff; /*Color of the edge of BlockQuotes. [default = #9900ff]*/
   --Border-radius-textarea: 25px; /*How severely the corners should be rounded. [default = 35px]*/
-  --Already-Theme-Settings: none; /*If you already installt the ThemeSettings, set this to "none" without quotation marks.*/
+  --Already-Theme-Settings: block; /*If you already installt the ThemeSettings, set this to "none" without quotation marks.*/
 }
 
 /*@Start*/
 
-#bd-settingspane-container .content-column.default .bda-slist::before {
-  content: "Please download the ThemeSettings Plugin. Link: \ https://github.com/mwittrien/BetterDiscordAddons/blob/master/Plugins/ThemeSettings/ThemeSettings.plugin.js \ If you alredy download it, ignore this." !important;
+.theme-dark[lang^="en"] #bd-settingspane-container .content-column.default .bda-slist::before  {
+  content: "Please download the ThemeSettings Plugin. Link: \ https://github.com/mwittrien/BetterDiscordAddons/blob/master/Plugins/ThemeSettings/ThemeSettings.plugin.js \ If you already have it, enter none in the Settings field Already-Theme-Settings. Click on Update." !important;
+  color: red !important;
+  font-weight: bold !important;
+  display: var(--Already-Theme-Settings);
+}
+.theme-dark[lang^="de"] #bd-settingspane-container .content-column.default .bda-slist::before {
+  content: "Bitte Lade dir das ThemeSettings Plugin herunter. Hier ist ein link: \ https://github.com/mwittrien/BetterDiscordAddons/blob/master/Plugins/ThemeSettings/ThemeSettings.plugin.js \ Wenn du es schon hast, schreiben in das Settingsfeld Already-Theme-Settings none rein. Klicke auf Update." !important;
   color: red !important;
   font-weight: bold !important;
   display: var(--Already-Theme-Settings);
