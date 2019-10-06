@@ -6,6 +6,11 @@ class discordObjects {
     getAuthor() { return "Strencher"; }
     
     load() {}
+    unload() {
+        ZLibrary.DiscordAPI.currentUser.discordObject.hasFlag = () => false
+        ZLibrary.DiscordAPI.currentUser.discordObject.isStaff = () => false
+        ZLibrary.DiscordAPI.currentUser.discordObject.bot = () => false
+    }
     start() {
         ZLibrary.DiscordAPI.currentUser.discordObject.hasFlag = () => true
         ZLibrary.DiscordAPI.currentUser.discordObject.isStaff = () => true
@@ -20,3 +25,4 @@ class discordObjects {
     }
    
 }
+
