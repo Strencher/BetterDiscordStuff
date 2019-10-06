@@ -5,7 +5,9 @@ class discordObjects {
     getVersion() { return "0.0.2"; }
     getAuthor() { return "Strencher"; }
     
-    load() {}
+    load() {
+        BdApi.showToast("[Discord Objects] was loadet", {type: ""});
+    }
     unload() {
         ZLibrary.DiscordAPI.currentUser.discordObject.hasFlag = () => false
         ZLibrary.DiscordAPI.currentUser.discordObject.isStaff = () => false
@@ -15,14 +17,12 @@ class discordObjects {
         ZLibrary.DiscordAPI.currentUser.discordObject.hasFlag = () => true
         ZLibrary.DiscordAPI.currentUser.discordObject.isStaff = () => true
         ZLibrary.DiscordAPI.currentUser.discordObject.bot = () => true 
-        BdApi.showToast("Please Restart Discord to apply changes.", {type: "info"});
+        BdApi.showToast("[Discord Objects] Please Restart Discord to apply changes.", {type: "error"});
     }
     stop() { 
         ZLibrary.DiscordAPI.currentUser.discordObject.hasFlag = () => false
         ZLibrary.DiscordAPI.currentUser.discordObject.isStaff = () => false
         ZLibrary.DiscordAPI.currentUser.discordObject.bot = () => false
-        BdApi.showToast("Please Restart Discord to clear you Settings.", {type: "info"});
+        BdApi.showToast("[Discord Objects] Please Restart Discord to clear you Settings.", {type: "error"});
     }
-   
 }
-
