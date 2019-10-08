@@ -1,7 +1,7 @@
 //META{"name":"discordObjects"}*//
 class discordObjects {
     getName() { return "Discord Objects"; }
-    getDescription() { return "Gives you Discord Object functions, for example: Bot, Staff and others (local)."; }
+    getDescription() { return "Gives you Discord Object functions, for example: Bot, Staff and others (local). You can get banned."; }
     getVersion() { return "0.0.3"; }
     getAuthor() { return "Strencher"; }
     
