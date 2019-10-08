@@ -12,6 +12,7 @@ class discordObjects {
         ZLibrary.DiscordAPI.currentUser.discordObject.hasFlag = () => false;
         ZLibrary.DiscordAPI.currentUser.discordObject.isStaff = () => false;
         ZLibrary.DiscordAPI.currentUser.discordObject.bot = () => false;
+        ZLibrary.DiscordAPI.currentUser.discordObject.premiumDiscriminator = () => false;
 
     }
     start() {
@@ -25,6 +26,7 @@ class discordObjects {
         ZLibrary.DiscordAPI.currentUser.discordObject.hasFlag = () => false;
         ZLibrary.DiscordAPI.currentUser.discordObject.isStaff = () => false;
         ZLibrary.DiscordAPI.currentUser.discordObject.bot = () => false;
+        ZLibrary.DiscordAPI.currentUser.discordObject.premiumDiscriminator = () => false;
         BdApi.showToast("[Discord Objects] Please Restart Discord to clear you Settings.", {type: "error"});
     }
    
