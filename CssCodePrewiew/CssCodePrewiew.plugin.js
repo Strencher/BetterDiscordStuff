@@ -16,8 +16,6 @@ class cssPreview {
             BdApi.clearCSS("prewiewCss")}
     onSwitch() {this.Buttons();}
     
-    
-
     Buttons() {
         let bases = document.querySelectorAll(".css");
         for(let base of bases) {
