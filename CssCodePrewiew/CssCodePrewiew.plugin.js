@@ -3,11 +3,11 @@ class cssPreview {
     getName() {return "CssBlockPrewiew";}
     getAuthor() {return "Strencher";}
     getDescription() {return "Let you Prewiew css from CodeBlocks";}
-    getVersion() {return "0.0.0";}
+    getVersion() {return "0.0.2";}
 
 
     load() {
-        ZLibrary.PluginUpdater.checkForUpdate("CssCodePrewiew", this.getVersion(), "https://github.com/Strencher/strencher.github.io/cssPluign.plugin.js");
+        ZLibrary.PluginUpdater.checkForUpdate("CssCodePrewiew", this.getVersion(), "https://github.com/Strencher/strencher.github.io/CssCodePrewiew.plugin.js");
 
     }
     unload() {}
@@ -16,8 +16,10 @@ class cssPreview {
             BdApi.clearCSS("prewiewCss")}
     onSwitch() {this.Buttons();}
     
+    
+
     Buttons() {
-        let bases = document.querySelectorAll(".css");
+        let bases = document.querySelectorAll(".css, .CSS, .Css, .cSS, .cSs, .CsS");
         for(let base of bases) {
             let contextMenu = document.createElement("div");
             let contextMenu1 = document.createElement("button");
