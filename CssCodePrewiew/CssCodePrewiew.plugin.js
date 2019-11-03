@@ -3,7 +3,7 @@ class cssPreview {
     getName() {return "CssBlockPrewiew";}
     getAuthor() {return "Strencher";}
     getDescription() {return "Let you Prewiew css from CodeBlocks";}
-    getVersion() {return "0.0.2";}
+    getVersion() {return "0.0.1";}
 
 
     load() {
