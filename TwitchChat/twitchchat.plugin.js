@@ -6,7 +6,7 @@ class twitchChat {
   getDescription() { return "Adds a twitch chat to Discord."; }
   getVersion() { return "0.0.0"; }
   load() {
-    ZLibrary.PluginUpdater.checkForUpdate("Twitch Chat", this.getVersion(), "https://strencher.github.io/twitchchat.plugin.js");
+    ZLibrary.PluginUpdater.checkForUpdate("Twitch Chat", this.getVersion(), "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/TwitchChat/twitchchat.plugin.js");
     this.loadSettings();
 
   }
