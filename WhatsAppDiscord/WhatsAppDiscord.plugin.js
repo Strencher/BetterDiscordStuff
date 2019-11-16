@@ -1,7 +1,7 @@
 //META{"name":"whatsAppDiscord"}*//
 class whatsAppDiscord {
   initConstructor() { }
-  getName() { return "!!!!WhatsApp Discord"; }
+  getName() { return "WhatsApp Discord"; }
   getAuthor() { return "Strencher"; }
   getDescription() { return "Adds a WhatsApp window to Discord."; }
   getVersion() { return "0.0.4"; }
