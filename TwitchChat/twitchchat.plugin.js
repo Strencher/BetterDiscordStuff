@@ -15,14 +15,21 @@ class twitchChat {
     if (document.getElementById("twitchChatButton")) {
       return;
     } else {
-      this.addButton();
+      this.tryAddButton();
     }
   }
+  tryAddButton() {
+  if(document.getElementsByClassName("toolbar-1t6TWx")) {
+    this.addButton();
+  } else {
+    return;
+  }
+}
   onSwitch() {
     if (document.getElementById("twitchChatButton")) {
       return;
     } else {
-      this.addButton();
+      this.tryAddButton();
     }
   }
 
