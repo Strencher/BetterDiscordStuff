@@ -1,2 +1,2 @@
 ## Better Discord Stuff - **Strencher**
-# A collection about some Better Discord Stuff themes and Plugins.
+# My collection about some Better Discord themes and Plugins.
