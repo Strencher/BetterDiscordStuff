@@ -4,7 +4,7 @@ class twitchChat {
   getName() { return "Twitch Chat"; }
   getAuthor() { return "Strencher"; }
   getDescription() { return "Adds a twitch chat to Discord."; }
-  getVersion() { return "0.0.2"; }
+  getVersion() { return "0.0.3"; }
   load() {
     ZLibrary.PluginUpdater.checkForUpdate("Twitch Chat", this.getVersion(), "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/TwitchChat/twitchchat.plugin.js");
     this.loadSettings();
@@ -12,7 +12,7 @@ class twitchChat {
   }
   unload() { }
   start() {
-    if (document.getElementsById("twitchChatButton")) {
+    if (document.getElementById("twitchChatButton")) {
       return;
     } else {
       this.addButton();
