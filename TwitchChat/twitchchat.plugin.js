@@ -225,16 +225,7 @@ class twitchChat {
     a.find(".twitchChatClose").on("click", () => {
       a.remove();
       backdrop.remove();
-      window.setTimeout(() => {
-
-        a.remove()
-        backdrop.remove()
-      }, 120);
-      window.setTimeout(() => {
-        a.remove()
-        backdrop.remove()
-
-      }, 120);
+      
     });
 
     backdrop.on("click", () => {
