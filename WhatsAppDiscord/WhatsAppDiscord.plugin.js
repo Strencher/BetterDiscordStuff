@@ -4,21 +4,28 @@ class whatsAppDiscord {
   getName() { return "!!!!WhatsApp Discord"; }
   getAuthor() { return "Strencher"; }
   getDescription() { return "Adds a WhatsApp window to Discord."; }
-  getVersion() { return "0.0.0"; }
+  getVersion() { return "0.0.4"; }
   load() {}
   start() {
       if(document.getElementById("whatsAppButton")){
           return;
         } else {
-            this.Button()
+            this.tryAddButton()
         }
     }
   onSwitch() {
     if(document.getElementById("whatsAppButton")){
         return;
     } else {
-        this.Button()
+        this.tryAddButton()
     }
+}
+tryAddButton() {
+  if(document.getElementsByClassName("toolbar-1t6TWx")) {
+    this.Button();
+  } else {
+    return;
+  }
 }
   stop() {}
   Button() {
