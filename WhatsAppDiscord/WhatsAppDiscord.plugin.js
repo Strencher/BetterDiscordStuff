@@ -4,7 +4,7 @@ class whatsAppDiscord {
   getName() { return "WhatsApp Discord"; }
   getAuthor() { return "Strencher"; }
   getDescription() { return "Adds a WhatsApp window to Discord."; }
-  getVersion() { return "0.0.1"; }
+  getVersion() { return "0.0.2"; }
   load() {
         ZLibrary.PluginUpdater.checkForUpdate(this.getName(), this.getVersion(), "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/WhatsAppDiscord/WhatsAppDiscord.plugin.js")
   }
