@@ -4,7 +4,7 @@ class twitchChat {
   getName() { return "Twitch Chat"; }
   getAuthor() { return "Strencher"; }
   getDescription() { return "Adds a twitch chat to Discord."; }
-  getVersion() { return "0.0.2"; }
+  getVersion() { return "0.0.3"; }
   load() {
     if (!global.ZeresPluginLibrary) return window.BdApi.alert("Library Missing",`The library plugin needed for ${this.getName()} is missing.<br /><br /> <a href="https://betterdiscord.net/ghdl?url=https://raw.githubusercontent.com/rauenzi/BDPluginLibrary/master/release/0PluginLibrary.plugin.js" target="_blank">Click here to download the library!</a>`)
     ZLibrary.PluginUpdater.checkForUpdate("Twitch Chat", this.getVersion(), "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/TwitchChat/twitchchat.plugin.js");
@@ -20,12 +20,14 @@ class twitchChat {
     }
   }
   tryAddButton() {
-  if(document.querySelectorAll(`svg[name="Nova_Bell"]`)) {
-    this.addButton();
-  } else {
-    return;
+  try {
+    this.addButton()
   }
-}
+  catch(err) {
+      console.error(`[${this.getName()}] ${err.message}`);
+  }
+  } 
+
   onSwitch() {
     if (document.getElementById("twitchChatButton")) {
       return;
@@ -78,6 +80,7 @@ class twitchChat {
     Icon.setAttribute("src", "https://image.flaticon.com/icons/svg/733/733577.svg");
     Icon.height = "25";
     Icon.width = "25";
+    Icon.setAttribute("class", "layer-v9HyYc da-layer");
     button.id = "twitchChatButton";
     button.class = "removeTwitchChat"
     button.style = "background-color: transparent !important;";
@@ -225,7 +228,16 @@ class twitchChat {
     a.find(".twitchChatClose").on("click", () => {
       a.remove();
       backdrop.remove();
-      
+      window.setTimeout(() => {
+
+        a.remove()
+        backdrop.remove()
+      }, 120);
+      window.setTimeout(() => {
+        a.remove()
+        backdrop.remove()
+
+      }, 120);
     });
 
     backdrop.on("click", () => {
