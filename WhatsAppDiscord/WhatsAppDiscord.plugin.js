@@ -23,7 +23,7 @@ class whatsAppDiscord {
     }
 }
 tryAddButton() {
-  if(document.getElementsByClassName("toolbar-1t6TWx")) {
+  if(document.querySelectorAll(`svg[name="Nova_Bell"]`)) {
     this.Button();
   } else {
     return;
