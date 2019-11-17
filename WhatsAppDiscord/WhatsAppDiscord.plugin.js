@@ -4,7 +4,7 @@ class whatsAppDiscord {
   getName() { return "WhatsApp Discord"; }
   getAuthor() { return "Strencher"; }
   getDescription() { return "Adds a WhatsApp window to Discord."; }
-  getVersion() { return "0.0.2"; }
+  getVersion() { return "0.0.3"; }
   load() {
         ZLibrary.PluginUpdater.checkForUpdate(this.getName(), this.getVersion(), "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/WhatsAppDiscord/WhatsAppDiscord.plugin.js")
   }
@@ -23,11 +23,13 @@ class whatsAppDiscord {
     }
 }
 tryAddButton() {
-  if(document.querySelectorAll(`svg[name="Nova_Bell"]`)) {
-    this.Button();
-  } else {
-    return;
+  try {
+    this.Button()
   }
+  catch(err) {
+    console.error(`[${this.getName()}] ${err.message}`);
+  }
+  
 }
   stop() {}
   Button() {
