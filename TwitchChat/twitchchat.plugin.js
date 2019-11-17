@@ -4,7 +4,7 @@ class twitchChat {
   getName() { return "Twitch Chat"; }
   getAuthor() { return "Strencher"; }
   getDescription() { return "Adds a twitch chat to Discord."; }
-  getVersion() { return "0.0.1"; }
+  getVersion() { return "0.0.2"; }
   load() {
     if (!global.ZeresPluginLibrary) return window.BdApi.alert("Library Missing",`The library plugin needed for ${this.getName()} is missing.<br /><br /> <a href="https://betterdiscord.net/ghdl?url=https://raw.githubusercontent.com/rauenzi/BDPluginLibrary/master/release/0PluginLibrary.plugin.js" target="_blank">Click here to download the library!</a>`)
     ZLibrary.PluginUpdater.checkForUpdate("Twitch Chat", this.getVersion(), "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/TwitchChat/twitchchat.plugin.js");
@@ -20,7 +20,7 @@ class twitchChat {
     }
   }
   tryAddButton() {
-  if(document.getElementsByClassName("toolbar-1t6TWx")) {
+  if(document.querySelectorAll(`svg[name="Nova_Bell"]`)) {
     this.addButton();
   } else {
     return;
