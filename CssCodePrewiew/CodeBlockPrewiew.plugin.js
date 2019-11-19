@@ -1,9 +1,9 @@
 //META{"name":"cssPreview"}*//
 class cssPreview {
-    getName() {return "CssBlockPrewiew";}
+    getName() {return "CodeBlockPrewiew";}
     getAuthor() {return "Strencher";}
     getDescription() {return "Let you Prewiew css & Jsfrom CodeBlocks";}
-    getVersion() {return "0.0.0";}
+    getVersion() {return "0.0.1";}
 
 
     load() {
@@ -11,7 +11,7 @@ class cssPreview {
     }
     unload() {}
     start() {this.cssButtons(); this.jsButtons();
-        ZLibrary.PluginUpdater.checkForUpdate("CssCodePrewiew", this.getVersion(), "https://github.com/Strencher/strencher.github.io/CodeBlockPrewiew.plugin.js");
+        ZLibrary.PluginUpdater.checkForUpdate("CodeBlockPrewiew", this.getVersion(), "https://github.com/Strencher/strencher.github.io/CodeBlockPrewiew.plugin.js");
     
     }
     stop() {document.getElementsByClassName("prewiewCss").style = "display: none !important";
