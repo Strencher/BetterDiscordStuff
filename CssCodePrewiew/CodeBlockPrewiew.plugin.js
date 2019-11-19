@@ -1,21 +1,50 @@
 //META{"name":"cssPreview"}*//
 class cssPreview {
-    getName() {return "CodeBlockPrewiew";}
+    getName() {return "CssBlockPrewiew";}
     getAuthor() {return "Strencher";}
-    getDescription() {return "Let you Prewiew css from CodeBlocks";}
+    getDescription() {return "Let you Prewiew css & Jsfrom CodeBlocks";}
     getVersion() {return "0.0.0";}
 
 
     load() {
-        ZLibrary.PluginUpdater.checkForUpdate("CssCodePrewiew", this.getVersion(), "https://github.com/Strencher/strencher.github.io/CssCodePrewiew.plugin.js");
-
+        this.loadSettings()
     }
     unload() {}
-    start() {this.cssButtons(); this.jsButtons();}
-    stop() {document.getElementsByClassName("prewiewCss").style = "display: none !important";
-            BdApi.clearCSS("PrewiewCss")}
-    onSwitch() {this.cssButtons(); this.jsButtons();}
+    start() {this.cssButtons(); this.jsButtons();
+        ZLibrary.PluginUpdater.checkForUpdate("CssCodePrewiew", this.getVersion(), "https://github.com/Strencher/strencher.github.io/CodeBlockPrewiew.plugin.js");
     
+    }
+    stop() {document.getElementsByClassName("prewiewCss").style = "display: none !important";
+            BdApi.clearCSS("prewiewCss")}
+    onSwitch() {this.cssButtons(); this.jsButtons();}
+
+    getSettingsPanel() {
+        let panel = $(`<form class="form" style="width:100%;"></form>`)[0];
+        new ZLibrary.Settings.SettingGroup(this.getName(), {
+          shown: true
+        }).appendTo(panel)
+          .append(
+            new ZLibrary.Settings.Switch("Animation", "This plays an animation when css or js script loaded;", this.settings.animation, (e) => {
+              this.settings.animation = e;
+              this.saveSettings();
+            }))
+            return panel;
+        }/*Ende vom Settings Panel*/
+
+
+
+
+
+    defaultSettings() {
+        return {
+          animation: false,
+          lastUsedVersion: "0.0.0"
+        }
+      }// Ende von defaultSettings
+      initialize() {
+        this.loadSettings();
+    
+      }// ende von initalize
     
     jsButtons() {
         let bases = document.querySelectorAll(".js, .JS, .Js, .jS");
@@ -55,6 +84,9 @@ class cssPreview {
             }
             contextMenu1.onclick = () => {
                 BdApi.showToast("[PrewiewJs] Js script loadet.", {type: "success"});
+                if(this.settings.animation === true) {
+                    this.CssandJsAnimation();
+                }
                 let scriptsrc = base.innerText;
                 let js1 = scriptsrc.replace(/Js|jS|JS/gi, "")
                 $("head").append(`<script id="PrewiewJs">${js1}</script>`);
@@ -84,7 +116,25 @@ class cssPreview {
             BdApi.showToast("[PrewiewCss] There is no Css", {type: "error"});
         }
     }
+    CssandJsAnimation() {
+        var css = `
+        body {
+    animation: spinner 1s;
+    transform-style: preserve-3d;
+    }
+    @keyframes spinner {
+    0% { transform: rotate3d(1, 1, 1, 0deg); }
+    50% { transform: rotate3d(1, 1, 1, 180deg); }
+    100% { transform: rotate3d(1, 1, 1, 360deg); }
+    }
+        `
+        BdApi.injectCSS("prewiewAnimation", css);
+        window.setTimeout(() => {
+            BdApi.clearCSS("prewiewAnimation");
+        }, 3000);
+    }
     cssButtons() {
+        let settings = ZLibrary.PluginUtilities.loadSettings("BlockPrewiew", {});
         let bases = document.querySelectorAll(".css, .CSS, .Css, .cSS, .cSs, .CsS");
         for(let base of bases) {
             let contextMenu = document.createElement("div");
@@ -122,16 +172,26 @@ class cssPreview {
             }
             contextMenu1.onclick = () => {
                 BdApi.showToast("[PrewiewCss] Css loadet.", {type: "success"});
+                if(this.settings.animation === true) {
+                    this.CssandJsAnimation();
+                }
                 let style1 = base.innerText;
                 
                 let css1 = style1.replace(/css|CSS|cSS|CsS|csS|cSs|/gi, "")
                 $("head").append(`<style id="PrewiewCss">${css1}</style>`);
                 
-            }
+            }/*unloadCSS ende */
             
 
-        }
+        } /*for(let...) script end*/
 
-    }
+    }/*funktion ende */
+    saveSettings() {
+        ZLibrary.PluginUtilities.saveSettings("BlockPrewiew", this.settings);
+      }
+      loadSettings() {
+        this.settings = ZLibrary.PluginUtilities.loadSettings("BlockPrewiew", this.defaultSettings());
+      }    
+
     
 }
