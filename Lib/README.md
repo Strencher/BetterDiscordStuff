@@ -10,6 +10,7 @@ if(!document.getElementById("NaJibLibrary")){
 			document.head.appendChild(najib);
 }
 ```
+# Docs
 ### InjectCSS
 `injectCSS(id, style)`
 ```css
