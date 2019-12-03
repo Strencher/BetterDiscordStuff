@@ -1,6 +1,6 @@
 # NaJib Library
 
-###InjectCSS
+### InjectCSS
 `injectCSS(id, style)`
 ```
 id: The is of the element / style
