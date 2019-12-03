@@ -58,3 +58,34 @@ id: The id of the script
 ```
 NaJib.clearScript("testid");
 ```
+### injectCSSafter
+`injectCSSafter(id, script, delay)`
+```
+id: The id of the script
+delay: time in milliseconds before the command will executed
+```
+**Example:**
+```
+NaJib.injectCSS("testid", `
+.emoji {
+    background-color: green;
+}`, 1200);
+```
+or
+```
+var style = `
+.emoji {
+    background-color: green;
+}`;
+NaJib.injectCSS("testid", style, 1200);
+```
+### ClearCSSafter
+`clearCSSafter(id, delay)`
+```
+id: Id of an element e.g (id)
+delay: time in milliseconds before the command will executed
+```
+**Example:**
+```
+NaJib.clearCSS("testid", 1200);
+```
