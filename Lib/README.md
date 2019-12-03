@@ -1,6 +1,6 @@
 # NaJib Library
 
-## How to Adds NaJib to your Plugin:
+## How to Add NaJib to your Plugin:
 ```js
 if(!document.getElementById("NaJibLibrary")){
 			let najib = document.createElement("script");
