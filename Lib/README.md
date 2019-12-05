@@ -100,3 +100,14 @@ delay: time in milliseconds before the command will executed
 ```js
 NaJib.clearCSS("testid", 1200);
 ```
+### showToast
+`showToast(text, type)`
+```css
+text: the text in the toast.
+type: Choose an type, here all types: (success, info, normal, error).
+```
+**Example:**
+```js
+NaJib.showToast("This is a Test", "normal");
+```
+![image](https://user-images.githubusercontent.com/46447572/70234164-51821400-1760-11ea-82bc-3197d61e4583.png)
