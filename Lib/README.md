@@ -110,4 +110,4 @@ type: Choose an type, here all types: (success, info, normal, error).
 ```js
 NaJib.showToast("This is a Test", "normal");
 ```
-![image](https://user-images.githubusercontent.com/46447572/70234164-51821400-1760-11ea-82bc-3197d61e4583.png)
+![image](https://user-images.githubusercontent.com/46447572/70256004-ffed7f80-1787-11ea-8094-ee64e2f8772e.png)
