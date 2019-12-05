@@ -77,7 +77,7 @@ delay: time in milliseconds before the command will executed
 ```
 **Example:**
 ```js
-NaJib.injectCSS("testid", `
+NaJib.injectCSSafter("testid", `
 .emoji {
     background-color: green;
 }`, 1200);
