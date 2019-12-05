@@ -60,15 +60,6 @@ console.error("This is not an Error!")
 `;
 NaJib.injectScript("testid", script);
 ```
-### ClearScript
-`clearScript(id)`
-```css
-id: The id of the script
-```
-**Example:**
-```js
-NaJib.clearScript("testid");
-```
 ### injectCSSafter
 `injectCSSafter(id, script, delay)`
 ```css
