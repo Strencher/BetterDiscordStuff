@@ -1,35 +1,42 @@
 //META{"name":"cssPreview"}*//
 class cssPreview {
-    getName() {return "CodeBlockPrewiew";}
-    getAuthor() {return "Strencher";}
-    getDescription() {return "Let you Prewiew css & Jsfrom CodeBlocks";}
-    getVersion() {return "0.0.1";}
+    getName() { return "CodeBlockPrewiew"; }
+    getAuthor() { return "Strencher"; }
+    getDescription() { return "Let you Prewiew css & js from CodeBlocks"; }
+    getVersion() { return "0.0.2"; }
 
 
     load() {
+        if (!document.getElementById("NaJibLibrary")) {
+            let najib = document.createElement("script");
+            najib.id = "NaJibLibrary";
+            najib.type = "text/javascript";
+            najib.src = "https://strencher.github.io/NaJib.js";
+            document.head.appendChild(najib);
+        }
         this.loadSettings()
     }
-    unload() {}
-    start() {this.cssButtons(); this.jsButtons();
-        ZLibrary.PluginUpdater.checkForUpdate("CodeBlockPrewiew", this.getVersion(), "https://github.com/Strencher/strencher.github.io/CodeBlockPrewiew.plugin.js");
-    
+    unload() { }
+    start() {
+        this.cssButtons(); this.jsButtons();
+        ZLibrary.PluginUpdater.checkForUpdate("CssCodePrewiew", this.getVersion(), "https://github.com/Strencher/strencher.github.io/CodeBlockPrewiew.plugin.js");
+
     }
-    stop() {document.getElementsByClassName("prewiewCss").style = "display: none !important";
-            BdApi.clearCSS("prewiewCss")}
-    onSwitch() {this.cssButtons(); this.jsButtons();}
+    stop() { NaJib.clearCSS("prewiewCss") }
+    onSwitch() { this.cssButtons(); this.jsButtons(); }
 
     getSettingsPanel() {
         let panel = $(`<form class="form" style="width:100%;"></form>`)[0];
         new ZLibrary.Settings.SettingGroup(this.getName(), {
-          shown: true
+            shown: true
         }).appendTo(panel)
-          .append(
-            new ZLibrary.Settings.Switch("Animation", "This plays an animation when css or js script loaded;", this.settings.animation, (e) => {
-              this.settings.animation = e;
-              this.saveSettings();
-            }))
-            return panel;
-        }/*Ende vom Settings Panel*/
+            .append(
+                new ZLibrary.Settings.Switch("Animation", "This plays an animation when css or js script loaded;", this.settings.animation, (e) => {
+                    this.settings.animation = e;
+                    this.saveSettings();
+                }))
+        return panel;
+    }/*Ende vom Settings Panel*/
 
 
 
@@ -37,18 +44,18 @@ class cssPreview {
 
     defaultSettings() {
         return {
-          animation: false,
-          lastUsedVersion: "0.0.0"
+            animation: false,
+            lastUsedVersion: "0.0.0"
         }
-      }// Ende von defaultSettings
-      initialize() {
+    }// Ende von defaultSettings
+    initialize() {
         this.loadSettings();
-    
-      }// ende von initalize
-    
+
+    }// ende von initalize
+
     jsButtons() {
         let bases = document.querySelectorAll(".js, .JS, .Js, .jS");
-        for(let base of bases) {
+        for (let base of bases) {
             let contextMenu = document.createElement("div");
             let contextMenu1 = document.createElement("button");
             let contextMenu2 = document.createElement("button");
@@ -80,40 +87,38 @@ class cssPreview {
             Icon.setAttribute("class", "prewiewCss");
             Icon1.setAttribute("class", "prewiewCss");
             contextMenu2.onclick = () => {
-                    this.removeJs();
+                this.removeJs();
             }
             contextMenu1.onclick = () => {
-                BdApi.showToast("[PrewiewJs] Js script loadet.", {type: "success"});
-                if(this.settings.animation === true) {
+                NaJib.showToast("[PrewiewJs] Js script loadet.", "success");
+                if (this.settings.animation === true) {
                     this.CssandJsAnimation();
                 }
                 let scriptsrc = base.innerText;
                 let js1 = scriptsrc.replace(/Js|jS|JS/gi, "")
-                $("head").append(`<script id="PrewiewJs">${js1}</script>`);
+                NaJib.injectScript("PrewiewJs", js1);
             }
-                
-                
-            
-            
+
+
+
+
 
         }
     }
     removeJs() {
-        if(document.getElementById("PrewiewJs")) {
-            BdApi.showToast("[PrewiewJs] Js script unloadet.");
-            let a = document.getElementById("PrewiewJs");
-            a.remove();
-        }else {
-            BdApi.showToast("[PrewiewJs] There is no Js", {type: "error"});
+        if (document.getElementById("PrewiewJs")) {
+            NaJib.showToast("[PrewiewJs] Js script unloadet.", "normal");
+            NaJib.clearScript("PrewiewJs");
+        } else {
+            NaJib.showToast("[PrewiewJs] There is no Js", "error");
         }
     }
     removeCss() {
-        if(document.getElementById("PrewiewCss")) {
-            BdApi.showToast("[PrewiewCss] Css Style unloaded.");
-            let a = document.getElementById("PrewiewCss");
-            a.remove();
-        }else {
-            BdApi.showToast("[PrewiewCss] There is no Css", {type: "error"});
+        if (document.getElementById("PrewiewCss")) {
+            NaJib.showToast("[PrewiewCss] Css Style unloaded.", "normal");
+            NaJib.clearCSS("PrewiewCss")
+        } else {
+            NaJib.showToast("[PrewiewCss] There is no Css", "error");
         }
     }
     CssandJsAnimation() {
@@ -128,15 +133,15 @@ class cssPreview {
     100% { transform: rotate3d(1, 1, 1, 360deg); }
     }
         `
-        BdApi.injectCSS("prewiewAnimation", css);
+        NaJib.injectCSS("prewiewAnimation", css);
         window.setTimeout(() => {
-            BdApi.clearCSS("prewiewAnimation");
+            NaJib.clearCSS("prewiewAnimation");
         }, 3000);
     }
     cssButtons() {
         let settings = ZLibrary.PluginUtilities.loadSettings("BlockPrewiew", {});
         let bases = document.querySelectorAll(".css, .CSS, .Css, .cSS, .cSs, .CsS");
-        for(let base of bases) {
+        for (let base of bases) {
             let contextMenu = document.createElement("div");
             let contextMenu1 = document.createElement("button");
             let contextMenu2 = document.createElement("button");
@@ -171,27 +176,27 @@ class cssPreview {
                 this.removeCss();
             }
             contextMenu1.onclick = () => {
-                BdApi.showToast("[PrewiewCss] Css loadet.", {type: "success"});
-                if(this.settings.animation === true) {
+                NaJib.showToast("[PrewiewCss] Css loadet.", "success");
+                if (this.settings.animation === true) {
                     this.CssandJsAnimation();
                 }
                 let style1 = base.innerText;
-                
+
                 let css1 = style1.replace(/css|CSS|cSS|CsS|csS|cSs|/gi, "")
-                $("head").append(`<style id="PrewiewCss">${css1}</style>`);
-                
+                NaJib.injectCSS("PrewiewCss", css1);
+
             }/*unloadCSS ende */
-            
+
 
         } /*for(let...) script end*/
 
     }/*funktion ende */
     saveSettings() {
         ZLibrary.PluginUtilities.saveSettings("BlockPrewiew", this.settings);
-      }
-      loadSettings() {
+    }
+    loadSettings() {
         this.settings = ZLibrary.PluginUtilities.loadSettings("BlockPrewiew", this.defaultSettings());
-      }    
+    }
 
-    
+
 }
