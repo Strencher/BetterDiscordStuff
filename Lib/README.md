@@ -15,6 +15,20 @@ if(typeof NaJib !== "undefined") libLoaded();
 else najib.addEventListener("load", libLoaded);
 ```
 # Docs
+### deleteElement
+`deleteElement(class or id name)`
+```css
+You can choose an Id or Class.
+```
+**Example:**
+```js
+NaJib.deleteElement(".className");
+```
+or
+```js
+NaJib.deleteElement("#IdName");
+```
+**It Deletes Only the element Not a script they're running inside.**
 ### InjectCSS
 `injectCSS(id, style)`
 ```css
