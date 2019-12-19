@@ -4,15 +4,23 @@
 In the following code `libLoaded` is a function that gets executed when the library is loaded.
 ```js
 var najib = document.getElementById("NaJibLibrary");
-if(!najib){
-	najib = document.createElement("script");
-	najib.id = "NaJibLibrary";
-	najib.type = "text/javascript";
-	najib.src = "https://strencher.github.io/NaJib.js";
-	document.head.appendChild(najib);
+    if (!najib) {
+         najib = document.createElement("script");
+        najib.id = "NaJibLibrary";
+        najib.type = "text/javascript";
+        najib.src = "https://cdn.statically.io/gh/Strencher/strencher.github.io/c2e47126/NaJib.min.js";
+        document.head.appendChild(najib);
+	}
+if (window.NaJib) {
+    	this.libLoaded();
+} else {
+    najib.addEventListener("load", () => {
+        this.libLoaded()
+	});
 }
-if(typeof NaJib !== "undefined") libLoaded();
-else najib.addEventListener("load", libLoaded);
+libLoaded() {
+	// Your functions instead of start.
+}
 ```
 # Docs
 ### deleteElement
