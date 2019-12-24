@@ -8,7 +8,7 @@ var najib = document.getElementById("NaJibLibrary");
          najib = document.createElement("script");
         najib.id = "NaJibLibrary";
         najib.type = "text/javascript";
-        najib.src = "https://cdn.statically.io/gh/Strencher/strencher.github.io/c2e47126/NaJib.min.js";
+        najib.src = "https://strencher.github.io/NaJib.min.js";
         document.head.appendChild(najib);
 	}
 if (window.NaJib) {
