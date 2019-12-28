@@ -4,6 +4,7 @@
 In the following code `libLoaded` is a function that gets executed when the library is loaded.
 ```js
 if(!global.NaJib) {
+pluginModule.stopPlugin("NaJibLibrary")
             const title = "Library Missing";
             const ModalStack = BdApi.findModuleByProps("push", "update", "pop", "popWithKey");
             const TextElement = BdApi.findModuleByProps("Sizes", "Weights");
