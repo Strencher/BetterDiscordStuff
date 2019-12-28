@@ -1,7 +1,6 @@
 # NaJib Library
 
 ## How to Add NaJib to your Plugin:
-In the following code `libLoaded` is a function that gets executed when the library is loaded.
 ```js
 if(!global.NaJib) {
 pluginModule.stopPlugin("NaJibLibrary")
