@@ -1,5 +1,5 @@
 # NaJib Library
-
+ - [Support-Server](https://discord.gg/gvA2ree)
 ## How to Add NaJib to your Plugin:
 ```js
 if(!global.NaJib) {
