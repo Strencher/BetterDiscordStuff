@@ -37,28 +37,34 @@
  - **!!Requires WhatsApp Desktop App!!**
 
 # NaJib Library
-
+ - [Support-Server](https://discord.gg/gvA2ree)
 ## How to Add NaJib to your Plugin:
-In the following code `libLoaded` is a function that gets executed when the library is loaded.
 ```js
-var najib = document.getElementById("NaJibLibrary");
-    if (!najib) {
-         najib = document.createElement("script");
-        najib.id = "NaJibLibrary";
-        najib.type = "text/javascript";
-        najib.src = "https://strencher.github.io/NaJib.min.js";
-        document.head.appendChild(najib);
-	}
-if (window.NaJib) {
-    	this.libLoaded();
-} else {
-    najib.addEventListener("load", () => {
-        this.libLoaded()
-	});
-}
-libLoaded() {
-	// Your functions instead of start.
-}
+if(!global.NaJib) {
+pluginModule.stopPlugin("NaJibLibrary")
+            const title = "Library Missing";
+            const ModalStack = BdApi.findModuleByProps("push", "update", "pop", "popWithKey");
+            const TextElement = BdApi.findModuleByProps("Sizes", "Weights");
+            const ConfirmationModal = BdApi.findModule(m => m.defaultProps && m.key && m.key() == "confirm-modal");
+            if (!ModalStack || !ConfirmationModal || !TextElement) return BdApi.alert(title, `The library plugin needed for ${this.getName()} is missing.<br /><br /> <a href="https://betterdiscord.net/ghdl?url=https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/Lib/0NaJibLibrary.plugin.js" target="_blank">Click here to download the library!</a>`);
+            ModalStack.push(function(props) {
+                return BdApi.React.createElement(ConfirmationModal, Object.assign({
+                    header: title,
+                    children: [TextElement({color: TextElement.Colors.PRIMARY, children: [`The NaJib library plugin needed for ${this.getName()} is missing. Please click Download Now to install it.`]})],
+                    red: false,
+                    confirmText: "Download Now",
+                    cancelText: "Cancel",
+                    onConfirm: () => {
+                        require("request").get("https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/Lib/0NaJibLibrary.plugin.js", async (error, response, body) => {
+                            if (error) return require("electron").shell.openExternal("https://betterdiscord.net/ghdl?url=https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/Lib/0NaJibLibrary.plugin.js");
+                            await new Promise(r => require("fs").writeFile(require("path").join(ContentManager.pluginsFolder, "0NaJibLibrary.plugin.js"), body, r));
+                        });
+                    }
+                }, props));
+            });
+        } else {
+            // Your stuff "Start".
+        }
 ```
 # Docs
 ### deleteElement
@@ -173,4 +179,3 @@ NaJib.showToast("This is a Test", {
 });
 ```
 ![image](https://user-images.githubusercontent.com/46447572/70256004-ffed7f80-1787-11ea-8094-ee64e2f8772e.png)
-
