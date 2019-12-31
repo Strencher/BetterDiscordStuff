@@ -10,11 +10,11 @@ class naJib {
         return "A Cool Javascript Library";
     }
     getVersion() {
-        return "0.0.1";
+        return "0.0.2";
     }
     start() {
         global.NaJib = {
-            version: "0.0.4",
+            version: "0.0.6",
 
             injectCSS: function (id, css) {
                 let element = document.createElement("style");
@@ -170,41 +170,30 @@ class naJib {
             },
             Modules: {
 
-                req: webpackJsonp.push([
-                    [], {
-                        "__extra_id__": (m, e, r) => m.exports = r
-                    },
-                    [
-                        ["__extra_id__"]
-                    ]
-                ]),
-                findAllByProps: function (pName, filter) {
 
-                    if (!filter) filter = m => m[pName];
+                findAllByProps: function (properties) {
 
-                    let found = [];
-
-                    for (let i in this.req.c) {
-
-                        if (this.req.c.hasOwnProperty(i)) {
-                            let m = this.req.c[i].exports;
-                            if (m && m.__esModule && m.default && filter(m.default)) found.push(m.default[pName]);
-                            else if (m && filter(m)) found.push(m[pName]);
-                        }
-
+                    properties = Array.isArray(properties) ? properties : Array.from(arguments);
+                    const id = "WebModules-TEST";
+                    const req = window.webpackJsonp.push([[], { [id]: (module, exports, req) => module.exports = req }, [[id]]]);
+                    delete req.m[id];
+                    delete req.c[id];
+                    const filter = m => properties.every(prop => m[prop] !== undefined);
+                    for (let i in req.c) if (req.c.hasOwnProperty(i)) {
+                        var m = req.c[i].exports;
+                        if (m && (typeof m == "object" || typeof m == "function") && filter(m)) return m;
+                        if (m && m.__esModule) for (let j in m) if (m[j] && (typeof m[j] == "object" || typeof m[j] == "function") && filter(m[j])) return m[j];
                     }
-
-                    return found;
 
                 }
             },
             sendBotMessage: function (channelID, content) {
-                NaJib.Modules.findAllByProps(["sendBotMessage"])[0](channelID, content);
+                NaJib.Modules.findAllByProps("sendBotMessage").sendBotMessage(channelID, content)
             },
 
         }
         if (document.getElementById("NaJibCSS")) {
-            NaJibtest.ElementOptions.delete("#NaJibCSS");
+            NaJib.ElementOptions.delete("#NaJibCSS");
             this.inject
         } else {
             this.inject
