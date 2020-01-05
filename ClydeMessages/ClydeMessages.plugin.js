@@ -5,7 +5,7 @@ let ClydeMessages = (function () {
             "author": "Strencher",
             "version": "0.0.1",
             "name": "ClydeMessages",
-            "description": "Send Local Clyde Messages by Strg+Enter"
+            "description": "Send Local Clyde Messages by Ctrl+Enter"
         }
     }
     class ClydeMessages {
