@@ -53,6 +53,7 @@ let ClydeMessages = (function () {
             else libraryScript.addEventListener("load", () => { this.initialize(); });
         }
         listener() {
+            ZLibrary.PluginUpdater.checkForUpdate(this.getName(), this.getVersion(), "https://betterdiscord.net/ghdl?url=https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/ClydeMessages/ClydeMessages.plugin.js");
             let b = document.querySelectorAll(".slateTextArea-1Mkdgw")[0];
             b.addEventListener("keydown", this.event)
             this.event = (e) => {

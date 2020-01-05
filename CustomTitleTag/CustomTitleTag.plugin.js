@@ -72,6 +72,7 @@ var CustomTitleTag = (function () {
 
     }
     initialize() {
+      ZLibrary.PluginUpdater.checkForUpdate(this.getName(), this.getVersion(), "https://betterdiscord.net/ghdl?url=https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/CustomTitleTag/CustomTitleTag.plugin.js");
       if (this.settings.lastUsedVersion != this.getVersion()) {
         this.settings.lastUsedVersion = this.getVersion();
         this.saveSettings();
