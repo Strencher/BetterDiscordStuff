@@ -5,7 +5,7 @@
  - CopySelector
  - Reload Discord easy
  - run Debugger
- - Create events in from the console:
+ - Create events from the console:
  > Keydown, Click, Contextmenu
 ```js
 DevUtils.CreateEvent.Click("SelectorForElement");
