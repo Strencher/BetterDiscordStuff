@@ -1,5 +1,5 @@
 # DevUtils
-> Helps devs to develop Plugins
+> Makes it easier to develop Plugins
 ![image](https://user-images.githubusercontent.com/46447572/72170812-d7cded80-33d1-11ea-82d8-3b5f85ba4467.png)
 ### Features:
  - CopySelector
