@@ -17,7 +17,7 @@ class spotifyLinks {
             if (e.target.localName == "a" && e.target.href.includes("open.spotify.com")) {
                 e.preventDefault();
                 let url = e.target.href.split("/");
-                window.open(`spotify://${url[3]}/${url.reverse()[0]}`);
+                window.open(`spotify://${url[3]}/${url[url.length - 1]}`);
             }
         }
         document.addEventListener("click", this.event);
