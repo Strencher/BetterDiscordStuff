@@ -1,4 +1,4 @@
-//META{"name":"spotifyLinks"}*//
+//META{"name":"spotifyLinks", "source": "https://github.com/Strencher/BetterDiscordStuff/blob/master/OpenSpotifylinksInSpotify/OpenSpotifylinksInSpotify.plugin.js", "webside": "https://strencher.github.io/BetterDiscordStuff/"}*//
 class spotifyLinks {
     getAuthor() {
         return "Strencher";
