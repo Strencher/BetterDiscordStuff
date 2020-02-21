@@ -1,48 +1,66 @@
 //META{"name":"twitchChat"}*//
 class twitchChat {
-  initConstructor() { }
+  constructor() { }
   getName() { return "Twitch Chat"; }
   getAuthor() { return "Strencher"; }
   getDescription() { return "Support-server: https://discord.gg/gvA2ree Adds a twitch chat to Discord."; }
-  getVersion() { return "0.0.4"; }
-  load() {
-    if (!global.ZeresPluginLibrary) return window.BdApi.alert("Library Missing", `The library plugin needed for ${this.getName()} is missing.<br/><br/> <a href="https://betterdiscord.net/ghdl?url=https://raw.githubusercontent.com/rauenzi/BDPluginLibrary/master/release/0PluginLibrary.plugin.js" target="_blank">Click here to download the library!</a>`)
+  getVersion() { return "0.0.5"; }
+  initialize() {
     ZLibrary.PluginUpdater.checkForUpdate("Twitch Chat", this.getVersion(), "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/TwitchChat/twitchchat.plugin.js");
     this.loadSettings();
   }
-  unload() { }
+  load() { }
+  unload() { this.stop() }
   start() {
-    $("head").append('<script id="JQueryUI" src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>')
-    if (document.getElementById("twitchChatButton")) {
-      return;
-    } else {
-      try {
-        this.addButton()
+    this.observer = new MutationObserver(changes => {
+      for (let a = 0; a < changes.length; a++) {
+        changes[a].addedNodes.forEach(e => {
+          if (e && e.classList && e.classList.contains("contentRegionScrollerWrap-3YZXdm")) {
+            e.querySelectorAll(".bda-author").forEach(f => {
+              if (f.innerText.includes("Strencher")) {
+                f.innerText = null;
+                let btn = $(`<a class="anchor-3Z-8Bb da-anchor anchorUnderlineOnHover-2ESHQB da-anchorUnderlineOnHover">Strencher</a>`);
+                btn.on("click", () => {
+                  BdApi.findModuleByProps("openPrivateChannel").openPrivateChannel(BdApi.findModuleByProps("getCurrentUser").getCurrentUser().id, "415849376598982656");
+                  setTimeout(_ => {
+                    BdApi.findModuleByProps("fetchProfile").open("415849376598982656", null);
+                  }, 2000)
+                })
+                f.appendChild(btn[0])
+              }
+
+            })
+          }
+        })
       }
-      catch (err) {
-        console.error(`[${this.getName()}] ${err.message}`);
-      }
+    })
+    this.observer.observe(document.body, {
+      childList: true,
+      subtree: true
+    })
+    var libraryScript = document.getElementById("ZLibraryScript");
+    if (!libraryScript || !window.ZLibrary) {
+      libraryScript = document.createElement("script");
+      libraryScript.setAttribute("type", "text/javascript");
+      libraryScript.setAttribute("src", "https://rauenzi.github.io/BDPluginLibrary/release/ZLibrary.js");
+      libraryScript.setAttribute("id", "ZLibraryScript");
+      document.head.appendChild(libraryScript);
     }
+    if (window.ZLibrary) this.initialize();
+    else libraryScript.addEventListener("load", () => { this.initialize(); });
+
+    $("head").append('<script id="JQueryUI" src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>')
+    if (!$("#twitchChatButton")[0] && $(".toolbar-1t6TWx")[0]) this.addButton();
     if (this.settings.lastUsedVersion != this.getVersion()) {
       this.settings.lastUsedVersion = this.getVersion();
       this.saveSettings();
-      BdApi.alert("TwitchChat - Changelog", `
-				Fix for the double modals. Thanks to l0c4lh057.
-			`);
+      BdApi.alert("TwitchChat - Changelog", `Some Small fixes. \n Added author profile link. Thanks to DevilBro's help!`);
     }
   }
 
   onSwitch() {
-    if (document.getElementById("twitchChatButton")) {
-      return;
-    } else {
-      try {
-        this.addButton()
-      }
-      catch (err) {
-        console.error(`[${this.getName()}] ${err.message}`);
-      }
-    }
+    if (!$("#twitchChatButton")[0] && $(".toolbar-1t6TWx")[0]) this.addButton();
+
   }
 
   getSettingsPanel() {
@@ -60,7 +78,6 @@ class twitchChat {
           this.saveSettings();
         })
       )
-
     return panel;
   }
   defaultSettings() {
@@ -71,46 +88,18 @@ class twitchChat {
       lastUsedVersion: "0.0.0",
     }
   }
-  initialize() {
-    this.loadSettings();
-
-  }
   addButton() {
-    let inner = document.getElementsByClassName("toolbar-1t6TWx")[0];
-    let button = document.createElement("button");
-    let Icon = document.createElement("img");
-    let buttonInner = document.createElement("div");
-    Icon.setAttribute("src", "https://image.flaticon.com/icons/svg/733/733577.svg");
-    Icon.height = "25";
-    Icon.width = "25";
-    Icon.setAttribute("class", "layer-v9HyYc da-layer");
-    button.id = "twitchChatButton";
-    button.class = "removeTwitchChat"
-    button.style = "background-color: transparent !important;";
-    buttonInner.style = "background-color: transparent !important;";
-    inner.appendChild(buttonInner);
-    buttonInner.appendChild(button);
-    button.appendChild(Icon);
-    Icon.setAttribute("class", "removeTwitchChat");
-    Icon.onmouseover = () => {
-      Icon.setAttribute("style", "transform: scale(1.2);")
-    }
-    Icon.onmouseout = () => {
-      Icon.setAttribute("style", "transform: scale(1);")
-    }
-    button.onclick = () => {
-      let chat = document.querySelector("#chat_embed");
-      if (chat) {
-        $(".dragger").effect("shake");
-        return;
+    let btn = $(`<div style="cursor: pointer; background-color: transparent !important;" id="twitchChatButton" class="removeTwitchChat iconWrapper-2OrFZ1 da-iconWrapper clickable-3rdHwn da-clickable"><img width="25" height="25" src="https://image.flaticon.com/icons/svg/733/733577.svg"></img></div>`);
+    btn.on("click", () => {
+      if ($("#chat_embed")[0]) {
+        $(".dragger").effect("shake")
       } else {
-        this.channelNameWrapper();
+        this.channelNameWrapper()
       }
-    }
+    });
+    $('.toolbar-1t6TWx')[0].prepend(btn[0]);
   }
-
   addChat(z) {
-    let channelName = z;
     let a = $(`<div class="removeTwitchChat dragger modal-3c3bKg da-modal" style="opacity: 1; transform: scale(1) translateZ(0px); z-index: 9999999">
                 <div class="removeTwitchChat dragger" data-focus-guard="true" tabindex="0" style="width: 1px; height: 0px; padding: 0px; overflow: hidden; position: fixed; top: 1px; left: 1px;"></div>
                 <div class="removeTwitchChat dragger" data-focus-guard="true" tabindex="1" style="width: 1px; height: 0px; padding: 0px; overflow: hidden; position: fixed; top: 1px; left: 1px;"></div>
@@ -123,7 +112,7 @@ class twitchChat {
                   </img>
                   </button
                   <h2 class="removeTwitchChat h2-2gWE-o title-3sZWYQ size16-14cGz5 height20-mO2eIN weightSemiBold-NJexzi da-h2 da-title da-size16 da-height20 da-weightSemiBold defaultColor-1_ajX0 da-defaultColor title-18-Ds0 marginBottom20-32qID7 marginTop8-1DLZ1n da-title da-marginBottom20 da-marginTop8">
-                          <a style="text-transform: uppercase; font-weight: bold; margin-left: 125px;" class="removeTwitchChat" href="https://twitch.tv/${channelName}">${channelName}</a>
+                          <a style="text-transform: uppercase; font-weight: bold; margin-left: 125px;" class="removeTwitchChat" href="https://twitch.tv/${z}">${z}</a>
                         </h2>
                         <div class="removeTwitchChat inputWrapper-31_8H8 da-inputWrapper">
                         <div class="removeTwitchChat inputMaxLength-1vRluy da-inputMaxLength">
@@ -136,7 +125,7 @@ class twitchChat {
                     scrolling="no"
                     id="chat_embed"
                     class="removeTwitchChat"
-                    src="https://www.twitch.tv/embed/${channelName}/chat?darkpopout"
+                    src="https://www.twitch.tv/embed/${z}/chat?darkpopout"
                     height="550"
                     width="550">
             </iframe>
@@ -145,100 +134,80 @@ class twitchChat {
                 </div>
                 <div class="removeTwitchChat" data-focus-guard="true" tabindex="0" style="width: 1px; height: 0px; padding: 0px; overflow: hidden; position: fixed; top: 1px; left: 1px;"></div>
               </div>`);
-
-
-
-    a.find(".twitchChatClose").on("click", () => {
-      a.remove();
-    });
+    a.find(".twitchChatClose").on("click", () => { a.remove(); });
     if (this.settings.dragAble === true) {
       a.find('.dragger').draggable({
         addClasses: true,
         scrollSensitivity: 10
       });
-    }
-    let rootElement = document.querySelector("#app-mount > div[data-no-focus-lock='true'] > div:not([class])");
-    a.appendTo(rootElement);
-    return a.find("div.da-modal")[0];
+    };
+    a.appendTo($("#app-mount > div[data-no-focus-lock='true'] > div:not([class])")[0]);
   }
   channelNameWrapper() {
     let settings = ZLibrary.PluginUtilities.loadSettings("twitchChat", {});
     let defaultChan = settings.defaultChan;
     let backdrop = $(`<div class="removeTwitchChat backdrop-1wrmKB da-backdrop" style="opacity: 0.85; background-color: transparent; z-index: 1000; transform: translateZ(0px);"></div>`);
     let a = $(`<div class="removeTwitchChat modal-3c3bKg da-modal" style="opacity: 1; transform: scale(1) translateZ(0px); z-index: 9999999">
-                <div class="removeTwitchChat"data-focus-guard="true" tabindex="0" style="width: 1px; height: 0px; padding: 0px; overflow: hidden; position: fixed; top: 1px; left: 1px;"></div>
-                <div class="removeTwitchChat"data-focus-guard="true" tabindex="1" style="width: 1px; height: 0px; padding: 0px; overflow: hidden; position: fixed; top: 1px; left: 1px;"></div>
-                <div data-focus-lock-disabled="false" class="removeTwitchChat inner-1ilYF7 da-inner">
-                  <div class="removeTwitchChat modal-yWgWj- da-modal container-14fypd da-container sizeSmall-1jtLQy">
-                    <div class="removeTwitchChat scrollerWrap-2lJEkd firefoxFixScrollFlex-cnI2ix da-scrollerWrap da-firefoxFixScrollFlex content-1EtbQh da-content scrollerThemed-2oenus da-scrollerThemed themeGhostHairline-DBD-2d">
-                      <div class="removeTwitchChat scroller-2FKFPG firefoxFixScrollFlex-cnI2ix da-scroller da-firefoxFixScrollFlex systemPad-3UxEGl da-systemPad inner-ZyuQk0 da-inner content-dfabe7 da-content">
-                      <div style="removeTwitchChat background-color: transparent;">
-                      <button class="removeTwitchChat" style="background-color: transparent;">
-                      <img class="removeTwitchChat twitchChatClose" style="filter: invert(100%);" src="https://image.flaticon.com/icons/svg/151/151882.svg" width="15" height="15">
+                <div data-focus-guard="true" tabindex="0" style="width: 1px; height: 0px; padding: 0px; overflow: hidden; position: fixed; top: 1px; left: 1px;"></div>
+                <div data-focus-guard="true" tabindex="1" style="width: 1px; height: 0px; padding: 0px; overflow: hidden; position: fixed; top: 1px; left: 1px;"></div>
+                <div data-focus-lock-disabled="false" class="inner-1ilYF7 da-inner">
+                  <div class="modal-yWgWj- da-modal container-14fypd da-container sizeSmall-1jtLQy">
+                    <div class="scrollerWrap-2lJEkd firefoxFixScrollFlex-cnI2ix da-scrollerWrap da-firefoxFixScrollFlex content-1EtbQh da-content scrollerThemed-2oenus da-scrollerThemed themeGhostHairline-DBD-2d">
+                      <div class="scroller-2FKFPG firefoxFixScrollFlex-cnI2ix da-scroller da-firefoxFixScrollFlex systemPad-3UxEGl da-systemPad inner-ZyuQk0 da-inner content-dfabe7 da-content">
+                      <div style="background-color: transparent;">
+                      <button style="background-color: transparent;">
+                      <img class="twitchChatClose" style="filter: invert(100%);" src="https://image.flaticon.com/icons/svg/151/151882.svg" width="15" height="15">
                       </img>
                       </button
                       </div>
-                        <h2 class="removeTwitchChat h2-2gWE-o title-3sZWYQ size16-14cGz5 height20-mO2eIN weightSemiBold-NJexzi da-h2 da-title da-size16 da-height20 da-weightSemiBold defaultColor-1_ajX0 da-defaultColor title-18-Ds0 marginBottom20-32qID7 da-title da-marginBottom20">
+                        <h2 class="h2-2gWE-o title-3sZWYQ size16-14cGz5 height20-mO2eIN weightSemiBold-NJexzi da-h2 da-title da-size16 da-height20 da-weightSemiBold defaultColor-1_ajX0 da-defaultColor title-18-Ds0 marginBottom20-32qID7 da-title da-marginBottom20">
                           Type ChannelName
                         </h2>
-                        <input value="${defaultChan}" class="removeTwitchChat twitchChatInputChannelName inputDefault-_djjkz input-cIJ7To da-inputDefault da-input input-cIJ7To da-input size16-1P40sf da-size16 wordInputs" placeholder="ChannelName:"></input>
-                        <button style="margin-top: 5px" class="removeTwitchChat twitchChatOpenChat flexChild-faoVW3 da-flexChild button-38aScr da-button lookFilled-1Gx00P da-lookFilled colorBrand-3pXr91 da-colorBrand sizeMedium-1AC_Sl da-sizeMedium grow-q77ONN da-grow">
-                        <div class="removeTwitchChat contents-18-Yxp da-contents">
+                        <input value="${defaultChan}" class="twitchChatInputChannelName inputDefault-_djjkz input-cIJ7To da-inputDefault da-input input-cIJ7To da-input size16-1P40sf da-size16 wordInputs" placeholder="ChannelName:"></input>
+                        <button style="margin-top: 5px" class="twitchChatOpenChat flexChild-faoVW3 da-flexChild button-38aScr da-button lookFilled-1Gx00P da-lookFilled colorBrand-3pXr91 da-colorBrand sizeMedium-1AC_Sl da-sizeMedium grow-q77ONN da-grow">
+                        <div class="contents-18-Yxp da-contents">
                         Open Chat
                         </div>
-                        <div class="removeTwitchChat inputWrapper-31_8H8 da-inputWrapper">
-                        <div class="removeTwitchChat inputMaxLength-1vRluy da-inputMaxLength">
+                        <div class="inputWrapper-31_8H8 da-inputWrapper">
+                        <div class="inputMaxLength-1vRluy da-inputMaxLength">
                         </div>
                         </div>
                       </div>
                     </div>
                    </div>
                 </div>
-                <div class="removeTwitchChat" data-focus-guard="true" tabindex="0" style="width: 1px; height: 0px; padding: 0px; overflow: hidden; position: fixed; top: 1px; left: 1px;"></div>
+                <div data-focus-guard="true" tabindex="0" style="width: 1px; height: 0px; padding: 0px; overflow: hidden; position: fixed; top: 1px; left: 1px;"></div>
               </div>`);
 
     a.find(".twitchChatOpenChat").on("click", () => {
-      let z = document.getElementsByClassName("twitchChatInputChannelName")[0].value;
-      if (z.length === "0") {
+      let z = $(".twitchChatInputChannelName")[0].value;
+      if (z.length == "0" || z.length <= 4) {
         a.remove();
         backdrop.remove();
       } else {
         this.settings.defaultChan = z;
         this.saveSettings()
         this.addChat(z);
-        window.setTimeout(() => {
-          a.remove()
-          backdrop.remove()
-        }, 1200);
+        a.remove()
+        backdrop.remove()
       };
 
     });
     a.find(".twitchChatInputChannelName").on("keyup", (e) => {
-      var key = e.which || e.keyCode;
-      if (key === 13) {
-        a.find(".twitchChatOpenChat").click()
-      }
-
-
+      let key = e.which || e.keyCode;
+      if (key === 13) a.find(".twitchChatOpenChat").click();
     });
-    a.find(".twitchChatClose").on("click", () => {
-      a.remove();
-      backdrop.remove();
-    });
-    $(".twitchChatOpenChat").focus();
-
-    backdrop.on("click", () => {
-      a.remove()
-      backdrop.remove();
-    });
-    let rootElement = document.querySelector("#app-mount > div[data-no-focus-lock='true'] > div:not([class])");
-    backdrop.appendTo(rootElement);
-    a.appendTo(rootElement);
-    return a.find("div.da-modal")[0];
+    a.find(".twitchChatClose").on("click", () => { a.remove(); backdrop.remove(); });
+    a.find(".twitchChatOpenChat").focus();
+    backdrop.on("click", () => { a.remove(); backdrop.remove(); });
+    backdrop.appendTo($("#app-mount > div[data-no-focus-lock='true'] > div:not([class])")[0]);
+    a.appendTo($("#app-mount > div[data-no-focus-lock='true'] > div:not([class])")[0]);
   }
   stop() {
-    let r = document.getElementsByClassName("removeTwitchChat")[0];
-    if (r) r.remove()
+    this.observer.disconnect()
+    $(".removeTwitchChat")[0] ? document.querySelectorAll(".removeTwitchChat").forEach(element => {
+      element.remove()
+    }) : null;
   }
   saveSettings() {
     ZLibrary.PluginUtilities.saveSettings("twitchChat", this.settings);
@@ -246,4 +215,5 @@ class twitchChat {
   loadSettings() {
     this.settings = ZLibrary.PluginUtilities.loadSettings("twitchChat", this.defaultSettings());
   }
+
 }
