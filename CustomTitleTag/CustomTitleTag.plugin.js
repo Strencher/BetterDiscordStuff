@@ -4,7 +4,7 @@ var CustomTitleTag = (function () {
   const config = {
     "info": {
       "author": "Strencher",
-      "version": "0.0.1",
+      "version": "0.0.2",
       "name": "CustomTitleTag",
       "description": "Allows you to set a Custom Tag to the title."
     }
@@ -26,18 +26,12 @@ var CustomTitleTag = (function () {
       this.loadSettings()
     }
     unload() { this.stop() }
-    selector() {
-      var bold;
-      if (this.settings.bold == true) {
-        bold = "bold";
-      } else {
-        bold = "none"
-      }
+    parseCSS() {
       this.css = `
           .wordmark-2iDDfm {
               font-size: ${this.settings.fontSize};
               padding: 0;
-              font-weight: ${bold};
+              font-weight: ${this.settings.bold ? "bold" : "none"};
               color: ${this.settings.color};
           }
 
@@ -72,15 +66,13 @@ var CustomTitleTag = (function () {
 
     }
     initialize() {
-      ZLibrary.PluginUpdater.checkForUpdate(this.getName(), this.getVersion(), "https://betterdiscord.net/ghdl?url=https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/CustomTitleTag/CustomTitleTag.plugin.js");
+      ZLibrary.PluginUpdater.checkForUpdate(this.getName(), this.getVersion(), "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/CustomTitleTag/CustomTitleTag.plugin.js");
       if (this.settings.lastUsedVersion != this.getVersion()) {
         this.settings.lastUsedVersion = this.getVersion();
         this.saveSettings();
-        BdApi.alert("CustomTitleTag - Changelog", `
-                  Initial release! :)
-        `);
+        BdApi.alert("CustomTitleTag - Changelog", `Fixed some bugs`);
       }
-      this.selector()
+      this.parseCSS()
       BdApi.injectCSS(config.info.name + "-settings", `
           .slider.switch-round {
               border-radius: 34px;
@@ -135,18 +127,12 @@ var CustomTitleTag = (function () {
       BdApi.clearCSS(config.info.name + "-settings");
     }
     getSettingsPanel() {
-      var bold;
-      if (this.settings.bold == false) {
-        bold = ""
-      } else {
-        bold = 'checked="true"';
-      }
       let panel = document.createElement("form");
       panel.className = "form";
       panel.style.width = "100%";
       panel.insertAdjacentHTML("afterbegin",
         `<span>Text:  <input style="width: 560px;" class="textInput inputDefault-_djjkz input-cIJ7To da-inputDefault da-input input-cIJ7To da-input size16-1P40sf da-size16 wordInputs" value="${this.settings.content}"></input><span>
-              <span>Bold: <label style="display: flex; width: 60px; height: 34px; transform: scale(0.7); margin-left: 33px; margin-top: -18px;" class="boldText switch"><input ${bold} type="checkbox" class="input"><span class="slider switch-round"></label></input></span></span>
+              <span>Bold: <label style="display: flex; width: 60px; height: 34px; transform: scale(0.7); margin-left: 33px; margin-top: -18px;" class="boldText switch"><input ${this.settings.bold == false ? "" : "checked=\"true\""} type="checkbox" class="input"><span class="slider switch-round"></label></input></span></span>
               <span>Font-size: <input style="width: 560px;" class="fontSizeText inputDefault-_djjkz input-cIJ7To da-inputDefault da-input input-cIJ7To da-input size16-1P40sf da-size16 wordInputs" value="${this.settings.fontSize}"></input></span>
               <span>Color: <input class="colorPicker" value="${this.settings.color}" style="cursor: pointer; background-color: transparent; border-color: transparent;" type="color"></input></span>
           `);
@@ -186,7 +172,7 @@ var CustomTitleTag = (function () {
       }
     }
     loadSettings() {
-      var a = BdApi.loadData("CustomTitleTag", "settings");
+      var a = BdApi.loadData("CustomTitleTag", "settings")
       if (!a) {
         this.settings = null;
         this.saveSettings()
@@ -201,7 +187,7 @@ var CustomTitleTag = (function () {
       } else {
         BdApi.saveData("CustomTitleTag", "settings", this.settings);
         BdApi.clearCSS(config.info.name);
-        this.selector()
+        this.parseCSS()
       }
 
     }

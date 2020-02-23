@@ -4,7 +4,7 @@ class twitchChat {
   getName() { return "Twitch Chat"; }
   getAuthor() { return "Strencher"; }
   getDescription() { return "Support-server: https://discord.gg/gvA2ree Adds a twitch chat to Discord."; }
-  getVersion() { return "0.0.5"; }
+  getVersion() { return "0.0.6"; }
   initialize() {
     ZLibrary.PluginUpdater.checkForUpdate("Twitch Chat", this.getVersion(), "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/TwitchChat/twitchchat.plugin.js");
     this.loadSettings();
@@ -54,7 +54,7 @@ class twitchChat {
     if (this.settings.lastUsedVersion != this.getVersion()) {
       this.settings.lastUsedVersion = this.getVersion();
       this.saveSettings();
-      BdApi.alert("TwitchChat - Changelog", `Some Small fixes. \n Added author profile link. Thanks to DevilBro's help!`);
+      BdApi.alert("TwitchChat - Changelog", `Fixes.. fixes`);
     }
   }
 
@@ -101,26 +101,26 @@ class twitchChat {
   }
   addChat(z) {
     let a = $(`<div class="removeTwitchChat dragger modal-3c3bKg da-modal" style="opacity: 1; transform: scale(1) translateZ(0px); z-index: 9999999">
-                <div class="removeTwitchChat dragger" data-focus-guard="true" tabindex="0" style="width: 1px; height: 0px; padding: 0px; overflow: hidden; position: fixed; top: 1px; left: 1px;"></div>
-                <div class="removeTwitchChat dragger" data-focus-guard="true" tabindex="1" style="width: 1px; height: 0px; padding: 0px; overflow: hidden; position: fixed; top: 1px; left: 1px;"></div>
-                <div data-focus-lock-disabled="false" class="removeTwitchChat dragger inner-1ilYF7 da-inner">
-                  <div class="removeTwitchChat modal-yWgWj- da-modal container-14fypd da-container sizeSmall-1jtLQy">
-                  <div class="removeTwitchChat scrollerWrap-2lJEkd firefoxFixScrollFlex-cnI2ix da-scrollerWrap da-firefoxFixScrollFlex content-1EtbQh da-content scrollerThemed-2oenus da-scrollerThemed themeGhostHairline-DBD-2d">
-                  <div class="removeTwitchChat scroller-2FKFPG firefoxFixScrollFlex-cnI2ix da-scroller da-firefoxFixScrollFlex systemPad-3UxEGl da-systemPad inner-ZyuQk0 da-inner content-dfabe7 da-content">
-                  <button clas="removeTwitchChat " style="background-color: transparent;">
-                  <img style="filter: invert(100%);" class="removeTwitchChat twitchChatClose" src="https://image.flaticon.com/icons/svg/151/151882.svg" width="15" height="15">
+                <div class="dragger" data-focus-guard="true" tabindex="0" style="width: 1px; height: 0px; padding: 0px; overflow: hidden; position: fixed; top: 1px; left: 1px;"></div>
+                <div class="dragger" data-focus-guard="true" tabindex="1" style="width: 1px; height: 0px; padding: 0px; overflow: hidden; position: fixed; top: 1px; left: 1px;"></div>
+                <div data-focus-lock-disabled="false" class="dragger inner-1ilYF7 da-inner">
+                  <div class="modal-yWgWj- da-modal container-14fypd da-container sizeSmall-1jtLQy">
+                  <div class="scrollerWrap-2lJEkd firefoxFixScrollFlex-cnI2ix da-scrollerWrap da-firefoxFixScrollFlex content-1EtbQh da-content scrollerThemed-2oenus da-scrollerThemed themeGhostHairline-DBD-2d">
+                  <div class="scroller-2FKFPG firefoxFixScrollFlex-cnI2ix da-scroller da-firefoxFixScrollFlex systemPad-3UxEGl da-systemPad inner-ZyuQk0 da-inner content-dfabe7 da-content">
+                  <button style="background-color: transparent;">
+                  <img style="filter: invert(100%);" class="twitchChatClose" src="https://image.flaticon.com/icons/svg/151/151882.svg" width="15" height="15">
                   </img>
                   </button
-                  <h2 class="removeTwitchChat h2-2gWE-o title-3sZWYQ size16-14cGz5 height20-mO2eIN weightSemiBold-NJexzi da-h2 da-title da-size16 da-height20 da-weightSemiBold defaultColor-1_ajX0 da-defaultColor title-18-Ds0 marginBottom20-32qID7 marginTop8-1DLZ1n da-title da-marginBottom20 da-marginTop8">
+                  <h2 class="h2-2gWE-o title-3sZWYQ size16-14cGz5 height20-mO2eIN weightSemiBold-NJexzi da-h2 da-title da-size16 da-height20 da-weightSemiBold defaultColor-1_ajX0 da-defaultColor title-18-Ds0 marginBottom20-32qID7 marginTop8-1DLZ1n da-title da-marginBottom20 da-marginTop8">
                           <a style="text-transform: uppercase; font-weight: bold; margin-left: 125px;" class="removeTwitchChat" href="https://twitch.tv/${z}">${z}</a>
                         </h2>
-                        <div class="removeTwitchChat inputWrapper-31_8H8 da-inputWrapper">
-                        <div class="removeTwitchChat inputMaxLength-1vRluy da-inputMaxLength">
+                        <div class="inputWrapper-31_8H8 da-inputWrapper">
+                        <div class="inputMaxLength-1vRluy da-inputMaxLength">
                         </div>
                         </div>
                       </div>
                     </div>
-                    <div class="removeTwitchChat flex-1xMQg5 flex-1O1GKY da-flex da-flex horizontalReverse-2eTKWD horizontalReverse-3tRjY7 flex-1O1GKY directionRowReverse-m8IjIq justifyBetween-2tTqYu alignStretch-DpGPf3 wrap-ZIn9Iy footer-3rDWdC da-footer" style="flex: 0 0 auto;">
+                    <div class="flex-1xMQg5 flex-1O1GKY da-flex da-flex horizontalReverse-2eTKWD horizontalReverse-3tRjY7 flex-1O1GKY directionRowReverse-m8IjIq justifyBetween-2tTqYu alignStretch-DpGPf3 wrap-ZIn9Iy footer-3rDWdC da-footer" style="flex: 0 0 auto;">
                     <iframe frameborder="0"
                     scrolling="no"
                     id="chat_embed"
