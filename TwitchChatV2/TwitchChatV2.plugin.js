@@ -37,8 +37,8 @@ var TwitchChatV2 = (() => {
       ],
       version: "0.0.1",
       description: "Adds an Twitch chat to discord.",
-      github: "null",
-      github_raw: "null"
+      github: "https://github.com/Strencher/BetterDiscordStuff/blob/master/TwitchChatV2/TwitchChatV2.plugin.js",
+      github_raw: "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/TwitchChatV2/TwitchChatV2.plugin.js"
     },
     changelog: [
       {
