@@ -42,16 +42,16 @@ var AutoCorrectV2 = (() => {
                 },
 
             ],
-            version: "0.0.1",
+            version: "0.0.2",
             description: "Corrects your message when you send it.",
             github: "https://github.com/Strencher/BetterDiscordStuff/AutoCorrectV2/AutoCorrectV2.plugin.js",
             github_raw: "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/AutoCorrectV2/AutoCorrectV2.plugin.js"
         },
         changelog: [
             {
-                title: "Yeah",
-                type: "added",
-                items: ["The plugin exist"]
+                title: "BUG",
+                type: "fixed",
+                items: ["Fixed matching the words"]
             }
         ]
     };
@@ -125,7 +125,7 @@ var AutoCorrectV2 = (() => {
                     this.loadSettings()
                     var msg = e;
                     Object.entries(this.settings.words).forEach(([key, value])=> {
-                        msg = msg.replace(new RegExp(key, "gi"), value);
+                        msg = msg.replace(new RegExp(`\\b${key}\\b`, "gi"), value);
                     })
                     if(this.settings.capitalize && !(msg.startsWith("http"))) msg = msg[0].toUpperCase() + msg.substring(1);
                     if(this.settings.punctuate && !(msg.startsWith("http") || msg.endsWith(":") || msg.endsWith(".") || msg.endsWith("!") || msg.endsWith("?"))) msg += ".";
