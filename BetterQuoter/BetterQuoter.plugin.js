@@ -1,4 +1,4 @@
-//META{"name":"BetterQuoter","displayName":"BetterQuoter"}*//
+//META{"name":"BetterQuoter","displayName":"BetterQuoter", "invite": "gvA2ree", "authorId": "415849376598982656"}*//
 /*@cc_on
 @if (@_jscript)
 	
@@ -42,10 +42,10 @@ var BetterQuoter = (() => {
         },
         changelog: [
             {
-                title: "Fix",
-                type: "fixed",
+                title: "What\'s new?",
+                type: "added",
                 items: [
-                    "Fixed Styling issue with the new Discord Update."
+                    "Rewrite in React & now Patches also the Discord Quote function."
                 ]
             }
         ]
@@ -84,9 +84,10 @@ var BetterQuoter = (() => {
     } : (([Plugin, Api]) => {
         const plugin = (Plugin, Api) => {
 
-            const { PluginUtilities, ReactTools, EmulatedTooltip, Settings, WebpackModules } = Api;
+            const { PluginUtilities, DiscordModules, ReactTools, EmulatedTooltip, Settings, WebpackModules, Patcher } = Api;
             const { SettingGroup } = Settings;
-            const { ComponentActions: Actions } = WebpackModules.getByProps('ComponentActions');
+            const { React } = DiscordModules;
+            const Tooltip = WebpackModules.getByDisplayName("Tooltip");
             const { ComponentDispatch: Dispatcher } = WebpackModules.getByProps('ComponentDispatch');
             return class BetterQuoter extends Plugin {
                 constructor() {
@@ -104,12 +105,15 @@ var BetterQuoter = (() => {
                 loadSettings() {
                     this.settings = PluginUtilities.loadSettings("BetterQuoter", this.defaultSettings);
                 };
+                onLoad() {
+                    this.loadSettings()
+                }
                 getSettingsPanel() {
                     this.loadSettings()
                     let form = document.createElement("form");
                     new SettingGroup("Custom Quotation", { shown: true }).appendTo(form)
                         .append(
-                            $(`<textarea type="text" class="bq-input inputDefault-_djjkz input-cIJ7To da-inputDefault da-input textArea-1Lj-Ns da-textArea scrollbarDefault-3COgCQ scrollbar-3dvm_9 da-scrollbarDefault da-scrollbar" placeholder="" maxlength="512" rows="2" style="padding-right: 31.69px;"></textarea>`)[0]
+                            $(`<textarea style="height: 140px;" type="text" class="bq-input inputDefault-_djjkz input-cIJ7To da-inputDefault da-input textArea-1Lj-Ns da-textArea scrollbarDefault-3COgCQ scrollbar-3dvm_9 da-scrollbarDefault da-scrollbar" placeholder="" maxlength="512" rows="2" style="padding-right: 31.69px;"></textarea>`)[0]
                         )
                     setTimeout(() => {
                         let input = document.querySelector(".bq-input");
@@ -124,7 +128,7 @@ var BetterQuoter = (() => {
                         .append($(`<div><strong>%name%</strong><div>Will replace the name</div>\n\n<strong>%msg%</strong><div>Will replace the message</div>\n<strong>%codeblock%</strong><div>Will build a CodeBlock</div>\n<strong>%bold%</strong><div>Makes the message Bold</div>\n<strong>%italic%</strong><div>Makes the message Italic</div>\n<strong>%underline%</strong><div>Underlines the message</div>\n<strong>%code%</strong><div>Makes the message look like code</div>\n<strong>%quote%</strong><div>Makes the message look like QuoteBlock</div>\n<strong>%bold%</strong><div>Makes the message Bold</div>\n<strong>%italic%</strong><div>Makes the message Italic</div>\n<strong>%underline%</strong><div>Underlines the message</div>\n<strong>%code%</strong><div>Makes the message look like code</div>\n<strong>%timestamp%</strong><div>Adds a timestamp from message to Quotation.</div>\n<strong>%msg-link%</strong><div>Adds the MessageLink from the message that you Quoted.</div></div>`)[0])
                     return form;
                 };
-                decom(name, msg, time, link) {
+                parseMessage(name, msg, time, link) {
                     this.loadSettings()
                     var b = this.settings.replacem;
                     var a = b.replace(/%codeblock%/g, `${'```'}`)
@@ -139,64 +143,53 @@ var BetterQuoter = (() => {
                         .replace(/%msg-link%/g, link);
                     return a;
                 }
-                addbutton(e) {
-                    var a = e.querySelector(".wrapper-2aW0bm");
-                    if (a) {
-                        if (!a.querySelector(".Quote-btn")) {
-                            a.insertAdjacentHTML("afterbegin", `<div tabindex="0" class="button-1ZiXG9 Quote-btn" aria-controls="popout_161" aria-expanded="false" role="button"><img src="https://image.flaticon.com/icons/svg/59/59149.svg" class="Quote-icon"></div>`);
-                            new EmulatedTooltip(a.querySelector(".Quote-btn"), document.documentElement.lang == "de" ? "Zitieren" : "Quote", { side: 'top' });
-                            a.querySelector(".Quote-btn").addEventListener("click", (f) => {
-                                let props = ReactTools.getOwnerInstance(f.target.parentElement.parentElement.parentElement.parentElement.parentElement.querySelector(".container-1ov-mD"));
-                                let name = props.props.message.author.username;
-                                let msg = props.props.message.content;
-                                let timeStamp = props.props.message.timestamp._d.toString().split(" ");
-                                let time = `${timeStamp[2]} ${timeStamp[1]} ${timeStamp[3]}, ${timeStamp[4]}`;
-                                let msgLink = location.href + "/" + props.props.message.id;
-                                Dispatcher.dispatchToLastSubscribed(Actions.INSERT_TEXT, { content: this.decom(name, msg, time, msgLink) });
-                            });
-                        }
-                    }
-                };
+                patchMessageToolBar() {
+                    Patcher.after(WebpackModules.getByIndex(WebpackModules.getIndex(e => e.default && e.default.displayName === 'MiniPopover')), "default", (_, args, react) => {
+                        const _this = args[0]['children'][args[0].children.length-1]['props'];
+                        const timeStamp = _this.message.timestamp._d.toString().split(" ");
+                        const time = `${timeStamp[2]} ${timeStamp[1]} ${timeStamp[3]}, ${timeStamp[4]}`;
+                        const msgLink = location.href + "/" + _this.message.id;
+                        react.props.children.unshift(
+                            React.createElement(Tooltip, {
+                                text: document.documentElement.lang == "de" ? "Zitieren" : "Quote",
+                                position: "top",
+                                color: "black",
+                            }, e => React.createElement("div", {
+                                    onMouseEnter: e.onMouseEnter, 
+                                    onMouseLeave: e.onMouseLeave,
+                                    className: "button-1ZiXG9",
+                                    onClick: () => {
+                                        Dispatcher.dispatchToLastSubscribed("INSERT_TEXT", {content: this.parseMessage(_this.message.author.username, _this.message.content, time, msgLink)+"\n"})
+                                    }, 
+                                        children: React.createElement("svg", {
+                                        className: "icon-3Gkjwa",
+                                        width: "26",
+                                        height: "26",
+                                        children: React.createElement("path", {
+                                            fill: "currentColor",
+                                            d: "M19.8401 5.39392C20.1229 4.73405 19.6389 4 18.921 4H17.1231C16.7417 4 16.3935 4.21695 16.2254 4.55933L13.3297 10.4581C13.195 10.7324 13.125 11.0339 13.125 11.3394V19C13.125 19.5523 13.5727 20 14.125 20H20C20.5523 20 21 19.5523 21 19V12.875C21 12.3227 20.5523 11.875 20 11.875H17.8208C17.4618 11.875 17.2198 11.508 17.3612 11.178L19.8401 5.39392ZM9.71511 5.39392C9.99791 4.73405 9.51388 4 8.79596 4H6.99809C6.61669 4 6.2685 4.21695 6.10042 4.55933L3.20466 10.4581C3.07001 10.7324 3 11.0339 3 11.3394V19C3 19.5523 3.44772 20 4 20H9.875C10.4273 20 10.875 19.5523 10.875 19V12.875C10.875 12.3227 10.4273 11.875 9.875 11.875H7.69577C7.33681 11.875 7.0948 11.508 7.2362 11.178L9.71511 5.39392Z"
+                                        })
+                                    })
+                                })
+                            )
+                        )
+                    })
+                }
+                patchQuoteFunction() {
+                    Patcher.instead(WebpackModules.getByProps("createQuotedText"), "createQuotedText", (_, props) => {
+                        const message = props[0];
+                        const timeStamp = message.timestamp._d.toString().split(" ");
+                        const time = `${timeStamp[2]} ${timeStamp[1]} ${timeStamp[3]}, ${timeStamp[4]}`;
+                        const msgLink = location.href + "/" + message.id;
+                        return this.parseMessage(message.author.username, message.content, time, msgLink)+"\n";
+                    })
+                }
                 onStart() {
-                    this.observer = new MutationObserver(changes => {
-                        for (let a = 0; a < changes.length; a++) {
-                            changes[a].addedNodes.forEach(e => {
-                                if (e != undefined && e.classList && e.classList.contains("buttonContainer-DHceWr")) {
-                                    if (e != undefined) {
-                                        this.addbutton(e)
-                                    }
-                                }
-                            })
-                        }
-                    });
-                    this.observer.observe(document.body, {
-                        childList: true,
-                        subtree: true
-                    });
-                    this.style = `
-                    .Quote-icon {
-                        width: 20px;
-                        height: 20px;
-                        filter: invert(97%);
-                        opacity: 0.8;
-                    }
-                    .Quote-btn:hover > .Quote-icon {
-                        opacity: 1;
-                    }
-                    .bq-input {
-                       height: 140px;
-                    }`
-                    PluginUtilities.addStyle("BetterQuoter", this.style);
+                    this.patchMessageToolBar();
+                    this.patchQuoteFunction();
                 }
                 onStop() {
-                    this.observer.disconnect()
-                    document.querySelectorAll(".Quote-btn").forEach(element => {
-                        element.parentElement.remove();
-                    });
-                    PluginUtilities.removeStyle("BetterQuoter");
-                }
-                onUnload() {
-                    this.onStop();
+                    Patcher.unpatchAll();
                 }
 
             }
