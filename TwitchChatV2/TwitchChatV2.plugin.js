@@ -1,4 +1,9 @@
-//META{"name":"TwitchChatV2","displayName":"TwitchChatV2"}*//
+/**
+ * @name TwitchChatV2
+ * @displayName TwitchChatV2
+ * @invite gvA2ree
+ * @authorId 415849376598982656
+ */
 /*@cc_on
 @if (@_jscript)
     
@@ -25,170 +30,233 @@
 
 var TwitchChatV2 = (() => {
   const config = {
-    info: {
-      name: "TwitchChatV2",
-      authors: [
-        {
-          name: "Strencher",
-          discord_id: "415849376598982656",
-          github_username: "Strencher",
-          twitter_username: "Strencher3"
-        }
+      info: {
+          name: "TwitchChatV2",
+          authors: [
+              {
+                  name: "Strencher",
+                  discord_id: "415849376598982656",
+                  github_username: "Strencher",
+                  twitter_username: "Strencher3"
+              }
+          ],
+          version: "0.0.3",
+          description: "Adds an Twitch chat to discord.",
+          github: "https://github.com/Strencher/BetterDiscordStuff/TwitchChatV2/TwitchChatV2.plugin.js",
+          github_raw: "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/TwitchChatV2/TwitchChatV2.plugin.js"
+      },
+      changelog: [
+          {
+              title: "Yeah",
+              type: "added",
+              items: [
+                  "**Added Buttons to Close and open**",
+                  "**Added Tooltip to the button**",
+                  "**Correcly placed the icon**",
+                  "**Added settingspanel to set the Default channel**"
+              ]
+          }
       ],
-      version: "0.0.1",
-      description: "Adds an Twitch chat to discord.",
-      github: "https://github.com/Strencher/BetterDiscordStuff/blob/master/TwitchChatV2/TwitchChatV2.plugin.js",
-      github_raw: "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/TwitchChatV2/TwitchChatV2.plugin.js"
-    },
-    changelog: [
-      {
-        title: "Yeah",
-        type: "added",
-        items: ["Rewrote the plugin with React!"]
-      }
-    ]
+      defaultConfig: [
+          {
+              type: "textbox",
+              id: "channel",
+              name: "Default Channel",
+              note: "The Channel theyre auto filled in the Open Modal"
+          }
+      ]
   };
 
   return !global.ZeresPluginLibrary ? class {
-    constructor() { this._config = config; }
-    getName() { return config.info.name; }
-    getAuthor() { return config.info.authors.map(a => a.name).join(", "); }
-    getDescription() { return config.info.description; }
-    getVersion() { return config.info.version; }
-    load() {
-      const title = "Library Missing";
-      const ModalStack = BdApi.findModuleByProps("push", "update", "pop", "popWithKey");
-      const TextElement = BdApi.findModuleByProps("Sizes", "Weights");
-      const ConfirmationModal = BdApi.findModule(m => m.defaultProps && m.key && m.key() == "confirm-modal");
-      if (!ModalStack || !ConfirmationModal || !TextElement) return BdApi.alert(title, `The library plugin needed for ${config.info.name} is missing.<br /><br /> <a href="https://betterdiscord.net/ghdl?url=https://raw.githubusercontent.com/rauenzi/BDPluginLibrary/master/release/0PluginLibrary.plugin.js" target="_blank">Click here to download the library!</a>`);
-      ModalStack.push(function (props) {
-        return BdApi.React.createElement(ConfirmationModal, Object.assign({
-          header: title,
-          children: [BdApi.React.createElement(TextElement, { color: TextElement.Colors.PRIMARY, children: [`The library plugin needed for ${config.info.name} is missing. Please click Download Now to install it.`] })],
-          red: false,
-          confirmText: "Download Now",
-          cancelText: "Cancel",
-          onConfirm: () => {
-            require("request").get("https://rauenzi.github.io/BDPluginLibrary/release/0PluginLibrary.plugin.js", async (error, response, body) => {
-              if (error) return require("electron").shell.openExternal("https://betterdiscord.net/ghdl?url=https://raw.githubusercontent.com/rauenzi/BDPluginLibrary/master/release/0PluginLibrary.plugin.js");
-              await new Promise(r => require("fs").writeFile(require("path").join(ContentManager.pluginsFolder, "0PluginLibrary.plugin.js"), body, r));
-            });
-          }
-        }, props));
-      });
-    }
-    start() { }
-    stop() { }
-  } : (([Plugin, Api]) => {
-    const plugin = (Plugin, Api) => {
-      const { WebpackModules, PluginUtilities, Utilities, DiscordModules, ReactComponents, Patcher, DiscordClasses } = ZeresPluginLibrary, { React, Textbox, DiscordConstants: { KeyboardKeys } } = DiscordModules;
-      const FormItem = WebpackModules.getByDisplayName('FormItem');
-      return class TwitchChatV2 extends Plugin {
-        constructor() {
-          super();
-        }
-        get defaultSettings() {
-          return {
-            channel: "strencher_"
-          }
-        }
-        loadSettings() {
-          this.settings = PluginUtilities.loadSettings("TwitchChatV2", this.defaultSettings);
-        }
-        saveSettings() {
-          PluginUtilities.saveSettings("TwitchChatV2", this.settings);
-        }
-        async onStart() {
-          this.loadSettings();
-          const TitleBar = await ReactComponents.getComponentByName('HeaderBarContainer', `.title-3qD0b-`);
-          Patcher.after("TwitchChatV2", TitleBar.component.prototype, "render", (e, _, ret) => {
-            const title = Utilities.getNestedProp(ret, 'props.children.0.props.children');
-            if (!title || !Array.isArray(title)) return;
-            title.unshift(
-              React.createElement("button", {
-                style: {
-                  backgroundColor: "transparent"
-                },
-                className: "twitchChat-btn",
-                onClick: () => {
-                  WebpackModules.getByProps("openModal").openModal(props => {
-                    let tmpVal = this.settings.channel;
-                    let ref;
-                    return React.createElement(WebpackModules.getByProps("ModalRoot").ModalRoot, {
-                      transitionState: props.transitionState,
-                      children: [
-                        React.createElement("h1", {
-                          className: "h2-2gWE-o title-3sZWYQ da-h2 da-title defaultColor-1_ajX0 da-defaultColor title-18-Ds0 marginBottom20-32qID7 marginTop8-1DLZ1n da-title da-marginBottom20 da-marginTop8",
-
-                        }, "Select Channel"),
-                        React.createElement(Textbox, {
-                          value: tmpVal,
-                          ref: e => (ref = e),
-                          style: {
-                            position: "relative",
-                            top: "-20px",
-                            width: "400px",
-                            left: "20px"
-                          },
-                          onChange: e => {
-                            ref.props.value = tmpVal = e;
-                            ref.forceUpdate();
-                          },
-                          onKeyDown: e => {
-                            if (e.keyCode == KeyboardKeys.ENTER) {
-                              if (e.target.value) {
-                                this.settings.channel = tmpVal;
-                                this.saveSettings()
-                              }
-                              props.onClose();
-                              const channel = e.target.value || this.settings.channel;
-                              WebpackModules.getByProps("openModal").openModal(prop => {
-                                return React.createElement(WebpackModules.getByProps("ModalRoot").ModalRoot, {
-                                  onKeyDown: (e) => {
-                                    if (e.keyCode == KeyboardKeys.ESCAPE) {
-                                      prop.onClose();
-                                    };
-                                  },
-                                  transitionState: prop.transitionState,
-                                  children: [React.createElement("iframe", {
-                                    src: `https://www.twitch.tv/embed/${channel}/chat?darkpopout`,
-                                    width: "400",
-                                    height: "450",
-                                    style: {
-                                      margin: "20px"
-                                    },
-                                  })
-                                  ]
-                                });
-                              });
-                            }
-                          },
-                          placeholder: "Type the ChannelName, confirm with Enter",
-                          autoFocus: true
-                        })
-                      ]
-                    })
-                  });
-                },
-                children: [React.createElement("img", {
-                  src: "https://image.flaticon.com/icons/svg/733/733577.svg",
-                  width: "25",
-                  height: "25"
-                })
-                ]
-              }))
-          })
-        }
-        onStop() {
-          Patcher.unpatchAll("TwitchChatV2");
-        }
-        onUnLoad() {
-          this.onStop();
-        }
-
+      constructor() { this._config = config; }
+      getName() { return config.info.name; }
+      getAuthor() { return config.info.authors.map(a => a.name).join(", "); }
+      getDescription() { return config.info.description; }
+      getVersion() { return config.info.version; }
+      load() {
+          BdApi.showConfirmationModal("Library plugin is needed", 
+              ["The library plugin needed for TwitchChatV2 is missing. Please click Download Now to install it."], {
+                  confirmText: "Download",
+                  cancelText: "Cancel",
+                  onConfirm: () => {
+                      require("request").get("https://rauenzi.github.io/BDPluginLibrary/release/0PluginLibrary.plugin.js", async (error, response, body) => {
+                      if (error) return require("electron").shell.openExternal("https://betterdiscord.net/ghdl?url=https://raw.githubusercontent.com/rauenzi/BDPluginLibrary/master/release/0PluginLibrary.plugin.js");
+                      await new Promise(r => require("fs").writeFile(require("path").join(ContentManager.pluginsFolder, "0PluginLibrary.plugin.js"), body, r));
+                      });
+                  }
+              });
       }
+      start() { }
+      stop() { }
+  } : (([Plugin, Api]) => {
+      const plugin = (Plugin, Api) => {
+          const { WebpackModules, PluginUtilities, Utilities, DiscordModules, ReactComponents, Patcher } = Api;
+          const { React, Textbox, DiscordConstants: { KeyboardKeys } } = DiscordModules;
+          const Tooltip = WebpackModules.getByDisplayName("Tooltip");
+          const { ModalRoot: Modal } = WebpackModules.getByProps("ModalRoot");
+          class TwitchChatButton extends React.Component {
+              render() {
+                  return React.createElement(Tooltip, {
+                      position: "bottom",
+                      color: "black", 
+                      text: "Open Twitch Chat"
+                  }, e => React.createElement("div", {
+                      onClick: this.props.onClick,
+                      className: "iconWrapper-2OrFZ1 clickable-3rdHwn",
+                      onMouseEnter: e.onMouseEnter, 
+                      onMouseLeave: e.onMouseLeave,
+                      style: {
+                          backgroundColor: "transparent",
+                          borderColor: "transparent"
+                      },
+                      children: React.createElement("img", {
+                          className: "icon-22AiRD",
+                          src: "https://image.flaticon.com/icons/svg/733/733577.svg",
+                          width: "18",
+                          height: "18"
 
-    };
-    return plugin(Plugin, Api);
+                      })
+                  }))
+              }
+          }
+          return class TwitchChatV2 extends Plugin {
+              constructor() {
+                  super();
+              }
+              saveSettings() {
+                  PluginUtilities.saveSettings("TwitchChatV2", this.settings);
+              }
+              getSettingsPanel() { 
+                  return this.buildSettingsPanel().getElement()
+              }
+              openChat(val) {
+                  WebpackModules.getByProps("openModal").openModal(prop => {
+                      return React.createElement(Modal, {
+                          onKeyDown: (e) => {
+                              if (e.keyCode == KeyboardKeys.ESCAPE) prop.onClose();
+                          },
+                          transitionState: prop.transitionState,
+                          children: [React.createElement("iframe", {
+                              src: `https://www.twitch.tv/embed/${val ? val : this.settings.channel}/chat?darkpopout`,
+                              width: "400",
+                              height: "420",
+                              style: {
+                                  margin: "20px 20px 60px",
+                              },
+                          }), React.createElement("button", {
+                              className: "button-38aScr lookFilled-1Gx00P colorBrand-3pXr91 sizeMedium-1AC_Sl grow-q77ONN",
+                              onClick: () => prop.onClose(),
+                              children: React.createElement("div", {
+                                      className: "contents-18-Yxp"
+                              }, "Close"),
+                              style: {
+                                  margin: "10px",
+                                  width: "10px",
+                                  position: 'absolute',
+                                  right: "0",
+                                  bottom: '0'
+                              }
+                              })]
+                          })
+                  });
+              }
+              async onStart() {
+                  const TitleBar = await ReactComponents.getComponentByName('HeaderBarContainer', `.title-3qD0b-`);
+                  Patcher.after(TitleBar.component.prototype, "render", (e, _, ret) => {
+                      const title = Utilities.getNestedProp(ret, 'props.toolbar.props.children');
+                      if (!title || !Array.isArray(title)) return;
+                      title.unshift(
+                          React.createElement(TwitchChatButton, {
+                              onClick: () => {
+                                  WebpackModules.getByProps("openModal").openModal(props => {
+                                      let tmpVal = this.settings.channel, ref;
+                                  return React.createElement(Modal, {
+                                      transitionState: props.transitionState,
+                                      children: [
+                                          React.createElement("h1", {
+                                              className: "h2-2gWE-o title-3sZWYQ da-h2 da-title defaultColor-1_ajX0 da-defaultColor title-18-Ds0 marginBottom20-32qID7 marginTop8-1DLZ1n da-title da-marginBottom20 da-marginTop8",
+
+                                          }, "Select Channel"),
+                                          React.createElement(Textbox, {
+                                              value: tmpVal,
+                                              ref: e => (ref = e),
+                                              style: {
+                                                  margin: "10px",
+                                                  maxWidth: "420px"
+                                              },
+                                              onChange: e => {
+                                                  ref.props.value = tmpVal = e;
+                                                  ref.forceUpdate();
+                                              },
+                                              onKeyDown: e => {
+                                                  if (e.keyCode == KeyboardKeys.ENTER && tmpVal) {
+                                                      this.settings.channel = tmpVal;
+                                                      this.saveSettings()
+                                                      this.openChat(tmpVal);
+                                                      props.onClose();
+                                                  }
+                                              },
+                                              placeholder: "Type the ChannelName, confirm with Enter",
+                                              autoFocus: true
+                                              }),
+                                              React.createElement("div", {
+                                                  children: [
+                                                      React.createElement("button", {
+                                                          className: "button-38aScr lookLink-9FtZy- colorPrimary-3b3xI6 sizeMedium-1AC_Sl grow-q77ONN",
+                                                          onClick: () => props.onClose(),
+                                                          children: React.createElement("div", {
+                                                              className: "contents-18-Yxp"
+                                                          }, "Close"),
+                                                          style: {
+                                                              margin: "10px",
+                                                              width: "10px",
+                                                              position: 'absolute',
+                                                              right: "105px",
+                                                              bottom: '0'
+                                                          }
+                                                      }),
+                                                      React.createElement("button", {
+                                                          className: "button-38aScr lookFilled-1Gx00P colorBrand-3pXr91 sizeMedium-1AC_Sl grow-q77ONN",
+                                                          onClick: () => {
+                                                              this.settings.channel = tmpVal;
+                                                              this.saveSettings()
+                                                              this.openChat(tmpVal);
+                                                              props.onClose()
+                                                          },
+                                                          children: React.createElement("div", {
+                                                              className: "contents-18-Yxp"
+                                                          }, "Open"),
+                                                          style: {
+                                                              margin: "10px",
+                                                              width: "10px",
+                                                              position: 'absolute',
+                                                              right: "0",
+                                                              bottom: '0'
+                                                          }
+                                                      })
+                                                  ],
+                                                  style: {
+                                                      height: '50px'
+                                                  }
+                                              })
+                                          ]
+                                      })
+                                  });
+                              }
+                          })  
+                      )
+                  })
+              }
+              onStop() {
+                  Patcher.unpatchAll();
+              }
+              onUnLoad() {
+                  this.onStop();
+              }
+
+          }
+
+      };
+      return plugin(Plugin, Api);
   })(global.ZeresPluginLibrary.buildPlugin(config));
 })();
