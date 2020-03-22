@@ -1,9 +1,4 @@
-/**
-* @name MessageDoubleClickActions
-* @displayName MessageDoubleClickActions
-* @authorId 415849376598982656
-* @invite gvA2ree
-*/
+//META{"name":"ShutUpClyde","displayName":"ShutUpClyde"}*//
 /*@cc_on
 @if (@_jscript)
     
@@ -28,10 +23,10 @@
 
 @else@*/
 
-const MessageDoubleClickActions = (() => {
+var ShutUpClyde = (() => {
     const config = {
         info: {
-            name: "MessageDoubleClickActions",
+            name: "ShutUpClyde",
             authors: [
                 {
                     name: "Strencher",
@@ -40,48 +35,17 @@ const MessageDoubleClickActions = (() => {
                     twitter_username: "Strencher3"
                 }
             ],
-            version: "0.0.2",
-            description: "Adds an Action by Double Clicking a message.",
-            github: "https://github.com/Strencher/BetterDiscordStuff/MessageDoubleClickActions/MessageDoubleClickActions.plugin.js",
-            github_raw: "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/MessageDoubleClickActions/MessageDoubleClickActions.plugin.js"
+            version: "0.0.1",
+            description: "Prevents Clyde from disturb you.",
+            github: "https://github.com/Strencher/BetterDiscordStuff/ShutUpClyde/ShutUpClyde.plugin.js",
+            github_raw: "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/ShutUpClyde/ShutUpClyde.plugin.js"
         },
         changelog: [
             {
                 title: "Yeah",
                 type: "added",
                 items: ["The plugin exist"]
-            },
-            {
-                title: "bug",
-                type: "fixed",
-                items: ["Fixed weird bug with the message props."]
             }
-        ],
-        defaultConfig: [
-            {
-                name: 'Message DoubleClick action',
-                id: 'action',
-                type: 'radio',
-                value: 0,
-                options: [
-                    {   
-                        name: 'Edit Message', 
-                        value: 0 
-                    },
-                    { 
-                        name: 'Delete Message', 
-                        value: 1 
-                    },
-                    { 
-                        name: 'Copy Message Link', 
-                        value: 2 
-                    },
-                    { 
-                        name: 'Copy Message Content', 
-                        value: 3 
-                    }
-                ]
-            },
         ]
     };
 
@@ -109,39 +73,18 @@ const MessageDoubleClickActions = (() => {
     } : (([Plugin, Api]) => {
         const plugin = (Plugin, Api) => {
 
-            const { WebpackModules, ReactTools, DiscordAPI, DiscordModules, Toasts } = Api, { ElectronModule } = DiscordModules;
-            return class MessageDoubleClickActions extends Plugin {
+            const { WebpackModules, DiscordModules, Patcher } = Api;
+            return class ShutUpClyde extends Plugin {
                 constructor() {
                     super();
                 }
 
                 onStart() { 
-                    document.addEventListener("dblclick", this.event = e => {
-                        if(e.target && e.target.className && e.target.className.includes("markup-2BOw-j")) {
-                            const props = ReactTools.getOwnerInstance(e.target.parentElement.parentElement.querySelector('.container-1ov-mD'))
-                            if(props && !props.props) return;
-                            if(this.settings.action == 0 && props.props.message.author.id == DiscordAPI.currentUser.id) {
-                                WebpackModules.getByProps("startEditMessage").startEditMessage(props.props.message.channel_id, props.props.message.id, props.props.message.content)
-                            }
-                            if(this.settings.action == 1) {
-                                WebpackModules.getByProps("deleteMessage").deleteMessage(props.props.message.channel_id, props.props.message.id);
-                            }
-                            if(this.settings.action == 2) {
-                                ElectronModule.copy(`https://discordapp.com/channels/${props.props.channel.guild_id}/${props.props.channel.id}/${props.props.message.id}`);
-                                Toasts.success("Copied Message Link");
-                            }
-                            if(this.settings.action == 3) {
-                                ElectronModule.copy(props.props.message.content);
-                                Toasts.success("Copied Message Content");
-                            }
-                        }
-                    })
+                    Patcher.instead(DiscordModules.MessageActions, "sendBotMessage", () => {})
+                    Patcher.instead(WebpackModules.getByProps("sendClydeError"), "sendClydeError", () => {})
                 }
                 onStop() {
-                    document.removeEventListener("dblclick", this.event)
-                }
-                getSettingsPanel() {
-                    return this.buildSettingsPanel().getElement()
+                    Patcher.unpatchAll()
                 }
 
             }
@@ -150,5 +93,3 @@ const MessageDoubleClickActions = (() => {
         return plugin(Plugin, Api);
     })(global.ZeresPluginLibrary.buildPlugin(config));
 })();
-
-                    
