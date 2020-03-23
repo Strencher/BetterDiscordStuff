@@ -40,7 +40,7 @@ const RelationshipCounter = (() => {
                     twitter_username: "Strencher3"
                 }
             ],
-            version: "0.0.2",
+            version: "0.0.3",
             description: "Counts your'e Friends, blocked users & pending friends",
             github: "https://github.com/Strencher/BetterDiscordStuff/RelationshipCounter/RelationshipCounter.plugin.js",
             github_raw: "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/RelationshipCounter/RelationshipCounter.plugin.js"
@@ -50,6 +50,11 @@ const RelationshipCounter = (() => {
                 title: "Yeah",
                 type: "added",
                 items: ["**Added Incoming & Outgoing friend\'s Badges, Enable / Disable in the SettingsPanel**"]
+            },
+            {
+                title: "Yeah",
+                type: "added",
+                items: ["**Added ToolTips**"]
             }
         ],
         defaultConfig: [
@@ -94,13 +99,20 @@ const RelationshipCounter = (() => {
     } : (([Plugin, Api]) => {
         const plugin = (Plugin, Api) => {
 
-            const { DiscordModules, ReactComponents, Patcher, ReactTools } = Api;
+            const { WebpackModules, DiscordModules, ReactComponents, Patcher, ReactTools } = Api;
             const { React } = DiscordModules;
+            const ToolTip = WebpackModules.getByDisplayName("Tooltip");
             class Icon extends React.Component {
                 render() {
-                    return React.createElement("span", {
+                    return React.createElement(ToolTip, {
+                        text: this.props.label,
+                        color: "blue",
+                        position: "bottom"
+                    }, e=> React.createElement("span", {
                         children: this.props.count,
                         className: "relCount",
+                        onMouseEnter: e.onMouseEnter, 
+                        onMouseLeave: e.onMouseLeave,
                         style: {
                             color: "white", 
                             height: "20px",
@@ -112,7 +124,7 @@ const RelationshipCounter = (() => {
                             fontWeight: "bold",
                             left: this.props.left ? this.props.left : "5px"
                         }
-                    })
+                    }))
                 }
             }
             return class RelationshipCounter extends Plugin {
@@ -145,7 +157,8 @@ const RelationshipCounter = (() => {
                                     react.props.children[index].props.children.push(
                                         friendsLabel, 
                                         React.createElement(Icon, {
-                                            count: friends
+                                            count: friends,
+                                            label: "Friends: "+friends
                                         })
                                     )
                                 }
@@ -153,11 +166,11 @@ const RelationshipCounter = (() => {
                                     const pendingLabel = react.props.children[index].props.children;
                                     react.props.children[index].props.children = []
                                     react.props.children[index].props.children.push(
-                                        this.settings.in ? React.createElement(Icon, {count: incomingFriends, left: "-5px"}) : "",
+                                        this.settings.in ? React.createElement(Icon, {count: incomingFriends, left: "-5px", label: "Incoming friends: "+incomingFriends}) : "",
                                         this.settings.in ? "<= " : "",
                                         pendingLabel,
                                         this.settings.out ? " =>": "",
-                                        this.settings.out ? React.createElement(Icon, {count: outgoingFriends}) : ""
+                                        this.settings.out ? React.createElement(Icon, {count: outgoingFriends, label: "Outgoing friends: "+outgoingFriends}) : ""
                                         )
                                 }
                                 if(value.props.id == "BLOCKED") {
@@ -166,7 +179,8 @@ const RelationshipCounter = (() => {
                                     react.props.children[index].props.children.push(
                                         blockedLabel, 
                                         React.createElement(Icon, {
-                                            count: blockedUsers
+                                            count: blockedUsers,
+                                            label: "Blocked Users: "+blockedUsers
                                         })
                                     )
                                 }
