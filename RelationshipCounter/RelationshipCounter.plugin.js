@@ -40,7 +40,7 @@ const RelationshipCounter = (() => {
                     twitter_username: "Strencher3"
                 }
             ],
-            version: "0.0.1",
+            version: "0.0.2",
             description: "Counts your'e Friends, blocked users & pending friends",
             github: "https://github.com/Strencher/BetterDiscordStuff/RelationshipCounter/RelationshipCounter.plugin.js",
             github_raw: "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/RelationshipCounter/RelationshipCounter.plugin.js"
@@ -49,7 +49,23 @@ const RelationshipCounter = (() => {
             {
                 title: "Yeah",
                 type: "added",
-                items: ["The plugin exist"]
+                items: ["**Added Incoming & Outgoing friend\'s Badges, Enable / Disable in the SettingsPanel**"]
+            }
+        ],
+        defaultConfig: [
+            {
+                type: "switch",
+                name: "incoming",
+                note: "Show incoming friend request\'s",
+                id: "in",
+                value: true
+            },
+            {
+                type: "switch",
+                name: "outgoing",
+                note: "Show outgoing friend request\'s",
+                id: "out",
+                value: true
             }
         ]
     };
@@ -78,7 +94,7 @@ const RelationshipCounter = (() => {
     } : (([Plugin, Api]) => {
         const plugin = (Plugin, Api) => {
 
-            const { DiscordModules, ReactComponents, Patcher } = Api;
+            const { DiscordModules, ReactComponents, Patcher, ReactTools } = Api;
             const { React } = DiscordModules;
             class Icon extends React.Component {
                 render() {
@@ -87,14 +103,14 @@ const RelationshipCounter = (() => {
                         className: "relCount",
                         style: {
                             color: "white", 
+                            height: "20px",
                             width: "20px", 
-                            height: "20px", 
                             backgroundColor: "red", 
                             borderRadius: "50%", 
                             position: "relative", 
-                            left: "5px", 
                             fontSize: "12px", 
-                            fontWeight: "bold"
+                            fontWeight: "bold",
+                            left: this.props.left ? this.props.left : "5px"
                         }
                     })
                 }
@@ -103,17 +119,24 @@ const RelationshipCounter = (() => {
                 constructor() {
                     super();
                 }
-
+                getSettingsPanel() {
+                    const panel = this.buildSettingsPanel()
+                    panel.addListener(() => {
+                        if(document.querySelector(".tabBar-ZmDY9v")) ReactTools.getOwnerInstance(document.querySelector(".tabBar-ZmDY9v")).forceUpdate()
+                    })
+                    return panel.getElement();
+                }
                 async onStart() { 
                     
                     const tag = await ReactComponents.getComponentByName("TabBar", ".tabBar-ZmDY9v");
                     Patcher.after(tag.component.prototype, "render", (e, _, react) => {
                         if(e.props.className && e.props.className.indexOf("tabBar-ZmDY9v") !== -1) {
-                            let friends = 0, blockedUsers = 0, pendingFriends = 0;
+                            let friends = 0, blockedUsers = 0, incomingFriends = 0, outgoingFriends = 0;
                             Object.values(DiscordModules.RelationshipStore.getRelationships()).forEach(e=> {
                                 if(e == 1) friends += 1;
                                 if(e == 2) blockedUsers += 1;
-                                if(e == 3) pendingFriends += 1;
+                                if(e == 3) incomingFriends += 1;
+                                if(e == 4) outgoingFriends += 1;
                             })
                             react.props.children.forEach((value, index) => {
                                 if(value.props.id == "ALL") {
@@ -130,11 +153,12 @@ const RelationshipCounter = (() => {
                                     const pendingLabel = react.props.children[index].props.children;
                                     react.props.children[index].props.children = []
                                     react.props.children[index].props.children.push(
-                                        pendingLabel, 
-                                        React.createElement(Icon, {
-                                            count: pendingFriends
-                                        })
-                                    )
+                                        this.settings.in ? React.createElement(Icon, {count: incomingFriends, left: "-5px"}) : "",
+                                        this.settings.in ? "<= " : "",
+                                        pendingLabel,
+                                        this.settings.out ? " =>": "",
+                                        this.settings.out ? React.createElement(Icon, {count: outgoingFriends}) : ""
+                                        )
                                 }
                                 if(value.props.id == "BLOCKED") {
                                     const blockedLabel = react.props.children[index].props.children;
