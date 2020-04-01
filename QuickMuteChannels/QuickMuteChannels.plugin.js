@@ -42,7 +42,7 @@ const QuickMuteChannels = (() => {
             ],
             version: "0.0.1",
             description: "Adds an Speaker to channels to Quickly mute/unmute them.",
-            github: "https://github.com/Strencher/BetterDiscordStuff/QuickMuteChannels/QuickMuteChannels.plugin.js",
+            github: "https://github.com/Strencher/BetterDiscordStuff/blob/master/QuickMuteChannels/QuickMuteChannels.plugin.js",
             github_raw: "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/QuickMuteChannels/QuickMuteChannels.plugin.js"
         },
         changelog: [
