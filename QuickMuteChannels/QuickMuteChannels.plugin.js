@@ -40,7 +40,7 @@ const QuickMuteChannels = (() => {
                     twitter_username: "Strencher3"
                 }
             ],
-            version: "0.0.1",
+            version: "0.0.2",
             description: "Adds an Speaker to channels to Quickly mute/unmute them.",
             github: "https://github.com/Strencher/BetterDiscordStuff/blob/master/QuickMuteChannels/QuickMuteChannels.plugin.js",
             github_raw: "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/QuickMuteChannels/QuickMuteChannels.plugin.js"
@@ -50,6 +50,11 @@ const QuickMuteChannels = (() => {
                 title: "added",
                 type: "added",
                 items: ["The plugin exist"]
+            },
+            {
+                title: "fixed",
+                type: "fixed",
+                items: ["Fixed not working."]
             }
         ]
     };
@@ -80,6 +85,7 @@ const QuickMuteChannels = (() => {
 
             const { WebpackModules, Toasts, PluginUtilities, DiscordModules, ReactComponents, Patcher, DiscordSelectors, DiscordAPI } = Api;
             const { React } = DiscordModules;
+            const updateSetting = WebpackModules.getByProps("updateChannelOverrideSettings");
             const ToolTip = WebpackModules.getByDisplayName("Tooltip");
             class MuteIcon extends React.Component {
                 render() {
@@ -120,14 +126,13 @@ const QuickMuteChannels = (() => {
                         cursor: pointer;
                     }
                     `)
-                    const updateSetting = WebpackModules.getByProps("updateChannelOverrideSettings").updateChannelOverrideSettings;
                     const channel = await ReactComponents.getComponentByName("TextChannel", DiscordSelectors.ChannelList.containerDefault); 
                     Patcher.after(channel.component.prototype, "render", ({props}, _, react)=>{
                         react.props.children.props.children.unshift(
                             React.createElement(MuteIcon, {
                                 state: props.muted,
                                 onClick: () => {
-                                    updateSetting(DiscordAPI.currentGuild.id, props.channel.id, {
+                                    updateSetting.updateChannelOverrideSettings(DiscordAPI.currentGuild.id, props.channel.id, {
                                         muted: !props.muted
                                     })
                                     Toasts.success(props.muted ? "Unmuted" : "Muted")
