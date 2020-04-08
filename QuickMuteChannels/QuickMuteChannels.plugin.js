@@ -120,13 +120,14 @@ const QuickMuteChannels = (() => {
                         cursor: pointer;
                     }
                     `)
-                    const channel = await ReactComponents.getComponentByName("TextChannel", DiscordSelectors.ChannelList.containerDefault) 
+                    const updateSetting = WebpackModules.getByProps("updateChannelOverrideSettings").updateChannelOverrideSettings;
+                    const channel = await ReactComponents.getComponentByName("TextChannel", DiscordSelectors.ChannelList.containerDefault); 
                     Patcher.after(channel.component.prototype, "render", ({props}, _, react)=>{
                         react.props.children.props.children.unshift(
                             React.createElement(MuteIcon, {
                                 state: props.muted,
                                 onClick: () => {
-                                    WebpackModules.getByProps("updateChannelOverrideSettings").updateChannelOverrideSettings(DiscordAPI.currentGuild.id, props.channel.id, {
+                                    updateSetting(DiscordAPI.currentGuild.id, props.channel.id, {
                                         muted: !props.muted
                                     })
                                     Toasts.success(props.muted ? "Unmuted" : "Muted")
