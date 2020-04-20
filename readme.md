@@ -1,9 +1,6 @@
 # [Support-Server](https://discord.gg/gvA2ree)
 # OpenSpotifyLinksInSpotify **(Official)**
  - Opens Spotify links Direct in Spotify **(Spotify Desktop App required!)** by clicking on it.
-
-# Download [**🔽Spotify_Links**](https://betterdiscord.net/ghdl?url=https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/Spotify_Links/Spotify_Links.plugin.js) Plugin
-
 # TwitchChatV2
 ## Download [**🔽TwitchChatV2**](https://betterdiscord.net/ghdl?url=https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/TwitchChatV2/TwitchChatV2.plugin.js) Plugin
 
