@@ -40,16 +40,16 @@ const VoiceUsersCounter = (() => {
                     twitter_username: "Strencher3"
                 }
             ],
-            version: "0.0.1",
+            version: "0.0.2",
             description: "Adds a count of users they're connected to a VoiceChannel. Customize the Color of the count in the settingspanel when your\'e connected to the voicechannel.",
             github: "https://github.com/Strencher/BetterDiscordStuff/blob/master/VoiceUsersCounter/VoiceUsersCounter.plugin.js",
             github_raw: "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/VoiceUsersCounter/VoiceUsersCounter.plugin.js"
         },
         changelog: [
             {
-                title: "Yeah",
-                type: "added",
-                items: ["The plugin exist"]
+                title: "fixed",
+                type: "fixed",
+                items: ["the counter no longer overlaps the other buttons."]
             }
         ],
         defaultConfig: [
@@ -118,10 +118,14 @@ const VoiceUsersCounter = (() => {
                 }
                 async onStart() {
                     PluginUtilities.addStyle(config.info.name, 
-                    `.voiceCounter {
+                    `.iconVisibility-1bOqu7[aria-label*="voice"] .children-Bmpf2Q {
+                        position: relative;
+                        right: 15px;
+                    }
+                    .voiceCounter {
                         color: var(--channels-default);
                         position: absolute;
-                        top: 8px;
+                        top: 9px;
                         right: 11px;
                         font-weight: bold; 
                     }`)                    
