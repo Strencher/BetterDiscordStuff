@@ -35,7 +35,7 @@ var LinkChannels = (() => {
                     twitter_username: "Strencher3"
                 }
             ],
-            version: "0.0.3",
+            version: "0.0.4",
             description: "Adds an Icon to channels that copys <#channelId>. (channelId is replaced) Shift + Click to insert the channel in the textarea.",
             github: "https://github.com/Strencher/BetterDiscordStuff/LinkChannels/LinkChannels.plugin.js",
             github_raw: "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/LinkChannels/LinkChannels.plugin.js"
@@ -47,9 +47,9 @@ var LinkChannels = (() => {
                 items: ["Added shift + click to insert in the textarea."]
             },
             {
-                title: "Yeah",
-                type: "added",
-                items: ["Added a ToolTip & changed the icon"]
+                title: "improvements",
+                type: "improved",
+                items: ["Some small fixes & the name of the channel is no longer cuttet off."]
             }
         ]
     };
@@ -60,81 +60,78 @@ var LinkChannels = (() => {
         getDescription() { return config.info.description; }
         getVersion() { return config.info.version; }
         load() {
-            const title = "Library Missing";
-            const ModalStack = BdApi.findModuleByProps("push", "update", "pop", "popWithKey");
-            const TextElement = BdApi.findModuleByProps("Sizes", "Weights");
-            const ConfirmationModal = BdApi.findModule(m => m.defaultProps && m.key && m.key() == "confirm-modal");
-            if (!ModalStack || !ConfirmationModal || !TextElement) return BdApi.alert(title, `The library plugin needed for ${config.info.name} is missing.<br /><br /> <a href="https://betterdiscord.net/ghdl?url=https://raw.githubusercontent.com/rauenzi/BDPluginLibrary/master/release/0PluginLibrary.plugin.js" target="_blank">Click here to download the library!</a>`);
-            ModalStack.push(function (props) {
-                return BdApi.React.createElement(ConfirmationModal, Object.assign({
-                    header: title,
-                    children: [BdApi.React.createElement(TextElement, { color: TextElement.Colors.PRIMARY, children: [`The library plugin needed for ${config.info.name} is missing. Please click Download Now to install it.`] })],
-                    red: false,
-                    confirmText: "Download Now",
+            BdApi.showConfirmationModal("Library plugin is needed", 
+                [`The library plugin needed for ${config.info.name} is missing. Please click Download Now to install it.`], {
+                    confirmText: "Download",
                     cancelText: "Cancel",
                     onConfirm: () => {
                         require("request").get("https://rauenzi.github.io/BDPluginLibrary/release/0PluginLibrary.plugin.js", async (error, response, body) => {
-                            if (error) return require("electron").shell.openExternal("https://betterdiscord.net/ghdl?url=https://raw.githubusercontent.com/rauenzi/BDPluginLibrary/master/release/0PluginLibrary.plugin.js");
-                            await new Promise(r => require("fs").writeFile(require("path").join(ContentManager.pluginsFolder, "0PluginLibrary.plugin.js"), body, r));
+                        if (error) return require("electron").shell.openExternal("https://betterdiscord.net/ghdl?url=https://raw.githubusercontent.com/rauenzi/BDPluginLibrary/master/release/0PluginLibrary.plugin.js");
+                        await new Promise(r => require("fs").writeFile(require("path").join(BdApi.Plugins.folder, "0PluginLibrary.plugin.js"), body, r));
                         });
                     }
-                }, props));
-            });
+                });
         }
         start() { }
         stop() { }
     } : (([Plugin, Api]) => {
         const plugin = (Plugin, Api) => {
-
-            const { WebpackModules, PluginUtilities, DiscordModules, ReactComponents, Patcher, DiscordSelectors } = Api;
+            const { WebpackModules, PluginUtilities, DiscordModules, ReactComponents, Patcher, DiscordSelectors, Utilities } = Api;
             const { React } = DiscordModules;
-            return class  extends Plugin {
+            const ToolTip = WebpackModules.getByDisplayName("Tooltip");
+            const insertText = e => WebpackModules.getByProps("ComponentDispatch").ComponentDispatch.dispatchToLastSubscribed("INSERT_TEXT", {content: e})
+            class linkIcon extends React.Component {
+                render() {
+                    return React.createElement(ToolTip, {
+                        text: "Link Channel",
+                        position: "top",
+                        color: "black"
+                    }, e => React.createElement("svg", {
+                            className: "linkChannels icon-3Gkjwa",
+                            width: "25",
+                            height: "25",
+                            viewBox: "0 0 25 25",
+                            onMouseEnter: e.onMouseEnter, 
+                            onMouseLeave: e.onMouseLeave,
+                            onClick: this.props.onClick,
+                            children: React.createElement("path", {
+                                    fill: "#8e9297",
+                                    d: "M10.59 13.41c.41.39.41 1.03 0 1.42-.39.39-1.03.39-1.42 0a5.003 5.003 0 0 1 0-7.07l3.54-3.54a5.003 5.003 0 0 1 7.07 0 5.003 5.003 0 0 1 0 7.07l-1.49 1.49c.01-.82-.12-1.64-.4-2.42l.47-.48a2.982 2.982 0 0 0 0-4.24 2.982 2.982 0 0 0-4.24 0l-3.53 3.53a2.982 2.982 0 0 0 0 4.24zm2.82-4.24c.39-.39 1.03-.39 1.42 0a5.003 5.003 0 0 1 0 7.07l-3.54 3.54a5.003 5.003 0 0 1-7.07 0 5.003 5.003 0 0 1 0-7.07l1.49-1.49c-.01.82.12 1.64.4 2.43l-.47.47a2.982 2.982 0 0 0 0 4.24 2.982 2.982 0 0 0 4.24 0l3.53-3.53a2.982 2.982 0 0 0 0-4.24.973.973 0 0 1 0-1.42z"
+                            })
+                        })
+                    )
+                }
+            }
+            return class linkChannels extends Plugin {
                 constructor() {
                     super();
                 }
 
                 async onStart() {
                     const channel = await ReactComponents.getComponentByName("TextChannel", DiscordSelectors.ChannelList.containerDefault)
-                    const ToolTip = WebpackModules.getByDisplayName("Tooltip");
-                    PluginUtilities.addStyle("LinkChannels", 
-                    `
-                    .linkChannels {
-                        visibility: hidden;
+                    PluginUtilities.addStyle(config.info.name, 
+                    `.linkChannels {
+                        display: none;
                     }   
                     .containerDefault-1ZnADq:hover .linkChannels {
-                        visibility: visible;
-                    }
-                    `) 
-                    Patcher.after(channel.component.prototype, "render", ({props}, _, react)=>{
-                        react.props.children.props.children.unshift(
-                            React.createElement(ToolTip, {
-                                text: "Link Channel",
-                                position: "top",
-                                color: "black"
-                            }, e=> React.createElement("svg", {
-                                    className: "linkChannels icon-3Gkjwa",
-                                    width: "25",
-                                    height: "25",
-                                    viewBox: "0 0 25 25",
-                                    onMouseEnter: e.onMouseEnter, 
-                                    onMouseLeave: e.onMouseLeave,
-                                    onClick: (d) => {
-                                        if(d.shiftKey) {
-                                            WebpackModules.getByProps("ComponentDispatch").ComponentDispatch.dispatchToLastSubscribed("INSERT_TEXT", {content: "<#"+props.channel.id+">"})
-                                        }
-                                        DiscordModules.ElectronModule.copy("<#"+props.channel.id+">");
-                                    },
-                                    children: React.createElement("path", {
-                                            fill: "#8e9297",
-                                            d: "M10.59 13.41c.41.39.41 1.03 0 1.42-.39.39-1.03.39-1.42 0a5.003 5.003 0 0 1 0-7.07l3.54-3.54a5.003 5.003 0 0 1 7.07 0 5.003 5.003 0 0 1 0 7.07l-1.49 1.49c.01-.82-.12-1.64-.4-2.42l.47-.48a2.982 2.982 0 0 0 0-4.24 2.982 2.982 0 0 0-4.24 0l-3.53 3.53a2.982 2.982 0 0 0 0 4.24zm2.82-4.24c.39-.39 1.03-.39 1.42 0a5.003 5.003 0 0 1 0 7.07l-3.54 3.54a5.003 5.003 0 0 1-7.07 0 5.003 5.003 0 0 1 0-7.07l1.49-1.49c-.01.82.12 1.64.4 2.43l-.47.47a2.982 2.982 0 0 0 0 4.24 2.982 2.982 0 0 0 4.24 0l3.53-3.53a2.982 2.982 0 0 0 0-4.24.973.973 0 0 1 0-1.42z"
-                                        })
-                                }))
+                        display: block;
+                        cursor: pointer;
+                    }`) 
+                    this.unpatch = Patcher.after(channel.component.prototype, "render", ({props}, _, react) => {
+                        const children = Utilities.getNestedProp(react, "props.children.props.children")
+                        if(children && Array.isArray(children)) children.unshift(
+                            React.createElement(linkIcon, {
+                                onClick: e => {
+                                    if(d.shiftKey) insertText("<#"+props.channel.id+">")
+                                    else DiscordModules.ElectronModule.copy("<#"+props.channel.id+">");
+                                }
+                            })
                         );
                     });
                 }
                 onStop() {
-                    PluginUtilities.removeStyle("LinkChannels");
-                    Patcher.unpatchAll();
+                    PluginUtilities.removeStyle(config.info.name);
+                    this.unpatch()
                 }
 
             }
