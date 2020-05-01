@@ -122,7 +122,7 @@ var LinkChannels = (() => {
                         if(children && Array.isArray(children)) children.unshift(
                             React.createElement(linkIcon, {
                                 onClick: e => {
-                                    if(d.shiftKey) insertText("<#"+props.channel.id+">")
+                                    if(e.shiftKey) insertText("<#"+props.channel.id+">")
                                     else DiscordModules.ElectronModule.copy("<#"+props.channel.id+">");
                                 }
                             })
