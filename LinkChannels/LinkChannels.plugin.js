@@ -122,8 +122,7 @@ var LinkChannels = (() => {
                         if(children && Array.isArray(children)) children.unshift(
                             React.createElement(linkIcon, {
                                 onClick: e => {
-                                    if(e.shiftKey) insertText("<#"+props.channel.id+">")
-                                    else DiscordModules.ElectronModule.copy("<#"+props.channel.id+">");
+                                    if(e.shiftKey){ insertText("<#"+props.channel.id+">") }else{ DiscordModules.ElectronModule.copy("<#"+props.channel.id+">"); BdApi.showToast(`Copied link for #${props.channel.name}`, { type: 'success' }); };
                                 }
                             })
                         );
