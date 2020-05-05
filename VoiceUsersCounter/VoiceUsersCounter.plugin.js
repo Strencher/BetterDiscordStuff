@@ -40,7 +40,7 @@ const VoiceUsersCounter = (() => {
                     twitter_username: "Strencher3"
                 }
             ],
-            version: "0.0.3",
+            version: "0.0.4",
             description: "Adds a count of users they're connected to a VoiceChannel. Customize the Color of the count in the SettingsPanel.",
             github: "https://github.com/Strencher/BetterDiscordStuff/blob/master/VoiceUsersCounter/VoiceUsersCounter.plugin.js",
             github_raw: "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/VoiceUsersCounter/VoiceUsersCounter.plugin.js"
@@ -132,32 +132,17 @@ const VoiceUsersCounter = (() => {
                     const VoiceChannelComponent = await ReactComponents.getComponentByName("VoiceChannel", DiscordSelectors.ChannelList.containerDefault);
                     this.unpatch = Patcher.after(VoiceChannelComponent.component.prototype, "render", ({props}, _, ret) => {
                         let childs = Utilities.getNestedProp(ret, "props.children");
-                        if(childs && Array.isArray(childs)) {
-                            if(Array.isArray(props.voiceStates) && props.voiceStates.find(e=> e.user.id == DiscordAPI.currentUser.id)) childs.push(React.createElement(VoiceCount, {
-                                options: {
-                                    style: {
-                                        color: this.settings.color || "var(--blurple)"
-                                    }
-                                },
-                                count: props.voiceStates.length
-                            }));
-                            else childs.push(React.createElement(VoiceCount, {
-                                count: Array.isArray(props.voiceStates) ? props.voiceStates.length : "0"
-                            }));
-                        } else {
-                            let children = Utilities.getNestedProp(ret, "props.children.props.children");
-                            if(Array.isArray(props.voiceStates) && props.voiceStates.find(e=> e.user.id == DiscordAPI.currentUser.id)) children.push(React.createElement(VoiceCount, {
-                                options: {
-                                    style: {
-                                        color: this.settings.color || "var(--blurple)"
-                                    }
-                                },
-                                count: props.voiceStates.length
-                            }));
-                            else children.push(React.createElement(VoiceCount, {
-                                count: Array.isArray(props.voiceStates) ? props.voiceStates.length : "0"
-                            }));
-                        };
+                        let children = Utilities.getNestedProp(ret, "props.children.props.children");
+                        const Counter = React.createElement(VoiceCount, {
+                            options: props.voiceStates && Array.isArray(props.voiceStates) && props.voiceStates.find(e=> e.user.id == DiscordAPI.currentUser.id) ? {
+                                style: {
+                                    color: this.settings.color || "var(--blurple)"
+                                }
+                            } : {},
+                            count: props.voiceStates && Array.isArray(props.voiceStates) ? props.voiceStates.length : "0"
+                        })
+                        if(childs && Array.isArray(childs)) childs.push(Counter) 
+                        else if (children && Array.isArray(children)) children.push(Counter);
                     });
                     VoiceChannelComponent.forceUpdateAll();
                 }
@@ -171,4 +156,4 @@ const VoiceUsersCounter = (() => {
         };
         return plugin(Plugin, Api);
     })(global.ZeresPluginLibrary.buildPlugin(config));
-})();
+})();                 
