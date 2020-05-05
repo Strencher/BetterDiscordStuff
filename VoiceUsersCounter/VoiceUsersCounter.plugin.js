@@ -40,8 +40,8 @@ const VoiceUsersCounter = (() => {
                     twitter_username: "Strencher3"
                 }
             ],
-            version: "0.0.2",
-            description: "Adds a count of users they're connected to a VoiceChannel. Customize the Color of the count in the settingspanel when your\'e connected to the voicechannel.",
+            version: "0.0.3",
+            description: "Adds a count of users they're connected to a VoiceChannel. Customize the Color of the count in the SettingsPanel.",
             github: "https://github.com/Strencher/BetterDiscordStuff/blob/master/VoiceUsersCounter/VoiceUsersCounter.plugin.js",
             github_raw: "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/VoiceUsersCounter/VoiceUsersCounter.plugin.js"
         },
@@ -80,7 +80,7 @@ const VoiceUsersCounter = (() => {
                         await new Promise(r => require("fs").writeFile(require("path").join(BdApi.Plugins.folder, "0PluginLibrary.plugin.js"), body, r));
                         });
                     }
-                });
+            });
         }
         start() { }
         stop() { }
@@ -89,7 +89,7 @@ const VoiceUsersCounter = (() => {
 
             const { WebpackModules, DiscordAPI, Utilities, PluginUtilities, DiscordModules, ReactComponents, Patcher, DiscordSelectors, ReactTools } = Api;
             const { React } = DiscordModules;
-            const Tooltip = WebpackModules.getByDisplayName("Tooltip")
+            const Tooltip = WebpackModules.getByDisplayName("Tooltip");
             class VoiceCount extends React.Component {
                 render() {
                     return React.createElement(Tooltip, {
@@ -111,10 +111,10 @@ const VoiceUsersCounter = (() => {
                     const panel = this.buildSettingsPanel();
                     panel.addListener(() => {
                         document.querySelectorAll(DiscordSelectors.ChannelList.containerDefault).forEach(e=> {
-                            if(e) ReactTools.getOwnerInstance(e).forceUpdate()
-                        })
-                    })
-                    return panel.getElement()
+                            ReactTools.getOwnerInstance(e).forceUpdate();
+                        });
+                    });
+                    return panel.getElement();
                 }
                 async onStart() {
                     PluginUtilities.addStyle(config.info.name, 
@@ -128,7 +128,7 @@ const VoiceUsersCounter = (() => {
                         top: 9px;
                         right: 11px;
                         font-weight: bold; 
-                    }`)                    
+                    }`);                    
                     const VoiceChannelComponent = await ReactComponents.getComponentByName("VoiceChannel", DiscordSelectors.ChannelList.containerDefault);
                     this.unpatch = Patcher.after(VoiceChannelComponent.component.prototype, "render", ({props}, _, ret) => {
                         let childs = Utilities.getNestedProp(ret, "props.children");
@@ -139,11 +139,11 @@ const VoiceUsersCounter = (() => {
                                         color: this.settings.color || "var(--blurple)"
                                     }
                                 },
-                                count: Array.isArray(props.voiceStates) ? props.voiceStates.length : "0"
-                            }))
+                                count: props.voiceStates.length
+                            }));
                             else childs.push(React.createElement(VoiceCount, {
                                 count: Array.isArray(props.voiceStates) ? props.voiceStates.length : "0"
-                            }))
+                            }));
                         } else {
                             let children = Utilities.getNestedProp(ret, "props.children.props.children");
                             if(Array.isArray(props.voiceStates) && props.voiceStates.find(e=> e.user.id == DiscordAPI.currentUser.id)) children.push(React.createElement(VoiceCount, {
@@ -152,18 +152,18 @@ const VoiceUsersCounter = (() => {
                                         color: this.settings.color || "var(--blurple)"
                                     }
                                 },
-                                count: Array.isArray(props.voiceStates) ? props.voiceStates.length : "0"
-                            }))
+                                count: props.voiceStates.length
+                            }));
                             else children.push(React.createElement(VoiceCount, {
                                 count: Array.isArray(props.voiceStates) ? props.voiceStates.length : "0"
-                            }))
-                        }
-                    })
-                    VoiceChannelComponent.forceUpdateAll()
+                            }));
+                        };
+                    });
+                    VoiceChannelComponent.forceUpdateAll();
                 }
                 onStop() {
-                    PluginUtilities.removeStyle(config.info.name)
-                    this.unpatch()
+                    PluginUtilities.removeStyle(config.info.name);
+                    this.unpatch();
                 }
 
             }
@@ -172,5 +172,3 @@ const VoiceUsersCounter = (() => {
         return plugin(Plugin, Api);
     })(global.ZeresPluginLibrary.buildPlugin(config));
 })();
-
-                    
