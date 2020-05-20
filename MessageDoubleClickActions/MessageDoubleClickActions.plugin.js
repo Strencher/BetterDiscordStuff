@@ -40,48 +40,71 @@ const MessageDoubleClickActions = (() => {
                     twitter_username: "Strencher3"
                 }
             ],
-            version: "0.0.2",
+            version: "0.0.3",
             description: "Adds an Action by Double Clicking a message.",
             github: "https://github.com/Strencher/BetterDiscordStuff/MessageDoubleClickActions/MessageDoubleClickActions.plugin.js",
             github_raw: "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/MessageDoubleClickActions/MessageDoubleClickActions.plugin.js"
         },
         changelog: [
             {
-                title: "Yeah",
                 type: "added",
-                items: ["The plugin exist"]
+                title: "New Stuff",
+                items: [
+                    "Added Add Reaction to messag, only works with unicodeemojis",
+                    "Added Multiple actions when you double click",
+                    "Some functions may not work together, look into the settingspanel for more infos.",
+                ]
             },
             {
-                title: "bug",
                 type: "fixed",
-                items: ["Fixed weird bug with the message props."]
+                title: "fixed",
+                items: [
+                    "fixed throwing errors when dbl clicking messages."
+                ]
             }
         ],
         defaultConfig: [
             {
-                name: 'Message DoubleClick action',
-                id: 'action',
-                type: 'radio',
-                value: 0,
-                options: [
-                    {   
-                        name: 'Edit Message', 
-                        value: 0 
-                    },
-                    { 
-                        name: 'Delete Message', 
-                        value: 1 
-                    },
-                    { 
-                        name: 'Copy Message Link', 
-                        value: 2 
-                    },
-                    { 
-                        name: 'Copy Message Content', 
-                        value: 3 
-                    }
-                ]
+                type: "switch",
+                name: "Edit Message",
+                value: true,
+                id: "edit",
+                note: "It does not work when you have Delete Message enabled!"
             },
+            {
+                type: "switch",
+                name: "Delete Message",
+                value: true,
+                id: "delete",
+                note: "It does not work when you have Edit Message, Add Reaction or Copy MessageLink enabled!"
+            },
+            {
+                type: "switch",
+                name: "Copy Message Content",
+                value: true,
+                id: "copy_content"
+            },
+            {
+                type: "switch",
+                name: "Copy MessageLink",
+                value: true,
+                id: "copy_link",
+                note: "It does not work when you have Delete Message enabled!"
+            },
+            {
+                type: "switch",
+                name: "Add Reaction to Message",
+                value: true,
+                id: "add_reaction",
+                note: "It does not work when you have DeleteMessage enabled!"
+            },
+            {
+                type: "textbox",
+                value: "🔴",
+                name: "Reaction",
+                placeholder: "Reaction UNICode",
+                id: "reaction",
+            }
         ]
     };
 
@@ -114,34 +137,35 @@ const MessageDoubleClickActions = (() => {
                 constructor() {
                     super();
                 }
-
-                onStart() { 
+                onStart() {
                     document.addEventListener("dblclick", this.event = e => {
-                        if(e.target && e.target.className && e.target.className.includes("markup-2BOw-j")) {
-                            const props = ReactTools.getOwnerInstance(e.target.parentElement.parentElement.querySelector('.container-1ov-mD'))
-                            if(props && !props.props) return;
-                            if(this.settings.action == 0 && props.props.message.author.id == DiscordAPI.currentUser.id) {
-                                WebpackModules.getByProps("startEditMessage").startEditMessage(props.props.message.channel_id, props.props.message.id, props.props.message.content)
-                            }
-                            if(this.settings.action == 1) {
-                                WebpackModules.getByProps("deleteMessage").deleteMessage(props.props.message.channel_id, props.props.message.id);
-                            }
-                            if(this.settings.action == 2) {
-                                ElectronModule.copy(`https://discordapp.com/channels/${props.props.channel.guild_id}/${props.props.channel.id}/${props.props.message.id}`);
+                        if(e.target && e.target.className  && typeof e.target.className == "string" && e.target.className.indexOf("markup-2BOw-j") !== -1) {
+                            const { props } = ReactTools.getOwnerInstance(e.target.parentElement.parentElement.querySelector('.container-1ov-mD'));
+                            if(props && this.settings.edit && !this.settings.delete && props.message.author.id == DiscordAPI.currentUser.id) {
+                                WebpackModules.getByProps("startEditMessage").startEditMessage(props.message.channel_id, props.message.id, props.message.content)
+                            };
+                            if(props && this.settings.delete && !this.settings.edit && !this.settings.copy_link && !this.settings.add_reaction) {
+                                WebpackModules.getByProps("deleteMessage").deleteMessage(props.message.channel_id, props.message.id);
+                            };
+                            if(props && this.settings.copy_link && !this.settings.delete) {
+                                ElectronModule.copy(`https://discordapp.com/channels/${props.channel.guild_id}/${props.channel.id}/${props.message.id}`);
                                 Toasts.success("Copied Message Link");
-                            }
-                            if(this.settings.action == 3) {
-                                ElectronModule.copy(props.props.message.content);
+                            };
+                            if(props && this.settings.copy_content) {
+                                ElectronModule.copy(props.message.content);
                                 Toasts.success("Copied Message Content");
+                            };
+                            if(props && this.settings.add_reaction && !this.settings.delete) {
+                                WebpackModules.getByProps("addReaction").addReaction(props.message.channel_id, props.message.id, {name: this.settings.reaction})
                             }
                         }
                     })
                 }
                 onStop() {
-                    document.removeEventListener("dblclick", this.event)
+                    document.removeEventListener("dblclick", this.event);
                 }
                 getSettingsPanel() {
-                    return this.buildSettingsPanel().getElement()
+                    return this.buildSettingsPanel().getElement();
                 }
 
             }
@@ -150,5 +174,3 @@ const MessageDoubleClickActions = (() => {
         return plugin(Plugin, Api);
     })(global.ZeresPluginLibrary.buildPlugin(config));
 })();
-
-                    
