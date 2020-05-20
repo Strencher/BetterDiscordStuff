@@ -45,16 +45,16 @@ const MessageLinkEmbed = (() => {
                     github_username: "Juby210"
                 }
             ],
-            version: "0.0.1",
+            version: "0.0.2",
             description: "Make messagelinks look like any other link but with the message. Converted from a PC plugin -> BD plugin. full credits go to @Juby210",
             github: "https://github.com/Strencher/BetterDiscordStuff/blob/master/MessageLinkEmbed/MessageLinkEmbed.plugin.js",
             github_raw: "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/MessageLinkEmbed/MessageLinkEmbed.plugin.js"
         },
         changelog: [
             {
-                title: "Yeah",
-                type: "added",
-                items: ["The plugin exist"]
+                title: "fixed",
+                type: "fixed",
+                items: ["Fixed clicking on the name reloads discord."]
             }
         ]
     };
@@ -100,6 +100,7 @@ const MessageLinkEmbed = (() => {
             const User = WebpackModules.find(m => m.prototype && m.prototype.tag);
             const Timestamp = WebpackModules.find(m => m.prototype && m.prototype.toDate && m.prototype.month)
             const joinClass = (...e) => e.join(" ");
+            const { jumpToMessage } = WebpackModules.getByProps("jumpToMessage")
             let lastFetch = 0
             let cache = {}
             async function getMsg(channelId, messageId) {
@@ -194,6 +195,10 @@ const MessageLinkEmbed = (() => {
                                     React.createElement("a", {
                                         className: joinClass(anchor, embedAuthorName, embedAuthorNameLink, embedLink),
                                         href: this.props.msgLink,
+                                        onClick: e=> {
+                                            e.preventDefault();
+                                            jumpToMessage(this.state.channel_id, this.state.id)
+                                        },
                                         children: this.state.author.tag
                                     })
                                 ]
@@ -248,4 +253,4 @@ const MessageLinkEmbed = (() => {
         };
         return plugin(Plugin, Api);
     })(global.ZeresPluginLibrary.buildPlugin(config));
-})();                   
+})();
