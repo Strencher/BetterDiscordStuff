@@ -40,7 +40,7 @@ const VoiceUsersCounter = (() => {
                     twitter_username: "Strencher3"
                 }
             ],
-            version: "0.0.4",
+            version: "0.0.5",
             description: "Adds a count of users they're connected to a VoiceChannel. Customize the Color of the count in the SettingsPanel.",
             github: "https://github.com/Strencher/BetterDiscordStuff/blob/master/VoiceUsersCounter/VoiceUsersCounter.plugin.js",
             github_raw: "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/VoiceUsersCounter/VoiceUsersCounter.plugin.js"
@@ -136,9 +136,10 @@ const VoiceUsersCounter = (() => {
                         const Counter = React.createElement(VoiceCount, {
                             options: props.voiceStates && Array.isArray(props.voiceStates) && props.voiceStates.find(e=> e.user.id == DiscordAPI.currentUser.id) ? {
                                 style: {
-                                    color: this.settings.color || "var(--blurple)"
+                                    color: this.settings.color || "var(--blurple)",
+                                    display: props.channel.userLimit > 0 ? "none" : "block"
                                 }
-                            } : {},
+                            } : {style: {display: props.channel.userLimit > 0 ? "none" : "block"}},
                             count: props.voiceStates && Array.isArray(props.voiceStates) ? props.voiceStates.length : "0"
                         })
                         if(childs && Array.isArray(childs)) childs.push(Counter) 
@@ -156,4 +157,4 @@ const VoiceUsersCounter = (() => {
         };
         return plugin(Plugin, Api);
     })(global.ZeresPluginLibrary.buildPlugin(config));
-})();                 
+})();
