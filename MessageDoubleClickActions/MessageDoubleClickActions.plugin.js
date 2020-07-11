@@ -40,26 +40,17 @@ const MessageDoubleClickActions = (() => {
                     twitter_username: "Strencher3"
                 }
             ],
-            version: "0.0.3",
+            version: "0.0.4",
             description: "Adds an Action by Double Clicking a message.",
             github: "https://github.com/Strencher/BetterDiscordStuff/MessageDoubleClickActions/MessageDoubleClickActions.plugin.js",
             github_raw: "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/MessageDoubleClickActions/MessageDoubleClickActions.plugin.js"
         },
         changelog: [
             {
-                type: "added",
-                title: "New Stuff",
+                type: "improved",
+                title: "Improved",
                 items: [
-                    "Added Add Reaction to messag, only works with unicodeemojis",
-                    "Added Multiple actions when you double click",
-                    "Some functions may not work together, look into the settingspanel for more infos.",
-                ]
-            },
-            {
-                type: "fixed",
-                title: "fixed",
-                items: [
-                    "fixed throwing errors when dbl clicking messages."
+                    "The plugin now uses a better method to add the eventlistener. Thanks Juby210 for reminding me of that."
                 ]
             }
         ],
@@ -132,15 +123,17 @@ const MessageDoubleClickActions = (() => {
     } : (([Plugin, Api]) => {
         const plugin = (Plugin, Api) => {
 
-            const { WebpackModules, ReactTools, DiscordAPI, DiscordModules, Toasts } = Api, { ElectronModule } = DiscordModules;
+            const { Utilities, Patcher, WebpackModules, ReactTools, DiscordAPI, DiscordModules, Toasts, DiscordModules: { ElectronModule } } = Api;
             return class MessageDoubleClickActions extends Plugin {
                 constructor() {
                     super();
                 }
                 onStart() {
-                    document.addEventListener("dblclick", this.event = e => {
-                        if(e.target && e.target.className  && typeof e.target.className == "string" && e.target.className.indexOf("markup-2BOw-j") !== -1) {
-                            const { props } = ReactTools.getOwnerInstance(e.target.parentElement.parentElement.querySelector('.container-1ov-mD'));
+                    const Message = WebpackModules.getModule(m=>m.default && m.default.displayName == "Message");
+                    if(Message && "default" in Message) this.unpatch = Patcher.after(Message, "default", (_, args, ret)=>{
+                        ret.props.onDoubleClick = ()=>{
+                            const props = Utilities.getNestedProp(args[0], "childrenMessageContent.props");
+                            if(!props) return;
                             if(props && this.settings.edit && !this.settings.delete && props.message.author.id == DiscordAPI.currentUser.id) {
                                 WebpackModules.getByProps("startEditMessage").startEditMessage(props.message.channel_id, props.message.id, props.message.content)
                             };
@@ -157,12 +150,12 @@ const MessageDoubleClickActions = (() => {
                             };
                             if(props && this.settings.add_reaction && !this.settings.delete) {
                                 WebpackModules.getByProps("addReaction").addReaction(props.message.channel_id, props.message.id, {name: this.settings.reaction})
-                            }
+                            }    
                         }
                     })
                 }
                 onStop() {
-                    document.removeEventListener("dblclick", this.event);
+                    this.unpatch();
                 }
                 getSettingsPanel() {
                     return this.buildSettingsPanel().getElement();
