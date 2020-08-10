@@ -28,7 +28,7 @@
 
 @else@*/
 
-const VoiceUsersCounter = (() => {
+module.exports = (() => {
     const config = {
         info: {
             name: "VoiceUsersCounter",
@@ -40,16 +40,16 @@ const VoiceUsersCounter = (() => {
                     twitter_username: "Strencher3"
                 }
             ],
-            version: "0.0.5",
+            version: "0.0.6",
             description: "Adds a count of users they're connected to a VoiceChannel. Customize the Color of the count in the SettingsPanel.",
             github: "https://github.com/Strencher/BetterDiscordStuff/blob/master/VoiceUsersCounter/VoiceUsersCounter.plugin.js",
             github_raw: "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/VoiceUsersCounter/VoiceUsersCounter.plugin.js"
         },
         changelog: [
             {
-                title: "fixed",
-                type: "fixed",
-                items: ["the counter no longer overlaps the other buttons."]
+                title: "Rewrite",
+                type: "added",
+                items: ["The Plugin got rewritten."]
             }
         ],
         defaultConfig: [
@@ -70,16 +70,16 @@ const VoiceUsersCounter = (() => {
         getDescription() { return config.info.description; }
         getVersion() { return config.info.version; }
         load() {
-            BdApi.showConfirmationModal("Library plugin is needed", 
+            BdApi.showConfirmationModal("Library plugin is needed",
                 [`The library plugin needed for ${config.info.name} is missing. Please click Download Now to install it.`], {
-                    confirmText: "Download",
-                    cancelText: "Cancel",
-                    onConfirm: () => {
-                        require("request").get("https://rauenzi.github.io/BDPluginLibrary/release/0PluginLibrary.plugin.js", async (error, response, body) => {
+                confirmText: "Download",
+                cancelText: "Cancel",
+                onConfirm: () => {
+                    require("request").get("https://rauenzi.github.io/BDPluginLibrary/release/0PluginLibrary.plugin.js", async (error, response, body) => {
                         if (error) return require("electron").shell.openExternal("https://betterdiscord.net/ghdl?url=https://raw.githubusercontent.com/rauenzi/BDPluginLibrary/master/release/0PluginLibrary.plugin.js");
                         await new Promise(r => require("fs").writeFile(require("path").join(BdApi.Plugins.folder, "0PluginLibrary.plugin.js"), body, r));
-                        });
-                    }
+                    });
+                }
             });
         }
         start() { }
@@ -87,19 +87,19 @@ const VoiceUsersCounter = (() => {
     } : (([Plugin, Api]) => {
         const plugin = (Plugin, Api) => {
 
-            const { WebpackModules, DiscordAPI, Utilities, PluginUtilities, DiscordModules, ReactComponents, Patcher, DiscordSelectors, ReactTools } = Api;
+            const { WebpackModules, PluginUtilities, DiscordModules, Patcher, DiscordSelectors, ReactTools } = Api;
             const { React } = DiscordModules;
             const Tooltip = WebpackModules.getByDisplayName("Tooltip");
+            const { getVoiceChannelId } = WebpackModules.getByProps('getVoiceChannelId');
             class VoiceCount extends React.Component {
                 render() {
                     return React.createElement(Tooltip, {
-                        text: "Connected Users: "+this.props.count,
+                        text: "Connected Users: " + this.props.count,
                         position: "top",
                         color: "black"
                     }, e => React.createElement("span", Object.assign({
-                        className: "voiceCounter", 
-                        onMouseEnter: e.onMouseEnter, 
-                        onMouseLeave: e.onMouseLeave
+                        ...e,
+                        className: "voiceCounter",
                     }, this.props.options), this.props.count))
                 }
             }
@@ -110,42 +110,39 @@ const VoiceUsersCounter = (() => {
                 getSettingsPanel() {
                     const panel = this.buildSettingsPanel();
                     panel.addListener(() => {
-                        document.querySelectorAll(DiscordSelectors.ChannelList.containerDefault).forEach(e=> {
+                        document.querySelectorAll(DiscordSelectors.ChannelList.containerDefault).forEach(e => {
                             ReactTools.getOwnerInstance(e).forceUpdate();
                         });
                     });
                     return panel.getElement();
                 }
-                async onStart() {
-                    PluginUtilities.addStyle(config.info.name, 
-                    `.iconVisibility-1bOqu7[aria-label*="voice"] .children-Bmpf2Q {
-                        position: relative;
-                        right: 15px;
-                    }
-                    .voiceCounter {
-                        color: var(--channels-default);
-                        position: absolute;
-                        top: 9px;
-                        right: 11px;
-                        font-weight: bold; 
-                    }`);                    
-                    const VoiceChannelComponent = await ReactComponents.getComponentByName("VoiceChannel", DiscordSelectors.ChannelList.containerDefault);
-                    this.unpatch = Patcher.after(VoiceChannelComponent.component.prototype, "render", ({props}, _, ret) => {
-                        let childs = Utilities.getNestedProp(ret, "props.children");
-                        let children = Utilities.getNestedProp(ret, "props.children.props.children");
-                        const Counter = React.createElement(VoiceCount, {
-                            options: props.voiceStates && Array.isArray(props.voiceStates) && props.voiceStates.find(e=> e.user.id == DiscordAPI.currentUser.id) ? {
-                                style: {
-                                    color: this.settings.color || "var(--blurple)",
-                                    display: props.channel.userLimit > 0 ? "none" : "block"
+                onStart() {
+                    PluginUtilities.addStyle(config.info.name,
+                        `.voiceCounter {
+                            color: var(--channels-default);
+                            font-weight: bold; 
+                            margin-left: 5px;
+                        }`
+                    );
+                    this.unpatch = Patcher.after(WebpackModules.getByDisplayName("ChannelItem").prototype, "renderIcons", (_, __, e) => {
+                        const { props: { channel, userCount }} = e.props.children.find(e => e && e.props && e.props.hasOwnProperty("userCount")) || {props: {}};
+                        if(!channel || channel.type !== 2) return e;
+                        if(channel.userLimit > 0) return;
+                        e.props.children.push(
+                            React.createElement(VoiceCount, {
+                                count: userCount,
+                                options: {
+                                    style: channel.id == getVoiceChannelId() ? {
+                                        color: this.settings.color || "var(--blurple)",
+                                        display: userCount == 0 ? "none" : "block"
+                                    } : {
+                                        display: userCount == 0 ? "none" : "block"
+                                    }
                                 }
-                            } : {style: {display: props.channel.userLimit > 0 ? "none" : "block"}},
-                            count: props.voiceStates && Array.isArray(props.voiceStates) ? props.voiceStates.length : "0"
-                        })
-                        if(childs && Array.isArray(childs)) childs.push(Counter) 
-                        else if (children && Array.isArray(children)) children.push(Counter);
+                            })
+                        );
+                        return e;
                     });
-                    VoiceChannelComponent.forceUpdateAll();
                 }
                 onStop() {
                     PluginUtilities.removeStyle(config.info.name);
