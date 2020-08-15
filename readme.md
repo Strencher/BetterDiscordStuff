@@ -29,9 +29,6 @@
 # LinkChannels
 - Adds an Icon to channels that copys <#channelId>. (channelId is replaced)
 ## Download[**🔽LinkChannels**](https://betterdiscord.net/ghdl?url=https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/LinkChannels/LinkChannels.plugin.js)
-# SuppressUserMentionsRedux
-- Suppress mentions from Specific users
-## Download[**🔽SuppressUserMentionsRedux**](https://betterdiscord.net/ghdl?url=https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/SuppressUserMentionsRedux/SuppressUserMentionsRedux.plugin.js)
 # MessageDoubleClickActions
 - Adds an Specific Action by Double Clicking a message.
 ## Download[**🔽MessageDoubleClickActions**](https://betterdiscord.net/ghdl?url=https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/MessageDoubleClickActions/MessageDoubleClickActions.plugin.js)
