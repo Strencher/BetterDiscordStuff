@@ -40,7 +40,7 @@ const QuickMuteChannels = (() => {
                     twitter_username: "Strencher3"
                 }
             ],
-            version: "0.0.4",
+            version: "0.0.6",
             description: "Adds an Speaker to channels to Quickly mute/unmute them.",
             github: "https://github.com/Strencher/BetterDiscordStuff/blob/master/QuickMuteChannels/QuickMuteChannels.plugin.js",
             github_raw: "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/QuickMuteChannels/QuickMuteChannels.plugin.js"
@@ -55,7 +55,7 @@ const QuickMuteChannels = (() => {
                 title: "fixed",
                 type: "fixed",
                 items: [
-                    "Fixed the several buttons problem."
+                    "Fixed the several buttons problem. 2.0"
                 ]
             }
         ]
@@ -126,23 +126,25 @@ const QuickMuteChannels = (() => {
                         visibility: visible;
                         cursor: pointer;
                     }
+                    .muteChannelIcon {
+                        z-index: 999999;
+                    }
                     `)
                     const channel = await ReactComponents.getComponentByName("TextChannel", DiscordSelectors.ChannelList.containerDefault); 
                     Patcher.after(channel.component.prototype, "render", ({props}, _, react)=>{
                         if(!Utilities.getNestedProp(react, "props.children.props.children")) return;
-                        if(react.props.children.props.children.find((_,__, e)=>e && e.props && e.props.displayName == "MuteIcon")) return; 
-                        react.props.children.props.children.unshift(React.createElement(MuteIcon, {
-                            state: props.muted,
-                            displayName: "MuteIcon",
-                            onClick: () => {
-                                updateSetting.updateChannelOverrideSettings(DiscordAPI.currentGuild.id, props.channel.id, {
-                                    muted: !props.muted
-                                })
-                                Toasts.success(props.muted ? "Unmuted" : "Muted");
-                            }
-                        }))
-                        
+                        if(!react.props.children.props.children.find(e=>e && e.props && e.props.displayName == "MuteIcon")) react.props.children.props.children.unshift(React.createElement(MuteIcon, {
+                                state: props.muted,
+                                displayName: "MuteIcon",
+                                onClick: () => {
+                                    updateSetting.updateChannelOverrideSettings(DiscordAPI.currentGuild.id, props.channel.id, {
+                                        muted: !props.muted
+                                    })
+                                    Toasts.success(props.muted ? "Unmuted" : "Muted");
+                                }
+                            }))
                     });
+                    channel.forceUpdateAll()
                 }
                 onStop() {
                     Patcher.unpatchAll()

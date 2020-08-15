@@ -35,16 +35,16 @@ var LinkChannels = (() => {
                     twitter_username: "Strencher3"
                 }
             ],
-            version: "0.0.4",
+            version: "0.0.6",
             description: "Adds an Icon to channels that copys <#channelId>. (channelId is replaced) Shift + Click to insert the channel in the textarea.",
             github: "https://github.com/Strencher/BetterDiscordStuff/LinkChannels/LinkChannels.plugin.js",
             github_raw: "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/LinkChannels/LinkChannels.plugin.js"
         },
         changelog: [
             {
-                title: "Quick",
+                title: "smol",
                 type: "added",
-                items: ["Added shift + click to insert in the textarea."]
+                items: ["Added toasts when copying a channel tag."]
             },
             {
                 title: "improvements",
@@ -76,7 +76,7 @@ var LinkChannels = (() => {
         stop() { }
     } : (([Plugin, Api]) => {
         const plugin = (Plugin, Api) => {
-            const { WebpackModules, PluginUtilities, DiscordModules, ReactComponents, Patcher, DiscordSelectors, Utilities } = Api;
+            const { WebpackModules, PluginUtilities, DiscordModules, ReactComponents, Patcher, DiscordSelectors, Utilities, Toasts } = Api;
             const { React } = DiscordModules;
             const ToolTip = WebpackModules.getByDisplayName("Tooltip");
             const insertText = e => WebpackModules.getByProps("ComponentDispatch").ComponentDispatch.dispatchToLastSubscribed("INSERT_TEXT", {content: e})
@@ -116,14 +116,22 @@ var LinkChannels = (() => {
                     .containerDefault-1ZnADq:hover .linkChannels {
                         display: block;
                         cursor: pointer;
+                    }
+                    .linkChannels {
+                      z-index: 99999;
                     }`) 
                     this.unpatch = Patcher.after(channel.component.prototype, "render", ({props}, _, react) => {
                         const children = Utilities.getNestedProp(react, "props.children.props.children")
-                        if(children && Array.isArray(children)) children.unshift(
+                        if(!children || !Array.isArray(children)) return;
+                        if(!children.find(e=>e && e.props && e.props.displayName == "LinkChannels")) children.unshift(
                             React.createElement(linkIcon, {
+                                displayName: "LinkChannels",
                                 onClick: e => {
                                     if(e.shiftKey) insertText("<#"+props.channel.id+">")
-                                    else DiscordModules.ElectronModule.copy("<#"+props.channel.id+">");
+                                    else {
+                                        DiscordModules.ElectronModule.copy("<#"+props.channel.id+">");
+                                         Toasts.success("Copied link for #"+props.channel.name)
+                                    }
                                 }
                             })
                         );
