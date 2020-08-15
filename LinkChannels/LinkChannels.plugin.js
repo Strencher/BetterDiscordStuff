@@ -35,7 +35,7 @@ var LinkChannels = (() => {
                     twitter_username: "Strencher3"
                 }
             ],
-            version: "0.0.5",
+            version: "0.0.6",
             description: "Adds an Icon to channels that copys <#channelId>. (channelId is replaced) Shift + Click to insert the channel in the textarea.",
             github: "https://github.com/Strencher/BetterDiscordStuff/LinkChannels/LinkChannels.plugin.js",
             github_raw: "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/LinkChannels/LinkChannels.plugin.js"
@@ -116,6 +116,9 @@ var LinkChannels = (() => {
                     .containerDefault-1ZnADq:hover .linkChannels {
                         display: block;
                         cursor: pointer;
+                    }
+                    .linkChannels {
+                      z-index: 99999;
                     }`) 
                     this.unpatch = Patcher.after(channel.component.prototype, "render", ({props}, _, react) => {
                         const children = Utilities.getNestedProp(react, "props.children.props.children")
