@@ -1,0 +1,171 @@
+/* Buttons */
+.lookFilled-1Gx00P.colorBrand-3pXr91 {
+    background: var(--accent);
+}
+/* Switches */
+.valueChecked-m-4IJZ {
+    background-color: var(--accent) !important;
+}
+/* Links */
+.anchor-3Z-8Bb {
+    color: var(--accent) !important;
+}
+
+/* Windows Bar */
+.typeWindows-1za-n7 {
+    background-color: var(--lvl1);
+    margin-top: 0px;
+    height: 23px;
+}
+.typeWindows-1za-n7 > div[role="button"] {
+    top: 1px;
+}
+.wordmarkWindows-1v0lYD {
+    color: grey;
+}
+/* App Mount */
+#app-mount {
+    background-color: #111;
+}
+
+/* Stupid Textarea fix */
+.form-2fGMdU::before {
+    display: none;
+}
+/* Focused input */
+.input-cIJ7To.focused-1mmYsC, .input-cIJ7To:focus {
+    border-color: var(--accent);
+}
+/* UserPopout Header */
+.headerNormal-T_seeN {
+    background-color: var(--lvl1) !important;
+}
+/* UserPopout Body */
+.body-3iLsc4 {
+    background-color: var(--lvl2) !important;
+}
+/* UserPopout Footer */
+.footer-1fjuF6 {
+    background-color: var(--lvl2) !important;
+}
+/* Scrollbars */
+::-webkit-scrollbar-track {
+    background-color: var(--background-accent) !important;
+}
+::-webkit-scrollbar-thumb {
+    background-color: var(--lvl1) !important;
+}
+::-webkit-scrollbar-button {
+    display: none;
+}
+/* Mentions */
+.wrapper-3WhCwL {
+    color: var(--accent);
+}
+/* Interactives */
+.interactive:hover {
+    background-color: var(--accent);
+}
+/* New Messages Bar */
+.newMessagesBar-265mhP {
+    background-color: var(--accent);
+}
+/* Bot Tag */
+.botTagRegular-2HEhHi {
+    background-color: var(--accent);
+}
+/* ContextMenu - Hover */
+.colorDefault-2K3EoJ.focused-3afm-j {
+    background-color: var(--accent);
+}
+/* ContextMenu - Radio Item */
+.radioSelection-1HmrQS {
+    color: var(--accent) !important;
+}
+/* Checkboxes */
+.checkbox-3s5GYZ {
+    color: var(--accent) !important;
+}
+.checkbox-1ix_J3.checked-3_4uQ9 {
+    background-color: var(--accent) !important;
+    border-color: var(--accent) !important;
+}
+/* Selected Channel */
+.modeSelected-1zApJ_ .content-3at_AU {
+    background-color: var(--accent) !important;
+}
+.modeSelected-1zApJ_ .icon-1_QxNX {
+    color: white !important;
+}
+/* Search List */
+.container-3ayLPN {
+    background-color: var(--background-accent) !important;
+}
+.option-96V44q::after {
+    display: none;
+}
+/* AutoComplete */
+.autocomplete-1vrmpx {
+    background-color: var(--background-accent);
+}
+/* Video */
+.mediaBarProgress-1xaPtl {
+    background-color: var(--accent);
+}
+/* Home Icon */
+.selected-bZ3Lue .childWrapper-anI2G9 {
+    background-color: var(--accent) !important;
+}
+/* My UnreadCountBadges */
+.guild-badge, .channel-badge {
+    background-color: var(--accent) !important;
+}
+/* GIF Picker */
+.categoryFadeBlurple-1j72_A {
+    background-color: var(--accent) !important;
+    opacity: .8;
+}
+/* Modal BG */
+.root-1gCeng {
+    background-color: var(--background-accent) !important;
+}
+/* ImageUpload Modal */
+.uploadModal-2ifh8j {
+    background-color: var(--background-tertiary) !important;
+}
+.footer-3mqk7D {
+    background-color: var(--lvl1) !important;
+}
+/* Friends Body */
+.container-1D34oG {
+    background-color: var(--lvl1) !important;
+}
+/* Sliders */
+.barFill-23-gu- {
+    background-color: var(--accent) !important;
+}
+/* Radio Groups */
+.item-26Dhrx[style="border-color: rgb(114, 137, 218); background-color: rgb(114, 137, 218); padding: 10px;"] {
+    background-color: var(--accent) !important;
+    border-color: var(--accent) !important;
+}
+/* Side Choose option */
+.wrapper-3jrx9n {
+    border-color: var(--accent);
+}
+.selected-mKYnfr.option-n0icdO {
+    border-color: var(--accent) !important;
+    background-color: var(--accent) !important;
+}
+/* Keybind recorder */
+.card-FDVird::before {
+    background-color: var(--background-secondary) !important;
+    border-color: var(--background-secondary) !important;
+}
+/* Nitro ServerSettings */
+.tierBody-x9kBBp {
+    background-color: var(--background-tertiary) !important
+}
+.tierHeaderLocked-1a2opw {
+    background-color: var(--lvl1) !important;
+}

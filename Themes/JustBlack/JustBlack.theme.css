@@ -1,0 +1,20 @@
+/**
+* @name JustDark
+* @author Strencher
+* @authorId 415849376598982656
+* @invite gvA2ree
+* @description A nice and Simple dark theme
+* @version 1.0.0
+*/
+:root {
+    --lvl1: #111;
+    --lvl2: #1A1A1A;
+    --accent: #0066cc;
+    --background-primary: rgb(14, 14, 14);
+    --background-secondary: #101010;
+    --channeltextarea-background: var(--lvl1);
+    --background-secondary-alt: var(--background-secondary);
+    --background-tertiary: #141414;
+    --background-accent: #222;
+}
+@import url(https://cdn.statically.io/gh/Strencher/BetterDiscordStuff/tree/master/Themes/JustBlack/import.css);
