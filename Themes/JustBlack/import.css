@@ -74,6 +74,10 @@
 .botTagRegular-2HEhHi {
     background-color: var(--accent);
 }
+/* ContextMenu */
+.menu-3sdvDG {
+    background-color: var(--background-secondary) !important;
+}
 /* ContextMenu - Hover */
 .colorDefault-2K3EoJ.focused-3afm-j {
     background-color: var(--accent);
@@ -106,7 +110,10 @@
 }
 /* AutoComplete */
 .autocomplete-1vrmpx {
-    background-color: var(--background-accent);
+    background-color: var(--lvl2) !important;
+}
+.selectorSelected-1_M1WV {
+    background-color: var(--background-accent) !important;
 }
 /* Video */
 .mediaBarProgress-1xaPtl {
