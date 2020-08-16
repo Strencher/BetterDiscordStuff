@@ -176,3 +176,10 @@
 .tierHeaderLocked-1a2opw {
     background-color: var(--lvl1) !important;
 }
+/* NitroPerks Modal */
+.perksModal-fSYqOq {
+    background-color: var(--background-secondary) !important;
+}
+.perk-2WeBWW {
+    background-color: var(--lvl2) !important;
+}
