@@ -40,7 +40,7 @@ var TwitchChatV2 = (() => {
                     twitter_username: "Strencher3"
                 }
             ],
-            version: "0.0.4",
+            version: "0.0.5",
             description: "Adds an Twitch chat to discord.",
             github: "https://github.com/Strencher/BetterDiscordStuff/TwitchChatV2/TwitchChatV2.plugin.js",
             github_raw: "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/TwitchChatV2/TwitchChatV2.plugin.js"
@@ -156,7 +156,7 @@ var TwitchChatV2 = (() => {
                                 plugins: true
                             }
                         })
-                        win.loadURL(`https://www.twitch.tv/embed/${val ? val : this.settings.channel}/chat?${this.settings.dark ? "darkpopout": ""}`);
+                        win.loadURL(`https://www.twitch.tv/embed/${val ? val : this.settings.channel}/chat?${this.settings.dark ? "darkpopout": ""}&parent=twitch.tv`);
                     } else WebpackModules.getByProps("openModal").openModal(prop => {
                         return React.createElement(Modal, {
                             onKeyDown: (e) => {
