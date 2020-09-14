@@ -18,3 +18,17 @@
     top: 1px;
     background: var(--text-muted);
 }
+/* Selected guild pill */
+.pill-31IEus.wrapper-sa6paO > .item-2hkk8m {
+    border-radius: 0;
+    width: 3px;
+    height: 30px !important;
+    background: var(--text-muted);
+    left: 9px;
+}
+
+/* Guild Unread pill */
+.bd-unread > .pill-31IEus.wrapper-sa6paO > .item-2hkk8m {
+    background: white;
+    height: 48px !important;
+}
