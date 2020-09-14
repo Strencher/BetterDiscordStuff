@@ -1,0 +1,20 @@
+/* Channel unread indicator */
+.unread-3zKkbm {
+    width: 3px;
+    left: 2px;
+    border-radius: 0;
+    height: 30px;
+    top: 5px;
+    background: var(--text-muted);
+}
+
+/* Selected Channel */
+.selected-37j_iU:before {
+    content: "";
+    width: 3px;
+    left: 2px;
+    position: absolute;
+    height: 30px;
+    top: 1px;
+    background: var(--text-muted);
+}
