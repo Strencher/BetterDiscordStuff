@@ -40,7 +40,7 @@ module.exports = (() => {
                     twitter_username: "Strencher3"
                 }
             ],
-            version: "0.0.1",
+            version: "0.0.2",
             description: "See every status a user has enabled. Original made by Juby210#0577.",
             github: "https://github.com/Strencher/BetterDiscordStuff/blob/master/ShowAllActivities/ShowAllActivities.plugin.js",
             github_raw: "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/ShowAllActivities/ShowAllActivities.plugin.js"
@@ -83,7 +83,13 @@ module.exports = (() => {
             const ActivityStore = WebpackModules.getByProps('getActivities');
             const GameStore = WebpackModules.getByProps('getGame', 'getGameByName');
             const {TooltipContainer: Tooltip} = WebpackModules.getByProps('TooltipContainer');
-            const Icon = props => React.createElement(WebpackModules.find(m => m.id && typeof m.keys === 'function' && m.keys().includes('./Activity'))('./' + props.name).default, props);
+            let fetchedModules = {};
+            const Icon = props => {
+                if(fetchedModules[props.name]) return React.createElement(fetchedModules[props.name].default, props);
+                const module = WebpackModules.find(m => m.id && typeof m.keys === 'function' && m.keys().includes('./Activity'))('./' + props.name);
+                fetchedModules[props.name] = module;
+                return React.createElement(module.default, props);
+            }
             const LabelStore = WebpackModules.getByProps('Messages', 'setLocale')
             const Button = WebpackModules.getByProps('DropdownSizes');
             var temp;
@@ -117,9 +123,9 @@ module.exports = (() => {
                     this.patchUserActivity();
                 }
 
-                async patchUserActivity() {
-                    const UserActivity = await ReactComponents.getComponentByName('UserActivity', '*');
-                    Patcher.before(UserActivity.component.prototype, 'render', _this => {
+                patchUserActivity() {
+                    const UserActivity = WebpackModules.getByDisplayName('UserActivity');
+                    Patcher.before(UserActivity.prototype, 'render', _this => {
                         const activities = ActivityStore.getActivities(_this.props.user.id).filter(activitiesFilter);
                         if(!activities) return;
                         if(!_this.state) _this.state = {activity: activities.indexOf(_this.props.activity)};
@@ -130,7 +136,7 @@ module.exports = (() => {
                             _this.props.game = GameStore.getGame(activity.application_id);
                         }
                     });
-                    Patcher.after(UserActivity.component.prototype, 'render', (_this, _, ret) => {
+                    Patcher.after(UserActivity.prototype, 'render', (_this, _, ret) => {
                         if(!ret) return;
                         const activities = ActivityStore.getActivities(_this.props.user.id).filter(activitiesFilter);
                         if(!activities) return ret;
@@ -163,7 +169,6 @@ module.exports = (() => {
                         const actions = Utilities.findInReactTree(ret.props, e => e && e.onOpenConnections);
                         if(actions) actions.activity = _this.props.activity;
                     });
-                    UserActivity.forceUpdateAll();
                 }
 
                 onStop() {
