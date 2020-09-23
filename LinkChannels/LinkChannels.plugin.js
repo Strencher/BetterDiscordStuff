@@ -42,14 +42,11 @@ var LinkChannels = (() => {
         },
         changelog: [
             {
-                title: "smol",
-                type: "added",
-                items: ["Added toasts when copying a channel tag."]
-            },
-            {
-                title: "improvements",
-                type: "improved",
-                items: ["Some small fixes & the name of the channel is no longer cuttet off."]
+                title: 'fixed',
+                type: 'fixed',
+                items: [
+                    'Fixed the last update of discord.'
+                ]
             }
         ]
     };
@@ -113,7 +110,7 @@ var LinkChannels = (() => {
                     `.linkChannels {
                         display: none;
                     }   
-                    .containerDefault-1ZnADq:hover .linkChannels {
+                    .iconVisibility-1bOqu7:hover .linkChannels {
                         display: block;
                         cursor: pointer;
                     }
@@ -121,7 +118,7 @@ var LinkChannels = (() => {
                       z-index: 99999;
                     }`) 
                     this.unpatch = Patcher.after(channel.component.prototype, "render", ({props}, _, react) => {
-                        const children = Utilities.getNestedProp(react, "props.children.props.children")
+                        const children = Utilities.getNestedProp(react, "props.children.props.children.props.children")
                         if(!children || !Array.isArray(children)) return;
                         if(!children.find(e=>e && e.props && e.props.displayName == "LinkChannels")) children.unshift(
                             React.createElement(linkIcon, {
