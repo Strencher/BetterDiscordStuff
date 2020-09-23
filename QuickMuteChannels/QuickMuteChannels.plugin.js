@@ -40,22 +40,17 @@ const QuickMuteChannels = (() => {
                     twitter_username: "Strencher3"
                 }
             ],
-            version: "0.0.6",
+            version: "0.0.7",
             description: "Adds an Speaker to channels to Quickly mute/unmute them.",
             github: "https://github.com/Strencher/BetterDiscordStuff/blob/master/QuickMuteChannels/QuickMuteChannels.plugin.js",
             github_raw: "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/QuickMuteChannels/QuickMuteChannels.plugin.js"
         },
         changelog: [
             {
-                title: "fixed",
-                type: "fixed",
-                items: ["Fixed not working."]
-            }, 
-            {
-                title: "fixed",
-                type: "fixed",
+                title: 'fixed',
+                type: 'fixed',
                 items: [
-                    "Fixed the several buttons problem. 2.0"
+                    'Fixed the last update of discord.'
                 ]
             }
         ]
@@ -119,11 +114,11 @@ const QuickMuteChannels = (() => {
                 async onStart() {
                     PluginUtilities.addStyle(config.info.name, 
                     `.muteChannelIcon {
-                        visibility: hidden;
+                        display: none;
                         cursor: pointer;
                     } 
-                    .containerDefault-1ZnADq:hover .muteChannelIcon {
-                        visibility: visible;
+                    .iconVisibility-1bOqu7:hover .muteChannelIcon {
+                        display: block;
                         cursor: pointer;
                     }
                     .muteChannelIcon {
@@ -131,18 +126,20 @@ const QuickMuteChannels = (() => {
                     }
                     `)
                     const channel = await ReactComponents.getComponentByName("TextChannel", DiscordSelectors.ChannelList.containerDefault); 
-                    Patcher.after(channel.component.prototype, "render", ({props}, _, react)=>{
-                        if(!Utilities.getNestedProp(react, "props.children.props.children")) return;
-                        if(!react.props.children.props.children.find(e=>e && e.props && e.props.displayName == "MuteIcon")) react.props.children.props.children.unshift(React.createElement(MuteIcon, {
-                                state: props.muted,
-                                displayName: "MuteIcon",
-                                onClick: () => {
-                                    updateSetting.updateChannelOverrideSettings(DiscordAPI.currentGuild.id, props.channel.id, {
-                                        muted: !props.muted
-                                    })
-                                    Toasts.success(props.muted ? "Unmuted" : "Muted");
-                                }
-                            }))
+                    Patcher.after(channel.component.prototype, "render", ({props}, _, ret)=>{
+                        const childs = Utilities.getNestedProp(ret, 'props.children.props.children.props.children');
+                        if(!childs) return ret;
+                        childs.unshift(React.createElement(MuteIcon, {
+                            state: props.muted,
+                            displayName: "MuteIcon",
+                            channelId: props.channel.id,
+                            onClick: () => {
+                                updateSetting.updateChannelOverrideSettings(DiscordAPI.currentGuild.id, props.channel.id, {
+                                    muted: !props.muted
+                                })
+                                Toasts.success(props.muted ? "Unmuted" : "Muted");
+                            }
+                        }))
                     });
                     channel.forceUpdateAll()
                 }
@@ -157,5 +154,4 @@ const QuickMuteChannels = (() => {
         return plugin(Plugin, Api);
     })(global.ZeresPluginLibrary.buildPlugin(config));
 })();
-
-                    
+/*@end@*/
