@@ -125,6 +125,7 @@ body {
     margin: 4px;
     color: #a2a2a2;
     font-family: Arial;
+    margin-top: auto;
 }
 
 .card .buttonNormal:focus {
