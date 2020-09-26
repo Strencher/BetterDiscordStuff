@@ -35,7 +35,7 @@ var LinkChannels = (() => {
                     twitter_username: "Strencher3"
                 }
             ],
-            version: "0.0.6",
+            version: "0.0.7",
             description: "Adds an Icon to channels that copys <#channelId>. (channelId is replaced) Shift + Click to insert the channel in the textarea.",
             github: "https://github.com/Strencher/BetterDiscordStuff/LinkChannels/LinkChannels.plugin.js",
             github_raw: "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/LinkChannels/LinkChannels.plugin.js"
@@ -46,6 +46,13 @@ var LinkChannels = (() => {
                 type: 'fixed',
                 items: [
                     'Fixed the last update of discord.'
+                ]
+            },
+            {
+                title: 'fixed',
+                type: 'shitcord',
+                items: [
+                    'Blame shitcord that i need to update the plugin every day.'
                 ]
             }
         ]
@@ -117,9 +124,9 @@ var LinkChannels = (() => {
                     .linkChannels {
                       z-index: 99999;
                     }`) 
-                    this.unpatch = Patcher.after(channel.component.prototype, "render", ({props}, _, react) => {
-                        const children = Utilities.getNestedProp(react, "props.children.props.children.props.children")
-                        if(!children || !Array.isArray(children)) return;
+                    this.unpatch = Patcher.after(channel.component.prototype, "render", ({props}, _, ret) => {
+                        const children = Utilities.getNestedProp(ret, 'props.children.props.children.props.children') || Utilities.getNestedProp(ret, 'props.children.props.children');
+                        if(!Array.isArray(children)) return;
                         if(!children.find(e=>e && e.props && e.props.displayName == "LinkChannels")) children.unshift(
                             React.createElement(linkIcon, {
                                 displayName: "LinkChannels",
