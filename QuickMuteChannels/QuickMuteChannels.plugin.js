@@ -40,7 +40,7 @@ const QuickMuteChannels = (() => {
                     twitter_username: "Strencher3"
                 }
             ],
-            version: "0.0.7",
+            version: "0.0.8",
             description: "Adds an Speaker to channels to Quickly mute/unmute them.",
             github: "https://github.com/Strencher/BetterDiscordStuff/blob/master/QuickMuteChannels/QuickMuteChannels.plugin.js",
             github_raw: "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/QuickMuteChannels/QuickMuteChannels.plugin.js"
@@ -51,6 +51,13 @@ const QuickMuteChannels = (() => {
                 type: 'fixed',
                 items: [
                     'Fixed the last update of discord.'
+                ]
+            },
+            {
+                title: 'fixed',
+                type: 'shitcord',
+                items: [
+                    'Blame shitcord that i need to update the plugin every day.'
                 ]
             }
         ]
@@ -127,8 +134,9 @@ const QuickMuteChannels = (() => {
                     `)
                     const channel = await ReactComponents.getComponentByName("TextChannel", DiscordSelectors.ChannelList.containerDefault); 
                     Patcher.after(channel.component.prototype, "render", ({props}, _, ret)=>{
-                        const childs = Utilities.getNestedProp(ret, 'props.children.props.children.props.children');
-                        if(!childs) return ret;
+                        const childs = Utilities.getNestedProp(ret, 'props.children.props.children.props.children') || Utilities.getNestedProp(ret, 'props.children.props.children');
+                        if(!Array.isArray(childs)) return ret;
+                        if(childs.find(e => e && e.props.displayName == 'MuteIcon')) return ret;
                         childs.unshift(React.createElement(MuteIcon, {
                             state: props.muted,
                             displayName: "MuteIcon",
