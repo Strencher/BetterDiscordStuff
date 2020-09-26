@@ -1,0 +1,22 @@
+[
+    {
+        "name": "JustBlack",
+        "version": "1.0.0",
+        "url": "https://betterdiscord.net/ghdl?id=3336",
+        "source": "https://github.com/Strencher/BetterDiscordStuff/tree/master/Themes/JustBlack",
+        "img": "https://i.imgur.com/FHMFy8n.png",
+        "broken": false,
+        "official": true,
+        "description": "A nice and Simple dark theme"
+    },
+    {
+        "name": "BetterUnreadIdicators",
+        "version": "1.0.0",
+        "url": "https://betterdiscord.net/ghdl?id=3357",
+        "source": "https://github.com/Strencher/BetterDiscordStuff/tree/master/Themes/BetterUnreadIndicators",
+        "img": "https://i.imgur.com/QCrHAeS.png",
+        "broken": false,
+        "official": true,
+        "description": "Makes the unread indicators look better."
+    }  
+ ]

@@ -1,0 +1,188 @@
+@font-face {
+    font-family: Discord;
+    src: url(./Discord.otf);
+}
+
+body {
+    background: #111;
+}
+
+.card .buttonNormal {
+    color: white;
+    border: 1px solid black;
+    padding: 7px;
+    cursor: pointer;
+    margin: 2px;
+    border-radius: 15px;
+}
+
+.card .buttonNormal div {
+    text-decoration: none;
+    color: white;
+    width: 100%;
+    height: 100%;
+    display: block;
+    text-shadow: 0 0 10px white;
+}
+
+.card {
+    display: flex;
+    flex-direction: column;
+    width: 250px;
+    padding: 10px;
+    background: #1a1a1a;
+    margin: 15px;
+    transition: .3s;
+    border-radius: 3px;
+}
+
+.app {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.card .name {
+    color: white;
+    font-family: Arial;
+    font-weight: bold;
+}
+.card .head {
+    display: flex;
+}
+
+.card .version {
+    color: #0066ff;
+    text-shadow: 0 0 10px currentColor;
+    font-family: consolas;
+}
+
+.card:hover {
+    transition: .3s;
+    transform: translateY(-10px);
+}
+.title .text.blue {
+    color: #0066ff;
+}
+
+.title .text {
+    font-family: Discord;
+    font-size: 30px;
+    color: white;
+    text-align: center;
+    margin-right: 5px;
+    text-shadow: 0px 0px 6px currentColor;
+}
+
+.title {
+    display: flex;
+    justify-content: center;
+}
+
+.section {
+    display: flex;
+    position: inherit;
+    background: #1a1919;
+    margin: 8px;
+    width: 98%;
+    padding: 15px;
+    font-family: Discord;
+    font-size: 25px;
+}
+
+.section.themes {
+    color: #1da741;
+}
+
+.section.plugins {
+    color: #0066ff;
+}
+
+.card.theme .version {
+    color: #1da741;
+}
+
+.card.theme .buttonNormal {
+    background: #1da741;
+}
+
+.card.plugin .buttonNormal {
+    background: #0066ff;
+}
+
+::-webkit-scrollbar {
+	width: 10px;
+}
+
+::-webkit-scrollbar-track {
+	border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+	border-radius: 10px;
+	background: black;
+}
+
+.description {
+    border-left: 4px solid grey;
+    padding-left: 8px;
+    margin: 4px;
+    color: #a2a2a2;
+    font-family: Arial;
+}
+
+.card .buttonNormal:focus {
+    outline: none;
+}
+
+.card .preview {
+    max-height: 175px;
+}
+
+
+.image-viewer.hidden {
+    display: none;
+}
+
+.image-viewer {
+    position: fixed;
+}
+
+.backdrop {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background: #000000e6;
+}
+
+.content > img {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.close {
+    color: white;
+    font-family: consolas;
+    z-index: 99;
+    font-size: 25px;
+    cursor: pointer;
+    position: absolute;
+    width: 17px;
+    height: 33px;
+    padding: 5px;
+}
+
+.image-viewer {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+}
+
+.title a {
+    color: #0066ff;
+    font-family: Discord;
+    position: absolute;
+    right: 10px;
+    top: 15px;
+}

@@ -1,0 +1,52 @@
+[
+   {
+	   "name": "ShowAllActivities",
+	   "version": "0.0.2",
+	   "url": "https://betterdiscord.net/ghdl?id=3354",
+	   "source": "https://github.com/Strencher/BetterDiscordStuff/blob/master/ShowAllActivities/ShowAllActivities.plugin.js",
+	   "img": "https://i.imgur.com/pjNoZmp.gif",
+	   "broken": false,
+	   "official": true,
+	   "description": "See every status a user has enabled. Original made by Juby210#0577."
+   },
+   {
+	   "name": "VoiceUsersCounter",
+	   "version": "0.0.6",
+	   "url": "https://betterdiscord.net/ghdl?id=3253",
+	   "source": "https://github.com/Strencher/BetterDiscordStuff/tree/master/VoiceUsersCounter",
+	   "img": "https://cdn.discordapp.com/attachments/659432966958612490/701964671883935754/unknown.png",
+	   "broken": false,
+	   "official": true,
+	   "description": "Adds a count of users theyre connected to a VoiceChannel. Customize the Color of the count in the SettingsPanel."
+   },
+   {
+	   "name": "LinkChannels",
+	   "version": "0.0.7",
+	   "url": "https://betterdiscord.net/ghdl?id=3238",
+	   "source": "https://github.com/Strencher/BetterDiscordStuff/tree/master/LinkChannels",
+	   "img": "https://i.imgur.com/l7UZ47S.png",
+	   "broken": false,
+	   "official": true,
+	   "description": "Adds an Icon to channels that copys <#channelId>. Press Shift & Click to insert the channel in the textarea."
+   },
+   {
+	   "name": "Open Spotify Links In Spotify",
+	   "version": "0.0.3",
+	   "url": "https://betterdiscord.net/ghdl?id=3113",
+	   "source": "https://github.com/Strencher/BetterDiscordStuff/tree/master/OpenSpotifylinksInSpotify",
+	   "img": "https://i.imgur.com/tHdEHwq.png",
+	   "broken": false,
+	   "official": true,
+	   "description": "Open spotify links directly in the Spotify Desktop App."
+   },
+   {
+	   "name": "QuickMuteChannels",
+	   "version": "0.0.8",
+	   "url": "https://betterdiscord.net/ghdl?id=3214",
+	   "source": "https://github.com/Strencher/BetterDiscordStuff/tree/master/QuickMuteChannels",
+	   "img": "https://i.imgur.com/tHdEHwq.png",
+	   "broken": false,
+	   "official": true,
+	   "description": "Opens Spotify links in Spotify. requires Spotify Desktop App."
+   }  
+]
