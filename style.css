@@ -56,10 +56,7 @@ body {
     font-family: consolas;
 }
 
-.card:hover {
-    transition: .3s;
-    transform: translateY(-10px);
-}
+
 .title .text.blue {
     color: #0066ff;
 }
