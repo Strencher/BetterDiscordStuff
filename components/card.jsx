@@ -8,12 +8,8 @@ module.exports = class Card extends React.Component {
             </div>
             <img src={this.props.img} className="preview" onClick={this.props.onView}/>
             <div className="description">{this.props.description}</div>
-            <button className="download buttonNormal" onClick={() => open(this.props.url)}>
-                <div>Download</div>
-            </button>
-            <button className="source buttonNormal" onClick={() => open(this.props.source)}>
-                <div>Source Code</div>
-            </button>
+            <a href={this.props.url} className="download buttonNormal">Download</a>
+            <a href={this.props.source} className="source buttonNormal">Source Code</a>
         </div>;
     }
 }

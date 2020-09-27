@@ -14,7 +14,7 @@
 	   "version": "0.0.6",
 	   "url": "https://betterdiscord.net/ghdl?id=3253",
 	   "source": "https://github.com/Strencher/BetterDiscordStuff/tree/master/VoiceUsersCounter",
-	   "img": "https://cdn.discordapp.com/attachments/659432966958612490/701964671883935754/unknown.png",
+	   "img": "https://i.imgur.com/BgXeB0M.png",
 	   "broken": false,
 	   "official": true,
 	   "description": "Adds a count of users theyre connected to a VoiceChannel. Customize the Color of the count in the SettingsPanel."
