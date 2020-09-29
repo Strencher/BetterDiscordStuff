@@ -79,7 +79,7 @@
     background-color: var(--background-secondary) !important;
 }
 /* ContextMenu - Hover */
-.colorDefault-2K3EoJ.focused-3afm-j {
+.colorDefault-2K3EoJ.focused-3afm-j, .colorDefault-2K3EoJ:active:not(.hideInteraction-1iHO1O) {
     background-color: var(--accent);
 }
 /* ContextMenu - Radio Item */
