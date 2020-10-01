@@ -33,7 +33,7 @@ module.exports = (async () => {
                 <div className="title">
                     <div className="text blue">BetterDiscord</div>
                     <div className="text"> Addons</div>
-                    <a href="https://discord.gg/gvA2ree">Support Server</a>
+                    <a href="https://discord.gg/gvA2ree">Support Server, <span>{discordInfo.presence_count} Online</span></a>
                 </div>,
                 <div className="section plugins">Plugins: </div>,
                 plugins.map((e, i) => <Card {...e} type="plugin" key={"plugin-"+i} onView={() => this.showImage(plugins, i)}></Card>),
