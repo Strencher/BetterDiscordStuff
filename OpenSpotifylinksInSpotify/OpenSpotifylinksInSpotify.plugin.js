@@ -1,5 +1,3 @@
-//META{"name":"spotifyLinks", "source": "https://github.com/Strencher/BetterDiscordStuff/blob/master/OpenSpotifylinksInSpotify/OpenSpotifylinksInSpotify.plugin.js", "website": "https://strencher.github.io/BetterDiscordStuff/"}*//
-const { shell } = require('electron')
 /**
  * @name spotifyLinks,
  * @authorId 415849376598982656
@@ -42,7 +40,7 @@ module.exports = (() => {
             ],
             version: "0.0.3",
             description: "Opens Spotify links in Spotify. (mini plugin) requires Spotify Desktop App.",
-            github: "https://github.com/Strencher/BetterDiscordStuff/blob/master/NitroSniper/NitroSniper.plugin.js",
+            github: "https://github.com/Strencher/BetterDiscordStuff/blob/master/OpenSpotifylinksInSpotify/OpenSpotifylinksInSpotify.plugin.js",
             github_raw: "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/OpenSpotifylinksInSpotify/OpenSpotifylinksInSpotify.plugin.js"
         },
         changelog: [
