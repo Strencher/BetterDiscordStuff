@@ -1,5 +1,5 @@
 /**
- * @name spotifyLinks,
+ * @name OpenSpotifylinksInSpotify,
  * @authorId 415849376598982656
  */
 /*@cc_on
