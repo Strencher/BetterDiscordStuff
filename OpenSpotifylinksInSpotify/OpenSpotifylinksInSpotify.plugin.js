@@ -1,5 +1,5 @@
 /**
- * @name OpenSpotifylinksInSpotify,
+ * @name OpenSpotifylinksInSpotify
  * @authorId 415849376598982656
  */
 /*@cc_on
@@ -38,7 +38,7 @@ module.exports = (() => {
                     twitter_username: "Strencher3"
                 }
             ],
-            version: "0.0.5",
+            version: "0.0.6",
             description: "Opens Spotify links in Spotify. (mini plugin) requires Spotify Desktop App.",
             github: "https://github.com/Strencher/BetterDiscordStuff/blob/master/OpenSpotifylinksInSpotify/OpenSpotifylinksInSpotify.plugin.js",
             github_raw: "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/OpenSpotifylinksInSpotify/OpenSpotifylinksInSpotify.plugin.js"
