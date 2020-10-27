@@ -38,16 +38,16 @@ module.exports = (() => {
                     twitter_username: "Strencher3"
                 }
             ],
-            version: "0.0.6",
-            description: "Opens Spotify links in Spotify. (mini plugin) requires Spotify Desktop App.",
+            version: "0.0.8",
+            description: "Opens Spotify links in Spotify. requires Spotify Desktop App.",
             github: "https://github.com/Strencher/BetterDiscordStuff/blob/master/OpenSpotifylinksInSpotify/OpenSpotifylinksInSpotify.plugin.js",
             github_raw: "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/OpenSpotifylinksInSpotify/OpenSpotifylinksInSpotify.plugin.js"
         },
         changelog: [
             {
-                title: "switch",
-                type: "improvement",
-                items: ["Switched from remote Zlib to local zlib."]
+                title: "fix",
+                type: "fixed",
+                items: ["Fixed not working."]
             }
         ]
     };
@@ -75,8 +75,8 @@ module.exports = (() => {
         stop() { }
     } : (([Plugin, Api]) => {
         const plugin = (Plugin, Api) => {
-
             const { WebpackModules, PluginUtilities, DiscordModules, ReactComponents, Patcher, Toasts, Modals, DiscordModules: { React } } = Api;
+            const { shell } = require('electron');
             return class OpenSpotifylinksInSpotify extends Plugin {
                 constructor() {
                     super();
