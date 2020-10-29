@@ -23,7 +23,7 @@
 
 @else@*/
 
-var LinkChannels = (() => {
+module.exports = (() => {
     const config = {
         info: {
             name: "LinkChannels",
@@ -35,9 +35,9 @@ var LinkChannels = (() => {
                     twitter_username: "Strencher3"
                 }
             ],
-            version: "0.0.7",
+            version: "1.0.0",
             description: "Adds an Icon to channels that copys <#channelId>. (channelId is replaced) Shift + Click to insert the channel in the textarea.",
-            github: "https://github.com/Strencher/BetterDiscordStuff/LinkChannels/LinkChannels.plugin.js",
+            github: "https://github.com/Strencher/BetterDiscordStuff/blob/master/LinkChannels/LinkChannels.plugin.js",
             github_raw: "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/LinkChannels/LinkChannels.plugin.js"
         },
         changelog: [
@@ -45,14 +45,7 @@ var LinkChannels = (() => {
                 title: 'fixed',
                 type: 'fixed',
                 items: [
-                    'Fixed the last update of discord.'
-                ]
-            },
-            {
-                title: 'fixed',
-                type: 'shitcord',
-                items: [
-                    'Blame shitcord that i need to update the plugin every day.'
+                    'Fixed the last update of discord. take 3.'
                 ]
             }
         ]
@@ -80,27 +73,25 @@ var LinkChannels = (() => {
         stop() { }
     } : (([Plugin, Api]) => {
         const plugin = (Plugin, Api) => {
-            const { WebpackModules, PluginUtilities, DiscordModules, ReactComponents, Patcher, DiscordSelectors, Utilities, Toasts } = Api;
-            const { React } = DiscordModules;
+            const {DiscordModules: {React, DiscordConstants}, WebpackModules, PluginUtilities, DiscordModules, Patcher, Utilities, Toasts} = Api;
             const ToolTip = WebpackModules.getByDisplayName("Tooltip");
             const insertText = e => WebpackModules.getByProps("ComponentDispatch").ComponentDispatch.dispatchToLastSubscribed("INSERT_TEXT", {content: e})
-            class linkIcon extends React.Component {
+            class LinkIcon extends React.Component {
                 render() {
                     return React.createElement(ToolTip, {
                         text: "Link Channel",
                         position: "top",
                         color: "black"
-                    }, e => React.createElement("svg", {
-                            className: "linkChannels icon-3Gkjwa",
+                    }, _props => React.createElement("svg", {
+                            ..._props,
+                            className: "linkChannels iconBase-2IHuka",
                             width: "25",
                             height: "25",
                             viewBox: "0 0 25 25",
-                            onMouseEnter: e.onMouseEnter, 
-                            onMouseLeave: e.onMouseLeave,
                             onClick: this.props.onClick,
                             children: React.createElement("path", {
-                                    fill: "#8e9297",
-                                    d: "M10.59 13.41c.41.39.41 1.03 0 1.42-.39.39-1.03.39-1.42 0a5.003 5.003 0 0 1 0-7.07l3.54-3.54a5.003 5.003 0 0 1 7.07 0 5.003 5.003 0 0 1 0 7.07l-1.49 1.49c.01-.82-.12-1.64-.4-2.42l.47-.48a2.982 2.982 0 0 0 0-4.24 2.982 2.982 0 0 0-4.24 0l-3.53 3.53a2.982 2.982 0 0 0 0 4.24zm2.82-4.24c.39-.39 1.03-.39 1.42 0a5.003 5.003 0 0 1 0 7.07l-3.54 3.54a5.003 5.003 0 0 1-7.07 0 5.003 5.003 0 0 1 0-7.07l1.49-1.49c-.01.82.12 1.64.4 2.43l-.47.47a2.982 2.982 0 0 0 0 4.24 2.982 2.982 0 0 0 4.24 0l3.53-3.53a2.982 2.982 0 0 0 0-4.24.973.973 0 0 1 0-1.42z"
+                                fill: "#8e9297",
+                                d: "M10.59 13.41c.41.39.41 1.03 0 1.42-.39.39-1.03.39-1.42 0a5.003 5.003 0 0 1 0-7.07l3.54-3.54a5.003 5.003 0 0 1 7.07 0 5.003 5.003 0 0 1 0 7.07l-1.49 1.49c.01-.82-.12-1.64-.4-2.42l.47-.48a2.982 2.982 0 0 0 0-4.24 2.982 2.982 0 0 0-4.24 0l-3.53 3.53a2.982 2.982 0 0 0 0 4.24zm2.82-4.24c.39-.39 1.03-.39 1.42 0a5.003 5.003 0 0 1 0 7.07l-3.54 3.54a5.003 5.003 0 0 1-7.07 0 5.003 5.003 0 0 1 0-7.07l1.49-1.49c-.01.82.12 1.64.4 2.43l-.47.47a2.982 2.982 0 0 0 0 4.24 2.982 2.982 0 0 0 4.24 0l3.53-3.53a2.982 2.982 0 0 0 0-4.24.973.973 0 0 1 0-1.42z"
                             })
                         })
                     )
@@ -110,40 +101,46 @@ var LinkChannels = (() => {
                 constructor() {
                     super();
                 }
+                css = `
+                .linkChannels {
+                    display: none;
+                }   
+                .iconVisibility-1bOqu7:hover .linkChannels {
+                    display: block;
+                    cursor: pointer;
+                }
+                .linkChannels {
+                    z-index: 999;
+                }`;
+                onStart() {
+                    PluginUtilities.addStyle(config.info.name, this.css) 
+                    Utilities.suppressErrors(this.patchChannelItem.bind(this), "ChannelItem patch")();
+                }
 
-                async onStart() {
-                    const channel = await ReactComponents.getComponentByName("TextChannel", DiscordSelectors.ChannelList.containerDefault)
-                    PluginUtilities.addStyle(config.info.name, 
-                    `.linkChannels {
-                        display: none;
-                    }   
-                    .iconVisibility-1bOqu7:hover .linkChannels {
-                        display: block;
-                        cursor: pointer;
-                    }
-                    .linkChannels {
-                      z-index: 99999;
-                    }`) 
-                    this.unpatch = Patcher.after(channel.component.prototype, "render", ({props}, _, ret) => {
-                        const children = Utilities.getNestedProp(ret, 'props.children.props.children.props.children') || Utilities.getNestedProp(ret, 'props.children.props.children');
-                        if(!Array.isArray(children)) return;
-                        if(!children.find(e=>e && e.props && e.props.displayName == "LinkChannels")) children.unshift(
-                            React.createElement(linkIcon, {
-                                displayName: "LinkChannels",
-                                onClick: e => {
-                                    if(e.shiftKey) insertText("<#"+props.channel.id+">")
-                                    else {
-                                        DiscordModules.ElectronModule.copy("<#"+props.channel.id+">");
-                                         Toasts.success("Copied link for #"+props.channel.name)
-                                    }
+                patchChannelItem() {
+                    const ChannelItem = WebpackModules.getModule(m => Object(m.default).displayName === "ChannelItem");
+                    if ("default" in ChannelItem) Patcher.after(ChannelItem, "default", (_, [props], ret) => {
+                        if (!("channel" in props)) return ret;
+                        if (props.channel.type === DiscordConstants.ChannelTypes.GUILD_VOICE) return ret;
+                        const children = Utilities.getNestedProp(props, "children");
+                        if (!Array.isArray(children)) return ret;
+                        if (children.find(e => e && e.type === LinkIcon)) return ret;
+                        children.unshift(React.createElement(LinkIcon, {
+                            onClick: e => {
+                                if (e.shiftKey) insertText("<#"+props.channel.id+">")
+                                else {
+                                    DiscordModules.ElectronModule.copy("<#"+props.channel.id+">");
+                                    Toasts.success("Copied link for #"+props.channel.name)
                                 }
-                            })
-                        );
+                            }
+                        }));
+                        return ret;
                     });
                 }
+
                 onStop() {
                     PluginUtilities.removeStyle(config.info.name);
-                    this.unpatch()
+                    Patcher.unpatchAll();
                 }
 
             }
@@ -152,3 +149,4 @@ var LinkChannels = (() => {
         return plugin(Plugin, Api);
     })(global.ZeresPluginLibrary.buildPlugin(config));
 })();
+/*@end@*/
