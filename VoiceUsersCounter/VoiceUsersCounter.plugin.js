@@ -40,16 +40,18 @@ module.exports = (() => {
                     twitter_username: "Strencher3"
                 }
             ],
-            version: "0.0.6",
+            version: "0.0.7",
             description: "Adds a count of users they're connected to a VoiceChannel. Customize the Color of the count in the SettingsPanel.",
             github: "https://github.com/Strencher/BetterDiscordStuff/blob/master/VoiceUsersCounter/VoiceUsersCounter.plugin.js",
             github_raw: "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/VoiceUsersCounter/VoiceUsersCounter.plugin.js"
         },
         changelog: [
             {
-                title: "Rewrite",
-                type: "added",
-                items: ["The Plugin got rewritten."]
+                title: "FIXED",
+                type: "fixed",
+                items: [
+                    "Fixed the last discord update. take 3."
+                ]
             }
         ],
         defaultConfig: [
@@ -87,66 +89,83 @@ module.exports = (() => {
     } : (([Plugin, Api]) => {
         const plugin = (Plugin, Api) => {
 
-            const { WebpackModules, PluginUtilities, DiscordModules, Patcher, DiscordSelectors, ReactTools } = Api;
-            const { React } = DiscordModules;
+            const {DiscordModules: {React, DiscordConstants}, Utilities, WebpackModules, PluginUtilities, DiscordModules, Patcher, DiscordSelectors, ReactTools} = Api;
             const Tooltip = WebpackModules.getByDisplayName("Tooltip");
-            const { getVoiceChannelId } = WebpackModules.getByProps('getVoiceChannelId');
+            const {getVoiceChannelId} = WebpackModules.getByProps('getVoiceChannelId');
+            const VoiceChannelStore = WebpackModules.getByProps("getVoiceStates");
             class VoiceCount extends React.Component {
                 render() {
                     return React.createElement(Tooltip, {
                         text: "Connected Users: " + this.props.count,
                         position: "top",
                         color: "black"
-                    }, e => React.createElement("span", Object.assign({
+                    }, e => React.createElement("span", {
                         ...e,
+                        ...this.props,
                         className: "voiceCounter",
-                    }, this.props.options), this.props.count))
+                    }, this.props.count))
                 }
             }
             return class VoiceUsersCounter extends Plugin {
                 constructor() {
                     super();
                 }
+
                 getSettingsPanel() {
                     const panel = this.buildSettingsPanel();
                     panel.addListener(() => {
-                        document.querySelectorAll(DiscordSelectors.ChannelList.containerDefault).forEach(e => {
-                            ReactTools.getOwnerInstance(e).forceUpdate();
-                        });
+                        this.forceUpdateAll();
                     });
                     return panel.getElement();
                 }
-                onStart() {
-                    PluginUtilities.addStyle(config.info.name,
-                        `.voiceCounter {
-                            color: var(--channels-default);
-                            font-weight: bold; 
-                            margin-left: 5px;
-                        }`
-                    );
-                    this.unpatch = Patcher.after(WebpackModules.getByDisplayName("ChannelItem").prototype, "renderIcons", (_, __, e) => {
-                        const { props: { channel, userCount }} = e.props.children.find(e => e && e.props && e.props.hasOwnProperty("userCount")) || {props: {}};
-                        if(!channel || channel.type !== 2) return e;
-                        if(channel.userLimit > 0) return;
-                        e.props.children.push(
-                            React.createElement(VoiceCount, {
-                                count: userCount,
-                                options: {
-                                    style: channel.id == getVoiceChannelId() ? {
-                                        color: this.settings.color || "var(--blurple)",
-                                        display: userCount == 0 ? "none" : "block"
-                                    } : {
-                                        display: userCount == 0 ? "none" : "block"
-                                    }
-                                }
-                            })
-                        );
-                        return e;
+
+                forceUpdateAll() {
+                    document.querySelectorAll(DiscordSelectors.ChannelList.containerDefault).forEach(e => {
+                        ReactTools.getOwnerInstance(e).forceUpdate();
                     });
                 }
+
+                css = `
+                .voiceCounter {
+                    color: var(--channels-default);
+                    font-weight: bold; 
+                    margin-left: 5px;
+                    z-index: 999;
+                }`
+
+                onStart() {
+                    PluginUtilities.addStyle(config.info.name, this.css);
+                    Utilities.suppressErrors(this.patchChannelItem.bind(this), "ChannelItem Patch")();
+                    this.forceUpdateAll();
+                }
+
+                patchChannelItem() {
+                    const ChannelItem = WebpackModules.getModule(m => Object(m.default).displayName === "ChannelItem");
+                    Patcher.after(ChannelItem, "default", (_, [props], ret) => {
+                        if (!("channel" in props)) return ret;
+                        if (props.channel.type !== DiscordConstants.ChannelTypes.GUILD_VOICE) return ret;
+                        const children = Utilities.getNestedProp(props, "children");
+                        if (!Array.isArray(children)) return ret;
+                        if (children.find(e => e && e.type === VoiceCount)) return ret;
+                        const count = VoiceChannelStore.getVoiceStatesForChannel(props.channel).length;
+                        if(props.channel.userLimit > 0) return ret; // Don't show on channels with limits.
+                        if(count == 0) return ret;
+                        children.push(
+                            React.createElement(VoiceCount, {
+                                count: count,
+                                style: props.channel.id === getVoiceChannelId() ? {
+                                    color: this.settings.color || "var(--blurple)",
+                                } : {},
+                                ...props,
+                            })
+                        );
+                        return ret;
+                    });
+                }
+
                 onStop() {
                     PluginUtilities.removeStyle(config.info.name);
-                    this.unpatch();
+                    Patcher.unpatchAll();
                 }
 
             }
@@ -155,3 +174,4 @@ module.exports = (() => {
         return plugin(Plugin, Api);
     })(global.ZeresPluginLibrary.buildPlugin(config));
 })();
+/*@end@*/
