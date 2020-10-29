@@ -28,7 +28,7 @@
 
 @else@*/
 
-const QuickMuteChannels = (() => {
+module.exports = (() => {
     const config = {
         info: {
             name: "QuickMuteChannels",
@@ -40,7 +40,7 @@ const QuickMuteChannels = (() => {
                     twitter_username: "Strencher3"
                 }
             ],
-            version: "0.0.8",
+            version: "1.0.0",
             description: "Adds an Speaker to channels to Quickly mute/unmute them.",
             github: "https://github.com/Strencher/BetterDiscordStuff/blob/master/QuickMuteChannels/QuickMuteChannels.plugin.js",
             github_raw: "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/QuickMuteChannels/QuickMuteChannels.plugin.js"
@@ -50,14 +50,7 @@ const QuickMuteChannels = (() => {
                 title: 'fixed',
                 type: 'fixed',
                 items: [
-                    'Fixed the last update of discord.'
-                ]
-            },
-            {
-                title: 'fixed',
-                type: 'shitcord',
-                items: [
-                    'Blame shitcord that i need to update the plugin every day.'
+                    'Fixed the last update of discord. take 3.'
                 ]
             }
         ]
@@ -87,28 +80,25 @@ const QuickMuteChannels = (() => {
     } : (([Plugin, Api]) => {
         const plugin = (Plugin, Api) => {
 
-            const { WebpackModules, Toasts, Utilities, PluginUtilities, DiscordModules, ReactComponents, Patcher, DiscordSelectors, DiscordAPI } = Api;
-            const { React } = DiscordModules;
-            const updateSetting = WebpackModules.getByProps("updateChannelOverrideSettings");
+            const {DiscordModules: {React}, WebpackModules, Toasts, Utilities, PluginUtilities, DiscordModules, Patcher} = Api;
+            const MuteChannelModule = WebpackModules.getByProps("updateChannelOverrideSettings");
             const ToolTip = WebpackModules.getByDisplayName("Tooltip");
             class MuteIcon extends React.Component {
                 render() {
                     return React.createElement(ToolTip, {
-                        text: this.props.state ? "Unmute": "Mute",
+                        text: this.props.muted ? "Unmute": "Mute",
                         position: "top",
                         color: "black"
-                    }, e => React.createElement("svg", {
+                    }, _props => React.createElement("svg", {
+                        ..._props,
                         width: "25",
                         height: "25",
                         viewBox: "0 0 25 25",
-                        className: `icon-1_QxNX muteChannelIcon`,
-                        onMouseEnter: e.onMouseEnter, 
-                        onMouseLeave: e.onMouseLeave,
+                        className: "icon-1_QxNX muteChannelIcon",
                         onClick: this.props.onClick,
                         children: React.createElement("path", {
                            d: "M11.383 3.07904C11.009 2.92504 10.579 3.01004 10.293 3.29604L6 8.00204H3C2.45 8.00204 2 8.45304 2 9.00204V15.002C2 15.552 2.45 16.002 3 16.002H6L10.293 20.71C10.579 20.996 11.009 21.082 11.383 20.927C11.757 20.772 12 20.407 12 20.002V4.00204C12 3.59904 11.757 3.23204 11.383 3.07904ZM14 5.00195V7.00195C16.757 7.00195 19 9.24595 19 12.002C19 14.759 16.757 17.002 14 17.002V19.002C17.86 19.002 21 15.863 21 12.002C21 8.14295 17.86 5.00195 14 5.00195ZM14 9.00195C15.654 9.00195 17 10.349 17 12.002C17 13.657 15.654 15.002 14 15.002V13.002C14.551 13.002 15 12.553 15 12.002C15 11.451 14.551 11.002 14 11.002V9.00195Z",
-                           fill: this.props.state ? "#f04747" : "currentColor" ,
-
+                           fill: this.props.muted ? "#f04747" : "currentColor" ,
                         })
                     }))
                 }
@@ -118,39 +108,45 @@ const QuickMuteChannels = (() => {
                     super();
                 }
 
-                async onStart() {
-                    PluginUtilities.addStyle(config.info.name, 
-                    `.muteChannelIcon {
-                        display: none;
-                        cursor: pointer;
-                    } 
-                    .iconVisibility-1bOqu7:hover .muteChannelIcon {
-                        display: block;
-                        cursor: pointer;
-                    }
-                    .muteChannelIcon {
-                        z-index: 999999;
-                    }
-                    `)
-                    const channel = await ReactComponents.getComponentByName("TextChannel", DiscordSelectors.ChannelList.containerDefault); 
-                    Patcher.after(channel.component.prototype, "render", ({props}, _, ret)=>{
-                        const childs = Utilities.getNestedProp(ret, 'props.children.props.children.props.children') || Utilities.getNestedProp(ret, 'props.children.props.children');
-                        if(!Array.isArray(childs)) return ret;
-                        if(childs.find(e => e && e.props.displayName == 'MuteIcon')) return ret;
-                        childs.unshift(React.createElement(MuteIcon, {
-                            state: props.muted,
-                            displayName: "MuteIcon",
-                            channelId: props.channel.id,
-                            onClick: () => {
-                                updateSetting.updateChannelOverrideSettings(DiscordAPI.currentGuild.id, props.channel.id, {
-                                    muted: !props.muted
-                                })
-                                Toasts.success(props.muted ? "Unmuted" : "Muted");
-                            }
-                        }))
-                    });
-                    channel.forceUpdateAll()
+                css = `
+                .muteChannelIcon {
+                    display: none;
+                    cursor: pointer;
+                } 
+                .iconVisibility-1bOqu7:hover .muteChannelIcon {
+                    display: block;
+                    cursor: pointer;
                 }
+                .muteChannelIcon {
+                    z-index: 999999;
+                }`
+
+                onStart() {
+                    PluginUtilities.addStyle(config.info.name, this.css);
+                    Utilities.suppressErrors(this.patchChannelItem.bind(this), "ChannelItem Patch")();
+                }
+
+                patchChannelItem() {
+                    const ChannelItem = WebpackModules.getModule(m => Object(m.default).displayName === "ChannelItem");
+                    if("default" in ChannelItem) Patcher.after(ChannelItem, "default", (_, [props], ret) => {
+                        if(!("channel" in props)) return ret;
+                        if(props.channel.type === DiscordModules.DiscordConstants.ChannelTypes.GUILD_VOICE) return ret;
+                        const children = Utilities.getNestedProp(props, "children");
+                        if(!Array.isArray(children)) return ret;
+                        if(children.find(e => e && e.type === MuteIcon)) return ret;
+                        children.unshift(React.createElement(MuteIcon, {
+                            muted: props.muted,
+                            onClick: () => {
+                                MuteChannelModule.updateChannelOverrideSettings(props.channel.guild_id, props.channel.id, {
+                                    muted: !props.muted
+                                });
+                                Toasts.success(`${props.muted ? "Unmuted" : "Muted"} #${props.channel.name}`);
+                            }
+                        }));
+                        return ret;
+                    });
+                }
+
                 onStop() {
                     Patcher.unpatchAll()
                     PluginUtilities.removeStyle(config.info.name)
