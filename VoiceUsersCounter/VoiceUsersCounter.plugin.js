@@ -40,7 +40,7 @@ module.exports = (() => {
                     twitter_username: "Strencher3"
                 }
             ],
-            version: "0.0.7",
+            version: "0.0.8",
             description: "Adds a count of users they're connected to a VoiceChannel. Customize the Color of the count in the SettingsPanel.",
             github: "https://github.com/Strencher/BetterDiscordStuff/blob/master/VoiceUsersCounter/VoiceUsersCounter.plugin.js",
             github_raw: "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/VoiceUsersCounter/VoiceUsersCounter.plugin.js"
@@ -93,6 +93,7 @@ module.exports = (() => {
             const Tooltip = WebpackModules.getByDisplayName("Tooltip");
             const {getVoiceChannelId} = WebpackModules.getByProps('getVoiceChannelId');
             const VoiceChannelStore = WebpackModules.getByProps("getVoiceStates");
+            const classes = Object(WebpackModules.getByProps("iconItem"))
             class VoiceCount extends React.Component {
                 render() {
                     return React.createElement(Tooltip, {
@@ -102,7 +103,7 @@ module.exports = (() => {
                     }, e => React.createElement("span", {
                         ...e,
                         ...this.props,
-                        className: "voiceCounter",
+                        className: ["voiceCounter", classes.baseItem].filter(e => e).join(" "),
                     }, this.props.count))
                 }
             }

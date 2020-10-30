@@ -35,7 +35,7 @@ module.exports = (() => {
                     twitter_username: "Strencher3"
                 }
             ],
-            version: "1.0.0",
+            version: "1.0.1",
             description: "Adds an Icon to channels that copys <#channelId>. (channelId is replaced) Shift + Click to insert the channel in the textarea.",
             github: "https://github.com/Strencher/BetterDiscordStuff/blob/master/LinkChannels/LinkChannels.plugin.js",
             github_raw: "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/LinkChannels/LinkChannels.plugin.js"
@@ -76,6 +76,7 @@ module.exports = (() => {
             const {DiscordModules: {React, DiscordConstants}, WebpackModules, PluginUtilities, DiscordModules, Patcher, Utilities, Toasts} = Api;
             const ToolTip = WebpackModules.getByDisplayName("Tooltip");
             const insertText = e => WebpackModules.getByProps("ComponentDispatch").ComponentDispatch.dispatchToLastSubscribed("INSERT_TEXT", {content: e})
+            const classes = Object(WebpackModules.getByProps("iconItem"))
             class LinkIcon extends React.Component {
                 render() {
                     return React.createElement(ToolTip, {
@@ -84,7 +85,7 @@ module.exports = (() => {
                         color: "black"
                     }, _props => React.createElement("svg", {
                             ..._props,
-                            className: "linkChannels iconBase-2IHuka",
+                            className: ["linkChannels", classes.iconBase].filter(e => e).join(" "),
                             width: "25",
                             height: "25",
                             viewBox: "0 0 25 25",
