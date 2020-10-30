@@ -103,7 +103,7 @@ module.exports = (() => {
                     }, e => React.createElement("span", {
                         ...e,
                         ...this.props,
-                        className: ["voiceCounter", classes.baseItem].filter(e => e).join(" "),
+                        className: ["voiceCounter", classes.iconBase].filter(e => e).join(" "),
                     }, this.props.count))
                 }
             }
