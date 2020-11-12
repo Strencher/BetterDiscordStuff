@@ -1,4 +1,9 @@
-//META{"name":"LinkChannels","displayName":"LinkChannels", "invite": "gvA2ree", "authorId": "415849376598982656"}*//
+/**
+ * @name LinkChannels
+ * @displayName LinkChannels
+ * @invite gv2ree
+ * @authorId 415849376598982656
+ */
 /*@cc_on
 @if (@_jscript)
     
@@ -35,7 +40,7 @@ module.exports = (() => {
                     twitter_username: "Strencher3"
                 }
             ],
-            version: "1.0.1",
+            version: "1.0.3",
             description: "Adds an Icon to channels that copys <#channelId>. (channelId is replaced) Shift + Click to insert the channel in the textarea.",
             github: "https://github.com/Strencher/BetterDiscordStuff/blob/master/LinkChannels/LinkChannels.plugin.js",
             github_raw: "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/LinkChannels/LinkChannels.plugin.js"
@@ -45,7 +50,7 @@ module.exports = (() => {
                 title: 'fixed',
                 type: 'fixed',
                 items: [
-                    'Fixed the last update of discord. take 3.'
+                    'Fixed the last update of discord. take 4.'
                 ]
             }
         ]
@@ -76,26 +81,28 @@ module.exports = (() => {
             const {DiscordModules: {React, DiscordConstants}, WebpackModules, PluginUtilities, DiscordModules, Patcher, Utilities, Toasts} = Api;
             const ToolTip = WebpackModules.getByDisplayName("Tooltip");
             const insertText = e => WebpackModules.getByProps("ComponentDispatch").ComponentDispatch.dispatchToLastSubscribed("INSERT_TEXT", {content: e})
-            const classes = Object(WebpackModules.getByProps("iconItem"))
+            const classes = Object(WebpackModules.getByProps("iconItem"));
+            const joinClass = (...classNames) => classNames.filter(Boolean).join(" ");
             class LinkIcon extends React.Component {
                 render() {
                     return React.createElement(ToolTip, {
                         text: "Link Channel",
                         position: "top",
                         color: "black"
-                    }, _props => React.createElement("svg", {
-                            ..._props,
-                            className: ["linkChannels", classes.iconBase].filter(e => e).join(" "),
-                            width: "25",
-                            height: "25",
-                            viewBox: "0 0 25 25",
-                            onClick: this.props.onClick,
-                            children: React.createElement("path", {
-                                fill: "#8e9297",
-                                d: "M10.59 13.41c.41.39.41 1.03 0 1.42-.39.39-1.03.39-1.42 0a5.003 5.003 0 0 1 0-7.07l3.54-3.54a5.003 5.003 0 0 1 7.07 0 5.003 5.003 0 0 1 0 7.07l-1.49 1.49c.01-.82-.12-1.64-.4-2.42l.47-.48a2.982 2.982 0 0 0 0-4.24 2.982 2.982 0 0 0-4.24 0l-3.53 3.53a2.982 2.982 0 0 0 0 4.24zm2.82-4.24c.39-.39 1.03-.39 1.42 0a5.003 5.003 0 0 1 0 7.07l-3.54 3.54a5.003 5.003 0 0 1-7.07 0 5.003 5.003 0 0 1 0-7.07l1.49-1.49c-.01.82.12 1.64.4 2.43l-.47.47a2.982 2.982 0 0 0 0 4.24 2.982 2.982 0 0 0 4.24 0l3.53-3.53a2.982 2.982 0 0 0 0-4.24.973.973 0 0 1 0-1.42z"
-                            })
+                    }, _props => React.createElement("div", {
+                        className: joinClass("linkChannels", classes.iconItem)
+                    }, React.createElement("svg", {
+                        ..._props,
+                        className: classes.actionIcon,
+                        width: "25",
+                        height: "25",
+                        viewBox: "0 0 25 25",
+                        onClick: this.props.onClick,
+                        children: React.createElement("path", {
+                            d: "M10.59 13.41c.41.39.41 1.03 0 1.42-.39.39-1.03.39-1.42 0a5.003 5.003 0 0 1 0-7.07l3.54-3.54a5.003 5.003 0 0 1 7.07 0 5.003 5.003 0 0 1 0 7.07l-1.49 1.49c.01-.82-.12-1.64-.4-2.42l.47-.48a2.982 2.982 0 0 0 0-4.24 2.982 2.982 0 0 0-4.24 0l-3.53 3.53a2.982 2.982 0 0 0 0 4.24zm2.82-4.24c.39-.39 1.03-.39 1.42 0a5.003 5.003 0 0 1 0 7.07l-3.54 3.54a5.003 5.003 0 0 1-7.07 0 5.003 5.003 0 0 1 0-7.07l1.49-1.49c-.01.82.12 1.64.4 2.43l-.47.47a2.982 2.982 0 0 0 0 4.24 2.982 2.982 0 0 0 4.24 0l3.53-3.53a2.982 2.982 0 0 0 0-4.24.973.973 0 0 1 0-1.42z",
+                            fill: "currentColor"
                         })
-                    )
+                    })))
                 }
             }
             return class linkChannels extends Plugin {
