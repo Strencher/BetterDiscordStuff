@@ -1,15 +1,15 @@
 /* Channel unread indicator */
-.unread-3zKkbm {
+.unread-2lAfLh {
     width: 3px;
     left: 2px;
     border-radius: 0;
     height: 30px;
     top: 5px;
-    background: var(--text-muted);
+    background: var(--text-normal);
 }
 
 /* Selected Channel */
-.selected-37j_iU:before {
+.selected-3LIHYU:before {
     content: "";
     width: 3px;
     left: 2px;
