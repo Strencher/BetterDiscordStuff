@@ -50,10 +50,10 @@
 }
 /* Scrollbars */
 ::-webkit-scrollbar-track {
-    background-color: var(--background-accent) !important;
+    background-color: var(--lvl1) !important;
 }
 ::-webkit-scrollbar-thumb {
-    background-color: var(--lvl1) !important;
+    background-color: var(--background-accent) !important;
 }
 ::-webkit-scrollbar-button {
     display: none;
@@ -95,12 +95,13 @@
     border-color: var(--accent) !important;
 }
 /* Selected Channel */
-.modeSelected-1zApJ_ .content-3at_AU {
+.modeSelected-346R90 .content-1x5b-n {
     background-color: var(--accent) !important;
 }
-.modeSelected-1zApJ_ .icon-1_QxNX {
+.modeSelected-346R90 .icon-1DeIlz {
     color: white !important;
 }
+
 /* Search List */
 .container-3ayLPN {
     background-color: var(--background-accent) !important;
