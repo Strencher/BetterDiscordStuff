@@ -48,12 +48,20 @@ body {
 }
 .card .head {
     display: flex;
+    position: sticky;
+    margin: 5px;
 }
 
 .card .version {
     color: #0066ff;
     text-shadow: 0 0 10px currentColor;
     font-family: consolas;
+    position: absolute;
+    right: -15px;
+    top: -15px;
+    padding: 7px;
+    background: #111;
+    border-bottom-left-radius: 20px;
 }
 
 
