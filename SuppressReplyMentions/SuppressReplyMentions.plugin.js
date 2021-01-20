@@ -40,7 +40,7 @@ module.exports = (() => {
                     twitter_username: "Strencher3"
                 }
             ],
-            version: "0.0.1",
+            version: "0.0.2",
             description: "Suppresses mentions from Replied messages and when replying to someone else.",
             github: "https://github.com/Strencher/BetterDiscordStuff/blob/master/SuppressReplyMentions/SuppressReplyMentions.plugin.js",
             github_raw: "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/SuppressReplyMentions/SuppressReplyMentions.plugin.js"
@@ -137,7 +137,8 @@ module.exports = (() => {
                         const message = Utilities.findInReactTree(returnValue, e => e && e.props && e.props.compact != undefined);
                         if (!message) return;
 
-                        Patcher.after(message, "type", (_, __, returnValue) => {
+                        const unpatch = Patcher.after(message, "type", (_, __, returnValue) => {
+                            unpatch();
                             if (!returnValue || !returnValue.props || !Array.isArray(returnValue.props.children)) return;
 
                             returnValue.props.children.unshift(React.createElement(Tooltip, {
