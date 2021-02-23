@@ -40,7 +40,7 @@ module.exports = (() => {
                     twitter_username: "Strencher3"
                 }
             ],
-            version: "0.0.8",
+            version: "2.0.0",
             description: "Adds a count of users they're connected to a VoiceChannel. Customize the Color of the count in the SettingsPanel.",
             github: "https://github.com/Strencher/BetterDiscordStuff/blob/master/VoiceUsersCounter/VoiceUsersCounter.plugin.js",
             github_raw: "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/VoiceUsersCounter/VoiceUsersCounter.plugin.js"
@@ -51,6 +51,13 @@ module.exports = (() => {
                 type: "fixed",
                 items: [
                     "Fixed the last discord update. take 3."
+                ]
+            },
+            {
+                title: "23.2.2021 - FIXED",
+                type: "fixed",
+                items: [
+                    "Discord updated, things broke, i fixed."
                 ]
             }
         ],
@@ -148,7 +155,7 @@ module.exports = (() => {
                         const children = Utilities.getNestedProp(props, "children");
                         if (!Array.isArray(children)) return ret;
                         if (children.find(e => e && e.type === VoiceCount)) return ret;
-                        const count = VoiceChannelStore.getVoiceStatesForChannel(props.channel).length;
+                        const count = Object.keys(VoiceChannelStore.getVoiceStatesForChannel(props.channel.id)).length;
                         if(props.channel.userLimit > 0) return ret; // Don't show on channels with limits.
                         if(count == 0) return ret;
                         children.push(
