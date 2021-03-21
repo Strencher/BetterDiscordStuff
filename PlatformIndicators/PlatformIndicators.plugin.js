@@ -39,16 +39,29 @@ module.exports = (() => {
                     twitter_username: "Strencher3"
                 }
             ],
-            version: "0.0.2",
+            version: "0.0.4",
             description: "Adds indicators for every platform that the user is using. Source code availble on the repo in the 'src' folder.",
-            github: "https://github.com/Strencher/BetterDiscordStuff/blob/master/PlatformIndicators/PlatformIndicators.plugin.js",
-            github_raw: "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/PlatformIndicators/PlatformIndicators.plugin.js"
+            github: "https://github.com/Strencher/BetterDiscordStuff/blob/master/PlatformIndicators/APlatformIndicators.plugin.js",
+            github_raw: "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/PlatformIndicators/APlatformIndicators.plugin.js"
         },
         changelog: [
             {
-                title: "okay... fine...",
+                title: "v0.0.4",
                 type: "added",
-                items: ["People keep asking me if i could drop it into the official list. There you go!"]
+                items: [
+                    "2 Attempt to fix conflicts with BetterRoleColors.",
+                    "It'll probably require you to update 2 times because the filename has changed.",
+                    "Bug fixes... styling fixes..."
+                ]
+            },
+            {
+                title: "v0.0.3",
+                type: "added",
+                items: [
+                    "Fixed some padding issues",
+                    "Added support for you to show indicators",
+                    "1 Attempt to fix some updating issues on the first start"
+                ]
             },
             {
                 title: "v0.0.2",
@@ -156,7 +169,7 @@ module.exports = (() => {
         stop() { }
     } : (([Plugin, Api]) => {
         const plugin = (Plugin, Api) => {
-            const { Utilities, WebpackModules, PluginUtilities, DiscordModules, ReactComponents, Patcher, Logger, DiscordModules: { React, UserStatusStore, DiscordConstants: { StatusTypes } } } = Api;
+            const { Utilities, WebpackModules, PluginUtilities, ReactTools, Patcher, Logger, DiscordModules: { React, UserStatusStore, Dispatcher, DiscordConstants: { ActionTypes } } } = Api;
             const Utils = Object.assign(Utilities, {
                 joinClassNames: (...classNames) => classNames.filter(Boolean).join(" "),
                 capFirst(text) {
@@ -186,7 +199,8 @@ module.exports = (() => {
             const Flux = WebpackModules.getByProps("connectStores");
             const MessageTimestamp = WebpackModules.getByProps("MessageTimestamp");
             const { Messages } = WebpackModules.getByProps("Messages", "setLocale");
-            let plugin;
+            const AuthStore = WebpackModules.getByProps("getId", "getEmail");
+            let plugin, currentClientStatus;
             const StatusIndicators = function StatusIndicators(props) {
                 if (!props)
                     return null;
@@ -205,6 +219,10 @@ module.exports = (() => {
                         display: inline-flex;
                     }
 
+                    .PI-indicatorContainer svg {
+                        margin: 2px;
+                    }
+
                     .header-23xsNx {
                         display: flex !important;
                         flex-direction: row !important;
@@ -217,36 +235,45 @@ module.exports = (() => {
                     this.getSettingsPanel = () => {
                         return this.buildSettingsPanel().getElement();
                     };
+                    this.ON_PRESENCE_UPDATE = ({ user, clientStatus }) => {
+                        if (user.id != AuthStore.getId())
+                            return;
+                        currentClientStatus = clientStatus;
+                        UserStatusStore.emitChange();
+                    };
                 }
                 getClients(userId) {
-                    const status = UserStatusStore.getState().clientStatuses[userId];
+                    const isSelf = userId == AuthStore.getId();
+                    const status = isSelf ? currentClientStatus : UserStatusStore.getState().clientStatuses[userId];
                     return status !== null && status !== void 0 ? status : {};
                 }
                 onStart() {
                     plugin = this;
                     PluginUtilities.addStyle(config.info.name, this.css);
-                    this.patchMessageHeader();
-                    this.patchMemberListItem();
-                    this.patchDmList();
-                    this.patchDiscordTag();
+                    Utils.suppressErrors(this.patchMessageHeader.bind(this))();
+                    Utils.suppressErrors(this.patchMemberListItem.bind(this))();
+                    Utils.suppressErrors(this.patchDmList.bind(this))();
+                    Utils.suppressErrors(this.patchDiscordTag.bind(this))();
+                    Dispatcher.subscribe(ActionTypes.PRESENCE_UPDATE, this.ON_PRESENCE_UPDATE);
                 }
                 async patchMemberListItem() {
-                    const Item = await ReactComponents.getComponentByName("MemberListItem", getClass(["member"], ["member"], [], true));
-                    Patcher.after(Item.component.prototype, "render", ({ props }, _, returnValue) => {
+                    const MemberListItem = WebpackModules.getByDisplayName("MemberListItem");
+                    Patcher.after(MemberListItem.prototype, "renderDecorators", ({ props }, _, returnValue) => {
+                        var _a;
                         if (!this.settings.showInMemberList)
                             return;
                         try {
-                            const tree = returnValue.props.decorators;
-                            if (!tree || (this.settings.ignoreBots && props.user.bot))
+                            const tree = (_a = returnValue === null || returnValue === void 0 ? void 0 : returnValue.props) === null || _a === void 0 ? void 0 : _a.children;
+                            if (!Array.isArray(tree) || (this.settings.ignoreBots && props.user.bot))
                                 return;
                             const FluxWrapper = Flux.connectStores([UserStatusStore], () => this.getClients(props.user.id))(clients => React.createElement(StatusIndicators, Object.assign({}, clients, { type: "memberList" })));
-                            tree.props.children.unshift(React.createElement(FluxWrapper, null));
+                            tree.unshift(React.createElement(FluxWrapper, null));
                         }
                         catch (error) {
                             Logger.error("Error while patching MemberListItem:", error);
                         }
                     });
-                    Item.forceUpdateAll();
+                    this.forceUpdate(getClass(["member"], ["member"], [], true));
                 }
                 patchMessageHeader() {
                     Patcher.after(MessageTimestamp, "default", (_, [props], returnValue) => {
@@ -267,47 +294,72 @@ module.exports = (() => {
                 patchDmList() {
                     var _a;
                     const { default: PrivateChannel } = (_a = WebpackModules.getModule(m => { var _a; return ((_a = m === null || m === void 0 ? void 0 : m.default) === null || _a === void 0 ? void 0 : _a.displayName) === "PrivateChannel"; })) !== null && _a !== void 0 ? _a : {};
-                    const name = getClass(["nameAndDecorators", "name"], ["name"]);
-                    const decorators = getClass(["nameAndDecorators", "name"], ["nameAndDecorators"]);
                     Patcher.after(PrivateChannel.prototype, "render", (_this, _, ret) => {
-                        var _a, _b;
-                        if (!this.settings.showInDmsList)
-                            return;
-                        const tree = Utils.getNestedProp(ret, "props.name.props");
-                        if (!(tree === null || tree === void 0 ? void 0 : tree.children) || (this.settings.ignoreBots && ((_b = (_a = _this.props) === null || _a === void 0 ? void 0 : _a.user) === null || _b === void 0 ? void 0 : _b.bot)))
-                            return;
-                        const FluxWrapper = Flux.connectStores([UserStatusStore], () => { var _a, _b; return this.getClients((_b = (_a = _this.props) === null || _a === void 0 ? void 0 : _a.user) === null || _b === void 0 ? void 0 : _b.id); })(clients => React.createElement(StatusIndicators, Object.assign({}, clients, { type: "dmList" })));
-                        tree.children = React.createElement("div", { className: Utils.joinClassNames("PI-container", decorators) },
-                            React.createElement("div", { className: name },
-                                React.createElement("span", null, tree.children)),
-                            React.createElement(FluxWrapper, null));
+                        const unpatch = Patcher.after(ret.type, "render", (_, __, ret) => {
+                            var _a, _b;
+                            unpatch();
+                            if (!this.settings.showInDmsList)
+                                return;
+                            const tree = Utils.findInReactTree(ret, m => { var _a; return ((_a = m === null || m === void 0 ? void 0 : m.className) === null || _a === void 0 ? void 0 : _a.indexOf("nameAndDecorators")) > -1; });
+                            if (!tree)
+                                return;
+                            if (!Array.isArray(tree === null || tree === void 0 ? void 0 : tree.children) || (this.settings.ignoreBots && ((_b = (_a = _this.props) === null || _a === void 0 ? void 0 : _a.user) === null || _b === void 0 ? void 0 : _b.bot)))
+                                return;
+                            const FluxWrapper = Flux.connectStores([UserStatusStore], () => { var _a, _b; return this.getClients((_b = (_a = _this.props) === null || _a === void 0 ? void 0 : _a.user) === null || _b === void 0 ? void 0 : _b.id); })(clients => React.createElement(StatusIndicators, Object.assign({}, clients, { type: "dmList" })));
+                            tree.children = [
+                                tree.children,
+                                React.createElement(FluxWrapper, null)
+                            ];
+                        });
                     });
+                    this.forceUpdate(getClass(["privateChannels"], ["privateChannels"], [], true));
+                }
+                forceUpdate(selector) {
+                    const nodes = document.querySelectorAll(selector);
+                    if (!nodes.length)
+                        return;
+                    for (const node of nodes) {
+                        const instance = ReactTools.getOwnerInstance(node);
+                        if (!instance)
+                            return;
+                        instance.forceUpdate();
+                    }
                 }
                 patchDiscordTag() {
                     const DiscordTag = WebpackModules.getModule(m => { var _a; return ((_a = m === null || m === void 0 ? void 0 : m.default) === null || _a === void 0 ? void 0 : _a.displayName) === "DiscordTag"; });
                     const NameTag = WebpackModules.getModule(m => { var _a; return ((_a = m === null || m === void 0 ? void 0 : m.default) === null || _a === void 0 ? void 0 : _a.displayName) === "NameTag"; });
+                    console.log(DiscordTag);
+                    // Patcher.after(DiscordTag, "default", (_, [{user}], ret) => {
+                    //     ret.props.user = user;
+                    //     return ret;
+                    // });
                     Patcher.after(DiscordTag, "default", (_, [{ user }], ret) => {
                         ret.props.user = user;
                     });
-                    Patcher.after(NameTag, "default", (_, [{ user }], ret) => {
-                        var _a;
+                    Patcher.after(NameTag, "default", (_, [args], ret) => {
                         if (!this.settings.showOnTags)
                             return;
-                        const tree = (_a = ret === null || ret === void 0 ? void 0 : ret.props) === null || _a === void 0 ? void 0 : _a.children;
-                        if (!Array.isArray(tree) || (this.settings.ignoreBots && (user === null || user === void 0 ? void 0 : user.bot)))
+                        const tree = ret === null || ret === void 0 ? void 0 : ret.props;
+                        var { user } = args;
+                        if (!Array.isArray(tree === null || tree === void 0 ? void 0 : tree.children) || (this.settings.ignoreBots && (user === null || user === void 0 ? void 0 : user.bot)))
                             return;
                         const FluxWrapper = Flux.connectStores([UserStatusStore], () => this.getClients(user === null || user === void 0 ? void 0 : user.id))(clients => React.createElement(StatusIndicators, Object.assign({}, clients, { type: "discordTag" })));
                         try {
-                            tree.push(React.createElement(FluxWrapper, null));
+                            var a = React.createElement(FluxWrapper, null);
+                            a.ref = console.log;
+                            tree.children.push(a);
                         }
                         catch (error) {
                             Logger.error("Failed to inject into NameTag:\n", error);
                         }
+                        console.log(tree);
+                        return ret;
                     });
                 }
                 onStop() {
                     Patcher.unpatchAll();
                     PluginUtilities.removeStyle(config.info.name);
+                    Dispatcher.unsubscribe(ActionTypes.PRESENCE_UPDATE, this.ON_PRESENCE_UPDATE);
                 }
             };
         };
