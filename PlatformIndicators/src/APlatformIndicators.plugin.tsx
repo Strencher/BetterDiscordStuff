@@ -373,12 +373,6 @@ module.exports = (() => {
                 patchDiscordTag() {
                     const DiscordTag = WebpackModules.getModule(m => m?.default?.displayName === "DiscordTag");
                     const NameTag = WebpackModules.getModule(m => m?.default?.displayName === "NameTag");
-                    console.log(DiscordTag)
-                    // Patcher.after(DiscordTag, "default", (_, [{user}], ret) => {
-                    //     ret.props.user = user;
-                        
-                    //     return ret;
-                    // });
 
                     Patcher.after(DiscordTag, "default", (_, [{user}], ret) => {
                         ret.props.user = user;
@@ -393,13 +387,10 @@ module.exports = (() => {
                         const FluxWrapper = Flux.connectStores([UserStatusStore], () => this.getClients(user?.id))(clients => <StatusIndicators {...clients} type="discordTag" />)
 
                         try {
-                            var a = <FluxWrapper />;
-                            a.ref = console.log;
-                            tree.children.push(a);
+                            tree.children.push(<FluxWrapper />);
                         } catch (error) {
                             Logger.error("Failed to inject into NameTag:\n", error);
                         }
-                        console.log(tree)
                         return ret;
                     });
                 }
