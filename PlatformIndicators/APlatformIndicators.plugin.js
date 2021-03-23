@@ -39,12 +39,20 @@ module.exports = (() => {
                     twitter_username: "Strencher3"
                 }
             ],
-            version: "0.0.4",
+            version: "0.0.5",
             description: "Adds indicators for every platform that the user is using. Source code availble on the repo in the 'src' folder.",
             github: "https://github.com/Strencher/BetterDiscordStuff/blob/master/PlatformIndicators/APlatformIndicators.plugin.js",
             github_raw: "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/PlatformIndicators/APlatformIndicators.plugin.js"
         },
         changelog: [
+            {
+                title: "v0.0.5",
+                type: "fixed",
+                items: [
+                    "Thanks to @qwert#1441 for fixing the padding issue in chat messages!",
+                    "I still need ideas where to show all of them at one position that is not next to the username... join my Support server => https://discord.gg/gvA2ree to send me ideas!"
+                ]
+            },
             {
                 title: "v0.0.4",
                 type: "added",
@@ -52,26 +60,6 @@ module.exports = (() => {
                     "2 Attempt to fix conflicts with BetterRoleColors.",
                     "It'll probably require you to update 2 times because the filename has changed.",
                     "Bug fixes... styling fixes..."
-                ]
-            },
-            {
-                title: "v0.0.3",
-                type: "added",
-                items: [
-                    "Fixed some padding issues",
-                    "Added support for you to show indicators",
-                    "1 Attempt to fix some updating issues on the first start"
-                ]
-            },
-            {
-                title: "v0.0.2",
-                type: "added",
-                items: [
-                    "Fixed the BetterRoleColors crash issue",
-                    "Added a setting to ignore bots",
-                    "Added a setting(s) to hide specific icons",
-                    "Added the icon in the user profile modal",
-                    "Anyways... I need ideas where to show all of them at one position that is not next to the username... join my Support server => https://discord.gg/gvA2ree to send me ideas!"
                 ]
             }
         ],
@@ -220,7 +208,7 @@ module.exports = (() => {
                     }
 
                     .PI-indicatorContainer svg {
-                        margin: 2px;
+                        margin-left: 2px;
                     }
 
                     .header-23xsNx {
