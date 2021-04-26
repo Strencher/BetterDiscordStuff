@@ -39,7 +39,7 @@ const config = {
                 twitter_username: "Strencher3"
             }
         ],
-        version: "0.0.1",
+        version: "0.0.2",
         description: "Allows you to copy certain stuff with custom options.",
         github: "https://github.com/Strencher/BetterDiscordStuff/blob/master/Copier/Copier.plugin.js",
         github_raw: "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/Copier/Copier.plugin.js"
@@ -49,6 +49,11 @@ const config = {
             title: "Release",
             type: "added",
             items: ["The plugin got released!"]
+        },
+        {
+            title: "Fixed",
+            type: "fixed",
+            items: ["Fixed a bug where the username of the custom copy option wasn't replaced correctly."]
         }
     ]
 };
@@ -223,7 +228,7 @@ const UserCopyOptions = [
     },
     {
         name: "name",
-        getValue: user => user.name,
+        getValue: user => user.username,
         description: "Will be replaced with the name of the user."
     },
     {
