@@ -28,7 +28,7 @@
 
 @else@*/
 
-var TwitchChatV2 = (() => {
+module.exports = (() => {
     const config = {
         info: {
             name: "TwitchChatV2",
@@ -40,7 +40,7 @@ var TwitchChatV2 = (() => {
                     twitter_username: "Strencher3"
                 }
             ],
-            version: "0.0.5",
+            version: "0.0.6",
             description: "Adds an Twitch chat to discord.",
             github: "https://github.com/Strencher/BetterDiscordStuff/TwitchChatV2/TwitchChatV2.plugin.js",
             github_raw: "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/TwitchChatV2/TwitchChatV2.plugin.js"
@@ -105,7 +105,6 @@ var TwitchChatV2 = (() => {
             const { WebpackModules, PluginUtilities, Utilities, DiscordModules, ReactComponents, Patcher } = Api;
             const { React, Textbox, DiscordConstants: { KeyboardKeys } } = DiscordModules;
             const Tooltip = WebpackModules.getByDisplayName("Tooltip");
-            const { remote: { BrowserWindow }} = require('electron');
             const { ModalRoot: Modal } = WebpackModules.getByProps("ModalRoot");
             class TwitchChatButton extends React.Component {
                 render() {
@@ -143,28 +142,14 @@ var TwitchChatV2 = (() => {
                     return this.buildSettingsPanel().getElement()
                 }
                 openChat(val) {
-                    if (this.settings.window) {
-                        let win = new BrowserWindow({
-                            frame: true,
-                            resizeable: true,
-                            show: true,
-                            darkTheme: true,
-                            center: true,
-                            useContentSize: true,
-                            backgroundColor: '#171717',
-                            webPreferences: {
-                                plugins: true
-                            }
-                        })
-                        win.loadURL(`https://www.twitch.tv/embed/${val ? val : this.settings.channel}/chat?${this.settings.dark ? "darkpopout": ""}&parent=twitch.tv`);
-                    } else WebpackModules.getByProps("openModal").openModal(prop => {
+                    WebpackModules.getByProps("openModal").openModal(prop => {
                         return React.createElement(Modal, {
                             onKeyDown: (e) => {
                                 if (e.keyCode == KeyboardKeys.ESCAPE) prop.onClose();
                             },
                             transitionState: prop.transitionState,
                             children: [React.createElement("iframe", {
-                                src: `https://www.twitch.tv/embed/${val ? val : this.settings.channel}/chat?${this.settings.dark ? "darkpopout": ""}`,
+                                src: `https://www.twitch.tv/embed/${val ? val : this.settings.channel}/chat?parent=twitch.tv${this.settings.dark ? "&darkpopout": ""}`,
                                 width: "400",
                                 height: "420",
                                 style: {
@@ -277,10 +262,6 @@ var TwitchChatV2 = (() => {
                 onStop() {
                     Patcher.unpatchAll();
                 }
-                onUnLoad() {
-                    this.onStop();
-                }
-
             }
 
         };
