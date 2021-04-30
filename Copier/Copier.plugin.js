@@ -432,7 +432,7 @@ const buildPlugin = ([Plugin, Api]) => {
                 text: active === "none" ? "Copy RAW Message" : "Copy Message (Custom)"
             },
             React.createElement(MiniPopover.Button, {
-                action: () => {
+                onClick: () => {
                     switch(active) {
                         case "none":
                             ElectronModule.copy(message.content);
