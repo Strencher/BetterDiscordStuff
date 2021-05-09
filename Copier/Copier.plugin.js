@@ -39,7 +39,7 @@ const config = {
                 twitter_username: "Strencher3"
             }
         ],
-        version: "0.0.2",
+        version: "0.0.3",
         description: "Allows you to copy certain stuff with custom options.",
         github: "https://github.com/Strencher/BetterDiscordStuff/blob/master/Copier/Copier.plugin.js",
         github_raw: "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/Copier/Copier.plugin.js"
@@ -48,7 +48,7 @@ const config = {
         {
             title: "Release",
             type: "added",
-            items: ["The plugin got released!"]
+            items: ["The plugin got released!", "If you press the \"Copy\" button instead of choosing options from there, it will automatically copy the ID"]
         },
         {
             title: "Fixed",
@@ -583,6 +583,9 @@ const buildPlugin = ([Plugin, Api]) => {
                         {
                             id: "copy-message",
                             label: "Copy",
+                            action: () => {
+                                ElectronModule.copy(message.id);
+                            },
                             children: [
                                 {
                                     label: "RAW Content",
@@ -678,6 +681,9 @@ const buildPlugin = ([Plugin, Api]) => {
                         {
                             label: "Copy",
                             id: "copy-channel",
+                            action: () => {
+                                ElectronModule.copy(channel.id);
+                            },
                             children: [
                                 {
                                     label: "Name",
@@ -735,6 +741,9 @@ const buildPlugin = ([Plugin, Api]) => {
                         {
                             label: "Copy",
                             id: "copy-voice-channel",
+                            action: () => {
+                                ElectronModule.copy(channel.id);
+                            },
                             children: [
                                 {
                                     label: "Name",
@@ -803,6 +812,9 @@ const buildPlugin = ([Plugin, Api]) => {
                         {
                             label: "Copy",
                             id: "copy-guild",
+                            action: () => {
+                                ElectronModule.copy(guild.id);
+                            },
                             children: [
                                 {
                                     label: "Name",
@@ -867,6 +879,9 @@ const buildPlugin = ([Plugin, Api]) => {
                         {
                             label: "Copy",
                             id: "copy-user",
+                            action: () => {
+                                ElectronModule.copy(user.id);
+                            },
                             children: [
                                 {
                                     label: "Name",
@@ -940,6 +955,9 @@ const buildPlugin = ([Plugin, Api]) => {
                     {
                         label: "Copy",
                         id: "copy-role",
+                        action: () => {
+                            ElectronModule.copy(props.id);
+                        },
                         children: [
                             {
                                 label: "Id",
@@ -1040,7 +1058,7 @@ const buildPlugin = ([Plugin, Api]) => {
                     children: [
                         React.createElement("div", {
                             className: "copr-header",
-                            onClick: () => {
+                            action: () => {
                                 setOpened(!isOpened);
                             },
                             children: [
