@@ -609,7 +609,7 @@ const buildPlugin = ([Plugin, Api]) => {
                                     } 
                                 },
                                 {
-                                    label: "Messge Link",
+                                    label: "Message Link",
                                     id: "copy-message-link",
                                     action: () => {
                                         const channel = ChannelStore.getChannel(message.channel_id);
