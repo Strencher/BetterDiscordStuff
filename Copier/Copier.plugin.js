@@ -39,7 +39,7 @@ const config = {
                 twitter_username: "Strencher3"
             }
         ],
-        version: "0.0.4",
+        version: "0.0.5",
         description: "Allows you to copy certain stuff with custom options.",
         github: "https://github.com/Strencher/BetterDiscordStuff/blob/master/Copier/Copier.plugin.js",
         github_raw: "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/Copier/Copier.plugin.js"
