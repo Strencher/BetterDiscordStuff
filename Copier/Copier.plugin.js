@@ -54,6 +54,11 @@ const config = {
             title: "Fixed",
             type: "fixed",
             items: ["Fixed a bug where the username of the custom copy option wasn't replaced correctly."]
+        }, 
+        {
+            title: "Fixed",
+            type: "fixed",
+            items: ["Fixed a bug where an '@' was missing in the mentions of roles."]
         }
     ]
 };
@@ -995,7 +1000,7 @@ const buildPlugin = ([Plugin, Api]) => {
                                 label: "Mention",
                                 id: "copy-role-mention",
                                 action: () => {
-                                    ElectronModule.copy(`<&${role.id}>`);
+                                    ElectronModule.copy(`<@&${role.id}>`);
                                     Toasts.success("Copied role mention. (<&roleId>)");
                                 }
                             },
