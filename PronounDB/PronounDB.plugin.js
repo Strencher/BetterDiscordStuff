@@ -1,7 +1,9 @@
 /**
  * @name PronounDB
  * @author Strencher, Kyza
- * @description Shows you the pronoun of a user right next to their name. Pronouns by https://pronoundb.org
+ * @description Shows you the pronoun of a user right next to their name. Pronouns by https://pronoundb.org. Source code can be found in the ./src folder of the github repo.
+ * @source https://github.com/Strencher/BetterDiscordStuff/tree/master/PronounDB
+ * @updateUrl https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/PronounDB/PronounDB.plugin.js
  * @version 0.0.1
  */
 /*@cc_on
@@ -43,7 +45,9 @@ const config = {
 				"github_username": "Kyza"
 			}
 		],
-		"description": "Shows you the pronoun of a user right next to their name. Pronouns by https://pronoundb.org",
+		"description": "Shows you the pronoun of a user right next to their name. Pronouns by https://pronoundb.org. Source code can be found in the ./src folder of the github repo.",
+		"github": "https://github.com/Strencher/BetterDiscordStuff/tree/master/PronounDB",
+		"github_raw": "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/PronounDB/PronounDB.plugin.js",
 		"version": "0.0.1"
 	},
 	"build": {
