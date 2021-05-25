@@ -1,0 +1,41 @@
+{
+    "zlib": true,
+    "info": {
+        "name": "PronounDB",
+        "authors": [
+            {
+				"name": "Strencher",
+				"discord_id": "415849376598982656",
+				"github_username": "Strencher",
+				"twitter_username": "Strencher3"
+			},
+            {
+                "name": "Kyza",
+                "discord_id": "220584715265114113",
+                "github_username": "Kyza"
+            }
+        ],
+        "description": "Shows you the pronoun of a user right next to their name. Pronouns by https://pronoundb.org",
+        "version": "0.0.1"
+    },
+    "build": {
+        "zlibrary": true,
+        "copy": true,
+        "production": true,
+        "scssHash": false,
+        "alias": {},
+        "release": {
+            "source": true,
+            "readme": true,
+            "contributors": [
+                {
+                    "name": "Kyza",
+                    "github": "https://github.com/Kyza"
+                }
+            ]
+        }
+    },
+    "dependencies": {
+        "dexie": "^3.0.3"
+    }
+}

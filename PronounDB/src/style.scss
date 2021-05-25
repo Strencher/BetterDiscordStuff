@@ -1,0 +1,18 @@
+.container {
+    align-content: center;
+    display: flex;
+    
+    .header {
+        font-weight: 700;
+        text-transform: uppercase;
+        font-size: 12px;
+        margin-bottom: 8px;
+        color: var(--header-secondary);
+    }
+    
+    .tag {
+        font-size: 12px;
+        color: var(--text-normal);
+        margin-left: 5px;
+    }
+}
