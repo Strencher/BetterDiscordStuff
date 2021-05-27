@@ -1,0 +1,35 @@
+{
+	"info": {
+		"name": "SilentTyping",
+		"authors": [
+			{
+				"name": "Strencher",
+				"discord_id": "415849376598982656",
+				"github_username": "Strencher",
+				"twitter_username": "Strencher3"
+			}
+		],
+		"version": "0.0.1",
+		"description": "Enhanced version of silent typing.",
+		"github": "https://github.com/Strencher/BetterDiscordStuff/blob/master/SilentTypingV2/SilentTypingV2.plugin.js",
+		"github_raw": "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/SilentTypingV2/SilentTypingV2.plugin.js"
+	},
+	"build": {
+		"copy": true,
+		"zlibrary": true,
+		"production": true,
+		"release": {
+			"source": true,
+			"readme": true
+		}
+	},
+	"changelog": [
+		{
+			"title": "Yeah",
+			"type": "added",
+			"items": [
+				"The plugin exist"
+			]
+		}
+	]
+}
