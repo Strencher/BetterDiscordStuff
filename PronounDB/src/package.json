@@ -18,13 +18,12 @@
         "description": "Shows you the pronoun of a user right next to their name. Pronouns by https://pronoundb.org. Source code can be found in the ./src folder of the github repo.",
         "github": "https://github.com/Strencher/BetterDiscordStuff/tree/master/PronounDB",
 		"github_raw": "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/PronounDB/PronounDB.plugin.js",
-        "version": "0.0.1"
+        "version": "0.0.2"
     },
     "build": {
         "zlibrary": true,
         "copy": true,
         "production": true,
-        "scssHash": false,
         "alias": {},
         "release": {
             "source": true,
@@ -37,6 +36,14 @@
             ]
         }
     },
+    "changelog": [
+        {
+            "type": "fixed",
+            "items": [
+                "Fixed not properly fetching."
+            ]
+        }
+    ],
     "dependencies": {
         "dexie": "^3.0.3"
     }

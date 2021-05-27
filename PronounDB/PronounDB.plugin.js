@@ -4,7 +4,7 @@
  * @description Shows you the pronoun of a user right next to their name. Pronouns by https://pronoundb.org. Source code can be found in the ./src folder of the github repo.
  * @source https://github.com/Strencher/BetterDiscordStuff/tree/master/PronounDB
  * @updateUrl https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/PronounDB/PronounDB.plugin.js
- * @version 0.0.1
+ * @version 0.0.2
  */
 /*@cc_on
 @if (@_jscript)
@@ -48,13 +48,12 @@ const config = {
 		"description": "Shows you the pronoun of a user right next to their name. Pronouns by https://pronoundb.org. Source code can be found in the ./src folder of the github repo.",
 		"github": "https://github.com/Strencher/BetterDiscordStuff/tree/master/PronounDB",
 		"github_raw": "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/PronounDB/PronounDB.plugin.js",
-		"version": "0.0.1"
+		"version": "0.0.2"
 	},
 	"build": {
 		"zlibrary": true,
 		"copy": true,
 		"production": true,
-		"scssHash": false,
 		"alias": {},
 		"release": {
 			"source": true,
@@ -65,6 +64,12 @@ const config = {
 			}]
 		}
 	},
+	"changelog": [{
+		"type": "fixed",
+		"items": [
+			"Fixed not properly fetching."
+		]
+	}],
 	"dependencies": {
 		"dexie": "^3.0.3"
 	}
@@ -78,7 +83,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 		let __plugin_styles__ = "";
 		let __style_element__ = null;
 		var __webpack_modules__ = {
-			484: (module, __webpack_exports__, __webpack_require__) => {
+			548: (module, __webpack_exports__, __webpack_require__) => {
 				__webpack_require__.d(__webpack_exports__, {
 					Z: () => __WEBPACK_DEFAULT_EXPORT__
 				});
@@ -87,14 +92,14 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
 					return i[1];
 				}));
-				___CSS_LOADER_EXPORT___.push([module.id, ".pronouns-text{font-size:.75rem}", ""]);
+				___CSS_LOADER_EXPORT___.push([module.id, ".PronounDB-pronouns-text{font-size:.75rem}", ""]);
 				___CSS_LOADER_EXPORT___.locals = {
-					text: "pronouns-text"
+					text: "PronounDB-pronouns-text"
 				};
 				__plugin_styles__ += `\n/* ${module.id} */\n${___CSS_LOADER_EXPORT___}\n`;
 				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
 			},
-			346: (module, __webpack_exports__, __webpack_require__) => {
+			837: (module, __webpack_exports__, __webpack_require__) => {
 				__webpack_require__.d(__webpack_exports__, {
 					Z: () => __WEBPACK_DEFAULT_EXPORT__
 				});
@@ -103,16 +108,16 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
 					return i[1];
 				}));
-				___CSS_LOADER_EXPORT___.push([module.id, ".style-container{align-content:center;display:flex}.style-container .style-header{font-weight:700;text-transform:uppercase;font-size:12px;margin-bottom:8px;color:var(--header-secondary)}.style-container .style-tag{font-size:12px;color:var(--text-normal);margin-left:5px}", ""]);
+				___CSS_LOADER_EXPORT___.push([module.id, ".PronounDB-style-container{align-content:center;display:flex}.PronounDB-style-container .PronounDB-style-header{font-weight:700;text-transform:uppercase;font-size:12px;margin-bottom:8px;color:var(--header-secondary)}.PronounDB-style-container .PronounDB-style-tag{font-size:12px;color:var(--text-normal);margin-left:5px}", ""]);
 				___CSS_LOADER_EXPORT___.locals = {
-					container: "style-container",
-					header: "style-header",
-					tag: "style-tag"
+					container: "PronounDB-style-container",
+					header: "PronounDB-style-header",
+					tag: "PronounDB-style-tag"
 				};
 				__plugin_styles__ += `\n/* ${module.id} */\n${___CSS_LOADER_EXPORT___}\n`;
 				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
 			},
-			534: (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+			666: (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 				__webpack_require__.r(__webpack_exports__);
 				__webpack_require__.d(__webpack_exports__, {
 					default: () => PronounDB
@@ -4431,7 +4436,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				const external_require_https_namespaceObject = require("https");
 				var external_require_https_default = __webpack_require__.n(external_require_https_namespaceObject);
 				var external_BdApi_React_ = __webpack_require__(698);
-				const package_namespaceObject = JSON.parse('{"um":{"u2":"PronounDB","i8":"0.0.1"}}');
+				const package_namespaceObject = JSON.parse('{"um":{"u2":"PronounDB","i8":"0.0.2"}}');
 				function _defineProperty(obj, key, value) {
 					if (key in obj) Object.defineProperty(obj, key, {
 						value,
@@ -4482,11 +4487,10 @@ function buildPlugin([BasePlugin, PluginApi]) {
 								users.push(userId);
 								return users;
 							}), []);
-							external_PluginApi_namespaceObject.Logger.debug("Performing fetch for [", idsMap.join(", ") + " ]");
-							external_require_https_default().get({
-								href: Endpoints.LOOKUP_BULK.format({
-									userIds: idsMap.join(",")
-								}),
+							external_PluginApi_namespaceObject.Logger.debug(`Performing fetch for [${idsMap.join(", ")}]`);
+							external_require_https_default().get(Endpoints.LOOKUP_BULK.format({
+								userIds: idsMap.join(",")
+							}), {
 								headers: {
 									"User-Agent": "BetterDiscord PronounDB Plugin v" + package_namespaceObject.um.i8
 								}
@@ -4571,7 +4575,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						};
 					}
 				}
-				var pronouns = __webpack_require__(484);
+				var pronouns = __webpack_require__(548);
 				var pronouns_React = __webpack_require__(698);
 				const components_pronouns = PronounsDB.connect((function({
 					data,
@@ -4599,9 +4603,9 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					}
 				};
 				var external_n_t_t_t_tinject_n_t_t_t_t_tif_style_element_style_element_remove_n_t_t_t_t_t_style_element_document_head_appendChild_Object_assign_document_createElement_style_textContent_plugin_styles_n_t_t_t_t_n_t_t_t_tremove_n_t_t_t_t_tif_style_element_n_t_t_t_t_t_t_style_element_remove_n_t_t_t_t_t_t_style_element_null_n_t_t_t_t_t_n_t_t_t_t_n_t_t_t_default = __webpack_require__.n(external_n_t_t_t_tinject_n_t_t_t_t_tif_style_element_style_element_remove_n_t_t_t_t_t_style_element_document_head_appendChild_Object_assign_document_createElement_style_textContent_plugin_styles_n_t_t_t_t_n_t_t_t_tremove_n_t_t_t_t_tif_style_element_n_t_t_t_t_t_t_style_element_remove_n_t_t_t_t_t_t_style_element_null_n_t_t_t_t_t_n_t_t_t_t_n_t_t_t_namespaceObject);
-				var style = __webpack_require__(346);
-				var Pronoundb_React = __webpack_require__(698);
-				function Pronoundb_defineProperty(obj, key, value) {
+				var style = __webpack_require__(837);
+				var PronounDB_React = __webpack_require__(698);
+				function PronounDB_defineProperty(obj, key, value) {
 					if (key in obj) Object.defineProperty(obj, key, {
 						value,
 						enumerable: true,
@@ -4614,7 +4618,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				class PronounDB extends(external_BasePlugin_default()) {
 					constructor(...args) {
 						super(...args);
-						Pronoundb_defineProperty(this, "patches", []);
+						PronounDB_defineProperty(this, "patches", []);
 					}
 					onStart() {
 						external_n_t_t_t_tinject_n_t_t_t_t_tif_style_element_style_element_remove_n_t_t_t_t_t_style_element_document_head_appendChild_Object_assign_document_createElement_style_textContent_plugin_styles_n_t_t_t_t_n_t_t_t_tremove_n_t_t_t_t_tif_style_element_n_t_t_t_t_t_t_style_element_remove_n_t_t_t_t_t_t_style_element_null_n_t_t_t_t_t_n_t_t_t_t_n_t_t_t_default().inject();
@@ -4634,7 +4638,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						}], ret) => {
 							const children = external_PluginApi_namespaceObject.Utilities.getNestedProp(ret, "props.children.1.props.children");
 							if (!Array.isArray(children)) return;
-							children.push(Pronoundb_React.createElement(components_pronouns, {
+							children.push(PronounDB_React.createElement(components_pronouns, {
 								userId: user.id
 							}));
 						})));
@@ -4667,15 +4671,15 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						this.patches.push(external_PluginApi_namespaceObject.Patcher.after(UserPopout.component.prototype, "renderBody", ((thisObject, _, res) => {
 							const children = external_PluginApi_namespaceObject.Utilities.getNestedProp(res, "props.children.props.children");
 							if (!Array.isArray(children)) return;
-							children.unshift(Pronoundb_React.createElement(components_pronouns, {
+							children.unshift(PronounDB_React.createElement(components_pronouns, {
 								userId: thisObject.props.userId,
 								render: data => {
 									if (!data) return data;
-									return Pronoundb_React.createElement("div", {
+									return PronounDB_React.createElement("div", {
 										className: style.Z.container
-									}, Pronoundb_React.createElement("div", {
+									}, PronounDB_React.createElement("div", {
 										className: style.Z.header
-									}, "Pronouns"), Pronoundb_React.createElement("div", {
+									}, "Pronouns"), PronounDB_React.createElement("div", {
 										className: style.Z.tag
 									}, data));
 								}
@@ -4799,11 +4803,11 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				});
 			};
 		})();
-		var __webpack_exports__ = __webpack_require__(534);
+		var __webpack_exports__ = __webpack_require__(666);
 		module.exports.LibraryPluginHack = __webpack_exports__;
 	})();
 	const PluginExports = module.exports.LibraryPluginHack;
-	return PluginExports.__esModule ? PluginExports.default : PluginExports;
+	return PluginExports?.__esModule ? PluginExports.default : PluginExports;
 }
 module.exports = window.hasOwnProperty("ZeresPluginLibrary") ?
 	buildPlugin(window.ZeresPluginLibrary.buildPlugin(config)) :

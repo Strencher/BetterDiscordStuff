@@ -26,7 +26,6 @@ for (const userId in customPronouns) {
 db.pronouns.bulkPut(users);
 
 let tmp = [], timeout = null;
-
 export default class PronounsDB {
     static bulkLoad(userIds) {
         return new Promise(resolve => {
@@ -35,11 +34,9 @@ export default class PronounsDB {
                 users.push(userId);
                 return users;
             }, []);
-    
-            Logger.debug("Performing fetch for [", idsMap.join(", ") + " ]");
-
-            https.get({
-                href: Endpoints.LOOKUP_BULK.format({userIds: idsMap.join(",")}),
+            Logger.debug(`Performing fetch for [${idsMap.join(", ")}]`);
+            
+            https.get(Endpoints.LOOKUP_BULK.format({userIds: idsMap.join(",")}), {
                 headers: {
                     "User-Agent": "BetterDiscord PronounDB Plugin v" + pkg.info.version
                 }
