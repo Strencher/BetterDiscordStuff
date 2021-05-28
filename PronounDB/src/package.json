@@ -37,7 +37,11 @@
                 {
                     "name": "Kyza",
                     "github": "https://github.com/Kyza"
-                }
+                },
+		{
+		   "name": "MinekPo1",
+		   "github": "https://github.com/MinekPo1"
+		}
             ]
         }
     },
