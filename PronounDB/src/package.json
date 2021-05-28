@@ -13,6 +13,11 @@
                 "name": "Kyza",
                 "discord_id": "220584715265114113",
                 "github_username": "Kyza"
+            },
+            {
+                "name": "MinekPo1",
+                "discord_id": "349810624273842176",
+                "github_username": "MinekPo1"
             }
         ],
         "description": "Shows you the pronoun of a user right next to their name. Pronouns by https://pronoundb.org. Source code can be found in the ./src folder of the github repo.",

@@ -1,6 +1,6 @@
 /**
  * @name PronounDB
- * @author Strencher, Kyza
+ * @author Strencher, Kyza, MinekPo1
  * @description Shows you the pronoun of a user right next to their name. Pronouns by https://pronoundb.org. Source code can be found in the ./src folder of the github repo.
  * @source https://github.com/Strencher/BetterDiscordStuff/tree/master/PronounDB
  * @updateUrl https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/PronounDB/PronounDB.plugin.js
@@ -43,6 +43,11 @@ const config = {
 				"name": "Kyza",
 				"discord_id": "220584715265114113",
 				"github_username": "Kyza"
+			},
+			{
+				"name": "MinekPo1",
+				"discord_id": "349810624273842176",
+				"github_username": "MinekPo1"
 			}
 		],
 		"description": "Shows you the pronoun of a user right next to their name. Pronouns by https://pronoundb.org. Source code can be found in the ./src folder of the github repo.",
@@ -83,7 +88,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 		let __plugin_styles__ = "";
 		let __style_element__ = null;
 		var __webpack_modules__ = {
-			548: (module, __webpack_exports__, __webpack_require__) => {
+			570: (module, __webpack_exports__, __webpack_require__) => {
 				__webpack_require__.d(__webpack_exports__, {
 					Z: () => __WEBPACK_DEFAULT_EXPORT__
 				});
@@ -99,7 +104,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				__plugin_styles__ += `\n/* ${module.id} */\n${___CSS_LOADER_EXPORT___}\n`;
 				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
 			},
-			837: (module, __webpack_exports__, __webpack_require__) => {
+			126: (module, __webpack_exports__, __webpack_require__) => {
 				__webpack_require__.d(__webpack_exports__, {
 					Z: () => __WEBPACK_DEFAULT_EXPORT__
 				});
@@ -117,7 +122,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				__plugin_styles__ += `\n/* ${module.id} */\n${___CSS_LOADER_EXPORT___}\n`;
 				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
 			},
-			666: (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+			715: (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 				__webpack_require__.r(__webpack_exports__);
 				__webpack_require__.d(__webpack_exports__, {
 					default: () => PronounDB
@@ -4575,7 +4580,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						};
 					}
 				}
-				var pronouns = __webpack_require__(548);
+				var pronouns = __webpack_require__(570);
 				var pronouns_React = __webpack_require__(698);
 				const components_pronouns = PronounsDB.connect((function({
 					data,
@@ -4603,9 +4608,9 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					}
 				};
 				var external_n_t_t_t_tinject_n_t_t_t_t_tif_style_element_style_element_remove_n_t_t_t_t_t_style_element_document_head_appendChild_Object_assign_document_createElement_style_textContent_plugin_styles_n_t_t_t_t_n_t_t_t_tremove_n_t_t_t_t_tif_style_element_n_t_t_t_t_t_t_style_element_remove_n_t_t_t_t_t_t_style_element_null_n_t_t_t_t_t_n_t_t_t_t_n_t_t_t_default = __webpack_require__.n(external_n_t_t_t_tinject_n_t_t_t_t_tif_style_element_style_element_remove_n_t_t_t_t_t_style_element_document_head_appendChild_Object_assign_document_createElement_style_textContent_plugin_styles_n_t_t_t_t_n_t_t_t_tremove_n_t_t_t_t_tif_style_element_n_t_t_t_t_t_t_style_element_remove_n_t_t_t_t_t_t_style_element_null_n_t_t_t_t_t_n_t_t_t_t_n_t_t_t_namespaceObject);
-				var style = __webpack_require__(837);
-				var PronounDB_React = __webpack_require__(698);
-				function PronounDB_defineProperty(obj, key, value) {
+				var style = __webpack_require__(126);
+				var ProunounsBD_React = __webpack_require__(698);
+				function ProunounsBD_defineProperty(obj, key, value) {
 					if (key in obj) Object.defineProperty(obj, key, {
 						value,
 						enumerable: true,
@@ -4618,7 +4623,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				class PronounDB extends(external_BasePlugin_default()) {
 					constructor(...args) {
 						super(...args);
-						PronounDB_defineProperty(this, "patches", []);
+						ProunounsBD_defineProperty(this, "patches", []);
 					}
 					onStart() {
 						external_n_t_t_t_tinject_n_t_t_t_t_tif_style_element_style_element_remove_n_t_t_t_t_t_style_element_document_head_appendChild_Object_assign_document_createElement_style_textContent_plugin_styles_n_t_t_t_t_n_t_t_t_tremove_n_t_t_t_t_tif_style_element_n_t_t_t_t_t_t_style_element_remove_n_t_t_t_t_t_t_style_element_null_n_t_t_t_t_t_n_t_t_t_t_n_t_t_t_default().inject();
@@ -4638,7 +4643,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						}], ret) => {
 							const children = external_PluginApi_namespaceObject.Utilities.getNestedProp(ret, "props.children.1.props.children");
 							if (!Array.isArray(children)) return;
-							children.push(PronounDB_React.createElement(components_pronouns, {
+							children.push(ProunounsBD_React.createElement(components_pronouns, {
 								userId: user.id
 							}));
 						})));
@@ -4671,15 +4676,15 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						this.patches.push(external_PluginApi_namespaceObject.Patcher.after(UserPopout.component.prototype, "renderBody", ((thisObject, _, res) => {
 							const children = external_PluginApi_namespaceObject.Utilities.getNestedProp(res, "props.children.props.children");
 							if (!Array.isArray(children)) return;
-							children.unshift(PronounDB_React.createElement(components_pronouns, {
+							children.unshift(ProunounsBD_React.createElement(components_pronouns, {
 								userId: thisObject.props.userId,
 								render: data => {
 									if (!data) return data;
-									return PronounDB_React.createElement("div", {
+									return ProunounsBD_React.createElement("div", {
 										className: style.Z.container
-									}, PronounDB_React.createElement("div", {
+									}, ProunounsBD_React.createElement("div", {
 										className: style.Z.header
-									}, "Pronouns"), PronounDB_React.createElement("div", {
+									}, "Pronouns"), ProunounsBD_React.createElement("div", {
 										className: style.Z.tag
 									}, data));
 								}
@@ -4714,6 +4719,19 @@ function buildPlugin([BasePlugin, PluginApi]) {
 											}
 										});
 									}
+								}
+							}]));
+							if (localOverride) children.push(external_PluginApi_namespaceObject.DCM.buildMenuChildren([{
+								label: "Edit Pronoun",
+								action: () => {
+									let value = Settings.get("customPronouns")[user.id];
+									external_PluginApi_namespaceObject.Modals.showModal("Set Local Pronoun", [external_PluginApi_namespaceObject.ReactTools.createWrappedElement([new external_PluginApi_namespaceObject.Settings.Textbox("Pronoun", "This will be displayed as your local pronoun. Only you will see this.", value, (val => {
+										value = val;
+									})).getElement()])], {
+										onConfirm: () => {
+											PronounsDB.setPronouns(user.id, value);
+										}
+									});
 								}
 							}]));
 						})));
@@ -4803,7 +4821,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				});
 			};
 		})();
-		var __webpack_exports__ = __webpack_require__(666);
+		var __webpack_exports__ = __webpack_require__(715);
 		module.exports.LibraryPluginHack = __webpack_exports__;
 	})();
 	const PluginExports = module.exports.LibraryPluginHack;
