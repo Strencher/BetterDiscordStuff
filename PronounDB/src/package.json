@@ -13,12 +13,17 @@
                 "name": "Kyza",
                 "discord_id": "220584715265114113",
                 "github_username": "Kyza"
+            },
+            {
+                "name": "MinekPo1",
+                "discord_id": "349810624273842176",
+                "github_username": "MinekPo1"
             }
         ],
         "description": "Shows you the pronoun of a user right next to their name. Pronouns by https://pronoundb.org. Source code can be found in the ./src folder of the github repo.",
         "github": "https://github.com/Strencher/BetterDiscordStuff/tree/master/PronounDB",
 		"github_raw": "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/PronounDB/PronounDB.plugin.js",
-        "version": "0.0.2"
+        "version": "0.0.3"
     },
     "build": {
         "zlibrary": true,
@@ -32,18 +37,20 @@
                 {
                     "name": "Kyza",
                     "github": "https://github.com/Kyza"
-                }
+                },
+		{
+		   "name": "MinekPo1",
+		   "github": "https://github.com/MinekPo1"
+		}
             ]
         }
     },
-    "changelog": [
-        {
-            "type": "fixed",
-            "items": [
-                "Fixed not properly fetching."
-            ]
-        }
-    ],
+    "changelog": [{
+		"type": "added",
+		"items": [
+			"`Edit Prounoun` button."
+		]
+	}],
     "dependencies": {
         "dexie": "^3.0.3"
     }

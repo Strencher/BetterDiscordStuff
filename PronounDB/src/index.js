@@ -19,11 +19,11 @@ export default class PronounDB extends BasePlugin {
 
     async patchMessageTimestamp() {
         const OriginalMessageTimestamp = WebpackModules.getModule(m => m?.default?.toString().indexOf("showTimestampOnHover") > -1);
-        
+
         this.patches.push(Patcher.after(OriginalMessageTimestamp, "default", (_, [{message: {author: user}}], ret) => {
             const children = Utilities.getNestedProp(ret, "props.children.1.props.children");
             if (!Array.isArray(children)) return;
-            
+
             children.push(
                 <PronounTag userId={user.id} />
             );
@@ -57,7 +57,7 @@ export default class PronounDB extends BasePlugin {
 
     async patchUserPopout() {
         const UserPopout = await ReactComponents.getComponentByName("UserPopout", this.getSingleClass("userPopout", true));
-    
+
         this.patches.push(Patcher.after(UserPopout.component.prototype, "renderBody", (thisObject, _, res) => {
             const children = Utilities.getNestedProp(res, "props.children.props.children");
 
@@ -87,9 +87,9 @@ export default class PronounDB extends BasePlugin {
             Patcher.after(Menu, "default", (_, [{user}], ret) => {
                 const children = Utilities.getNestedProp(ret, "props.children.props.children");
                 if (!Array.isArray(children)) return;
-    
+
                 const localOverride = Settings.get("customPronouns")[user.id];
-    
+
                 children.push(DCM.buildMenuChildren([
                     {
                         label: localOverride ? "Remove Pronoun" : "Add Pronoun",
@@ -114,6 +114,27 @@ export default class PronounDB extends BasePlugin {
                         }
                     }
                 ]))
+                if (localOverride){
+                    children.push(DCM.buildMenuChildren([
+                        {
+                            label: "Edit Pronoun",
+                            action: () => {
+                                let value = Settings.get("customPronouns")[user.id];
+                                Modals.showModal("Set Local Pronoun", [
+                                    ReactTools.createWrappedElement([
+                                        new ZSettings.Textbox("Pronoun", "This will be displayed as your local pronoun. Only you will see this.", value, val => {
+                                            value = val;
+                                        }).getElement()
+                                    ])
+                                ], {
+                                    onConfirm: () => {
+                                        PronounsDB.setPronouns(user.id, value);
+                                    },
+                                });
+                            }
+                        }
+                    ]))
+                }
             })
         );
     }
