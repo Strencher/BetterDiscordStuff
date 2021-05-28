@@ -8,7 +8,7 @@
  */
 /*@cc_on
 @if (@_jscript)
-    
+
     // Offer to self-install for clueless users that try to run this directly.
     var shell = WScript.CreateObject("WScript.Shell");
     var fs = new ActiveXObject("Scripting.FileSystemObject");
@@ -70,9 +70,9 @@ const config = {
 		}
 	},
 	"changelog": [{
-		"type": "fixed",
+		"type": "added",
 		"items": [
-			"Fixed not properly fetching."
+			"`Edit Prounoun` button."
 		]
 	}],
 	"dependencies": {
