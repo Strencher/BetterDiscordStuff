@@ -9,13 +9,13 @@
     
 <td align="center">
     <img src="https://github.com/Kyza.png" width="25" /><br/>
-    <a href="{{github}}"><strong>Kyza</strong></a>
+    <a href="https://github.com/Kyza"><strong>Kyza</strong></a>
 </td>
 
 
 <td align="center">
     <img src="https://github.com/MinekPo1.png" width="25" /><br/>
-    <a href="{{github}}"><strong>MinekPo1</strong></a>
+    <a href="https://github.com/MinekPo1"><strong>MinekPo1</strong></a>
 </td>
 
 </tr>
