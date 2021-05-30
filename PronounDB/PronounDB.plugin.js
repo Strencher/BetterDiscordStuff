@@ -4,11 +4,11 @@
  * @description Shows you the pronoun of a user right next to their name. Pronouns by https://pronoundb.org. Source code can be found in the ./src folder of the github repo.
  * @source https://github.com/Strencher/BetterDiscordStuff/tree/master/PronounDB
  * @updateUrl https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/PronounDB/PronounDB.plugin.js
- * @version 0.0.2
+ * @version 0.0.4
  */
 /*@cc_on
 @if (@_jscript)
-
+    
     // Offer to self-install for clueless users that try to run this directly.
     var shell = WScript.CreateObject("WScript.Shell");
     var fs = new ActiveXObject("Scripting.FileSystemObject");
@@ -53,28 +53,45 @@ const config = {
 		"description": "Shows you the pronoun of a user right next to their name. Pronouns by https://pronoundb.org. Source code can be found in the ./src folder of the github repo.",
 		"github": "https://github.com/Strencher/BetterDiscordStuff/tree/master/PronounDB",
 		"github_raw": "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/PronounDB/PronounDB.plugin.js",
-		"version": "0.0.3"
+		"version": "0.0.4"
 	},
 	"build": {
 		"zlibrary": true,
 		"copy": true,
-		"production": true,
+		"production": false,
 		"alias": {},
 		"release": {
+			"public": true,
 			"source": true,
 			"readme": true,
 			"contributors": [{
-				"name": "Kyza",
-				"github": "https://github.com/Kyza"
-			}]
+					"name": "Kyza",
+					"github": "https://github.com/Kyza"
+				},
+				{
+					"name": "MinekPo1",
+					"github": "https://github.com/MinekPo1"
+				}
+			]
 		}
 	},
 	"changelog": [{
-		"type": "added",
-		"items": [
-			"`Edit Prounoun` button."
-		]
-	}],
+			"type": "added",
+			"title": "v0.0.3",
+			"items": [
+				"`Edit Prounoun` button."
+			]
+		},
+		{
+			"type": "added",
+			"title": "v0.0.4",
+			"items": [
+				"Setting to hide Pronoun tag in specific areas",
+				"Dropdown menus to select local pronoun.",
+				"Hopefully fixed multiple prounoun tags showing up."
+			]
+		}
+	],
 	"dependencies": {
 		"dexie": "^3.0.3"
 	}
@@ -88,7 +105,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 		let __plugin_styles__ = "";
 		let __style_element__ = null;
 		var __webpack_modules__ = {
-			570: (module, __webpack_exports__, __webpack_require__) => {
+			809: (module, __webpack_exports__, __webpack_require__) => {
 				__webpack_require__.d(__webpack_exports__, {
 					Z: () => __WEBPACK_DEFAULT_EXPORT__
 				});
@@ -104,7 +121,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				__plugin_styles__ += `\n/* ${module.id} */\n${___CSS_LOADER_EXPORT___}\n`;
 				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
 			},
-			126: (module, __webpack_exports__, __webpack_require__) => {
+			523: (module, __webpack_exports__, __webpack_require__) => {
 				__webpack_require__.d(__webpack_exports__, {
 					Z: () => __WEBPACK_DEFAULT_EXPORT__
 				});
@@ -122,7 +139,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				__plugin_styles__ += `\n/* ${module.id} */\n${___CSS_LOADER_EXPORT___}\n`;
 				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
 			},
-			715: (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+			615: (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 				__webpack_require__.r(__webpack_exports__);
 				__webpack_require__.d(__webpack_exports__, {
 					default: () => PronounDB
@@ -130,6 +147,58 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				const external_PluginApi_namespaceObject = PluginApi;
 				const external_BasePlugin_namespaceObject = BasePlugin;
 				var external_BasePlugin_default = __webpack_require__.n(external_BasePlugin_namespaceObject);
+				const external_events_namespaceObject = require("events");
+				var external_events_default = __webpack_require__.n(external_events_namespaceObject);
+				const package_namespaceObject = JSON.parse('{"um":{"u2":"PronounDB","i8":"0.0.4"}}');
+				var external_BdApi_React_ = __webpack_require__(698);
+				var external_BdApi_React_default = __webpack_require__.n(external_BdApi_React_);
+				function _defineProperty(obj, key, value) {
+					if (key in obj) Object.defineProperty(obj, key, {
+						value,
+						enumerable: true,
+						configurable: true,
+						writable: true
+					});
+					else obj[key] = value;
+					return obj;
+				}
+				const useForceUpdate = () => (0, external_BdApi_React_.useReducer)((n => n + 1), 0)[1];
+				class Settings {
+					static get(id) {
+						return this.settings[id];
+					}
+					static set(id, value) {
+						this.settings[id] = value;
+						this.saveState();
+					}
+					static saveState() {
+						external_PluginApi_namespaceObject.PluginUtilities.saveSettings(package_namespaceObject.um.u2, this.settings);
+						this.updater.emit("update");
+					}
+					static connectStore(Component) {
+						return props => {
+							if (!props.getSetting) Object.assign(props, {
+								getSetting: this.get,
+								updateSetting: this.set,
+								toggleSetting: id => {
+									this.set(!this.get(id));
+								}
+							});
+							const forceUpdate = useForceUpdate();
+							(0, external_BdApi_React_.useEffect)((() => {
+								this.updater.on("update", forceUpdate);
+								return () => this.updater.off("update", forceUpdate);
+							}), []);
+							return external_BdApi_React_default().createElement(Component, props);
+						};
+					}
+				}
+				_defineProperty(Settings, "updater", new(external_events_default()));
+				_defineProperty(Settings, "settings", external_PluginApi_namespaceObject.PluginUtilities.loadSettings(package_namespaceObject.um.u2, {
+					customPronouns: {},
+					showOnTimestamp: true,
+					showInUserPopout: true
+				}));
 				class FormattableString extends String {
 					format(options) {
 						return external_PluginApi_namespaceObject.Utilities.formatString(this, options);
@@ -4440,33 +4509,6 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				const dexie = Dexie;
 				const external_require_https_namespaceObject = require("https");
 				var external_require_https_default = __webpack_require__.n(external_require_https_namespaceObject);
-				var external_BdApi_React_ = __webpack_require__(698);
-				const package_namespaceObject = JSON.parse('{"um":{"u2":"PronounDB","i8":"0.0.2"}}');
-				function _defineProperty(obj, key, value) {
-					if (key in obj) Object.defineProperty(obj, key, {
-						value,
-						enumerable: true,
-						configurable: true,
-						writable: true
-					});
-					else obj[key] = value;
-					return obj;
-				}
-				class Settings {
-					static get(id) {
-						return this.settings[id];
-					}
-					static set(id, value) {
-						this.settings[id] = value;
-						this.saveState();
-					}
-					static saveState() {
-						return external_PluginApi_namespaceObject.PluginUtilities.saveSettings(package_namespaceObject.um.u2, this.settings);
-					}
-				}
-				_defineProperty(Settings, "settings", external_PluginApi_namespaceObject.PluginUtilities.loadSettings(package_namespaceObject.um.u2, {
-					customPronouns: {}
-				}));
 				var React = __webpack_require__(698);
 				const db = new dexie("Pronouns");
 				const dispatcher = dexie.Events(null, "update");
@@ -4580,20 +4622,22 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						};
 					}
 				}
-				var pronouns = __webpack_require__(570);
+				var pronouns = __webpack_require__(809);
 				var pronouns_React = __webpack_require__(698);
-				const components_pronouns = PronounsDB.connect((function({
+				const components_pronouns = Settings.connectStore(PronounsDB.connect((function({
 					data,
-					render
+					render,
+					type
 				}) {
+					if (!Settings.get(type)) return null;
 					const pronoun = Pronouns.hasOwnProperty(data) ? Pronouns[data] : data;
 					if ("function" === typeof render) return render(pronoun);
 					if (!pronoun) return null;
 					return pronouns_React.createElement("span", {
 						className: pronouns.Z.text
 					}, " • ", pronoun);
-				}));
-				const external_n_t_t_t_tinject_n_t_t_t_t_tif_style_element_style_element_remove_n_t_t_t_t_t_style_element_document_head_appendChild_Object_assign_document_createElement_style_textContent_plugin_styles_n_t_t_t_t_n_t_t_t_tremove_n_t_t_t_t_tif_style_element_n_t_t_t_t_t_t_style_element_remove_n_t_t_t_t_t_t_style_element_null_n_t_t_t_t_t_n_t_t_t_t_n_t_t_t_namespaceObject = {
+				})));
+				const external_n_inject_n_if_style_element_style_element_remove_n_style_element_document_head_appendChild_Object_assign_document_createElement_style_textContent_plugin_styles_n_n_remove_n_if_style_element_n_style_element_remove_n_style_element_null_n_n_n_namespaceObject = {
 					inject: () => {
 						if (__style_element__) __style_element__.remove();
 						__style_element__ = document.head.appendChild(Object.assign(document.createElement("style"), {
@@ -4607,10 +4651,43 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						}
 					}
 				};
-				var external_n_t_t_t_tinject_n_t_t_t_t_tif_style_element_style_element_remove_n_t_t_t_t_t_style_element_document_head_appendChild_Object_assign_document_createElement_style_textContent_plugin_styles_n_t_t_t_t_n_t_t_t_tremove_n_t_t_t_t_tif_style_element_n_t_t_t_t_t_t_style_element_remove_n_t_t_t_t_t_t_style_element_null_n_t_t_t_t_t_n_t_t_t_t_n_t_t_t_default = __webpack_require__.n(external_n_t_t_t_tinject_n_t_t_t_t_tif_style_element_style_element_remove_n_t_t_t_t_t_style_element_document_head_appendChild_Object_assign_document_createElement_style_textContent_plugin_styles_n_t_t_t_t_n_t_t_t_tremove_n_t_t_t_t_tif_style_element_n_t_t_t_t_t_t_style_element_remove_n_t_t_t_t_t_t_style_element_null_n_t_t_t_t_t_n_t_t_t_t_n_t_t_t_namespaceObject);
-				var style = __webpack_require__(126);
-				var ProunounsBD_React = __webpack_require__(698);
-				function ProunounsBD_defineProperty(obj, key, value) {
+				var external_n_inject_n_if_style_element_style_element_remove_n_style_element_document_head_appendChild_Object_assign_document_createElement_style_textContent_plugin_styles_n_n_remove_n_if_style_element_n_style_element_remove_n_style_element_null_n_n_n_default = __webpack_require__.n(external_n_inject_n_if_style_element_style_element_remove_n_style_element_document_head_appendChild_Object_assign_document_createElement_style_textContent_plugin_styles_n_n_remove_n_if_style_element_n_style_element_remove_n_style_element_null_n_n_n_namespaceObject);
+				var style = __webpack_require__(523);
+				const external_BdApi_findModuleByProps_FormItem_namespaceObject = BdApi.findModuleByProps("FormItem");
+				function _extends() {
+					_extends = Object.assign || function(target) {
+						for (var i = 1; i < arguments.length; i++) {
+							var source = arguments[i];
+							for (var key in source)
+								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
+						}
+						return target;
+					};
+					return _extends.apply(this, arguments);
+				}
+				const createUpdateWrapper = (Component, valueProp = "value", changeProp = "onChange") => props => {
+					const [value, setValue] = external_BdApi_React_default().useState(props[valueProp]);
+					return external_BdApi_React_default().createElement(Component, _extends({}, props, {
+						[valueProp]: value,
+						[changeProp]: value => {
+							if ("function" === typeof props[changeProp]) props[changeProp](value);
+							setValue(value);
+						}
+					}));
+				};
+				const SwitchItem = createUpdateWrapper(external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("SwitchItem"));
+				function SettingsPanel() {
+					return external_BdApi_React_default().createElement("div", null, external_BdApi_React_default().createElement(SwitchItem, {
+						note: "Shows the pronoun right next to the message timestamp.",
+						value: Settings.get("showOnTimestamp"),
+						onChange: value => Settings.set("showOnTimestamp", value)
+					}, "Message Timestamp"), external_BdApi_React_default().createElement(SwitchItem, {
+						note: "Shows the pronoun in the user popout body.",
+						value: Settings.get("showInUserPopout"),
+						onChange: value => Settings.set("showInUserPopout", value)
+					}, "User Popout"));
+				}
+				function PronounDB_defineProperty(obj, key, value) {
 					if (key in obj) Object.defineProperty(obj, key, {
 						value,
 						enumerable: true,
@@ -4620,16 +4697,41 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					else obj[key] = value;
 					return obj;
 				}
+				function PronounDB_extends() {
+					PronounDB_extends = Object.assign || function(target) {
+						for (var i = 1; i < arguments.length; i++) {
+							var source = arguments[i];
+							for (var key in source)
+								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
+						}
+						return target;
+					};
+					return PronounDB_extends.apply(this, arguments);
+				}
+				const PronounDB_createUpdateWrapper = (Component, valueProp = "value", changeProp = "onChange") => props => {
+					const [value, setValue] = (0, external_BdApi_React_.useState)(props[valueProp]);
+					return external_BdApi_React_default().createElement(Component, PronounDB_extends({}, props, {
+						[valueProp]: value,
+						[changeProp]: value => {
+							if ("function" === typeof props[changeProp]) props[changeProp](value);
+							setValue(value);
+						}
+					}));
+				};
+				const SelectInput = PronounDB_createUpdateWrapper(external_PluginApi_namespaceObject.WebpackModules.getByProps("SingleSelect").SingleSelect);
 				class PronounDB extends(external_BasePlugin_default()) {
 					constructor(...args) {
 						super(...args);
-						ProunounsBD_defineProperty(this, "patches", []);
+						PronounDB_defineProperty(this, "patches", []);
 					}
 					onStart() {
-						external_n_t_t_t_tinject_n_t_t_t_t_tif_style_element_style_element_remove_n_t_t_t_t_t_style_element_document_head_appendChild_Object_assign_document_createElement_style_textContent_plugin_styles_n_t_t_t_t_n_t_t_t_tremove_n_t_t_t_t_tif_style_element_n_t_t_t_t_t_t_style_element_remove_n_t_t_t_t_t_t_style_element_null_n_t_t_t_t_t_n_t_t_t_t_n_t_t_t_default().inject();
+						external_n_inject_n_if_style_element_style_element_remove_n_style_element_document_head_appendChild_Object_assign_document_createElement_style_textContent_plugin_styles_n_n_remove_n_if_style_element_n_style_element_remove_n_style_element_null_n_n_n_default().inject();
 						external_PluginApi_namespaceObject.Utilities.suppressErrors(this.patchMessageTimestamp.bind(this), "MessageHeader patch")();
 						external_PluginApi_namespaceObject.Utilities.suppressErrors(this.patchUserContextMenus.bind(this), "UserContextMenu patch")();
 						external_PluginApi_namespaceObject.Utilities.suppressErrors(this.patchUserPopout.bind(this), "UserPopout patch")();
+					}
+					getSettingsPanel() {
+						return external_BdApi_React_default().createElement(SettingsPanel, null);
 					}
 					async patchMessageTimestamp() {
 						const OriginalMessageTimestamp = external_PluginApi_namespaceObject.WebpackModules.getModule((m => {
@@ -4643,8 +4745,9 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						}], ret) => {
 							const children = external_PluginApi_namespaceObject.Utilities.getNestedProp(ret, "props.children.1.props.children");
 							if (!Array.isArray(children)) return;
-							children.push(ProunounsBD_React.createElement(components_pronouns, {
-								userId: user.id
+							children.push(external_BdApi_React_default().createElement(components_pronouns, {
+								userId: user.id,
+								type: "showOnTimestamp"
 							}));
 						})));
 						const Modules = external_PluginApi_namespaceObject.WebpackModules.findAll((m => {
@@ -4675,19 +4778,20 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						const UserPopout = await external_PluginApi_namespaceObject.ReactComponents.getComponentByName("UserPopout", this.getSingleClass("userPopout", true));
 						this.patches.push(external_PluginApi_namespaceObject.Patcher.after(UserPopout.component.prototype, "renderBody", ((thisObject, _, res) => {
 							const children = external_PluginApi_namespaceObject.Utilities.getNestedProp(res, "props.children.props.children");
-							if (!Array.isArray(children)) return;
-							children.unshift(ProunounsBD_React.createElement(components_pronouns, {
+							if (!Array.isArray(children) || children.some((e => (null === e || void 0 === e ? void 0 : e.type) === components_pronouns))) return;
+							children.unshift(external_BdApi_React_default().createElement(components_pronouns, {
 								userId: thisObject.props.userId,
 								render: data => {
 									if (!data) return data;
-									return ProunounsBD_React.createElement("div", {
+									return external_BdApi_React_default().createElement("div", {
 										className: style.Z.container
-									}, ProunounsBD_React.createElement("div", {
+									}, external_BdApi_React_default().createElement("div", {
 										className: style.Z.header
-									}, "Pronouns"), ProunounsBD_React.createElement("div", {
+									}, "Pronouns"), external_BdApi_React_default().createElement("div", {
 										className: style.Z.tag
 									}, data));
-								}
+								},
+								type: "showInUserPopout"
 							}));
 						})));
 						UserPopout.forceUpdateAll();
@@ -4697,6 +4801,13 @@ function buildPlugin([BasePlugin, PluginApi]) {
 							var _m$default2, _m$default2$displayNa;
 							return (null === (_m$default2 = m.default) || void 0 === _m$default2 ? void 0 : null === (_m$default2$displayNa = _m$default2.displayName) || void 0 === _m$default2$displayNa ? void 0 : _m$default2$displayNa.search(/user.*contextmenu/i)) > -1;
 						}));
+						const SelectOptions = Object.entries(Pronouns).reduce(((items, [key, value]) => {
+							items.push({
+								label: value ?? key,
+								value: key
+							});
+							return items;
+						}), []);
 						for (const Menu of Menus) this.patches.push(external_PluginApi_namespaceObject.Patcher.after(Menu, "default", ((_, [{
 							user
 						}], ret) => {
@@ -4711,9 +4822,15 @@ function buildPlugin([BasePlugin, PluginApi]) {
 										PronounsDB.removePronoun(user.id);
 									} else {
 										let value = "";
-										external_PluginApi_namespaceObject.Modals.showModal("Set Local Pronoun", [external_PluginApi_namespaceObject.ReactTools.createWrappedElement([new external_PluginApi_namespaceObject.Settings.Textbox("Pronoun", "This will be displayed as your local pronoun. Only you will see this.", "hh or He/Him", (val => {
-											value = val;
-										})).getElement()])], {
+										external_PluginApi_namespaceObject.Modals.showModal("Set local Pronoun", [external_BdApi_React_default().createElement(external_BdApi_findModuleByProps_FormItem_namespaceObject.FormItem, {
+											title: "Pronoun"
+										}, external_BdApi_React_default().createElement(SelectInput, {
+											value,
+											options: SelectOptions,
+											onChange: val => value = val
+										}), external_BdApi_React_default().createElement(external_BdApi_findModuleByProps_FormItem_namespaceObject.FormText, {
+											type: "description"
+										}, "This will be displayed as your local pronoun. Only you will see this."))], {
 											onConfirm: () => {
 												PronounsDB.setPronouns(user.id, value);
 											}
@@ -4725,9 +4842,15 @@ function buildPlugin([BasePlugin, PluginApi]) {
 								label: "Edit Pronoun",
 								action: () => {
 									let value = Settings.get("customPronouns")[user.id];
-									external_PluginApi_namespaceObject.Modals.showModal("Set Local Pronoun", [external_PluginApi_namespaceObject.ReactTools.createWrappedElement([new external_PluginApi_namespaceObject.Settings.Textbox("Pronoun", "This will be displayed as your local pronoun. Only you will see this.", value, (val => {
-										value = val;
-									})).getElement()])], {
+									external_PluginApi_namespaceObject.Modals.showModal("Edit Pronoun", [external_BdApi_React_default().createElement(external_BdApi_findModuleByProps_FormItem_namespaceObject.FormItem, {
+										title: "Pronoun"
+									}, external_BdApi_React_default().createElement(SelectInput, {
+										value,
+										options: SelectOptions,
+										onChange: val => value = val
+									}), external_BdApi_React_default().createElement(external_BdApi_findModuleByProps_FormItem_namespaceObject.FormText, {
+										type: "description"
+									}, "This will be displayed as your local pronoun. Only you will see this."))], {
 										onConfirm: () => {
 											PronounsDB.setPronouns(user.id, value);
 										}
@@ -4739,7 +4862,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					onStop() {
 						for (const unpatch of this.patches) unpatch();
 						external_PluginApi_namespaceObject.Patcher.unpatchAll();
-						external_n_t_t_t_tinject_n_t_t_t_t_tif_style_element_style_element_remove_n_t_t_t_t_t_style_element_document_head_appendChild_Object_assign_document_createElement_style_textContent_plugin_styles_n_t_t_t_t_n_t_t_t_tremove_n_t_t_t_t_tif_style_element_n_t_t_t_t_t_t_style_element_remove_n_t_t_t_t_t_t_style_element_null_n_t_t_t_t_t_n_t_t_t_t_n_t_t_t_default().remove();
+						external_n_inject_n_if_style_element_style_element_remove_n_style_element_document_head_appendChild_Object_assign_document_createElement_style_textContent_plugin_styles_n_n_remove_n_if_style_element_n_style_element_remove_n_style_element_null_n_n_n_default().remove();
 					}
 				}
 			},
@@ -4821,7 +4944,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				});
 			};
 		})();
-		var __webpack_exports__ = __webpack_require__(715);
+		var __webpack_exports__ = __webpack_require__(615);
 		module.exports.LibraryPluginHack = __webpack_exports__;
 	})();
 	const PluginExports = module.exports.LibraryPluginHack;

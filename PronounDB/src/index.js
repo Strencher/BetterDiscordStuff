@@ -1,10 +1,31 @@
-import {DCM, Patcher, Utilities, WebpackModules, Modals, ReactTools, Settings as ZSettings, ReactComponents} from "@zlibrary";
+import {DCM, Patcher, Utilities, WebpackModules, Modals, ReactComponents} from "@zlibrary";
 import BasePlugin from "@zlibrary/plugin";
 import PronounTag from "./components/pronouns";
 import Settings from "./modules/settings";
 import PronounsDB from "./modules/database";
 import style from "styles";
 import styles from "./style.scss";
+import React, {useState} from "react";
+import {FormItem, FormText} from "@discord/forms";
+import {Pronouns} from "./data/constants";
+import SettingsPanel from "./components/Settings";
+
+const createUpdateWrapper = (Component, valueProp = "value", changeProp = "onChange") => props => {
+    const [value, setValue] = useState(props[valueProp]);
+
+    return <Component 
+        {...{
+            ...props,
+            [valueProp]: value,
+            [changeProp]: value => {
+                if (typeof props[changeProp] === "function") props[changeProp](value);
+                setValue(value);
+            }
+        }}
+    />;
+};
+
+const SelectInput = createUpdateWrapper(WebpackModules.getByProps("SingleSelect").SingleSelect);
 
 export default class PronounDB extends BasePlugin {
     patches = [];
@@ -17,6 +38,12 @@ export default class PronounDB extends BasePlugin {
         Utilities.suppressErrors(this.patchUserPopout.bind(this), "UserPopout patch")();
     }
 
+    getSettingsPanel() {
+        return (
+            <SettingsPanel />
+        );
+    };
+
     async patchMessageTimestamp() {
         const OriginalMessageTimestamp = WebpackModules.getModule(m => m?.default?.toString().indexOf("showTimestampOnHover") > -1);
 
@@ -25,7 +52,7 @@ export default class PronounDB extends BasePlugin {
             if (!Array.isArray(children)) return;
 
             children.push(
-                <PronounTag userId={user.id} />
+                <PronounTag userId={user.id} type="showOnTimestamp" />
             );
         }));
 
@@ -61,7 +88,7 @@ export default class PronounDB extends BasePlugin {
         this.patches.push(Patcher.after(UserPopout.component.prototype, "renderBody", (thisObject, _, res) => {
             const children = Utilities.getNestedProp(res, "props.children.props.children");
 
-            if (!Array.isArray(children)) return;
+            if (!Array.isArray(children) || children.some(e => e?.type === PronounTag)) return;
 
             const renderPronoun = data => {
                 if (!data) return data;
@@ -74,7 +101,7 @@ export default class PronounDB extends BasePlugin {
                 );
             };
 
-            children.unshift(<PronounTag userId={thisObject.props.userId} render={renderPronoun} />);
+            children.unshift(<PronounTag userId={thisObject.props.userId} render={renderPronoun} type="showInUserPopout" />);
         }));
 
         UserPopout.forceUpdateAll();
@@ -82,6 +109,15 @@ export default class PronounDB extends BasePlugin {
 
     async patchUserContextMenus() {
         const Menus = WebpackModules.findAll(m => m.default?.displayName?.search(/user.*contextmenu/i) > -1);
+
+        const SelectOptions = Object.entries(Pronouns).reduce((items, [key, value]) => {
+            items.push({
+                label: value ?? key,
+                value: key
+            });
+
+            return items;
+        }, []);
 
         for (const Menu of Menus) this.patches.push(
             Patcher.after(Menu, "default", (_, [{user}], ret) => {
@@ -99,12 +135,11 @@ export default class PronounDB extends BasePlugin {
                                 PronounsDB.removePronoun(user.id);
                             } else {
                                 let value = "";
-                                Modals.showModal("Set Local Pronoun", [
-                                    ReactTools.createWrappedElement([
-                                        new ZSettings.Textbox("Pronoun", "This will be displayed as your local pronoun. Only you will see this.", "hh or He/Him", val => {
-                                            value = val;
-                                        }).getElement()
-                                    ])
+                                Modals.showModal("Set local Pronoun", [
+                                    <FormItem title="Pronoun">
+                                        <SelectInput value={value} options={SelectOptions} onChange={val => value = val} />
+                                        <FormText type="description">This will be displayed as your local pronoun. Only you will see this.</FormText>
+                                    </FormItem>
                                 ], {
                                     onConfirm: () => {
                                         PronounsDB.setPronouns(user.id, value);
@@ -120,12 +155,11 @@ export default class PronounDB extends BasePlugin {
                             label: "Edit Pronoun",
                             action: () => {
                                 let value = Settings.get("customPronouns")[user.id];
-                                Modals.showModal("Set Local Pronoun", [
-                                    ReactTools.createWrappedElement([
-                                        new ZSettings.Textbox("Pronoun", "This will be displayed as your local pronoun. Only you will see this.", value, val => {
-                                            value = val;
-                                        }).getElement()
-                                    ])
+                                Modals.showModal("Edit Pronoun", [
+                                    <FormItem title="Pronoun">
+                                        <SelectInput value={value} options={SelectOptions} onChange={val => value = val} />
+                                        <FormText type="description">This will be displayed as your local pronoun. Only you will see this.</FormText>
+                                    </FormItem>
                                 ], {
                                     onConfirm: () => {
                                         PronounsDB.setPronouns(user.id, value);
