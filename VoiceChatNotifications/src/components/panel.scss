@@ -1,0 +1,24 @@
+.clearButton {
+    min-width: 100px;
+    width: 100px;
+    margin: 10px;
+    position: absolute;
+    right: 15px;
+    z-index: 99999;
+}
+
+.contents {
+    height: 500px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+.message {
+    margin-top: 1.0625rem;
+}
+
+.empty {
+    color: #ddd;
+    margin: 20px;
+    text-align: center;
+}
