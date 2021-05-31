@@ -1,0 +1,8 @@
+.scrollableText {
+    color: var(--text-normal);
+    white-space: nowrap;
+    position: relative;
+    font-size: 14px;
+    width: -webkit-fill-available;
+    text-align: center;
+}

@@ -1,0 +1,190 @@
+[
+    {
+        "name": "General",
+        "icon": "Wrench",
+        "items": [
+            {
+                "type": "switch",
+                "name": "Use Icons",
+                "note": "Defines if icons should be used to show any date.",
+                "id": "useIcons",
+                "value": true
+            },
+            {
+                "type": "radio",
+                "name": "Time Format",
+                "value": 1,
+                "options": [
+                    {
+                        "value": 1,
+                        "name": "24 hour"
+                    },
+                    {
+                        "value": 0,
+                        "name": "12 hour"
+                    }
+                ]
+            },
+            {"type": "divider"},
+            {
+                "type": "category",
+                "name": "Variables",
+                "items": [
+                    {
+                        "type": "replacement",
+                        "prefix": "$timelabel",
+                        "description": "Replaces the current time label. eg AM or PM."
+                    },
+                    {
+                        "type": "replacement",
+                        "prefix": "$day",
+                        "description": "Replaces the current day."
+                    },
+                    {
+                        "type": "replacement",
+                        "prefix": "$daysago",
+                        "description": "Replaces with how much days it\"s ago."
+                    },
+                    {
+                        "type": "replacement",
+                        "prefix": "$dayname",
+                        "description": "Replaces the shorted dayname."
+                    },
+                    {
+                        "type": "replacement",
+                        "prefix": "$weeksago",
+                        "description": "Replaces how much weeks it\"s ago."
+                    },
+                    {
+                        "type": "replacement",
+                        "prefix": "$month",
+                        "description": "Replaces the month."
+                    },
+                    {
+                        "type": "replacement",
+                        "prefix": "$monthname",
+                        "description": "Replaces the shorted monthname."
+                    },
+                    {
+                        "type": "replacement",
+                        "prefix": "$monthsago",
+                        "description": "Replaces with how much months it\"s ago."
+                    },
+                    {
+                        "type": "replacement",
+                        "prefix": "$year",
+                        "description": "Replaces the year."
+                    },
+                    {
+                        "type": "replacement",
+                        "prefix": "$yearsago",
+                        "description": "Replaces how much years it\"s ago."
+                    },
+                    {
+                        "type": "replacement",
+                        "prefix": "$hour",
+                        "description": "Replaces the hour(s)"
+                    },
+                    {
+                        "type": "replacement",
+                        "prefix": "$minute",
+                        "description": "Replaces the minute(s)"
+                    },
+                    {
+                        "type": "replacement",
+                        "prefix": "$second",
+                        "description": "Replaces the second(s)"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "name": "Created At",
+        "icon": "Cake",
+        "items": [
+            {
+                "type": "switch",
+                "name": "Show in UserPopout",
+                "id": "created_show_up",
+                "note": "Defines if the creation date should be shown in the UserPopout.",
+                "value": true
+            },
+            {
+                "type": "switch",
+                "name": "Show in UserProfile",
+                "id": "created_show_profile",
+                "note": "Defines if the creation date should be shown in the UserProfile.",
+                "value": true
+            },
+            {
+                "type": "text",
+                "name": "Created At",
+                "note": "Format of the Created at date. Read the variables section below to understand how it works.",
+                "id": "created_format",
+                "value": "Created At: $hour:$minute:$second, $day.$month.$year $daysago days"
+            }
+        ]
+    },
+    {
+        "name": "Joined At",
+        "icon": "Calendar",
+        "items": [
+            {
+                "type": "switch",
+                "name": "Show in UserPopout",
+                "id": "joined_show_up",
+                "note": "Defines if the joined date should be shown in the UserPopout.",
+                "value": true
+            },
+            {
+                "type": "switch",
+                "name": "Show in UserProfile",
+                "id": "joined_show_profile",
+                "note": "Defines if the joined date should be shown in the UserProfile.",
+                "value": true
+            },
+            {
+                "type": "text",
+                "name": "Joined At",
+                "note": "Format of the joined at date. Read the variables section below to understand how it works.",
+                "id": "joined_format",
+                "value": "Joined At: $hour:$minute:$second, $day.$month.$year $daysago days"
+            }
+        ]
+    },
+    {
+        "name": "Last Message At",
+        "icon": "TextBubble",
+        "items": [
+            {
+                "type": "switch",
+                "name": "Show in UserPopout",
+                "id": "lastmessage_show_up",
+                "note": "Defines if the last message date should be shown in the UserPopout.",
+                "value": true
+            },
+            {
+                "type": "switch",
+                "name": "Show in UserProfile",
+                "id": "lastmessage_show_profile",
+                "note": "Defines if the last message date should be shown in the UserProfile.",
+                "value": true
+            },
+            {
+                "type": "text",
+                "name": "Last Message",
+                "note": "Format of the LastMessage at date. Read the variables section below to understand how it works.",
+                "id": "lastmessage_format",
+                "value": "Last Message At: $hour:$minute:$second, $day.$month.$year $daysago days"
+            }
+        ]
+    },
+    {
+        "name": "Connections",
+        "icon": "Chain",
+        "items": [
+            {"type": "icons"}
+        ]
+    }
+]

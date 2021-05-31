@@ -1,0 +1,51 @@
+.connectionsBody {
+    div:not(.connections, .container) {
+        display: inline-flex;
+        margin: 5px;
+    }
+
+    .loading {
+        fill: var(--interactive-muted);
+        animation: blink infinite 2s;
+        width: 30px;
+        height: 30px;
+        margin: 5px;
+        margin-top: 0;
+        margin-left: 0;
+    }
+
+    .connections {
+        display: flex;
+        flex-wrap: wrap;
+        margin-bottom: 8px;
+
+        img {
+            width: 30px;
+            height: 30px;
+        }        
+    }
+
+    .errorIcon {
+        width: 35px;
+        height: 35px;
+        margin-top: -5px;
+    }
+
+    .errorIcon {
+        fill: #ed4245 !important;
+    }
+}
+
+@keyframes blink {
+    0% {
+        opacity: .6;
+    }
+
+    50% {
+        opacity: .3;
+    }
+
+    100% {
+        opacity: .6;
+    }
+}

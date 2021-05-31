@@ -1,0 +1,31 @@
+{
+    "info": {
+        "name": "UserDetails",
+        "version": "1.0.0",
+        "authors": [
+            {
+                "name": "Strencher",
+                "discord_id": "415849376598982656",
+                "github_username": "Strencher",
+                "twitter_username": "Strencher3"
+            }
+        ],
+        "description": "Shows you a lot information about users in popouts.",
+		"github": "https://github.com/Strencher/BetterDiscordStuff/UserDetails",
+		"github_raw": "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/UserDetails/UserDetails.plugin.js"
+    },
+    "build": {
+        "zlibrary": true,
+        "copy": true,
+        "production": false,
+        "scssHash": false,
+        "alias": {
+            "icons": "components/icons"
+        },
+		"release": {
+			"public": true,
+			"source": true,
+			"readme": true
+		}
+    }
+}

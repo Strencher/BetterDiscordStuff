@@ -1,0 +1,56 @@
+.container {
+    display: flex;
+    max-width: -webkit-fill-available;
+
+    &.text {
+        flex-direction: column;
+    }
+
+    &.icons {
+        flex-direction: row;
+
+        .loading {
+            animation: blink infinite 2s ease-in-out;
+        }
+    }
+
+    svg {
+        fill: #ddd;
+        margin: 5px;
+        width: 20px;
+        height: 20px;
+    }
+
+    &.text {
+        .scrollableText {
+            color: var(--text-normal);
+            white-space: nowrap;
+            position: relative;
+            font-size: 14px;
+            width: -webkit-fill-available;
+            text-align: left;
+        }
+    
+        &.userProfile .scrollableText {
+            text-align: left !important;
+        }
+    }
+
+    .errorIcon {
+        fill: #ed4245 !important;
+    }
+}
+
+@keyframes blink {
+    0% {
+        opacity: .6;
+    }
+
+    50% {
+        opacity: .3;
+    }
+
+    100% {
+        opacity: .6;
+    }
+}
