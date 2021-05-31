@@ -1,4 +1,4 @@
-# SilentTyping
+# InvisibleTyping
 
 > Enhanced version of silent typing.
 <hr/>

@@ -1,10 +1,10 @@
 /**
- * @name SilentTyping
+ * @name InvisibleTyping
  * @author Strencher
  * @version 0.0.1
  * @description Enhanced version of silent typing.
- * @source https://github.com/Strencher/BetterDiscordStuff/blob/master/SilentTypingV2/SilentTypingV2.plugin.js
- * @updateUrl https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/SilentTypingV2/SilentTypingV2.plugin.js
+ * @source https://github.com/Strencher/BetterDiscordStuff/blob/master/InvisibleTyping/InvisibleTyping.plugin.js
+ * @updateUrl https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/InvisibleTyping/InvisibleTyping.plugin.js
  */
 /*@cc_on
 @if (@_jscript)
@@ -31,7 +31,7 @@
 /* Generated Code */
 const config = {
 	"info": {
-		"name": "SilentTyping",
+		"name": "InvisibleTyping",
 		"authors": [{
 			"name": "Strencher",
 			"discord_id": "415849376598982656",
@@ -40,8 +40,8 @@ const config = {
 		}],
 		"version": "0.0.1",
 		"description": "Enhanced version of silent typing.",
-		"github": "https://github.com/Strencher/BetterDiscordStuff/blob/master/SilentTypingV2/SilentTypingV2.plugin.js",
-		"github_raw": "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/SilentTypingV2/SilentTypingV2.plugin.js"
+		"github": "https://github.com/Strencher/BetterDiscordStuff/blob/master/InvisibleTyping/InvisibleTyping.plugin.js",
+		"github_raw": "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/InvisibleTyping/InvisibleTyping.plugin.js"
 	},
 	"build": {
 		"copy": true,
@@ -49,7 +49,8 @@ const config = {
 		"production": true,
 		"release": {
 			"source": true,
-			"readme": true
+			"readme": true,
+			"public": true
 		}
 	},
 	"changelog": [{
@@ -69,7 +70,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 		let __plugin_styles__ = "";
 		let __style_element__ = null;
 		var __webpack_modules__ = {
-			470: (module, __webpack_exports__, __webpack_require__) => {
+			605: (module, __webpack_exports__, __webpack_require__) => {
 				__webpack_require__.d(__webpack_exports__, {
 					Z: () => __WEBPACK_DEFAULT_EXPORT__
 				});
@@ -78,25 +79,25 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
 					return i[1];
 				}));
-				___CSS_LOADER_EXPORT___.push([module.id, ".SilentTyping-typingButton-silentTypingButton svg{color:var(--interactive-normal);overflow:visible}.SilentTyping-typingButton-silentTypingButton .SilentTyping-typingButton-disabledStrokeThrough{position:absolute;transform:translateX(-15px) translateY(530px) rotate(-45deg)}.SilentTyping-typingButton-silentTypingButton{margin-top:3px;background:transparent}.SilentTyping-typingButton-silentTypingButton:hover:not(.SilentTyping-typingButton-disabled) svg{color:var(--interactive-hover)}.SilentTyping-typingButton-silentTypingTooltip{display:inline-flex}", ""]);
+				___CSS_LOADER_EXPORT___.push([module.id, ".InvisibleTyping-typingButton-invisibleTypingButton svg{color:var(--interactive-normal);overflow:visible}.InvisibleTyping-typingButton-invisibleTypingButton .InvisibleTyping-typingButton-disabledStrokeThrough{position:absolute;transform:translateX(-15px) translateY(530px) rotate(-45deg)}.InvisibleTyping-typingButton-invisibleTypingButton{margin-top:3px;background:transparent}.InvisibleTyping-typingButton-invisibleTypingButton:hover:not(.InvisibleTyping-typingButton-disabled) svg{color:var(--interactive-hover)}.InvisibleTyping-typingButton-invisibleTypingTooltip{display:inline-flex}", ""]);
 				___CSS_LOADER_EXPORT___.locals = {
-					silentTypingButton: "SilentTyping-typingButton-silentTypingButton",
-					disabledStrokeThrough: "SilentTyping-typingButton-disabledStrokeThrough",
-					disabled: "SilentTyping-typingButton-disabled",
-					silentTypingTooltip: "SilentTyping-typingButton-silentTypingTooltip"
+					invisibleTypingButton: "InvisibleTyping-typingButton-invisibleTypingButton",
+					disabledStrokeThrough: "InvisibleTyping-typingButton-disabledStrokeThrough",
+					disabled: "InvisibleTyping-typingButton-disabled",
+					invisibleTypingTooltip: "InvisibleTyping-typingButton-invisibleTypingTooltip"
 				};
 				__plugin_styles__ += `\n/* ${module.id} */\n${___CSS_LOADER_EXPORT___}\n`;
 				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
 			},
-			961: (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+			282: (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 				__webpack_require__.r(__webpack_exports__);
 				__webpack_require__.d(__webpack_exports__, {
-					default: () => SilentTyping
+					default: () => InvisibleTyping
 				});
 				const external_PluginApi_namespaceObject = PluginApi;
 				const external_BasePlugin_namespaceObject = BasePlugin;
 				var external_BasePlugin_default = __webpack_require__.n(external_BasePlugin_namespaceObject);
-				const package_namespaceObject = JSON.parse('{"um":{"u2":"SilentTyping"}}');
+				const package_namespaceObject = JSON.parse('{"um":{"u2":"InvisibleTyping"}}');
 				function _defineProperty(obj, key, value) {
 					if (key in obj) Object.defineProperty(obj, key, {
 						value,
@@ -206,7 +207,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					external_PluginApi_namespaceObject.PluginUtilities.saveSettings(package_namespaceObject.um.u2, Settings.settings);
 					Settings.updater.reply("update");
 				}));
-				var typingButton = __webpack_require__(470);
+				var typingButton = __webpack_require__(605);
 				var React = __webpack_require__(698);
 				function _extends() {
 					_extends = Object.assign || function(target) {
@@ -244,7 +245,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				const {
 					TooltipContainer: Tooltip
 				} = external_PluginApi_namespaceObject.WebpackModules.getByProps("TooltipContainer");
-				function SilentTypingButton({
+				function InvisibleTypingButton({
 					channel,
 					textValue
 				}) {
@@ -263,9 +264,9 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					return typingbutton_React.createElement(Tooltip, {
 						text: enabled ? "Typing Enabled" : "Typing Disabled",
 						position: "top",
-						className: typingButton.Z.silentTypingTooltip
+						className: typingButton.Z.invisibleTypingTooltip
 					}, typingbutton_React.createElement("button", {
-						className: Utilities.joinClassNames(typingButton.Z.silentTypingButton, {
+						className: Utilities.joinClassNames(typingButton.Z.invisibleTypingButton, {
 							enabled,
 							disabled: !enabled
 						}),
@@ -274,7 +275,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						disabled: !enabled
 					})));
 				}
-				const external_n_t_t_t_tinject_n_t_t_t_t_tif_style_element_style_element_remove_n_t_t_t_t_t_style_element_document_head_appendChild_Object_assign_document_createElement_style_textContent_plugin_styles_n_t_t_t_t_n_t_t_t_tremove_n_t_t_t_t_tif_style_element_n_t_t_t_t_t_t_style_element_remove_n_t_t_t_t_t_t_style_element_null_n_t_t_t_t_t_n_t_t_t_t_n_t_t_t_namespaceObject = {
+				const external_n_inject_n_if_style_element_style_element_remove_n_style_element_document_head_appendChild_Object_assign_document_createElement_style_textContent_plugin_styles_n_n_remove_n_if_style_element_n_style_element_remove_n_style_element_null_n_n_n_namespaceObject = {
 					inject: () => {
 						if (__style_element__) __style_element__.remove();
 						__style_element__ = document.head.appendChild(Object.assign(document.createElement("style"), {
@@ -288,15 +289,15 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						}
 					}
 				};
-				var external_n_t_t_t_tinject_n_t_t_t_t_tif_style_element_style_element_remove_n_t_t_t_t_t_style_element_document_head_appendChild_Object_assign_document_createElement_style_textContent_plugin_styles_n_t_t_t_t_n_t_t_t_tremove_n_t_t_t_t_tif_style_element_n_t_t_t_t_t_t_style_element_remove_n_t_t_t_t_t_t_style_element_null_n_t_t_t_t_t_n_t_t_t_t_n_t_t_t_default = __webpack_require__.n(external_n_t_t_t_tinject_n_t_t_t_t_tif_style_element_style_element_remove_n_t_t_t_t_t_style_element_document_head_appendChild_Object_assign_document_createElement_style_textContent_plugin_styles_n_t_t_t_t_n_t_t_t_tremove_n_t_t_t_t_tif_style_element_n_t_t_t_t_t_t_style_element_remove_n_t_t_t_t_t_t_style_element_null_n_t_t_t_t_t_n_t_t_t_t_n_t_t_t_namespaceObject);
-				var SilentTyping_React = __webpack_require__(698);
-				class SilentTyping extends(external_BasePlugin_default()) {
+				var external_n_inject_n_if_style_element_style_element_remove_n_style_element_document_head_appendChild_Object_assign_document_createElement_style_textContent_plugin_styles_n_n_remove_n_if_style_element_n_style_element_remove_n_style_element_null_n_n_n_default = __webpack_require__.n(external_n_inject_n_if_style_element_style_element_remove_n_style_element_document_head_appendChild_Object_assign_document_createElement_style_textContent_plugin_styles_n_n_remove_n_if_style_element_n_style_element_remove_n_style_element_null_n_n_n_namespaceObject);
+				var InvisibleTyping_React = __webpack_require__(698);
+				class InvisibleTyping extends(external_BasePlugin_default()) {
 					onStart() {
-						external_n_t_t_t_tinject_n_t_t_t_t_tif_style_element_style_element_remove_n_t_t_t_t_t_style_element_document_head_appendChild_Object_assign_document_createElement_style_textContent_plugin_styles_n_t_t_t_t_n_t_t_t_tremove_n_t_t_t_t_tif_style_element_n_t_t_t_t_t_t_style_element_remove_n_t_t_t_t_t_t_style_element_null_n_t_t_t_t_t_n_t_t_t_t_n_t_t_t_default().inject();
+						external_n_inject_n_if_style_element_style_element_remove_n_style_element_document_head_appendChild_Object_assign_document_createElement_style_textContent_plugin_styles_n_n_remove_n_if_style_element_n_style_element_remove_n_style_element_null_n_n_n_default().inject();
 						Utilities.suppressErrors(this.patchTextAreaButtons.bind(this), "textarea buttons patch")();
 						Utilities.suppressErrors(this.patchStartTyping.bind(this), "start typing patch")();
 					}
-					patchTextAreaButtons() {
+					async patchTextAreaButtons() {
 						var _WebpackModules$find;
 						const ChannelTextAreaContainer = null === (_WebpackModules$find = external_PluginApi_namespaceObject.WebpackModules.find((m => {
 							var _m$type, _m$type$render;
@@ -311,21 +312,21 @@ function buildPlugin([BasePlugin, PluginApi]) {
 								return (null === e || void 0 === e ? void 0 : null === (_e$className = e.className) || void 0 === _e$className ? void 0 : _e$className.indexOf("buttons-")) > -1;
 							}));
 							if (!Array.isArray(null === tree || void 0 === tree ? void 0 : tree.children)) return returnValue;
-							tree.children.unshift(SilentTyping_React.createElement(SilentTypingButton, {
+							tree.children.unshift(InvisibleTyping_React.createElement(InvisibleTypingButton, {
 								channel,
 								textValue
 							}));
 						}));
 					}
-					patchStartTyping() {
+					async patchStartTyping() {
 						const TypingModule = external_PluginApi_namespaceObject.WebpackModules.getByProps("startTyping");
 						external_PluginApi_namespaceObject.Patcher.instead(TypingModule, "startTyping", ((_, [channelId], originalMethod) => {
-							if (Settings.get("exclude", []).indexOf(channelId) > -1) originalMethod(channelId);
+							if (~Settings.get("exclude", []).indexOf(channelId)) originalMethod(channelId);
 						}));
 					}
 					onStop() {
 						external_PluginApi_namespaceObject.Patcher.unpatchAll();
-						external_n_t_t_t_tinject_n_t_t_t_t_tif_style_element_style_element_remove_n_t_t_t_t_t_style_element_document_head_appendChild_Object_assign_document_createElement_style_textContent_plugin_styles_n_t_t_t_t_n_t_t_t_tremove_n_t_t_t_t_tif_style_element_n_t_t_t_t_t_t_style_element_remove_n_t_t_t_t_t_t_style_element_null_n_t_t_t_t_t_n_t_t_t_t_n_t_t_t_default().remove();
+						external_n_inject_n_if_style_element_style_element_remove_n_style_element_document_head_appendChild_Object_assign_document_createElement_style_textContent_plugin_styles_n_n_remove_n_if_style_element_n_style_element_remove_n_style_element_null_n_n_n_default().remove();
 					}
 				}
 			},
@@ -407,7 +408,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				});
 			};
 		})();
-		var __webpack_exports__ = __webpack_require__(961);
+		var __webpack_exports__ = __webpack_require__(282);
 		module.exports.LibraryPluginHack = __webpack_exports__;
 	})();
 	const PluginExports = module.exports.LibraryPluginHack;

@@ -8,7 +8,7 @@ import styles from "./typingButton.scss";
 const TypingModule = WebpackModules.getByProps("startTyping");
 const {TooltipContainer: Tooltip} = WebpackModules.getByProps("TooltipContainer");
 
-export default function SilentTypingButton({channel, textValue}) {
+export default function InvisibleTypingButton({channel, textValue}) {
     const [enabled, setEnabled] = useState(Settings.get("exclude", []).indexOf(channel.id) > -1);
     
     const handleClick = useCallback(() => {
@@ -24,8 +24,8 @@ export default function SilentTypingButton({channel, textValue}) {
     }, [enabled]);
 
     return (
-        <Tooltip text={enabled ? "Typing Enabled" : "Typing Disabled"} position="top" className={styles.silentTypingTooltip}>
-            <button className={Utilities.joinClassNames(styles.silentTypingButton, {enabled, disabled: !enabled})} onClick={handleClick}>
+        <Tooltip text={enabled ? "Typing Enabled" : "Typing Disabled"} position="top" className={styles.invisibleTypingTooltip}>
+            <button className={Utilities.joinClassNames(styles.invisibleTypingButton, {enabled, disabled: !enabled})} onClick={handleClick}>
                 <Keyboard disabled={!enabled}/>
             </button>
         </Tooltip>

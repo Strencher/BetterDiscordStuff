@@ -1,14 +1,14 @@
-.silentTypingButton svg {
+.invisibleTypingButton svg {
     color: var(--interactive-normal);
     overflow: visible;
 }
 
-.silentTypingButton .disabledStrokeThrough {
+.invisibleTypingButton .disabledStrokeThrough {
     position: absolute;
     transform: translateX(-15px) translateY(530px) rotate(-45deg);
 }
 
-.silentTypingButton {
+.invisibleTypingButton {
     margin-top: 3px;
     background: transparent;
     
@@ -17,6 +17,6 @@
     }
 }
 
-.silentTypingTooltip {
+.invisibleTypingTooltip {
     display: inline-flex;
 }
