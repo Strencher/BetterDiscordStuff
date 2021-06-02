@@ -131,9 +131,8 @@ export default class Plugin extends BasePlugin {
             const tree = Utilities.findInReactTree(returnValue, e => e?.className && Array.isArray(e.children));
             if (!Array.isArray(tree?.children)) return returnValue;
             const Connections = this.connectionsApi.task(thisObject.props.user);
-
             tree.children.unshift(
-                <ErrorBoundary id="UserPopoutBody" mini>
+                <ErrorBoundary id="UserPopoutBody" mini key="connections">
                     <Connections titleClassName={titleClassName} />
                 </ErrorBoundary>
             );

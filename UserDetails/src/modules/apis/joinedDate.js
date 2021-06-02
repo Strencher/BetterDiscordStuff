@@ -18,7 +18,7 @@ export default class JoinedAt extends ApiModule {
     get api() {return this.constructor.name;}
 
     task(userId) {
-        return React.memo(() => {
+        return () => {
             const settingsFormat = Settings.get("joined_format", "Joined At: $hour:$minute:$second, $day.$month.$year $daysago days");
             const guildId = SelectedGuilds.getGuildId();
             const byCache = this.getByCache(guildId, userId);
@@ -72,6 +72,6 @@ export default class JoinedAt extends ApiModule {
                                 : <LoadingText />
                         }
                     </Tooltip>;
-        });
+        };
     }
 }

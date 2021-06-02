@@ -5,14 +5,15 @@ import TextBubble from "../components/icons/textbubble";
 import Cube from "../components/blankslates/cube";
 import Error from "../components/icons/error";
 import Eventhandler from "../eventhandler";
-import {WebpackModules, DiscordModules} from "@zlibrary";
+import {WebpackModules, DiscordModules, Logger} from "@zlibrary";
 import Settings from "../Settings";
 import styles from "./dates.scss";
 import {TooltipContainer as Tooltip} from "@discord/components";
 import {SelectedChannels, SelectedGuilds} from "@discord/stores";
 import LoadingText from "../components/loadingtext";
+import {APIModule} from "@zlibrary/discord";
+import {Navigation} from "@discord/utils";
 
-const ChannelTransitioner = WebpackModules.getByProps("jumpToMessage");
 const {stringify} = WebpackModules.getByProps("stringify", "parse", "encode");
 const constants = DiscordModules.DiscordConstants;
 
@@ -20,66 +21,78 @@ export default class LastMessage extends ApiModule {
     get api() {return this.constructor.name;}
 
     task(user) {
-        return React.memo(() => {
+        return () => {
             const [lastMessage, setLastMessage] = useState({messageId: null, channelId: null, date: null});
             const [errorMessage, setErrorMessage] = useState("");
+            const isGuild = Boolean(SelectedGuilds.getGuildId());
 
             useEffect(() => {
                 if (user.bot && user.discriminator === "0000") return setLastMessage({
                     date: "Last Message: --- --- ---"
                 });
                 const roomId = SelectedGuilds.getGuildId() || SelectedChannels.getChannelId();
-                const isGuild = Boolean(SelectedGuilds.getGuildId());
                 if (!roomId) return setLastMessage({
                     date: "Last Message: --- --- ---"
                 });
 
-                const event = new Eventhandler();
+                const byCache = this.getByCache(roomId, user.id);
+                if (byCache) {
+                    const message = byCache.body.messages[0].find(e => e.hit && e.author.id === user.id);
+                    setLastMessage({
+                        messageId: message.id,
+                        channelId: message.channel_id,
+                        date: this.parseTime(
+                            Settings.get(
+                                "lastmessage_format",
+                                "Last Message: $hour:$minute:$second, $day.$month.$year $daysago days"
+                            ), new Date(message.timestamp)
+                        )
+                    }); 
+                }
 
-                event
-                    .on("done", data => {
-                        if (data && data.body?.messages?.length) {
-                            const message = data.body.messages[0].find(e => e.hit && e.author.id === user.id);
-                            if (message) {
-                                return setLastMessage({
-                                    messageId: message.id,
-                                    channelId: message.channel_id,
-                                    returnMessageId: null,
-                                    flash: true,
-                                    isPreload: void 0,
-                                    date: this.parseTime(
-                                        Settings.get(
-                                            "lastmessage_format",
-                                            "Last Message: $hour:$minute:$second, $day.$month.$year $daysago days"
-                                        ), new Date(message.timestamp)
-                                    )
-                                });
-                            }
-                        }
-                        setLastMessage({
-                            date: "Last Message: --- --- ---"
-                        });
-                    })
-                    .on("error", error => {
-                        setErrorMessage("Failed to fetch data.");
-                        this.error(error);
-                    });
-
-                this.get({
+                APIModule.get({
                     url: isGuild ? constants.Endpoints.SEARCH_GUILD(roomId) : constants.Endpoints.SEARCH_CHANNEL(roomId),
                     query: stringify({author_id: user.id})
-                }, roomId, user.id, event);
+                }).then(data => {
+            	    if (data?.body?.messages?.length) {
+                        const message = data.body.messages[0].find(e => e.hit && e.author.id === user.id);
+                        if (message) {
+                            const data = {
+                                messageId: message.id,
+                                channelId: message.channel_id,
+                                date: this.parseTime(
+                                    Settings.get(
+                                        "lastmessage_format",
+                                        "Last Message: $hour:$minute:$second, $day.$month.$year $daysago days"
+                                    ), new Date(message.timestamp)
+                                )
+                            };
+                            this.setCache(roomId, user.id, {
+                                data: {
+                                    body: {messages: [[message]]}
+                                }
+                            });
+                            setLastMessage(data);
+                        }
+                    } else setLastMessage({
+                        date: "Last Message: --- --- ---"
+                    });
+                }).catch(error => {
+                    setErrorMessage("Failed to fetch!");
+                    this.error(`Fetch for ${userId} failed!\n`, error);
+                });
 
-
-                return () => event.cancel();
             }, [true]);
 
             const transitionToMessage = () => {
                 if (!lastMessage.channelId || !lastMessage.messageId) return;
-                ChannelTransitioner.jumpToMessage(lastMessage);
+                Navigation.replaceWith(isGuild 
+                    ? `/channels/${SelectedGuilds.getGuildId()}/${lastMessage.channelId}/${lastMessage.messageId}` 
+                    : `/channels/@me/${lastMessage.channelId}/${lastMessage.messageId}`
+                );
             }
 
-            return lastMessage
+            return lastMessage?.date
                 ? Settings.get("useIcons", true)
                     ? <Tooltip text={lastMessage?.date}>
                         <TextBubble onClick={transitionToMessage} />
@@ -94,6 +107,6 @@ export default class LastMessage extends ApiModule {
                                 : <LoadingText />
                         }
                     </Tooltip> 
-        });
+        };
     }
 }

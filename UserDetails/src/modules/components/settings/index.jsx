@@ -10,6 +10,7 @@ import ErrorBoundary from "../errorboundary";
 import {FormItem, FormText, FormTitle, FormDivider} from "@discord/forms";
 import {TooltipContainer as Tooltip} from "@discord/components";
 import Icon from "../icons/index";
+import Connections from "@discord/connections";
 
 const RadioGroup = Utilities.createUpdateWrapper(WebpackModules.getByDisplayName("RadioGroup"));
 const SwitchItem = Utilities.createUpdateWrapper(WebpackModules.getByDisplayName("SwitchItem"), false);
@@ -35,16 +36,16 @@ const TextItem = ({value, onChange, name, note}) => {
 
 const IconSetting = () => {
     const forceUpdate = Utilities.useForceUpdate(); 
-    const shownIcons = Settings.get("shownConnections", Object.fromEntries(Object.keys(defaultconnections).map(k => [k, true])));
+    const shownIcons = Settings.get("shownConnections", Object.fromEntries(Connections.map(e => [e.type, true])));
 
     return <Flex className={styles.icons}>
         {
-            Object.keys(defaultconnections).map(k => <Tooltip className={styles.settingsBadgeContainer} text={shownIcons[k] ? "Enabled" : "Disabled"} hideOnClick={false}>
+            Connections.filter(e => e.enabled).map(k => <Tooltip className={styles.settingsBadgeContainer} text={shownIcons[k.type] ? "Enabled" : "Disabled"} hideOnClick={false}>
                 <img
-                    src={defaultconnections[k].icon}
-                    className={Utilities.joinClassNames(styles.settingsBadgeIcon, shownIcons[k] ? "enabled" : styles.disabled)}
+                    src={k.icon.color}
+                    className={Utilities.joinClassNames(styles.settingsBadgeIcon, shownIcons[k.type] ? "enabled" : styles.disabled)}
                     onClick={() => {
-                        Settings.set("shownConnections", (shownIcons[k] = !shownIcons[k], shownIcons)); 
+                        Settings.set("shownConnections", (shownIcons[k.type] = !shownIcons[k.type], shownIcons)); 
                         forceUpdate();
                     }}
                 />

@@ -1,74 +1,60 @@
+/// <reference path="../../../../typings/discord.d.ts" />
 import React, {useState, useEffect} from "react";
 import Badge from "../components/badge";
-import defaultconnections from "../data/defaultConnections";
 import ApiModule from "./api";
 import Circle from "../components/blankslates/circle";
 import Error from "../components/icons/error";
-import Eventhandler from "../eventhandler";
-import {DiscordModules} from "@zlibrary";
 import Utilities from "../Utilities";
 import Settings from "../Settings";
 import styles from "./connections.scss";
 import {TooltipContainer as Tooltip} from "@discord/components";
-
-const constants = DiscordModules.DiscordConstants;
+import {useStateFromStores} from "@discord/flux";
+import {UserProfile} from "@discord/stores";
+import {ProfileActions} from "@discord/actions";
+import {Logger} from "@zlibrary";
+import Connections from "@discord/connections";
 
 export default class Userconnections extends ApiModule {
     get api() {return this.constructor.name;}
 
-    get shownConnections() {
-        const connections = Settings.get("shownConnections", defaultconnections);
-
-        return Object.keys(connections).reduce((items, curr) => (items[curr] = Boolean(connections[curr]), items), {});
-    }
-
-    get shownConnectionsAsArray() {
-        const connections = this.shownConnections;
-        return Object.keys(connections).reduce((items, item, _) => {
-            if (connections[item]) items.push(item);
-            return items;
-        }, []);
-    }
-
     task(user) {
-        return React.memo(({titleClassName}) => {
-            if (!this.shownConnectionsAsArray.length || user.bot) return null;
-            const [connections, setConnections] = useState(null);
+        return ({titleClassName}) => {
+            if (!Connections.filter(c => Settings.get("shownConnections", {})[c.type]).length || user.bot) return null;
+            const connections = useStateFromStores([UserProfile], () => UserProfile.getUserProfile(user.id)?.connectedAccounts);
             const [message, setMessage] = useState("");
 
             useEffect(() => {
-                const event = new Eventhandler();
-                event
-                    .on("done", data => {
-                        if (!data || !Array.isArray(data.body?.connected_accounts)) return setConnections([]);
-                        const shown = this.shownConnections;
-                        const connections = data.body.connected_accounts.filter(e => shown[e.type]);
-                        setConnections(connections);
-                    })
-                    .on("error", error => {
-                        let text = "Failed to fetch data.";
-                        if (error.body?.code === 50001) text = "Cannot access Profile";
-                        setMessage(text + ".");
-                        this.error(text + " from \"" + user.id + "\"");
+                if (UserProfile.isFetching(user.id)) return;
+                ProfileActions.fetchProfile(user.id)
+                    .catch(error => {
+                        if (~error?.message?.indexOf("Already dispatching")) return;
+                        Logger.error(`Failed to fetch profile for ${user.id}:\n`, error);
+                        setMessage("Failed to fetch!");
                     });
-                    
-                this.get({
-                    url: constants.Endpoints.USER_PROFILE(user.id)
-                }, user.id, user.id, event);
-
-                return () => event.cancel();
             }, [true]);
 
             return <div className={styles.connectionsBody}>
-                <div className={Utilities.joinClassNames(titleClassName, styles.container)}>{connections?.length ? "connections" : "no connections"}</div>
+                {   
+                    (!connections?.length && Settings.get("showEmptyConnections", true)) || connections?.length
+                        ? <div className={Utilities.joinClassNames(titleClassName, styles.container)}>{connections?.length ? "connections" : "no connections"}</div>
+                        : null
+                }
                 {
                     Array.isArray(connections)
-                        ? connections.length ? <div className={styles.connections}>{connections.map(badge => <Badge {...badge} />)}</div> : null
+                        ? connections?.length 
+                            ? <div className={styles.connections}>
+                                {
+                                    connections
+                                        .filter(e => Settings.get("shownConnections")[e.type])
+                                        .map(badge => <Badge item={badge} key={badge.type} />)
+                                }
+                                </div> 
+                            : null
                         : message
                             ? <Tooltip text={message}><Error className={styles.errorIcon} /></Tooltip>
-                            : <Tooltip text="Loading Connections...">{this.shownConnectionsAsArray.map(() => <Circle className={styles.loading} />)}</Tooltip>
+                            : <Tooltip text="Loading Connections...">{Connections.filter(e => Settings.get("shownConnections")[e.type]).map(() => <Circle className={styles.loading} />)}</Tooltip>
                 }
             </div>;
-        });
+        };
     }
 }

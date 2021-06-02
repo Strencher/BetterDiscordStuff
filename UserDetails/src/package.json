@@ -1,7 +1,7 @@
 {
     "info": {
         "name": "UserDetails",
-        "version": "1.0.0",
+        "version": "1.1.0",
         "authors": [
             {
                 "name": "Strencher",
@@ -14,6 +14,26 @@
 		"github": "https://github.com/Strencher/BetterDiscordStuff/UserDetails",
 		"github_raw": "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/UserDetails/UserDetails.plugin.js"
     },
+    "changelog": [
+        {
+            "type": "fixed",
+            "title": "Bugs have been reported!",
+            "items": [
+                "Fixed jumping to messages when clicking the last message icon.",
+                "It shouldn't show things twice anymore."
+            ]
+        },
+        {
+            "type": "improved",
+            "title": "Improvements",
+            "items": [
+                "Some strings have been improved.",
+                "More customization for connections. Also using a new Api.",
+                "Faster loading, i mean **__FASTER__** loading connections should load now in less than 1s.",
+                "Some things that i don't remember... lol"
+            ]
+        }
+    ],
     "build": {
         "zlibrary": true,
         "copy": true,
