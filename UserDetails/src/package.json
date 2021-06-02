@@ -1,7 +1,7 @@
 {
     "info": {
         "name": "UserDetails",
-        "version": "1.1.0",
+        "version": "1.1.1",
         "authors": [
             {
                 "name": "Strencher",
@@ -19,6 +19,7 @@
             "type": "fixed",
             "title": "Bugs have been reported!",
             "items": [
+                "Discord updated right after i updated my plugin. :zere_zoom: Fixed that too.",
                 "Fixed jumping to messages when clicking the last message icon.",
                 "It shouldn't show things twice anymore."
             ]

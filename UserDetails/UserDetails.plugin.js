@@ -1,6 +1,6 @@
 /**
  * @name UserDetails
- * @version 1.1.0
+ * @version 1.1.1
  * @author Strencher
  * @description Shows you a lot information about users in popouts.
  * @source https://github.com/Strencher/BetterDiscordStuff/UserDetails
@@ -32,7 +32,7 @@
 const config = {
 	"info": {
 		"name": "UserDetails",
-		"version": "1.1.0",
+		"version": "1.1.1",
 		"authors": [{
 			"name": "Strencher",
 			"discord_id": "415849376598982656",
@@ -47,6 +47,7 @@ const config = {
 			"type": "fixed",
 			"title": "Bugs have been reported!",
 			"items": [
+				"Discord updated right after i updated my plugin. :zere_zoom: Fixed that too.",
 				"Fixed jumping to messages when clicking the last message icon.",
 				"It shouldn't show things twice anymore."
 			]
@@ -409,7 +410,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			const UserDetails_package = {
 				info: {
 					name: "UserDetails",
-					version: "1.1.0",
+					version: "1.1.1",
 					authors: [{
 						name: "Strencher",
 						discord_id: "415849376598982656",
@@ -423,7 +424,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				changelog: [{
 					type: "fixed",
 					title: "Bugs have been reported!",
-					items: ["Fixed jumping to messages when clicking the last message icon.", "It shouldn't show things twice anymore."]
+					items: ["Discord updated right after i updated my plugin. :zere_zoom: Fixed that too.", "Fixed jumping to messages when clicking the last message icon.", "It shouldn't show things twice anymore."]
 				}, {
 					type: "improved",
 					title: "Improvements",
@@ -446,7 +447,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			};
 			var info = {
 				name: "UserDetails",
-				version: "1.1.0",
+				version: "1.1.1",
 				authors: [{
 					name: "Strencher",
 					discord_id: "415849376598982656",
@@ -460,7 +461,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			var changelog = [{
 				type: "fixed",
 				title: "Bugs have been reported!",
-				items: ["Fixed jumping to messages when clicking the last message icon.", "It shouldn't show things twice anymore."]
+				items: ["Discord updated right after i updated my plugin. :zere_zoom: Fixed that too.", "Fixed jumping to messages when clicking the last message icon.", "It shouldn't show things twice anymore."]
 			}, {
 				type: "improved",
 				title: "Improvements",
@@ -1965,9 +1966,9 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				}
 				async patchUserPopout() {
 					const UserPopout = await external_PluginApi_namespaceObject.ReactComponents.getComponentByName("UserPopout", getClass(["userPopout"], ["userPopout"], [], true));
-					const UserPopoutHeader = external_PluginApi_namespaceObject.WebpackModules.getModule((m => {
+					const UserPopoutInfo = external_PluginApi_namespaceObject.WebpackModules.getModule((m => {
 						var _m$default;
-						return "UserPopoutHeader" === (null === (_m$default = m.default) || void 0 === _m$default ? void 0 : _m$default.displayName);
+						return "UserPopoutInfo" === (null === (_m$default = m.default) || void 0 === _m$default ? void 0 : _m$default.displayName);
 					}));
 					const patch = (user, tree, type) => {
 						const WrappedJoinedAt = this.joinedApi.task(user.id);
@@ -1987,16 +1988,13 @@ function buildPlugin([BasePlugin, PluginApi]) {
 							key: "lastmessage-date"
 						}))));
 					};
-					external_PluginApi_namespaceObject.Patcher.after(UserPopoutHeader, "default", ((_, [{
+					external_PluginApi_namespaceObject.Patcher.after(UserPopoutInfo, "default", ((_, [{
 						user
 					}], returnValue) => {
+						var _returnValue$props;
 						if (this.promises.cancelled) return;
-						const tree = Utilities.findInReactTree(returnValue, (m => {
-							var _m$className;
-							return (null === m || void 0 === m ? void 0 : null === (_m$className = m.className) || void 0 === _m$className ? void 0 : _m$className.indexOf("headerTop")) > -1;
-						}));
-						if (!Array.isArray(null === tree || void 0 === tree ? void 0 : tree.children) || !user) return;
-						patch(user, tree, "PopoutHeader");
+						if (!Array.isArray(null === returnValue || void 0 === returnValue ? void 0 : null === (_returnValue$props = returnValue.props) || void 0 === _returnValue$props ? void 0 : _returnValue$props.children) || !user) return;
+						patch(user, returnValue.props, "PopoutHeader");
 					}));
 					external_PluginApi_namespaceObject.Patcher.after(UserPopout.component.prototype, "renderHeader", ((thisObject, _, returnValue) => {
 						const tree = Utilities.findInReactTree(returnValue, (e => e && e.direction));

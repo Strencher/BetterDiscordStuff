@@ -95,7 +95,7 @@ export default class Plugin extends BasePlugin {
 
     async patchUserPopout() {
         const UserPopout = await ReactComponents.getComponentByName("UserPopout", getClass(["userPopout"], ["userPopout"], [], true));
-        const UserPopoutHeader = WebpackModules.getModule(m => m.default?.displayName === "UserPopoutHeader");
+        const UserPopoutInfo = WebpackModules.getModule(m => m.default?.displayName === "UserPopoutInfo");
 
         const patch = (user, tree, type) => {
             const WrappedJoinedAt = this.joinedApi.task(user.id);
@@ -111,11 +111,10 @@ export default class Plugin extends BasePlugin {
             </ErrorBoundary>);
         };
 
-        Patcher.after(UserPopoutHeader, "default", (_, [{user}],  returnValue) => {
+        Patcher.after(UserPopoutInfo, "default", (_, [{user}],  returnValue) => {
             if (this.promises.cancelled) return;
-            const tree = Utilities.findInReactTree(returnValue, m => m?.className?.indexOf("headerTop") > -1);
-            if (!Array.isArray(tree?.children) || !user) return;
-            patch(user, tree, "PopoutHeader");
+            if (!Array.isArray(returnValue?.props?.children) || !user) return;
+            patch(user, returnValue.props, "PopoutHeader");
         });
 
         Patcher.after(UserPopout.component.prototype, "renderHeader", (thisObject, _, returnValue) => {
