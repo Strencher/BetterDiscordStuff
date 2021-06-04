@@ -27,6 +27,7 @@
     WScript.Quit();
 
 @else@*/
+/// <reference path="../_plugins/typings/BdApi.d.ts" />
 
 const config = {
     info: {
@@ -39,26 +40,21 @@ const config = {
                 twitter_username: "Strencher3"
             }
         ],
-        version: "0.0.5",
+        version: "0.0.6",
         description: "Allows you to copy certain stuff with custom options.",
         github: "https://github.com/Strencher/BetterDiscordStuff/blob/master/Copier/Copier.plugin.js",
         github_raw: "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/Copier/Copier.plugin.js"
     },
     changelog: [
         {
-            title: "Release",
+            title: "Added",
             type: "added",
-            items: ["The plugin got released!", "If you press the \"Copy\" button instead of choosing options from there, it will automatically copy the ID"]
+            items: ["Added a copy option to channel categories."]
         },
         {
             title: "Fixed",
             type: "fixed",
-            items: ["Fixed a bug where the username of the custom copy option wasn't replaced correctly."]
-        }, 
-        {
-            title: "Fixed",
-            type: "fixed",
-            items: ["Fixed a bug where an '@' was missing in the mentions of roles."]
+            items: ["Fixed copy menu on categories."]
         }
     ]
 };
@@ -291,9 +287,60 @@ const RoleCopyOptions = [
     }
 ];
 
+const ChannelCategoryCopyOptions = [
+    {
+        name: "id",
+        getValue: ({channel}) => channel.id,
+        description: "Will be replaced with the id of the category."
+    },
+    {
+        name: "name",
+        getValue: ({channel}) => channel.name,
+        description: "Will be replaced with the name of the category.",
+    },
+    {
+        name: "type",
+        getValue: ({channel}, {Formatter}) => Formatter.formatChannelType(channel.type),
+        description: "Will be replaced with the type of the category."
+    },
+    {
+        name: "server",
+        getValue: ({guild}) => guild.name,
+        description: "Will be replaced with the server name."
+    },
+    {
+        name: "serverId",
+        getValue: ({guild}) => guild.id,
+        description: "Will be replaced with the server id."
+    },
+    {
+        name: "creation",
+        getValue: ({channel}, {Formatter}) => Formatter.parseSnowFlake(channel.id).toLocaleString(),
+        description: "Will be replaced with the creation date of the category."
+    },
+    {
+        name: "channelMention",
+        getValue: ({channel}) => `<#${channel.id}>`,
+        description: "Will be replaced with the mention of the category."
+    },
+    {
+        name: "channelsCount",
+        getValue: ({channel}, {ChannelsStore}) => {
+            const channels = Object.values(ChannelsStore.getMutableGuildChannels()).filter(child => child.parent_id === channel.id);
+
+            return channels.length;
+        },
+        description: "Will be replaced with the children channels count of that category."
+    }
+];
+
+/**
+ * @param {[ZeresPluginLibrary.BasePlugin, ZeresPluginLibrary.PluginApi]} param0 
+ * @returns 
+ */
 const buildPlugin = ([Plugin, Api]) => {
 
-    const {ColorConverter, Logger, Toasts, Utilities: _utils, WebpackModules, PluginUtilities, ReactComponents, Patcher} = Api;
+    const {ColorConverter, Logger, Toasts, Utilities, WebpackModules, PluginUtilities, ReactComponents, Patcher} = Api;
     const {React, React: {useEffect, useState}, ElectronModule, GuildStore, ChannelStore, DiscordConstants: {ChannelTypes}, SelectedGuildStore} = Api.DiscordModules;
     const {MenuItem, MenuGroup} = WebpackModules.getByProps("MenuItem");
     const findWithDefault = filter => WebpackModules.getModule(m => m && m.default && filter(m.default));
@@ -303,6 +350,7 @@ const buildPlugin = ([Plugin, Api]) => {
     const MiniPopover = findWithDefault(m => m.displayName == "MiniPopover");
     const {Routes} = WebpackModules.getByProps("Routes");
     const VoiceStatesStore = WebpackModules.getByProps("getVoiceStatesForChannel");
+    const ChannelsStore = WebpackModules.getByProps("getMutableGuildChannels");
     const CopyIcon = props => React.createElement("svg", {height: 24, width: 24, viewBox: "0 0 24 24", fill: "currentColor", ...props}, React.createElement("path", {fill: "none", d: "M0 0h24v24H0z"}), React.createElement("path", {d: "M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"}));
 
     const createUpdateWrapper = component => props => {
@@ -322,18 +370,11 @@ const buildPlugin = ([Plugin, Api]) => {
     const TextInput = createUpdateWrapper(WebpackModules.getByDisplayName("TextInput"));
     const SwitchItem = createUpdateWrapper(WebpackModules.getByDisplayName("SwitchItem"));
 
-    class Utilities extends _utils {
-        static isNil(what) {return what === void 0 || what === null;}
-
-        static joinClassNames(...classNames) {
-            return classNames.filter(e => e).join(" ");
-        }
-    }
-
     class Settings {
         static settings = PluginUtilities.loadSettings(config.info.name, {
             messageCustom: "`$author` **$timestamp**\n> $message",
             channelCustom: "#$name in **$server**",
+            categoryCustom: "$name with $channelsCount channels",
             voiceCustom: "**$name** in **$server** with `$usersConnected` connected users.",
             guildCustom: "**$name** with `$members`",
             userCustom: "**$name** - Created at: `$creation`",
@@ -385,7 +426,7 @@ const buildPlugin = ([Plugin, Api]) => {
             return React.createElement(MenuItem, {
                 ...item,
                 id: (item.id ? item.id : item.label.toLowerCase().replace(/ /g, "-")) 
-                    + (Utilities.isNil(item.children) ? "" : "-submenu"),
+                    + (item.children ? "" : "-submenu"),
             });
         }
 
@@ -480,7 +521,7 @@ const buildPlugin = ([Plugin, Api]) => {
         })
     }
 
-    const Modules = {MemberCountStore, Formatter, VoiceStatesStore};
+    const Modules = {MemberCountStore, Formatter, VoiceStatesStore, GuildStore, ChannelsStore};
 
     return class Copier extends Plugin {
         hasCanaryLinks = false;
@@ -670,8 +711,63 @@ const buildPlugin = ([Plugin, Api]) => {
         }
 
         patchChannelContextMenu() {
-            const ChannelListTextChannelContextMenu = WebpackModules.findAll(m => m.default && m.default.displayName === "ChannelListTextChannelContextMenu")[2];
+            const [ChannelListTextChannelContextMenu,, CategoryContextMenu] = WebpackModules.findAll(m => m.default && m.default.displayName === "ChannelListTextChannelContextMenu");
             const ChannelListVoiceChannelContextMenu = findWithDefault(m => m.displayName === "ChannelListVoiceChannelContextMenu");
+            
+            Patcher.after(CategoryContextMenu, "default", (_, [props], ret) => {
+                const children = Utilities.getNestedProp(ret, "props.children");
+                if (!Array.isArray(children)) return;
+
+                const {channel} = props;
+
+                children.splice(
+                    children.length - 2,
+                    0,
+                    ContextMenu.buildMenu([
+                        {
+                            label: "Copy",
+                            id: "copy-category",
+                            action: () => {
+                                ElectronModule.copy(channel.id);
+                            },
+                            children: [
+                                {
+                                    label: "Name",
+                                    id: "copy-category-name",
+                                    action: () => {
+                                        ElectronModule.copy(channel.name);
+                                        Toasts.success("Copied category name.");
+                                    }
+                                },
+                                {
+                                    label: "Custom Format",
+                                    id: "copy-category-custom",
+                                    action: () => {
+                                        ElectronModule.copy(
+                                            Formatter.formatString(
+                                                Settings.getSetting("categoryCustom"),
+                                                ChannelCategoryCopyOptions.reduce((options, option) => {
+                                                    options[option.name] = option.getValue(props, Modules);
+                                                    return options;
+                                                }, {})
+                                            )
+                                        );
+                                        Toasts.success("Copied category with custom format.");
+                                    }
+                                },
+                                {
+                                    label: "Id",
+                                    id: "copy-category-id",
+                                    action: () => {
+                                        ElectronModule.copy(channel.id);
+                                        Toasts.success("Copied channel id.");
+                                    }
+                                }
+                            ]
+                        }
+                    ])
+                );
+            });
 
             Patcher.after(ChannelListTextChannelContextMenu, "default", (_, [props], ret) => {
                 const children = Utilities.getNestedProp(ret, "props.children");
@@ -735,6 +831,7 @@ const buildPlugin = ([Plugin, Api]) => {
                     ])
                 );
             });
+
             Patcher.after(ChannelListVoiceChannelContextMenu, "default", (_, [props], ret) => {
                 const children = Utilities.getNestedProp(ret, "props.children");
                 if (!Array.isArray(children)) return;
@@ -936,19 +1033,26 @@ const buildPlugin = ([Plugin, Api]) => {
         }
 
         patchDeveloperContextMenu() {
-            const DeveloperContextMenu = findWithDefault(m => m.displayName === "DeveloperContextMenu");
+            const Menus = [
+                findWithDefault(m => m.displayName === "DeveloperContextMenu"),
+                findWithDefault(m => m.displayName === "GuildSettingsRoleContextMenu")
+            ];
 
-            Patcher.after(DeveloperContextMenu, "default", (_, [props], ret) => {
+            for (const ContextMenuType of Menus) Patcher.after(ContextMenuType, "default", (_, [props], ret) => {
                 const handleClose = () => {
                     ret?.props?.onClose();
                 };
 
-                const guild = GuildStore.getGuild(SelectedGuildStore.getGuildId());
-                if (!guild) return handleClose();
+                const role = props.role || (() => {
+                    const guild = GuildStore.getGuild(SelectedGuildStore.getGuildId());
+                    if (!guild) return handleClose();
 
-                const role = guild.getRole(props.id);
+                    const role = guild.getRole(props.id);
 
-                if (!role) return handleClose();
+                    if (!role) return handleClose();
+
+                    return role;
+                })();
 
                 const colors = {
                     hex: ColorConverter.int2hex(role.color),
@@ -956,7 +1060,11 @@ const buildPlugin = ([Plugin, Api]) => {
                     rgb: ColorConverter.int2rgba(role.color)
                 };
 
-                ret.props.children = ContextMenu.buildMenu([
+                if (!Array.isArray(ret.props.children)) ret.props.children = [
+                    ret.props.children
+                ].filter(e => e);
+
+                ret.props.children.push(ContextMenu.buildMenu([
                     {
                         label: "Copy",
                         id: "copy-role",
@@ -1046,7 +1154,7 @@ const buildPlugin = ([Plugin, Api]) => {
                             }
                         ]
                     }
-                ]);
+                ]));
             });
         }
 
@@ -1068,7 +1176,7 @@ const buildPlugin = ([Plugin, Api]) => {
                             },
                             children: [
                                 Caret({
-                                    className: Utilities.joinClassNames("copr-caret", isOpened && "opened"),
+                                    className: Utilities.className("copr-caret", isOpened && "opened"),
                                 }),
                                 React.createElement("div", {
                                     className: "copr-label"
@@ -1156,6 +1264,12 @@ const buildPlugin = ([Plugin, Api]) => {
                         name: "ChannelCopy",
                         settingsId: "channelCustom",
                         customOptions: ChannelCopyOptions
+                    }),
+                    React.createElement("div", {className: "copr-separator"}),
+                    makeCategory({
+                        name: "ChannelCategoryCopy",
+                        settingsId: "categoryCustom",
+                        customOptions: ChannelCategoryCopyOptions
                     }),
                     React.createElement("div", {className: "copr-separator"}),
                     makeCategory({
