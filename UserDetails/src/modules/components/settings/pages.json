@@ -201,5 +201,47 @@
             },
             {"type": "icons"}
         ]
+    },
+    {
+        "name": "Activity Icons",
+        "icon": "GamePad",
+        "items": [
+            {
+                "type": "switch",
+                "name": "Enable Activity Icons",
+                "note": null,
+                "id": "activityIcons",
+                "value": true
+            },
+            {
+                "type": "radio",
+                "name": "Activity Icon State",
+                "note": "Replaces the activity icon in the activity text of the member list.",
+                "id": "activityIconState",
+                "value": 0,
+                "disabled": false,
+                "options": [
+                    {
+                        "name": "Replace with associated icon",
+                        "value": 0
+                    },
+                    {
+                        "name": "Don't do anything",
+                        "value": 1
+                    },
+                    {
+                        "name": "Hide it",
+                        "value": 2
+                    }
+                ]
+            },
+            {
+                "type": "switch",
+                "name": "Show Gamepad",
+                "note": "This shows a gamepad icon if an icon for the activity isn't available.",
+                "id": "showGamepad",
+                "value": true
+            }
+        ]
     }
 ]

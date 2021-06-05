@@ -4,6 +4,14 @@ import Error from "./error";
 import TextBubble from "./textbubble";
 import Chain from "./chain";
 import Wrench from "./wrench";
+import Flowerstar from "./flowerstar";
+import Spotify from "./spotify";
+import Twitch from "./twitch";
+import Valorant from "./valorant";
+import YouTube from "./youtube";
+import GamePad from "./gamepad";
+import GoogleChrome from "./googleChrome";
+import Headphones from "./headphones";
 
 export const Icons = {
     Cake,
@@ -11,7 +19,15 @@ export const Icons = {
     Error,
     TextBubble,
     Chain,
-    Wrench
+    Wrench,
+    Flowerstar,
+    Spotify,
+    Twitch,
+    Valorant,
+    YouTube,
+    GamePad,
+    GoogleChrome,
+    Headphones
 };
 
 export function noop() {return null;}

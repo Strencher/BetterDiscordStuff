@@ -88,13 +88,20 @@ const renderSetting = setting => {
                 <b>{setting.prefix}</b>
                 <span>{setting.description}</span>
             </Flex>;
-        case "radio": return <RadioGroup
-                {...setting}
-                value={Settings.get(setting.id, setting.value)}
-                onChange={value => {
-                    Settings.set(setting.id, value);
-                }}
-            >{setting.name}</RadioGroup>;
+        case "radio":
+            const {name, note} = setting;
+            delete setting.name;
+            delete setting.note; 
+            return <FormItem title={name}>
+                {note && <FormText type="description">{note}</FormText>}
+                <RadioGroup
+                    {...setting}
+                    value={Settings.get(setting.id, setting.value)}
+                    onChange={value => {
+                        Settings.set(setting.id, value);
+                    }}
+                />
+            </FormItem>;
         case "text": return <TextItem 
                 {...setting}
                 value={Settings.get(setting.id, setting.value)}
@@ -145,7 +152,7 @@ export default function SettingsPanel() {
                                 buttonText="Configure"
                                 details={[{text: `${page.items.length} setting${page.items.length > 1 ? "s" : ""}.`}]}
                                 hasNextSection={true}
-                                icon={() => <Icon name={page.icon} fill="var(--interactive-normal)" />}
+                                icon={() => <Icon className={styles.pageIcon} name={page.icon} />}
                                 name={page.name}
                                 onButtonClick={() => setActiveItem(index)}
                             />

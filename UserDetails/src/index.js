@@ -9,9 +9,13 @@ import Settings from "./modules/Settings";
 import SettingsPanel from "./modules/components/settings/index";
 import ErrorBoundary from "./modules/components/errorboundary";
 import BasePlugin from "@zlibrary/plugin";
-import {WebpackModules, Patcher, ReactComponents, Logger} from "@zlibrary";
+import {WebpackModules, Patcher, ReactComponents} from "@zlibrary";
 import dateStyles from "./modules/apis/dates.scss";
-import {Dispatcher} from "@discord/modules";
+import Activity, {ActivitiesFilter} from "./modules/components/activity";
+import {ActivityTypes} from "@discord/constants";
+import Gamepad from "./modules/components/icons/gamepad";
+import {connectStores, useStateFromStores} from "@discord/flux";
+import Headphones from "./modules/components/icons/headphones";
 
 /// <reference path="../../typings/zlib.d.ts" />
 
@@ -28,8 +32,7 @@ export default class Plugin extends BasePlugin {
     };
 
     getSettingsPanel() {
-        const ConnectedSettings = Settings.connectStore(SettingsPanel);
-        return <ConnectedSettings />;
+        return <SettingsPanel />;
     }
 
     onStart() {
@@ -45,57 +48,14 @@ export default class Plugin extends BasePlugin {
         // Patches
         this.patchUserPopout();
         this.patchUserProfile();
-
-        // Subscribe to message events
-        Dispatcher.subscribe("MESSAGE_CREATE", this.onMessage);        
-        Dispatcher.subscribe("MESSAGE_DELETE", this.onMessageDelete);
-    }
-
-    onMessage = ({channelId, message}) => {
-        try {
-            const roomId = message.guild_id ? message.guild_id : channelId;
-            
-            if (!this.lastMessageApi.cache[roomId]) this.lastMessageApi.cache[roomId] = {};
-
-            this.lastMessageApi.cache[roomId][message.author.id] = {
-                data: {
-                    body: {
-                        messages: [
-                            [{...message, hit: true}]
-                        ]
-                    }
-                },
-                fetch: Date.now()
-            };
-            
-        } catch (error) {
-            Logger.error(error);
-        }
-    }
-
-    onMessageDelete = ({channelId, messageId}) => {
-        try {
-            
-            if (!this.lastMessageApi.cache[channelId]) return;
-
-            const userIds = Object.keys(this.lastMessageApi.cache[channelId]);
-
-            for (const userId of userIds) {
-                const chunk = this.lastMessageApi.cache[channelId][userId];
-                const index = chunk?.data?.body?.messages.findIndex(e => e?.[0]?.id === messageId);
-
-                if (~index) {
-                    chunk.data.body.messages.splice(index, 1);
-                }
-            }
-        } catch (error) {
-            Logger.error("Error in MessageDelete event:\n", error);
-        }
+        this.patchMemberListItem();
+        this.patchUserActivityStatus();
     }
 
     async patchUserPopout() {
         const UserPopout = await ReactComponents.getComponentByName("UserPopout", getClass(["userPopout"], ["userPopout"], [], true));
         const UserPopoutInfo = WebpackModules.getModule(m => m.default?.displayName === "UserPopoutInfo");
+        const UserPopoutHeader = WebpackModules.getModule(m => m.default?.displayName === "UserPopoutHeader");
 
         const patch = (user, tree, type) => {
             const WrappedJoinedAt = this.joinedApi.task(user.id);
@@ -111,10 +71,18 @@ export default class Plugin extends BasePlugin {
             </ErrorBoundary>);
         };
 
+        Patcher.after(UserPopoutHeader, "default", (_, [{user}], returnValue) => {
+            if (this.promises.cancelled) return;
+            const tree = Utilities.findInReactTree(returnValue, m => m?.className?.indexOf("headerTop") > -1);
+            if (!Array.isArray(tree?.children)) return;
+
+            patch(user, tree, "PopoutHeader");
+        });
+
         Patcher.after(UserPopoutInfo, "default", (_, [{user}],  returnValue) => {
             if (this.promises.cancelled) return;
             if (!Array.isArray(returnValue?.props?.children) || !user) return;
-            patch(user, returnValue.props, "PopoutHeader");
+            patch(user, returnValue.props, "PopoutInfoHeader");
         });
 
         Patcher.after(UserPopout.component.prototype, "renderHeader", (thisObject, _, returnValue) => {
@@ -165,13 +133,53 @@ export default class Plugin extends BasePlugin {
         UserProfile.forceUpdateAll();
     }
 
+    async patchMemberListItem() {
+        const MemberListItem = await ReactComponents.getComponentByName("MemberListItem", getClass(["member", "activity"], ["member"], [], true));
+        const ActivityStatus = WebpackModules.getModule(m => m.default.displayName === "ActivityStatus");
+
+        const ConnectedActivity = connectStores([Settings], e => e)(Activity);
+        Patcher.after(MemberListItem.component.prototype, "render", (that, _, res) => {
+            if (this.promises.cancelled) return;
+            if (!Settings.get("activityIcon", true)) return;
+
+            res.props.children = (
+                <ConnectedActivity user={that.props.user} />
+            );
+        });
+
+        Patcher.after(ActivityStatus, "default", (_, [{activities}], res) => {
+            const element = res?.props?.children?.[2];
+
+            if (!element) return;
+
+            Object.assign(element.props, {
+                type: activities.filter(ActivitiesFilter)[0].type
+            });
+        });
+
+        MemberListItem.forceUpdateAll();
+    }
+
+    async patchUserActivityStatus() {
+        const RichActivity = WebpackModules.getModule(m => m.default.displayName === "RichActivity");
+    
+        Patcher.after(RichActivity, "default", (_, [props]) => {
+            const shouldShow = useStateFromStores([Settings], () => Settings.get("activityIconState", 0));
+            switch (shouldShow) {
+                case 1: return;
+                case 2: return null;
+            }
+            
+            switch(props.type) {
+                case ActivityTypes.PLAYING: return <Gamepad {...props}/>;
+                case ActivityTypes.LISTENING: return <Headphones {...props}/>;
+            }
+        });
+    }
+
     onStop() {
         // Unpatch
         Patcher.unpatchAll();
-
-        // Unsubscribe from message events
-        Dispatcher.unsubscribe("MESSAGE_CREATE", this.onMessage);
-        Dispatcher.unsubscribe("MESSAGE_DELETE", this.onMessageDelete);
 
         // Remove styles
         stylesheet.remove();

@@ -41,8 +41,8 @@ export default class ApiModule {
       if (!cache[this.api][guildId]) cache[this.api][guildId] = {};
       let data;
       const userFromCache = this.getByCache(guildId, userId);
-      if (userFromCache) data = userFromCache;  
-      
+      if (userFromCache) data = userFromCache;
+
       if (!data) {
          queue.add(() => APIModule.get(options), this.api, event);
          event
@@ -56,14 +56,14 @@ export default class ApiModule {
                if (error.status === 429) {
                   queue.pause();
                   setTimeout(queue.continue, (error.body?.retry_after ?? 5) * 1000);
-               } 
+               }
             });
 
       } else event.reply("done", data);
    }
 
    parseZeroPadding(zeroable) {
-      return zeroable < 9 ? "0" + zeroable : zeroable;
+      return zeroable <= 9 ? "0" + zeroable : zeroable;
    }
 
    monthsAgo(date1, date2) {
@@ -71,20 +71,21 @@ export default class ApiModule {
       months = (date2.getFullYear() - date1.getFullYear()) * 12;
       months -= date1.getMonth();
       months += date2.getMonth();
+      months = Math.abs(months);
       return months <= 0 ? 0 : months;
-  }
+   }
 
-  daysAgo(date1, date2) {
+   daysAgo(date1, date2) {
       return Math.floor((date1 - date2) / (1000 * 60 * 60 * 24));
-  }
+   }
 
-  yearsAgo(date1, date2) {
+   yearsAgo(date1, date2) {
       return this.monthsAgo(date2, date1) / 12;
-  }
+   }
 
    parseTime(format, date) {
       if (typeof date !== "object") date = new Date(date);
-      const today = new Date(), daysago = this.daysAgo(today, date), hour12 = Settings.get("12hour", 1);
+      const today = new Date(), daysago = this.daysAgo(today, date), hour12 = Settings.get("12hour", 1) === 0;
       return format
          .replace(/\$timelabel/g, date.getHours() >= 12 ? "PM" : "AM")
          .replace(/\$daysago/g, daysago)

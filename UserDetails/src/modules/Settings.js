@@ -1,44 +1,25 @@
 import {PluginUtilities} from "@zlibrary";
 import pkg from "../package.json";
-import Eventhandler from "./eventhandler";
+import Updater from "common/classes/updater";
 import React, {useEffect} from "react";
 import Utilities from "./Utilities";
+import {Dispatcher} from "@discord/modules";
+import {Store} from "@discord/flux";
 
-export default class Settings {
-    static updater = new Eventhandler();
+export default new class Settings extends Store {
+    constructor() {
+        super(Dispatcher, {});
+    }
 
-    static settings = PluginUtilities.loadSettings(pkg.info.name, {});
+    settings = PluginUtilities.loadSettings(pkg.info.name, {});
 
-    static get = (key, defaultValue) => {
+    get = (key, defaultValue) => {
         return this.settings[key] ?? defaultValue;
     }
 
-    static set = (key, value) => {
+    set = (key, value) => {
         this.settings[key] = value;
         PluginUtilities.saveSettings(pkg.info.name, this.settings);
-        this.updater.reply("update");
-    }
-
-    static connectStore(Component) {
-        return props => {
-
-            if (!props.getSetting) Object.assign(props, {
-                getSetting: this.get,
-                updateSetting: this.set,
-                toggleSetting: id => {
-                    this.set(!this.get(id));
-                }
-            })
-
-            const forceUpdate = Utilities.useForceUpdate();
-
-            useEffect(() => {
-                this.updater.on("update", forceUpdate);
-
-                return () => this.updater.off("update", forceUpdate);
-            }, []);
-
-            return <Component {...props}/>;
-        }
+        this.emitChange();
     }
 }

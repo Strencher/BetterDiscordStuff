@@ -1,7 +1,7 @@
 {
     "info": {
         "name": "UserDetails",
-        "version": "1.1.1",
+        "version": "1.2.1",
         "authors": [
             {
                 "name": "Strencher",
@@ -16,22 +16,17 @@
     },
     "changelog": [
         {
-            "type": "fixed",
-            "title": "Bugs have been reported!",
+            "title": "Added",
+            "type": "added",
             "items": [
-                "Discord updated right after i updated my plugin. :zere_zoom: Fixed that too.",
-                "Fixed jumping to messages when clicking the last message icon.",
-                "It shouldn't show things twice anymore."
+                "Added ActivityIcons feature, checkout the settings!"
             ]
         },
         {
-            "type": "improved",
-            "title": "Improvements",
+            "title": "Fixed",
+            "type": "fixed",
             "items": [
-                "Some strings have been improved.",
-                "More customization for connections. Also using a new Api.",
-                "Faster loading, i mean **__FASTER__** loading connections should load now in less than 1s.",
-                "Some things that i don't remember... lol"
+                "Fixed some weird bugs."
             ]
         }
     ],
@@ -41,7 +36,8 @@
         "production": false,
         "scssHash": false,
         "alias": {
-            "icons": "components/icons"
+            "icons": "components/icons",
+            "stores": "./modules/stores"
         },
 		"release": {
 			"public": true,

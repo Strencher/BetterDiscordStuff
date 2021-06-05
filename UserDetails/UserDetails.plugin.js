@@ -1,6 +1,6 @@
 /**
  * @name UserDetails
- * @version 1.1.1
+ * @version 1.2.1
  * @author Strencher
  * @description Shows you a lot information about users in popouts.
  * @source https://github.com/Strencher/BetterDiscordStuff/UserDetails
@@ -32,7 +32,7 @@
 const config = {
 	"info": {
 		"name": "UserDetails",
-		"version": "1.1.1",
+		"version": "1.2.1",
 		"authors": [{
 			"name": "Strencher",
 			"discord_id": "415849376598982656",
@@ -44,22 +44,17 @@ const config = {
 		"github_raw": "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/UserDetails/UserDetails.plugin.js"
 	},
 	"changelog": [{
-			"type": "fixed",
-			"title": "Bugs have been reported!",
+			"title": "Added",
+			"type": "added",
 			"items": [
-				"Discord updated right after i updated my plugin. :zere_zoom: Fixed that too.",
-				"Fixed jumping to messages when clicking the last message icon.",
-				"It shouldn't show things twice anymore."
+				"Added ActivityIcons feature, checkout the settings!"
 			]
 		},
 		{
-			"type": "improved",
-			"title": "Improvements",
+			"title": "Fixed",
+			"type": "fixed",
 			"items": [
-				"Some strings have been improved.",
-				"More customization for connections. Also using a new Api.",
-				"Faster loading, i mean **__FASTER__** loading connections should load now in less than 1s.",
-				"Some things that i don't remember... lol"
+				"Fixed some weird bugs."
 			]
 		}
 	],
@@ -69,7 +64,8 @@ const config = {
 		"production": false,
 		"scssHash": false,
 		"alias": {
-			"icons": "components/icons"
+			"icons": "components/icons",
+			"stores": "./modules/stores"
 		},
 		"release": {
 			"public": true,
@@ -87,7 +83,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 		let __plugin_styles__ = "";
 		let __style_element__ = null;
 		var __webpack_modules__ = {
-			815: (module, __webpack_exports__, __webpack_require__) => {
+			713: (module, __webpack_exports__, __webpack_require__) => {
 				__webpack_require__.d(__webpack_exports__, {
 					Z: () => __WEBPACK_DEFAULT_EXPORT__
 				});
@@ -108,7 +104,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				__plugin_styles__ += `\n/* ${module.id} */\n${___CSS_LOADER_EXPORT___}\n`;
 				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
 			},
-			785: (module, __webpack_exports__, __webpack_require__) => {
+			473: (module, __webpack_exports__, __webpack_require__) => {
 				__webpack_require__.d(__webpack_exports__, {
 					Z: () => __WEBPACK_DEFAULT_EXPORT__
 				});
@@ -131,7 +127,24 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				__plugin_styles__ += `\n/* ${module.id} */\n${___CSS_LOADER_EXPORT___}\n`;
 				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
 			},
-			308: (module, __webpack_exports__, __webpack_require__) => {
+			686: (module, __webpack_exports__, __webpack_require__) => {
+				__webpack_require__.d(__webpack_exports__, {
+					Z: () => __WEBPACK_DEFAULT_EXPORT__
+				});
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(645);
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
+				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
+					return i[1];
+				}));
+				___CSS_LOADER_EXPORT___.push([module.id, ".UserDetails-activity-icon{display:flex;float:right}.UserDetails-activity-container{display:flex}", ""]);
+				___CSS_LOADER_EXPORT___.locals = {
+					icon: "UserDetails-activity-icon",
+					container: "UserDetails-activity-container"
+				};
+				__plugin_styles__ += `\n/* ${module.id} */\n${___CSS_LOADER_EXPORT___}\n`;
+				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
+			},
+			194: (module, __webpack_exports__, __webpack_require__) => {
 				__webpack_require__.d(__webpack_exports__, {
 					Z: () => __WEBPACK_DEFAULT_EXPORT__
 				});
@@ -149,7 +162,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				__plugin_styles__ += `\n/* ${module.id} */\n${___CSS_LOADER_EXPORT___}\n`;
 				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
 			},
-			303: (module, __webpack_exports__, __webpack_require__) => {
+			881: (module, __webpack_exports__, __webpack_require__) => {
 				__webpack_require__.d(__webpack_exports__, {
 					Z: () => __WEBPACK_DEFAULT_EXPORT__
 				});
@@ -167,7 +180,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				__plugin_styles__ += `\n/* ${module.id} */\n${___CSS_LOADER_EXPORT___}\n`;
 				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
 			},
-			561: (module, __webpack_exports__, __webpack_require__) => {
+			466: (module, __webpack_exports__, __webpack_require__) => {
 				__webpack_require__.d(__webpack_exports__, {
 					Z: () => __WEBPACK_DEFAULT_EXPORT__
 				});
@@ -176,7 +189,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
 					return i[1];
 				}));
-				___CSS_LOADER_EXPORT___.push([module.id, ".UserDetails-settings-settingsPanel .UserDetails-settings-formItem{margin-bottom:10px}.UserDetails-settings-settingsPanel .UserDetails-settings-icons{flex-wrap:wrap}.UserDetails-settings-settingsPanel .UserDetails-settings-icons .UserDetails-settings-settingsBadgeContainer{display:inline-flex;cursor:pointer}.UserDetails-settings-settingsPanel .UserDetails-settings-icons .UserDetails-settings-settingsBadgeContainer .UserDetails-settings-settingsBadgeIcon{width:40px;height:40px}.UserDetails-settings-settingsPanel .UserDetails-settings-icons .UserDetails-settings-settingsBadgeContainer .UserDetails-settings-settingsBadgeIcon.UserDetails-settings-disabled{opacity:.4}.UserDetails-settings-settingsPanel .UserDetails-settings-category{color:#ddd}.UserDetails-settings-settingsPanel .UserDetails-settings-category.UserDetails-settings-opened .UserDetails-settings-categoryContent{padding:10px;padding:10px}.UserDetails-settings-settingsPanel .UserDetails-settings-category.UserDetails-settings-opened .UserDetails-settings-categoryContent .UserDetails-settings-replacementVariable{user-select:text;margin-bottom:6px;padding-bottom:6px;border-bottom:thin solid var(--background-modifier-accent)}.UserDetails-settings-settingsPanel .UserDetails-settings-category.UserDetails-settings-opened .UserDetails-settings-categoryContent .UserDetails-settings-replacementVariable b{margin-right:3px}.UserDetails-settings-settingsPanel .UserDetails-settings-category .UserDetails-settings-categoryHeader{cursor:pointer;padding:10px;font-size:15px;background:var(--background-tertiary);font-weight:600;text-transform:uppercase;display:flex;align-items:center}.UserDetails-settings-settingsPanel .UserDetails-settings-category .UserDetails-settings-categoryHeader .UserDetails-settings-categoryCaret{margin-left:auto}", ""]);
+				___CSS_LOADER_EXPORT___.push([module.id, ".UserDetails-settings-settingsPanel .UserDetails-settings-formItem{margin-bottom:10px}.UserDetails-settings-settingsPanel .UserDetails-settings-icons{flex-wrap:wrap}.UserDetails-settings-settingsPanel .UserDetails-settings-icons .UserDetails-settings-settingsBadgeContainer{display:inline-flex;cursor:pointer}.UserDetails-settings-settingsPanel .UserDetails-settings-icons .UserDetails-settings-settingsBadgeContainer .UserDetails-settings-settingsBadgeIcon{width:40px;height:40px}.UserDetails-settings-settingsPanel .UserDetails-settings-icons .UserDetails-settings-settingsBadgeContainer .UserDetails-settings-settingsBadgeIcon.UserDetails-settings-disabled{opacity:.4}.UserDetails-settings-settingsPanel .UserDetails-settings-category{color:#ddd}.UserDetails-settings-settingsPanel .UserDetails-settings-category.UserDetails-settings-opened .UserDetails-settings-categoryContent{padding:10px;padding:10px}.UserDetails-settings-settingsPanel .UserDetails-settings-category.UserDetails-settings-opened .UserDetails-settings-categoryContent .UserDetails-settings-replacementVariable{user-select:text;margin-bottom:6px;padding-bottom:6px;border-bottom:thin solid var(--background-modifier-accent)}.UserDetails-settings-settingsPanel .UserDetails-settings-category.UserDetails-settings-opened .UserDetails-settings-categoryContent .UserDetails-settings-replacementVariable b{margin-right:3px}.UserDetails-settings-settingsPanel .UserDetails-settings-category .UserDetails-settings-categoryHeader{cursor:pointer;padding:10px;font-size:15px;background:var(--background-tertiary);font-weight:600;text-transform:uppercase;display:flex;align-items:center}.UserDetails-settings-settingsPanel .UserDetails-settings-category .UserDetails-settings-categoryHeader .UserDetails-settings-categoryCaret{margin-left:auto}.UserDetails-settings-settingsPanel .UserDetails-settings-pageIcon{color:var(--interactive-normal);fill:var(--interactive-normal)}", ""]);
 				___CSS_LOADER_EXPORT___.locals = {
 					settingsPanel: "UserDetails-settings-settingsPanel",
 					formItem: "UserDetails-settings-formItem",
@@ -189,7 +202,8 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					categoryContent: "UserDetails-settings-categoryContent",
 					replacementVariable: "UserDetails-settings-replacementVariable",
 					categoryHeader: "UserDetails-settings-categoryHeader",
-					categoryCaret: "UserDetails-settings-categoryCaret"
+					categoryCaret: "UserDetails-settings-categoryCaret",
+					pageIcon: "UserDetails-settings-pageIcon"
 				};
 				__plugin_styles__ += `\n/* ${module.id} */\n${___CSS_LOADER_EXPORT___}\n`;
 				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
@@ -295,7 +309,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			var external_n_inject_n_if_style_element_style_element_remove_n_style_element_document_head_appendChild_Object_assign_document_createElement_style_textContent_plugin_styles_n_n_remove_n_if_style_element_n_style_element_remove_n_style_element_null_n_n_n_default = __webpack_require__.n(external_n_inject_n_if_style_element_style_element_remove_n_style_element_document_head_appendChild_Object_assign_document_createElement_style_textContent_plugin_styles_n_n_remove_n_if_style_element_n_style_element_remove_n_style_element_null_n_n_n_namespaceObject);
 			var external_BdApi_React_ = __webpack_require__(698);
 			var external_BdApi_React_default = __webpack_require__.n(external_BdApi_React_);
-			const external_get_Tooltip_n_const_value_BdApi_findModuleByDisplayName_Tooltip_n_Object_defineProperty_this_Tooltip_n_value_n_configurable_true_n_n_return_value_n_nget_TooltipContainer_n_const_value_BdApi_findModuleByProps_TooltipContainer_TooltipContainer_n_Object_defineProperty_this_TooltipContainer_n_value_n_configurable_true_n_n_return_value_n_nget_TextInput_n_const_value_BdApi_findModuleByDisplayName_TextInput_n_Object_defineProperty_this_TextInput_n_value_n_configurable_true_n_n_return_value_n_nget_SlideIn_n_const_value_BdApi_findModuleByDisplayName_SlideIn_n_Object_defineProperty_this_SlideIn_n_value_n_configurable_true_n_n_return_value_n_nget_SettingsNotice_n_const_value_BdApi_findModuleByDisplayName_SettingsNotice_n_Object_defineProperty_this_SettingsNotice_n_value_n_configurable_true_n_n_return_value_n_nget_TransitionGroup_n_const_value_BdApi_findModuleByDisplayName_TransitionGroup_n_Object_defineProperty_this_TransitionGroup_n_value_n_configurable_true_n_n_return_value_n_nget_Button_n_const_value_BdApi_findModuleByProps_DropdownSizes_n_Object_defineProperty_this_Button_n_value_n_configurable_true_n_n_return_value_n_nget_Flex_n_const_value_BdApi_findModuleByDisplayName_Flex_n_Object_defineProperty_this_Flex_n_value_n_configurable_true_n_n_return_value_n_nget_Text_n_const_value_BdApi_findModuleByDisplayName_Text_n_Object_defineProperty_this_Text_n_value_n_configurable_true_n_n_return_value_n_namespaceObject = {
+			const external_get_Tooltip_n_const_value_BdApi_findModuleByDisplayName_Tooltip_n_Object_defineProperty_this_Tooltip_n_value_n_configurable_true_n_n_return_value_n_nget_TooltipContainer_n_const_value_BdApi_findModuleByProps_TooltipContainer_TooltipContainer_n_Object_defineProperty_this_TooltipContainer_n_value_n_configurable_true_n_n_return_value_n_nget_TextInput_n_const_value_BdApi_findModuleByDisplayName_TextInput_n_Object_defineProperty_this_TextInput_n_value_n_configurable_true_n_n_return_value_n_nget_SlideIn_n_const_value_BdApi_findModuleByDisplayName_SlideIn_n_Object_defineProperty_this_SlideIn_n_value_n_configurable_true_n_n_return_value_n_nget_SettingsNotice_n_const_value_BdApi_findModuleByDisplayName_SettingsNotice_n_Object_defineProperty_this_SettingsNotice_n_value_n_configurable_true_n_n_return_value_n_nget_TransitionGroup_n_const_value_BdApi_findModuleByDisplayName_TransitionGroup_n_Object_defineProperty_this_TransitionGroup_n_value_n_configurable_true_n_n_return_value_n_nget_Button_n_const_value_BdApi_findModuleByProps_DropdownSizes_n_Object_defineProperty_this_Button_n_value_n_configurable_true_n_n_return_value_n_nget_Flex_n_const_value_BdApi_findModuleByDisplayName_Flex_n_Object_defineProperty_this_Flex_n_value_n_configurable_true_n_n_return_value_n_nget_Text_n_const_value_BdApi_findModuleByDisplayName_Text_n_Object_defineProperty_this_Text_n_value_n_configurable_true_n_n_return_value_n_nget_Card_n_const_value_BdApi_findModuleByDisplayName_Card_n_Object_defineProperty_this_Card_n_value_n_configurable_true_n_n_return_value_n_namespaceObject = {
 				get Tooltip() {
 					const value = BdApi.findModuleByDisplayName("Tooltip");
 					Object.defineProperty(this, "Tooltip", {
@@ -367,11 +381,19 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						configurable: true
 					});
 					return value;
+				},
+				get Card() {
+					const value = BdApi.findModuleByDisplayName("Card");
+					Object.defineProperty(this, "Card", {
+						value,
+						configurable: true
+					});
+					return value;
 				}
 			};
 			const external_BdApi_findModuleByProps_get_isSupported_map_namespaceObject = BdApi.findModuleByProps("get", "isSupported", "map");
 			var external_BdApi_findModuleByProps_get_isSupported_map_default = __webpack_require__.n(external_BdApi_findModuleByProps_get_isSupported_map_namespaceObject);
-			var badge = __webpack_require__(308);
+			var badge = __webpack_require__(194);
 			const external_get_joinClassNames_n_const_value_BdApi_findModule_m_typeof_m_default_default_function_default_n_Object_defineProperty_this_joinClassNames_n_value_n_configurable_true_n_n_return_value_n_nget_useForceUpdate_n_const_value_BdApi_findModuleByProps_useForceUpdate_useForceUpdate_n_Object_defineProperty_this_useForceUpdate_n_value_n_configurable_true_n_n_return_value_n_nget_Logger_n_const_value_BdApi_findModuleByProps_setLogFn_default_n_Object_defineProperty_this_Logger_n_value_n_configurable_true_n_n_return_value_n_nget_Navigation_n_const_value_BdApi_findModuleByProps_replaceWith_n_Object_defineProperty_this_Navigation_n_value_n_configurable_true_n_n_return_value_n_namespaceObject = {
 				get joinClassNames() {
 					const value = BdApi.findModule((m => "function" === typeof m?.default?.default))?.default;
@@ -410,7 +432,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			const UserDetails_package = {
 				info: {
 					name: "UserDetails",
-					version: "1.1.1",
+					version: "1.2.1",
 					authors: [{
 						name: "Strencher",
 						discord_id: "415849376598982656",
@@ -422,13 +444,13 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					github_raw: "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/UserDetails/UserDetails.plugin.js"
 				},
 				changelog: [{
-					type: "fixed",
-					title: "Bugs have been reported!",
-					items: ["Discord updated right after i updated my plugin. :zere_zoom: Fixed that too.", "Fixed jumping to messages when clicking the last message icon.", "It shouldn't show things twice anymore."]
+					title: "Added",
+					type: "added",
+					items: ["Added ActivityIcons feature, checkout the settings!"]
 				}, {
-					type: "improved",
-					title: "Improvements",
-					items: ["Some strings have been improved.", "More customization for connections. Also using a new Api.", "Faster loading, i mean **__FASTER__** loading connections should load now in less than 1s.", "Some things that i don't remember... lol"]
+					title: "Fixed",
+					type: "fixed",
+					items: ["Fixed some weird bugs."]
 				}],
 				build: {
 					zlibrary: true,
@@ -436,7 +458,8 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					production: false,
 					scssHash: false,
 					alias: {
-						icons: "components/icons"
+						icons: "components/icons",
+						stores: "./modules/stores"
 					},
 					release: {
 						public: true,
@@ -447,7 +470,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			};
 			var info = {
 				name: "UserDetails",
-				version: "1.1.1",
+				version: "1.2.1",
 				authors: [{
 					name: "Strencher",
 					discord_id: "415849376598982656",
@@ -459,13 +482,13 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				github_raw: "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/UserDetails/UserDetails.plugin.js"
 			};
 			var changelog = [{
-				type: "fixed",
-				title: "Bugs have been reported!",
-				items: ["Discord updated right after i updated my plugin. :zere_zoom: Fixed that too.", "Fixed jumping to messages when clicking the last message icon.", "It shouldn't show things twice anymore."]
+				title: "Added",
+				type: "added",
+				items: ["Added ActivityIcons feature, checkout the settings!"]
 			}, {
-				type: "improved",
-				title: "Improvements",
-				items: ["Some strings have been improved.", "More customization for connections. Also using a new Api.", "Faster loading, i mean **__FASTER__** loading connections should load now in less than 1s.", "Some things that i don't remember... lol"]
+				title: "Fixed",
+				type: "fixed",
+				items: ["Fixed some weird bugs."]
 			}];
 			var build = {
 				zlibrary: true,
@@ -473,7 +496,8 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				production: false,
 				scssHash: false,
 				alias: {
-					icons: "components/icons"
+					icons: "components/icons",
+					stores: "./modules/stores"
 				},
 				release: {
 					public: true,
@@ -481,70 +505,6 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					readme: true
 				}
 			};
-			class Logger {
-				static error(...message) {
-					this._log("error", ...message);
-				}
-				static warn(...message) {
-					this._log("warn", ...message);
-				}
-				static info(...message) {
-					this._log("info", ...message);
-				}
-				static log(...message) {
-					this._log("log", ...message);
-				}
-				static _log(level = "log", ...message) {
-					console[level](`%c[${UserDetails_package.info.name}]%c`, "color: #0870f3; font-weight: 700;", "", ...message);
-				}
-			}
-			function _defineProperty(obj, key, value) {
-				if (key in obj) Object.defineProperty(obj, key, {
-					value,
-					enumerable: true,
-					configurable: true,
-					writable: true
-				});
-				else obj[key] = value;
-				return obj;
-			}
-			class Eventhandler {
-				constructor({
-					events = ["done", "cancel"]
-				} = {}) {
-					_defineProperty(this, "subsriptions", {});
-					events.forEach((ev => this.subsriptions[ev] = []));
-				}
-				on(event, callback) {
-					if (!this.subsriptions[event]) this.subsriptions[event] = [];
-					this.subsriptions[event].push(callback);
-					return this;
-				}
-				off(event, callback) {
-					if (!this.subsriptions[event]) return false;
-					const index = this.subsriptions[event].indexOf(callback);
-					if (-1 === index) return false;
-					this.subsriptions[event].splice(index, 1);
-					return this;
-				}
-				reply(event, ...args) {
-					if (!this.subsriptions[event]) return false;
-					for (const callback of this.subsriptions[event]) try {
-						callback(...args);
-					} catch (error) {
-						Logger.error(`Cannot run callback for event "${event}": "` + callback.toString().slice(0, 10) + '..."', "\n", error);
-					}
-				}
-				onDone(callback) {
-					return this.on("done", callback);
-				}
-				cancel() {
-					this.reply("cancel");
-				}
-				get emit() {
-					return this.reply;
-				}
-			}
 			function _extends() {
 				_extends = Object.assign || function(target) {
 					for (var i = 1; i < arguments.length; i++) {
@@ -599,7 +559,34 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					};
 				}
 			}
-			function Settings_defineProperty(obj, key, value) {
+			const external_get_Dispatcher_n_const_value_BdApi_findModuleByProps_dirtyDispatch_subscribe_n_Object_defineProperty_this_Dispatcher_n_value_n_configurable_true_n_n_return_value_n_nget_EmojiUtils_n_const_value_BdApi_findModuleByProps_uploadEmoji_n_Object_defineProperty_this_EmojiUtils_n_value_n_configurable_true_n_n_return_value_n_nget_PermissionUtils_n_const_value_BdApi_findModuleByProps_computePermissions_n_Object_defineProperty_this_PermissionUtils_n_value_n_configurable_true_n_n_return_value_n_namespaceObject = {
+				get Dispatcher() {
+					const value = BdApi.findModuleByProps("dirtyDispatch", "subscribe");
+					Object.defineProperty(this, "Dispatcher", {
+						value,
+						configurable: true
+					});
+					return value;
+				},
+				get EmojiUtils() {
+					const value = BdApi.findModuleByProps("uploadEmoji");
+					Object.defineProperty(this, "EmojiUtils", {
+						value,
+						configurable: true
+					});
+					return value;
+				},
+				get PermissionUtils() {
+					const value = BdApi.findModuleByProps("computePermissions");
+					Object.defineProperty(this, "PermissionUtils", {
+						value,
+						configurable: true
+					});
+					return value;
+				}
+			};
+			const external_Object_assign_BdApi_findModuleByProps_useStateFromStores_default_BdApi_findModuleByProps_useStateFromStores_namespaceObject = Object.assign({}, BdApi.findModuleByProps("useStateFromStores").default, BdApi.findModuleByProps("useStateFromStores"));
+			function _defineProperty(obj, key, value) {
 				if (key in obj) Object.defineProperty(obj, key, {
 					value,
 					enumerable: true,
@@ -609,34 +596,19 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				else obj[key] = value;
 				return obj;
 			}
-			class Settings {
-				static connectStore(Component) {
-					return props => {
-						if (!props.getSetting) Object.assign(props, {
-							getSetting: this.get,
-							updateSetting: this.set,
-							toggleSetting: id => {
-								this.set(!this.get(id));
-							}
-						});
-						const forceUpdate = Utilities.useForceUpdate();
-						(0, external_BdApi_React_.useEffect)((() => {
-							this.updater.on("update", forceUpdate);
-							return () => this.updater.off("update", forceUpdate);
-						}), []);
-						return external_BdApi_React_default().createElement(Component, props);
-					};
+			const Settings = new class extends external_Object_assign_BdApi_findModuleByProps_useStateFromStores_default_BdApi_findModuleByProps_useStateFromStores_namespaceObject.Store {
+				constructor() {
+					super(external_get_Dispatcher_n_const_value_BdApi_findModuleByProps_dirtyDispatch_subscribe_n_Object_defineProperty_this_Dispatcher_n_value_n_configurable_true_n_n_return_value_n_nget_EmojiUtils_n_const_value_BdApi_findModuleByProps_uploadEmoji_n_Object_defineProperty_this_EmojiUtils_n_value_n_configurable_true_n_n_return_value_n_nget_PermissionUtils_n_const_value_BdApi_findModuleByProps_computePermissions_n_Object_defineProperty_this_PermissionUtils_n_value_n_configurable_true_n_n_return_value_n_namespaceObject.Dispatcher, {});
+					_defineProperty(this, "settings", external_PluginApi_namespaceObject.PluginUtilities.loadSettings(UserDetails_package.info.name, {}));
+					_defineProperty(this, "get", ((key, defaultValue) => this.settings[key] ?? defaultValue));
+					_defineProperty(this, "set", ((key, value) => {
+						this.settings[key] = value;
+						external_PluginApi_namespaceObject.PluginUtilities.saveSettings(UserDetails_package.info.name, this.settings);
+						this.emitChange();
+					}));
 				}
-			}
-			Settings_defineProperty(Settings, "updater", new Eventhandler);
-			Settings_defineProperty(Settings, "settings", external_PluginApi_namespaceObject.PluginUtilities.loadSettings(UserDetails_package.info.name, {}));
-			Settings_defineProperty(Settings, "get", ((key, defaultValue) => Settings.settings[key] ?? defaultValue));
-			Settings_defineProperty(Settings, "set", ((key, value) => {
-				Settings.settings[key] = value;
-				external_PluginApi_namespaceObject.PluginUtilities.saveSettings(UserDetails_package.info.name, Settings.settings);
-				Settings.updater.reply("update");
-			}));
-			var flowerstar = __webpack_require__(303);
+			};
+			var flowerstar = __webpack_require__(881);
 			function flowerstar_extends() {
 				flowerstar_extends = Object.assign || function(target) {
 					for (var i = 1; i < arguments.length; i++) {
@@ -673,7 +645,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			}) {
 				const connection = external_BdApi_findModuleByProps_get_isSupported_map_default().get(item.type);
 				const shouldVerified = Settings.get("showVerifiedConnections", true) && item.verified;
-				return external_BdApi_React_default().createElement(external_get_Tooltip_n_const_value_BdApi_findModuleByDisplayName_Tooltip_n_Object_defineProperty_this_Tooltip_n_value_n_configurable_true_n_n_return_value_n_nget_TooltipContainer_n_const_value_BdApi_findModuleByProps_TooltipContainer_TooltipContainer_n_Object_defineProperty_this_TooltipContainer_n_value_n_configurable_true_n_n_return_value_n_nget_TextInput_n_const_value_BdApi_findModuleByDisplayName_TextInput_n_Object_defineProperty_this_TextInput_n_value_n_configurable_true_n_n_return_value_n_nget_SlideIn_n_const_value_BdApi_findModuleByDisplayName_SlideIn_n_Object_defineProperty_this_SlideIn_n_value_n_configurable_true_n_n_return_value_n_nget_SettingsNotice_n_const_value_BdApi_findModuleByDisplayName_SettingsNotice_n_Object_defineProperty_this_SettingsNotice_n_value_n_configurable_true_n_n_return_value_n_nget_TransitionGroup_n_const_value_BdApi_findModuleByDisplayName_TransitionGroup_n_Object_defineProperty_this_TransitionGroup_n_value_n_configurable_true_n_n_return_value_n_nget_Button_n_const_value_BdApi_findModuleByProps_DropdownSizes_n_Object_defineProperty_this_Button_n_value_n_configurable_true_n_n_return_value_n_nget_Flex_n_const_value_BdApi_findModuleByDisplayName_Flex_n_Object_defineProperty_this_Flex_n_value_n_configurable_true_n_n_return_value_n_nget_Text_n_const_value_BdApi_findModuleByDisplayName_Text_n_Object_defineProperty_this_Text_n_value_n_configurable_true_n_n_return_value_n_namespaceObject.TooltipContainer, {
+				return external_BdApi_React_default().createElement(external_get_Tooltip_n_const_value_BdApi_findModuleByDisplayName_Tooltip_n_Object_defineProperty_this_Tooltip_n_value_n_configurable_true_n_n_return_value_n_nget_TooltipContainer_n_const_value_BdApi_findModuleByProps_TooltipContainer_TooltipContainer_n_Object_defineProperty_this_TooltipContainer_n_value_n_configurable_true_n_n_return_value_n_nget_TextInput_n_const_value_BdApi_findModuleByDisplayName_TextInput_n_Object_defineProperty_this_TextInput_n_value_n_configurable_true_n_n_return_value_n_nget_SlideIn_n_const_value_BdApi_findModuleByDisplayName_SlideIn_n_Object_defineProperty_this_SlideIn_n_value_n_configurable_true_n_n_return_value_n_nget_SettingsNotice_n_const_value_BdApi_findModuleByDisplayName_SettingsNotice_n_Object_defineProperty_this_SettingsNotice_n_value_n_configurable_true_n_n_return_value_n_nget_TransitionGroup_n_const_value_BdApi_findModuleByDisplayName_TransitionGroup_n_Object_defineProperty_this_TransitionGroup_n_value_n_configurable_true_n_n_return_value_n_nget_Button_n_const_value_BdApi_findModuleByProps_DropdownSizes_n_Object_defineProperty_this_Button_n_value_n_configurable_true_n_n_return_value_n_nget_Flex_n_const_value_BdApi_findModuleByDisplayName_Flex_n_Object_defineProperty_this_Flex_n_value_n_configurable_true_n_n_return_value_n_nget_Text_n_const_value_BdApi_findModuleByDisplayName_Text_n_Object_defineProperty_this_Text_n_value_n_configurable_true_n_n_return_value_n_nget_Card_n_const_value_BdApi_findModuleByDisplayName_Card_n_Object_defineProperty_this_Card_n_value_n_configurable_true_n_n_return_value_n_namespaceObject.TooltipContainer, {
 					text: item.name,
 					className: (0, external_get_joinClassNames_n_const_value_BdApi_findModule_m_typeof_m_default_default_function_default_n_Object_defineProperty_this_joinClassNames_n_value_n_configurable_true_n_n_return_value_n_nget_useForceUpdate_n_const_value_BdApi_findModuleByProps_useForceUpdate_useForceUpdate_n_Object_defineProperty_this_useForceUpdate_n_value_n_configurable_true_n_n_return_value_n_nget_Logger_n_const_value_BdApi_findModuleByProps_setLogFn_default_n_Object_defineProperty_this_Logger_n_value_n_configurable_true_n_n_return_value_n_nget_Navigation_n_const_value_BdApi_findModuleByProps_replaceWith_n_Object_defineProperty_this_Navigation_n_value_n_configurable_true_n_n_return_value_n_namespaceObject.joinClassNames)(badge.Z.connection, {
 						[badge.Z.verified]: shouldVerified
@@ -689,6 +661,23 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				}), shouldVerified && external_BdApi_React_default().createElement(icons_flowerstar, {
 					className: badge.Z.verifiedBadge
 				}));
+			}
+			class Logger {
+				static error(...message) {
+					this._log("error", ...message);
+				}
+				static warn(...message) {
+					this._log("warn", ...message);
+				}
+				static info(...message) {
+					this._log("info", ...message);
+				}
+				static log(...message) {
+					this._log("log", ...message);
+				}
+				static _log(level = "log", ...message) {
+					console[level](`%c[${UserDetails_package.info.name}]%c`, "color: #0870f3; font-weight: 700;", "", ...message);
+				}
 			}
 			function queue_defineProperty(obj, key, value) {
 				if (key in obj) Object.defineProperty(obj, key, {
@@ -811,12 +800,13 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					} else event.reply("done", data);
 				}
 				parseZeroPadding(zeroable) {
-					return zeroable < 9 ? "0" + zeroable : zeroable;
+					return zeroable <= 9 ? "0" + zeroable : zeroable;
 				}
 				monthsAgo(date1, date2) {
 					let months = 12 * (date2.getFullYear() - date1.getFullYear());
 					months -= date1.getMonth();
 					months += date2.getMonth();
+					months = Math.abs(months);
 					return months <= 0 ? 0 : months;
 				}
 				daysAgo(date1, date2) {
@@ -829,7 +819,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					if ("object" !== typeof date) date = new Date(date);
 					const today = new Date,
 						daysago = this.daysAgo(today, date),
-						hour12 = Settings.get("12hour", 1);
+						hour12 = 0 === Settings.get("12hour", 1);
 					return format.replace(/\$timelabel/g, date.getHours() >= 12 ? "PM" : "AM").replace(/\$daysago/g, daysago).replace(/\$dayname/g, date.toLocaleDateString("default", {
 						weekday: "short",
 						hour12
@@ -887,9 +877,8 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			}), external_BdApi_React_default().createElement("path", {
 				d: "M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"
 			}));
-			var apis_connections = __webpack_require__(815);
-			const external_Object_assign_BdApi_findModuleByProps_useStateFromStores_default_BdApi_findModuleByProps_useStateFromStores_namespaceObject = Object.assign({}, BdApi.findModuleByProps("useStateFromStores").default, BdApi.findModuleByProps("useStateFromStores"));
-			const external_get_Messages_n_const_value_BdApi_findModuleByProps_getMessage_getMessages_n_Object_defineProperty_this_Messages_n_value_n_configurable_true_n_n_return_value_n_nget_Channels_n_const_value_BdApi_findModuleByPorps_getChannel_n_Object_defineProperty_this_Channels_n_value_n_configurable_true_n_n_return_value_n_nget_Guilds_n_const_value_BdApi_findModuleByProps_getGuild_n_Object_defineProperty_this_Guilds_n_value_n_configurable_true_n_n_return_value_n_nget_SelectedGuilds_n_const_value_BdApi_findModuleByProps_getGuildId_getLastSelectedGuildId_n_Object_defineProperty_this_SelectedGuilds_n_value_n_configurable_true_n_n_return_value_n_nget_SelectedChannels_n_const_value_BdApi_findModuleByProps_getChannelId_getLastSelectedChannelId_n_Object_defineProperty_this_SelectedChannels_n_value_n_configurable_true_n_n_return_value_n_nget_Info_n_const_value_BdApi_findModuleByProps_getCurrentUser_n_Object_defineProperty_this_Info_n_value_n_configurable_true_n_n_return_value_n_nget_Status_n_const_value_BdApi_findModuleByProps_getStatus_n_Object_defineProperty_this_Status_n_value_n_configurable_true_n_n_return_value_n_nget_Users_n_const_value_BdApi_findModuleByProps_getUser_n_Object_defineProperty_this_Users_n_value_n_configurable_true_n_n_return_value_n_nget_Settings_n_const_value_BdApi_findModuleByProps_afkTimeout_status_n_Object_defineProperty_this_Settings_n_value_n_configurable_true_n_n_return_value_n_nget_UserProfile_n_const_value_BdApi_findModuleByProps_getUserProfile_n_Object_defineProperty_this_UserProfile_n_value_n_configurable_true_n_n_return_value_n_namespaceObject = {
+			var apis_connections = __webpack_require__(713);
+			const external_get_Messages_n_const_value_BdApi_findModuleByProps_getMessage_getMessages_n_Object_defineProperty_this_Messages_n_value_n_configurable_true_n_n_return_value_n_nget_Channels_n_const_value_BdApi_findModuleByProps_getChannel_n_Object_defineProperty_this_Channels_n_value_n_configurable_true_n_n_return_value_n_nget_Guilds_n_const_value_BdApi_findModuleByProps_getGuild_n_Object_defineProperty_this_Guilds_n_value_n_configurable_true_n_n_return_value_n_nget_SelectedGuilds_n_const_value_BdApi_findModuleByProps_getGuildId_getLastSelectedGuildId_n_Object_defineProperty_this_SelectedGuilds_n_value_n_configurable_true_n_n_return_value_n_nget_SelectedChannels_n_const_value_BdApi_findModuleByProps_getChannelId_getLastSelectedChannelId_n_Object_defineProperty_this_SelectedChannels_n_value_n_configurable_true_n_n_return_value_n_nget_Info_n_const_value_BdApi_findModuleByProps_getCurrentUser_n_Object_defineProperty_this_Info_n_value_n_configurable_true_n_n_return_value_n_nget_Status_n_const_value_BdApi_findModuleByProps_getStatus_n_Object_defineProperty_this_Status_n_value_n_configurable_true_n_n_return_value_n_nget_Users_n_const_value_BdApi_findModuleByProps_getUser_n_Object_defineProperty_this_Users_n_value_n_configurable_true_n_n_return_value_n_nget_Settings_n_const_value_BdApi_findModuleByProps_afkTimeout_status_n_Object_defineProperty_this_Settings_n_value_n_configurable_true_n_n_return_value_n_nget_UserProfile_n_const_value_BdApi_findModuleByProps_getUserProfile_n_Object_defineProperty_this_UserProfile_n_value_n_configurable_true_n_n_return_value_n_nget_Members_n_const_value_BdApi_findModuleByProps_getMember_n_Object_defineProperty_this_Members_n_value_n_configurable_true_n_n_return_value_n_nget_Activities_n_const_value_BdApi_findModuleByProps_getActivities_n_Object_defineProperty_this_Activities_n_value_n_configurable_true_n_n_return_value_n_nget_Games_n_const_value_BdApi_findModuleByProps_getGame_n_Object_defineProperty_this_Games_n_value_n_configurable_true_n_n_return_value_n_namespaceObject = {
 				get Messages() {
 					const value = BdApi.findModuleByProps("getMessage", "getMessages");
 					Object.defineProperty(this, "Messages", {
@@ -899,7 +888,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					return value;
 				},
 				get Channels() {
-					const value = BdApi.findModuleByPorps("getChannel");
+					const value = BdApi.findModuleByProps("getChannel");
 					Object.defineProperty(this, "Channels", {
 						value,
 						configurable: true
@@ -969,6 +958,30 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						configurable: true
 					});
 					return value;
+				},
+				get Members() {
+					const value = BdApi.findModuleByProps("getMember");
+					Object.defineProperty(this, "Members", {
+						value,
+						configurable: true
+					});
+					return value;
+				},
+				get Activities() {
+					const value = BdApi.findModuleByProps("getActivities");
+					Object.defineProperty(this, "Activities", {
+						value,
+						configurable: true
+					});
+					return value;
+				},
+				get Games() {
+					const value = BdApi.findModuleByProps("getGame");
+					Object.defineProperty(this, "Games", {
+						value,
+						configurable: true
+					});
+					return value;
 				}
 			};
 			const external_get_ProfileActions_n_const_value_BdApi_findModuleByProps_fetchProfile_n_Object_defineProperty_this_ProfileActions_n_value_n_configurable_true_n_n_return_value_n_namespaceObject = {
@@ -990,13 +1003,13 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						titleClassName
 					}) => {
 						if (!external_BdApi_findModuleByProps_get_isSupported_map_default().filter((c => Settings.get("shownConnections", {})[c.type])).length || user.bot) return null;
-						const connections = (0, external_Object_assign_BdApi_findModuleByProps_useStateFromStores_default_BdApi_findModuleByProps_useStateFromStores_namespaceObject.useStateFromStores)([external_get_Messages_n_const_value_BdApi_findModuleByProps_getMessage_getMessages_n_Object_defineProperty_this_Messages_n_value_n_configurable_true_n_n_return_value_n_nget_Channels_n_const_value_BdApi_findModuleByPorps_getChannel_n_Object_defineProperty_this_Channels_n_value_n_configurable_true_n_n_return_value_n_nget_Guilds_n_const_value_BdApi_findModuleByProps_getGuild_n_Object_defineProperty_this_Guilds_n_value_n_configurable_true_n_n_return_value_n_nget_SelectedGuilds_n_const_value_BdApi_findModuleByProps_getGuildId_getLastSelectedGuildId_n_Object_defineProperty_this_SelectedGuilds_n_value_n_configurable_true_n_n_return_value_n_nget_SelectedChannels_n_const_value_BdApi_findModuleByProps_getChannelId_getLastSelectedChannelId_n_Object_defineProperty_this_SelectedChannels_n_value_n_configurable_true_n_n_return_value_n_nget_Info_n_const_value_BdApi_findModuleByProps_getCurrentUser_n_Object_defineProperty_this_Info_n_value_n_configurable_true_n_n_return_value_n_nget_Status_n_const_value_BdApi_findModuleByProps_getStatus_n_Object_defineProperty_this_Status_n_value_n_configurable_true_n_n_return_value_n_nget_Users_n_const_value_BdApi_findModuleByProps_getUser_n_Object_defineProperty_this_Users_n_value_n_configurable_true_n_n_return_value_n_nget_Settings_n_const_value_BdApi_findModuleByProps_afkTimeout_status_n_Object_defineProperty_this_Settings_n_value_n_configurable_true_n_n_return_value_n_nget_UserProfile_n_const_value_BdApi_findModuleByProps_getUserProfile_n_Object_defineProperty_this_UserProfile_n_value_n_configurable_true_n_n_return_value_n_namespaceObject.UserProfile], (() => {
+						const connections = (0, external_Object_assign_BdApi_findModuleByProps_useStateFromStores_default_BdApi_findModuleByProps_useStateFromStores_namespaceObject.useStateFromStores)([external_get_Messages_n_const_value_BdApi_findModuleByProps_getMessage_getMessages_n_Object_defineProperty_this_Messages_n_value_n_configurable_true_n_n_return_value_n_nget_Channels_n_const_value_BdApi_findModuleByProps_getChannel_n_Object_defineProperty_this_Channels_n_value_n_configurable_true_n_n_return_value_n_nget_Guilds_n_const_value_BdApi_findModuleByProps_getGuild_n_Object_defineProperty_this_Guilds_n_value_n_configurable_true_n_n_return_value_n_nget_SelectedGuilds_n_const_value_BdApi_findModuleByProps_getGuildId_getLastSelectedGuildId_n_Object_defineProperty_this_SelectedGuilds_n_value_n_configurable_true_n_n_return_value_n_nget_SelectedChannels_n_const_value_BdApi_findModuleByProps_getChannelId_getLastSelectedChannelId_n_Object_defineProperty_this_SelectedChannels_n_value_n_configurable_true_n_n_return_value_n_nget_Info_n_const_value_BdApi_findModuleByProps_getCurrentUser_n_Object_defineProperty_this_Info_n_value_n_configurable_true_n_n_return_value_n_nget_Status_n_const_value_BdApi_findModuleByProps_getStatus_n_Object_defineProperty_this_Status_n_value_n_configurable_true_n_n_return_value_n_nget_Users_n_const_value_BdApi_findModuleByProps_getUser_n_Object_defineProperty_this_Users_n_value_n_configurable_true_n_n_return_value_n_nget_Settings_n_const_value_BdApi_findModuleByProps_afkTimeout_status_n_Object_defineProperty_this_Settings_n_value_n_configurable_true_n_n_return_value_n_nget_UserProfile_n_const_value_BdApi_findModuleByProps_getUserProfile_n_Object_defineProperty_this_UserProfile_n_value_n_configurable_true_n_n_return_value_n_nget_Members_n_const_value_BdApi_findModuleByProps_getMember_n_Object_defineProperty_this_Members_n_value_n_configurable_true_n_n_return_value_n_nget_Activities_n_const_value_BdApi_findModuleByProps_getActivities_n_Object_defineProperty_this_Activities_n_value_n_configurable_true_n_n_return_value_n_nget_Games_n_const_value_BdApi_findModuleByProps_getGame_n_Object_defineProperty_this_Games_n_value_n_configurable_true_n_n_return_value_n_namespaceObject.UserProfile], (() => {
 							var _UserProfile$getUserP;
-							return null === (_UserProfile$getUserP = external_get_Messages_n_const_value_BdApi_findModuleByProps_getMessage_getMessages_n_Object_defineProperty_this_Messages_n_value_n_configurable_true_n_n_return_value_n_nget_Channels_n_const_value_BdApi_findModuleByPorps_getChannel_n_Object_defineProperty_this_Channels_n_value_n_configurable_true_n_n_return_value_n_nget_Guilds_n_const_value_BdApi_findModuleByProps_getGuild_n_Object_defineProperty_this_Guilds_n_value_n_configurable_true_n_n_return_value_n_nget_SelectedGuilds_n_const_value_BdApi_findModuleByProps_getGuildId_getLastSelectedGuildId_n_Object_defineProperty_this_SelectedGuilds_n_value_n_configurable_true_n_n_return_value_n_nget_SelectedChannels_n_const_value_BdApi_findModuleByProps_getChannelId_getLastSelectedChannelId_n_Object_defineProperty_this_SelectedChannels_n_value_n_configurable_true_n_n_return_value_n_nget_Info_n_const_value_BdApi_findModuleByProps_getCurrentUser_n_Object_defineProperty_this_Info_n_value_n_configurable_true_n_n_return_value_n_nget_Status_n_const_value_BdApi_findModuleByProps_getStatus_n_Object_defineProperty_this_Status_n_value_n_configurable_true_n_n_return_value_n_nget_Users_n_const_value_BdApi_findModuleByProps_getUser_n_Object_defineProperty_this_Users_n_value_n_configurable_true_n_n_return_value_n_nget_Settings_n_const_value_BdApi_findModuleByProps_afkTimeout_status_n_Object_defineProperty_this_Settings_n_value_n_configurable_true_n_n_return_value_n_nget_UserProfile_n_const_value_BdApi_findModuleByProps_getUserProfile_n_Object_defineProperty_this_UserProfile_n_value_n_configurable_true_n_n_return_value_n_namespaceObject.UserProfile.getUserProfile(user.id)) || void 0 === _UserProfile$getUserP ? void 0 : _UserProfile$getUserP.connectedAccounts;
+							return null === (_UserProfile$getUserP = external_get_Messages_n_const_value_BdApi_findModuleByProps_getMessage_getMessages_n_Object_defineProperty_this_Messages_n_value_n_configurable_true_n_n_return_value_n_nget_Channels_n_const_value_BdApi_findModuleByProps_getChannel_n_Object_defineProperty_this_Channels_n_value_n_configurable_true_n_n_return_value_n_nget_Guilds_n_const_value_BdApi_findModuleByProps_getGuild_n_Object_defineProperty_this_Guilds_n_value_n_configurable_true_n_n_return_value_n_nget_SelectedGuilds_n_const_value_BdApi_findModuleByProps_getGuildId_getLastSelectedGuildId_n_Object_defineProperty_this_SelectedGuilds_n_value_n_configurable_true_n_n_return_value_n_nget_SelectedChannels_n_const_value_BdApi_findModuleByProps_getChannelId_getLastSelectedChannelId_n_Object_defineProperty_this_SelectedChannels_n_value_n_configurable_true_n_n_return_value_n_nget_Info_n_const_value_BdApi_findModuleByProps_getCurrentUser_n_Object_defineProperty_this_Info_n_value_n_configurable_true_n_n_return_value_n_nget_Status_n_const_value_BdApi_findModuleByProps_getStatus_n_Object_defineProperty_this_Status_n_value_n_configurable_true_n_n_return_value_n_nget_Users_n_const_value_BdApi_findModuleByProps_getUser_n_Object_defineProperty_this_Users_n_value_n_configurable_true_n_n_return_value_n_nget_Settings_n_const_value_BdApi_findModuleByProps_afkTimeout_status_n_Object_defineProperty_this_Settings_n_value_n_configurable_true_n_n_return_value_n_nget_UserProfile_n_const_value_BdApi_findModuleByProps_getUserProfile_n_Object_defineProperty_this_UserProfile_n_value_n_configurable_true_n_n_return_value_n_nget_Members_n_const_value_BdApi_findModuleByProps_getMember_n_Object_defineProperty_this_Members_n_value_n_configurable_true_n_n_return_value_n_nget_Activities_n_const_value_BdApi_findModuleByProps_getActivities_n_Object_defineProperty_this_Activities_n_value_n_configurable_true_n_n_return_value_n_nget_Games_n_const_value_BdApi_findModuleByProps_getGame_n_Object_defineProperty_this_Games_n_value_n_configurable_true_n_n_return_value_n_namespaceObject.UserProfile.getUserProfile(user.id)) || void 0 === _UserProfile$getUserP ? void 0 : _UserProfile$getUserP.connectedAccounts;
 						}));
 						const [message, setMessage] = (0, external_BdApi_React_.useState)("");
 						(0, external_BdApi_React_.useEffect)((() => {
-							if (external_get_Messages_n_const_value_BdApi_findModuleByProps_getMessage_getMessages_n_Object_defineProperty_this_Messages_n_value_n_configurable_true_n_n_return_value_n_nget_Channels_n_const_value_BdApi_findModuleByPorps_getChannel_n_Object_defineProperty_this_Channels_n_value_n_configurable_true_n_n_return_value_n_nget_Guilds_n_const_value_BdApi_findModuleByProps_getGuild_n_Object_defineProperty_this_Guilds_n_value_n_configurable_true_n_n_return_value_n_nget_SelectedGuilds_n_const_value_BdApi_findModuleByProps_getGuildId_getLastSelectedGuildId_n_Object_defineProperty_this_SelectedGuilds_n_value_n_configurable_true_n_n_return_value_n_nget_SelectedChannels_n_const_value_BdApi_findModuleByProps_getChannelId_getLastSelectedChannelId_n_Object_defineProperty_this_SelectedChannels_n_value_n_configurable_true_n_n_return_value_n_nget_Info_n_const_value_BdApi_findModuleByProps_getCurrentUser_n_Object_defineProperty_this_Info_n_value_n_configurable_true_n_n_return_value_n_nget_Status_n_const_value_BdApi_findModuleByProps_getStatus_n_Object_defineProperty_this_Status_n_value_n_configurable_true_n_n_return_value_n_nget_Users_n_const_value_BdApi_findModuleByProps_getUser_n_Object_defineProperty_this_Users_n_value_n_configurable_true_n_n_return_value_n_nget_Settings_n_const_value_BdApi_findModuleByProps_afkTimeout_status_n_Object_defineProperty_this_Settings_n_value_n_configurable_true_n_n_return_value_n_nget_UserProfile_n_const_value_BdApi_findModuleByProps_getUserProfile_n_Object_defineProperty_this_UserProfile_n_value_n_configurable_true_n_n_return_value_n_namespaceObject.UserProfile.isFetching(user.id)) return;
+							if (external_get_Messages_n_const_value_BdApi_findModuleByProps_getMessage_getMessages_n_Object_defineProperty_this_Messages_n_value_n_configurable_true_n_n_return_value_n_nget_Channels_n_const_value_BdApi_findModuleByProps_getChannel_n_Object_defineProperty_this_Channels_n_value_n_configurable_true_n_n_return_value_n_nget_Guilds_n_const_value_BdApi_findModuleByProps_getGuild_n_Object_defineProperty_this_Guilds_n_value_n_configurable_true_n_n_return_value_n_nget_SelectedGuilds_n_const_value_BdApi_findModuleByProps_getGuildId_getLastSelectedGuildId_n_Object_defineProperty_this_SelectedGuilds_n_value_n_configurable_true_n_n_return_value_n_nget_SelectedChannels_n_const_value_BdApi_findModuleByProps_getChannelId_getLastSelectedChannelId_n_Object_defineProperty_this_SelectedChannels_n_value_n_configurable_true_n_n_return_value_n_nget_Info_n_const_value_BdApi_findModuleByProps_getCurrentUser_n_Object_defineProperty_this_Info_n_value_n_configurable_true_n_n_return_value_n_nget_Status_n_const_value_BdApi_findModuleByProps_getStatus_n_Object_defineProperty_this_Status_n_value_n_configurable_true_n_n_return_value_n_nget_Users_n_const_value_BdApi_findModuleByProps_getUser_n_Object_defineProperty_this_Users_n_value_n_configurable_true_n_n_return_value_n_nget_Settings_n_const_value_BdApi_findModuleByProps_afkTimeout_status_n_Object_defineProperty_this_Settings_n_value_n_configurable_true_n_n_return_value_n_nget_UserProfile_n_const_value_BdApi_findModuleByProps_getUserProfile_n_Object_defineProperty_this_UserProfile_n_value_n_configurable_true_n_n_return_value_n_nget_Members_n_const_value_BdApi_findModuleByProps_getMember_n_Object_defineProperty_this_Members_n_value_n_configurable_true_n_n_return_value_n_nget_Activities_n_const_value_BdApi_findModuleByProps_getActivities_n_Object_defineProperty_this_Activities_n_value_n_configurable_true_n_n_return_value_n_nget_Games_n_const_value_BdApi_findModuleByProps_getGame_n_Object_defineProperty_this_Games_n_value_n_configurable_true_n_n_return_value_n_namespaceObject.UserProfile.isFetching(user.id)) return;
 							external_get_ProfileActions_n_const_value_BdApi_findModuleByProps_fetchProfile_n_Object_defineProperty_this_ProfileActions_n_value_n_configurable_true_n_n_return_value_n_namespaceObject.ProfileActions.fetchProfile(user.id).catch((error => {
 								var _error$message;
 								if (~(null === error || void 0 === error ? void 0 : null === (_error$message = error.message) || void 0 === _error$message ? void 0 : _error$message.indexOf("Already dispatching"))) return;
@@ -1013,11 +1026,11 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						}, connections.filter((e => Settings.get("shownConnections")[e.type])).map((badge => external_BdApi_React_default().createElement(Badge, {
 							item: badge,
 							key: badge.type
-						})))) : null : message ? external_BdApi_React_default().createElement(external_get_Tooltip_n_const_value_BdApi_findModuleByDisplayName_Tooltip_n_Object_defineProperty_this_Tooltip_n_value_n_configurable_true_n_n_return_value_n_nget_TooltipContainer_n_const_value_BdApi_findModuleByProps_TooltipContainer_TooltipContainer_n_Object_defineProperty_this_TooltipContainer_n_value_n_configurable_true_n_n_return_value_n_nget_TextInput_n_const_value_BdApi_findModuleByDisplayName_TextInput_n_Object_defineProperty_this_TextInput_n_value_n_configurable_true_n_n_return_value_n_nget_SlideIn_n_const_value_BdApi_findModuleByDisplayName_SlideIn_n_Object_defineProperty_this_SlideIn_n_value_n_configurable_true_n_n_return_value_n_nget_SettingsNotice_n_const_value_BdApi_findModuleByDisplayName_SettingsNotice_n_Object_defineProperty_this_SettingsNotice_n_value_n_configurable_true_n_n_return_value_n_nget_TransitionGroup_n_const_value_BdApi_findModuleByDisplayName_TransitionGroup_n_Object_defineProperty_this_TransitionGroup_n_value_n_configurable_true_n_n_return_value_n_nget_Button_n_const_value_BdApi_findModuleByProps_DropdownSizes_n_Object_defineProperty_this_Button_n_value_n_configurable_true_n_n_return_value_n_nget_Flex_n_const_value_BdApi_findModuleByDisplayName_Flex_n_Object_defineProperty_this_Flex_n_value_n_configurable_true_n_n_return_value_n_nget_Text_n_const_value_BdApi_findModuleByDisplayName_Text_n_Object_defineProperty_this_Text_n_value_n_configurable_true_n_n_return_value_n_namespaceObject.TooltipContainer, {
+						})))) : null : message ? external_BdApi_React_default().createElement(external_get_Tooltip_n_const_value_BdApi_findModuleByDisplayName_Tooltip_n_Object_defineProperty_this_Tooltip_n_value_n_configurable_true_n_n_return_value_n_nget_TooltipContainer_n_const_value_BdApi_findModuleByProps_TooltipContainer_TooltipContainer_n_Object_defineProperty_this_TooltipContainer_n_value_n_configurable_true_n_n_return_value_n_nget_TextInput_n_const_value_BdApi_findModuleByDisplayName_TextInput_n_Object_defineProperty_this_TextInput_n_value_n_configurable_true_n_n_return_value_n_nget_SlideIn_n_const_value_BdApi_findModuleByDisplayName_SlideIn_n_Object_defineProperty_this_SlideIn_n_value_n_configurable_true_n_n_return_value_n_nget_SettingsNotice_n_const_value_BdApi_findModuleByDisplayName_SettingsNotice_n_Object_defineProperty_this_SettingsNotice_n_value_n_configurable_true_n_n_return_value_n_nget_TransitionGroup_n_const_value_BdApi_findModuleByDisplayName_TransitionGroup_n_Object_defineProperty_this_TransitionGroup_n_value_n_configurable_true_n_n_return_value_n_nget_Button_n_const_value_BdApi_findModuleByProps_DropdownSizes_n_Object_defineProperty_this_Button_n_value_n_configurable_true_n_n_return_value_n_nget_Flex_n_const_value_BdApi_findModuleByDisplayName_Flex_n_Object_defineProperty_this_Flex_n_value_n_configurable_true_n_n_return_value_n_nget_Text_n_const_value_BdApi_findModuleByDisplayName_Text_n_Object_defineProperty_this_Text_n_value_n_configurable_true_n_n_return_value_n_nget_Card_n_const_value_BdApi_findModuleByDisplayName_Card_n_Object_defineProperty_this_Card_n_value_n_configurable_true_n_n_return_value_n_namespaceObject.TooltipContainer, {
 							text: message
 						}, external_BdApi_React_default().createElement(error, {
 							className: apis_connections.Z.errorIcon
-						})) : external_BdApi_React_default().createElement(external_get_Tooltip_n_const_value_BdApi_findModuleByDisplayName_Tooltip_n_Object_defineProperty_this_Tooltip_n_value_n_configurable_true_n_n_return_value_n_nget_TooltipContainer_n_const_value_BdApi_findModuleByProps_TooltipContainer_TooltipContainer_n_Object_defineProperty_this_TooltipContainer_n_value_n_configurable_true_n_n_return_value_n_nget_TextInput_n_const_value_BdApi_findModuleByDisplayName_TextInput_n_Object_defineProperty_this_TextInput_n_value_n_configurable_true_n_n_return_value_n_nget_SlideIn_n_const_value_BdApi_findModuleByDisplayName_SlideIn_n_Object_defineProperty_this_SlideIn_n_value_n_configurable_true_n_n_return_value_n_nget_SettingsNotice_n_const_value_BdApi_findModuleByDisplayName_SettingsNotice_n_Object_defineProperty_this_SettingsNotice_n_value_n_configurable_true_n_n_return_value_n_nget_TransitionGroup_n_const_value_BdApi_findModuleByDisplayName_TransitionGroup_n_Object_defineProperty_this_TransitionGroup_n_value_n_configurable_true_n_n_return_value_n_nget_Button_n_const_value_BdApi_findModuleByProps_DropdownSizes_n_Object_defineProperty_this_Button_n_value_n_configurable_true_n_n_return_value_n_nget_Flex_n_const_value_BdApi_findModuleByDisplayName_Flex_n_Object_defineProperty_this_Flex_n_value_n_configurable_true_n_n_return_value_n_nget_Text_n_const_value_BdApi_findModuleByDisplayName_Text_n_Object_defineProperty_this_Text_n_value_n_configurable_true_n_n_return_value_n_namespaceObject.TooltipContainer, {
+						})) : external_BdApi_React_default().createElement(external_get_Tooltip_n_const_value_BdApi_findModuleByDisplayName_Tooltip_n_Object_defineProperty_this_Tooltip_n_value_n_configurable_true_n_n_return_value_n_nget_TooltipContainer_n_const_value_BdApi_findModuleByProps_TooltipContainer_TooltipContainer_n_Object_defineProperty_this_TooltipContainer_n_value_n_configurable_true_n_n_return_value_n_nget_TextInput_n_const_value_BdApi_findModuleByDisplayName_TextInput_n_Object_defineProperty_this_TextInput_n_value_n_configurable_true_n_n_return_value_n_nget_SlideIn_n_const_value_BdApi_findModuleByDisplayName_SlideIn_n_Object_defineProperty_this_SlideIn_n_value_n_configurable_true_n_n_return_value_n_nget_SettingsNotice_n_const_value_BdApi_findModuleByDisplayName_SettingsNotice_n_Object_defineProperty_this_SettingsNotice_n_value_n_configurable_true_n_n_return_value_n_nget_TransitionGroup_n_const_value_BdApi_findModuleByDisplayName_TransitionGroup_n_Object_defineProperty_this_TransitionGroup_n_value_n_configurable_true_n_n_return_value_n_nget_Button_n_const_value_BdApi_findModuleByProps_DropdownSizes_n_Object_defineProperty_this_Button_n_value_n_configurable_true_n_n_return_value_n_nget_Flex_n_const_value_BdApi_findModuleByDisplayName_Flex_n_Object_defineProperty_this_Flex_n_value_n_configurable_true_n_n_return_value_n_nget_Text_n_const_value_BdApi_findModuleByDisplayName_Text_n_Object_defineProperty_this_Text_n_value_n_configurable_true_n_n_return_value_n_nget_Card_n_const_value_BdApi_findModuleByDisplayName_Card_n_Object_defineProperty_this_Card_n_value_n_configurable_true_n_n_return_value_n_namespaceObject.TooltipContainer, {
 							text: "Loading Connections..."
 						}, external_BdApi_findModuleByProps_get_isSupported_map_default().filter((e => Settings.get("shownConnections")[e.type])).map((() => external_BdApi_React_default().createElement(circle, {
 							className: apis_connections.Z.loading
@@ -1058,7 +1071,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			}))));
 			const external_BdApi_ReactDOM_namespaceObject = global["BdApi"]["ReactDOM"];
 			var external_BdApi_ReactDOM_default = __webpack_require__.n(external_BdApi_ReactDOM_namespaceObject);
-			var dates = __webpack_require__(785);
+			var dates = __webpack_require__(473);
 			function textscroller_defineProperty(obj, key, value) {
 				if (key in obj) Object.defineProperty(obj, key, {
 					value,
@@ -1146,7 +1159,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			class CreatedAt extends ApiModule {
 				task(userId) {
 					const text = this.parseTime(Settings.get("created_format", "Created At: $hour:$minute:$second, $day.$month.$year $daysago days"), this.extractDate(userId));
-					return () => Settings.get("useIcons", true) ? external_BdApi_React_default().createElement(external_get_Tooltip_n_const_value_BdApi_findModuleByDisplayName_Tooltip_n_Object_defineProperty_this_Tooltip_n_value_n_configurable_true_n_n_return_value_n_nget_TooltipContainer_n_const_value_BdApi_findModuleByProps_TooltipContainer_TooltipContainer_n_Object_defineProperty_this_TooltipContainer_n_value_n_configurable_true_n_n_return_value_n_nget_TextInput_n_const_value_BdApi_findModuleByDisplayName_TextInput_n_Object_defineProperty_this_TextInput_n_value_n_configurable_true_n_n_return_value_n_nget_SlideIn_n_const_value_BdApi_findModuleByDisplayName_SlideIn_n_Object_defineProperty_this_SlideIn_n_value_n_configurable_true_n_n_return_value_n_nget_SettingsNotice_n_const_value_BdApi_findModuleByDisplayName_SettingsNotice_n_Object_defineProperty_this_SettingsNotice_n_value_n_configurable_true_n_n_return_value_n_nget_TransitionGroup_n_const_value_BdApi_findModuleByDisplayName_TransitionGroup_n_Object_defineProperty_this_TransitionGroup_n_value_n_configurable_true_n_n_return_value_n_nget_Button_n_const_value_BdApi_findModuleByProps_DropdownSizes_n_Object_defineProperty_this_Button_n_value_n_configurable_true_n_n_return_value_n_nget_Flex_n_const_value_BdApi_findModuleByDisplayName_Flex_n_Object_defineProperty_this_Flex_n_value_n_configurable_true_n_n_return_value_n_nget_Text_n_const_value_BdApi_findModuleByDisplayName_Text_n_Object_defineProperty_this_Text_n_value_n_configurable_true_n_n_return_value_n_namespaceObject.TooltipContainer, {
+					return () => Settings.get("useIcons", true) ? external_BdApi_React_default().createElement(external_get_Tooltip_n_const_value_BdApi_findModuleByDisplayName_Tooltip_n_Object_defineProperty_this_Tooltip_n_value_n_configurable_true_n_n_return_value_n_nget_TooltipContainer_n_const_value_BdApi_findModuleByProps_TooltipContainer_TooltipContainer_n_Object_defineProperty_this_TooltipContainer_n_value_n_configurable_true_n_n_return_value_n_nget_TextInput_n_const_value_BdApi_findModuleByDisplayName_TextInput_n_Object_defineProperty_this_TextInput_n_value_n_configurable_true_n_n_return_value_n_nget_SlideIn_n_const_value_BdApi_findModuleByDisplayName_SlideIn_n_Object_defineProperty_this_SlideIn_n_value_n_configurable_true_n_n_return_value_n_nget_SettingsNotice_n_const_value_BdApi_findModuleByDisplayName_SettingsNotice_n_Object_defineProperty_this_SettingsNotice_n_value_n_configurable_true_n_n_return_value_n_nget_TransitionGroup_n_const_value_BdApi_findModuleByDisplayName_TransitionGroup_n_Object_defineProperty_this_TransitionGroup_n_value_n_configurable_true_n_n_return_value_n_nget_Button_n_const_value_BdApi_findModuleByProps_DropdownSizes_n_Object_defineProperty_this_Button_n_value_n_configurable_true_n_n_return_value_n_nget_Flex_n_const_value_BdApi_findModuleByDisplayName_Flex_n_Object_defineProperty_this_Flex_n_value_n_configurable_true_n_n_return_value_n_nget_Text_n_const_value_BdApi_findModuleByDisplayName_Text_n_Object_defineProperty_this_Text_n_value_n_configurable_true_n_n_return_value_n_nget_Card_n_const_value_BdApi_findModuleByDisplayName_Card_n_Object_defineProperty_this_Card_n_value_n_configurable_true_n_n_return_value_n_namespaceObject.TooltipContainer, {
 						text
 					}, external_BdApi_React_default().createElement(cake, null)) : external_BdApi_React_default().createElement(TextScroller, null, text);
 				}
@@ -1210,32 +1223,6 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					}
 				}, ".".repeat(state));
 			}
-			const external_get_Dispatcher_n_const_value_BdApi_findModuleByProps_dirtyDispatch_subscribe_n_Object_defineProperty_this_Dispatcher_n_value_n_configurable_true_n_n_return_value_n_nget_EmojiUtils_n_const_value_BdApi_findModuleByProps_uploadEmoji_n_Object_defineProperty_this_EmojiUtils_n_value_n_configurable_true_n_n_return_value_n_nget_PermissionUtils_n_const_value_BdApi_findModuleByProps_computePermissions_n_Object_defineProperty_this_PermissionUtils_n_value_n_configurable_true_n_n_return_value_n_namespaceObject = {
-				get Dispatcher() {
-					const value = BdApi.findModuleByProps("dirtyDispatch", "subscribe");
-					Object.defineProperty(this, "Dispatcher", {
-						value,
-						configurable: true
-					});
-					return value;
-				},
-				get EmojiUtils() {
-					const value = BdApi.findModuleByProps("uploadEmoji");
-					Object.defineProperty(this, "EmojiUtils", {
-						value,
-						configurable: true
-					});
-					return value;
-				},
-				get PermissionUtils() {
-					const value = BdApi.findModuleByProps("computePermissions");
-					Object.defineProperty(this, "PermissionUtils", {
-						value,
-						configurable: true
-					});
-					return value;
-				}
-			};
 			const GuildActions = external_PluginApi_namespaceObject.WebpackModules.getByProps("requestMembersById");
 			class JoinedAt extends ApiModule {
 				get api() {
@@ -1244,7 +1231,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				task(userId) {
 					return () => {
 						const settingsFormat = Settings.get("joined_format", "Joined At: $hour:$minute:$second, $day.$month.$year $daysago days");
-						const guildId = external_get_Messages_n_const_value_BdApi_findModuleByProps_getMessage_getMessages_n_Object_defineProperty_this_Messages_n_value_n_configurable_true_n_n_return_value_n_nget_Channels_n_const_value_BdApi_findModuleByPorps_getChannel_n_Object_defineProperty_this_Channels_n_value_n_configurable_true_n_n_return_value_n_nget_Guilds_n_const_value_BdApi_findModuleByProps_getGuild_n_Object_defineProperty_this_Guilds_n_value_n_configurable_true_n_n_return_value_n_nget_SelectedGuilds_n_const_value_BdApi_findModuleByProps_getGuildId_getLastSelectedGuildId_n_Object_defineProperty_this_SelectedGuilds_n_value_n_configurable_true_n_n_return_value_n_nget_SelectedChannels_n_const_value_BdApi_findModuleByProps_getChannelId_getLastSelectedChannelId_n_Object_defineProperty_this_SelectedChannels_n_value_n_configurable_true_n_n_return_value_n_nget_Info_n_const_value_BdApi_findModuleByProps_getCurrentUser_n_Object_defineProperty_this_Info_n_value_n_configurable_true_n_n_return_value_n_nget_Status_n_const_value_BdApi_findModuleByProps_getStatus_n_Object_defineProperty_this_Status_n_value_n_configurable_true_n_n_return_value_n_nget_Users_n_const_value_BdApi_findModuleByProps_getUser_n_Object_defineProperty_this_Users_n_value_n_configurable_true_n_n_return_value_n_nget_Settings_n_const_value_BdApi_findModuleByProps_afkTimeout_status_n_Object_defineProperty_this_Settings_n_value_n_configurable_true_n_n_return_value_n_nget_UserProfile_n_const_value_BdApi_findModuleByProps_getUserProfile_n_Object_defineProperty_this_UserProfile_n_value_n_configurable_true_n_n_return_value_n_namespaceObject.SelectedGuilds.getGuildId();
+						const guildId = external_get_Messages_n_const_value_BdApi_findModuleByProps_getMessage_getMessages_n_Object_defineProperty_this_Messages_n_value_n_configurable_true_n_n_return_value_n_nget_Channels_n_const_value_BdApi_findModuleByProps_getChannel_n_Object_defineProperty_this_Channels_n_value_n_configurable_true_n_n_return_value_n_nget_Guilds_n_const_value_BdApi_findModuleByProps_getGuild_n_Object_defineProperty_this_Guilds_n_value_n_configurable_true_n_n_return_value_n_nget_SelectedGuilds_n_const_value_BdApi_findModuleByProps_getGuildId_getLastSelectedGuildId_n_Object_defineProperty_this_SelectedGuilds_n_value_n_configurable_true_n_n_return_value_n_nget_SelectedChannels_n_const_value_BdApi_findModuleByProps_getChannelId_getLastSelectedChannelId_n_Object_defineProperty_this_SelectedChannels_n_value_n_configurable_true_n_n_return_value_n_nget_Info_n_const_value_BdApi_findModuleByProps_getCurrentUser_n_Object_defineProperty_this_Info_n_value_n_configurable_true_n_n_return_value_n_nget_Status_n_const_value_BdApi_findModuleByProps_getStatus_n_Object_defineProperty_this_Status_n_value_n_configurable_true_n_n_return_value_n_nget_Users_n_const_value_BdApi_findModuleByProps_getUser_n_Object_defineProperty_this_Users_n_value_n_configurable_true_n_n_return_value_n_nget_Settings_n_const_value_BdApi_findModuleByProps_afkTimeout_status_n_Object_defineProperty_this_Settings_n_value_n_configurable_true_n_n_return_value_n_nget_UserProfile_n_const_value_BdApi_findModuleByProps_getUserProfile_n_Object_defineProperty_this_UserProfile_n_value_n_configurable_true_n_n_return_value_n_nget_Members_n_const_value_BdApi_findModuleByProps_getMember_n_Object_defineProperty_this_Members_n_value_n_configurable_true_n_n_return_value_n_nget_Activities_n_const_value_BdApi_findModuleByProps_getActivities_n_Object_defineProperty_this_Activities_n_value_n_configurable_true_n_n_return_value_n_nget_Games_n_const_value_BdApi_findModuleByProps_getGame_n_Object_defineProperty_this_Games_n_value_n_configurable_true_n_n_return_value_n_namespaceObject.SelectedGuilds.getGuildId();
 						const byCache = this.getByCache(guildId, userId);
 						const [joined, setJoined] = (0, external_BdApi_React_.useState)(byCache ? this.parseTime(settingsFormat, byCache) : null);
 						const [message, setMessage] = (0, external_BdApi_React_.useState)("");
@@ -1279,9 +1266,9 @@ function buildPlugin([BasePlugin, PluginApi]) {
 							external_get_Dispatcher_n_const_value_BdApi_findModuleByProps_dirtyDispatch_subscribe_n_Object_defineProperty_this_Dispatcher_n_value_n_configurable_true_n_n_return_value_n_nget_EmojiUtils_n_const_value_BdApi_findModuleByProps_uploadEmoji_n_Object_defineProperty_this_EmojiUtils_n_value_n_configurable_true_n_n_return_value_n_nget_PermissionUtils_n_const_value_BdApi_findModuleByProps_computePermissions_n_Object_defineProperty_this_PermissionUtils_n_value_n_configurable_true_n_n_return_value_n_namespaceObject.Dispatcher.subscribe("GUILD_MEMBERS_CHUNK", callback);
 						}), []);
 						const useIcons = Settings.get("useIcons", true);
-						return joined ? useIcons ? external_BdApi_React_default().createElement(external_get_Tooltip_n_const_value_BdApi_findModuleByDisplayName_Tooltip_n_Object_defineProperty_this_Tooltip_n_value_n_configurable_true_n_n_return_value_n_nget_TooltipContainer_n_const_value_BdApi_findModuleByProps_TooltipContainer_TooltipContainer_n_Object_defineProperty_this_TooltipContainer_n_value_n_configurable_true_n_n_return_value_n_nget_TextInput_n_const_value_BdApi_findModuleByDisplayName_TextInput_n_Object_defineProperty_this_TextInput_n_value_n_configurable_true_n_n_return_value_n_nget_SlideIn_n_const_value_BdApi_findModuleByDisplayName_SlideIn_n_Object_defineProperty_this_SlideIn_n_value_n_configurable_true_n_n_return_value_n_nget_SettingsNotice_n_const_value_BdApi_findModuleByDisplayName_SettingsNotice_n_Object_defineProperty_this_SettingsNotice_n_value_n_configurable_true_n_n_return_value_n_nget_TransitionGroup_n_const_value_BdApi_findModuleByDisplayName_TransitionGroup_n_Object_defineProperty_this_TransitionGroup_n_value_n_configurable_true_n_n_return_value_n_nget_Button_n_const_value_BdApi_findModuleByProps_DropdownSizes_n_Object_defineProperty_this_Button_n_value_n_configurable_true_n_n_return_value_n_nget_Flex_n_const_value_BdApi_findModuleByDisplayName_Flex_n_Object_defineProperty_this_Flex_n_value_n_configurable_true_n_n_return_value_n_nget_Text_n_const_value_BdApi_findModuleByDisplayName_Text_n_Object_defineProperty_this_Text_n_value_n_configurable_true_n_n_return_value_n_namespaceObject.TooltipContainer, {
+						return joined ? useIcons ? external_BdApi_React_default().createElement(external_get_Tooltip_n_const_value_BdApi_findModuleByDisplayName_Tooltip_n_Object_defineProperty_this_Tooltip_n_value_n_configurable_true_n_n_return_value_n_nget_TooltipContainer_n_const_value_BdApi_findModuleByProps_TooltipContainer_TooltipContainer_n_Object_defineProperty_this_TooltipContainer_n_value_n_configurable_true_n_n_return_value_n_nget_TextInput_n_const_value_BdApi_findModuleByDisplayName_TextInput_n_Object_defineProperty_this_TextInput_n_value_n_configurable_true_n_n_return_value_n_nget_SlideIn_n_const_value_BdApi_findModuleByDisplayName_SlideIn_n_Object_defineProperty_this_SlideIn_n_value_n_configurable_true_n_n_return_value_n_nget_SettingsNotice_n_const_value_BdApi_findModuleByDisplayName_SettingsNotice_n_Object_defineProperty_this_SettingsNotice_n_value_n_configurable_true_n_n_return_value_n_nget_TransitionGroup_n_const_value_BdApi_findModuleByDisplayName_TransitionGroup_n_Object_defineProperty_this_TransitionGroup_n_value_n_configurable_true_n_n_return_value_n_nget_Button_n_const_value_BdApi_findModuleByProps_DropdownSizes_n_Object_defineProperty_this_Button_n_value_n_configurable_true_n_n_return_value_n_nget_Flex_n_const_value_BdApi_findModuleByDisplayName_Flex_n_Object_defineProperty_this_Flex_n_value_n_configurable_true_n_n_return_value_n_nget_Text_n_const_value_BdApi_findModuleByDisplayName_Text_n_Object_defineProperty_this_Text_n_value_n_configurable_true_n_n_return_value_n_nget_Card_n_const_value_BdApi_findModuleByDisplayName_Card_n_Object_defineProperty_this_Card_n_value_n_configurable_true_n_n_return_value_n_namespaceObject.TooltipContainer, {
 							text: joined
-						}, external_BdApi_React_default().createElement(calendar, null)) : external_BdApi_React_default().createElement(TextScroller, null, joined) : message ? useIcons ? external_BdApi_React_default().createElement(external_get_Tooltip_n_const_value_BdApi_findModuleByDisplayName_Tooltip_n_Object_defineProperty_this_Tooltip_n_value_n_configurable_true_n_n_return_value_n_nget_TooltipContainer_n_const_value_BdApi_findModuleByProps_TooltipContainer_TooltipContainer_n_Object_defineProperty_this_TooltipContainer_n_value_n_configurable_true_n_n_return_value_n_nget_TextInput_n_const_value_BdApi_findModuleByDisplayName_TextInput_n_Object_defineProperty_this_TextInput_n_value_n_configurable_true_n_n_return_value_n_nget_SlideIn_n_const_value_BdApi_findModuleByDisplayName_SlideIn_n_Object_defineProperty_this_SlideIn_n_value_n_configurable_true_n_n_return_value_n_nget_SettingsNotice_n_const_value_BdApi_findModuleByDisplayName_SettingsNotice_n_Object_defineProperty_this_SettingsNotice_n_value_n_configurable_true_n_n_return_value_n_nget_TransitionGroup_n_const_value_BdApi_findModuleByDisplayName_TransitionGroup_n_Object_defineProperty_this_TransitionGroup_n_value_n_configurable_true_n_n_return_value_n_nget_Button_n_const_value_BdApi_findModuleByProps_DropdownSizes_n_Object_defineProperty_this_Button_n_value_n_configurable_true_n_n_return_value_n_nget_Flex_n_const_value_BdApi_findModuleByDisplayName_Flex_n_Object_defineProperty_this_Flex_n_value_n_configurable_true_n_n_return_value_n_nget_Text_n_const_value_BdApi_findModuleByDisplayName_Text_n_Object_defineProperty_this_Text_n_value_n_configurable_true_n_n_return_value_n_namespaceObject.TooltipContainer, {
+						}, external_BdApi_React_default().createElement(calendar, null)) : external_BdApi_React_default().createElement(TextScroller, null, joined) : message ? useIcons ? external_BdApi_React_default().createElement(external_get_Tooltip_n_const_value_BdApi_findModuleByDisplayName_Tooltip_n_Object_defineProperty_this_Tooltip_n_value_n_configurable_true_n_n_return_value_n_nget_TooltipContainer_n_const_value_BdApi_findModuleByProps_TooltipContainer_TooltipContainer_n_Object_defineProperty_this_TooltipContainer_n_value_n_configurable_true_n_n_return_value_n_nget_TextInput_n_const_value_BdApi_findModuleByDisplayName_TextInput_n_Object_defineProperty_this_TextInput_n_value_n_configurable_true_n_n_return_value_n_nget_SlideIn_n_const_value_BdApi_findModuleByDisplayName_SlideIn_n_Object_defineProperty_this_SlideIn_n_value_n_configurable_true_n_n_return_value_n_nget_SettingsNotice_n_const_value_BdApi_findModuleByDisplayName_SettingsNotice_n_Object_defineProperty_this_SettingsNotice_n_value_n_configurable_true_n_n_return_value_n_nget_TransitionGroup_n_const_value_BdApi_findModuleByDisplayName_TransitionGroup_n_Object_defineProperty_this_TransitionGroup_n_value_n_configurable_true_n_n_return_value_n_nget_Button_n_const_value_BdApi_findModuleByProps_DropdownSizes_n_Object_defineProperty_this_Button_n_value_n_configurable_true_n_n_return_value_n_nget_Flex_n_const_value_BdApi_findModuleByDisplayName_Flex_n_Object_defineProperty_this_Flex_n_value_n_configurable_true_n_n_return_value_n_nget_Text_n_const_value_BdApi_findModuleByDisplayName_Text_n_Object_defineProperty_this_Text_n_value_n_configurable_true_n_n_return_value_n_nget_Card_n_const_value_BdApi_findModuleByDisplayName_Card_n_Object_defineProperty_this_Card_n_value_n_configurable_true_n_n_return_value_n_namespaceObject.TooltipContainer, {
 							text: message
 						}, external_BdApi_React_default().createElement(error, {
 							className: dates.Z.errorIcon
@@ -1289,7 +1276,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 							style: {
 								color: "red"
 							}
-						}, message) : external_BdApi_React_default().createElement(external_get_Tooltip_n_const_value_BdApi_findModuleByDisplayName_Tooltip_n_Object_defineProperty_this_Tooltip_n_value_n_configurable_true_n_n_return_value_n_nget_TooltipContainer_n_const_value_BdApi_findModuleByProps_TooltipContainer_TooltipContainer_n_Object_defineProperty_this_TooltipContainer_n_value_n_configurable_true_n_n_return_value_n_nget_TextInput_n_const_value_BdApi_findModuleByDisplayName_TextInput_n_Object_defineProperty_this_TextInput_n_value_n_configurable_true_n_n_return_value_n_nget_SlideIn_n_const_value_BdApi_findModuleByDisplayName_SlideIn_n_Object_defineProperty_this_SlideIn_n_value_n_configurable_true_n_n_return_value_n_nget_SettingsNotice_n_const_value_BdApi_findModuleByDisplayName_SettingsNotice_n_Object_defineProperty_this_SettingsNotice_n_value_n_configurable_true_n_n_return_value_n_nget_TransitionGroup_n_const_value_BdApi_findModuleByDisplayName_TransitionGroup_n_Object_defineProperty_this_TransitionGroup_n_value_n_configurable_true_n_n_return_value_n_nget_Button_n_const_value_BdApi_findModuleByProps_DropdownSizes_n_Object_defineProperty_this_Button_n_value_n_configurable_true_n_n_return_value_n_nget_Flex_n_const_value_BdApi_findModuleByDisplayName_Flex_n_Object_defineProperty_this_Flex_n_value_n_configurable_true_n_n_return_value_n_nget_Text_n_const_value_BdApi_findModuleByDisplayName_Text_n_Object_defineProperty_this_Text_n_value_n_configurable_true_n_n_return_value_n_namespaceObject.TooltipContainer, {
+						}, message) : external_BdApi_React_default().createElement(external_get_Tooltip_n_const_value_BdApi_findModuleByDisplayName_Tooltip_n_Object_defineProperty_this_Tooltip_n_value_n_configurable_true_n_n_return_value_n_nget_TooltipContainer_n_const_value_BdApi_findModuleByProps_TooltipContainer_TooltipContainer_n_Object_defineProperty_this_TooltipContainer_n_value_n_configurable_true_n_n_return_value_n_nget_TextInput_n_const_value_BdApi_findModuleByDisplayName_TextInput_n_Object_defineProperty_this_TextInput_n_value_n_configurable_true_n_n_return_value_n_nget_SlideIn_n_const_value_BdApi_findModuleByDisplayName_SlideIn_n_Object_defineProperty_this_SlideIn_n_value_n_configurable_true_n_n_return_value_n_nget_SettingsNotice_n_const_value_BdApi_findModuleByDisplayName_SettingsNotice_n_Object_defineProperty_this_SettingsNotice_n_value_n_configurable_true_n_n_return_value_n_nget_TransitionGroup_n_const_value_BdApi_findModuleByDisplayName_TransitionGroup_n_Object_defineProperty_this_TransitionGroup_n_value_n_configurable_true_n_n_return_value_n_nget_Button_n_const_value_BdApi_findModuleByProps_DropdownSizes_n_Object_defineProperty_this_Button_n_value_n_configurable_true_n_n_return_value_n_nget_Flex_n_const_value_BdApi_findModuleByDisplayName_Flex_n_Object_defineProperty_this_Flex_n_value_n_configurable_true_n_n_return_value_n_nget_Text_n_const_value_BdApi_findModuleByDisplayName_Text_n_Object_defineProperty_this_Text_n_value_n_configurable_true_n_n_return_value_n_nget_Card_n_const_value_BdApi_findModuleByDisplayName_Card_n_Object_defineProperty_this_Card_n_value_n_configurable_true_n_n_return_value_n_namespaceObject.TooltipContainer, {
 							text: "Loading JoinedAt..."
 						}, useIcons ? external_BdApi_React_default().createElement(cube, {
 							className: dates.Z.loading
@@ -1319,90 +1306,120 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			}), external_BdApi_React_default().createElement("path", {
 				d: "M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM9 11H7V9h2v2zm4 0h-2V9h2v2zm4 0h-2V9h2v2z"
 			}));
+			const external_BdApi_findModuleByProps_API_HOST_namespaceObject = BdApi.findModuleByProps("API_HOST");
+			const external_BdApi_findModuleByProps_stringify_parse_encode_namespaceObject = BdApi.findModuleByProps("stringify", "parse", "encode");
 			const external_PluginApi_DiscordModules_namespaceObject = PluginApi.DiscordModules;
-			const {
-				stringify
-			} = external_PluginApi_namespaceObject.WebpackModules.getByProps("stringify", "parse", "encode");
-			const constants = external_PluginApi_namespaceObject.DiscordModules.DiscordConstants;
-			class LastMessage extends ApiModule {
+			function resolveId(...args) {
+				return args.join("_");
+			}
+			const fetchingQueue = new Set,
+				lastMessages = new Map;
+			function handleMessageCreate({
+				message,
+				channelId
+			}) {
+				lastMessages.set(resolveId(message.author.id, channelId), {
+					channelId,
+					messageId: message.id,
+					date: new Date(message.timestamp),
+					fetch: Date.now()
+				});
+				LastMessage.emitChange();
+			}
+			function handleMessageDelete({
+				messageId,
+				channelId
+			}) {
+				for (const [userId, result] of lastMessages) {
+					if (result.messageId !== messageId || result.channelId !== channelId) continue;
+					lastMessages.delete(resolveId(userId, channelId));
+					LastMessage.emitChange();
+				}
+			}
+			class LastMessageStore extends external_Object_assign_BdApi_findModuleByProps_useStateFromStores_default_BdApi_findModuleByProps_useStateFromStores_namespaceObject.Store {
+				get _users() {
+					return lastMessages;
+				}
+				isFetching(userId) {
+					return fetchingQueue.has(userId);
+				}
+				get(userId, channelId) {
+					const cached = lastMessages.get(resolveId(userId, channelId));
+					if (!cached || Date.now() - cached.fetch > 6e5) return null;
+					return cached;
+				}
+				fetch(userId, roomId, isGuild = false) {
+					return new Promise(((resolve, reject) => {
+						const id = resolveId(userId, roomId);
+						fetchingQueue.add(id);
+						external_PluginApi_DiscordModules_namespaceObject.APIModule.get({
+							url: isGuild ? external_BdApi_findModuleByProps_API_HOST_namespaceObject.Endpoints.SEARCH_GUILD(roomId) : external_BdApi_findModuleByProps_API_HOST_namespaceObject.Endpoints.SEARCH_CHANNEL(roomId),
+							query: (0, external_BdApi_findModuleByProps_stringify_parse_encode_namespaceObject.stringify)({
+								author_id: userId
+							})
+						}).then((data => {
+							var _data$body, _data$body$messages;
+							fetchingQueue.delete(id);
+							if (null !== data && void 0 !== data && null !== (_data$body = data.body) && void 0 !== _data$body && null !== (_data$body$messages = _data$body.messages) && void 0 !== _data$body$messages && _data$body$messages.length) {
+								const message = data.body.messages[0].find((result => result.hit && result.author.id === userId));
+								if (message) {
+									lastMessages.set(resolveId(userId, roomId), {
+										date: new Date(message.timestamp),
+										fetch: Date.now(),
+										channelId: message.channel_id,
+										messageId: message.id
+									});
+									this.emitChange();
+								}
+							}
+							resolve();
+						})).catch((error => {
+							fetchingQueue.delete(id);
+							reject(error);
+						}));
+					}));
+				}
+			}
+			const LastMessage = new LastMessageStore(external_get_Dispatcher_n_const_value_BdApi_findModuleByProps_dirtyDispatch_subscribe_n_Object_defineProperty_this_Dispatcher_n_value_n_configurable_true_n_n_return_value_n_nget_EmojiUtils_n_const_value_BdApi_findModuleByProps_uploadEmoji_n_Object_defineProperty_this_EmojiUtils_n_value_n_configurable_true_n_n_return_value_n_nget_PermissionUtils_n_const_value_BdApi_findModuleByProps_computePermissions_n_Object_defineProperty_this_PermissionUtils_n_value_n_configurable_true_n_n_return_value_n_namespaceObject.Dispatcher, {
+				MESSAGE_CREATE: handleMessageCreate,
+				MESSAGE_DELETE: handleMessageDelete
+			});
+			const stores_lastMessage = LastMessage;
+			class LastMessageApi extends ApiModule {
 				get api() {
 					return this.constructor.name;
 				}
+				get format() {
+					return Settings.get("lastmessage_format", "Last Message: $hour:$minute:$second, $day.$month.$year $daysago days");
+				}
 				task(user) {
 					return () => {
-						const [lastMessage, setLastMessage] = (0, external_BdApi_React_.useState)({
-							messageId: null,
-							channelId: null,
-							date: null
-						});
+						const roomId = external_get_Messages_n_const_value_BdApi_findModuleByProps_getMessage_getMessages_n_Object_defineProperty_this_Messages_n_value_n_configurable_true_n_n_return_value_n_nget_Channels_n_const_value_BdApi_findModuleByProps_getChannel_n_Object_defineProperty_this_Channels_n_value_n_configurable_true_n_n_return_value_n_nget_Guilds_n_const_value_BdApi_findModuleByProps_getGuild_n_Object_defineProperty_this_Guilds_n_value_n_configurable_true_n_n_return_value_n_nget_SelectedGuilds_n_const_value_BdApi_findModuleByProps_getGuildId_getLastSelectedGuildId_n_Object_defineProperty_this_SelectedGuilds_n_value_n_configurable_true_n_n_return_value_n_nget_SelectedChannels_n_const_value_BdApi_findModuleByProps_getChannelId_getLastSelectedChannelId_n_Object_defineProperty_this_SelectedChannels_n_value_n_configurable_true_n_n_return_value_n_nget_Info_n_const_value_BdApi_findModuleByProps_getCurrentUser_n_Object_defineProperty_this_Info_n_value_n_configurable_true_n_n_return_value_n_nget_Status_n_const_value_BdApi_findModuleByProps_getStatus_n_Object_defineProperty_this_Status_n_value_n_configurable_true_n_n_return_value_n_nget_Users_n_const_value_BdApi_findModuleByProps_getUser_n_Object_defineProperty_this_Users_n_value_n_configurable_true_n_n_return_value_n_nget_Settings_n_const_value_BdApi_findModuleByProps_afkTimeout_status_n_Object_defineProperty_this_Settings_n_value_n_configurable_true_n_n_return_value_n_nget_UserProfile_n_const_value_BdApi_findModuleByProps_getUserProfile_n_Object_defineProperty_this_UserProfile_n_value_n_configurable_true_n_n_return_value_n_nget_Members_n_const_value_BdApi_findModuleByProps_getMember_n_Object_defineProperty_this_Members_n_value_n_configurable_true_n_n_return_value_n_nget_Activities_n_const_value_BdApi_findModuleByProps_getActivities_n_Object_defineProperty_this_Activities_n_value_n_configurable_true_n_n_return_value_n_nget_Games_n_const_value_BdApi_findModuleByProps_getGame_n_Object_defineProperty_this_Games_n_value_n_configurable_true_n_n_return_value_n_namespaceObject.SelectedGuilds.getGuildId() || external_get_Messages_n_const_value_BdApi_findModuleByProps_getMessage_getMessages_n_Object_defineProperty_this_Messages_n_value_n_configurable_true_n_n_return_value_n_nget_Channels_n_const_value_BdApi_findModuleByProps_getChannel_n_Object_defineProperty_this_Channels_n_value_n_configurable_true_n_n_return_value_n_nget_Guilds_n_const_value_BdApi_findModuleByProps_getGuild_n_Object_defineProperty_this_Guilds_n_value_n_configurable_true_n_n_return_value_n_nget_SelectedGuilds_n_const_value_BdApi_findModuleByProps_getGuildId_getLastSelectedGuildId_n_Object_defineProperty_this_SelectedGuilds_n_value_n_configurable_true_n_n_return_value_n_nget_SelectedChannels_n_const_value_BdApi_findModuleByProps_getChannelId_getLastSelectedChannelId_n_Object_defineProperty_this_SelectedChannels_n_value_n_configurable_true_n_n_return_value_n_nget_Info_n_const_value_BdApi_findModuleByProps_getCurrentUser_n_Object_defineProperty_this_Info_n_value_n_configurable_true_n_n_return_value_n_nget_Status_n_const_value_BdApi_findModuleByProps_getStatus_n_Object_defineProperty_this_Status_n_value_n_configurable_true_n_n_return_value_n_nget_Users_n_const_value_BdApi_findModuleByProps_getUser_n_Object_defineProperty_this_Users_n_value_n_configurable_true_n_n_return_value_n_nget_Settings_n_const_value_BdApi_findModuleByProps_afkTimeout_status_n_Object_defineProperty_this_Settings_n_value_n_configurable_true_n_n_return_value_n_nget_UserProfile_n_const_value_BdApi_findModuleByProps_getUserProfile_n_Object_defineProperty_this_UserProfile_n_value_n_configurable_true_n_n_return_value_n_nget_Members_n_const_value_BdApi_findModuleByProps_getMember_n_Object_defineProperty_this_Members_n_value_n_configurable_true_n_n_return_value_n_nget_Activities_n_const_value_BdApi_findModuleByProps_getActivities_n_Object_defineProperty_this_Activities_n_value_n_configurable_true_n_n_return_value_n_nget_Games_n_const_value_BdApi_findModuleByProps_getGame_n_Object_defineProperty_this_Games_n_value_n_configurable_true_n_n_return_value_n_namespaceObject.SelectedChannels.getChannelId();
+						const isGuild = Boolean(external_get_Messages_n_const_value_BdApi_findModuleByProps_getMessage_getMessages_n_Object_defineProperty_this_Messages_n_value_n_configurable_true_n_n_return_value_n_nget_Channels_n_const_value_BdApi_findModuleByProps_getChannel_n_Object_defineProperty_this_Channels_n_value_n_configurable_true_n_n_return_value_n_nget_Guilds_n_const_value_BdApi_findModuleByProps_getGuild_n_Object_defineProperty_this_Guilds_n_value_n_configurable_true_n_n_return_value_n_nget_SelectedGuilds_n_const_value_BdApi_findModuleByProps_getGuildId_getLastSelectedGuildId_n_Object_defineProperty_this_SelectedGuilds_n_value_n_configurable_true_n_n_return_value_n_nget_SelectedChannels_n_const_value_BdApi_findModuleByProps_getChannelId_getLastSelectedChannelId_n_Object_defineProperty_this_SelectedChannels_n_value_n_configurable_true_n_n_return_value_n_nget_Info_n_const_value_BdApi_findModuleByProps_getCurrentUser_n_Object_defineProperty_this_Info_n_value_n_configurable_true_n_n_return_value_n_nget_Status_n_const_value_BdApi_findModuleByProps_getStatus_n_Object_defineProperty_this_Status_n_value_n_configurable_true_n_n_return_value_n_nget_Users_n_const_value_BdApi_findModuleByProps_getUser_n_Object_defineProperty_this_Users_n_value_n_configurable_true_n_n_return_value_n_nget_Settings_n_const_value_BdApi_findModuleByProps_afkTimeout_status_n_Object_defineProperty_this_Settings_n_value_n_configurable_true_n_n_return_value_n_nget_UserProfile_n_const_value_BdApi_findModuleByProps_getUserProfile_n_Object_defineProperty_this_UserProfile_n_value_n_configurable_true_n_n_return_value_n_nget_Members_n_const_value_BdApi_findModuleByProps_getMember_n_Object_defineProperty_this_Members_n_value_n_configurable_true_n_n_return_value_n_nget_Activities_n_const_value_BdApi_findModuleByProps_getActivities_n_Object_defineProperty_this_Activities_n_value_n_configurable_true_n_n_return_value_n_nget_Games_n_const_value_BdApi_findModuleByProps_getGame_n_Object_defineProperty_this_Games_n_value_n_configurable_true_n_n_return_value_n_namespaceObject.SelectedGuilds.getGuildId());
+						const lastMessage = (0, external_Object_assign_BdApi_findModuleByProps_useStateFromStores_default_BdApi_findModuleByProps_useStateFromStores_namespaceObject.useStateFromStores)([stores_lastMessage], (() => stores_lastMessage.get(user.id, roomId)));
 						const [errorMessage, setErrorMessage] = (0, external_BdApi_React_.useState)("");
-						const isGuild = Boolean(external_get_Messages_n_const_value_BdApi_findModuleByProps_getMessage_getMessages_n_Object_defineProperty_this_Messages_n_value_n_configurable_true_n_n_return_value_n_nget_Channels_n_const_value_BdApi_findModuleByPorps_getChannel_n_Object_defineProperty_this_Channels_n_value_n_configurable_true_n_n_return_value_n_nget_Guilds_n_const_value_BdApi_findModuleByProps_getGuild_n_Object_defineProperty_this_Guilds_n_value_n_configurable_true_n_n_return_value_n_nget_SelectedGuilds_n_const_value_BdApi_findModuleByProps_getGuildId_getLastSelectedGuildId_n_Object_defineProperty_this_SelectedGuilds_n_value_n_configurable_true_n_n_return_value_n_nget_SelectedChannels_n_const_value_BdApi_findModuleByProps_getChannelId_getLastSelectedChannelId_n_Object_defineProperty_this_SelectedChannels_n_value_n_configurable_true_n_n_return_value_n_nget_Info_n_const_value_BdApi_findModuleByProps_getCurrentUser_n_Object_defineProperty_this_Info_n_value_n_configurable_true_n_n_return_value_n_nget_Status_n_const_value_BdApi_findModuleByProps_getStatus_n_Object_defineProperty_this_Status_n_value_n_configurable_true_n_n_return_value_n_nget_Users_n_const_value_BdApi_findModuleByProps_getUser_n_Object_defineProperty_this_Users_n_value_n_configurable_true_n_n_return_value_n_nget_Settings_n_const_value_BdApi_findModuleByProps_afkTimeout_status_n_Object_defineProperty_this_Settings_n_value_n_configurable_true_n_n_return_value_n_nget_UserProfile_n_const_value_BdApi_findModuleByProps_getUserProfile_n_Object_defineProperty_this_UserProfile_n_value_n_configurable_true_n_n_return_value_n_namespaceObject.SelectedGuilds.getGuildId());
 						(0, external_BdApi_React_.useEffect)((() => {
-							if (user.bot && "0000" === user.discriminator) return setLastMessage({
-								date: "Last Message: --- --- ---"
-							});
-							const roomId = external_get_Messages_n_const_value_BdApi_findModuleByProps_getMessage_getMessages_n_Object_defineProperty_this_Messages_n_value_n_configurable_true_n_n_return_value_n_nget_Channels_n_const_value_BdApi_findModuleByPorps_getChannel_n_Object_defineProperty_this_Channels_n_value_n_configurable_true_n_n_return_value_n_nget_Guilds_n_const_value_BdApi_findModuleByProps_getGuild_n_Object_defineProperty_this_Guilds_n_value_n_configurable_true_n_n_return_value_n_nget_SelectedGuilds_n_const_value_BdApi_findModuleByProps_getGuildId_getLastSelectedGuildId_n_Object_defineProperty_this_SelectedGuilds_n_value_n_configurable_true_n_n_return_value_n_nget_SelectedChannels_n_const_value_BdApi_findModuleByProps_getChannelId_getLastSelectedChannelId_n_Object_defineProperty_this_SelectedChannels_n_value_n_configurable_true_n_n_return_value_n_nget_Info_n_const_value_BdApi_findModuleByProps_getCurrentUser_n_Object_defineProperty_this_Info_n_value_n_configurable_true_n_n_return_value_n_nget_Status_n_const_value_BdApi_findModuleByProps_getStatus_n_Object_defineProperty_this_Status_n_value_n_configurable_true_n_n_return_value_n_nget_Users_n_const_value_BdApi_findModuleByProps_getUser_n_Object_defineProperty_this_Users_n_value_n_configurable_true_n_n_return_value_n_nget_Settings_n_const_value_BdApi_findModuleByProps_afkTimeout_status_n_Object_defineProperty_this_Settings_n_value_n_configurable_true_n_n_return_value_n_nget_UserProfile_n_const_value_BdApi_findModuleByProps_getUserProfile_n_Object_defineProperty_this_UserProfile_n_value_n_configurable_true_n_n_return_value_n_namespaceObject.SelectedGuilds.getGuildId() || external_get_Messages_n_const_value_BdApi_findModuleByProps_getMessage_getMessages_n_Object_defineProperty_this_Messages_n_value_n_configurable_true_n_n_return_value_n_nget_Channels_n_const_value_BdApi_findModuleByPorps_getChannel_n_Object_defineProperty_this_Channels_n_value_n_configurable_true_n_n_return_value_n_nget_Guilds_n_const_value_BdApi_findModuleByProps_getGuild_n_Object_defineProperty_this_Guilds_n_value_n_configurable_true_n_n_return_value_n_nget_SelectedGuilds_n_const_value_BdApi_findModuleByProps_getGuildId_getLastSelectedGuildId_n_Object_defineProperty_this_SelectedGuilds_n_value_n_configurable_true_n_n_return_value_n_nget_SelectedChannels_n_const_value_BdApi_findModuleByProps_getChannelId_getLastSelectedChannelId_n_Object_defineProperty_this_SelectedChannels_n_value_n_configurable_true_n_n_return_value_n_nget_Info_n_const_value_BdApi_findModuleByProps_getCurrentUser_n_Object_defineProperty_this_Info_n_value_n_configurable_true_n_n_return_value_n_nget_Status_n_const_value_BdApi_findModuleByProps_getStatus_n_Object_defineProperty_this_Status_n_value_n_configurable_true_n_n_return_value_n_nget_Users_n_const_value_BdApi_findModuleByProps_getUser_n_Object_defineProperty_this_Users_n_value_n_configurable_true_n_n_return_value_n_nget_Settings_n_const_value_BdApi_findModuleByProps_afkTimeout_status_n_Object_defineProperty_this_Settings_n_value_n_configurable_true_n_n_return_value_n_nget_UserProfile_n_const_value_BdApi_findModuleByProps_getUserProfile_n_Object_defineProperty_this_UserProfile_n_value_n_configurable_true_n_n_return_value_n_namespaceObject.SelectedChannels.getChannelId();
-							if (!roomId) return setLastMessage({
-								date: "Last Message: --- --- ---"
-							});
-							const byCache = this.getByCache(roomId, user.id);
-							if (byCache) {
-								const message = byCache.body.messages[0].find((e => e.hit && e.author.id === user.id));
-								setLastMessage({
-									messageId: message.id,
-									channelId: message.channel_id,
-									date: this.parseTime(Settings.get("lastmessage_format", "Last Message: $hour:$minute:$second, $day.$month.$year $daysago days"), new Date(message.timestamp))
-								});
-							}
-							external_PluginApi_DiscordModules_namespaceObject.APIModule.get({
-								url: isGuild ? constants.Endpoints.SEARCH_GUILD(roomId) : constants.Endpoints.SEARCH_CHANNEL(roomId),
-								query: stringify({
-									author_id: user.id
-								})
-							}).then((data => {
-								var _data$body, _data$body$messages;
-								if (null !== data && void 0 !== data && null !== (_data$body = data.body) && void 0 !== _data$body && null !== (_data$body$messages = _data$body.messages) && void 0 !== _data$body$messages && _data$body$messages.length) {
-									const message = data.body.messages[0].find((e => e.hit && e.author.id === user.id));
-									if (message) {
-										const data = {
-											messageId: message.id,
-											channelId: message.channel_id,
-											date: this.parseTime(Settings.get("lastmessage_format", "Last Message: $hour:$minute:$second, $day.$month.$year $daysago days"), new Date(message.timestamp))
-										};
-										this.setCache(roomId, user.id, {
-											data: {
-												body: {
-													messages: [
-														[message]
-													]
-												}
-											}
-										});
-										setLastMessage(data);
-									}
-								} else setLastMessage({
-									date: "Last Message: --- --- ---"
-								});
-							})).catch((error => {
-								setErrorMessage("Failed to fetch!");
-								this.error(`Fetch for ${userId} failed!\n`, error);
+							if (stores_lastMessage.isFetching(user.id)) return;
+							if (!roomId) return setErrorMessage("Cannot resolve channel/guild id.");
+							stores_lastMessage.fetch(user.id, roomId, isGuild).catch((error => {
+								this.error(`Failed to fetch LastMessage from ${user.tag}:\n`, error);
 							}));
 						}), [true]);
 						const transitionToMessage = () => {
 							if (!lastMessage.channelId || !lastMessage.messageId) return;
-							external_get_joinClassNames_n_const_value_BdApi_findModule_m_typeof_m_default_default_function_default_n_Object_defineProperty_this_joinClassNames_n_value_n_configurable_true_n_n_return_value_n_nget_useForceUpdate_n_const_value_BdApi_findModuleByProps_useForceUpdate_useForceUpdate_n_Object_defineProperty_this_useForceUpdate_n_value_n_configurable_true_n_n_return_value_n_nget_Logger_n_const_value_BdApi_findModuleByProps_setLogFn_default_n_Object_defineProperty_this_Logger_n_value_n_configurable_true_n_n_return_value_n_nget_Navigation_n_const_value_BdApi_findModuleByProps_replaceWith_n_Object_defineProperty_this_Navigation_n_value_n_configurable_true_n_n_return_value_n_namespaceObject.Navigation.replaceWith(isGuild ? `/channels/${external_get_Messages_n_const_value_BdApi_findModuleByProps_getMessage_getMessages_n_Object_defineProperty_this_Messages_n_value_n_configurable_true_n_n_return_value_n_nget_Channels_n_const_value_BdApi_findModuleByPorps_getChannel_n_Object_defineProperty_this_Channels_n_value_n_configurable_true_n_n_return_value_n_nget_Guilds_n_const_value_BdApi_findModuleByProps_getGuild_n_Object_defineProperty_this_Guilds_n_value_n_configurable_true_n_n_return_value_n_nget_SelectedGuilds_n_const_value_BdApi_findModuleByProps_getGuildId_getLastSelectedGuildId_n_Object_defineProperty_this_SelectedGuilds_n_value_n_configurable_true_n_n_return_value_n_nget_SelectedChannels_n_const_value_BdApi_findModuleByProps_getChannelId_getLastSelectedChannelId_n_Object_defineProperty_this_SelectedChannels_n_value_n_configurable_true_n_n_return_value_n_nget_Info_n_const_value_BdApi_findModuleByProps_getCurrentUser_n_Object_defineProperty_this_Info_n_value_n_configurable_true_n_n_return_value_n_nget_Status_n_const_value_BdApi_findModuleByProps_getStatus_n_Object_defineProperty_this_Status_n_value_n_configurable_true_n_n_return_value_n_nget_Users_n_const_value_BdApi_findModuleByProps_getUser_n_Object_defineProperty_this_Users_n_value_n_configurable_true_n_n_return_value_n_nget_Settings_n_const_value_BdApi_findModuleByProps_afkTimeout_status_n_Object_defineProperty_this_Settings_n_value_n_configurable_true_n_n_return_value_n_nget_UserProfile_n_const_value_BdApi_findModuleByProps_getUserProfile_n_Object_defineProperty_this_UserProfile_n_value_n_configurable_true_n_n_return_value_n_namespaceObject.SelectedGuilds.getGuildId()}/${lastMessage.channelId}/${lastMessage.messageId}` : `/channels/@me/${lastMessage.channelId}/${lastMessage.messageId}`);
+							external_get_joinClassNames_n_const_value_BdApi_findModule_m_typeof_m_default_default_function_default_n_Object_defineProperty_this_joinClassNames_n_value_n_configurable_true_n_n_return_value_n_nget_useForceUpdate_n_const_value_BdApi_findModuleByProps_useForceUpdate_useForceUpdate_n_Object_defineProperty_this_useForceUpdate_n_value_n_configurable_true_n_n_return_value_n_nget_Logger_n_const_value_BdApi_findModuleByProps_setLogFn_default_n_Object_defineProperty_this_Logger_n_value_n_configurable_true_n_n_return_value_n_nget_Navigation_n_const_value_BdApi_findModuleByProps_replaceWith_n_Object_defineProperty_this_Navigation_n_value_n_configurable_true_n_n_return_value_n_namespaceObject.Navigation.replaceWith(isGuild ? `/channels/${external_get_Messages_n_const_value_BdApi_findModuleByProps_getMessage_getMessages_n_Object_defineProperty_this_Messages_n_value_n_configurable_true_n_n_return_value_n_nget_Channels_n_const_value_BdApi_findModuleByProps_getChannel_n_Object_defineProperty_this_Channels_n_value_n_configurable_true_n_n_return_value_n_nget_Guilds_n_const_value_BdApi_findModuleByProps_getGuild_n_Object_defineProperty_this_Guilds_n_value_n_configurable_true_n_n_return_value_n_nget_SelectedGuilds_n_const_value_BdApi_findModuleByProps_getGuildId_getLastSelectedGuildId_n_Object_defineProperty_this_SelectedGuilds_n_value_n_configurable_true_n_n_return_value_n_nget_SelectedChannels_n_const_value_BdApi_findModuleByProps_getChannelId_getLastSelectedChannelId_n_Object_defineProperty_this_SelectedChannels_n_value_n_configurable_true_n_n_return_value_n_nget_Info_n_const_value_BdApi_findModuleByProps_getCurrentUser_n_Object_defineProperty_this_Info_n_value_n_configurable_true_n_n_return_value_n_nget_Status_n_const_value_BdApi_findModuleByProps_getStatus_n_Object_defineProperty_this_Status_n_value_n_configurable_true_n_n_return_value_n_nget_Users_n_const_value_BdApi_findModuleByProps_getUser_n_Object_defineProperty_this_Users_n_value_n_configurable_true_n_n_return_value_n_nget_Settings_n_const_value_BdApi_findModuleByProps_afkTimeout_status_n_Object_defineProperty_this_Settings_n_value_n_configurable_true_n_n_return_value_n_nget_UserProfile_n_const_value_BdApi_findModuleByProps_getUserProfile_n_Object_defineProperty_this_UserProfile_n_value_n_configurable_true_n_n_return_value_n_nget_Members_n_const_value_BdApi_findModuleByProps_getMember_n_Object_defineProperty_this_Members_n_value_n_configurable_true_n_n_return_value_n_nget_Activities_n_const_value_BdApi_findModuleByProps_getActivities_n_Object_defineProperty_this_Activities_n_value_n_configurable_true_n_n_return_value_n_nget_Games_n_const_value_BdApi_findModuleByProps_getGame_n_Object_defineProperty_this_Games_n_value_n_configurable_true_n_n_return_value_n_namespaceObject.SelectedGuilds.getGuildId()}/${lastMessage.channelId}/${lastMessage.messageId}` : `/channels/@me/${lastMessage.channelId}/${lastMessage.messageId}`);
 						};
-						return null !== lastMessage && void 0 !== lastMessage && lastMessage.date ? Settings.get("useIcons", true) ? external_BdApi_React_default().createElement(external_get_Tooltip_n_const_value_BdApi_findModuleByDisplayName_Tooltip_n_Object_defineProperty_this_Tooltip_n_value_n_configurable_true_n_n_return_value_n_nget_TooltipContainer_n_const_value_BdApi_findModuleByProps_TooltipContainer_TooltipContainer_n_Object_defineProperty_this_TooltipContainer_n_value_n_configurable_true_n_n_return_value_n_nget_TextInput_n_const_value_BdApi_findModuleByDisplayName_TextInput_n_Object_defineProperty_this_TextInput_n_value_n_configurable_true_n_n_return_value_n_nget_SlideIn_n_const_value_BdApi_findModuleByDisplayName_SlideIn_n_Object_defineProperty_this_SlideIn_n_value_n_configurable_true_n_n_return_value_n_nget_SettingsNotice_n_const_value_BdApi_findModuleByDisplayName_SettingsNotice_n_Object_defineProperty_this_SettingsNotice_n_value_n_configurable_true_n_n_return_value_n_nget_TransitionGroup_n_const_value_BdApi_findModuleByDisplayName_TransitionGroup_n_Object_defineProperty_this_TransitionGroup_n_value_n_configurable_true_n_n_return_value_n_nget_Button_n_const_value_BdApi_findModuleByProps_DropdownSizes_n_Object_defineProperty_this_Button_n_value_n_configurable_true_n_n_return_value_n_nget_Flex_n_const_value_BdApi_findModuleByDisplayName_Flex_n_Object_defineProperty_this_Flex_n_value_n_configurable_true_n_n_return_value_n_nget_Text_n_const_value_BdApi_findModuleByDisplayName_Text_n_Object_defineProperty_this_Text_n_value_n_configurable_true_n_n_return_value_n_namespaceObject.TooltipContainer, {
-							text: null === lastMessage || void 0 === lastMessage ? void 0 : lastMessage.date
+						return null !== lastMessage && void 0 !== lastMessage && lastMessage.date ? Settings.get("useIcons", true) ? external_BdApi_React_default().createElement(external_get_Tooltip_n_const_value_BdApi_findModuleByDisplayName_Tooltip_n_Object_defineProperty_this_Tooltip_n_value_n_configurable_true_n_n_return_value_n_nget_TooltipContainer_n_const_value_BdApi_findModuleByProps_TooltipContainer_TooltipContainer_n_Object_defineProperty_this_TooltipContainer_n_value_n_configurable_true_n_n_return_value_n_nget_TextInput_n_const_value_BdApi_findModuleByDisplayName_TextInput_n_Object_defineProperty_this_TextInput_n_value_n_configurable_true_n_n_return_value_n_nget_SlideIn_n_const_value_BdApi_findModuleByDisplayName_SlideIn_n_Object_defineProperty_this_SlideIn_n_value_n_configurable_true_n_n_return_value_n_nget_SettingsNotice_n_const_value_BdApi_findModuleByDisplayName_SettingsNotice_n_Object_defineProperty_this_SettingsNotice_n_value_n_configurable_true_n_n_return_value_n_nget_TransitionGroup_n_const_value_BdApi_findModuleByDisplayName_TransitionGroup_n_Object_defineProperty_this_TransitionGroup_n_value_n_configurable_true_n_n_return_value_n_nget_Button_n_const_value_BdApi_findModuleByProps_DropdownSizes_n_Object_defineProperty_this_Button_n_value_n_configurable_true_n_n_return_value_n_nget_Flex_n_const_value_BdApi_findModuleByDisplayName_Flex_n_Object_defineProperty_this_Flex_n_value_n_configurable_true_n_n_return_value_n_nget_Text_n_const_value_BdApi_findModuleByDisplayName_Text_n_Object_defineProperty_this_Text_n_value_n_configurable_true_n_n_return_value_n_nget_Card_n_const_value_BdApi_findModuleByDisplayName_Card_n_Object_defineProperty_this_Card_n_value_n_configurable_true_n_n_return_value_n_namespaceObject.TooltipContainer, {
+							text: this.parseTime(this.format, lastMessage.date)
 						}, external_BdApi_React_default().createElement(textbubble, {
 							onClick: transitionToMessage
 						})) : external_BdApi_React_default().createElement(TextScroller, {
 							onClick: transitionToMessage
-						}, null === lastMessage || void 0 === lastMessage ? void 0 : lastMessage.date) : errorMessage ? external_BdApi_React_default().createElement(external_get_Tooltip_n_const_value_BdApi_findModuleByDisplayName_Tooltip_n_Object_defineProperty_this_Tooltip_n_value_n_configurable_true_n_n_return_value_n_nget_TooltipContainer_n_const_value_BdApi_findModuleByProps_TooltipContainer_TooltipContainer_n_Object_defineProperty_this_TooltipContainer_n_value_n_configurable_true_n_n_return_value_n_nget_TextInput_n_const_value_BdApi_findModuleByDisplayName_TextInput_n_Object_defineProperty_this_TextInput_n_value_n_configurable_true_n_n_return_value_n_nget_SlideIn_n_const_value_BdApi_findModuleByDisplayName_SlideIn_n_Object_defineProperty_this_SlideIn_n_value_n_configurable_true_n_n_return_value_n_nget_SettingsNotice_n_const_value_BdApi_findModuleByDisplayName_SettingsNotice_n_Object_defineProperty_this_SettingsNotice_n_value_n_configurable_true_n_n_return_value_n_nget_TransitionGroup_n_const_value_BdApi_findModuleByDisplayName_TransitionGroup_n_Object_defineProperty_this_TransitionGroup_n_value_n_configurable_true_n_n_return_value_n_nget_Button_n_const_value_BdApi_findModuleByProps_DropdownSizes_n_Object_defineProperty_this_Button_n_value_n_configurable_true_n_n_return_value_n_nget_Flex_n_const_value_BdApi_findModuleByDisplayName_Flex_n_Object_defineProperty_this_Flex_n_value_n_configurable_true_n_n_return_value_n_nget_Text_n_const_value_BdApi_findModuleByDisplayName_Text_n_Object_defineProperty_this_Text_n_value_n_configurable_true_n_n_return_value_n_namespaceObject.TooltipContainer, {
+						}, this.parseTime(this.format, lastMessage.date)) : errorMessage ? external_BdApi_React_default().createElement(external_get_Tooltip_n_const_value_BdApi_findModuleByDisplayName_Tooltip_n_Object_defineProperty_this_Tooltip_n_value_n_configurable_true_n_n_return_value_n_nget_TooltipContainer_n_const_value_BdApi_findModuleByProps_TooltipContainer_TooltipContainer_n_Object_defineProperty_this_TooltipContainer_n_value_n_configurable_true_n_n_return_value_n_nget_TextInput_n_const_value_BdApi_findModuleByDisplayName_TextInput_n_Object_defineProperty_this_TextInput_n_value_n_configurable_true_n_n_return_value_n_nget_SlideIn_n_const_value_BdApi_findModuleByDisplayName_SlideIn_n_Object_defineProperty_this_SlideIn_n_value_n_configurable_true_n_n_return_value_n_nget_SettingsNotice_n_const_value_BdApi_findModuleByDisplayName_SettingsNotice_n_Object_defineProperty_this_SettingsNotice_n_value_n_configurable_true_n_n_return_value_n_nget_TransitionGroup_n_const_value_BdApi_findModuleByDisplayName_TransitionGroup_n_Object_defineProperty_this_TransitionGroup_n_value_n_configurable_true_n_n_return_value_n_nget_Button_n_const_value_BdApi_findModuleByProps_DropdownSizes_n_Object_defineProperty_this_Button_n_value_n_configurable_true_n_n_return_value_n_nget_Flex_n_const_value_BdApi_findModuleByDisplayName_Flex_n_Object_defineProperty_this_Flex_n_value_n_configurable_true_n_n_return_value_n_nget_Text_n_const_value_BdApi_findModuleByDisplayName_Text_n_Object_defineProperty_this_Text_n_value_n_configurable_true_n_n_return_value_n_nget_Card_n_const_value_BdApi_findModuleByDisplayName_Card_n_Object_defineProperty_this_Card_n_value_n_configurable_true_n_n_return_value_n_namespaceObject.TooltipContainer, {
 							text: errorMessage
 						}, external_BdApi_React_default().createElement(error, {
 							className: dates.Z.errorIcon
-						})) : external_BdApi_React_default().createElement(external_get_Tooltip_n_const_value_BdApi_findModuleByDisplayName_Tooltip_n_Object_defineProperty_this_Tooltip_n_value_n_configurable_true_n_n_return_value_n_nget_TooltipContainer_n_const_value_BdApi_findModuleByProps_TooltipContainer_TooltipContainer_n_Object_defineProperty_this_TooltipContainer_n_value_n_configurable_true_n_n_return_value_n_nget_TextInput_n_const_value_BdApi_findModuleByDisplayName_TextInput_n_Object_defineProperty_this_TextInput_n_value_n_configurable_true_n_n_return_value_n_nget_SlideIn_n_const_value_BdApi_findModuleByDisplayName_SlideIn_n_Object_defineProperty_this_SlideIn_n_value_n_configurable_true_n_n_return_value_n_nget_SettingsNotice_n_const_value_BdApi_findModuleByDisplayName_SettingsNotice_n_Object_defineProperty_this_SettingsNotice_n_value_n_configurable_true_n_n_return_value_n_nget_TransitionGroup_n_const_value_BdApi_findModuleByDisplayName_TransitionGroup_n_Object_defineProperty_this_TransitionGroup_n_value_n_configurable_true_n_n_return_value_n_nget_Button_n_const_value_BdApi_findModuleByProps_DropdownSizes_n_Object_defineProperty_this_Button_n_value_n_configurable_true_n_n_return_value_n_nget_Flex_n_const_value_BdApi_findModuleByDisplayName_Flex_n_Object_defineProperty_this_Flex_n_value_n_configurable_true_n_n_return_value_n_nget_Text_n_const_value_BdApi_findModuleByDisplayName_Text_n_Object_defineProperty_this_Text_n_value_n_configurable_true_n_n_return_value_n_namespaceObject.TooltipContainer, {
+						})) : external_BdApi_React_default().createElement(external_get_Tooltip_n_const_value_BdApi_findModuleByDisplayName_Tooltip_n_Object_defineProperty_this_Tooltip_n_value_n_configurable_true_n_n_return_value_n_nget_TooltipContainer_n_const_value_BdApi_findModuleByProps_TooltipContainer_TooltipContainer_n_Object_defineProperty_this_TooltipContainer_n_value_n_configurable_true_n_n_return_value_n_nget_TextInput_n_const_value_BdApi_findModuleByDisplayName_TextInput_n_Object_defineProperty_this_TextInput_n_value_n_configurable_true_n_n_return_value_n_nget_SlideIn_n_const_value_BdApi_findModuleByDisplayName_SlideIn_n_Object_defineProperty_this_SlideIn_n_value_n_configurable_true_n_n_return_value_n_nget_SettingsNotice_n_const_value_BdApi_findModuleByDisplayName_SettingsNotice_n_Object_defineProperty_this_SettingsNotice_n_value_n_configurable_true_n_n_return_value_n_nget_TransitionGroup_n_const_value_BdApi_findModuleByDisplayName_TransitionGroup_n_Object_defineProperty_this_TransitionGroup_n_value_n_configurable_true_n_n_return_value_n_nget_Button_n_const_value_BdApi_findModuleByProps_DropdownSizes_n_Object_defineProperty_this_Button_n_value_n_configurable_true_n_n_return_value_n_nget_Flex_n_const_value_BdApi_findModuleByDisplayName_Flex_n_Object_defineProperty_this_Flex_n_value_n_configurable_true_n_n_return_value_n_nget_Text_n_const_value_BdApi_findModuleByDisplayName_Text_n_Object_defineProperty_this_Text_n_value_n_configurable_true_n_n_return_value_n_nget_Card_n_const_value_BdApi_findModuleByDisplayName_Card_n_Object_defineProperty_this_Card_n_value_n_configurable_true_n_n_return_value_n_namespaceObject.TooltipContainer, {
 							text: "Loading Last Message..."
 						}, Settings.get("useIcons", true) ? external_BdApi_React_default().createElement(cube, {
 							className: dates.Z.loading
@@ -1617,8 +1634,41 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				}, {
 					type: "icons"
 				}]
+			}, {
+				name: "Activity Icons",
+				icon: "GamePad",
+				items: [{
+					type: "switch",
+					name: "Enable Activity Icons",
+					note: null,
+					id: "activityIcons",
+					value: true
+				}, {
+					type: "radio",
+					name: "Activity Icon State",
+					note: "Replaces the activity icon in the activity text of the member list.",
+					id: "activityIconState",
+					value: 0,
+					disabled: false,
+					options: [{
+						name: "Replace with associated icon",
+						value: 0
+					}, {
+						name: "Don't do anything",
+						value: 1
+					}, {
+						name: "Hide it",
+						value: 2
+					}]
+				}, {
+					type: "switch",
+					name: "Show Gamepad",
+					note: "This shows a gamepad icon if an icon for the activity isn't available.",
+					id: "showGamepad",
+					value: true
+				}]
 			}];
-			var settings = __webpack_require__(561);
+			var settings = __webpack_require__(466);
 			function errorboundary_defineProperty(obj, key, value) {
 				if (key in obj) Object.defineProperty(obj, key, {
 					value,
@@ -1693,13 +1743,218 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				d: "M501.1 395.7L384 278.6c-23.1-23.1-57.6-27.6-85.4-13.9L192 158.1V96L64 0 0 64l96 128h62.1l106.6 106.6c-13.6 27.8-9.2 62.3 13.9 85.4l117.1 117.1c14.6 14.6 38.2 14.6 52.7 0l52.7-52.7c14.5-14.6 14.5-38.2 0-52.7zM331.7 225c28.3 0 54.9 11 74.9 31l19.4 19.4c15.8-6.9 30.8-16.5 43.8-29.5 37.1-37.1 49.7-89.3 37.9-136.7-2.2-9-13.5-12.1-20.1-5.5l-74.4 74.4-67.9-11.3L334 98.9l74.4-74.4c6.6-6.6 3.4-17.9-5.7-20.2-47.4-11.7-99.6.9-136.6 37.9-28.5 28.5-41.9 66.1-41.2 103.6l82.1 82.1c8.1-1.9 16.5-2.9 24.7-2.9zm-103.9 82l-56.7-56.7L18.7 402.8c-25 25-25 65.5 0 90.5s65.5 25 90.5 0l123.6-123.6c-7.6-19.9-9.9-41.6-5-62.7zM64 472c-13.2 0-24-10.8-24-24 0-13.3 10.7-24 24-24s24 10.7 24 24c0 13.2-10.7 24-24 24z"
 			}));
 			var React = __webpack_require__(698);
+			function spotify_extends() {
+				spotify_extends = Object.assign || function(target) {
+					for (var i = 1; i < arguments.length; i++) {
+						var source = arguments[i];
+						for (var key in source)
+							if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
+					}
+					return target;
+				};
+				return spotify_extends.apply(this, arguments);
+			}
+			const spotify = props => React.createElement("svg", spotify_extends({}, props, {
+				width: "20",
+				height: "20",
+				viewBox: "0 0 65 65"
+			}), React.createElement("path", {
+				fill: "#1ED760",
+				d: "M32.5,0.5 C14.826888,0.5 0.5,14.826888 0.5,32.5 C0.5,50.173112 14.826888,64.5 32.5,64.5 C50.173112,64.5 64.5,50.173112 64.5,32.5 C64.5,14.826888 50.173112,0.5 32.5,0.5 Z M47.18,46.66 C46.6031412,47.595466 45.3795381,47.8902025 44.44,47.32 C36.93,42.73 27.44,41.69 16.33,44.23 C15.6145818,44.4464575 14.8381683,44.245926 14.3170501,43.7100969 C13.7959319,43.1742677 13.6170868,42.3925738 13.8533716,41.6834571 C14.0896564,40.9743403 14.7016337,40.4561564 15.44,40.34 C27.63,37.55 38.09,38.75 46.52,43.91 C47.4615306,44.487221 47.7569974,45.7183323 47.18,46.66 Z M51.1,37.95 C50.3770773,39.1205793 48.8441907,39.487042 47.67,38.77 C39.07,33.48 25.96,31.95 15.78,35.04 C14.9279216,35.2990176 14.0023844,35.0837812 13.3520294,34.4753684 C12.7016744,33.8669556 12.425306,32.9577988 12.6270294,32.0903684 C12.8287528,31.2229381 13.4779216,30.5290176 14.33,30.27 C25.95,26.74 40.4,28.45 50.28,34.52 C51.445766,35.2424019 51.8079122,36.7714637 51.09,37.94 L51.1,37.95 Z M51.44,28.88 C41.13,22.75 24.11,22.19 14.26,25.18 C13.2140022,25.5702637 12.0378133,25.3474036 11.207084,24.6015444 C10.3763547,23.8556852 10.0285164,22.7102178 10.3042349,21.6283692 C10.5799535,20.5465206 11.4336155,19.707266 12.52,19.45 C23.82,16.02 42.61,16.68 54.52,23.73 C55.8401426,24.6185116 56.2368626,26.3831995 55.4240137,27.7512295 C54.6111649,29.1192595 52.8715856,29.6146124 51.46,28.88 L51.44,28.88 Z"
+			}));
+			var twitch_React = __webpack_require__(698);
+			function twitch_extends() {
+				twitch_extends = Object.assign || function(target) {
+					for (var i = 1; i < arguments.length; i++) {
+						var source = arguments[i];
+						for (var key in source)
+							if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
+					}
+					return target;
+				};
+				return twitch_extends.apply(this, arguments);
+			}
+			const twitch = props => twitch_React.createElement("svg", twitch_extends({
+				width: "20",
+				height: "20",
+				viewBox: "0 0 128 128"
+			}, props), twitch_React.createElement("defs", null, twitch_React.createElement("path", {
+				id: "color-a",
+				d: "M8.5542826,0 L0,22 L0,111.8 L30.7954173,111.8 L30.7954173,128 L48.1052598,128 L64.408716,111.8 L89.3670935,111.8 L122.980392,78.4 L122.980392,0 L8.5542826,0 Z M111.406951,72.6 L92.0843362,91.8 L61.2889188,91.8 L44.9854626,108 L44.9854626,91.8 L19.020699,91.8 L19.020699,11.4 L111.406951,11.4 L111.406951,72.6 Z M92.2856134,33.4 L92.2856134,66.8 L80.8128109,66.8 L80.8128109,33.4 L92.2856134,33.4 Z M61.4901961,33.4 L61.4901961,66.8 L50.0173935,66.8 L50.0173935,33.4 L61.4901961,33.4 Z"
+			})), twitch_React.createElement("g", {
+				fill: "none",
+				"fill-rule": "evenodd",
+				transform: "translate(3)"
+			}, twitch_React.createElement("polygon", {
+				fill: "#FFF",
+				"fill-rule": "nonzero",
+				points: "110.431 72.512 91.272 91.717 60.736 91.717 44.57 107.922 44.57 91.717 18.824 91.717 18.824 11.294 110.431 11.294"
+			}), twitch_React.createElement("mask", {
+				id: "color-b",
+				fill: "#fff"
+			}, twitch_React.createElement("use", {
+				xlinkHref: "#color-a"
+			})), twitch_React.createElement("use", {
+				fill: "#563194",
+				"fill-rule": "nonzero",
+				xlinkHref: "#color-a"
+			})));
+			var valorant_React = __webpack_require__(698);
+			function valorant_extends() {
+				valorant_extends = Object.assign || function(target) {
+					for (var i = 1; i < arguments.length; i++) {
+						var source = arguments[i];
+						for (var key in source)
+							if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
+					}
+					return target;
+				};
+				return valorant_extends.apply(this, arguments);
+			}
+			const valorant = props => valorant_React.createElement("svg", valorant_extends({
+				width: "20",
+				height: "20",
+				viewBox: "0 0 216.000000 216.000000"
+			}, props), valorant_React.createElement("g", {
+				transform: "translate(0.000000,216.000000) scale(0.100000,-0.100000)",
+				fill: "#000000",
+				stroke: "none"
+			}, valorant_React.createElement("path", {
+				d: "M0 1080 l0 -1080 1080 0 1080 0 0 1080 0 1080 -1080 0 -1080 0 0-1080z"
+			})));
+			var youtube_React = __webpack_require__(698);
+			function youtube_extends() {
+				youtube_extends = Object.assign || function(target) {
+					for (var i = 1; i < arguments.length; i++) {
+						var source = arguments[i];
+						for (var key in source)
+							if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
+					}
+					return target;
+				};
+				return youtube_extends.apply(this, arguments);
+			}
+			const youtube = props => youtube_React.createElement("svg", youtube_extends({
+				height: "20",
+				width: "20",
+				viewBox: "0 0 576 512"
+			}, props), youtube_React.createElement("path", {
+				fill: "#FF1A1A",
+				d: "M549.655 124.083c-6.281-23.65-24.787-42.276-48.284-48.597C458.781 64 288 64 288 64S117.22 64 74.629 75.486c-23.497 6.322-42.003 24.947-48.284 48.597-11.412 42.867-11.412 132.305-11.412 132.305s0 89.438 11.412 132.305c6.281 23.65 24.787 41.5 48.284 47.821C117.22 448 288 448 288 448s170.78 0 213.371-11.486c23.497-6.321 42.003-24.171 48.284-47.821 11.412-42.867 11.412-132.305 11.412-132.305s0-89.438-11.412-132.305zm-317.51 213.508V175.185l142.739 81.205-142.739 81.201z"
+			}));
+			var gamepad_React = __webpack_require__(698);
+			function gamepad_extends() {
+				gamepad_extends = Object.assign || function(target) {
+					for (var i = 1; i < arguments.length; i++) {
+						var source = arguments[i];
+						for (var key in source)
+							if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
+					}
+					return target;
+				};
+				return gamepad_extends.apply(this, arguments);
+			}
+			const gamepad = props => gamepad_React.createElement("svg", gamepad_extends({
+				width: "20",
+				height: "20",
+				viewBox: "0 0 24 24"
+			}, props), gamepad_React.createElement("g", {
+				fill: "none",
+				"fill-rule": "evenodd"
+			}, gamepad_React.createElement("path", {
+				fill: "currentColor",
+				d: "M5.79335761,5 L18.2066424,5 C19.7805584,5 21.0868816,6.21634264 21.1990185,7.78625885 L21.8575059,17.0050826 C21.9307825,18.0309548 21.1585512,18.9219909 20.132679,18.9952675 C20.088523,18.9984215 20.0442685,19 20,19 C18.8245863,19 17.8000084,18.2000338 17.5149287,17.059715 L17,15 L7,15 L6.48507125,17.059715 C6.19999155,18.2000338 5.1754137,19 4,19 C2.97151413,19 2.13776159,18.1662475 2.13776159,17.1377616 C2.13776159,17.0934931 2.1393401,17.0492386 2.1424941,17.0050826 L2.80098151,7.78625885 C2.91311838,6.21634264 4.21944161,5 5.79335761,5 Z M14.5,10 C15.3284271,10 16,9.32842712 16,8.5 C16,7.67157288 15.3284271,7 14.5,7 C13.6715729,7 13,7.67157288 13,8.5 C13,9.32842712 13.6715729,10 14.5,10 Z M18.5,13 C19.3284271,13 20,12.3284271 20,11.5 C20,10.6715729 19.3284271,10 18.5,10 C17.6715729,10 17,10.6715729 17,11.5 C17,12.3284271 17.6715729,13 18.5,13 Z M6,9 L4,9 L4,11 L6,11 L6,13 L8,13 L8,11 L10,11 L10,9 L8,9 L8,7 L6,7 L6,9 Z"
+			}), gamepad_React.createElement("rect", {
+				width: "24",
+				height: "24"
+			})));
+			var googleChrome_React = __webpack_require__(698);
+			function googleChrome_extends() {
+				googleChrome_extends = Object.assign || function(target) {
+					for (var i = 1; i < arguments.length; i++) {
+						var source = arguments[i];
+						for (var key in source)
+							if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
+					}
+					return target;
+				};
+				return googleChrome_extends.apply(this, arguments);
+			}
+			const googleChrome = props => googleChrome_React.createElement("svg", googleChrome_extends({
+				width: "20",
+				height: "20",
+				viewBox: "0 0 48 48"
+			}, props), googleChrome_React.createElement("path", {
+				fill: "#4caf50",
+				d: "M44,24c0,11.044-8.956,20-20,20S4,35.044,4,24S12.956,4,24,4S44,12.956,44,24z"
+			}), googleChrome_React.createElement("path", {
+				fill: "#ffc107",
+				d: "M24,4v20l8,4l-8.843,16c0.317,0,0.526,0,0.843,0c11.053,0,20-8.947,20-20S35.053,4,24,4z"
+			}), googleChrome_React.createElement("path", {
+				fill: "#4caf50",
+				d: "M44,24c0,11.044-8.956,20-20,20S4,35.044,4,24S12.956,4,24,4S44,12.956,44,24z"
+			}), googleChrome_React.createElement("path", {
+				fill: "#ffc107",
+				d: "M24,4v20l8,4l-8.843,16c0.317,0,0.526,0,0.843,0c11.053,0,20-8.947,20-20S35.053,4,24,4z"
+			}), googleChrome_React.createElement("path", {
+				fill: "#f44336",
+				d: "M41.84,15H24v13l-3-1L7.16,13.26H7.14C10.68,7.69,16.91,4,24,4C31.8,4,38.55,8.48,41.84,15z"
+			}), googleChrome_React.createElement("path", {
+				fill: "#dd2c00",
+				d: "M7.158,13.264l8.843,14.862L21,27L7.158,13.264z"
+			}), googleChrome_React.createElement("path", {
+				fill: "#558b2f",
+				d: "M23.157,44l8.934-16.059L28,25L23.157,44z"
+			}), googleChrome_React.createElement("path", {
+				fill: "#f9a825",
+				d: "M41.865,15H24l-1.579,4.58L41.865,15z"
+			}), googleChrome_React.createElement("path", {
+				fill: "#fff",
+				d: "M33,24c0,4.969-4.031,9-9,9s-9-4.031-9-9s4.031-9,9-9S33,19.031,33,24z"
+			}), googleChrome_React.createElement("path", {
+				fill: "#2196f3",
+				d: "M31,24c0,3.867-3.133,7-7,7s-7-3.133-7-7s3.133-7,7-7S31,20.133,31,24z"
+			}));
+			var headphones_React = __webpack_require__(698);
+			function headphones_extends() {
+				headphones_extends = Object.assign || function(target) {
+					for (var i = 1; i < arguments.length; i++) {
+						var source = arguments[i];
+						for (var key in source)
+							if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
+					}
+					return target;
+				};
+				return headphones_extends.apply(this, arguments);
+			}
+			const headphones = props => headphones_React.createElement("svg", headphones_extends({
+				width: "20",
+				height: "20",
+				viewBox: "0 0 24 24"
+			}, props), headphones_React.createElement("svg", {
+				width: "24",
+				height: "24",
+				viewBox: "0 0 24 24"
+			}, headphones_React.createElement("path", {
+				d: "M12 2.00305C6.486 2.00305 2 6.48805 2 12.0031V20.0031C2 21.1071 2.895 22.0031 4 22.0031H6C7.104 22.0031 8 21.1071 8 20.0031V17.0031C8 15.8991 7.104 15.0031 6 15.0031H4V12.0031C4 7.59105 7.589 4.00305 12 4.00305C16.411 4.00305 20 7.59105 20 12.0031V15.0031H18C16.896 15.0031 16 15.8991 16 17.0031V20.0031C16 21.1071 16.896 22.0031 18 22.0031H20C21.104 22.0031 22 21.1071 22 20.0031V12.0031C22 6.48805 17.514 2.00305 12 2.00305Z",
+				fill: "currentColor"
+			})));
+			var icons_React = __webpack_require__(698);
 			const Icons = {
 				Cake: cake,
 				Calendar: calendar,
 				Error: error,
 				TextBubble: textbubble,
 				Chain: chain,
-				Wrench: wrench
+				Wrench: wrench,
+				Flowerstar: icons_flowerstar,
+				Spotify: spotify,
+				Twitch: twitch,
+				Valorant: valorant,
+				YouTube: youtube,
+				GamePad: gamepad,
+				GoogleChrome: googleChrome,
+				Headphones: headphones
 			};
 			function noop() {
 				return null;
@@ -1709,7 +1964,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				...props
 			}) {
 				const IconComponent = Icons[name] ?? noop;
-				return React.createElement(IconComponent, props);
+				return icons_React.createElement(IconComponent, props);
 			}
 			function settings_extends() {
 				settings_extends = Object.assign || function(target) {
@@ -1765,7 +2020,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				const shownIcons = Settings.get("shownConnections", Object.fromEntries(external_BdApi_findModuleByProps_get_isSupported_map_default().map((e => [e.type, true]))));
 				return external_BdApi_React_default().createElement(settings_Flex, {
 					className: settings.Z.icons
-				}, external_BdApi_findModuleByProps_get_isSupported_map_default().filter((e => e.enabled)).map((k => external_BdApi_React_default().createElement(external_get_Tooltip_n_const_value_BdApi_findModuleByDisplayName_Tooltip_n_Object_defineProperty_this_Tooltip_n_value_n_configurable_true_n_n_return_value_n_nget_TooltipContainer_n_const_value_BdApi_findModuleByProps_TooltipContainer_TooltipContainer_n_Object_defineProperty_this_TooltipContainer_n_value_n_configurable_true_n_n_return_value_n_nget_TextInput_n_const_value_BdApi_findModuleByDisplayName_TextInput_n_Object_defineProperty_this_TextInput_n_value_n_configurable_true_n_n_return_value_n_nget_SlideIn_n_const_value_BdApi_findModuleByDisplayName_SlideIn_n_Object_defineProperty_this_SlideIn_n_value_n_configurable_true_n_n_return_value_n_nget_SettingsNotice_n_const_value_BdApi_findModuleByDisplayName_SettingsNotice_n_Object_defineProperty_this_SettingsNotice_n_value_n_configurable_true_n_n_return_value_n_nget_TransitionGroup_n_const_value_BdApi_findModuleByDisplayName_TransitionGroup_n_Object_defineProperty_this_TransitionGroup_n_value_n_configurable_true_n_n_return_value_n_nget_Button_n_const_value_BdApi_findModuleByProps_DropdownSizes_n_Object_defineProperty_this_Button_n_value_n_configurable_true_n_n_return_value_n_nget_Flex_n_const_value_BdApi_findModuleByDisplayName_Flex_n_Object_defineProperty_this_Flex_n_value_n_configurable_true_n_n_return_value_n_nget_Text_n_const_value_BdApi_findModuleByDisplayName_Text_n_Object_defineProperty_this_Text_n_value_n_configurable_true_n_n_return_value_n_namespaceObject.TooltipContainer, {
+				}, external_BdApi_findModuleByProps_get_isSupported_map_default().filter((e => e.enabled)).map((k => external_BdApi_React_default().createElement(external_get_Tooltip_n_const_value_BdApi_findModuleByDisplayName_Tooltip_n_Object_defineProperty_this_Tooltip_n_value_n_configurable_true_n_n_return_value_n_nget_TooltipContainer_n_const_value_BdApi_findModuleByProps_TooltipContainer_TooltipContainer_n_Object_defineProperty_this_TooltipContainer_n_value_n_configurable_true_n_n_return_value_n_nget_TextInput_n_const_value_BdApi_findModuleByDisplayName_TextInput_n_Object_defineProperty_this_TextInput_n_value_n_configurable_true_n_n_return_value_n_nget_SlideIn_n_const_value_BdApi_findModuleByDisplayName_SlideIn_n_Object_defineProperty_this_SlideIn_n_value_n_configurable_true_n_n_return_value_n_nget_SettingsNotice_n_const_value_BdApi_findModuleByDisplayName_SettingsNotice_n_Object_defineProperty_this_SettingsNotice_n_value_n_configurable_true_n_n_return_value_n_nget_TransitionGroup_n_const_value_BdApi_findModuleByDisplayName_TransitionGroup_n_Object_defineProperty_this_TransitionGroup_n_value_n_configurable_true_n_n_return_value_n_nget_Button_n_const_value_BdApi_findModuleByProps_DropdownSizes_n_Object_defineProperty_this_Button_n_value_n_configurable_true_n_n_return_value_n_nget_Flex_n_const_value_BdApi_findModuleByDisplayName_Flex_n_Object_defineProperty_this_Flex_n_value_n_configurable_true_n_n_return_value_n_nget_Text_n_const_value_BdApi_findModuleByDisplayName_Text_n_Object_defineProperty_this_Text_n_value_n_configurable_true_n_n_return_value_n_nget_Card_n_const_value_BdApi_findModuleByDisplayName_Card_n_Object_defineProperty_this_Card_n_value_n_configurable_true_n_n_return_value_n_namespaceObject.TooltipContainer, {
 					className: settings.Z.settingsBadgeContainer,
 					text: shownIcons[k.type] ? "Enabled" : "Disabled",
 					hideOnClick: false
@@ -1809,12 +2064,21 @@ function buildPlugin([BasePlugin, PluginApi]) {
 							className: settings.Z.replacementVariable
 						}, external_BdApi_React_default().createElement("b", null, setting.prefix), external_BdApi_React_default().createElement("span", null, setting.description));
 					case "radio":
-						return external_BdApi_React_default().createElement(RadioGroup, settings_extends({}, setting, {
+						const {
+							name, note
+						} = setting;
+						delete setting.name;
+						delete setting.note;
+						return external_BdApi_React_default().createElement(external_BdApi_findModuleByProps_FormItem_namespaceObject.FormItem, {
+							title: name
+						}, note && external_BdApi_React_default().createElement(external_BdApi_findModuleByProps_FormItem_namespaceObject.FormText, {
+							type: "description"
+						}, note), external_BdApi_React_default().createElement(RadioGroup, settings_extends({}, setting, {
 							value: Settings.get(setting.id, setting.value),
 							onChange: value => {
 								Settings.set(setting.id, value);
 							}
-						}), setting.name);
+						})));
 					case "text":
 						return external_BdApi_React_default().createElement(TextItem, settings_extends({}, setting, {
 							value: Settings.get(setting.id, setting.value),
@@ -1871,8 +2135,8 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					}],
 					hasNextSection: true,
 					icon: () => external_BdApi_React_default().createElement(Icon, {
-						name: page.icon,
-						fill: "var(--interactive-normal)"
+						className: settings.Z.pageIcon,
+						name: page.icon
 					}),
 					name: page.name,
 					onButtonClick: () => setActiveItem(index)
@@ -1880,6 +2144,67 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			}
 			const external_BasePlugin_namespaceObject = BasePlugin;
 			var external_BasePlugin_default = __webpack_require__.n(external_BasePlugin_namespaceObject);
+			var components_activity = __webpack_require__(686);
+			var activity_React = __webpack_require__(698);
+			const byName = [
+				[/spotify/i, spotify],
+				[/youtube/i, () => activity_React.createElement("img", {
+					src: external_BdApi_findModuleByProps_get_isSupported_map_default().get("youtube").icon.color,
+					width: "20",
+					height: "20"
+				})],
+				[/twitch/i, twitch],
+				[/google\schrome/i, googleChrome]
+			];
+			function ActivityIcon({
+				activity
+			}) {
+				const {
+					game,
+					showGamepad
+				} = (0, external_Object_assign_BdApi_findModuleByProps_useStateFromStores_default_BdApi_findModuleByProps_useStateFromStores_namespaceObject.useStateFromStores)([external_get_Messages_n_const_value_BdApi_findModuleByProps_getMessage_getMessages_n_Object_defineProperty_this_Messages_n_value_n_configurable_true_n_n_return_value_n_nget_Channels_n_const_value_BdApi_findModuleByProps_getChannel_n_Object_defineProperty_this_Channels_n_value_n_configurable_true_n_n_return_value_n_nget_Guilds_n_const_value_BdApi_findModuleByProps_getGuild_n_Object_defineProperty_this_Guilds_n_value_n_configurable_true_n_n_return_value_n_nget_SelectedGuilds_n_const_value_BdApi_findModuleByProps_getGuildId_getLastSelectedGuildId_n_Object_defineProperty_this_SelectedGuilds_n_value_n_configurable_true_n_n_return_value_n_nget_SelectedChannels_n_const_value_BdApi_findModuleByProps_getChannelId_getLastSelectedChannelId_n_Object_defineProperty_this_SelectedChannels_n_value_n_configurable_true_n_n_return_value_n_nget_Info_n_const_value_BdApi_findModuleByProps_getCurrentUser_n_Object_defineProperty_this_Info_n_value_n_configurable_true_n_n_return_value_n_nget_Status_n_const_value_BdApi_findModuleByProps_getStatus_n_Object_defineProperty_this_Status_n_value_n_configurable_true_n_n_return_value_n_nget_Users_n_const_value_BdApi_findModuleByProps_getUser_n_Object_defineProperty_this_Users_n_value_n_configurable_true_n_n_return_value_n_nget_Settings_n_const_value_BdApi_findModuleByProps_afkTimeout_status_n_Object_defineProperty_this_Settings_n_value_n_configurable_true_n_n_return_value_n_nget_UserProfile_n_const_value_BdApi_findModuleByProps_getUserProfile_n_Object_defineProperty_this_UserProfile_n_value_n_configurable_true_n_n_return_value_n_nget_Members_n_const_value_BdApi_findModuleByProps_getMember_n_Object_defineProperty_this_Members_n_value_n_configurable_true_n_n_return_value_n_nget_Activities_n_const_value_BdApi_findModuleByProps_getActivities_n_Object_defineProperty_this_Activities_n_value_n_configurable_true_n_n_return_value_n_nget_Games_n_const_value_BdApi_findModuleByProps_getGame_n_Object_defineProperty_this_Games_n_value_n_configurable_true_n_n_return_value_n_namespaceObject.Games, Settings], (() => ({
+					showGamepad: Settings.get("showGamepad", true),
+					game: external_get_Messages_n_const_value_BdApi_findModuleByProps_getMessage_getMessages_n_Object_defineProperty_this_Messages_n_value_n_configurable_true_n_n_return_value_n_nget_Channels_n_const_value_BdApi_findModuleByProps_getChannel_n_Object_defineProperty_this_Channels_n_value_n_configurable_true_n_n_return_value_n_nget_Guilds_n_const_value_BdApi_findModuleByProps_getGuild_n_Object_defineProperty_this_Guilds_n_value_n_configurable_true_n_n_return_value_n_nget_SelectedGuilds_n_const_value_BdApi_findModuleByProps_getGuildId_getLastSelectedGuildId_n_Object_defineProperty_this_SelectedGuilds_n_value_n_configurable_true_n_n_return_value_n_nget_SelectedChannels_n_const_value_BdApi_findModuleByProps_getChannelId_getLastSelectedChannelId_n_Object_defineProperty_this_SelectedChannels_n_value_n_configurable_true_n_n_return_value_n_nget_Info_n_const_value_BdApi_findModuleByProps_getCurrentUser_n_Object_defineProperty_this_Info_n_value_n_configurable_true_n_n_return_value_n_nget_Status_n_const_value_BdApi_findModuleByProps_getStatus_n_Object_defineProperty_this_Status_n_value_n_configurable_true_n_n_return_value_n_nget_Users_n_const_value_BdApi_findModuleByProps_getUser_n_Object_defineProperty_this_Users_n_value_n_configurable_true_n_n_return_value_n_nget_Settings_n_const_value_BdApi_findModuleByProps_afkTimeout_status_n_Object_defineProperty_this_Settings_n_value_n_configurable_true_n_n_return_value_n_nget_UserProfile_n_const_value_BdApi_findModuleByProps_getUserProfile_n_Object_defineProperty_this_UserProfile_n_value_n_configurable_true_n_n_return_value_n_nget_Members_n_const_value_BdApi_findModuleByProps_getMember_n_Object_defineProperty_this_Members_n_value_n_configurable_true_n_n_return_value_n_nget_Activities_n_const_value_BdApi_findModuleByProps_getActivities_n_Object_defineProperty_this_Activities_n_value_n_configurable_true_n_n_return_value_n_nget_Games_n_const_value_BdApi_findModuleByProps_getGame_n_Object_defineProperty_this_Games_n_value_n_configurable_true_n_n_return_value_n_namespaceObject.Games.getGame(activity.application_id)
+				})), null, _.isEqual);
+				const icon = (0, external_BdApi_React_.useMemo)((() => byName.find((([regex]) => regex.test(activity.name || activity.id)))), [game]);
+				if (icon) {
+					const Icon = icon[1];
+					return activity_React.createElement(Icon, null);
+				}
+				if (game && game.getIconURL()) return activity_React.createElement("img", {
+					src: game.getIconURL(),
+					width: "20",
+					height: "20"
+				});
+				return showGamepad ? activity_React.createElement(gamepad, null) : null;
+			}
+			function noopNull() {
+				return null;
+			}
+			function ActivitiesFilter(activity, index, target) {
+				if (4 === (null === activity || void 0 === activity ? void 0 : activity.type)) return false;
+				return target.indexOf(activity) === index;
+			}
+			function Activity({
+				user
+			}) {
+				const {
+					activity,
+					showActivityIcons
+				} = (0, external_Object_assign_BdApi_findModuleByProps_useStateFromStores_default_BdApi_findModuleByProps_useStateFromStores_namespaceObject.useStateFromStores)([external_get_Messages_n_const_value_BdApi_findModuleByProps_getMessage_getMessages_n_Object_defineProperty_this_Messages_n_value_n_configurable_true_n_n_return_value_n_nget_Channels_n_const_value_BdApi_findModuleByProps_getChannel_n_Object_defineProperty_this_Channels_n_value_n_configurable_true_n_n_return_value_n_nget_Guilds_n_const_value_BdApi_findModuleByProps_getGuild_n_Object_defineProperty_this_Guilds_n_value_n_configurable_true_n_n_return_value_n_nget_SelectedGuilds_n_const_value_BdApi_findModuleByProps_getGuildId_getLastSelectedGuildId_n_Object_defineProperty_this_SelectedGuilds_n_value_n_configurable_true_n_n_return_value_n_nget_SelectedChannels_n_const_value_BdApi_findModuleByProps_getChannelId_getLastSelectedChannelId_n_Object_defineProperty_this_SelectedChannels_n_value_n_configurable_true_n_n_return_value_n_nget_Info_n_const_value_BdApi_findModuleByProps_getCurrentUser_n_Object_defineProperty_this_Info_n_value_n_configurable_true_n_n_return_value_n_nget_Status_n_const_value_BdApi_findModuleByProps_getStatus_n_Object_defineProperty_this_Status_n_value_n_configurable_true_n_n_return_value_n_nget_Users_n_const_value_BdApi_findModuleByProps_getUser_n_Object_defineProperty_this_Users_n_value_n_configurable_true_n_n_return_value_n_nget_Settings_n_const_value_BdApi_findModuleByProps_afkTimeout_status_n_Object_defineProperty_this_Settings_n_value_n_configurable_true_n_n_return_value_n_nget_UserProfile_n_const_value_BdApi_findModuleByProps_getUserProfile_n_Object_defineProperty_this_UserProfile_n_value_n_configurable_true_n_n_return_value_n_nget_Members_n_const_value_BdApi_findModuleByProps_getMember_n_Object_defineProperty_this_Members_n_value_n_configurable_true_n_n_return_value_n_nget_Activities_n_const_value_BdApi_findModuleByProps_getActivities_n_Object_defineProperty_this_Activities_n_value_n_configurable_true_n_n_return_value_n_nget_Games_n_const_value_BdApi_findModuleByProps_getGame_n_Object_defineProperty_this_Games_n_value_n_configurable_true_n_n_return_value_n_namespaceObject.Activities, Settings], (() => ({
+					activity: external_get_Messages_n_const_value_BdApi_findModuleByProps_getMessage_getMessages_n_Object_defineProperty_this_Messages_n_value_n_configurable_true_n_n_return_value_n_nget_Channels_n_const_value_BdApi_findModuleByProps_getChannel_n_Object_defineProperty_this_Channels_n_value_n_configurable_true_n_n_return_value_n_nget_Guilds_n_const_value_BdApi_findModuleByProps_getGuild_n_Object_defineProperty_this_Guilds_n_value_n_configurable_true_n_n_return_value_n_nget_SelectedGuilds_n_const_value_BdApi_findModuleByProps_getGuildId_getLastSelectedGuildId_n_Object_defineProperty_this_SelectedGuilds_n_value_n_configurable_true_n_n_return_value_n_nget_SelectedChannels_n_const_value_BdApi_findModuleByProps_getChannelId_getLastSelectedChannelId_n_Object_defineProperty_this_SelectedChannels_n_value_n_configurable_true_n_n_return_value_n_nget_Info_n_const_value_BdApi_findModuleByProps_getCurrentUser_n_Object_defineProperty_this_Info_n_value_n_configurable_true_n_n_return_value_n_nget_Status_n_const_value_BdApi_findModuleByProps_getStatus_n_Object_defineProperty_this_Status_n_value_n_configurable_true_n_n_return_value_n_nget_Users_n_const_value_BdApi_findModuleByProps_getUser_n_Object_defineProperty_this_Users_n_value_n_configurable_true_n_n_return_value_n_nget_Settings_n_const_value_BdApi_findModuleByProps_afkTimeout_status_n_Object_defineProperty_this_Settings_n_value_n_configurable_true_n_n_return_value_n_nget_UserProfile_n_const_value_BdApi_findModuleByProps_getUserProfile_n_Object_defineProperty_this_UserProfile_n_value_n_configurable_true_n_n_return_value_n_nget_Members_n_const_value_BdApi_findModuleByProps_getMember_n_Object_defineProperty_this_Members_n_value_n_configurable_true_n_n_return_value_n_nget_Activities_n_const_value_BdApi_findModuleByProps_getActivities_n_Object_defineProperty_this_Activities_n_value_n_configurable_true_n_n_return_value_n_nget_Games_n_const_value_BdApi_findModuleByProps_getGame_n_Object_defineProperty_this_Games_n_value_n_configurable_true_n_n_return_value_n_namespaceObject.Activities.getActivities(user.id).filter(ActivitiesFilter)[0],
+					showActivityIcons: Settings.get("activityIcons", true)
+				})), null, _.isEqual);
+				if (!showActivityIcons || !activity) return null;
+				return activity_React.createElement(external_get_Tooltip_n_const_value_BdApi_findModuleByDisplayName_Tooltip_n_Object_defineProperty_this_Tooltip_n_value_n_configurable_true_n_n_return_value_n_nget_TooltipContainer_n_const_value_BdApi_findModuleByProps_TooltipContainer_TooltipContainer_n_Object_defineProperty_this_TooltipContainer_n_value_n_configurable_true_n_n_return_value_n_nget_TextInput_n_const_value_BdApi_findModuleByDisplayName_TextInput_n_Object_defineProperty_this_TextInput_n_value_n_configurable_true_n_n_return_value_n_nget_SlideIn_n_const_value_BdApi_findModuleByDisplayName_SlideIn_n_Object_defineProperty_this_SlideIn_n_value_n_configurable_true_n_n_return_value_n_nget_SettingsNotice_n_const_value_BdApi_findModuleByDisplayName_SettingsNotice_n_Object_defineProperty_this_SettingsNotice_n_value_n_configurable_true_n_n_return_value_n_nget_TransitionGroup_n_const_value_BdApi_findModuleByDisplayName_TransitionGroup_n_Object_defineProperty_this_TransitionGroup_n_value_n_configurable_true_n_n_return_value_n_nget_Button_n_const_value_BdApi_findModuleByProps_DropdownSizes_n_Object_defineProperty_this_Button_n_value_n_configurable_true_n_n_return_value_n_nget_Flex_n_const_value_BdApi_findModuleByDisplayName_Flex_n_Object_defineProperty_this_Flex_n_value_n_configurable_true_n_n_return_value_n_nget_Text_n_const_value_BdApi_findModuleByDisplayName_Text_n_Object_defineProperty_this_Text_n_value_n_configurable_true_n_n_return_value_n_nget_Card_n_const_value_BdApi_findModuleByDisplayName_Card_n_Object_defineProperty_this_Card_n_value_n_configurable_true_n_n_return_value_n_namespaceObject.TooltipContainer, {
+					text: activity.name,
+					className: components_activity.Z.container,
+					position: "left"
+				}, activity_React.createElement(ActivityIcon, {
+					className: components_activity.Z.icon,
+					activity
+				}));
+			}
 			function UserDetails_defineProperty(obj, key, value) {
 				if (key in obj) Object.defineProperty(obj, key, {
 					value,
@@ -1904,71 +2229,30 @@ function buildPlugin([BasePlugin, PluginApi]) {
 							this.cancelled = true;
 						}
 					});
-					UserDetails_defineProperty(this, "onMessage", (({
-						channelId,
-						message
-					}) => {
-						try {
-							const roomId = message.guild_id ? message.guild_id : channelId;
-							if (!this.lastMessageApi.cache[roomId]) this.lastMessageApi.cache[roomId] = {};
-							this.lastMessageApi.cache[roomId][message.author.id] = {
-								data: {
-									body: {
-										messages: [
-											[{
-												...message,
-												hit: true
-											}]
-										]
-									}
-								},
-								fetch: Date.now()
-							};
-						} catch (error) {
-							external_PluginApi_namespaceObject.Logger.error(error);
-						}
-					}));
-					UserDetails_defineProperty(this, "onMessageDelete", (({
-						channelId,
-						messageId
-					}) => {
-						try {
-							if (!this.lastMessageApi.cache[channelId]) return;
-							const userIds = Object.keys(this.lastMessageApi.cache[channelId]);
-							for (const userId of userIds) {
-								var _chunk$data, _chunk$data$body;
-								const chunk = this.lastMessageApi.cache[channelId][userId];
-								const index = null === chunk || void 0 === chunk ? void 0 : null === (_chunk$data = chunk.data) || void 0 === _chunk$data ? void 0 : null === (_chunk$data$body = _chunk$data.body) || void 0 === _chunk$data$body ? void 0 : _chunk$data$body.messages.findIndex((e => {
-									var _e$;
-									return (null === e || void 0 === e ? void 0 : null === (_e$ = e[0]) || void 0 === _e$ ? void 0 : _e$.id) === messageId;
-								}));
-								if (~index) chunk.data.body.messages.splice(index, 1);
-							}
-						} catch (error) {
-							external_PluginApi_namespaceObject.Logger.error("Error in MessageDelete event:\n", error);
-						}
-					}));
 				}
 				getSettingsPanel() {
-					const ConnectedSettings = Settings.connectStore(SettingsPanel);
-					return external_BdApi_React_default().createElement(ConnectedSettings, null);
+					return external_BdApi_React_default().createElement(SettingsPanel, null);
 				}
 				onStart() {
 					external_n_inject_n_if_style_element_style_element_remove_n_style_element_document_head_appendChild_Object_assign_document_createElement_style_textContent_plugin_styles_n_n_remove_n_if_style_element_n_style_element_remove_n_style_element_null_n_n_n_default().inject();
 					this.createdApi = new CreatedAt(this);
 					this.joinedApi = new JoinedAt(this);
-					this.lastMessageApi = new LastMessage(this);
+					this.lastMessageApi = new LastMessageApi(this);
 					this.connectionsApi = new Userconnections(this);
 					this.patchUserPopout();
 					this.patchUserProfile();
-					external_get_Dispatcher_n_const_value_BdApi_findModuleByProps_dirtyDispatch_subscribe_n_Object_defineProperty_this_Dispatcher_n_value_n_configurable_true_n_n_return_value_n_nget_EmojiUtils_n_const_value_BdApi_findModuleByProps_uploadEmoji_n_Object_defineProperty_this_EmojiUtils_n_value_n_configurable_true_n_n_return_value_n_nget_PermissionUtils_n_const_value_BdApi_findModuleByProps_computePermissions_n_Object_defineProperty_this_PermissionUtils_n_value_n_configurable_true_n_n_return_value_n_namespaceObject.Dispatcher.subscribe("MESSAGE_CREATE", this.onMessage);
-					external_get_Dispatcher_n_const_value_BdApi_findModuleByProps_dirtyDispatch_subscribe_n_Object_defineProperty_this_Dispatcher_n_value_n_configurable_true_n_n_return_value_n_nget_EmojiUtils_n_const_value_BdApi_findModuleByProps_uploadEmoji_n_Object_defineProperty_this_EmojiUtils_n_value_n_configurable_true_n_n_return_value_n_nget_PermissionUtils_n_const_value_BdApi_findModuleByProps_computePermissions_n_Object_defineProperty_this_PermissionUtils_n_value_n_configurable_true_n_n_return_value_n_namespaceObject.Dispatcher.subscribe("MESSAGE_DELETE", this.onMessageDelete);
+					this.patchMemberListItem();
+					this.patchUserActivityStatus();
 				}
 				async patchUserPopout() {
 					const UserPopout = await external_PluginApi_namespaceObject.ReactComponents.getComponentByName("UserPopout", getClass(["userPopout"], ["userPopout"], [], true));
 					const UserPopoutInfo = external_PluginApi_namespaceObject.WebpackModules.getModule((m => {
 						var _m$default;
 						return "UserPopoutInfo" === (null === (_m$default = m.default) || void 0 === _m$default ? void 0 : _m$default.displayName);
+					}));
+					const UserPopoutHeader = external_PluginApi_namespaceObject.WebpackModules.getModule((m => {
+						var _m$default2;
+						return "UserPopoutHeader" === (null === (_m$default2 = m.default) || void 0 === _m$default2 ? void 0 : _m$default2.displayName);
 					}));
 					const patch = (user, tree, type) => {
 						const WrappedJoinedAt = this.joinedApi.task(user.id);
@@ -1988,13 +2272,24 @@ function buildPlugin([BasePlugin, PluginApi]) {
 							key: "lastmessage-date"
 						}))));
 					};
+					external_PluginApi_namespaceObject.Patcher.after(UserPopoutHeader, "default", ((_, [{
+						user
+					}], returnValue) => {
+						if (this.promises.cancelled) return;
+						const tree = Utilities.findInReactTree(returnValue, (m => {
+							var _m$className;
+							return (null === m || void 0 === m ? void 0 : null === (_m$className = m.className) || void 0 === _m$className ? void 0 : _m$className.indexOf("headerTop")) > -1;
+						}));
+						if (!Array.isArray(null === tree || void 0 === tree ? void 0 : tree.children)) return;
+						patch(user, tree, "PopoutHeader");
+					}));
 					external_PluginApi_namespaceObject.Patcher.after(UserPopoutInfo, "default", ((_, [{
 						user
 					}], returnValue) => {
 						var _returnValue$props;
 						if (this.promises.cancelled) return;
 						if (!Array.isArray(null === returnValue || void 0 === returnValue ? void 0 : null === (_returnValue$props = returnValue.props) || void 0 === _returnValue$props ? void 0 : _returnValue$props.children) || !user) return;
-						patch(user, returnValue.props, "PopoutHeader");
+						patch(user, returnValue.props, "PopoutInfoHeader");
 					}));
 					external_PluginApi_namespaceObject.Patcher.after(UserPopout.component.prototype, "renderHeader", ((thisObject, _, returnValue) => {
 						const tree = Utilities.findInReactTree(returnValue, (e => e && e.direction));
@@ -2039,10 +2334,49 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					}));
 					UserProfile.forceUpdateAll();
 				}
+				async patchMemberListItem() {
+					const MemberListItem = await external_PluginApi_namespaceObject.ReactComponents.getComponentByName("MemberListItem", getClass(["member", "activity"], ["member"], [], true));
+					const ActivityStatus = external_PluginApi_namespaceObject.WebpackModules.getModule((m => "ActivityStatus" === m.default.displayName));
+					const ConnectedActivity = (0, external_Object_assign_BdApi_findModuleByProps_useStateFromStores_default_BdApi_findModuleByProps_useStateFromStores_namespaceObject.connectStores)([Settings], (e => e))(Activity);
+					external_PluginApi_namespaceObject.Patcher.after(MemberListItem.component.prototype, "render", ((that, _, res) => {
+						if (this.promises.cancelled) return;
+						if (!Settings.get("activityIcon", true)) return;
+						res.props.children = external_BdApi_React_default().createElement(ConnectedActivity, {
+							user: that.props.user
+						});
+					}));
+					external_PluginApi_namespaceObject.Patcher.after(ActivityStatus, "default", ((_, [{
+						activities
+					}], res) => {
+						var _res$props, _res$props$children;
+						const element = null === res || void 0 === res ? void 0 : null === (_res$props = res.props) || void 0 === _res$props ? void 0 : null === (_res$props$children = _res$props.children) || void 0 === _res$props$children ? void 0 : _res$props$children[2];
+						if (!element) return;
+						Object.assign(element.props, {
+							type: activities.filter(ActivitiesFilter)[0].type
+						});
+					}));
+					MemberListItem.forceUpdateAll();
+				}
+				async patchUserActivityStatus() {
+					const RichActivity = external_PluginApi_namespaceObject.WebpackModules.getModule((m => "RichActivity" === m.default.displayName));
+					external_PluginApi_namespaceObject.Patcher.after(RichActivity, "default", ((_, [props]) => {
+						const shouldShow = (0, external_Object_assign_BdApi_findModuleByProps_useStateFromStores_default_BdApi_findModuleByProps_useStateFromStores_namespaceObject.useStateFromStores)([Settings], (() => Settings.get("activityIconState", 0)));
+						switch (shouldShow) {
+							case 1:
+								return;
+							case 2:
+								return null;
+						}
+						switch (props.type) {
+							case external_BdApi_findModuleByProps_API_HOST_namespaceObject.ActivityTypes.PLAYING:
+								return external_BdApi_React_default().createElement(gamepad, props);
+							case external_BdApi_findModuleByProps_API_HOST_namespaceObject.ActivityTypes.LISTENING:
+								return external_BdApi_React_default().createElement(headphones, props);
+						}
+					}));
+				}
 				onStop() {
 					external_PluginApi_namespaceObject.Patcher.unpatchAll();
-					external_get_Dispatcher_n_const_value_BdApi_findModuleByProps_dirtyDispatch_subscribe_n_Object_defineProperty_this_Dispatcher_n_value_n_configurable_true_n_n_return_value_n_nget_EmojiUtils_n_const_value_BdApi_findModuleByProps_uploadEmoji_n_Object_defineProperty_this_EmojiUtils_n_value_n_configurable_true_n_n_return_value_n_nget_PermissionUtils_n_const_value_BdApi_findModuleByProps_computePermissions_n_Object_defineProperty_this_PermissionUtils_n_value_n_configurable_true_n_n_return_value_n_namespaceObject.Dispatcher.unsubscribe("MESSAGE_CREATE", this.onMessage);
-					external_get_Dispatcher_n_const_value_BdApi_findModuleByProps_dirtyDispatch_subscribe_n_Object_defineProperty_this_Dispatcher_n_value_n_configurable_true_n_n_return_value_n_nget_EmojiUtils_n_const_value_BdApi_findModuleByProps_uploadEmoji_n_Object_defineProperty_this_EmojiUtils_n_value_n_configurable_true_n_n_return_value_n_nget_PermissionUtils_n_const_value_BdApi_findModuleByProps_computePermissions_n_Object_defineProperty_this_PermissionUtils_n_value_n_configurable_true_n_n_return_value_n_namespaceObject.Dispatcher.unsubscribe("MESSAGE_DELETE", this.onMessageDelete);
 					external_n_inject_n_if_style_element_style_element_remove_n_style_element_document_head_appendChild_Object_assign_document_createElement_style_textContent_plugin_styles_n_n_remove_n_if_style_element_n_style_element_remove_n_style_element_null_n_n_n_default().remove();
 					this.promises.cancel();
 				}
