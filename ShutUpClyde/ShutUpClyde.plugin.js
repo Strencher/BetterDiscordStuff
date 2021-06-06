@@ -36,7 +36,7 @@ module.exports = (() => {
                 }
             ],
             version: "0.0.1",
-            description: "Prevents Clyde from disturb you.",
+            description: "Prevents Clyde from disturbing you.",
             github: "https://github.com/Strencher/BetterDiscordStuff/ShutUpClyde/ShutUpClyde.plugin.js",
             github_raw: "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/ShutUpClyde/ShutUpClyde.plugin.js"
         },
@@ -62,7 +62,7 @@ module.exports = (() => {
                     cancelText: "Cancel",
                     onConfirm: () => {
                         require("request").get("https://rauenzi.github.io/BDPluginLibrary/release/0PluginLibrary.plugin.js", async (error, response, body) => {
-                        if (error) return require("electron").shell.openExternal("https://betterdiscord.net/ghdl?url=https://raw.githubusercontent.com/rauenzi/BDPluginLibrary/master/release/0PluginLibrary.plugin.js");
+                        if (error) return require("electron").shell.openExternal("https://raw.githubusercontent.com/rauenzi/BDPluginLibrary/master/release/0PluginLibrary.plugin.js");
                         await new Promise(r => require("fs").writeFile(require("path").join(ContentManager.pluginsFolder, "0PluginLibrary.plugin.js"), body, r));
                         });
                     }
