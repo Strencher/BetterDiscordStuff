@@ -23,7 +23,7 @@
 
 @else@*/
 
-var ShutUpClyde = (() => {
+module.exports = (() => {
     const config = {
         info: {
             name: "ShutUpClyde",
@@ -93,3 +93,4 @@ var ShutUpClyde = (() => {
         return plugin(Plugin, Api);
     })(global.ZeresPluginLibrary.buildPlugin(config));
 })();
+/*@end@*/
