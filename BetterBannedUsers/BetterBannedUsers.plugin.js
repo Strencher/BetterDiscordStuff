@@ -56,11 +56,11 @@ const config = {
 			"public": true,
 			"previews": [{
 					"name": "Banned Users Page",
-					"src": "./assets/preview.png"
+					"src": "assets/preview.png"
 				},
 				{
 					"name": "Settings Panel",
-					"src": "./assets/settings.png"
+					"src": "assets/settings.png"
 				}
 			]
 		}
@@ -246,10 +246,10 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						public: true,
 						previews: [{
 							name: "Banned Users Page",
-							src: "./assets/preview.png"
+							src: "assets/preview.png"
 						}, {
 							name: "Settings Panel",
-							src: "./assets/settings.png"
+							src: "assets/settings.png"
 						}]
 					}
 				}
@@ -280,10 +280,10 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					public: true,
 					previews: [{
 						name: "Banned Users Page",
-						src: "./assets/preview.png"
+						src: "assets/preview.png"
 					}, {
 						name: "Settings Panel",
-						src: "./assets/settings.png"
+						src: "assets/settings.png"
 					}]
 				}
 			};
@@ -689,6 +689,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					return func.apply(this, arguments);
 				};
 			}
+			const external_BdApi_findModuleByProps_API_HOST_namespaceObject = BdApi.findModuleByProps("API_HOST");
 			var BetterBannedUsers_React = __webpack_require__(698);
 			const RemoveButton = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("RemoveButton");
 			const GuildActions = external_PluginApi_namespaceObject.WebpackModules.getByProps("unbanUser");
@@ -734,7 +735,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				}
 				async patchBannedUsers() {
 					const BannedUsers = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("FluxContainer(GuildSettingsBans)").prototype.render.call({
-						memoizedGetStateFromStores: () => {}
+						memoizedGetStateFromStores: external_BdApi_findModuleByProps_API_HOST_namespaceObject.NOOP
 					}).type;
 					external_PluginApi_namespaceObject.Patcher.before(BannedUsers.prototype, "render", (that => {
 						const order = settings.get("order", {
@@ -816,7 +817,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				}
 				async unbanUser(guildId, user) {
 					await GuildActions.unbanUser(guildId, user.id);
-					external_PluginApi_namespaceObject.Toasts.succes(`Unbanned <span style="color: #5865f2;">${user.tag}</span>!`);
+					external_PluginApi_namespaceObject.Toasts.success(`Unbanned <span style="color: #5865f2;">${user.tag}</span>!`);
 				}
 				onStop() {
 					external_n_inject_name_config_info_name_n_if_style_element_style_element_remove_n_style_element_document_head_appendChild_Object_assign_document_createElement_style_id_name_textContent_plugin_styles_n_n_remove_n_if_style_element_n_style_element_remove_n_style_element_null_n_n_n_default().remove();

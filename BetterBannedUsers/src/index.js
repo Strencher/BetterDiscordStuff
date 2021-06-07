@@ -10,6 +10,7 @@ import {Messages} from "@discord/i18n";
 import Select from "./components/select.jsx";
 import SettingsPanel from "./components/settings";
 import preventPropagation from "../../common/util/prevent";
+import {NOOP} from "@discord/constants";
 
 /// <reference path="../../typings/discord.d.ts"/>
 /// <reference path="../../typings/zlib.d.ts"/>
@@ -68,8 +69,8 @@ export default class BetterBannedUsers extends BasePlugin {
 	}
 
 	async patchBannedUsers() {
-		const BannedUsers = WebpackModules.getByDisplayName("FluxContainer(GuildSettingsBans)").prototype.render.call({memoizedGetStateFromStores: () => void 0}).type;
-		var a = true;
+		const BannedUsers = WebpackModules.getByDisplayName("FluxContainer(GuildSettingsBans)").prototype.render.call({memoizedGetStateFromStores: NOOP}).type;
+		
 		Patcher.before(BannedUsers.prototype, "render", that => {
 			const order = Settings.get("order", {value: "descending", label: "Descending"});
 			const sort = Settings.get("sort", {value: "username", label: "Name"});
@@ -147,7 +148,7 @@ export default class BetterBannedUsers extends BasePlugin {
 	async unbanUser(guildId, user) {
 		await GuildActions.unbanUser(guildId, user.id);
 
-		Toasts.succes(`Unbanned <span style="color: #5865f2;">${user.tag}</span>!`);
+		Toasts.success(`Unbanned <span style="color: #5865f2;">${user.tag}</span>!`);
 	}
 
 	onStop() {

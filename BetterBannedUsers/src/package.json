@@ -28,11 +28,11 @@
 			"previews": [
 				{
 					"name": "Banned Users Page",
-					"src": "./assets/preview.png"
+					"src": "assets/preview.png"
 				},
 				{
 					"name": "Settings Panel",
-					"src": "./assets/settings.png"
+					"src": "assets/settings.png"
 				}
 			]
 		}
