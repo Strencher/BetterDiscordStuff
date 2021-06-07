@@ -1,0 +1,41 @@
+.remove {
+    display: none;
+    position: absolute;
+    top: -15px;
+    right: -30px;
+}
+
+:kss(bannedUser) {
+    :kss(username bannedUser) {
+        white-space: nowrap;
+        padding-left: 0;
+    }
+
+    &:hover .remove {
+        display: flex;
+    }
+}
+
+.banReason {
+    text-overflow: ellipsis;
+    color: var(--interactive-normal);
+    overflow: hidden;
+    white-space: nowrap;
+    padding-bottom: 1px;
+    max-width: 575px;
+    display: flex;
+    align-items: center;
+}
+
+.wrapper {
+    margin-left: 10px;
+    z-index: 10;
+}
+
+.container {
+    margin-bottom: 20px;
+}
+
+.search {
+    margin-top: 10px;
+}

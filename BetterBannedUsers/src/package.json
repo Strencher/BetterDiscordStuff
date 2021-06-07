@@ -1,0 +1,40 @@
+{
+	"info": {
+		"name": "BetterBannedUsers",
+		"version": "1.0.0",
+		"description": "Enhances the banned users page.",
+		"authors": [
+			{
+				"name": "Strencher",
+				"discord_id": "415849376598982656",
+				"github_username": "Strencher"
+			}
+		],
+		"github": "https://github.com/Strencher/BetterDiscordStuff/BetterBannedUsers",
+		"github_raw": "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/BetterBannedUsers/BetterBannedUsers.plugin.js"
+	},
+	"build": {
+		"zlibrary": true,
+		"copy": true,
+		"production": false,
+		"scssHash": false,
+		"alias": {
+			"components": "components/index.js"
+		},
+		"release": {
+			"source": true,
+			"readme": true,
+			"public": true,
+			"previews": [
+				{
+					"name": "Banned Users Page",
+					"src": "./assets/preview.png"
+				},
+				{
+					"name": "Settings Panel",
+					"src": "./assets/settings.png"
+				}
+			]
+		}
+	}
+}
