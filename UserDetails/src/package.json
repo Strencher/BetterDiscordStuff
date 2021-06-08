@@ -1,7 +1,7 @@
 {
     "info": {
         "name": "UserDetails",
-        "version": "1.3.1",
+        "version": "1.3.2",
         "authors": [
             {
                 "name": "Strencher",
@@ -16,18 +16,10 @@
     },
     "changelog": [
         {
-            "title": "Added",
-            "type": "added",
-            "items": [
-                "Added ActivityIcons feature, checkout the settings!"
-            ]
-        },
-        {
             "title": "Fixed",
             "type": "fixed",
             "items": [
-                "Fixed some weird bugs.",
-                "Hotfix for fetching last messages."
+                "Sorry but another update... i fixed the icons showing up in the profile modal."
             ]
         }
     ],

@@ -109,28 +109,26 @@ export default class Plugin extends BasePlugin {
     }
 
     async patchUserProfile() {
-        const UserProfile = await ReactComponents.getComponentByName("UserProfileBody", getClass(["root", "topSectionNormal", "topSectionStreaming"], ["root"], [], true));
-    
-        Patcher.after(UserProfile.component.prototype, "renderHeader", (thisObject, _, returnValue) => {
-            if (this.promises.cancelled) return;
-            const tree = Utilities.findInReactTree(returnValue, n => n?.className?.indexOf("headerInfo") > -1);
-            if (!tree) return;
-            if (!thisObject.props.user) return;
+        const UserProfileModalHeader = WebpackModules.getModule(m => m.default.displayName === "UserProfileModalHeader");
 
-            const WrappedJoinedAt = this.joinedApi.task(thisObject.props.user.id);
-            const WrappedCreatedAt = this.createdApi.task(thisObject.props.user.id);
-            const WrappedLastMessage = this.lastMessageApi.task(thisObject.props.user);
+        Patcher.after(UserProfileModalHeader, "default", (_, [{user}], res) => {
+            if (this.promises.cancelled) return;
+            const tree = Utilities.findInReactTree(res, m => m?.className?.indexOf("headerInfo") > -1);
+
+            if (!Array.isArray(tree?.children)) return;
+
+            const WrappedJoinedAt = this.joinedApi.task(user.id);
+            const WrappedCreatedAt = this.createdApi.task(user.id);
+            const WrappedLastMessage = this.lastMessageApi.task(user);
             
-            tree.children.push(<ErrorBoundary id="UserProfile" mini>
+            tree.children.splice(1, 0, <ErrorBoundary id="UserProfile" mini>
                 <div className={Utilities.joinClassNames(dateStyles.container, dateStyles.userProfile, Settings.get("useIcons", true) ? dateStyles.icons : dateStyles.text)}>
                     {Settings.get("created_show_profile", true) && <WrappedCreatedAt />}
                     {Settings.get("joined_show_profile", true) && <WrappedJoinedAt />}
                     {Settings.get("lastmessage_show_profile", true) && <WrappedLastMessage />}
                 </div>
             </ErrorBoundary>);
-         });
-
-        UserProfile.forceUpdateAll();
+        });
     }
 
     async patchMemberListItem() {

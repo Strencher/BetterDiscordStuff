@@ -1,6 +1,6 @@
 /**
  * @name UserDetails
- * @version 1.3.1
+ * @version 1.3.2
  * @author Strencher
  * @description Shows you a lot information about users in popouts.
  * @source https://github.com/Strencher/BetterDiscordStuff/UserDetails
@@ -32,7 +32,7 @@
 const config = {
 	"info": {
 		"name": "UserDetails",
-		"version": "1.3.1",
+		"version": "1.3.2",
 		"authors": [{
 			"name": "Strencher",
 			"discord_id": "415849376598982656",
@@ -44,21 +44,12 @@ const config = {
 		"github_raw": "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/UserDetails/UserDetails.plugin.js"
 	},
 	"changelog": [{
-			"title": "Added",
-			"type": "added",
-			"items": [
-				"Added ActivityIcons feature, checkout the settings!"
-			]
-		},
-		{
-			"title": "Fixed",
-			"type": "fixed",
-			"items": [
-				"Fixed some weird bugs.",
-				"Hotfix for fetching last messages."
-			]
-		}
-	],
+		"title": "Fixed",
+		"type": "fixed",
+		"items": [
+			"Sorry but another update... i fixed the icons showing up in the profile modal."
+		]
+	}],
 	"build": {
 		"zlibrary": true,
 		"copy": true,
@@ -435,7 +426,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			const UserDetails_package = {
 				info: {
 					name: "UserDetails",
-					version: "1.3.1",
+					version: "1.3.2",
 					authors: [{
 						name: "Strencher",
 						discord_id: "415849376598982656",
@@ -447,13 +438,9 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					github_raw: "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/UserDetails/UserDetails.plugin.js"
 				},
 				changelog: [{
-					title: "Added",
-					type: "added",
-					items: ["Added ActivityIcons feature, checkout the settings!"]
-				}, {
 					title: "Fixed",
 					type: "fixed",
-					items: ["Fixed some weird bugs.", "Hotfix for fetching last messages."]
+					items: ["Sorry but another update... i fixed the icons showing up in the profile modal."]
 				}],
 				build: {
 					zlibrary: true,
@@ -473,7 +460,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			};
 			var info = {
 				name: "UserDetails",
-				version: "1.3.1",
+				version: "1.3.2",
 				authors: [{
 					name: "Strencher",
 					discord_id: "415849376598982656",
@@ -485,13 +472,9 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				github_raw: "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/UserDetails/UserDetails.plugin.js"
 			};
 			var changelog = [{
-				title: "Added",
-				type: "added",
-				items: ["Added ActivityIcons feature, checkout the settings!"]
-			}, {
 				title: "Fixed",
 				type: "fixed",
-				items: ["Fixed some weird bugs.", "Hotfix for fetching last messages."]
+				items: ["Sorry but another update... i fixed the icons showing up in the profile modal."]
 			}];
 			var build = {
 				zlibrary: true,
@@ -2356,26 +2339,26 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					UserPopout.forceUpdateAll();
 				}
 				async patchUserProfile() {
-					const UserProfile = await external_PluginApi_namespaceObject.ReactComponents.getComponentByName("UserProfileBody", getClass(["root", "topSectionNormal", "topSectionStreaming"], ["root"], [], true));
-					external_PluginApi_namespaceObject.Patcher.after(UserProfile.component.prototype, "renderHeader", ((thisObject, _, returnValue) => {
+					const UserProfileModalHeader = external_PluginApi_namespaceObject.WebpackModules.getModule((m => "UserProfileModalHeader" === m.default.displayName));
+					external_PluginApi_namespaceObject.Patcher.after(UserProfileModalHeader, "default", ((_, [{
+						user
+					}], res) => {
 						if (this.promises.cancelled) return;
-						const tree = Utilities.findInReactTree(returnValue, (n => {
-							var _n$className;
-							return (null === n || void 0 === n ? void 0 : null === (_n$className = n.className) || void 0 === _n$className ? void 0 : _n$className.indexOf("headerInfo")) > -1;
+						const tree = Utilities.findInReactTree(res, (m => {
+							var _m$className2;
+							return (null === m || void 0 === m ? void 0 : null === (_m$className2 = m.className) || void 0 === _m$className2 ? void 0 : _m$className2.indexOf("headerInfo")) > -1;
 						}));
-						if (!tree) return;
-						if (!thisObject.props.user) return;
-						const WrappedJoinedAt = this.joinedApi.task(thisObject.props.user.id);
-						const WrappedCreatedAt = this.createdApi.task(thisObject.props.user.id);
-						const WrappedLastMessage = this.lastMessageApi.task(thisObject.props.user);
-						tree.children.push(external_BdApi_React_default().createElement(ErrorBoundary, {
+						if (!Array.isArray(null === tree || void 0 === tree ? void 0 : tree.children)) return;
+						const WrappedJoinedAt = this.joinedApi.task(user.id);
+						const WrappedCreatedAt = this.createdApi.task(user.id);
+						const WrappedLastMessage = this.lastMessageApi.task(user);
+						tree.children.splice(1, 0, external_BdApi_React_default().createElement(ErrorBoundary, {
 							id: "UserProfile",
 							mini: true
 						}, external_BdApi_React_default().createElement("div", {
 							className: Utilities.joinClassNames(dates.Z.container, dates.Z.userProfile, Settings.get("useIcons", true) ? dates.Z.icons : dates.Z.text)
 						}, Settings.get("created_show_profile", true) && external_BdApi_React_default().createElement(WrappedCreatedAt, null), Settings.get("joined_show_profile", true) && external_BdApi_React_default().createElement(WrappedJoinedAt, null), Settings.get("lastmessage_show_profile", true) && external_BdApi_React_default().createElement(WrappedLastMessage, null))));
 					}));
-					UserProfile.forceUpdateAll();
 				}
 				async patchMemberListItem() {
 					const MemberListItem = await external_PluginApi_namespaceObject.ReactComponents.getComponentByName("MemberListItem", getClass(["member", "activity"], ["member"], [], true));
