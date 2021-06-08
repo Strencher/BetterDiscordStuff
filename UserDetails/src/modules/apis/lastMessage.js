@@ -25,7 +25,7 @@ export default class LastMessageApi extends ApiModule {
             const [errorMessage, setErrorMessage] = useState("");
 
             useEffect(() => {
-                if (LastMessage.isFetching(user.id)) return;
+                if (LastMessage.isFetching(user.id) || LastMessage.has(user.id, roomId)) return;
 
                 if (!roomId) return setErrorMessage("Cannot resolve channel/guild id.");
             

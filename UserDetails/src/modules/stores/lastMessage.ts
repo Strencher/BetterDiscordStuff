@@ -54,6 +54,7 @@ function handleMessageDelete({messageId, channelId}) {
 }
 
 class LastMessageStore extends Store {
+    public paused = false;
     get _users() {return lastMessages;}
     isFetching(userId: string) {return fetchingQueue.has(userId);}
 
@@ -64,10 +65,15 @@ class LastMessageStore extends Store {
         return cached;
     }
 
+    has(userId: string, channelId: string): boolean {
+        return lastMessages.has(resolveId(userId, channelId));
+    }
+
     fetch(userId: string, roomId: string, isGuild = false): Promise<void> {
+        const id = resolveId(userId, roomId);
+        if (fetchingQueue.has(id) || this.paused) return Promise.resolve();
+        fetchingQueue.add(id);
         return new Promise<void>((resolve, reject) => {
-            const id = resolveId(userId, roomId);
-            fetchingQueue.add(id);
             APIModule.get({
                 url: isGuild ? Endpoints.SEARCH_GUILD(roomId) : Endpoints.SEARCH_CHANNEL(roomId),
                 query: stringify({author_id: userId})
@@ -76,7 +82,7 @@ class LastMessageStore extends Store {
                 if (data?.body?.messages?.length) {
                     const message = data.body.messages[0].find((result: SearchResult) => result.hit && result.author.id === userId);
                     if (message) {
-                        lastMessages.set(resolveId(userId, roomId), {
+                        lastMessages.set(id, {
                             date: new Date(message.timestamp),
                             fetch: Date.now(),
                             channelId: message.channel_id,
@@ -87,8 +93,16 @@ class LastMessageStore extends Store {
                 }
                 resolve();
             }).catch(error => {
+                if (error.status === 429) {
+                    this.paused = true;
+                    setTimeout(() => {
+                        this.paused = false;
+                        this.fetch(userId, roomId, isGuild).then(resolve).catch(reject);
+                    }, error.body.retry_after + 1000);
+                } else {
+                    reject(error);
+                }
                 fetchingQueue.delete(id);
-                reject(error);
             });
         });
     }
