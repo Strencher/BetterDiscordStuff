@@ -6,13 +6,6 @@
 }
 
 :kss(bannedUser) {
-
-    /* Just don't ask. https://i.imgur.com/gW9eL9p.png */
-    &::before {
-        background-color: rgba(32, 34, 37, .3);
-        border-color: #202225;
-    }
-
     :kss(username bannedUser) {
         white-space: nowrap;
         padding-left: 0;
@@ -29,8 +22,8 @@
     overflow: hidden;
     white-space: nowrap;
     padding-bottom: 1px;
-    max-width: 600px;
-    display: inline-block;
+    max-width: 575px;
+    display: flex;
     align-items: center;
 }
 

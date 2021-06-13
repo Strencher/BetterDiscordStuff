@@ -1,6 +1,6 @@
-import config from "./package.json";
+import {info} from "./package.json";
 import SettingsManager from "../../common/classes/settings";
 
-const Settings = new SettingsManager(config.info.name);
+const Settings = new SettingsManager(info.name);
 
 export default Settings;
