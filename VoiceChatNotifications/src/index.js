@@ -106,13 +106,13 @@ export default class VoiceChatNotifications extends BasePlugin {
 		};
 
 		if (this.lastStates[props.userId] && !props.channelId && Settings.get("leave", true)) {
-			pushToLog("Left.");
+			pushToLog("Left the call.");
 			delete this.lastStates[props.userId];
 		}
 		if (props.channelId !== this.currentVoiceChannelId) return;
 
 		if (!this.lastStates[props.userId]) {
-			if (Settings.get("join", true)) pushToLog("Joined.");
+			if (Settings.get("join", true)) pushToLog("Joined the call.");
 			this.lastStates[props.userId] = props;
 		} else {
 			if (_.isEqual(this.lastStates[props.userId], props)) return;

@@ -1,7 +1,7 @@
 {
 	"info": {
 		"name": "BetterBannedUsers",
-		"version": "1.0.0",
+		"version": "1.0.1",
 		"description": "Enhances the banned users page.",
 		"authors": [
 			{
@@ -13,6 +13,16 @@
 		"github": "https://github.com/Strencher/BetterDiscordStuff/BetterBannedUsers",
 		"github_raw": "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/BetterBannedUsers/BetterBannedUsers.plugin.js"
 	},
+	"changelog": [
+		{
+			"type": "fixed",
+			"title": "Fixed - 1.0.1",
+			"items": [
+				"Fixed hovering style.",
+				"Quick unbanning should work again."
+			]
+		}
+	],
 	"build": {
 		"zlibrary": true,
 		"copy": true,
