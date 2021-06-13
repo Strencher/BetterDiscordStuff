@@ -1,6 +1,6 @@
 /**
  * @name BetterBannedUsers
- * @version 1.0.0
+ * @version 1.0.1
  * @description Enhances the banned users page.
  * @author Strencher
  * @source https://github.com/Strencher/BetterDiscordStuff/BetterBannedUsers
@@ -32,7 +32,7 @@
 const config = {
 	"info": {
 		"name": "BetterBannedUsers",
-		"version": "1.0.0",
+		"version": "1.0.1",
 		"description": "Enhances the banned users page.",
 		"authors": [{
 			"name": "Strencher",
@@ -42,6 +42,14 @@ const config = {
 		"github": "https://github.com/Strencher/BetterDiscordStuff/BetterBannedUsers",
 		"github_raw": "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/BetterBannedUsers/BetterBannedUsers.plugin.js"
 	},
+	"changelog": [{
+		"type": "fixed",
+		"title": "Fixed - 1.0.1",
+		"items": [
+			"Fixed hovering style.",
+			"Quick unbanning should work again."
+		]
+	}],
 	"build": {
 		"zlibrary": true,
 		"copy": true,
@@ -72,8 +80,202 @@ function buildPlugin([BasePlugin, PluginApi]) {
 	};
 	(() => {
 		"use strict";
-		let __plugin_styles__ = "";
-		let __style_element__ = null;
+		class StyleLoader {
+			static styles = "";
+			static element = null;
+			static append(module, css) {
+				this.styles += `/* ${module} */\n${css}`;
+			}
+			static inject(name = config.info.name) {
+				if (this.element) this.element.remove();
+				this.element = document.head.appendChild(Object.assign(document.createElement("style"), {
+					id: name,
+					textContent: this.styles
+				}));
+			}
+			static remove() {
+				if (this.element) {
+					this.element.remove();
+					this.element = null;
+				}
+			}
+		}
+		function ___createMemoize___(instance, name, value) {
+			value = value();
+			Object.defineProperty(instance, name, {
+				value,
+				configurable: true
+			});
+			return value;
+		};
+		const Modules = {
+			get 'react-spring'() {
+				return ___createMemoize___(this, 'react-spring', () => BdApi.findModuleByProps('useSpring'))
+			},
+			'@discord/utils': {
+				get 'joinClassNames'() {
+					return ___createMemoize___(this, 'joinClassNames', () => BdApi.findModule(m => typeof m?.default?.default === 'function')?.default)
+				},
+				get 'useForceUpdate'() {
+					return ___createMemoize___(this, 'useForceUpdate', () => BdApi.findModuleByProps('useForceUpdate')?.useForceUpdate)
+				},
+				get 'Logger'() {
+					return ___createMemoize___(this, 'Logger', () => BdApi.findModuleByProps('setLogFn')?.default)
+				},
+				get 'Navigation'() {
+					return ___createMemoize___(this, 'Navigation', () => BdApi.findModuleByProps('replaceWith'))
+				}
+			},
+			'@discord/components': {
+				get 'Tooltip'() {
+					return ___createMemoize___(this, 'Tooltip', () => BdApi.findModuleByDisplayName('Tooltip'))
+				},
+				get 'TooltipContainer'() {
+					return ___createMemoize___(this, 'TooltipContainer', () => BdApi.findModuleByProps('TooltipContainer')?.TooltipContainer)
+				},
+				get 'TextInput'() {
+					return ___createMemoize___(this, 'TextInput', () => BdApi.findModuleByDisplayName('TextInput'))
+				},
+				get 'SlideIn'() {
+					return ___createMemoize___(this, 'SlideIn', () => BdApi.findModuleByDisplayName('SlideIn'))
+				},
+				get 'SettingsNotice'() {
+					return ___createMemoize___(this, 'SettingsNotice', () => BdApi.findModuleByDisplayName('SettingsNotice'))
+				},
+				get 'TransitionGroup'() {
+					return ___createMemoize___(this, 'TransitionGroup', () => BdApi.findModuleByDisplayName('TransitionGroup'))
+				},
+				get 'Button'() {
+					return ___createMemoize___(this, 'Button', () => BdApi.findModuleByProps('DropdownSizes'))
+				},
+				get 'Flex'() {
+					return ___createMemoize___(this, 'Flex', () => BdApi.findModuleByDisplayName('Flex'))
+				},
+				get 'Text'() {
+					return ___createMemoize___(this, 'Text', () => BdApi.findModuleByDisplayName('Text'))
+				},
+				get 'Card'() {
+					return ___createMemoize___(this, 'Card', () => BdApi.findModuleByDisplayName('Card'))
+				}
+			},
+			'@discord/modules': {
+				get 'Dispatcher'() {
+					return ___createMemoize___(this, 'Dispatcher', () => BdApi.findModuleByProps('dirtyDispatch', 'subscribe'))
+				},
+				get 'EmojiUtils'() {
+					return ___createMemoize___(this, 'EmojiUtils', () => BdApi.findModuleByProps('uploadEmoji'))
+				},
+				get 'PermissionUtils'() {
+					return ___createMemoize___(this, 'PermissionUtils', () => BdApi.findModuleByProps('computePermissions'))
+				},
+				get 'DMUtils'() {
+					return ___createMemoize___(this, 'DMUtils', () => BdApi.findModuleByProps('openPrivateChannel'))
+				}
+			},
+			'@discord/stores': {
+				get 'Messages'() {
+					return ___createMemoize___(this, 'Messages', () => BdApi.findModuleByProps('getMessage', 'getMessages'))
+				},
+				get 'Channels'() {
+					return ___createMemoize___(this, 'Channels', () => BdApi.findModuleByProps('getChannel'))
+				},
+				get 'Guilds'() {
+					return ___createMemoize___(this, 'Guilds', () => BdApi.findModuleByProps('getGuild'))
+				},
+				get 'SelectedGuilds'() {
+					return ___createMemoize___(this, 'SelectedGuilds', () => BdApi.findModuleByProps('getGuildId', 'getLastSelectedGuildId'))
+				},
+				get 'SelectedChannels'() {
+					return ___createMemoize___(this, 'SelectedChannels', () => BdApi.findModuleByProps('getChannelId', 'getLastSelectedChannelId'))
+				},
+				get 'Info'() {
+					return ___createMemoize___(this, 'Info', () => BdApi.findModuleByProps('getCurrentUser'))
+				},
+				get 'Status'() {
+					return ___createMemoize___(this, 'Status', () => BdApi.findModuleByProps('getStatus'))
+				},
+				get 'Users'() {
+					return ___createMemoize___(this, 'Users', () => BdApi.findModuleByProps('getUser'))
+				},
+				get 'SettingsStore'() {
+					return ___createMemoize___(this, 'SettingsStore', () => BdApi.findModuleByProps('afkTimeout', 'status'))
+				},
+				get 'UserProfile'() {
+					return ___createMemoize___(this, 'UserProfile', () => BdApi.findModuleByProps('getUserProfile'))
+				},
+				get 'Members'() {
+					return ___createMemoize___(this, 'Members', () => BdApi.findModuleByProps('getMember'))
+				},
+				get 'Activities'() {
+					return ___createMemoize___(this, 'Activities', () => BdApi.findModuleByProps('getActivities'))
+				},
+				get 'Games'() {
+					return ___createMemoize___(this, 'Games', () => BdApi.findModuleByProps('getGame'))
+				},
+				get 'Auth'() {
+					return ___createMemoize___(this, 'Auth', () => BdApi.findModuleByProps('getId', 'isGuest'))
+				},
+				get 'TypingUsers'() {
+					return ___createMemoize___(this, 'TypingUsers', () => BdApi.findModuleByProps('isTyping'))
+				}
+			},
+			'@discord/actions': {
+				get 'ProfileActions'() {
+					return ___createMemoize___(this, 'ProfileActions', () => BdApi.findModuleByProps('fetchProfile'))
+				}
+			},
+			get '@discord/i18n'() {
+				return ___createMemoize___(this, '@discord/i18n', () => BdApi.findModuleByProps('getLocale'))
+			},
+			get '@discord/constants'() {
+				return ___createMemoize___(this, '@discord/constants', () => BdApi.findModuleByProps('API_HOST'))
+			},
+			get '@discord/contextmenu'() {
+				return ___createMemoize___(this, '@discord/contextmenu', () => {
+					const ctx = Object.assign({}, BdApi.findModuleByProps('openContextMenu'), BdApi.findModuleByProps('MenuItem'));
+					ctx.Menu = ctx.default;
+					return ctx;
+				})
+			},
+			get '@discord/forms'() {
+				return ___createMemoize___(this, '@discord/forms', () => BdApi.findModuleByProps('FormItem'))
+			},
+			get '@discord/scrollbars'() {
+				return ___createMemoize___(this, '@discord/scrollbars', () => BdApi.findModuleByProps('ScrollerAuto'))
+			},
+			get '@discord/native'() {
+				return ___createMemoize___(this, '@discord/native', () => BdApi.findModuleByProps('requireModule'))
+			},
+			get '@discord/flux'() {
+				return ___createMemoize___(this, '@discord/flux', () => Object.assign({}, BdApi.findModuleByProps('useStateFromStores').default, BdApi.findModuleByProps('useStateFromStores')))
+			},
+			get '@discord/modal'() {
+				return ___createMemoize___(this, '@discord/modal', () => Object.assign({}, BdApi.findModuleByProps('ModalRoot'), BdApi.findModuleByProps('openModal')))
+			},
+			get '@discord/connections'() {
+				return ___createMemoize___(this, '@discord/connections', () => BdApi.findModuleByProps('get', 'isSupported', 'map'))
+			},
+			get '@discord/sanitize'() {
+				return ___createMemoize___(this, '@discord/sanitize', () => BdApi.findModuleByProps('stringify', 'parse', 'encode'))
+			},
+			get '@discord/icons'() {
+				return ___createMemoize___(this, '@discord/icons', () => BdApi.findAllModules(m => m.displayName && ~m.toString().indexOf('currentColor')).reduce((icons, icon) => (icons[icon.displayName] = icon, icons), {}))
+			},
+			'@discord/classes': {
+				get 'Timestamp'() {
+					return ___createMemoize___(this, 'Timestamp', () => BdApi.findModuleByPrototypes('toDate', 'month'))
+				},
+				get 'Message'() {
+					return ___createMemoize___(this, 'Message', () => BdApi.findModuleByPrototypes('getReaction', 'isSystemDM'))
+				},
+				get 'User'() {
+					return ___createMemoize___(this, 'User', () => BdApi.findModuleByPrototypes('tag'))
+				},
+				get 'Channel'() {
+					return ___createMemoize___(this, 'Channel', () => BdApi.findModuleByPrototypes('isOwner', 'isCategory'))
+				}
+			}
+		};
 		var __webpack_modules__ = {
 			418: (module, __webpack_exports__, __webpack_require__) => {
 				__webpack_require__.d(__webpack_exports__, {
@@ -84,7 +286,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
 					return i[1];
 				}));
-				___CSS_LOADER_EXPORT___.push([module.id, ".BetterBannedUsers-banned-remove{display:none;position:absolute;top:-15px;right:-30px}.bannedUser-1IalTM .username-1b3MVI{white-space:nowrap;padding-left:0}.bannedUser-1IalTM:hover .BetterBannedUsers-banned-remove{display:flex}.BetterBannedUsers-banned-banReason{text-overflow:ellipsis;color:var(--interactive-normal);overflow:hidden;white-space:nowrap;padding-bottom:1px;max-width:575px;display:flex;align-items:center}.BetterBannedUsers-banned-wrapper{margin-left:10px;z-index:10}.BetterBannedUsers-banned-container{margin-bottom:20px}.BetterBannedUsers-banned-search{margin-top:10px}", ""]);
+				___CSS_LOADER_EXPORT___.push([module.id, ".BetterBannedUsers-banned-remove{display:none;position:absolute;top:-15px;right:-30px}.bannedUser-1IalTM::before{background-color:rgba(32,34,37,.3);border-color:#202225}.bannedUser-1IalTM .username-1b3MVI{white-space:nowrap;padding-left:0}.bannedUser-1IalTM:hover .BetterBannedUsers-banned-remove{display:flex}.BetterBannedUsers-banned-banReason{text-overflow:ellipsis;color:var(--interactive-normal);overflow:hidden;white-space:nowrap;padding-bottom:1px;max-width:600px;display:inline-block;align-items:center}.BetterBannedUsers-banned-wrapper{margin-left:10px;z-index:10}.BetterBannedUsers-banned-container{margin-bottom:20px}.BetterBannedUsers-banned-search{margin-top:10px}", ""]);
 				___CSS_LOADER_EXPORT___.locals = {
 					remove: "BetterBannedUsers-banned-remove",
 					banReason: "BetterBannedUsers-banned-banReason",
@@ -92,7 +294,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					container: "BetterBannedUsers-banned-container",
 					search: "BetterBannedUsers-banned-search"
 				};
-				__plugin_styles__ += `\n/* ${module.id} */\n${___CSS_LOADER_EXPORT___}\n`;
+				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
 				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
 			},
 			469: (module, __webpack_exports__, __webpack_require__) => {
@@ -112,8 +314,292 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					selectedText: "BetterBannedUsers-select-selectedText",
 					select: "BetterBannedUsers-select-select"
 				};
-				__plugin_styles__ += `\n/* ${module.id} */\n${___CSS_LOADER_EXPORT___}\n`;
+				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
 				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
+			},
+			170: (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+				__webpack_require__.r(__webpack_exports__);
+				__webpack_require__.d(__webpack_exports__, {
+					default: () => BetterBannedUsers
+				});
+				const external_BasePlugin_namespaceObject = BasePlugin;
+				var external_BasePlugin_default = __webpack_require__.n(external_BasePlugin_namespaceObject);
+				const external_PluginApi_namespaceObject = PluginApi;
+				var banned = __webpack_require__(418);
+				const external_StyleLoader_namespaceObject = StyleLoader;
+				var external_StyleLoader_default = __webpack_require__.n(external_StyleLoader_namespaceObject);
+				const package_namespaceObject = JSON.parse('{"um":{"u2":"BetterBannedUsers"}}');
+				const flux_namespaceObject = Modules["@discord/flux"];
+				const modules_namespaceObject = Modules["@discord/modules"];
+				function _defineProperty(obj, key, value) {
+					if (key in obj) Object.defineProperty(obj, key, {
+						value,
+						enumerable: true,
+						configurable: true,
+						writable: true
+					});
+					else obj[key] = value;
+					return obj;
+				}
+				class SettingsManager extends flux_namespaceObject.Store {
+					constructor(pluginName) {
+						super(modules_namespaceObject.Dispatcher, {});
+						_defineProperty(this, "settings", void 0);
+						_defineProperty(this, "pluginName", void 0);
+						_defineProperty(this, "get", ((key, defaultValue) => this.settings[key] ?? defaultValue));
+						_defineProperty(this, "set", ((key, value) => {
+							this.settings[key] = value;
+							external_PluginApi_namespaceObject.PluginUtilities.saveSettings(this.pluginName, this.settings);
+							this.emitChange();
+							return value;
+						}));
+						this.pluginName = pluginName;
+						this.settings = external_PluginApi_namespaceObject.PluginUtilities.loadSettings(pluginName, {});
+					}
+				}
+				const Settings = new SettingsManager(package_namespaceObject.um.u2);
+				const settings = Settings;
+				const stores_namespaceObject = Modules["@discord/stores"];
+				const external_window_namespaceObject = window._;
+				var external_window_default = __webpack_require__.n(external_window_namespaceObject);
+				const components_namespaceObject = Modules["@discord/components"];
+				const i18n_namespaceObject = Modules["@discord/i18n"];
+				var external_BdApi_React_ = __webpack_require__(832);
+				var components_select = __webpack_require__(469);
+				const utils_namespaceObject = Modules["@discord/utils"];
+				var React = __webpack_require__(832);
+				function _extends() {
+					_extends = Object.assign || function(target) {
+						for (var i = 1; i < arguments.length; i++) {
+							var source = arguments[i];
+							for (var key in source)
+								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
+						}
+						return target;
+					};
+					return _extends.apply(this, arguments);
+				}
+				const Popout = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("Popout");
+				const Caret = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("Caret");
+				function Select({
+					value,
+					options,
+					label,
+					onChange
+				}) {
+					const [selected, setSelected] = (0, external_BdApi_React_.useState)(value);
+					const renderPopout = props => React.createElement("div", _extends({}, props, {
+						className: components_select.Z.container
+					}), options.map(((option, index) => React.createElement("div", {
+						className: (0, utils_namespaceObject.joinClassNames)(components_select.Z.option, {
+							[components_select.Z.selected]: selected?.value === option.value
+						}),
+						key: index,
+						onClick: () => {
+							setSelected(option);
+							onChange(option);
+							props.closePopout();
+						}
+					}, option.label))));
+					return React.createElement(Popout, {
+						renderPopout,
+						align: "center",
+						animation: Popout.Animation.FADE,
+						position: "bottom"
+					}, (props => React.createElement(components_namespaceObject.Flex, {
+						className: components_select.Z.select,
+						shrink: 0,
+						grow: 0,
+						align: components_namespaceObject.Flex.Align.CENTER,
+						justify: components_namespaceObject.Flex.Justify.END,
+						onClick: props.onClick
+					}, React.createElement(components_namespaceObject.Text, {
+						color: components_namespaceObject.Text.Colors.MUTED
+					}, label), React.createElement(components_namespaceObject.Text, {
+						className: components_select.Z.selectedText,
+						color: components_namespaceObject.Text.Colors.INTERACTIVE_NORMAL
+					}, selected?.label), React.createElement(Caret, {
+						direction: Caret.Directions.DOWN,
+						className: components_namespaceObject.Text.Colors.INTERACTIVE_NORMAL
+					}))));
+				}
+				var createUpdateWrapper_React = __webpack_require__(832);
+				function createUpdateWrapper_extends() {
+					createUpdateWrapper_extends = Object.assign || function(target) {
+						for (var i = 1; i < arguments.length; i++) {
+							var source = arguments[i];
+							for (var key in source)
+								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
+						}
+						return target;
+					};
+					return createUpdateWrapper_extends.apply(this, arguments);
+				}
+				const createUpdateWrapper = (Component, valueProp = "value", changeProp = "onChange") => props => {
+					const [value, setValue] = createUpdateWrapper_React.useState(props[valueProp]);
+					return createUpdateWrapper_React.createElement(Component, createUpdateWrapper_extends({}, props, {
+						[valueProp]: value,
+						[changeProp]: value => {
+							if ("function" === typeof props[changeProp]) props[changeProp](value);
+							setValue(value);
+						}
+					}));
+				};
+				const hooks_createUpdateWrapper = createUpdateWrapper;
+				var settings_React = __webpack_require__(832);
+				const SwitchItem = hooks_createUpdateWrapper(external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("SwitchItem"));
+				const settings_settings = {
+					quickUnban: {
+						value: true,
+						note: "Adds a quick unban button (X) to the card."
+					},
+					showReason: {
+						value: true,
+						note: "Shows the reason right inside the card."
+					}
+				};
+				function SettingsPanel() {
+					return settings_React.createElement(settings_React.Fragment, null, Object.keys(settings_settings).map((id => settings_React.createElement(SwitchItem, {
+						children: external_window_default().upperFirst(id),
+						note: settings_settings[id].note,
+						value: settings.get(id, settings_settings[id].value),
+						onChange: value => settings.set(id, value)
+					}))));
+				}
+				function preventPropagation(func) {
+					return function(event) {
+						event.preventDefault?.();
+						event.stopPropagation?.();
+						return func.apply(this, arguments);
+					};
+				}
+				const constants_namespaceObject = Modules["@discord/constants"];
+				var BetterBannedUsers_React = __webpack_require__(832);
+				const RemoveButton = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("RemoveButton");
+				const GuildActions = external_PluginApi_namespaceObject.WebpackModules.getByProps("unbanUser");
+				const SearchBar = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("SearchBar");
+				const GuildSettings = external_PluginApi_namespaceObject.WebpackModules.getByProps("updateMemberRoles");
+				const Util = external_PluginApi_namespaceObject.WebpackModules.getByProps("cachedFunction");
+				class BetterBannedUsers extends(external_BasePlugin_default()) {
+					onStart() {
+						external_StyleLoader_default().inject();
+						this.patchBannedUser();
+						this.patchBannedUsers();
+					}
+					getSettingsPanel() {
+						return BetterBannedUsers_React.createElement(SettingsPanel, null);
+					}
+					getSingleClass(...props) {
+						return "." + external_PluginApi_namespaceObject.WebpackModules.getByProps(...props)?.[props[0]];
+					}
+					async patchBannedUser() {
+						const BannedUser = await external_PluginApi_namespaceObject.ReactComponents.getComponentByName("BannedUser", this.getSingleClass(["bannedUser"]));
+						external_PluginApi_namespaceObject.Patcher.after(BannedUser.component.prototype, "render", ((that, _, res) => {
+							if (!Array.isArray(res?.props?.children)) return;
+							const {
+								guild,
+								user,
+								ban
+							} = that.props;
+							const name = res.props.children.pop();
+							res.props.children.push(BetterBannedUsers_React.createElement("div", {
+								className: banned.Z.wrapper
+							}, name, settings.get("showReason", true) ? BetterBannedUsers_React.createElement("span", {
+								className: banned.Z.banReason
+							}, ban.reason ?? i18n_namespaceObject.Messages.NO_BAN_REASON) : null), settings.get("quickUnban", true) ? BetterBannedUsers_React.createElement(RemoveButton, {
+								className: banned.Z.remove,
+								onClick: preventPropagation((() => {
+									this.unbanUser(guild.id, user);
+								}))
+							}) : null);
+						}));
+						BannedUser.forceUpdateAll();
+					}
+					async patchBannedUsers() {
+						const BannedUsers = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("FluxContainer(GuildSettingsBans)").prototype.render.call({
+							memoizedGetStateFromStores: constants_namespaceObject.NOOP
+						}).type;
+						external_PluginApi_namespaceObject.Patcher.before(BannedUsers.prototype, "render", (that => {
+							const order = settings.get("order", {
+								value: "descending",
+								label: "Descending"
+							});
+							const sort = settings.get("sort", {
+								value: "username",
+								label: "Name"
+							});
+							that.getSortedBans = Util.cachedFunction(((bans, searchQuery) => {
+								if (!bans) return [];
+								const userIds = external_window_default()(bans).keys();
+								if (~userIds.indexOf(searchQuery)) return [stores_namespaceObject.Users.getUser(searchQuery)];
+								let users = userIds.map(stores_namespaceObject.Users.getUser);
+								const tester = new RegExp(`^${external_window_default().escape(searchQuery)}`, "i");
+								if (searchQuery) users = users.filter((user => tester.test(user?.username) || tester.test(bans[user.id]?.reason)));
+								users = users.sortBy((e => "username" === sort.value ? e.username.toLowerCase() : bans[e.id]?.reason?.length ?? 0));
+								if ("ascending" === order.value) users = users.reverse();
+								return users.value();
+							}));
+							const original = that.renderSection;
+							that.renderSection = function() {
+								const res = original(...arguments);
+								const message = res.props.children[0].props.children[0];
+								res.props.children[0] = BetterBannedUsers_React.createElement(components_namespaceObject.Flex, {
+									direction: components_namespaceObject.Flex.Direction.VERTICAL,
+									className: banned.Z.container
+								}, message, BetterBannedUsers_React.createElement(components_namespaceObject.Flex, {
+									direction: components_namespaceObject.Flex.Direction.HORIZONTAL,
+									justify: components_namespaceObject.Flex.Justify.END
+								}, BetterBannedUsers_React.createElement(Select, {
+									label: "Order",
+									value: order,
+									options: [{
+										label: "Ascending",
+										value: "ascending"
+									}, {
+										label: "Descending",
+										value: "descending"
+									}],
+									onChange: value => {
+										that.forceUpdate();
+										settings.set("order", value);
+									}
+								}), BetterBannedUsers_React.createElement(Select, {
+									label: "Sort by",
+									value: sort,
+									options: [{
+										label: "Name",
+										value: "username"
+									}, {
+										label: "Reason length",
+										value: "reason_length"
+									}],
+									onChange: value => {
+										that.forceUpdate();
+										settings.set("sort", value);
+									}
+								})), Object.keys(Object(that.props.bans)).length ? BetterBannedUsers_React.createElement(SearchBar, {
+									onChange: value => {
+										GuildSettings.setSearchQuery(value);
+									},
+									onClear: () => GuildSettings.setSearchQuery(""),
+									placeholder: i18n_namespaceObject.Messages.BANS_SEARCH_PLACEHOLDER,
+									size: SearchBar.Sizes.LARGE,
+									query: that.props.searchQuery,
+									className: banned.Z.search
+								}) : null);
+								return res;
+							};
+						}));
+					}
+					async unbanUser(guildId, user) {
+						await GuildActions.unbanUser(guildId, user.id);
+						external_PluginApi_namespaceObject.Toasts.success(`Unbanned <span style="color: #5865f2;">${user.tag}</span>!`);
+					}
+					onStop() {
+						external_StyleLoader_default().remove();
+						external_PluginApi_namespaceObject.Patcher.unpatchAll();
+					}
+				}
 			},
 			645: module => {
 				module.exports = function(cssWithMappingToString) {
@@ -147,8 +633,8 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					return list;
 				};
 			},
-			698: module => {
-				module.exports = window["BdApi"]["React"];
+			832: module => {
+				module.exports = BdApi.React;
 			}
 		};
 		var __webpack_module_cache__ = {};
@@ -193,638 +679,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				});
 			};
 		})();
-		var __webpack_exports__ = {};
-		(() => {
-			__webpack_require__.r(__webpack_exports__);
-			__webpack_require__.d(__webpack_exports__, {
-				default: () => BetterBannedUsers
-			});
-			const external_BasePlugin_namespaceObject = BasePlugin;
-			var external_BasePlugin_default = __webpack_require__.n(external_BasePlugin_namespaceObject);
-			const external_PluginApi_namespaceObject = PluginApi;
-			var banned = __webpack_require__(418);
-			const external_n_inject_name_config_info_name_n_if_style_element_style_element_remove_n_style_element_document_head_appendChild_Object_assign_document_createElement_style_id_name_textContent_plugin_styles_n_n_remove_n_if_style_element_n_style_element_remove_n_style_element_null_n_n_n_namespaceObject = {
-				inject: (name = config.info.name) => {
-					if (__style_element__) __style_element__.remove();
-					__style_element__ = document.head.appendChild(Object.assign(document.createElement("style"), {
-						id: name,
-						textContent: __plugin_styles__
-					}));
-				},
-				remove: () => {
-					if (__style_element__) {
-						__style_element__.remove();
-						__style_element__ = null;
-					}
-				}
-			};
-			var external_n_inject_name_config_info_name_n_if_style_element_style_element_remove_n_style_element_document_head_appendChild_Object_assign_document_createElement_style_id_name_textContent_plugin_styles_n_n_remove_n_if_style_element_n_style_element_remove_n_style_element_null_n_n_n_default = __webpack_require__.n(external_n_inject_name_config_info_name_n_if_style_element_style_element_remove_n_style_element_document_head_appendChild_Object_assign_document_createElement_style_id_name_textContent_plugin_styles_n_n_remove_n_if_style_element_n_style_element_remove_n_style_element_null_n_n_n_namespaceObject);
-			const BetterBannedUsers_package = {
-				info: {
-					name: "BetterBannedUsers",
-					version: "1.0.0",
-					description: "Enhances the banned users page.",
-					authors: [{
-						name: "Strencher",
-						discord_id: "415849376598982656",
-						github_username: "Strencher"
-					}],
-					github: "https://github.com/Strencher/BetterDiscordStuff/BetterBannedUsers",
-					github_raw: "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/BetterBannedUsers/BetterBannedUsers.plugin.js"
-				},
-				build: {
-					zlibrary: true,
-					copy: true,
-					production: false,
-					scssHash: false,
-					alias: {
-						components: "components/index.js"
-					},
-					release: {
-						source: true,
-						readme: true,
-						public: true,
-						previews: [{
-							name: "Banned Users Page",
-							src: "assets/preview.png"
-						}, {
-							name: "Settings Panel",
-							src: "assets/settings.png"
-						}]
-					}
-				}
-			};
-			var info = {
-				name: "BetterBannedUsers",
-				version: "1.0.0",
-				description: "Enhances the banned users page.",
-				authors: [{
-					name: "Strencher",
-					discord_id: "415849376598982656",
-					github_username: "Strencher"
-				}],
-				github: "https://github.com/Strencher/BetterDiscordStuff/BetterBannedUsers",
-				github_raw: "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/BetterBannedUsers/BetterBannedUsers.plugin.js"
-			};
-			var build = {
-				zlibrary: true,
-				copy: true,
-				production: false,
-				scssHash: false,
-				alias: {
-					components: "components/index.js"
-				},
-				release: {
-					source: true,
-					readme: true,
-					public: true,
-					previews: [{
-						name: "Banned Users Page",
-						src: "assets/preview.png"
-					}, {
-						name: "Settings Panel",
-						src: "assets/settings.png"
-					}]
-				}
-			};
-			const external_Object_assign_BdApi_findModuleByProps_useStateFromStores_default_BdApi_findModuleByProps_useStateFromStores_namespaceObject = Object.assign({}, BdApi.findModuleByProps("useStateFromStores").default, BdApi.findModuleByProps("useStateFromStores"));
-			const external_get_Dispatcher_n_const_value_BdApi_findModuleByProps_dirtyDispatch_subscribe_n_Object_defineProperty_this_Dispatcher_n_value_n_configurable_true_n_n_return_value_n_nget_EmojiUtils_n_const_value_BdApi_findModuleByProps_uploadEmoji_n_Object_defineProperty_this_EmojiUtils_n_value_n_configurable_true_n_n_return_value_n_nget_PermissionUtils_n_const_value_BdApi_findModuleByProps_computePermissions_n_Object_defineProperty_this_PermissionUtils_n_value_n_configurable_true_n_n_return_value_n_namespaceObject = {
-				get Dispatcher() {
-					const value = BdApi.findModuleByProps("dirtyDispatch", "subscribe");
-					Object.defineProperty(this, "Dispatcher", {
-						value,
-						configurable: true
-					});
-					return value;
-				},
-				get EmojiUtils() {
-					const value = BdApi.findModuleByProps("uploadEmoji");
-					Object.defineProperty(this, "EmojiUtils", {
-						value,
-						configurable: true
-					});
-					return value;
-				},
-				get PermissionUtils() {
-					const value = BdApi.findModuleByProps("computePermissions");
-					Object.defineProperty(this, "PermissionUtils", {
-						value,
-						configurable: true
-					});
-					return value;
-				}
-			};
-			function _defineProperty(obj, key, value) {
-				if (key in obj) Object.defineProperty(obj, key, {
-					value,
-					enumerable: true,
-					configurable: true,
-					writable: true
-				});
-				else obj[key] = value;
-				return obj;
-			}
-			class SettingsManager extends external_Object_assign_BdApi_findModuleByProps_useStateFromStores_default_BdApi_findModuleByProps_useStateFromStores_namespaceObject.Store {
-				constructor(pluginName) {
-					super(external_get_Dispatcher_n_const_value_BdApi_findModuleByProps_dirtyDispatch_subscribe_n_Object_defineProperty_this_Dispatcher_n_value_n_configurable_true_n_n_return_value_n_nget_EmojiUtils_n_const_value_BdApi_findModuleByProps_uploadEmoji_n_Object_defineProperty_this_EmojiUtils_n_value_n_configurable_true_n_n_return_value_n_nget_PermissionUtils_n_const_value_BdApi_findModuleByProps_computePermissions_n_Object_defineProperty_this_PermissionUtils_n_value_n_configurable_true_n_n_return_value_n_namespaceObject.Dispatcher, {});
-					_defineProperty(this, "get", ((key, defaultValue) => this.settings[key] ?? defaultValue));
-					_defineProperty(this, "set", ((key, value) => {
-						this.settings[key] = value;
-						external_PluginApi_namespaceObject.PluginUtilities.saveSettings(this.pluginName, this.settings);
-						this.emitChange();
-					}));
-					this.pluginName = pluginName;
-					this.settings = external_PluginApi_namespaceObject.PluginUtilities.loadSettings(pluginName, {});
-				}
-			}
-			const Settings = new SettingsManager(info.name);
-			const settings = Settings;
-			const external_get_Messages_n_const_value_BdApi_findModuleByProps_getMessage_getMessages_n_Object_defineProperty_this_Messages_n_value_n_configurable_true_n_n_return_value_n_nget_Channels_n_const_value_BdApi_findModuleByProps_getChannel_n_Object_defineProperty_this_Channels_n_value_n_configurable_true_n_n_return_value_n_nget_Guilds_n_const_value_BdApi_findModuleByProps_getGuild_n_Object_defineProperty_this_Guilds_n_value_n_configurable_true_n_n_return_value_n_nget_SelectedGuilds_n_const_value_BdApi_findModuleByProps_getGuildId_getLastSelectedGuildId_n_Object_defineProperty_this_SelectedGuilds_n_value_n_configurable_true_n_n_return_value_n_nget_SelectedChannels_n_const_value_BdApi_findModuleByProps_getChannelId_getLastSelectedChannelId_n_Object_defineProperty_this_SelectedChannels_n_value_n_configurable_true_n_n_return_value_n_nget_Info_n_const_value_BdApi_findModuleByProps_getCurrentUser_n_Object_defineProperty_this_Info_n_value_n_configurable_true_n_n_return_value_n_nget_Status_n_const_value_BdApi_findModuleByProps_getStatus_n_Object_defineProperty_this_Status_n_value_n_configurable_true_n_n_return_value_n_nget_Users_n_const_value_BdApi_findModuleByProps_getUser_n_Object_defineProperty_this_Users_n_value_n_configurable_true_n_n_return_value_n_nget_Settings_n_const_value_BdApi_findModuleByProps_afkTimeout_status_n_Object_defineProperty_this_Settings_n_value_n_configurable_true_n_n_return_value_n_nget_UserProfile_n_const_value_BdApi_findModuleByProps_getUserProfile_n_Object_defineProperty_this_UserProfile_n_value_n_configurable_true_n_n_return_value_n_nget_Members_n_const_value_BdApi_findModuleByProps_getMember_n_Object_defineProperty_this_Members_n_value_n_configurable_true_n_n_return_value_n_nget_Activities_n_const_value_BdApi_findModuleByProps_getActivities_n_Object_defineProperty_this_Activities_n_value_n_configurable_true_n_n_return_value_n_nget_Games_n_const_value_BdApi_findModuleByProps_getGame_n_Object_defineProperty_this_Games_n_value_n_configurable_true_n_n_return_value_n_nget_Auth_n_const_value_BdApi_findModuleByProps_getId_isGuest_n_Object_defineProperty_this_Auth_n_value_n_configurable_true_n_n_return_value_n_nget_TypingUsers_n_const_value_BdApi_findModuleByProps_isTyping_n_Object_defineProperty_this_TypingUsers_n_value_n_configurable_true_n_n_return_value_n_namespaceObject = {
-				get Messages() {
-					const value = BdApi.findModuleByProps("getMessage", "getMessages");
-					Object.defineProperty(this, "Messages", {
-						value,
-						configurable: true
-					});
-					return value;
-				},
-				get Channels() {
-					const value = BdApi.findModuleByProps("getChannel");
-					Object.defineProperty(this, "Channels", {
-						value,
-						configurable: true
-					});
-					return value;
-				},
-				get Guilds() {
-					const value = BdApi.findModuleByProps("getGuild");
-					Object.defineProperty(this, "Guilds", {
-						value,
-						configurable: true
-					});
-					return value;
-				},
-				get SelectedGuilds() {
-					const value = BdApi.findModuleByProps("getGuildId", "getLastSelectedGuildId");
-					Object.defineProperty(this, "SelectedGuilds", {
-						value,
-						configurable: true
-					});
-					return value;
-				},
-				get SelectedChannels() {
-					const value = BdApi.findModuleByProps("getChannelId", "getLastSelectedChannelId");
-					Object.defineProperty(this, "SelectedChannels", {
-						value,
-						configurable: true
-					});
-					return value;
-				},
-				get Info() {
-					const value = BdApi.findModuleByProps("getCurrentUser");
-					Object.defineProperty(this, "Info", {
-						value,
-						configurable: true
-					});
-					return value;
-				},
-				get Status() {
-					const value = BdApi.findModuleByProps("getStatus");
-					Object.defineProperty(this, "Status", {
-						value,
-						configurable: true
-					});
-					return value;
-				},
-				get Users() {
-					const value = BdApi.findModuleByProps("getUser");
-					Object.defineProperty(this, "Users", {
-						value,
-						configurable: true
-					});
-					return value;
-				},
-				get Settings() {
-					const value = BdApi.findModuleByProps("afkTimeout", "status");
-					Object.defineProperty(this, "Settings", {
-						value,
-						configurable: true
-					});
-					return value;
-				},
-				get UserProfile() {
-					const value = BdApi.findModuleByProps("getUserProfile");
-					Object.defineProperty(this, "UserProfile", {
-						value,
-						configurable: true
-					});
-					return value;
-				},
-				get Members() {
-					const value = BdApi.findModuleByProps("getMember");
-					Object.defineProperty(this, "Members", {
-						value,
-						configurable: true
-					});
-					return value;
-				},
-				get Activities() {
-					const value = BdApi.findModuleByProps("getActivities");
-					Object.defineProperty(this, "Activities", {
-						value,
-						configurable: true
-					});
-					return value;
-				},
-				get Games() {
-					const value = BdApi.findModuleByProps("getGame");
-					Object.defineProperty(this, "Games", {
-						value,
-						configurable: true
-					});
-					return value;
-				},
-				get Auth() {
-					const value = BdApi.findModuleByProps("getId", "isGuest");
-					Object.defineProperty(this, "Auth", {
-						value,
-						configurable: true
-					});
-					return value;
-				},
-				get TypingUsers() {
-					const value = BdApi.findModuleByProps("isTyping");
-					Object.defineProperty(this, "TypingUsers", {
-						value,
-						configurable: true
-					});
-					return value;
-				}
-			};
-			const external_window_namespaceObject = window._;
-			var external_window_default = __webpack_require__.n(external_window_namespaceObject);
-			const external_get_Tooltip_n_const_value_BdApi_findModuleByDisplayName_Tooltip_n_Object_defineProperty_this_Tooltip_n_value_n_configurable_true_n_n_return_value_n_nget_TooltipContainer_n_const_value_BdApi_findModuleByProps_TooltipContainer_TooltipContainer_n_Object_defineProperty_this_TooltipContainer_n_value_n_configurable_true_n_n_return_value_n_nget_TextInput_n_const_value_BdApi_findModuleByDisplayName_TextInput_n_Object_defineProperty_this_TextInput_n_value_n_configurable_true_n_n_return_value_n_nget_SlideIn_n_const_value_BdApi_findModuleByDisplayName_SlideIn_n_Object_defineProperty_this_SlideIn_n_value_n_configurable_true_n_n_return_value_n_nget_SettingsNotice_n_const_value_BdApi_findModuleByDisplayName_SettingsNotice_n_Object_defineProperty_this_SettingsNotice_n_value_n_configurable_true_n_n_return_value_n_nget_TransitionGroup_n_const_value_BdApi_findModuleByDisplayName_TransitionGroup_n_Object_defineProperty_this_TransitionGroup_n_value_n_configurable_true_n_n_return_value_n_nget_Button_n_const_value_BdApi_findModuleByProps_DropdownSizes_n_Object_defineProperty_this_Button_n_value_n_configurable_true_n_n_return_value_n_nget_Flex_n_const_value_BdApi_findModuleByDisplayName_Flex_n_Object_defineProperty_this_Flex_n_value_n_configurable_true_n_n_return_value_n_nget_Text_n_const_value_BdApi_findModuleByDisplayName_Text_n_Object_defineProperty_this_Text_n_value_n_configurable_true_n_n_return_value_n_nget_Card_n_const_value_BdApi_findModuleByDisplayName_Card_n_Object_defineProperty_this_Card_n_value_n_configurable_true_n_n_return_value_n_namespaceObject = {
-				get Tooltip() {
-					const value = BdApi.findModuleByDisplayName("Tooltip");
-					Object.defineProperty(this, "Tooltip", {
-						value,
-						configurable: true
-					});
-					return value;
-				},
-				get TooltipContainer() {
-					const value = BdApi.findModuleByProps("TooltipContainer")?.TooltipContainer;
-					Object.defineProperty(this, "TooltipContainer", {
-						value,
-						configurable: true
-					});
-					return value;
-				},
-				get TextInput() {
-					const value = BdApi.findModuleByDisplayName("TextInput");
-					Object.defineProperty(this, "TextInput", {
-						value,
-						configurable: true
-					});
-					return value;
-				},
-				get SlideIn() {
-					const value = BdApi.findModuleByDisplayName("SlideIn");
-					Object.defineProperty(this, "SlideIn", {
-						value,
-						configurable: true
-					});
-					return value;
-				},
-				get SettingsNotice() {
-					const value = BdApi.findModuleByDisplayName("SettingsNotice");
-					Object.defineProperty(this, "SettingsNotice", {
-						value,
-						configurable: true
-					});
-					return value;
-				},
-				get TransitionGroup() {
-					const value = BdApi.findModuleByDisplayName("TransitionGroup");
-					Object.defineProperty(this, "TransitionGroup", {
-						value,
-						configurable: true
-					});
-					return value;
-				},
-				get Button() {
-					const value = BdApi.findModuleByProps("DropdownSizes");
-					Object.defineProperty(this, "Button", {
-						value,
-						configurable: true
-					});
-					return value;
-				},
-				get Flex() {
-					const value = BdApi.findModuleByDisplayName("Flex");
-					Object.defineProperty(this, "Flex", {
-						value,
-						configurable: true
-					});
-					return value;
-				},
-				get Text() {
-					const value = BdApi.findModuleByDisplayName("Text");
-					Object.defineProperty(this, "Text", {
-						value,
-						configurable: true
-					});
-					return value;
-				},
-				get Card() {
-					const value = BdApi.findModuleByDisplayName("Card");
-					Object.defineProperty(this, "Card", {
-						value,
-						configurable: true
-					});
-					return value;
-				}
-			};
-			const external_BdApi_findModuleByProps_getLocale_namespaceObject = BdApi.findModuleByProps("getLocale");
-			var external_BdApi_React_ = __webpack_require__(698);
-			var components_select = __webpack_require__(469);
-			const external_get_joinClassNames_n_const_value_BdApi_findModule_m_typeof_m_default_default_function_default_n_Object_defineProperty_this_joinClassNames_n_value_n_configurable_true_n_n_return_value_n_nget_useForceUpdate_n_const_value_BdApi_findModuleByProps_useForceUpdate_useForceUpdate_n_Object_defineProperty_this_useForceUpdate_n_value_n_configurable_true_n_n_return_value_n_nget_Logger_n_const_value_BdApi_findModuleByProps_setLogFn_default_n_Object_defineProperty_this_Logger_n_value_n_configurable_true_n_n_return_value_n_nget_Navigation_n_const_value_BdApi_findModuleByProps_replaceWith_n_Object_defineProperty_this_Navigation_n_value_n_configurable_true_n_n_return_value_n_namespaceObject = {
-				get joinClassNames() {
-					const value = BdApi.findModule((m => "function" === typeof m?.default?.default))?.default;
-					Object.defineProperty(this, "joinClassNames", {
-						value,
-						configurable: true
-					});
-					return value;
-				},
-				get useForceUpdate() {
-					const value = BdApi.findModuleByProps("useForceUpdate")?.useForceUpdate;
-					Object.defineProperty(this, "useForceUpdate", {
-						value,
-						configurable: true
-					});
-					return value;
-				},
-				get Logger() {
-					const value = BdApi.findModuleByProps("setLogFn")?.default;
-					Object.defineProperty(this, "Logger", {
-						value,
-						configurable: true
-					});
-					return value;
-				},
-				get Navigation() {
-					const value = BdApi.findModuleByProps("replaceWith");
-					Object.defineProperty(this, "Navigation", {
-						value,
-						configurable: true
-					});
-					return value;
-				}
-			};
-			var React = __webpack_require__(698);
-			function _extends() {
-				_extends = Object.assign || function(target) {
-					for (var i = 1; i < arguments.length; i++) {
-						var source = arguments[i];
-						for (var key in source)
-							if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-					}
-					return target;
-				};
-				return _extends.apply(this, arguments);
-			}
-			const Popout = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("Popout");
-			const Caret = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("Caret");
-			function Select({
-				value,
-				options,
-				label,
-				onChange
-			}) {
-				const [selected, setSelected] = (0, external_BdApi_React_.useState)(value);
-				const renderPopout = props => React.createElement("div", _extends({}, props, {
-					className: components_select.Z.container
-				}), options.map(((option, index) => React.createElement("div", {
-					className: (0, external_get_joinClassNames_n_const_value_BdApi_findModule_m_typeof_m_default_default_function_default_n_Object_defineProperty_this_joinClassNames_n_value_n_configurable_true_n_n_return_value_n_nget_useForceUpdate_n_const_value_BdApi_findModuleByProps_useForceUpdate_useForceUpdate_n_Object_defineProperty_this_useForceUpdate_n_value_n_configurable_true_n_n_return_value_n_nget_Logger_n_const_value_BdApi_findModuleByProps_setLogFn_default_n_Object_defineProperty_this_Logger_n_value_n_configurable_true_n_n_return_value_n_nget_Navigation_n_const_value_BdApi_findModuleByProps_replaceWith_n_Object_defineProperty_this_Navigation_n_value_n_configurable_true_n_n_return_value_n_namespaceObject.joinClassNames)(components_select.Z.option, {
-						[components_select.Z.selected]: (null === selected || void 0 === selected ? void 0 : selected.value) === option.value
-					}),
-					key: index,
-					onClick: () => {
-						setSelected(option);
-						onChange(option);
-						props.closePopout();
-					}
-				}, option.label))));
-				return React.createElement(Popout, {
-					renderPopout,
-					align: "center",
-					animation: Popout.Animation.FADE,
-					position: "bottom"
-				}, (props => React.createElement(external_get_Tooltip_n_const_value_BdApi_findModuleByDisplayName_Tooltip_n_Object_defineProperty_this_Tooltip_n_value_n_configurable_true_n_n_return_value_n_nget_TooltipContainer_n_const_value_BdApi_findModuleByProps_TooltipContainer_TooltipContainer_n_Object_defineProperty_this_TooltipContainer_n_value_n_configurable_true_n_n_return_value_n_nget_TextInput_n_const_value_BdApi_findModuleByDisplayName_TextInput_n_Object_defineProperty_this_TextInput_n_value_n_configurable_true_n_n_return_value_n_nget_SlideIn_n_const_value_BdApi_findModuleByDisplayName_SlideIn_n_Object_defineProperty_this_SlideIn_n_value_n_configurable_true_n_n_return_value_n_nget_SettingsNotice_n_const_value_BdApi_findModuleByDisplayName_SettingsNotice_n_Object_defineProperty_this_SettingsNotice_n_value_n_configurable_true_n_n_return_value_n_nget_TransitionGroup_n_const_value_BdApi_findModuleByDisplayName_TransitionGroup_n_Object_defineProperty_this_TransitionGroup_n_value_n_configurable_true_n_n_return_value_n_nget_Button_n_const_value_BdApi_findModuleByProps_DropdownSizes_n_Object_defineProperty_this_Button_n_value_n_configurable_true_n_n_return_value_n_nget_Flex_n_const_value_BdApi_findModuleByDisplayName_Flex_n_Object_defineProperty_this_Flex_n_value_n_configurable_true_n_n_return_value_n_nget_Text_n_const_value_BdApi_findModuleByDisplayName_Text_n_Object_defineProperty_this_Text_n_value_n_configurable_true_n_n_return_value_n_nget_Card_n_const_value_BdApi_findModuleByDisplayName_Card_n_Object_defineProperty_this_Card_n_value_n_configurable_true_n_n_return_value_n_namespaceObject.Flex, {
-					className: components_select.Z.select,
-					shrink: 0,
-					grow: 0,
-					align: external_get_Tooltip_n_const_value_BdApi_findModuleByDisplayName_Tooltip_n_Object_defineProperty_this_Tooltip_n_value_n_configurable_true_n_n_return_value_n_nget_TooltipContainer_n_const_value_BdApi_findModuleByProps_TooltipContainer_TooltipContainer_n_Object_defineProperty_this_TooltipContainer_n_value_n_configurable_true_n_n_return_value_n_nget_TextInput_n_const_value_BdApi_findModuleByDisplayName_TextInput_n_Object_defineProperty_this_TextInput_n_value_n_configurable_true_n_n_return_value_n_nget_SlideIn_n_const_value_BdApi_findModuleByDisplayName_SlideIn_n_Object_defineProperty_this_SlideIn_n_value_n_configurable_true_n_n_return_value_n_nget_SettingsNotice_n_const_value_BdApi_findModuleByDisplayName_SettingsNotice_n_Object_defineProperty_this_SettingsNotice_n_value_n_configurable_true_n_n_return_value_n_nget_TransitionGroup_n_const_value_BdApi_findModuleByDisplayName_TransitionGroup_n_Object_defineProperty_this_TransitionGroup_n_value_n_configurable_true_n_n_return_value_n_nget_Button_n_const_value_BdApi_findModuleByProps_DropdownSizes_n_Object_defineProperty_this_Button_n_value_n_configurable_true_n_n_return_value_n_nget_Flex_n_const_value_BdApi_findModuleByDisplayName_Flex_n_Object_defineProperty_this_Flex_n_value_n_configurable_true_n_n_return_value_n_nget_Text_n_const_value_BdApi_findModuleByDisplayName_Text_n_Object_defineProperty_this_Text_n_value_n_configurable_true_n_n_return_value_n_nget_Card_n_const_value_BdApi_findModuleByDisplayName_Card_n_Object_defineProperty_this_Card_n_value_n_configurable_true_n_n_return_value_n_namespaceObject.Flex.Align.CENTER,
-					justify: external_get_Tooltip_n_const_value_BdApi_findModuleByDisplayName_Tooltip_n_Object_defineProperty_this_Tooltip_n_value_n_configurable_true_n_n_return_value_n_nget_TooltipContainer_n_const_value_BdApi_findModuleByProps_TooltipContainer_TooltipContainer_n_Object_defineProperty_this_TooltipContainer_n_value_n_configurable_true_n_n_return_value_n_nget_TextInput_n_const_value_BdApi_findModuleByDisplayName_TextInput_n_Object_defineProperty_this_TextInput_n_value_n_configurable_true_n_n_return_value_n_nget_SlideIn_n_const_value_BdApi_findModuleByDisplayName_SlideIn_n_Object_defineProperty_this_SlideIn_n_value_n_configurable_true_n_n_return_value_n_nget_SettingsNotice_n_const_value_BdApi_findModuleByDisplayName_SettingsNotice_n_Object_defineProperty_this_SettingsNotice_n_value_n_configurable_true_n_n_return_value_n_nget_TransitionGroup_n_const_value_BdApi_findModuleByDisplayName_TransitionGroup_n_Object_defineProperty_this_TransitionGroup_n_value_n_configurable_true_n_n_return_value_n_nget_Button_n_const_value_BdApi_findModuleByProps_DropdownSizes_n_Object_defineProperty_this_Button_n_value_n_configurable_true_n_n_return_value_n_nget_Flex_n_const_value_BdApi_findModuleByDisplayName_Flex_n_Object_defineProperty_this_Flex_n_value_n_configurable_true_n_n_return_value_n_nget_Text_n_const_value_BdApi_findModuleByDisplayName_Text_n_Object_defineProperty_this_Text_n_value_n_configurable_true_n_n_return_value_n_nget_Card_n_const_value_BdApi_findModuleByDisplayName_Card_n_Object_defineProperty_this_Card_n_value_n_configurable_true_n_n_return_value_n_namespaceObject.Flex.Justify.END,
-					onClick: props.onClick
-				}, React.createElement(external_get_Tooltip_n_const_value_BdApi_findModuleByDisplayName_Tooltip_n_Object_defineProperty_this_Tooltip_n_value_n_configurable_true_n_n_return_value_n_nget_TooltipContainer_n_const_value_BdApi_findModuleByProps_TooltipContainer_TooltipContainer_n_Object_defineProperty_this_TooltipContainer_n_value_n_configurable_true_n_n_return_value_n_nget_TextInput_n_const_value_BdApi_findModuleByDisplayName_TextInput_n_Object_defineProperty_this_TextInput_n_value_n_configurable_true_n_n_return_value_n_nget_SlideIn_n_const_value_BdApi_findModuleByDisplayName_SlideIn_n_Object_defineProperty_this_SlideIn_n_value_n_configurable_true_n_n_return_value_n_nget_SettingsNotice_n_const_value_BdApi_findModuleByDisplayName_SettingsNotice_n_Object_defineProperty_this_SettingsNotice_n_value_n_configurable_true_n_n_return_value_n_nget_TransitionGroup_n_const_value_BdApi_findModuleByDisplayName_TransitionGroup_n_Object_defineProperty_this_TransitionGroup_n_value_n_configurable_true_n_n_return_value_n_nget_Button_n_const_value_BdApi_findModuleByProps_DropdownSizes_n_Object_defineProperty_this_Button_n_value_n_configurable_true_n_n_return_value_n_nget_Flex_n_const_value_BdApi_findModuleByDisplayName_Flex_n_Object_defineProperty_this_Flex_n_value_n_configurable_true_n_n_return_value_n_nget_Text_n_const_value_BdApi_findModuleByDisplayName_Text_n_Object_defineProperty_this_Text_n_value_n_configurable_true_n_n_return_value_n_nget_Card_n_const_value_BdApi_findModuleByDisplayName_Card_n_Object_defineProperty_this_Card_n_value_n_configurable_true_n_n_return_value_n_namespaceObject.Text, {
-					color: external_get_Tooltip_n_const_value_BdApi_findModuleByDisplayName_Tooltip_n_Object_defineProperty_this_Tooltip_n_value_n_configurable_true_n_n_return_value_n_nget_TooltipContainer_n_const_value_BdApi_findModuleByProps_TooltipContainer_TooltipContainer_n_Object_defineProperty_this_TooltipContainer_n_value_n_configurable_true_n_n_return_value_n_nget_TextInput_n_const_value_BdApi_findModuleByDisplayName_TextInput_n_Object_defineProperty_this_TextInput_n_value_n_configurable_true_n_n_return_value_n_nget_SlideIn_n_const_value_BdApi_findModuleByDisplayName_SlideIn_n_Object_defineProperty_this_SlideIn_n_value_n_configurable_true_n_n_return_value_n_nget_SettingsNotice_n_const_value_BdApi_findModuleByDisplayName_SettingsNotice_n_Object_defineProperty_this_SettingsNotice_n_value_n_configurable_true_n_n_return_value_n_nget_TransitionGroup_n_const_value_BdApi_findModuleByDisplayName_TransitionGroup_n_Object_defineProperty_this_TransitionGroup_n_value_n_configurable_true_n_n_return_value_n_nget_Button_n_const_value_BdApi_findModuleByProps_DropdownSizes_n_Object_defineProperty_this_Button_n_value_n_configurable_true_n_n_return_value_n_nget_Flex_n_const_value_BdApi_findModuleByDisplayName_Flex_n_Object_defineProperty_this_Flex_n_value_n_configurable_true_n_n_return_value_n_nget_Text_n_const_value_BdApi_findModuleByDisplayName_Text_n_Object_defineProperty_this_Text_n_value_n_configurable_true_n_n_return_value_n_nget_Card_n_const_value_BdApi_findModuleByDisplayName_Card_n_Object_defineProperty_this_Card_n_value_n_configurable_true_n_n_return_value_n_namespaceObject.Text.Colors.MUTED
-				}, label), React.createElement(external_get_Tooltip_n_const_value_BdApi_findModuleByDisplayName_Tooltip_n_Object_defineProperty_this_Tooltip_n_value_n_configurable_true_n_n_return_value_n_nget_TooltipContainer_n_const_value_BdApi_findModuleByProps_TooltipContainer_TooltipContainer_n_Object_defineProperty_this_TooltipContainer_n_value_n_configurable_true_n_n_return_value_n_nget_TextInput_n_const_value_BdApi_findModuleByDisplayName_TextInput_n_Object_defineProperty_this_TextInput_n_value_n_configurable_true_n_n_return_value_n_nget_SlideIn_n_const_value_BdApi_findModuleByDisplayName_SlideIn_n_Object_defineProperty_this_SlideIn_n_value_n_configurable_true_n_n_return_value_n_nget_SettingsNotice_n_const_value_BdApi_findModuleByDisplayName_SettingsNotice_n_Object_defineProperty_this_SettingsNotice_n_value_n_configurable_true_n_n_return_value_n_nget_TransitionGroup_n_const_value_BdApi_findModuleByDisplayName_TransitionGroup_n_Object_defineProperty_this_TransitionGroup_n_value_n_configurable_true_n_n_return_value_n_nget_Button_n_const_value_BdApi_findModuleByProps_DropdownSizes_n_Object_defineProperty_this_Button_n_value_n_configurable_true_n_n_return_value_n_nget_Flex_n_const_value_BdApi_findModuleByDisplayName_Flex_n_Object_defineProperty_this_Flex_n_value_n_configurable_true_n_n_return_value_n_nget_Text_n_const_value_BdApi_findModuleByDisplayName_Text_n_Object_defineProperty_this_Text_n_value_n_configurable_true_n_n_return_value_n_nget_Card_n_const_value_BdApi_findModuleByDisplayName_Card_n_Object_defineProperty_this_Card_n_value_n_configurable_true_n_n_return_value_n_namespaceObject.Text, {
-					className: components_select.Z.selectedText,
-					color: external_get_Tooltip_n_const_value_BdApi_findModuleByDisplayName_Tooltip_n_Object_defineProperty_this_Tooltip_n_value_n_configurable_true_n_n_return_value_n_nget_TooltipContainer_n_const_value_BdApi_findModuleByProps_TooltipContainer_TooltipContainer_n_Object_defineProperty_this_TooltipContainer_n_value_n_configurable_true_n_n_return_value_n_nget_TextInput_n_const_value_BdApi_findModuleByDisplayName_TextInput_n_Object_defineProperty_this_TextInput_n_value_n_configurable_true_n_n_return_value_n_nget_SlideIn_n_const_value_BdApi_findModuleByDisplayName_SlideIn_n_Object_defineProperty_this_SlideIn_n_value_n_configurable_true_n_n_return_value_n_nget_SettingsNotice_n_const_value_BdApi_findModuleByDisplayName_SettingsNotice_n_Object_defineProperty_this_SettingsNotice_n_value_n_configurable_true_n_n_return_value_n_nget_TransitionGroup_n_const_value_BdApi_findModuleByDisplayName_TransitionGroup_n_Object_defineProperty_this_TransitionGroup_n_value_n_configurable_true_n_n_return_value_n_nget_Button_n_const_value_BdApi_findModuleByProps_DropdownSizes_n_Object_defineProperty_this_Button_n_value_n_configurable_true_n_n_return_value_n_nget_Flex_n_const_value_BdApi_findModuleByDisplayName_Flex_n_Object_defineProperty_this_Flex_n_value_n_configurable_true_n_n_return_value_n_nget_Text_n_const_value_BdApi_findModuleByDisplayName_Text_n_Object_defineProperty_this_Text_n_value_n_configurable_true_n_n_return_value_n_nget_Card_n_const_value_BdApi_findModuleByDisplayName_Card_n_Object_defineProperty_this_Card_n_value_n_configurable_true_n_n_return_value_n_namespaceObject.Text.Colors.INTERACTIVE_NORMAL
-				}, null === selected || void 0 === selected ? void 0 : selected.label), React.createElement(Caret, {
-					direction: Caret.Directions.DOWN,
-					className: external_get_Tooltip_n_const_value_BdApi_findModuleByDisplayName_Tooltip_n_Object_defineProperty_this_Tooltip_n_value_n_configurable_true_n_n_return_value_n_nget_TooltipContainer_n_const_value_BdApi_findModuleByProps_TooltipContainer_TooltipContainer_n_Object_defineProperty_this_TooltipContainer_n_value_n_configurable_true_n_n_return_value_n_nget_TextInput_n_const_value_BdApi_findModuleByDisplayName_TextInput_n_Object_defineProperty_this_TextInput_n_value_n_configurable_true_n_n_return_value_n_nget_SlideIn_n_const_value_BdApi_findModuleByDisplayName_SlideIn_n_Object_defineProperty_this_SlideIn_n_value_n_configurable_true_n_n_return_value_n_nget_SettingsNotice_n_const_value_BdApi_findModuleByDisplayName_SettingsNotice_n_Object_defineProperty_this_SettingsNotice_n_value_n_configurable_true_n_n_return_value_n_nget_TransitionGroup_n_const_value_BdApi_findModuleByDisplayName_TransitionGroup_n_Object_defineProperty_this_TransitionGroup_n_value_n_configurable_true_n_n_return_value_n_nget_Button_n_const_value_BdApi_findModuleByProps_DropdownSizes_n_Object_defineProperty_this_Button_n_value_n_configurable_true_n_n_return_value_n_nget_Flex_n_const_value_BdApi_findModuleByDisplayName_Flex_n_Object_defineProperty_this_Flex_n_value_n_configurable_true_n_n_return_value_n_nget_Text_n_const_value_BdApi_findModuleByDisplayName_Text_n_Object_defineProperty_this_Text_n_value_n_configurable_true_n_n_return_value_n_nget_Card_n_const_value_BdApi_findModuleByDisplayName_Card_n_Object_defineProperty_this_Card_n_value_n_configurable_true_n_n_return_value_n_namespaceObject.Text.Colors.INTERACTIVE_NORMAL
-				}))));
-			}
-			var createUpdateWrapper_React = __webpack_require__(698);
-			function createUpdateWrapper_extends() {
-				createUpdateWrapper_extends = Object.assign || function(target) {
-					for (var i = 1; i < arguments.length; i++) {
-						var source = arguments[i];
-						for (var key in source)
-							if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-					}
-					return target;
-				};
-				return createUpdateWrapper_extends.apply(this, arguments);
-			}
-			const createUpdateWrapper = (Component, valueProp = "value", changeProp = "onChange") => props => {
-				const [value, setValue] = createUpdateWrapper_React.useState(props[valueProp]);
-				return createUpdateWrapper_React.createElement(Component, createUpdateWrapper_extends({}, props, {
-					[valueProp]: value,
-					[changeProp]: value => {
-						if ("function" === typeof props[changeProp]) props[changeProp](value);
-						setValue(value);
-					}
-				}));
-			};
-			const hooks_createUpdateWrapper = createUpdateWrapper;
-			var settings_React = __webpack_require__(698);
-			const SwitchItem = hooks_createUpdateWrapper(external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("SwitchItem"));
-			const settings_settings = {
-				quickUnban: {
-					value: true,
-					note: "Adds a quick unban button (X) to the card."
-				},
-				showReason: {
-					value: true,
-					note: "Shows the reason right inside the card."
-				}
-			};
-			function SettingsPanel() {
-				return settings_React.createElement(settings_React.Fragment, null, Object.keys(settings_settings).map((id => settings_React.createElement(SwitchItem, {
-					children: external_window_default().upperFirst(id),
-					note: settings_settings[id].note,
-					value: settings.get(id, settings_settings[id].value),
-					onChange: value => settings.set(id, value)
-				}))));
-			}
-			function preventPropagation(func) {
-				return function(event) {
-					var _event$preventDefault, _event$stopPropagatio;
-					null === (_event$preventDefault = event.preventDefault) || void 0 === _event$preventDefault ? void 0 : _event$preventDefault.call(event);
-					null === (_event$stopPropagatio = event.stopPropagation) || void 0 === _event$stopPropagatio ? void 0 : _event$stopPropagatio.call(event);
-					return func.apply(this, arguments);
-				};
-			}
-			const external_BdApi_findModuleByProps_API_HOST_namespaceObject = BdApi.findModuleByProps("API_HOST");
-			var BetterBannedUsers_React = __webpack_require__(698);
-			const RemoveButton = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("RemoveButton");
-			const GuildActions = external_PluginApi_namespaceObject.WebpackModules.getByProps("unbanUser");
-			const SearchBar = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("SearchBar");
-			const GuildSettings = external_PluginApi_namespaceObject.WebpackModules.getByProps("updateMemberRoles");
-			const Util = external_PluginApi_namespaceObject.WebpackModules.getByProps("cachedFunction");
-			class BetterBannedUsers extends(external_BasePlugin_default()) {
-				onStart() {
-					external_n_inject_name_config_info_name_n_if_style_element_style_element_remove_n_style_element_document_head_appendChild_Object_assign_document_createElement_style_id_name_textContent_plugin_styles_n_n_remove_n_if_style_element_n_style_element_remove_n_style_element_null_n_n_n_default().inject();
-					this.patchBannedUser();
-					this.patchBannedUsers();
-				}
-				getSettingsPanel() {
-					return BetterBannedUsers_React.createElement(SettingsPanel, null);
-				}
-				getSingleClass(...props) {
-					var _WebpackModules$getBy;
-					return "." + (null === (_WebpackModules$getBy = external_PluginApi_namespaceObject.WebpackModules.getByProps(...props)) || void 0 === _WebpackModules$getBy ? void 0 : _WebpackModules$getBy[props[0]]);
-				}
-				async patchBannedUser() {
-					const BannedUser = await external_PluginApi_namespaceObject.ReactComponents.getComponentByName("BannedUser", this.getSingleClass(["bannedUser"]));
-					external_PluginApi_namespaceObject.Patcher.after(BannedUser.component.prototype, "render", ((that, _, res) => {
-						var _res$props;
-						if (!Array.isArray(null === res || void 0 === res ? void 0 : null === (_res$props = res.props) || void 0 === _res$props ? void 0 : _res$props.children)) return;
-						const {
-							guild,
-							user,
-							ban
-						} = that.props;
-						const name = res.props.children.pop();
-						res.props.children.push(BetterBannedUsers_React.createElement("div", {
-							className: banned.Z.wrapper
-						}, name, settings.get("showReason", true) ? BetterBannedUsers_React.createElement("span", {
-							className: banned.Z.banReason
-						}, ban.reason ?? external_BdApi_findModuleByProps_getLocale_namespaceObject.Messages.NO_BAN_REASON) : null), settings.get("quickUnban", true) ? BetterBannedUsers_React.createElement(RemoveButton, {
-							className: banned.Z.remove,
-							onClick: preventPropagation((() => {
-								this.unbanUser(guild.id, user);
-							}))
-						}) : null);
-					}));
-					BannedUser.forceUpdateAll();
-				}
-				async patchBannedUsers() {
-					const BannedUsers = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("FluxContainer(GuildSettingsBans)").prototype.render.call({
-						memoizedGetStateFromStores: external_BdApi_findModuleByProps_API_HOST_namespaceObject.NOOP
-					}).type;
-					external_PluginApi_namespaceObject.Patcher.before(BannedUsers.prototype, "render", (that => {
-						const order = settings.get("order", {
-							value: "descending",
-							label: "Descending"
-						});
-						const sort = settings.get("sort", {
-							value: "username",
-							label: "Name"
-						});
-						that.getSortedBans = Util.cachedFunction(((bans, searchQuery) => {
-							if (!bans) return [];
-							const userIds = external_window_default()(bans).keys();
-							if (~userIds.indexOf(searchQuery)) return [external_get_Messages_n_const_value_BdApi_findModuleByProps_getMessage_getMessages_n_Object_defineProperty_this_Messages_n_value_n_configurable_true_n_n_return_value_n_nget_Channels_n_const_value_BdApi_findModuleByProps_getChannel_n_Object_defineProperty_this_Channels_n_value_n_configurable_true_n_n_return_value_n_nget_Guilds_n_const_value_BdApi_findModuleByProps_getGuild_n_Object_defineProperty_this_Guilds_n_value_n_configurable_true_n_n_return_value_n_nget_SelectedGuilds_n_const_value_BdApi_findModuleByProps_getGuildId_getLastSelectedGuildId_n_Object_defineProperty_this_SelectedGuilds_n_value_n_configurable_true_n_n_return_value_n_nget_SelectedChannels_n_const_value_BdApi_findModuleByProps_getChannelId_getLastSelectedChannelId_n_Object_defineProperty_this_SelectedChannels_n_value_n_configurable_true_n_n_return_value_n_nget_Info_n_const_value_BdApi_findModuleByProps_getCurrentUser_n_Object_defineProperty_this_Info_n_value_n_configurable_true_n_n_return_value_n_nget_Status_n_const_value_BdApi_findModuleByProps_getStatus_n_Object_defineProperty_this_Status_n_value_n_configurable_true_n_n_return_value_n_nget_Users_n_const_value_BdApi_findModuleByProps_getUser_n_Object_defineProperty_this_Users_n_value_n_configurable_true_n_n_return_value_n_nget_Settings_n_const_value_BdApi_findModuleByProps_afkTimeout_status_n_Object_defineProperty_this_Settings_n_value_n_configurable_true_n_n_return_value_n_nget_UserProfile_n_const_value_BdApi_findModuleByProps_getUserProfile_n_Object_defineProperty_this_UserProfile_n_value_n_configurable_true_n_n_return_value_n_nget_Members_n_const_value_BdApi_findModuleByProps_getMember_n_Object_defineProperty_this_Members_n_value_n_configurable_true_n_n_return_value_n_nget_Activities_n_const_value_BdApi_findModuleByProps_getActivities_n_Object_defineProperty_this_Activities_n_value_n_configurable_true_n_n_return_value_n_nget_Games_n_const_value_BdApi_findModuleByProps_getGame_n_Object_defineProperty_this_Games_n_value_n_configurable_true_n_n_return_value_n_nget_Auth_n_const_value_BdApi_findModuleByProps_getId_isGuest_n_Object_defineProperty_this_Auth_n_value_n_configurable_true_n_n_return_value_n_nget_TypingUsers_n_const_value_BdApi_findModuleByProps_isTyping_n_Object_defineProperty_this_TypingUsers_n_value_n_configurable_true_n_n_return_value_n_namespaceObject.Users.getUser(searchQuery)];
-							let users = userIds.map(external_get_Messages_n_const_value_BdApi_findModuleByProps_getMessage_getMessages_n_Object_defineProperty_this_Messages_n_value_n_configurable_true_n_n_return_value_n_nget_Channels_n_const_value_BdApi_findModuleByProps_getChannel_n_Object_defineProperty_this_Channels_n_value_n_configurable_true_n_n_return_value_n_nget_Guilds_n_const_value_BdApi_findModuleByProps_getGuild_n_Object_defineProperty_this_Guilds_n_value_n_configurable_true_n_n_return_value_n_nget_SelectedGuilds_n_const_value_BdApi_findModuleByProps_getGuildId_getLastSelectedGuildId_n_Object_defineProperty_this_SelectedGuilds_n_value_n_configurable_true_n_n_return_value_n_nget_SelectedChannels_n_const_value_BdApi_findModuleByProps_getChannelId_getLastSelectedChannelId_n_Object_defineProperty_this_SelectedChannels_n_value_n_configurable_true_n_n_return_value_n_nget_Info_n_const_value_BdApi_findModuleByProps_getCurrentUser_n_Object_defineProperty_this_Info_n_value_n_configurable_true_n_n_return_value_n_nget_Status_n_const_value_BdApi_findModuleByProps_getStatus_n_Object_defineProperty_this_Status_n_value_n_configurable_true_n_n_return_value_n_nget_Users_n_const_value_BdApi_findModuleByProps_getUser_n_Object_defineProperty_this_Users_n_value_n_configurable_true_n_n_return_value_n_nget_Settings_n_const_value_BdApi_findModuleByProps_afkTimeout_status_n_Object_defineProperty_this_Settings_n_value_n_configurable_true_n_n_return_value_n_nget_UserProfile_n_const_value_BdApi_findModuleByProps_getUserProfile_n_Object_defineProperty_this_UserProfile_n_value_n_configurable_true_n_n_return_value_n_nget_Members_n_const_value_BdApi_findModuleByProps_getMember_n_Object_defineProperty_this_Members_n_value_n_configurable_true_n_n_return_value_n_nget_Activities_n_const_value_BdApi_findModuleByProps_getActivities_n_Object_defineProperty_this_Activities_n_value_n_configurable_true_n_n_return_value_n_nget_Games_n_const_value_BdApi_findModuleByProps_getGame_n_Object_defineProperty_this_Games_n_value_n_configurable_true_n_n_return_value_n_nget_Auth_n_const_value_BdApi_findModuleByProps_getId_isGuest_n_Object_defineProperty_this_Auth_n_value_n_configurable_true_n_n_return_value_n_nget_TypingUsers_n_const_value_BdApi_findModuleByProps_isTyping_n_Object_defineProperty_this_TypingUsers_n_value_n_configurable_true_n_n_return_value_n_namespaceObject.Users.getUser);
-							const tester = new RegExp(`^${external_window_default().escape(searchQuery)}`, "i");
-							if (searchQuery) users = users.filter((user => {
-								var _bans$user$id;
-								return tester.test(null === user || void 0 === user ? void 0 : user.username) || tester.test(null === (_bans$user$id = bans[user.id]) || void 0 === _bans$user$id ? void 0 : _bans$user$id.reason);
-							}));
-							users = users.sortBy((e => {
-								var _bans$e$id, _bans$e$id$reason;
-								return "username" === sort.value ? e.username.toLowerCase() : (null === (_bans$e$id = bans[e.id]) || void 0 === _bans$e$id ? void 0 : null === (_bans$e$id$reason = _bans$e$id.reason) || void 0 === _bans$e$id$reason ? void 0 : _bans$e$id$reason.length) ?? 0;
-							}));
-							if ("ascending" === order.value) users = users.reverse();
-							return users.value();
-						}));
-						const original = that.renderSection;
-						that.renderSection = function() {
-							const res = original(...arguments);
-							const message = res.props.children[0].props.children[0];
-							res.props.children[0] = BetterBannedUsers_React.createElement(external_get_Tooltip_n_const_value_BdApi_findModuleByDisplayName_Tooltip_n_Object_defineProperty_this_Tooltip_n_value_n_configurable_true_n_n_return_value_n_nget_TooltipContainer_n_const_value_BdApi_findModuleByProps_TooltipContainer_TooltipContainer_n_Object_defineProperty_this_TooltipContainer_n_value_n_configurable_true_n_n_return_value_n_nget_TextInput_n_const_value_BdApi_findModuleByDisplayName_TextInput_n_Object_defineProperty_this_TextInput_n_value_n_configurable_true_n_n_return_value_n_nget_SlideIn_n_const_value_BdApi_findModuleByDisplayName_SlideIn_n_Object_defineProperty_this_SlideIn_n_value_n_configurable_true_n_n_return_value_n_nget_SettingsNotice_n_const_value_BdApi_findModuleByDisplayName_SettingsNotice_n_Object_defineProperty_this_SettingsNotice_n_value_n_configurable_true_n_n_return_value_n_nget_TransitionGroup_n_const_value_BdApi_findModuleByDisplayName_TransitionGroup_n_Object_defineProperty_this_TransitionGroup_n_value_n_configurable_true_n_n_return_value_n_nget_Button_n_const_value_BdApi_findModuleByProps_DropdownSizes_n_Object_defineProperty_this_Button_n_value_n_configurable_true_n_n_return_value_n_nget_Flex_n_const_value_BdApi_findModuleByDisplayName_Flex_n_Object_defineProperty_this_Flex_n_value_n_configurable_true_n_n_return_value_n_nget_Text_n_const_value_BdApi_findModuleByDisplayName_Text_n_Object_defineProperty_this_Text_n_value_n_configurable_true_n_n_return_value_n_nget_Card_n_const_value_BdApi_findModuleByDisplayName_Card_n_Object_defineProperty_this_Card_n_value_n_configurable_true_n_n_return_value_n_namespaceObject.Flex, {
-								direction: external_get_Tooltip_n_const_value_BdApi_findModuleByDisplayName_Tooltip_n_Object_defineProperty_this_Tooltip_n_value_n_configurable_true_n_n_return_value_n_nget_TooltipContainer_n_const_value_BdApi_findModuleByProps_TooltipContainer_TooltipContainer_n_Object_defineProperty_this_TooltipContainer_n_value_n_configurable_true_n_n_return_value_n_nget_TextInput_n_const_value_BdApi_findModuleByDisplayName_TextInput_n_Object_defineProperty_this_TextInput_n_value_n_configurable_true_n_n_return_value_n_nget_SlideIn_n_const_value_BdApi_findModuleByDisplayName_SlideIn_n_Object_defineProperty_this_SlideIn_n_value_n_configurable_true_n_n_return_value_n_nget_SettingsNotice_n_const_value_BdApi_findModuleByDisplayName_SettingsNotice_n_Object_defineProperty_this_SettingsNotice_n_value_n_configurable_true_n_n_return_value_n_nget_TransitionGroup_n_const_value_BdApi_findModuleByDisplayName_TransitionGroup_n_Object_defineProperty_this_TransitionGroup_n_value_n_configurable_true_n_n_return_value_n_nget_Button_n_const_value_BdApi_findModuleByProps_DropdownSizes_n_Object_defineProperty_this_Button_n_value_n_configurable_true_n_n_return_value_n_nget_Flex_n_const_value_BdApi_findModuleByDisplayName_Flex_n_Object_defineProperty_this_Flex_n_value_n_configurable_true_n_n_return_value_n_nget_Text_n_const_value_BdApi_findModuleByDisplayName_Text_n_Object_defineProperty_this_Text_n_value_n_configurable_true_n_n_return_value_n_nget_Card_n_const_value_BdApi_findModuleByDisplayName_Card_n_Object_defineProperty_this_Card_n_value_n_configurable_true_n_n_return_value_n_namespaceObject.Flex.Direction.VERTICAL,
-								className: banned.Z.container
-							}, message, BetterBannedUsers_React.createElement(external_get_Tooltip_n_const_value_BdApi_findModuleByDisplayName_Tooltip_n_Object_defineProperty_this_Tooltip_n_value_n_configurable_true_n_n_return_value_n_nget_TooltipContainer_n_const_value_BdApi_findModuleByProps_TooltipContainer_TooltipContainer_n_Object_defineProperty_this_TooltipContainer_n_value_n_configurable_true_n_n_return_value_n_nget_TextInput_n_const_value_BdApi_findModuleByDisplayName_TextInput_n_Object_defineProperty_this_TextInput_n_value_n_configurable_true_n_n_return_value_n_nget_SlideIn_n_const_value_BdApi_findModuleByDisplayName_SlideIn_n_Object_defineProperty_this_SlideIn_n_value_n_configurable_true_n_n_return_value_n_nget_SettingsNotice_n_const_value_BdApi_findModuleByDisplayName_SettingsNotice_n_Object_defineProperty_this_SettingsNotice_n_value_n_configurable_true_n_n_return_value_n_nget_TransitionGroup_n_const_value_BdApi_findModuleByDisplayName_TransitionGroup_n_Object_defineProperty_this_TransitionGroup_n_value_n_configurable_true_n_n_return_value_n_nget_Button_n_const_value_BdApi_findModuleByProps_DropdownSizes_n_Object_defineProperty_this_Button_n_value_n_configurable_true_n_n_return_value_n_nget_Flex_n_const_value_BdApi_findModuleByDisplayName_Flex_n_Object_defineProperty_this_Flex_n_value_n_configurable_true_n_n_return_value_n_nget_Text_n_const_value_BdApi_findModuleByDisplayName_Text_n_Object_defineProperty_this_Text_n_value_n_configurable_true_n_n_return_value_n_nget_Card_n_const_value_BdApi_findModuleByDisplayName_Card_n_Object_defineProperty_this_Card_n_value_n_configurable_true_n_n_return_value_n_namespaceObject.Flex, {
-								direction: external_get_Tooltip_n_const_value_BdApi_findModuleByDisplayName_Tooltip_n_Object_defineProperty_this_Tooltip_n_value_n_configurable_true_n_n_return_value_n_nget_TooltipContainer_n_const_value_BdApi_findModuleByProps_TooltipContainer_TooltipContainer_n_Object_defineProperty_this_TooltipContainer_n_value_n_configurable_true_n_n_return_value_n_nget_TextInput_n_const_value_BdApi_findModuleByDisplayName_TextInput_n_Object_defineProperty_this_TextInput_n_value_n_configurable_true_n_n_return_value_n_nget_SlideIn_n_const_value_BdApi_findModuleByDisplayName_SlideIn_n_Object_defineProperty_this_SlideIn_n_value_n_configurable_true_n_n_return_value_n_nget_SettingsNotice_n_const_value_BdApi_findModuleByDisplayName_SettingsNotice_n_Object_defineProperty_this_SettingsNotice_n_value_n_configurable_true_n_n_return_value_n_nget_TransitionGroup_n_const_value_BdApi_findModuleByDisplayName_TransitionGroup_n_Object_defineProperty_this_TransitionGroup_n_value_n_configurable_true_n_n_return_value_n_nget_Button_n_const_value_BdApi_findModuleByProps_DropdownSizes_n_Object_defineProperty_this_Button_n_value_n_configurable_true_n_n_return_value_n_nget_Flex_n_const_value_BdApi_findModuleByDisplayName_Flex_n_Object_defineProperty_this_Flex_n_value_n_configurable_true_n_n_return_value_n_nget_Text_n_const_value_BdApi_findModuleByDisplayName_Text_n_Object_defineProperty_this_Text_n_value_n_configurable_true_n_n_return_value_n_nget_Card_n_const_value_BdApi_findModuleByDisplayName_Card_n_Object_defineProperty_this_Card_n_value_n_configurable_true_n_n_return_value_n_namespaceObject.Flex.Direction.HORIZONTAL,
-								justify: external_get_Tooltip_n_const_value_BdApi_findModuleByDisplayName_Tooltip_n_Object_defineProperty_this_Tooltip_n_value_n_configurable_true_n_n_return_value_n_nget_TooltipContainer_n_const_value_BdApi_findModuleByProps_TooltipContainer_TooltipContainer_n_Object_defineProperty_this_TooltipContainer_n_value_n_configurable_true_n_n_return_value_n_nget_TextInput_n_const_value_BdApi_findModuleByDisplayName_TextInput_n_Object_defineProperty_this_TextInput_n_value_n_configurable_true_n_n_return_value_n_nget_SlideIn_n_const_value_BdApi_findModuleByDisplayName_SlideIn_n_Object_defineProperty_this_SlideIn_n_value_n_configurable_true_n_n_return_value_n_nget_SettingsNotice_n_const_value_BdApi_findModuleByDisplayName_SettingsNotice_n_Object_defineProperty_this_SettingsNotice_n_value_n_configurable_true_n_n_return_value_n_nget_TransitionGroup_n_const_value_BdApi_findModuleByDisplayName_TransitionGroup_n_Object_defineProperty_this_TransitionGroup_n_value_n_configurable_true_n_n_return_value_n_nget_Button_n_const_value_BdApi_findModuleByProps_DropdownSizes_n_Object_defineProperty_this_Button_n_value_n_configurable_true_n_n_return_value_n_nget_Flex_n_const_value_BdApi_findModuleByDisplayName_Flex_n_Object_defineProperty_this_Flex_n_value_n_configurable_true_n_n_return_value_n_nget_Text_n_const_value_BdApi_findModuleByDisplayName_Text_n_Object_defineProperty_this_Text_n_value_n_configurable_true_n_n_return_value_n_nget_Card_n_const_value_BdApi_findModuleByDisplayName_Card_n_Object_defineProperty_this_Card_n_value_n_configurable_true_n_n_return_value_n_namespaceObject.Flex.Justify.END
-							}, BetterBannedUsers_React.createElement(Select, {
-								label: "Order",
-								value: order,
-								options: [{
-									label: "Ascending",
-									value: "ascending"
-								}, {
-									label: "Descending",
-									value: "descending"
-								}],
-								onChange: value => {
-									that.forceUpdate();
-									settings.set("order", value);
-								}
-							}), BetterBannedUsers_React.createElement(Select, {
-								label: "Sort by",
-								value: sort,
-								options: [{
-									label: "Name",
-									value: "username"
-								}, {
-									label: "Reason length",
-									value: "reason_length"
-								}],
-								onChange: value => {
-									that.forceUpdate();
-									settings.set("sort", value);
-								}
-							})), Object.keys(Object(that.props.bans)).length ? BetterBannedUsers_React.createElement(SearchBar, {
-								onChange: value => {
-									GuildSettings.setSearchQuery(value);
-								},
-								onClear: () => GuildSettings.setSearchQuery(""),
-								placeholder: external_BdApi_findModuleByProps_getLocale_namespaceObject.Messages.BANS_SEARCH_PLACEHOLDER,
-								size: SearchBar.Sizes.LARGE,
-								query: that.props.searchQuery,
-								className: banned.Z.search
-							}) : null);
-							return res;
-						};
-					}));
-				}
-				async unbanUser(guildId, user) {
-					await GuildActions.unbanUser(guildId, user.id);
-					external_PluginApi_namespaceObject.Toasts.success(`Unbanned <span style="color: #5865f2;">${user.tag}</span>!`);
-				}
-				onStop() {
-					external_n_inject_name_config_info_name_n_if_style_element_style_element_remove_n_style_element_document_head_appendChild_Object_assign_document_createElement_style_id_name_textContent_plugin_styles_n_n_remove_n_if_style_element_n_style_element_remove_n_style_element_null_n_n_n_default().remove();
-					external_PluginApi_namespaceObject.Patcher.unpatchAll();
-				}
-			}
-		})();
+		var __webpack_exports__ = __webpack_require__(170);
 		module.exports.LibraryPluginHack = __webpack_exports__;
 	})();
 	const PluginExports = module.exports.LibraryPluginHack;
