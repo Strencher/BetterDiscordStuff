@@ -2,7 +2,7 @@ import {Channel, Message, User} from "@discord/classes";
 import {Button} from "@discord/components";
 import {ScrollerThin} from "@discord/scrollbars";
 import {WebpackModules} from "@zlibrary";
-import createStore from "../modules/zustand";
+import createStore from "common/hooks/zustand";
 import styles from "./panel.scss";
 
 const ChannelMessage = WebpackModules.getModule(m => m?.type?.displayName === "ChannelMessage");
@@ -26,10 +26,10 @@ export default function LogsPanel() {
 
     for (const item of logs) {
         let isGroupStart = lastItem?.user?.id === item.user.id;
-        
+
         const message = new Message({
             content: item.message,
-            timestamp: item.timestamp, 
+            timestamp: item.timestamp,
             author: new User(item.user),
         });
         message.start = !isGroupStart;
@@ -44,7 +44,7 @@ export default function LogsPanel() {
             <ScrollerThin className={styles.contents}>
                 {
                     formattedLogs.map(message => <div className={message.start && styles.message}>
-                        <ChannelMessage 
+                        <ChannelMessage
                             message={message}
                             channel={dummyChannel}
                             isGroupStart={message.start}
@@ -53,7 +53,7 @@ export default function LogsPanel() {
                 }
             </ScrollerThin>
         </div>
-    ); 
+    );
 }
 
 LogsPanel.Store = Api;

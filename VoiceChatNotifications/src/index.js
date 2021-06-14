@@ -1,19 +1,28 @@
+/// <reference path="../../typings/discord.d.ts" />
+
 import {Timestamp} from "@discord/classes";
 import {ModalRoot, openModal} from "@discord/modal";
-import {Info, Settings as SettingsStore, Users} from "@discord/stores";
+import {Channels, Info, SettingsStore, Status, Users} from "@discord/stores";
 import {Logger, Patcher, ReactComponents, Utilities, WebpackModules} from "@zlibrary";
 import BasePlugin from "@zlibrary/plugin";
 import VoiceNotificationsButton from "./components/button";
 import Settings from "./modules/settings";
+import style from "./components/notification.scss";
 import styles from "styles";
 import {DiscordConstants} from "@zlibrary/discord";
 import {Dispatcher} from "@discord/modules";
 import LogsPanel from "./components/panel";
 import Constants from "./data/constants";
 import SettingsPanel from "./components/Settings";
+import * as Notifications from "./modules/notifications";
+import Commands from "../../common/apis/commands";
+import Clyde from "../../common/apis/clyde";
 
 const VoiceStateStore = WebpackModules.getByProps("getVoiceStates");
 const SelectedVoiceChannelStore = WebpackModules.getByProps("getVoiceChannelId");
+const {AnimatedAvatar, Sizes: AvatarSizes} = WebpackModules.getByProps("AnimatedAvatar");
+const MessageTimestamp = WebpackModules.getByDisplayName("MessageTimestamp");
+const Members = WebpackModules.getByProps("getMember");
 
 export default class VoiceChatNotifications extends BasePlugin {
 	logs = [];
@@ -28,15 +37,16 @@ export default class VoiceChatNotifications extends BasePlugin {
 		];
 	}
 
-    getSettingsPanel() {
-        return (
-            <SettingsPanel />
-        );
-    }
+	getSettingsPanel() {
+		return (
+			<SettingsPanel />
+		);
+	}
 
 	onStart() {
 		styles.inject();
-        
+		Notifications.initialize();
+
 		for (const [event, callback] of this.subscriptions) {
 			Dispatcher.subscribe(event, callback);
 		}
@@ -52,8 +62,38 @@ export default class VoiceChatNotifications extends BasePlugin {
 			});
 			this.currentVoiceChannelId = selectedVoiceChannel;
 		}
-        
+
 		Utilities.suppressErrors(this.patchHeaderBar.bind(this), "HeaderBar patch")();
+
+		Commands.registerCommand(this.getName(), {
+			id: "disable-notifications",
+			type: 3,
+			name: "Disable VCN",
+			description: "Disables Voicechat notifications for this session.",
+			predicate: () => !LogsPanel.Store.getState().paused && this.currentVoiceChannelId,
+			options: [],
+			execute: (_, {channel}) => {
+				Clyde.sendMessage(channel.id, {
+					content: "Hiding Voicechat notifications for now."
+				});
+				LogsPanel.Store.setState({paused: true});
+			}
+		});
+
+		Commands.registerCommand(this.getName(), {
+			id: "enable-notifications",
+			type: 3,
+			name: "Enable VCN",
+			description: "Enables Voicechat notifications for this session again.",
+			predicate: () => LogsPanel.Store.getState().paused && this.currentVoiceChannelId,
+			options: [],
+			execute: (_, {channel}) => {
+				Clyde.sendMessage(channel.id, {
+					content: "Showing Voicechat notifications again."
+				});
+				LogsPanel.Store.setState({paused: false});
+			}
+		});
 	}
 
 	async patchHeaderBar() {
@@ -64,9 +104,9 @@ export default class VoiceChatNotifications extends BasePlugin {
 			if (!Array.isArray(tree)) return;
 
 			try {
-                tree.unshift(
-                    <VoiceNotificationsButton onClick={this.openLogs} />
-                );
+				tree.unshift(
+					<VoiceNotificationsButton onClick={this.openLogs} />
+				);
 			} catch (error) {
 				Logger.error(`Failed to inject HeaderBarIcon!\n`, error);
 			}
@@ -75,20 +115,49 @@ export default class VoiceChatNotifications extends BasePlugin {
 		HeaderBarContainer.forceUpdateAll();
 	}
 
-	updateLogs({message, user, timestamp}) {
-		if (Settings.get("desktopNotifi", false) && (Settings.get("supressInDnd", true) && SettingsStore.status !== "dnd")) new Notification(user.username + " - " + timestamp.toLocaleString(), {
-			icon: user.getAvatarURL(),
-			body: message,
-			silent: true
-		});
+	updateLogs({message, user, timestamp, channelId}) {
+		if (!Settings.get("notifications", true) || LogsPanel.Store.getState().paused) return;
+		const useInApp = (Settings.get("suppressInDnd", true) && SettingsStore.status === "dnd") || Settings.get("inppNotifications", true);
+
+		if (useInApp) {
+			Notifications.show(
+				<>
+					<AnimatedAvatar
+						isMobile={false}
+						status={Status.getStatus(user.id)}
+						isTyping={false}
+						src={user.getAvatarURL()}
+						size={AvatarSizes.SIZE_32}
+					/>
+					<div className={style.wrapper}>
+						<div className={style.header}>
+							<div className={style.username}>{user.username}</div>
+							<MessageTimestamp timestamp={new Timestamp(timestamp)} className={style.timestamp} />
+						</div>
+						<div className={style.message}>{message}</div>
+					</div>
+				</>,
+				{
+					color: Members.getMember(Channels.getChannel(channelId)?.guild_id, user.id)?.colorString
+				}
+			);
+		} else {
+			const notification = new Notification(user.username + " - " + timestamp.toLocaleString(), {
+				icon: user.getAvatarURL(),
+				body: message,
+				silent: true
+			});
+
+			notification.addEventListener("click", () => this.openLogs());
+		}
 	}
 
 	openLogs = () => {
-        openModal(props => (
-            <ModalRoot {...props}>
-                <LogsPanel />
-            </ModalRoot>
-        ));
+		openModal(props => (
+			<ModalRoot {...props}>
+				<LogsPanel />
+			</ModalRoot>
+		));
 	}
 
 	onVoiceStateChange = props => {
@@ -98,21 +167,28 @@ export default class VoiceChatNotifications extends BasePlugin {
 		const pushToLog = message => {
 			const timestamp = new Timestamp(new Date());
 
-            LogsPanel.Store.setState(state => ({logs: state.logs.concat({
+			const log = {
 				user,
 				timestamp: timestamp,
 				message,
-			})}));
+				channelId: props.channelId
+			};
+
+			this.updateLogs(log);
+			LogsPanel.Store.setState(state => {
+				state.logs.unshift(log);
+				return {logs: state.logs};
+			});
 		};
 
 		if (this.lastStates[props.userId] && !props.channelId && Settings.get("leave", true)) {
-			pushToLog("Left.");
+			pushToLog("Left the call.");
 			delete this.lastStates[props.userId];
 		}
-		if (props.channelId !== this.currentVoiceChannelId) return;
+		if (!props.channelId || (props.channelId !== this.currentVoiceChannelId)) return;
 
 		if (!this.lastStates[props.userId]) {
-			if (Settings.get("join", true)) pushToLog("Joined.");
+			if (Settings.get("join", true)) pushToLog("Joined the call.");
 			this.lastStates[props.userId] = props;
 		} else {
 			if (_.isEqual(this.lastStates[props.userId], props)) return;
@@ -139,6 +215,8 @@ export default class VoiceChatNotifications extends BasePlugin {
 	onStop() {
 		styles.remove();
 		Patcher.unpatchAll();
+		Commands.unregisterAllCommands(this.getName());
+		Notifications.shutdown();
 
 		for (const [event, callack] of this.subscriptions) {
 			Dispatcher.unsubscribe(event, callack);

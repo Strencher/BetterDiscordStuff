@@ -1,9 +1,9 @@
 /**
  * @name VoiceChatNotifications
- * @version 1.0.0
+ * @version 1.0.1
  * @description Shows you certain events from voicechats in a logs panel or as desktop notification.
  * @author Strencher
- * @source https://github.com/Strencher/BetterDiscordStuff/VoiceChatNotifications
+ * @source https://github.com/Strencher/BetterDiscordStuff/tree/master/VoiceChatNotifications
  * @updateUrl https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/VoiceChatNotifications/VoiceChatNotifications.plugin.js
  */
 /*@cc_on
@@ -32,16 +32,33 @@
 const config = {
 	"info": {
 		"name": "VoiceChatNotifications",
-		"version": "1.0.0",
+		"version": "1.0.1",
 		"description": "Shows you certain events from voicechats in a logs panel or as desktop notification.",
 		"authors": [{
 			"name": "Strencher",
 			"discord_id": "415849376598982656",
 			"github_username": "Strencher"
 		}],
-		"github": "https://github.com/Strencher/BetterDiscordStuff/VoiceChatNotifications",
+		"github": "https://github.com/Strencher/BetterDiscordStuff/tree/master/VoiceChatNotifications",
 		"github_raw": "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/VoiceChatNotifications/VoiceChatNotifications.plugin.js"
 	},
+	"changelog": [{
+			"type": "fixed",
+			"title": "Fixes",
+			"items": [
+				"Fixed logging from different voice channels.",
+				"Fixed notification popups."
+			]
+		},
+		{
+			"type": "added",
+			"title": "Added",
+			"items": [
+				"Added a new notification api, suppress in dnd mode.",
+				"Added a `/enable` and `/disable` command in the textarea to hide notifications."
+			]
+		}
+	],
 	"build": {
 		"zlibrary": true,
 		"copy": true,
@@ -62,10 +79,204 @@ function buildPlugin([BasePlugin, PluginApi]) {
 	};
 	(() => {
 		"use strict";
-		let __plugin_styles__ = "";
-		let __style_element__ = null;
+		class StyleLoader {
+			static styles = "";
+			static element = null;
+			static append(module, css) {
+				this.styles += `/* ${module} */\n${css}`;
+			}
+			static inject(name = config.info.name) {
+				if (this.element) this.element.remove();
+				this.element = document.head.appendChild(Object.assign(document.createElement("style"), {
+					id: name,
+					textContent: this.styles
+				}));
+			}
+			static remove() {
+				if (this.element) {
+					this.element.remove();
+					this.element = null;
+				}
+			}
+		}
+		function ___createMemoize___(instance, name, value) {
+			value = value();
+			Object.defineProperty(instance, name, {
+				value,
+				configurable: true
+			});
+			return value;
+		};
+		const Modules = {
+			get 'react-spring'() {
+				return ___createMemoize___(this, 'react-spring', () => BdApi.findModuleByProps('useSpring'))
+			},
+			'@discord/utils': {
+				get 'joinClassNames'() {
+					return ___createMemoize___(this, 'joinClassNames', () => BdApi.findModule(m => typeof m?.default?.default === 'function')?.default)
+				},
+				get 'useForceUpdate'() {
+					return ___createMemoize___(this, 'useForceUpdate', () => BdApi.findModuleByProps('useForceUpdate')?.useForceUpdate)
+				},
+				get 'Logger'() {
+					return ___createMemoize___(this, 'Logger', () => BdApi.findModuleByProps('setLogFn')?.default)
+				},
+				get 'Navigation'() {
+					return ___createMemoize___(this, 'Navigation', () => BdApi.findModuleByProps('replaceWith'))
+				}
+			},
+			'@discord/components': {
+				get 'Tooltip'() {
+					return ___createMemoize___(this, 'Tooltip', () => BdApi.findModuleByDisplayName('Tooltip'))
+				},
+				get 'TooltipContainer'() {
+					return ___createMemoize___(this, 'TooltipContainer', () => BdApi.findModuleByProps('TooltipContainer')?.TooltipContainer)
+				},
+				get 'TextInput'() {
+					return ___createMemoize___(this, 'TextInput', () => BdApi.findModuleByDisplayName('TextInput'))
+				},
+				get 'SlideIn'() {
+					return ___createMemoize___(this, 'SlideIn', () => BdApi.findModuleByDisplayName('SlideIn'))
+				},
+				get 'SettingsNotice'() {
+					return ___createMemoize___(this, 'SettingsNotice', () => BdApi.findModuleByDisplayName('SettingsNotice'))
+				},
+				get 'TransitionGroup'() {
+					return ___createMemoize___(this, 'TransitionGroup', () => BdApi.findModuleByDisplayName('TransitionGroup'))
+				},
+				get 'Button'() {
+					return ___createMemoize___(this, 'Button', () => BdApi.findModuleByProps('DropdownSizes'))
+				},
+				get 'Flex'() {
+					return ___createMemoize___(this, 'Flex', () => BdApi.findModuleByDisplayName('Flex'))
+				},
+				get 'Text'() {
+					return ___createMemoize___(this, 'Text', () => BdApi.findModuleByDisplayName('Text'))
+				},
+				get 'Card'() {
+					return ___createMemoize___(this, 'Card', () => BdApi.findModuleByDisplayName('Card'))
+				}
+			},
+			'@discord/modules': {
+				get 'Dispatcher'() {
+					return ___createMemoize___(this, 'Dispatcher', () => BdApi.findModuleByProps('dirtyDispatch', 'subscribe'))
+				},
+				get 'EmojiUtils'() {
+					return ___createMemoize___(this, 'EmojiUtils', () => BdApi.findModuleByProps('uploadEmoji'))
+				},
+				get 'PermissionUtils'() {
+					return ___createMemoize___(this, 'PermissionUtils', () => BdApi.findModuleByProps('computePermissions'))
+				},
+				get 'DMUtils'() {
+					return ___createMemoize___(this, 'DMUtils', () => BdApi.findModuleByProps('openPrivateChannel'))
+				}
+			},
+			'@discord/stores': {
+				get 'Messages'() {
+					return ___createMemoize___(this, 'Messages', () => BdApi.findModuleByProps('getMessage', 'getMessages'))
+				},
+				get 'Channels'() {
+					return ___createMemoize___(this, 'Channels', () => BdApi.findModuleByProps('getChannel'))
+				},
+				get 'Guilds'() {
+					return ___createMemoize___(this, 'Guilds', () => BdApi.findModuleByProps('getGuild'))
+				},
+				get 'SelectedGuilds'() {
+					return ___createMemoize___(this, 'SelectedGuilds', () => BdApi.findModuleByProps('getGuildId', 'getLastSelectedGuildId'))
+				},
+				get 'SelectedChannels'() {
+					return ___createMemoize___(this, 'SelectedChannels', () => BdApi.findModuleByProps('getChannelId', 'getLastSelectedChannelId'))
+				},
+				get 'Info'() {
+					return ___createMemoize___(this, 'Info', () => BdApi.findModuleByProps('getCurrentUser'))
+				},
+				get 'Status'() {
+					return ___createMemoize___(this, 'Status', () => BdApi.findModuleByProps('getStatus'))
+				},
+				get 'Users'() {
+					return ___createMemoize___(this, 'Users', () => BdApi.findModuleByProps('getUser'))
+				},
+				get 'SettingsStore'() {
+					return ___createMemoize___(this, 'SettingsStore', () => BdApi.findModuleByProps('afkTimeout', 'status'))
+				},
+				get 'UserProfile'() {
+					return ___createMemoize___(this, 'UserProfile', () => BdApi.findModuleByProps('getUserProfile'))
+				},
+				get 'Members'() {
+					return ___createMemoize___(this, 'Members', () => BdApi.findModuleByProps('getMember'))
+				},
+				get 'Activities'() {
+					return ___createMemoize___(this, 'Activities', () => BdApi.findModuleByProps('getActivities'))
+				},
+				get 'Games'() {
+					return ___createMemoize___(this, 'Games', () => BdApi.findModuleByProps('getGame'))
+				},
+				get 'Auth'() {
+					return ___createMemoize___(this, 'Auth', () => BdApi.findModuleByProps('getId', 'isGuest'))
+				},
+				get 'TypingUsers'() {
+					return ___createMemoize___(this, 'TypingUsers', () => BdApi.findModuleByProps('isTyping'))
+				}
+			},
+			'@discord/actions': {
+				get 'ProfileActions'() {
+					return ___createMemoize___(this, 'ProfileActions', () => BdApi.findModuleByProps('fetchProfile'))
+				}
+			},
+			get '@discord/i18n'() {
+				return ___createMemoize___(this, '@discord/i18n', () => BdApi.findModuleByProps('getLocale'))
+			},
+			get '@discord/constants'() {
+				return ___createMemoize___(this, '@discord/constants', () => BdApi.findModuleByProps('API_HOST'))
+			},
+			get '@discord/contextmenu'() {
+				return ___createMemoize___(this, '@discord/contextmenu', () => {
+					const ctx = Object.assign({}, BdApi.findModuleByProps('openContextMenu'), BdApi.findModuleByProps('MenuItem'));
+					ctx.Menu = ctx.default;
+					return ctx;
+				})
+			},
+			get '@discord/forms'() {
+				return ___createMemoize___(this, '@discord/forms', () => BdApi.findModuleByProps('FormItem'))
+			},
+			get '@discord/scrollbars'() {
+				return ___createMemoize___(this, '@discord/scrollbars', () => BdApi.findModuleByProps('ScrollerAuto'))
+			},
+			get '@discord/native'() {
+				return ___createMemoize___(this, '@discord/native', () => BdApi.findModuleByProps('requireModule'))
+			},
+			get '@discord/flux'() {
+				return ___createMemoize___(this, '@discord/flux', () => Object.assign({}, BdApi.findModuleByProps('useStateFromStores').default, BdApi.findModuleByProps('useStateFromStores')))
+			},
+			get '@discord/modal'() {
+				return ___createMemoize___(this, '@discord/modal', () => Object.assign({}, BdApi.findModuleByProps('ModalRoot'), BdApi.findModuleByProps('openModal')))
+			},
+			get '@discord/connections'() {
+				return ___createMemoize___(this, '@discord/connections', () => BdApi.findModuleByProps('get', 'isSupported', 'map'))
+			},
+			get '@discord/sanitize'() {
+				return ___createMemoize___(this, '@discord/sanitize', () => BdApi.findModuleByProps('stringify', 'parse', 'encode'))
+			},
+			get '@discord/icons'() {
+				return ___createMemoize___(this, '@discord/icons', () => BdApi.findAllModules(m => m.displayName && ~m.toString().indexOf('currentColor')).reduce((icons, icon) => (icons[icon.displayName] = icon, icons), {}))
+			},
+			'@discord/classes': {
+				get 'Timestamp'() {
+					return ___createMemoize___(this, 'Timestamp', () => BdApi.findModuleByPrototypes('toDate', 'month'))
+				},
+				get 'Message'() {
+					return ___createMemoize___(this, 'Message', () => BdApi.findModuleByPrototypes('getReaction', 'isSystemDM'))
+				},
+				get 'User'() {
+					return ___createMemoize___(this, 'User', () => BdApi.findModuleByPrototypes('tag'))
+				},
+				get 'Channel'() {
+					return ___createMemoize___(this, 'Channel', () => BdApi.findModuleByPrototypes('isOwner', 'isCategory'))
+				}
+			}
+		};
 		var __webpack_modules__ = {
-			281: (module, __webpack_exports__, __webpack_require__) => {
+			901: (module, __webpack_exports__, __webpack_require__) => {
 				__webpack_require__.d(__webpack_exports__, {
 					Z: () => __WEBPACK_DEFAULT_EXPORT__
 				});
@@ -74,14 +285,39 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
 					return i[1];
 				}));
-				___CSS_LOADER_EXPORT___.push([module.id, ".VoiceChatNotifications-button-icon{cursor:pointer;align-items:center}", ""]);
+				___CSS_LOADER_EXPORT___.push([module.id, ".VoiceChatNotifications-button-icon{cursor:pointer;align-items:center;display:flex}", ""]);
 				___CSS_LOADER_EXPORT___.locals = {
 					icon: "VoiceChatNotifications-button-icon"
 				};
-				__plugin_styles__ += `\n/* ${module.id} */\n${___CSS_LOADER_EXPORT___}\n`;
+				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
 				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
 			},
-			554: (module, __webpack_exports__, __webpack_require__) => {
+			571: (module, __webpack_exports__, __webpack_require__) => {
+				__webpack_require__.d(__webpack_exports__, {
+					Z: () => __WEBPACK_DEFAULT_EXPORT__
+				});
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(645);
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
+				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
+					return i[1];
+				}));
+				___CSS_LOADER_EXPORT___.push([module.id, "#voicechatnotifications{position:absolute;left:20px;z-index:9}.VoiceChatNotifications-notification-container{min-width:220px;margin-top:20px;position:relative;align-items:center;overflow:hidden;display:flex;pointer-events:all;padding:15px;border-radius:4px}.VoiceChatNotifications-notification-closeButton{color:#ddd;position:absolute;right:3px;top:3px;opacity:.7}.VoiceChatNotifications-notification-progress{bottom:0;height:3px;position:absolute;width:100%;left:0}.VoiceChatNotifications-notification-progressBar{height:3px;background:#0870f3}.VoiceChatNotifications-notification-content{color:#ddd;display:flex}.VoiceChatNotifications-notification-closeButton:hover{opacity:1}.VoiceChatNotifications-notification-wrapper{display:flex;flex-direction:column;margin-left:10px}.VoiceChatNotifications-notification-wrapper .VoiceChatNotifications-notification-header{display:flex;flex-direction:row}.VoiceChatNotifications-notification-wrapper .VoiceChatNotifications-notification-header .VoiceChatNotifications-notification-username{color:#fff;font-weight:700}.VoiceChatNotifications-notification-wrapper .VoiceChatNotifications-notification-header .VoiceChatNotifications-notification-timestamp{font-size:.75rem;padding-top:3px;color:var(--channels-default)}.VoiceChatNotifications-notification-wrapper .VoiceChatNotifications-notification-message{line-height:10px}", ""]);
+				___CSS_LOADER_EXPORT___.locals = {
+					container: "VoiceChatNotifications-notification-container",
+					closeButton: "VoiceChatNotifications-notification-closeButton",
+					progress: "VoiceChatNotifications-notification-progress",
+					progressBar: "VoiceChatNotifications-notification-progressBar",
+					content: "VoiceChatNotifications-notification-content",
+					wrapper: "VoiceChatNotifications-notification-wrapper",
+					header: "VoiceChatNotifications-notification-header",
+					username: "VoiceChatNotifications-notification-username",
+					timestamp: "VoiceChatNotifications-notification-timestamp",
+					message: "VoiceChatNotifications-notification-message"
+				};
+				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
+				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
+			},
+			0: (module, __webpack_exports__, __webpack_require__) => {
 				__webpack_require__.d(__webpack_exports__, {
 					Z: () => __WEBPACK_DEFAULT_EXPORT__
 				});
@@ -97,202 +333,23 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					message: "VoiceChatNotifications-panel-message",
 					empty: "VoiceChatNotifications-panel-empty"
 				};
-				__plugin_styles__ += `\n/* ${module.id} */\n${___CSS_LOADER_EXPORT___}\n`;
+				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
 				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
 			},
-			562: (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+			101: (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 				__webpack_require__.r(__webpack_exports__);
 				__webpack_require__.d(__webpack_exports__, {
 					default: () => VoiceChatNotifications
 				});
-				const external_get_Timestamp_n_const_value_BdApi_findModuleByPrototypes_toDate_month_n_Object_defineProperty_this_Timestamp_n_value_n_configurable_true_n_n_return_value_n_nget_Message_n_const_value_BdApi_findModuleByPrototypes_getReaction_isSystemDM_n_Object_defineProperty_this_Message_n_value_n_configurable_true_n_n_return_value_n_nget_User_n_const_value_BdApi_findModuleByPrototypes_tag_n_Object_defineProperty_this_User_n_value_n_configurable_true_n_n_return_value_n_nget_Channel_n_const_value_BdApi_findModuleByPrototypes_isOwner_isCategory_n_Object_defineProperty_this_Channel_n_value_n_configurable_true_n_n_return_value_n_namespaceObject = {
-					get Timestamp() {
-						const value = BdApi.findModuleByPrototypes("toDate", "month");
-						Object.defineProperty(this, "Timestamp", {
-							value,
-							configurable: true
-						});
-						return value;
-					},
-					get Message() {
-						const value = BdApi.findModuleByPrototypes("getReaction", "isSystemDM");
-						Object.defineProperty(this, "Message", {
-							value,
-							configurable: true
-						});
-						return value;
-					},
-					get User() {
-						const value = BdApi.findModuleByPrototypes("tag");
-						Object.defineProperty(this, "User", {
-							value,
-							configurable: true
-						});
-						return value;
-					},
-					get Channel() {
-						const value = BdApi.findModuleByPrototypes("isOwner", "isCategory");
-						Object.defineProperty(this, "Channel", {
-							value,
-							configurable: true
-						});
-						return value;
-					}
-				};
-				const external_Object_assign_BdApi_findModuleByProps_ModalRoot_BdApi_findModuleByProps_openModal_namespaceObject = Object.assign({}, BdApi.findModuleByProps("ModalRoot"), BdApi.findModuleByProps("openModal"));
-				const external_get_Messages_n_const_value_BdApi_findModuleByProps_getMessage_getMessages_n_Object_defineProperty_this_Messages_n_value_n_configurable_true_n_n_return_value_n_nget_Channels_n_const_value_BdApi_findModuleByPorps_getChannel_n_Object_defineProperty_this_Channels_n_value_n_configurable_true_n_n_return_value_n_nget_Guilds_n_const_value_BdApi_findModuleByProps_getGuild_n_Object_defineProperty_this_Guilds_n_value_n_configurable_true_n_n_return_value_n_nget_SelectedGuilds_n_const_value_BdApi_findModuleByProps_getGuildId_getLastSelectedGuildId_n_Object_defineProperty_this_SelectedGuilds_n_value_n_configurable_true_n_n_return_value_n_nget_SelectedChannels_n_const_value_BdApi_findModuleByProps_getChannelId_getLastSelectedChannelId_n_Object_defineProperty_this_SelectedChannels_n_value_n_configurable_true_n_n_return_value_n_nget_Info_n_const_value_BdApi_findModuleByProps_getCurrentUser_n_Object_defineProperty_this_Info_n_value_n_configurable_true_n_n_return_value_n_nget_Status_n_const_value_BdApi_findModuleByProps_getStatus_n_Object_defineProperty_this_Status_n_value_n_configurable_true_n_n_return_value_n_nget_Users_n_const_value_BdApi_findModuleByProps_getUser_n_Object_defineProperty_this_Users_n_value_n_configurable_true_n_n_return_value_n_nget_Settings_n_const_value_BdApi_findModuleByProps_afkTimeout_status_n_Object_defineProperty_this_Settings_n_value_n_configurable_true_n_n_return_value_n_namespaceObject = {
-					get Messages() {
-						const value = BdApi.findModuleByProps("getMessage", "getMessages");
-						Object.defineProperty(this, "Messages", {
-							value,
-							configurable: true
-						});
-						return value;
-					},
-					get Channels() {
-						const value = BdApi.findModuleByPorps("getChannel");
-						Object.defineProperty(this, "Channels", {
-							value,
-							configurable: true
-						});
-						return value;
-					},
-					get Guilds() {
-						const value = BdApi.findModuleByProps("getGuild");
-						Object.defineProperty(this, "Guilds", {
-							value,
-							configurable: true
-						});
-						return value;
-					},
-					get SelectedGuilds() {
-						const value = BdApi.findModuleByProps("getGuildId", "getLastSelectedGuildId");
-						Object.defineProperty(this, "SelectedGuilds", {
-							value,
-							configurable: true
-						});
-						return value;
-					},
-					get SelectedChannels() {
-						const value = BdApi.findModuleByProps("getChannelId", "getLastSelectedChannelId");
-						Object.defineProperty(this, "SelectedChannels", {
-							value,
-							configurable: true
-						});
-						return value;
-					},
-					get Info() {
-						const value = BdApi.findModuleByProps("getCurrentUser");
-						Object.defineProperty(this, "Info", {
-							value,
-							configurable: true
-						});
-						return value;
-					},
-					get Status() {
-						const value = BdApi.findModuleByProps("getStatus");
-						Object.defineProperty(this, "Status", {
-							value,
-							configurable: true
-						});
-						return value;
-					},
-					get Users() {
-						const value = BdApi.findModuleByProps("getUser");
-						Object.defineProperty(this, "Users", {
-							value,
-							configurable: true
-						});
-						return value;
-					},
-					get Settings() {
-						const value = BdApi.findModuleByProps("afkTimeout", "status");
-						Object.defineProperty(this, "Settings", {
-							value,
-							configurable: true
-						});
-						return value;
-					}
-				};
+				const classes_namespaceObject = Modules["@discord/classes"];
+				const modal_namespaceObject = Modules["@discord/modal"];
+				const stores_namespaceObject = Modules["@discord/stores"];
 				const external_PluginApi_namespaceObject = PluginApi;
 				const external_BasePlugin_namespaceObject = BasePlugin;
 				var external_BasePlugin_default = __webpack_require__.n(external_BasePlugin_namespaceObject);
-				const external_get_Tooltip_n_const_value_BdApi_findModuleByDisplayName_Tooltip_n_Object_defineProperty_this_Tooltip_n_value_n_configurable_true_n_n_return_value_n_nget_TooltipContainer_n_const_value_BdApi_findModuleByProps_TooltipContainer_TooltipContainer_n_Object_defineProperty_this_TooltipContainer_n_value_n_configurable_true_n_n_return_value_n_nget_TextInput_n_const_value_BdApi_findModuleByDisplayName_TextInput_n_Object_defineProperty_this_TextInput_n_value_n_configurable_true_n_n_return_value_n_nget_SlideIn_n_const_value_BdApi_findModuleByDisplayName_SlideIn_n_Object_defineProperty_this_SlideIn_n_value_n_configurable_true_n_n_return_value_n_nget_SettingsNotice_n_const_value_BdApi_findModuleByDisplayName_SettingsNotice_n_Object_defineProperty_this_SettingsNotice_n_value_n_configurable_true_n_n_return_value_n_nget_TransitionGroup_n_const_value_BdApi_findModuleByDisplayName_TransitionGroup_n_Object_defineProperty_this_TransitionGroup_n_value_n_configurable_true_n_n_return_value_n_nget_Button_n_const_value_BdApi_findModuleByProps_DropdownSizes_n_Object_defineProperty_this_Button_n_value_n_configurable_true_n_n_return_value_n_nget_Flex_n_const_value_BdApi_findModuleByDisplayName_Flex_n_Object_defineProperty_this_Flex_n_value_n_configurable_true_n_n_return_value_n_nget_Text_n_const_value_BdApi_findModuleByDisplayName_Text_n_Object_defineProperty_this_Text_n_value_n_configurable_true_n_n_return_value_n_namespaceObject = {
-					get Tooltip() {
-						const value = BdApi.findModuleByDisplayName("Tooltip");
-						Object.defineProperty(this, "Tooltip", {
-							value,
-							configurable: true
-						});
-						return value;
-					},
-					get TooltipContainer() {
-						const value = BdApi.findModuleByProps("TooltipContainer")?.TooltipContainer;
-						Object.defineProperty(this, "TooltipContainer", {
-							value,
-							configurable: true
-						});
-						return value;
-					},
-					get TextInput() {
-						const value = BdApi.findModuleByDisplayName("TextInput");
-						Object.defineProperty(this, "TextInput", {
-							value,
-							configurable: true
-						});
-						return value;
-					},
-					get SlideIn() {
-						const value = BdApi.findModuleByDisplayName("SlideIn");
-						Object.defineProperty(this, "SlideIn", {
-							value,
-							configurable: true
-						});
-						return value;
-					},
-					get SettingsNotice() {
-						const value = BdApi.findModuleByDisplayName("SettingsNotice");
-						Object.defineProperty(this, "SettingsNotice", {
-							value,
-							configurable: true
-						});
-						return value;
-					},
-					get TransitionGroup() {
-						const value = BdApi.findModuleByDisplayName("TransitionGroup");
-						Object.defineProperty(this, "TransitionGroup", {
-							value,
-							configurable: true
-						});
-						return value;
-					},
-					get Button() {
-						const value = BdApi.findModuleByProps("DropdownSizes");
-						Object.defineProperty(this, "Button", {
-							value,
-							configurable: true
-						});
-						return value;
-					},
-					get Flex() {
-						const value = BdApi.findModuleByDisplayName("Flex");
-						Object.defineProperty(this, "Flex", {
-							value,
-							configurable: true
-						});
-						return value;
-					},
-					get Text() {
-						const value = BdApi.findModuleByDisplayName("Text");
-						Object.defineProperty(this, "Text", {
-							value,
-							configurable: true
-						});
-						return value;
-					}
-				};
-				var components_button = __webpack_require__(281);
-				var React = __webpack_require__(698);
+				const components_namespaceObject = Modules["@discord/components"];
+				var components_button = __webpack_require__(901);
+				var React = __webpack_require__(832);
 				function _extends() {
 					_extends = Object.assign || function(target) {
 						for (var i = 1; i < arguments.length; i++) {
@@ -305,7 +362,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					return _extends.apply(this, arguments);
 				}
 				function VoiceNotificationsButton(props) {
-					return React.createElement(external_get_Tooltip_n_const_value_BdApi_findModuleByDisplayName_Tooltip_n_Object_defineProperty_this_Tooltip_n_value_n_configurable_true_n_n_return_value_n_nget_TooltipContainer_n_const_value_BdApi_findModuleByProps_TooltipContainer_TooltipContainer_n_Object_defineProperty_this_TooltipContainer_n_value_n_configurable_true_n_n_return_value_n_nget_TextInput_n_const_value_BdApi_findModuleByDisplayName_TextInput_n_Object_defineProperty_this_TextInput_n_value_n_configurable_true_n_n_return_value_n_nget_SlideIn_n_const_value_BdApi_findModuleByDisplayName_SlideIn_n_Object_defineProperty_this_SlideIn_n_value_n_configurable_true_n_n_return_value_n_nget_SettingsNotice_n_const_value_BdApi_findModuleByDisplayName_SettingsNotice_n_Object_defineProperty_this_SettingsNotice_n_value_n_configurable_true_n_n_return_value_n_nget_TransitionGroup_n_const_value_BdApi_findModuleByDisplayName_TransitionGroup_n_Object_defineProperty_this_TransitionGroup_n_value_n_configurable_true_n_n_return_value_n_nget_Button_n_const_value_BdApi_findModuleByProps_DropdownSizes_n_Object_defineProperty_this_Button_n_value_n_configurable_true_n_n_return_value_n_nget_Flex_n_const_value_BdApi_findModuleByDisplayName_Flex_n_Object_defineProperty_this_Flex_n_value_n_configurable_true_n_n_return_value_n_nget_Text_n_const_value_BdApi_findModuleByDisplayName_Text_n_Object_defineProperty_this_Text_n_value_n_configurable_true_n_n_return_value_n_namespaceObject.TooltipContainer, {
+					return React.createElement(components_namespaceObject.TooltipContainer, {
 						position: "bottom",
 						text: "Open VoiceLogs"
 					}, React.createElement("div", _extends({
@@ -316,8 +373,8 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						x: "0px",
 						y: "0px",
 						viewBox: "0 0 512 512",
-						width: "22",
-						height: "22"
+						width: "20",
+						height: "20"
 					}, React.createElement("g", null, React.createElement("path", {
 						d: "M299.389,412.924l-53.346,24.248c-5.285,2.402-10.87,3.62-16.602,3.62c-6.846,0-13.425-1.743-19.222-4.94   c-0.288,0.016-0.574,0.044-0.867,0.044H96.137c-8.284,0-15-6.716-15-15c0-8.284,6.716-15,15-15h93.655   c-0.938-7.26,0.133-14.757,3.285-21.69l3.777-8.31H96.137c-8.284,0-15-6.716-15-15c0-8.284,6.716-15,15-15H210.49l6.907-15.196   c0.018-0.04,0.038-0.072,0.057-0.11c1.471-3.201,3.502-6.151,6.041-8.69l6.005-6.004H96.137c-8.284,0-15-6.716-15-15   s6.716-15,15-15H259.5l30-29.999H96.137c-8.284,0-15-6.716-15-15c0-8.284,6.716-15,15-15H319.5l77.724-77.723l0.345-0.344V67.001   c0-8.284-6.716-15-15-15h-35V15c0-8.284-6.716-15-15-15c-8.284,0-15,6.716-15,15v37h-31.429V15c0-8.284-6.716-15-15-15   c-8.284,0-15,6.716-15,15v37H224.71V15c0-8.284-6.716-15-15-15c-8.284,0-15,6.716-15,15v37h-31.429V15c0-8.284-6.716-15-15-15   c-8.284,0-15,6.716-15,15v37h-31.429V15c0-8.284-6.716-15-15-15s-15,6.716-15,15v37H36.137c-8.284,0-15,6.716-15,15v400   c0,24.813,20.187,45,45,45h286.432c24.813,0,45-20.187,45-45V317.533l-89.221,89.22   C305.682,409.419,302.637,411.471,299.389,412.924z M209.71,195.897H96.137c-8.284,0-15-6.716-15-15c0-8.284,6.716-15,15-15H209.71   c8.284,0,15,6.716,15,15C224.71,189.182,217.994,195.897,209.71,195.897z"
 					}), React.createElement("path", {
@@ -326,7 +383,8 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						d: "M482.077,148.174c-11.716-11.716-30.711-11.716-42.426,0l-21.213,21.213l42.426,42.426l21.213-21.213   C493.792,178.884,493.792,159.89,482.077,148.174z"
 					})))));
 				}
-				const package_namespaceObject = JSON.parse('{"u":{"u2":"VoiceChatNotifications"}}');
+				const flux_namespaceObject = Modules["@discord/flux"];
+				const modules_namespaceObject = Modules["@discord/modules"];
 				function _defineProperty(obj, key, value) {
 					if (key in obj) Object.defineProperty(obj, key, {
 						value,
@@ -337,61 +395,31 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					else obj[key] = value;
 					return obj;
 				}
-				class Settings {
-					static saveState() {
-						external_PluginApi_namespaceObject.PluginUtilities.saveSettings(package_namespaceObject.u.u2, this.settings);
+				class SettingsManager extends flux_namespaceObject.Store {
+					constructor(pluginName) {
+						super(modules_namespaceObject.Dispatcher, {});
+						_defineProperty(this, "settings", void 0);
+						_defineProperty(this, "pluginName", void 0);
+						_defineProperty(this, "get", ((key, defaultValue) => this.settings[key] ?? defaultValue));
+						_defineProperty(this, "set", ((key, value) => {
+							this.settings[key] = value;
+							external_PluginApi_namespaceObject.PluginUtilities.saveSettings(this.pluginName, this.settings);
+							this.emitChange();
+							return value;
+						}));
+						this.pluginName = pluginName;
+						this.settings = external_PluginApi_namespaceObject.PluginUtilities.loadSettings(pluginName, {});
 					}
 				}
-				_defineProperty(Settings, "settings", external_PluginApi_namespaceObject.PluginUtilities.loadSettings(package_namespaceObject.u.u2, {}));
-				_defineProperty(Settings, "get", ((key, defaultValue) => Settings.settings[key] ?? defaultValue));
-				_defineProperty(Settings, "set", ((key, value) => {
-					Settings.settings[key] = value;
-					Settings.saveState();
-				}));
-				const external_n_inject_n_if_style_element_style_element_remove_n_style_element_document_head_appendChild_Object_assign_document_createElement_style_textContent_plugin_styles_n_n_remove_n_if_style_element_n_style_element_remove_n_style_element_null_n_n_n_namespaceObject = {
-					inject: () => {
-						if (__style_element__) __style_element__.remove();
-						__style_element__ = document.head.appendChild(Object.assign(document.createElement("style"), {
-							textContent: __plugin_styles__
-						}));
-					},
-					remove: () => {
-						if (__style_element__) {
-							__style_element__.remove();
-							__style_element__ = null;
-						}
-					}
-				};
-				var external_n_inject_n_if_style_element_style_element_remove_n_style_element_document_head_appendChild_Object_assign_document_createElement_style_textContent_plugin_styles_n_n_remove_n_if_style_element_n_style_element_remove_n_style_element_null_n_n_n_default = __webpack_require__.n(external_n_inject_n_if_style_element_style_element_remove_n_style_element_document_head_appendChild_Object_assign_document_createElement_style_textContent_plugin_styles_n_n_remove_n_if_style_element_n_style_element_remove_n_style_element_null_n_n_n_namespaceObject);
+				const package_namespaceObject = JSON.parse('{"um":{"u2":"VoiceChatNotifications"}}');
+				const Settings = new SettingsManager(package_namespaceObject.um.u2, {});
+				const settings = Settings;
+				var notification = __webpack_require__(571);
+				const external_StyleLoader_namespaceObject = StyleLoader;
+				var external_StyleLoader_default = __webpack_require__.n(external_StyleLoader_namespaceObject);
 				const external_PluginApi_DiscordModules_namespaceObject = PluginApi.DiscordModules;
-				const external_get_Dispatcher_n_const_value_BdApi_findModuleByProps_dirtyDispatch_subscribe_n_Object_defineProperty_this_Dispatcher_n_value_n_configurable_true_n_n_return_value_n_nget_EmojiUtils_n_const_value_BdApi_findModuleByProps_uploadEmoji_n_Object_defineProperty_this_EmojiUtils_n_value_n_configurable_true_n_n_return_value_n_nget_PermissionUtils_n_const_value_BdApi_findModuleByProps_computePermissions_n_Object_defineProperty_this_PermissionUtils_n_value_n_configurable_true_n_n_return_value_n_namespaceObject = {
-					get Dispatcher() {
-						const value = BdApi.findModuleByProps("dirtyDispatch", "subscribe");
-						Object.defineProperty(this, "Dispatcher", {
-							value,
-							configurable: true
-						});
-						return value;
-					},
-					get EmojiUtils() {
-						const value = BdApi.findModuleByProps("uploadEmoji");
-						Object.defineProperty(this, "EmojiUtils", {
-							value,
-							configurable: true
-						});
-						return value;
-					},
-					get PermissionUtils() {
-						const value = BdApi.findModuleByProps("computePermissions");
-						Object.defineProperty(this, "PermissionUtils", {
-							value,
-							configurable: true
-						});
-						return value;
-					}
-				};
-				const external_BdApi_findModuleByProps_ScrollerAuto_namespaceObject = BdApi.findModuleByProps("ScrollerAuto");
-				var external_BdApi_React_ = __webpack_require__(698);
+				const scrollbars_namespaceObject = Modules["@discord/scrollbars"];
+				var external_BdApi_React_ = __webpack_require__(832);
 				var external_BdApi_React_default = __webpack_require__.n(external_BdApi_React_);
 				function createStore(state) {
 					const listeners = new Set;
@@ -401,12 +429,10 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						},
 						setState(partial) {
 							const partialState = "function" === typeof partial ? partial(state) : partial;
-							if (!_.isEqual(partialState, state)) {
-								state = Object.assign({}, state, partialState);
-								listeners.forEach((listener => {
-									listener(state);
-								}));
-							}
+							state = Object.assign({}, state, partialState);
+							listeners.forEach((listener => {
+								listener(state);
+							}));
 						},
 						get listeners() {
 							return listeners;
@@ -430,13 +456,10 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						return collector(api.getState());
 					}, api];
 				}
-				var panel = __webpack_require__(554);
-				var panel_React = __webpack_require__(698);
-				const ChannelMessage = external_PluginApi_namespaceObject.WebpackModules.getModule((m => {
-					var _m$type;
-					return "ChannelMessage" === (null === m || void 0 === m ? void 0 : null === (_m$type = m.type) || void 0 === _m$type ? void 0 : _m$type.displayName);
-				}));
-				const dummyChannel = new external_get_Timestamp_n_const_value_BdApi_findModuleByPrototypes_toDate_month_n_Object_defineProperty_this_Timestamp_n_value_n_configurable_true_n_n_return_value_n_nget_Message_n_const_value_BdApi_findModuleByPrototypes_getReaction_isSystemDM_n_Object_defineProperty_this_Message_n_value_n_configurable_true_n_n_return_value_n_nget_User_n_const_value_BdApi_findModuleByPrototypes_tag_n_Object_defineProperty_this_User_n_value_n_configurable_true_n_n_return_value_n_nget_Channel_n_const_value_BdApi_findModuleByPrototypes_isOwner_isCategory_n_Object_defineProperty_this_Channel_n_value_n_configurable_true_n_n_return_value_n_namespaceObject.Channel({
+				var panel = __webpack_require__(0);
+				var panel_React = __webpack_require__(832);
+				const ChannelMessage = external_PluginApi_namespaceObject.WebpackModules.getModule((m => "ChannelMessage" === m?.type?.displayName));
+				const dummyChannel = new classes_namespaceObject.Channel({
 					name: "dumb-channel",
 					id: "-1"
 				});
@@ -451,23 +474,22 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					const formattedLogs = [];
 					let lastItem = null;
 					for (const item of logs) {
-						var _lastItem, _lastItem$user;
-						let isGroupStart = (null === (_lastItem = lastItem) || void 0 === _lastItem ? void 0 : null === (_lastItem$user = _lastItem.user) || void 0 === _lastItem$user ? void 0 : _lastItem$user.id) === item.user.id;
-						const message = new external_get_Timestamp_n_const_value_BdApi_findModuleByPrototypes_toDate_month_n_Object_defineProperty_this_Timestamp_n_value_n_configurable_true_n_n_return_value_n_nget_Message_n_const_value_BdApi_findModuleByPrototypes_getReaction_isSystemDM_n_Object_defineProperty_this_Message_n_value_n_configurable_true_n_n_return_value_n_nget_User_n_const_value_BdApi_findModuleByPrototypes_tag_n_Object_defineProperty_this_User_n_value_n_configurable_true_n_n_return_value_n_nget_Channel_n_const_value_BdApi_findModuleByPrototypes_isOwner_isCategory_n_Object_defineProperty_this_Channel_n_value_n_configurable_true_n_n_return_value_n_namespaceObject.Message({
+						let isGroupStart = lastItem?.user?.id === item.user.id;
+						const message = new classes_namespaceObject.Message({
 							content: item.message,
 							timestamp: item.timestamp,
-							author: new external_get_Timestamp_n_const_value_BdApi_findModuleByPrototypes_toDate_month_n_Object_defineProperty_this_Timestamp_n_value_n_configurable_true_n_n_return_value_n_nget_Message_n_const_value_BdApi_findModuleByPrototypes_getReaction_isSystemDM_n_Object_defineProperty_this_Message_n_value_n_configurable_true_n_n_return_value_n_nget_User_n_const_value_BdApi_findModuleByPrototypes_tag_n_Object_defineProperty_this_User_n_value_n_configurable_true_n_n_return_value_n_nget_Channel_n_const_value_BdApi_findModuleByPrototypes_isOwner_isCategory_n_Object_defineProperty_this_Channel_n_value_n_configurable_true_n_n_return_value_n_namespaceObject.User(item.user)
+							author: new classes_namespaceObject.User(item.user)
 						});
 						message.start = !isGroupStart;
 						formattedLogs.push(message);
 						lastItem = item;
 					}
-					return panel_React.createElement("div", null, panel_React.createElement(external_get_Tooltip_n_const_value_BdApi_findModuleByDisplayName_Tooltip_n_Object_defineProperty_this_Tooltip_n_value_n_configurable_true_n_n_return_value_n_nget_TooltipContainer_n_const_value_BdApi_findModuleByProps_TooltipContainer_TooltipContainer_n_Object_defineProperty_this_TooltipContainer_n_value_n_configurable_true_n_n_return_value_n_nget_TextInput_n_const_value_BdApi_findModuleByDisplayName_TextInput_n_Object_defineProperty_this_TextInput_n_value_n_configurable_true_n_n_return_value_n_nget_SlideIn_n_const_value_BdApi_findModuleByDisplayName_SlideIn_n_Object_defineProperty_this_SlideIn_n_value_n_configurable_true_n_n_return_value_n_nget_SettingsNotice_n_const_value_BdApi_findModuleByDisplayName_SettingsNotice_n_Object_defineProperty_this_SettingsNotice_n_value_n_configurable_true_n_n_return_value_n_nget_TransitionGroup_n_const_value_BdApi_findModuleByDisplayName_TransitionGroup_n_Object_defineProperty_this_TransitionGroup_n_value_n_configurable_true_n_n_return_value_n_nget_Button_n_const_value_BdApi_findModuleByProps_DropdownSizes_n_Object_defineProperty_this_Button_n_value_n_configurable_true_n_n_return_value_n_nget_Flex_n_const_value_BdApi_findModuleByDisplayName_Flex_n_Object_defineProperty_this_Flex_n_value_n_configurable_true_n_n_return_value_n_nget_Text_n_const_value_BdApi_findModuleByDisplayName_Text_n_Object_defineProperty_this_Text_n_value_n_configurable_true_n_n_return_value_n_namespaceObject.Button, {
+					return panel_React.createElement("div", null, panel_React.createElement(components_namespaceObject.Button, {
 						className: panel.Z.clearButton,
 						onClick: () => Api.setState({
 							logs: []
 						})
-					}, "Clear Logs"), panel_React.createElement(external_BdApi_findModuleByProps_ScrollerAuto_namespaceObject.ScrollerThin, {
+					}, "Clear Logs"), panel_React.createElement(scrollbars_namespaceObject.ScrollerThin, {
 						className: panel.Z.contents
 					}, formattedLogs.map((message => panel_React.createElement("div", {
 						className: message.start && panel.Z.message
@@ -534,25 +556,239 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					}));
 				};
 				const SwitchItem = createUpdateWrapper(external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("SwitchItem"));
+				const otherSettings = {
+					ignoreSelf: {
+						value: false,
+						note: "Defines if logs about your own actions should be ignored.",
+						name: "Ignore yourself"
+					},
+					supressInDnd: {
+						value: true,
+						note: "Suppress desktop notifications in DND, this automatically enables the In-App notification api.",
+						name: "Suppress in DND"
+					},
+					inppNotifications: {
+						value: true,
+						note: "Shows In-App Notifications instead of desktop notifications.",
+						name: "In-App Notifications"
+					},
+					notifications: {
+						value: true,
+						note: "Defines if notifications should be shown when an event happens in your current call.",
+						name: "Notifications"
+					}
+				};
 				function SettingsPanel() {
-					return external_BdApi_React_default().createElement("div", null, external_BdApi_React_default().createElement(SwitchItem, {
-						note: "Defines if logs about your own actions should be shown.",
-						value: Settings.get("ignoreSelf", false),
+					return external_BdApi_React_default().createElement("div", null, Object.keys(otherSettings).map((key => external_BdApi_React_default().createElement(SwitchItem, Settings_extends({}, otherSettings[key], {
+						value: settings.get(key, otherSettings[key].value),
 						onChange: value => {
-							Settings.set("ignoreSelf", value);
+							settings.set(key, value);
 						}
-					}, "Log yourself"), Object.keys(constants.VOICE_STATES).reduce(((items, key) => {
+					}), otherSettings[key].name))), Object.keys(constants.VOICE_STATES).reduce(((items, key) => {
 						items.push(external_BdApi_React_default().createElement(SwitchItem, {
-							value: Settings.get(key, true),
+							value: settings.get(key, true),
 							onChange: value => {
-								Settings.set(key, value);
+								settings.set(key, value);
 							},
 							note: constants.VOICE_STATES[key].description
 						}, _.upperFirst(key)));
 						return items;
 					}), []));
 				}
-				var VoiceChatNotifications_React = __webpack_require__(698);
+				const utils_namespaceObject = Modules["@discord/utils"];
+				const external_Modules_react_spring_namespaceObject = Modules["react-spring"];
+				var notification_React = __webpack_require__(832);
+				function notification_extends() {
+					notification_extends = Object.assign || function(target) {
+						for (var i = 1; i < arguments.length; i++) {
+							var source = arguments[i];
+							for (var key in source)
+								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
+						}
+						return target;
+					};
+					return notification_extends.apply(this, arguments);
+				}
+				const RemoveIcon = props => notification_React.createElement("svg", notification_extends({
+					width: "12",
+					height: "12",
+					viewBox: "0 0 24 24"
+				}, props), notification_React.createElement("path", {
+					fill: "currentColor",
+					d: "M18.4 4L12 10.4L5.6 4L4 5.6L10.4 12L4 18.4L5.6 20L12 13.6L18.4 20L20 18.4L13.6 12L20 5.6L18.4 4Z"
+				}));
+				function notification_Notification(props) {
+					const [closing, setClosing] = (0, external_BdApi_React_.useState)(false);
+					const timeout = (0, external_BdApi_React_.useMemo)((() => props.timeout || 5e3), []);
+					const spring = (0, external_Modules_react_spring_namespaceObject.useSpring)({
+						from: {
+							progress: 0,
+							backdrop: closing ? 10 : 0
+						},
+						to: {
+							progress: 100,
+							backdrop: closing ? 0 : 10
+						},
+						config: key => {
+							switch (key) {
+								case "progress":
+									return {
+										duration: timeout
+									};
+								default:
+									return {
+										duration: 250
+									};
+							}
+						}
+					});
+					return notification_React.createElement(external_Modules_react_spring_namespaceObject.animated.div, {
+						style: {
+							backdropFilter: spring.backdrop.to((e => {
+								if (closing && 0 === e && "function" === typeof props.onClose) props.onClose();
+								return `blur(${e}px)`;
+							}))
+						},
+						onMouseEnter: () => spring.progress.pause(),
+						onMouseLeave: () => spring.progress.resume(),
+						className: (0, utils_namespaceObject.joinClassNames)(notification.Z.container, {
+							closing
+						})
+					}, notification_React.createElement("div", {
+						className: notification.Z.content
+					}, props.content), notification_React.createElement(components_namespaceObject.Button, {
+						look: components_namespaceObject.Button.Looks.BLANK,
+						size: components_namespaceObject.Button.Sizes.NONE,
+						className: notification.Z.closeButton,
+						onClick: () => setClosing(true)
+					}, notification_React.createElement(RemoveIcon, null)), notification_React.createElement("div", {
+						className: notification.Z.progress
+					}, notification_React.createElement(external_Modules_react_spring_namespaceObject.animated.div, {
+						className: notification.Z.progressBar,
+						style: {
+							width: spring.progress.to((e => {
+								if (e > 97 && 0 !== props.timeout && !closing) setClosing(true);
+								return `${e}%`;
+							})),
+							backgroundColor: props.color
+						}
+					})));
+				}
+				const external_BdApi_ReactDOM_namespaceObject = BdApi.ReactDOM;
+				var external_BdApi_ReactDOM_default = __webpack_require__.n(external_BdApi_ReactDOM_namespaceObject);
+				var notifications_React = __webpack_require__(832);
+				function notifications_extends() {
+					notifications_extends = Object.assign || function(target) {
+						for (var i = 1; i < arguments.length; i++) {
+							var source = arguments[i];
+							for (var key in source)
+								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
+						}
+						return target;
+					};
+					return notifications_extends.apply(this, arguments);
+				}
+				const [notifications_useStore, notifications_Api] = createStore({
+					notifications: {},
+					paused: false
+				});
+				function initialize() {
+					const DOMNode = Object.assign(document.createElement("div"), {
+						id: "voicechatnotifications"
+					});
+					external_BdApi_ReactDOM_default().render(notifications_React.createElement(VoiceNotifications, null), DOMNode);
+					document.getElementById("app-mount").appendChild(DOMNode);
+				}
+				function shutdown() {
+					const node = document.getElementById("voicechatnotifications");
+					if (!node) return false;
+					const didUnmount = external_BdApi_ReactDOM_default().unmountComponentAtNode(node);
+					if (didUnmount) node.remove();
+				}
+				function show(content, options = {}) {
+					const id = parseInt(Math.random().toString().slice(2, 16));
+					const props = {
+						id,
+						content,
+						...options,
+						onClose: () => {
+							notifications_Api.setState((state => {
+								delete state.notifications[id];
+								return {
+									...state
+								};
+							}));
+						}
+					};
+					notifications_Api.setState((state => ({
+						notifications: {
+							...state.notifications,
+							[id]: props
+						}
+					})));
+					return id;
+				}
+				function VoiceNotifications() {
+					const state = notifications_useStore((e => Object.entries(e.notifications)));
+					return state.map((([id, props]) => notifications_React.createElement(notification_Notification, notifications_extends({}, props, {
+						key: id
+					}))));
+				}
+				const DiscordCommands = BdApi.findModuleByProps("BUILT_IN_COMMANDS");
+				if (!DiscordCommands.BUILT_IN_SECTIONS.some((e => "betterdiscord" === e.id))) DiscordCommands.BUILT_IN_SECTIONS.push({
+					icon: "https://github.com/BetterDiscord.png",
+					id: "betterdiscord",
+					name: "BetterDiscord",
+					type: 0
+				});
+				function registerCommand(caller, options) {
+					const cmd = Object.assign({}, options, {
+						__registerId: caller,
+						applicationId: "betterdiscord"
+					});
+					DiscordCommands.BUILT_IN_COMMANDS.push(cmd);
+					return () => {
+						const index = DiscordCommands.BUILT_IN_COMMANDS.findIndex((c => c === cmd));
+						if (index < 0) return false;
+						DiscordCommands.BUILT_IN_COMMANDS.splice(index, 1);
+					};
+				}
+				function unregisterAllCommands(caller) {
+					let index = DiscordCommands.BUILT_IN_COMMANDS.findIndex((cmd => cmd.__registerId === caller));
+					while (index > -1) {
+						DiscordCommands.BUILT_IN_COMMANDS.splice(index, 1);
+						index = DiscordCommands.BUILT_IN_COMMANDS.findIndex((cmd => cmd.__registerId === caller));
+					}
+				}
+				const Commands = {
+					registerCommand,
+					unregisterAllCommands
+				};
+				const commands = Commands;
+				const DefaultMessage = {
+					state: "SENT",
+					author: {
+						avatar: "betterdiscord",
+						id: "81388395867156480",
+						bot: true,
+						discriminator: "5000",
+						username: "BetterDiscord"
+					},
+					content: "Hello <:zere_zoom:477825238172958730>"
+				};
+				const MessageCreators = BdApi.findModuleByProps("createBotMessage");
+				const MessageActions = BdApi.findModuleByProps("receiveMessage");
+				const AvatarDefaults = BdApi.findModuleByProps("BOT_AVATARS");
+				if (AvatarDefaults?.BOT_AVATARS && !AvatarDefaults.BOT_AVATARS.betterdiscord) AvatarDefaults.BOT_AVATARS.betterdiscord = "https://github.com/BetterDiscord.png";
+				function sendMessage(channelId, message) {
+					MessageActions.receiveMessage(channelId, Object.assign({}, MessageCreators.createBotMessage(channelId, message?.content), DefaultMessage, message));
+				}
+				const Clyde = {
+					sendMessage,
+					DefaultMessage
+				};
+				const clyde = Clyde;
+				var VoiceChatNotifications_React = __webpack_require__(832);
 				function VoiceChatNotifications_defineProperty(obj, key, value) {
 					if (key in obj) Object.defineProperty(obj, key, {
 						value,
@@ -565,6 +801,12 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				}
 				const VoiceStateStore = external_PluginApi_namespaceObject.WebpackModules.getByProps("getVoiceStates");
 				const SelectedVoiceChannelStore = external_PluginApi_namespaceObject.WebpackModules.getByProps("getVoiceChannelId");
+				const {
+					AnimatedAvatar,
+					Sizes: AvatarSizes
+				} = external_PluginApi_namespaceObject.WebpackModules.getByProps("AnimatedAvatar");
+				const MessageTimestamp = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("MessageTimestamp");
+				const Members = external_PluginApi_namespaceObject.WebpackModules.getByProps("getMember");
 				class VoiceChatNotifications extends(external_BasePlugin_default()) {
 					constructor(...args) {
 						super(...args);
@@ -573,35 +815,41 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						VoiceChatNotifications_defineProperty(this, "logsRef", VoiceChatNotifications_React.createRef());
 						VoiceChatNotifications_defineProperty(this, "currentVoiceChannelId", void 0);
 						VoiceChatNotifications_defineProperty(this, "openLogs", (() => {
-							(0, external_Object_assign_BdApi_findModuleByProps_ModalRoot_BdApi_findModuleByProps_openModal_namespaceObject.openModal)((props => VoiceChatNotifications_React.createElement(external_Object_assign_BdApi_findModuleByProps_ModalRoot_BdApi_findModuleByProps_openModal_namespaceObject.ModalRoot, props, VoiceChatNotifications_React.createElement(LogsPanel, null))));
+							(0, modal_namespaceObject.openModal)((props => VoiceChatNotifications_React.createElement(modal_namespaceObject.ModalRoot, props, VoiceChatNotifications_React.createElement(LogsPanel, null))));
 						}));
 						VoiceChatNotifications_defineProperty(this, "onVoiceStateChange", (props => {
-							let user = external_get_Messages_n_const_value_BdApi_findModuleByProps_getMessage_getMessages_n_Object_defineProperty_this_Messages_n_value_n_configurable_true_n_n_return_value_n_nget_Channels_n_const_value_BdApi_findModuleByPorps_getChannel_n_Object_defineProperty_this_Channels_n_value_n_configurable_true_n_n_return_value_n_nget_Guilds_n_const_value_BdApi_findModuleByProps_getGuild_n_Object_defineProperty_this_Guilds_n_value_n_configurable_true_n_n_return_value_n_nget_SelectedGuilds_n_const_value_BdApi_findModuleByProps_getGuildId_getLastSelectedGuildId_n_Object_defineProperty_this_SelectedGuilds_n_value_n_configurable_true_n_n_return_value_n_nget_SelectedChannels_n_const_value_BdApi_findModuleByProps_getChannelId_getLastSelectedChannelId_n_Object_defineProperty_this_SelectedChannels_n_value_n_configurable_true_n_n_return_value_n_nget_Info_n_const_value_BdApi_findModuleByProps_getCurrentUser_n_Object_defineProperty_this_Info_n_value_n_configurable_true_n_n_return_value_n_nget_Status_n_const_value_BdApi_findModuleByProps_getStatus_n_Object_defineProperty_this_Status_n_value_n_configurable_true_n_n_return_value_n_nget_Users_n_const_value_BdApi_findModuleByProps_getUser_n_Object_defineProperty_this_Users_n_value_n_configurable_true_n_n_return_value_n_nget_Settings_n_const_value_BdApi_findModuleByProps_afkTimeout_status_n_Object_defineProperty_this_Settings_n_value_n_configurable_true_n_n_return_value_n_namespaceObject.Users.getUser(props.userId) || {};
-							if (Settings.get("ignoreSelf", false) && user.id === external_get_Messages_n_const_value_BdApi_findModuleByProps_getMessage_getMessages_n_Object_defineProperty_this_Messages_n_value_n_configurable_true_n_n_return_value_n_nget_Channels_n_const_value_BdApi_findModuleByPorps_getChannel_n_Object_defineProperty_this_Channels_n_value_n_configurable_true_n_n_return_value_n_nget_Guilds_n_const_value_BdApi_findModuleByProps_getGuild_n_Object_defineProperty_this_Guilds_n_value_n_configurable_true_n_n_return_value_n_nget_SelectedGuilds_n_const_value_BdApi_findModuleByProps_getGuildId_getLastSelectedGuildId_n_Object_defineProperty_this_SelectedGuilds_n_value_n_configurable_true_n_n_return_value_n_nget_SelectedChannels_n_const_value_BdApi_findModuleByProps_getChannelId_getLastSelectedChannelId_n_Object_defineProperty_this_SelectedChannels_n_value_n_configurable_true_n_n_return_value_n_nget_Info_n_const_value_BdApi_findModuleByProps_getCurrentUser_n_Object_defineProperty_this_Info_n_value_n_configurable_true_n_n_return_value_n_nget_Status_n_const_value_BdApi_findModuleByProps_getStatus_n_Object_defineProperty_this_Status_n_value_n_configurable_true_n_n_return_value_n_nget_Users_n_const_value_BdApi_findModuleByProps_getUser_n_Object_defineProperty_this_Users_n_value_n_configurable_true_n_n_return_value_n_nget_Settings_n_const_value_BdApi_findModuleByProps_afkTimeout_status_n_Object_defineProperty_this_Settings_n_value_n_configurable_true_n_n_return_value_n_namespaceObject.Info.getCurrentUser().id) return;
+							let user = stores_namespaceObject.Users.getUser(props.userId) || {};
+							if (settings.get("ignoreSelf", false) && user.id === stores_namespaceObject.Info.getCurrentUser().id) return;
 							const pushToLog = message => {
-								const timestamp = new external_get_Timestamp_n_const_value_BdApi_findModuleByPrototypes_toDate_month_n_Object_defineProperty_this_Timestamp_n_value_n_configurable_true_n_n_return_value_n_nget_Message_n_const_value_BdApi_findModuleByPrototypes_getReaction_isSystemDM_n_Object_defineProperty_this_Message_n_value_n_configurable_true_n_n_return_value_n_nget_User_n_const_value_BdApi_findModuleByPrototypes_tag_n_Object_defineProperty_this_User_n_value_n_configurable_true_n_n_return_value_n_nget_Channel_n_const_value_BdApi_findModuleByPrototypes_isOwner_isCategory_n_Object_defineProperty_this_Channel_n_value_n_configurable_true_n_n_return_value_n_namespaceObject.Timestamp(new Date);
-								LogsPanel.Store.setState((state => ({
-									logs: state.logs.concat({
-										user,
-										timestamp,
-										message
-									})
-								})));
+								const timestamp = new classes_namespaceObject.Timestamp(new Date);
+								const log = {
+									user,
+									timestamp,
+									message,
+									channelId: props.channelId
+								};
+								this.updateLogs(log);
+								LogsPanel.Store.setState((state => {
+									state.logs.unshift(log);
+									return {
+										logs: state.logs
+									};
+								}));
 							};
-							if (this.lastStates[props.userId] && !props.channelId && Settings.get("leave", true)) {
-								pushToLog("Left.");
+							if (this.lastStates[props.userId] && !props.channelId && settings.get("leave", true)) {
+								pushToLog("Left the call.");
 								delete this.lastStates[props.userId];
 							}
-							if (props.channelId !== this.currentVoiceChannelId) return;
+							if (!props.channelId || props.channelId !== this.currentVoiceChannelId) return;
 							if (!this.lastStates[props.userId]) {
-								if (Settings.get("join", true)) pushToLog("Joined.");
+								if (settings.get("join", true)) pushToLog("Joined the call.");
 								this.lastStates[props.userId] = props;
 							} else {
 								if (_.isEqual(this.lastStates[props.userId], props)) return;
 								for (const prop in constants.VOICE_STATES) {
 									const value = constants.VOICE_STATES[prop];
 									const hasChanges = this.lastStates[props.userId][prop] !== props[prop];
-									if (Settings.get(value.setting, true) && hasChanges) pushToLog(value.strings[Number(Boolean(props[prop]))]);
+									if (settings.get(value.setting, true) && hasChanges) pushToLog(value.strings[Number(Boolean(props[prop]))]);
 								}
 								this.lastStates[props.userId] = props;
 							}
@@ -622,8 +870,9 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						return VoiceChatNotifications_React.createElement(SettingsPanel, null);
 					}
 					onStart() {
-						external_n_inject_n_if_style_element_style_element_remove_n_style_element_document_head_appendChild_Object_assign_document_createElement_style_textContent_plugin_styles_n_n_remove_n_if_style_element_n_style_element_remove_n_style_element_null_n_n_n_default().inject();
-						for (const [event, callback] of this.subscriptions) external_get_Dispatcher_n_const_value_BdApi_findModuleByProps_dirtyDispatch_subscribe_n_Object_defineProperty_this_Dispatcher_n_value_n_configurable_true_n_n_return_value_n_nget_EmojiUtils_n_const_value_BdApi_findModuleByProps_uploadEmoji_n_Object_defineProperty_this_EmojiUtils_n_value_n_configurable_true_n_n_return_value_n_nget_PermissionUtils_n_const_value_BdApi_findModuleByProps_computePermissions_n_Object_defineProperty_this_PermissionUtils_n_value_n_configurable_true_n_n_return_value_n_namespaceObject.Dispatcher.subscribe(event, callback);
+						external_StyleLoader_default().inject();
+						initialize();
+						for (const [event, callback] of this.subscriptions) modules_namespaceObject.Dispatcher.subscribe(event, callback);
 						const selectedVoiceChannel = SelectedVoiceChannelStore.getVoiceChannelId();
 						if (selectedVoiceChannel) {
 							const state = VoiceStateStore.getVoiceStatesForChannel(selectedVoiceChannel);
@@ -634,6 +883,42 @@ function buildPlugin([BasePlugin, PluginApi]) {
 							this.currentVoiceChannelId = selectedVoiceChannel;
 						}
 						external_PluginApi_namespaceObject.Utilities.suppressErrors(this.patchHeaderBar.bind(this), "HeaderBar patch")();
+						commands.registerCommand(this.getName(), {
+							id: "disable-notifications",
+							type: 3,
+							name: "Disable VCN",
+							description: "Disables Voicechat notifications for this session.",
+							predicate: () => !LogsPanel.Store.getState().paused && this.currentVoiceChannelId,
+							options: [],
+							execute: (_, {
+								channel
+							}) => {
+								clyde.sendMessage(channel.id, {
+									content: "Hiding Voicechat notifications for now."
+								});
+								LogsPanel.Store.setState({
+									paused: true
+								});
+							}
+						});
+						commands.registerCommand(this.getName(), {
+							id: "enable-notifications",
+							type: 3,
+							name: "Enable VCN",
+							description: "Enables Voicechat notifications for this session again.",
+							predicate: () => LogsPanel.Store.getState().paused && this.currentVoiceChannelId,
+							options: [],
+							execute: (_, {
+								channel
+							}) => {
+								clyde.sendMessage(channel.id, {
+									content: "Showing Voicechat notifications again."
+								});
+								LogsPanel.Store.setState({
+									paused: false
+								});
+							}
+						});
 					}
 					async patchHeaderBar() {
 						const HeaderBarContainer = await external_PluginApi_namespaceObject.ReactComponents.getComponentByName("HeaderBarContainer", `.${external_PluginApi_namespaceObject.WebpackModules.getByProps("chat", "threadSidebar", "uploadArea").title}`);
@@ -653,18 +938,46 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					updateLogs({
 						message,
 						user,
-						timestamp
+						timestamp,
+						channelId
 					}) {
-						if (Settings.get("desktopNotifi", false) && Settings.get("supressInDnd", true) && "dnd" !== external_get_Messages_n_const_value_BdApi_findModuleByProps_getMessage_getMessages_n_Object_defineProperty_this_Messages_n_value_n_configurable_true_n_n_return_value_n_nget_Channels_n_const_value_BdApi_findModuleByPorps_getChannel_n_Object_defineProperty_this_Channels_n_value_n_configurable_true_n_n_return_value_n_nget_Guilds_n_const_value_BdApi_findModuleByProps_getGuild_n_Object_defineProperty_this_Guilds_n_value_n_configurable_true_n_n_return_value_n_nget_SelectedGuilds_n_const_value_BdApi_findModuleByProps_getGuildId_getLastSelectedGuildId_n_Object_defineProperty_this_SelectedGuilds_n_value_n_configurable_true_n_n_return_value_n_nget_SelectedChannels_n_const_value_BdApi_findModuleByProps_getChannelId_getLastSelectedChannelId_n_Object_defineProperty_this_SelectedChannels_n_value_n_configurable_true_n_n_return_value_n_nget_Info_n_const_value_BdApi_findModuleByProps_getCurrentUser_n_Object_defineProperty_this_Info_n_value_n_configurable_true_n_n_return_value_n_nget_Status_n_const_value_BdApi_findModuleByProps_getStatus_n_Object_defineProperty_this_Status_n_value_n_configurable_true_n_n_return_value_n_nget_Users_n_const_value_BdApi_findModuleByProps_getUser_n_Object_defineProperty_this_Users_n_value_n_configurable_true_n_n_return_value_n_nget_Settings_n_const_value_BdApi_findModuleByProps_afkTimeout_status_n_Object_defineProperty_this_Settings_n_value_n_configurable_true_n_n_return_value_n_namespaceObject.Settings.status) new Notification(user.username + " - " + timestamp.toLocaleString(), {
-							icon: user.getAvatarURL(),
-							body: message,
-							silent: true
+						if (!settings.get("notifications", true) || LogsPanel.Store.getState().paused) return;
+						const useInApp = settings.get("suppressInDnd", true) && "dnd" === stores_namespaceObject.SettingsStore.status || settings.get("inppNotifications", true);
+						if (useInApp) show(VoiceChatNotifications_React.createElement(VoiceChatNotifications_React.Fragment, null, VoiceChatNotifications_React.createElement(AnimatedAvatar, {
+							isMobile: false,
+							status: stores_namespaceObject.Status.getStatus(user.id),
+							isTyping: false,
+							src: user.getAvatarURL(),
+							size: AvatarSizes.SIZE_32
+						}), VoiceChatNotifications_React.createElement("div", {
+							className: notification.Z.wrapper
+						}, VoiceChatNotifications_React.createElement("div", {
+							className: notification.Z.header
+						}, VoiceChatNotifications_React.createElement("div", {
+							className: notification.Z.username
+						}, user.username), VoiceChatNotifications_React.createElement(MessageTimestamp, {
+							timestamp: new classes_namespaceObject.Timestamp(timestamp),
+							className: notification.Z.timestamp
+						})), VoiceChatNotifications_React.createElement("div", {
+							className: notification.Z.message
+						}, message))), {
+							color: Members.getMember(stores_namespaceObject.Channels.getChannel(channelId)?.guild_id, user.id)?.colorString
 						});
+						else {
+							const notification = new Notification(user.username + " - " + timestamp.toLocaleString(), {
+								icon: user.getAvatarURL(),
+								body: message,
+								silent: true
+							});
+							notification.addEventListener("click", (() => this.openLogs()));
+						}
 					}
 					onStop() {
-						external_n_inject_n_if_style_element_style_element_remove_n_style_element_document_head_appendChild_Object_assign_document_createElement_style_textContent_plugin_styles_n_n_remove_n_if_style_element_n_style_element_remove_n_style_element_null_n_n_n_default().remove();
+						external_StyleLoader_default().remove();
 						external_PluginApi_namespaceObject.Patcher.unpatchAll();
-						for (const [event, callack] of this.subscriptions) external_get_Dispatcher_n_const_value_BdApi_findModuleByProps_dirtyDispatch_subscribe_n_Object_defineProperty_this_Dispatcher_n_value_n_configurable_true_n_n_return_value_n_nget_EmojiUtils_n_const_value_BdApi_findModuleByProps_uploadEmoji_n_Object_defineProperty_this_EmojiUtils_n_value_n_configurable_true_n_n_return_value_n_nget_PermissionUtils_n_const_value_BdApi_findModuleByProps_computePermissions_n_Object_defineProperty_this_PermissionUtils_n_value_n_configurable_true_n_n_return_value_n_namespaceObject.Dispatcher.unsubscribe(event, callack);
+						commands.unregisterAllCommands(this.getName());
+						shutdown();
+						for (const [event, callack] of this.subscriptions) modules_namespaceObject.Dispatcher.unsubscribe(event, callack);
 					}
 				}
 			},
@@ -700,8 +1013,8 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					return list;
 				};
 			},
-			698: module => {
-				module.exports = global["BdApi"]["React"];
+			832: module => {
+				module.exports = BdApi.React;
 			}
 		};
 		var __webpack_module_cache__ = {};
@@ -746,7 +1059,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				});
 			};
 		})();
-		var __webpack_exports__ = __webpack_require__(562);
+		var __webpack_exports__ = __webpack_require__(101);
 		module.exports.LibraryPluginHack = __webpack_exports__;
 	})();
 	const PluginExports = module.exports.LibraryPluginHack;
