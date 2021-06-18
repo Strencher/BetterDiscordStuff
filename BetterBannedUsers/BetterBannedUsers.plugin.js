@@ -69,6 +69,10 @@ const config = {
 				{
 					"name": "Settings Panel",
 					"src": "assets/settings.png"
+				},
+				{
+					"name": "Commands API",
+					"src": "assets/commands.png"
 				}
 			]
 		}
@@ -277,7 +281,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			}
 		};
 		var __webpack_modules__ = {
-			418: (module, __webpack_exports__, __webpack_require__) => {
+			527: (module, __webpack_exports__, __webpack_require__) => {
 				__webpack_require__.d(__webpack_exports__, {
 					Z: () => __WEBPACK_DEFAULT_EXPORT__
 				});
@@ -297,7 +301,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
 				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
 			},
-			469: (module, __webpack_exports__, __webpack_require__) => {
+			698: (module, __webpack_exports__, __webpack_require__) => {
 				__webpack_require__.d(__webpack_exports__, {
 					Z: () => __WEBPACK_DEFAULT_EXPORT__
 				});
@@ -317,7 +321,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
 				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
 			},
-			170: (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+			778: (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 				__webpack_require__.r(__webpack_exports__);
 				__webpack_require__.d(__webpack_exports__, {
 					default: () => BetterBannedUsers
@@ -325,7 +329,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				const external_BasePlugin_namespaceObject = BasePlugin;
 				var external_BasePlugin_default = __webpack_require__.n(external_BasePlugin_namespaceObject);
 				const external_PluginApi_namespaceObject = PluginApi;
-				var banned = __webpack_require__(418);
+				var banned = __webpack_require__(527);
 				const external_StyleLoader_namespaceObject = StyleLoader;
 				var external_StyleLoader_default = __webpack_require__.n(external_StyleLoader_namespaceObject);
 				const package_namespaceObject = JSON.parse('{"um":{"u2":"BetterBannedUsers"}}');
@@ -365,7 +369,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				const components_namespaceObject = Modules["@discord/components"];
 				const i18n_namespaceObject = Modules["@discord/i18n"];
 				var external_BdApi_React_ = __webpack_require__(832);
-				var components_select = __webpack_require__(469);
+				var components_select = __webpack_require__(698);
 				const utils_namespaceObject = Modules["@discord/utils"];
 				var React = __webpack_require__(832);
 				function _extends() {
@@ -435,11 +439,12 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					};
 					return createUpdateWrapper_extends.apply(this, arguments);
 				}
-				const createUpdateWrapper = (Component, valueProp = "value", changeProp = "onChange") => props => {
+				const createUpdateWrapper = (Component, valueProp = "value", changeProp = "onChange", valueIndex = 0) => props => {
 					const [value, setValue] = createUpdateWrapper_React.useState(props[valueProp]);
 					return createUpdateWrapper_React.createElement(Component, createUpdateWrapper_extends({}, props, {
 						[valueProp]: value,
-						[changeProp]: value => {
+						[changeProp]: (...args) => {
+							const value = args[valueIndex];
 							if ("function" === typeof props[changeProp]) props[changeProp](value);
 							setValue(value);
 						}
@@ -474,17 +479,213 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					};
 				}
 				const constants_namespaceObject = Modules["@discord/constants"];
+				const DiscordCommands = BdApi.findModuleByProps("BUILT_IN_COMMANDS");
+				const DiscordCommandTypes = BdApi.findModuleByProps("ApplicationCommandType");
+				const Types = DiscordCommandTypes.ApplicationCommandType;
+				const OptionTypes = DiscordCommandTypes.ApplicationCommandOptionType;
+				const PermissionTypes = DiscordCommandTypes.ApplicationCommandPermissionType;
+				if (!DiscordCommands.BUILT_IN_SECTIONS.some((e => "betterdiscord" === e.id))) DiscordCommands.BUILT_IN_SECTIONS.push({
+					icon: "https://github.com/BetterDiscord.png",
+					id: "betterdiscord",
+					name: "BetterDiscord",
+					type: 0
+				});
+				function registerCommand(caller, options) {
+					const cmd = Object.assign({}, options, {
+						__registerId: caller,
+						applicationId: "betterdiscord",
+						type: Types.BOT
+					});
+					DiscordCommands.BUILT_IN_COMMANDS.push(cmd);
+					return () => {
+						const index = DiscordCommands.BUILT_IN_COMMANDS.indexOf(cmd);
+						if (index < 0) return false;
+						DiscordCommands.BUILT_IN_COMMANDS.splice(index, 1);
+					};
+				}
+				function unregisterAllCommands(caller) {
+					let index = DiscordCommands.BUILT_IN_COMMANDS.findIndex((cmd => cmd.__registerId === caller));
+					while (index > -1) {
+						DiscordCommands.BUILT_IN_COMMANDS.splice(index, 1);
+						index = DiscordCommands.BUILT_IN_COMMANDS.findIndex((cmd => cmd.__registerId === caller));
+					}
+				}
+				const Commands = {
+					registerCommand,
+					unregisterAllCommands
+				};
+				const commands = Commands;
+				const DefaultMessage = {
+					state: "SENT",
+					author: {
+						avatar: "betterdiscord",
+						id: "81388395867156480",
+						bot: true,
+						discriminator: "5000",
+						username: "BetterDiscord"
+					},
+					content: "Hello <:zere_zoom:477825238172958730>"
+				};
+				const MessageCreators = BdApi.findModuleByProps("createBotMessage");
+				const MessageActions = BdApi.findModuleByProps("receiveMessage");
+				const AvatarDefaults = BdApi.findModuleByProps("BOT_AVATARS");
+				if (AvatarDefaults?.BOT_AVATARS && !AvatarDefaults.BOT_AVATARS.betterdiscord) AvatarDefaults.BOT_AVATARS.betterdiscord = "https://github.com/BetterDiscord.png";
+				function sendMessage(channelId, message) {
+					MessageActions.receiveMessage(channelId, Object.assign({}, MessageCreators.createBotMessage(channelId, message?.content), DefaultMessage, message));
+				}
+				const Clyde = {
+					sendMessage,
+					DefaultMessage
+				};
+				const clyde = Clyde;
+				function switchCase(caze, cases, defaultValue) {
+					for (const caseTest of cases)
+						if (Array.isArray(caseTest)) {
+							const [tester, value] = caseTest;
+							if ("function" === typeof tester) {
+								if (tester(caze)) return value;
+							} else if (Object.is(caze, tester)) return value;
+						} else if ("object" === typeof caseTest)
+						if ("function" === typeof caseTest.test) {
+							if (caseTest.test(caze)) return caseTest.value;
+						} else if (Object.is(caze, caseTest.test)) return caseTest.value;
+					return defaultValue;
+				}
 				var BetterBannedUsers_React = __webpack_require__(832);
+				function BetterBannedUsers_defineProperty(obj, key, value) {
+					if (key in obj) Object.defineProperty(obj, key, {
+						value,
+						enumerable: true,
+						configurable: true,
+						writable: true
+					});
+					else obj[key] = value;
+					return obj;
+				}
 				const RemoveButton = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("RemoveButton");
 				const GuildActions = external_PluginApi_namespaceObject.WebpackModules.getByProps("unbanUser");
 				const SearchBar = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("SearchBar");
 				const GuildSettings = external_PluginApi_namespaceObject.WebpackModules.getByProps("updateMemberRoles");
 				const Util = external_PluginApi_namespaceObject.WebpackModules.getByProps("cachedFunction");
+				const APIErrors = {
+					UNKOWN_USER: 10013,
+					MISSING_PERMISSIONS: 50013
+				};
 				class BetterBannedUsers extends(external_BasePlugin_default()) {
+					constructor(...args) {
+						super(...args);
+						BetterBannedUsers_defineProperty(this, "promises", {
+							cancelled: false,
+							cancel() {
+								this.cancelled = true;
+							}
+						});
+						BetterBannedUsers_defineProperty(this, "regex", {
+							userId: /^\d{15}/
+						});
+					}
+					async banUserWithCommand(guild, userId, reason) {
+						try {
+							await GuildActions.banUser(guild.id, userId, void 0, `${stores_namespaceObject.Users.getCurrentUser().tag}: ${reason ? reason : "No reason provided."}`);
+						} catch (error) {
+							external_PluginApi_namespaceObject.Logger.error(`Failed to ban ${userId}:\n`, error);
+							return switchCase(error?.body?.code, [
+								[APIErrors.MISSING_PERMISSIONS, "Sorry, but you don't have enough power to perform that action. 😕"],
+								[APIErrors.UNKOWN_USER, "Sorry, but i couldn't find that user. Are you sure it's their user id? 🤔"]
+							], "Something when wrong when i tried to ban them. Check your console for more details.");
+						}
+						return `Banned <@!${userId}> from this server. 🔨`;
+					}
+					async unbanUserWithCommand(guild, userId) {
+						try {
+							await GuildActions.unbanUser(guild.id, userId);
+						} catch (error) {
+							external_PluginApi_namespaceObject.Logger.error(`Failed to unban ${userId}:\n`, error);
+							return switchCase(error?.body?.code, [
+								[APIErrors.MISSING_PERMISSIONS, "Sorry, but you don't have enough power to perform that action. 😕"],
+								[APIErrors.UNKOWN_USER, "Sorry, but i couldn't find that user. Are you sure it's their user id? 🤔"]
+							], "Something when wrong when i tried to unban them. Check your console for more details.");
+						}
+						return `Unbanned <@!${userId}> from this server. ✅`;
+					}
 					onStart() {
 						external_StyleLoader_default().inject();
 						this.patchBannedUser();
 						this.patchBannedUsers();
+						this.registerCommands();
+					}
+					registerCommands() {
+						commands.registerCommand(this.getName(), {
+							id: "ban-user",
+							name: "ban",
+							predicate: ({
+								guild
+							}) => modules_namespaceObject.PermissionUtils.can(constants_namespaceObject.Permissions.BAN_MEMBERS, stores_namespaceObject.Users.getCurrentUser(), stores_namespaceObject.Guilds.getGuild(guild?.id)),
+							description: "Ban someone from this guild. Click the options to choose which method you want.",
+							execute: (props, {
+								guild,
+								channel
+							}) => {
+								const userId = props.userId ? props.userId[0].text : props.mention?.[0]?.userId;
+								if (!this.regex.userId.test(userId?.trim?.())) return clyde.sendMessage(channel.id, {
+									content: "You must specify a user!"
+								});
+								this.banUserWithCommand(guild, userId, props.reason?.[0]?.text).then((message => {
+									clyde.sendMessage(channel.id, {
+										content: message
+									});
+								}));
+							},
+							options: [{
+								type: OptionTypes.USER,
+								name: "mention",
+								description: "The user mention from chat.",
+								required: false
+							}, {
+								type: OptionTypes.STRING,
+								name: "userId",
+								description: "The user id string.",
+								required: false
+							}, {
+								type: OptionTypes.STRING,
+								name: "reason",
+								description: "Select a reason why you want to ban them.",
+								required: false
+							}]
+						});
+						commands.registerCommand(this.getName(), {
+							id: "unban-user",
+							name: "unban",
+							description: "Unbans a user by id or mention from this guild. Click the options to choose the method you want.",
+							predicate: ({
+								guild
+							}) => modules_namespaceObject.PermissionUtils.can(constants_namespaceObject.Permissions.BAN_MEMBERS, stores_namespaceObject.Users.getCurrentUser(), stores_namespaceObject.Guilds.getGuild(guild?.id)),
+							execute: (props, {
+								guild,
+								channel
+							}) => {
+								const userId = props.userId ? props.userId[0].text : props.mention?.[0]?.userId;
+								if (!this.regex.userId.test(userId?.trim?.())) return clyde.sendMessage(channel.id, {
+									content: "You must specify a user!"
+								});
+								this.unbanUserWithCommand(guild, userId, props.reason?.[0]?.text).then((message => {
+									clyde.sendMessage(channel.id, {
+										content: message
+									});
+								}));
+							},
+							options: [{
+								type: OptionTypes.USER,
+								name: "mention",
+								description: "The user mention from chat.",
+								required: false
+							}, {
+								type: OptionTypes.STRING,
+								name: "userId",
+								description: "The user id string.",
+								required: false
+							}]
+						});
 					}
 					getSettingsPanel() {
 						return BetterBannedUsers_React.createElement(SettingsPanel, null);
@@ -495,6 +696,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					async patchBannedUser() {
 						const BannedUser = await external_PluginApi_namespaceObject.ReactComponents.getComponentByName("BannedUser", this.getSingleClass(["bannedUser"]));
 						external_PluginApi_namespaceObject.Patcher.after(BannedUser.component.prototype, "render", ((that, _, res) => {
+							if (this.promises.cancelled) return;
 							if (!Array.isArray(res?.props?.children)) return;
 							const {
 								guild,
@@ -520,6 +722,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 							memoizedGetStateFromStores: constants_namespaceObject.NOOP
 						}).type;
 						external_PluginApi_namespaceObject.Patcher.before(BannedUsers.prototype, "render", (that => {
+							if (this.promises.cancelled) return;
 							const order = settings.get("order", {
 								value: "descending",
 								label: "Descending"
@@ -598,6 +801,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					onStop() {
 						external_StyleLoader_default().remove();
 						external_PluginApi_namespaceObject.Patcher.unpatchAll();
+						commands.unregisterAllCommands(this.getName());
 					}
 				}
 			},
@@ -679,7 +883,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				});
 			};
 		})();
-		var __webpack_exports__ = __webpack_require__(170);
+		var __webpack_exports__ = __webpack_require__(778);
 		module.exports.LibraryPluginHack = __webpack_exports__;
 	})();
 	const PluginExports = module.exports.LibraryPluginHack;

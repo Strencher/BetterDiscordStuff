@@ -43,6 +43,10 @@
 				{
 					"name": "Settings Panel",
 					"src": "assets/settings.png"
+				},
+				{
+					"name": "Commands API",
+					"src": "assets/commands.png"
 				}
 			]
 		}
