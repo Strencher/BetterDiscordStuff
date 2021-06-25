@@ -18,6 +18,7 @@ import {connectStores, useStateFromStores} from "@discord/flux";
 import Headphones from "./modules/components/icons/headphones";
 
 /// <reference path="../../typings/zlib.d.ts" />
+
 const getClass = (props = [], items = props, exclude = [], selector = false) => {
     const module = WebpackModules.find(m => m && props.every(prop => m[prop] !== undefined) && exclude.every(e => m[e] == undefined));
     if (!module) return "";
