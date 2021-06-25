@@ -9,25 +9,17 @@ import React, {useState} from "react";
 import {FormItem, FormText} from "@discord/forms";
 import {Pronouns} from "./data/constants";
 import SettingsPanel from "./components/Settings";
-
-const createUpdateWrapper = (Component, valueProp = "value", changeProp = "onChange") => props => {
-    const [value, setValue] = useState(props[valueProp]);
-
-    return <Component 
-        {...{
-            ...props,
-            [valueProp]: value,
-            [changeProp]: value => {
-                if (typeof props[changeProp] === "function") props[changeProp](value);
-                setValue(value);
-            }
-        }}
-    />;
-};
+import createUpdateWrapper from "../../common/hooks/createUpdateWrapper";
 
 const SelectInput = createUpdateWrapper(WebpackModules.getByProps("SingleSelect").SingleSelect);
+const TextInput = createUpdateWrapper(WebpackModules.getByDisplayName("TextInput"));
+const Header = WebpackModules.getByDisplayName("Header");
 
 export default class PronounDB extends BasePlugin {
+    promises = {
+        cancelled: false,
+        cancel() {this.cancelled = true;}
+    }
     patches = [];
 
     onStart() {
@@ -74,37 +66,28 @@ export default class PronounDB extends BasePlugin {
         }
     }
 
-    getSingleClass(className, isSelector = false) {
-        const selector = className.split(" ");
-        const module = WebpackModules.findByUniqueProperties(selector);
-        if (!module) return "";
-
-        return (isSelector ? "." : "") + module[selector.shift()];
-    }
-
     async patchUserPopout() {
-        const UserPopout = await ReactComponents.getComponentByName("UserPopout", this.getSingleClass("userPopout", true));
+        const UserPopoutBody = WebpackModules.getModule(m => m.default.displayName === "UserPopoutBody");
 
-        this.patches.push(Patcher.after(UserPopout.component.prototype, "renderBody", (thisObject, _, res) => {
-            const children = Utilities.getNestedProp(res, "props.children.props.children");
-
-            if (!Array.isArray(children) || children.some(e => e?.type === PronounTag)) return;
+        this.patches.push(Patcher.after(UserPopoutBody, "default", (_, [{user}], res) => {
+            if (this.promises.cancelled) return;
+            if (!Array.isArray(res?.props?.children) || res.props.children.some(s => s?.type === PronounTag)) return;
 
             const renderPronoun = data => {
                 if (!data) return data;
 
                 return (
                     <div className={styles.container}>
-                        <div className={styles.header}>Pronouns</div>
+                        <Header className={styles.header} size={Header.Sizes.SIZE_12} uppercase muted>Pronouns</Header>
                         <div className={styles.tag}>{data}</div>
                     </div>
                 );
             };
 
-            children.unshift(<PronounTag userId={thisObject.props.userId} render={renderPronoun} type="showInUserPopout" />);
+            res.props.children.unshift(
+                <PronounTag userId={user.id} render={renderPronoun} type="showInUserPopout" />
+            );
         }));
-
-        UserPopout.forceUpdateAll();
     }
 
     async patchUserContextMenus() {
@@ -126,49 +109,48 @@ export default class PronounDB extends BasePlugin {
 
                 const localOverride = Settings.get("customPronouns")[user.id];
 
+                const openModal = () => {
+                    let value = "";
+                    Modals.showModal("Set local Pronoun", [
+                        <FormItem title="Pronoun">
+                            <SelectInput value={value} options={SelectOptions} onChange={val => value = val} />
+                            <FormText type="description">This will be displayed as your local pronoun. Only you will see this.</FormText>
+                            <FormText>OR</FormText>
+                            <TextInput value={value} onChange={val => value = val} placeholder="Custom Pronoun" />
+                        </FormItem>
+                    ], {
+                        onConfirm: () => {
+                            PronounsDB.setPronouns(user.id, value);
+                        },
+                    });
+                };
+
                 children.push(DCM.buildMenuChildren([
                     {
-                        label: localOverride ? "Remove Pronoun" : "Add Pronoun",
-                        action: () => {
-                            if (localOverride) {
-                                delete Settings.get("customPronouns")[user.id];
-                                PronounsDB.removePronoun(user.id);
-                            } else {
-                                let value = "";
-                                Modals.showModal("Set local Pronoun", [
-                                    <FormItem title="Pronoun">
-                                        <SelectInput value={value} options={SelectOptions} onChange={val => value = val} />
-                                        <FormText type="description">This will be displayed as your local pronoun. Only you will see this.</FormText>
-                                    </FormItem>
-                                ], {
-                                    onConfirm: () => {
-                                        PronounsDB.setPronouns(user.id, value);
-                                    },
-                                });
+                        type: "submenu",
+                        id: "pronoun-db",
+                        label: "PronounDB",
+                        items: [
+                            {
+                                id: "remove-or-add-pronoun",
+                                label: localOverride ? "Remove Pronoun" : "Add Pronoun",
+                                danger: Boolean(localOverride),
+                                action: () => {
+                                    if (localOverride) {
+                                        delete Settings.get("customPronouns")[user.id];
+                                        Settings.saveState();
+                                        PronounsDB.removePronoun(user.id);
+                                    } else openModal();
+                                }
+                            },
+                            localOverride && {
+                                id: "edit-pronoun",
+                                label: "Edit Pronoun",
+                                action: () => openModal()
                             }
-                        }
+                        ].filter(Boolean)
                     }
-                ]))
-                if (localOverride){
-                    children.push(DCM.buildMenuChildren([
-                        {
-                            label: "Edit Pronoun",
-                            action: () => {
-                                let value = Settings.get("customPronouns")[user.id];
-                                Modals.showModal("Edit Pronoun", [
-                                    <FormItem title="Pronoun">
-                                        <SelectInput value={value} options={SelectOptions} onChange={val => value = val} />
-                                        <FormText type="description">This will be displayed as your local pronoun. Only you will see this.</FormText>
-                                    </FormItem>
-                                ], {
-                                    onConfirm: () => {
-                                        PronounsDB.setPronouns(user.id, value);
-                                    },
-                                });
-                            }
-                        }
-                    ]))
-                }
+                ]));
             })
         );
     }
@@ -177,5 +159,6 @@ export default class PronounDB extends BasePlugin {
         for (const unpatch of this.patches) unpatch();
         Patcher.unpatchAll();
         style.remove();
+        this.promises.cancel();
     }
 }

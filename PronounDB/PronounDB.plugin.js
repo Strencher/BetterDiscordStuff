@@ -4,7 +4,7 @@
  * @description Shows you the pronoun of a user right next to their name. Pronouns by https://pronoundb.org. Source code can be found in the ./src folder of the github repo.
  * @source https://github.com/Strencher/BetterDiscordStuff/tree/master/PronounDB
  * @updateUrl https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/PronounDB/PronounDB.plugin.js
- * @version 0.0.4
+ * @version 0.0.5
  */
 /*@cc_on
 @if (@_jscript)
@@ -53,7 +53,7 @@ const config = {
 		"description": "Shows you the pronoun of a user right next to their name. Pronouns by https://pronoundb.org. Source code can be found in the ./src folder of the github repo.",
 		"github": "https://github.com/Strencher/BetterDiscordStuff/tree/master/PronounDB",
 		"github_raw": "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/PronounDB/PronounDB.plugin.js",
-		"version": "0.0.4"
+		"version": "0.0.5"
 	},
 	"build": {
 		"zlibrary": true,
@@ -76,19 +76,17 @@ const config = {
 		}
 	},
 	"changelog": [{
-			"type": "added",
-			"title": "v0.0.3",
+			"type": "fixed",
+			"title": "Discord Fixes...",
 			"items": [
-				"`Edit Prounoun` button."
+				"Guess what... discord updated and broke pronoun tag in user popout. Fixed that for now."
 			]
 		},
 		{
-			"type": "added",
-			"title": "v0.0.4",
+			"type": "improved",
+			"title": "Improved",
 			"items": [
-				"Setting to hide Pronoun tag in specific areas",
-				"Dropdown menus to select local pronoun.",
-				"Hopefully fixed multiple prounoun tags showing up."
+				"Added a text box for custom pronouns."
 			]
 		}
 	],
@@ -102,10 +100,204 @@ function buildPlugin([BasePlugin, PluginApi]) {
 	};
 	(() => {
 		"use strict";
-		let __plugin_styles__ = "";
-		let __style_element__ = null;
+		class StyleLoader {
+			static styles = "";
+			static element = null;
+			static append(module, css) {
+				this.styles += `/* ${module} */\n${css}`;
+			}
+			static inject(name = config.info.name) {
+				if (this.element) this.element.remove();
+				this.element = document.head.appendChild(Object.assign(document.createElement("style"), {
+					id: name,
+					textContent: this.styles
+				}));
+			}
+			static remove() {
+				if (this.element) {
+					this.element.remove();
+					this.element = null;
+				}
+			}
+		}
+		function ___createMemoize___(instance, name, value) {
+			value = value();
+			Object.defineProperty(instance, name, {
+				value,
+				configurable: true
+			});
+			return value;
+		};
+		const Modules = {
+			get 'react-spring'() {
+				return ___createMemoize___(this, 'react-spring', () => BdApi.findModuleByProps('useSpring'))
+			},
+			'@discord/utils': {
+				get 'joinClassNames'() {
+					return ___createMemoize___(this, 'joinClassNames', () => BdApi.findModule(m => typeof m?.default?.default === 'function')?.default)
+				},
+				get 'useForceUpdate'() {
+					return ___createMemoize___(this, 'useForceUpdate', () => BdApi.findModuleByProps('useForceUpdate')?.useForceUpdate)
+				},
+				get 'Logger'() {
+					return ___createMemoize___(this, 'Logger', () => BdApi.findModuleByProps('setLogFn')?.default)
+				},
+				get 'Navigation'() {
+					return ___createMemoize___(this, 'Navigation', () => BdApi.findModuleByProps('replaceWith'))
+				}
+			},
+			'@discord/components': {
+				get 'Tooltip'() {
+					return ___createMemoize___(this, 'Tooltip', () => BdApi.findModuleByDisplayName('Tooltip'))
+				},
+				get 'TooltipContainer'() {
+					return ___createMemoize___(this, 'TooltipContainer', () => BdApi.findModuleByProps('TooltipContainer')?.TooltipContainer)
+				},
+				get 'TextInput'() {
+					return ___createMemoize___(this, 'TextInput', () => BdApi.findModuleByDisplayName('TextInput'))
+				},
+				get 'SlideIn'() {
+					return ___createMemoize___(this, 'SlideIn', () => BdApi.findModuleByDisplayName('SlideIn'))
+				},
+				get 'SettingsNotice'() {
+					return ___createMemoize___(this, 'SettingsNotice', () => BdApi.findModuleByDisplayName('SettingsNotice'))
+				},
+				get 'TransitionGroup'() {
+					return ___createMemoize___(this, 'TransitionGroup', () => BdApi.findModuleByDisplayName('TransitionGroup'))
+				},
+				get 'Button'() {
+					return ___createMemoize___(this, 'Button', () => BdApi.findModuleByProps('DropdownSizes'))
+				},
+				get 'Flex'() {
+					return ___createMemoize___(this, 'Flex', () => BdApi.findModuleByDisplayName('Flex'))
+				},
+				get 'Text'() {
+					return ___createMemoize___(this, 'Text', () => BdApi.findModuleByDisplayName('Text'))
+				},
+				get 'Card'() {
+					return ___createMemoize___(this, 'Card', () => BdApi.findModuleByDisplayName('Card'))
+				}
+			},
+			'@discord/modules': {
+				get 'Dispatcher'() {
+					return ___createMemoize___(this, 'Dispatcher', () => BdApi.findModuleByProps('dirtyDispatch', 'subscribe'))
+				},
+				get 'EmojiUtils'() {
+					return ___createMemoize___(this, 'EmojiUtils', () => BdApi.findModuleByProps('uploadEmoji'))
+				},
+				get 'PermissionUtils'() {
+					return ___createMemoize___(this, 'PermissionUtils', () => BdApi.findModuleByProps('computePermissions'))
+				},
+				get 'DMUtils'() {
+					return ___createMemoize___(this, 'DMUtils', () => BdApi.findModuleByProps('openPrivateChannel'))
+				}
+			},
+			'@discord/stores': {
+				get 'Messages'() {
+					return ___createMemoize___(this, 'Messages', () => BdApi.findModuleByProps('getMessage', 'getMessages'))
+				},
+				get 'Channels'() {
+					return ___createMemoize___(this, 'Channels', () => BdApi.findModuleByProps('getChannel'))
+				},
+				get 'Guilds'() {
+					return ___createMemoize___(this, 'Guilds', () => BdApi.findModuleByProps('getGuild'))
+				},
+				get 'SelectedGuilds'() {
+					return ___createMemoize___(this, 'SelectedGuilds', () => BdApi.findModuleByProps('getGuildId', 'getLastSelectedGuildId'))
+				},
+				get 'SelectedChannels'() {
+					return ___createMemoize___(this, 'SelectedChannels', () => BdApi.findModuleByProps('getChannelId', 'getLastSelectedChannelId'))
+				},
+				get 'Info'() {
+					return ___createMemoize___(this, 'Info', () => BdApi.findModuleByProps('getSessionId'))
+				},
+				get 'Status'() {
+					return ___createMemoize___(this, 'Status', () => BdApi.findModuleByProps('getStatus'))
+				},
+				get 'Users'() {
+					return ___createMemoize___(this, 'Users', () => BdApi.findModuleByProps('getUser'))
+				},
+				get 'SettingsStore'() {
+					return ___createMemoize___(this, 'SettingsStore', () => BdApi.findModuleByProps('afkTimeout', 'status'))
+				},
+				get 'UserProfile'() {
+					return ___createMemoize___(this, 'UserProfile', () => BdApi.findModuleByProps('getUserProfile'))
+				},
+				get 'Members'() {
+					return ___createMemoize___(this, 'Members', () => BdApi.findModuleByProps('getMember'))
+				},
+				get 'Activities'() {
+					return ___createMemoize___(this, 'Activities', () => BdApi.findModuleByProps('getActivities'))
+				},
+				get 'Games'() {
+					return ___createMemoize___(this, 'Games', () => BdApi.findModuleByProps('getGame'))
+				},
+				get 'Auth'() {
+					return ___createMemoize___(this, 'Auth', () => BdApi.findModuleByProps('getId', 'isGuest'))
+				},
+				get 'TypingUsers'() {
+					return ___createMemoize___(this, 'TypingUsers', () => BdApi.findModuleByProps('isTyping'))
+				}
+			},
+			'@discord/actions': {
+				get 'ProfileActions'() {
+					return ___createMemoize___(this, 'ProfileActions', () => BdApi.findModuleByProps('fetchProfile'))
+				}
+			},
+			get '@discord/i18n'() {
+				return ___createMemoize___(this, '@discord/i18n', () => BdApi.findModuleByProps('getLocale'))
+			},
+			get '@discord/constants'() {
+				return ___createMemoize___(this, '@discord/constants', () => BdApi.findModuleByProps('API_HOST'))
+			},
+			get '@discord/contextmenu'() {
+				return ___createMemoize___(this, '@discord/contextmenu', () => {
+					const ctx = Object.assign({}, BdApi.findModuleByProps('openContextMenu'), BdApi.findModuleByProps('MenuItem'));
+					ctx.Menu = ctx.default;
+					return ctx;
+				})
+			},
+			get '@discord/forms'() {
+				return ___createMemoize___(this, '@discord/forms', () => BdApi.findModuleByProps('FormItem'))
+			},
+			get '@discord/scrollbars'() {
+				return ___createMemoize___(this, '@discord/scrollbars', () => BdApi.findModuleByProps('ScrollerAuto'))
+			},
+			get '@discord/native'() {
+				return ___createMemoize___(this, '@discord/native', () => BdApi.findModuleByProps('requireModule'))
+			},
+			get '@discord/flux'() {
+				return ___createMemoize___(this, '@discord/flux', () => Object.assign({}, BdApi.findModuleByProps('useStateFromStores').default, BdApi.findModuleByProps('useStateFromStores')))
+			},
+			get '@discord/modal'() {
+				return ___createMemoize___(this, '@discord/modal', () => Object.assign({}, BdApi.findModuleByProps('ModalRoot'), BdApi.findModuleByProps('openModal')))
+			},
+			get '@discord/connections'() {
+				return ___createMemoize___(this, '@discord/connections', () => BdApi.findModuleByProps('get', 'isSupported', 'map'))
+			},
+			get '@discord/sanitize'() {
+				return ___createMemoize___(this, '@discord/sanitize', () => BdApi.findModuleByProps('stringify', 'parse', 'encode'))
+			},
+			get '@discord/icons'() {
+				return ___createMemoize___(this, '@discord/icons', () => BdApi.findAllModules(m => m.displayName && ~m.toString().indexOf('currentColor')).reduce((icons, icon) => (icons[icon.displayName] = icon, icons), {}))
+			},
+			'@discord/classes': {
+				get 'Timestamp'() {
+					return ___createMemoize___(this, 'Timestamp', () => BdApi.findModuleByPrototypes('toDate', 'month'))
+				},
+				get 'Message'() {
+					return ___createMemoize___(this, 'Message', () => BdApi.findModuleByPrototypes('getReaction', 'isSystemDM'))
+				},
+				get 'User'() {
+					return ___createMemoize___(this, 'User', () => BdApi.findModuleByPrototypes('tag'))
+				},
+				get 'Channel'() {
+					return ___createMemoize___(this, 'Channel', () => BdApi.findModuleByPrototypes('isOwner', 'isCategory'))
+				}
+			}
+		};
 		var __webpack_modules__ = {
-			809: (module, __webpack_exports__, __webpack_require__) => {
+			14: (module, __webpack_exports__, __webpack_require__) => {
 				__webpack_require__.d(__webpack_exports__, {
 					Z: () => __WEBPACK_DEFAULT_EXPORT__
 				});
@@ -118,10 +310,10 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				___CSS_LOADER_EXPORT___.locals = {
 					text: "PronounDB-pronouns-text"
 				};
-				__plugin_styles__ += `\n/* ${module.id} */\n${___CSS_LOADER_EXPORT___}\n`;
+				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
 				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
 			},
-			523: (module, __webpack_exports__, __webpack_require__) => {
+			160: (module, __webpack_exports__, __webpack_require__) => {
 				__webpack_require__.d(__webpack_exports__, {
 					Z: () => __WEBPACK_DEFAULT_EXPORT__
 				});
@@ -130,16 +322,16 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
 					return i[1];
 				}));
-				___CSS_LOADER_EXPORT___.push([module.id, ".PronounDB-style-container{align-content:center;display:flex}.PronounDB-style-container .PronounDB-style-header{font-weight:700;text-transform:uppercase;font-size:12px;margin-bottom:8px;color:var(--header-secondary)}.PronounDB-style-container .PronounDB-style-tag{font-size:12px;color:var(--text-normal);margin-left:5px}", ""]);
+				___CSS_LOADER_EXPORT___.push([module.id, ".PronounDB-style-container{display:flex;align-items:center}.PronounDB-style-container .PronounDB-style-header{font-weight:700}.PronounDB-style-container .PronounDB-style-tag{font-size:12px;color:var(--text-normal);margin-left:5px}", ""]);
 				___CSS_LOADER_EXPORT___.locals = {
 					container: "PronounDB-style-container",
 					header: "PronounDB-style-header",
 					tag: "PronounDB-style-tag"
 				};
-				__plugin_styles__ += `\n/* ${module.id} */\n${___CSS_LOADER_EXPORT___}\n`;
+				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
 				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
 			},
-			615: (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+			116: (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 				__webpack_require__.r(__webpack_exports__);
 				__webpack_require__.d(__webpack_exports__, {
 					default: () => PronounDB
@@ -149,8 +341,8 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				var external_BasePlugin_default = __webpack_require__.n(external_BasePlugin_namespaceObject);
 				const external_events_namespaceObject = require("events");
 				var external_events_default = __webpack_require__.n(external_events_namespaceObject);
-				const package_namespaceObject = JSON.parse('{"um":{"u2":"PronounDB","i8":"0.0.4"}}');
-				var external_BdApi_React_ = __webpack_require__(698);
+				const package_namespaceObject = JSON.parse('{"um":{"u2":"PronounDB","i8":"0.0.5"}}');
+				var external_BdApi_React_ = __webpack_require__(832);
 				var external_BdApi_React_default = __webpack_require__.n(external_BdApi_React_);
 				function _defineProperty(obj, key, value) {
 					if (key in obj) Object.defineProperty(obj, key, {
@@ -4509,7 +4701,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				const dexie = Dexie;
 				const external_require_https_namespaceObject = require("https");
 				var external_require_https_default = __webpack_require__.n(external_require_https_namespaceObject);
-				var React = __webpack_require__(698);
+				var React = __webpack_require__(832);
 				const db = new dexie("Pronouns");
 				const dispatcher = dexie.Events(null, "update");
 				db.version(1).stores({
@@ -4622,8 +4814,8 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						};
 					}
 				}
-				var pronouns = __webpack_require__(809);
-				var pronouns_React = __webpack_require__(698);
+				var pronouns = __webpack_require__(14);
+				var pronouns_React = __webpack_require__(832);
 				const components_pronouns = Settings.connectStore(PronounsDB.connect((function({
 					data,
 					render,
@@ -4637,23 +4829,10 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						className: pronouns.Z.text
 					}, " • ", pronoun);
 				})));
-				const external_n_inject_n_if_style_element_style_element_remove_n_style_element_document_head_appendChild_Object_assign_document_createElement_style_textContent_plugin_styles_n_n_remove_n_if_style_element_n_style_element_remove_n_style_element_null_n_n_n_namespaceObject = {
-					inject: () => {
-						if (__style_element__) __style_element__.remove();
-						__style_element__ = document.head.appendChild(Object.assign(document.createElement("style"), {
-							textContent: __plugin_styles__
-						}));
-					},
-					remove: () => {
-						if (__style_element__) {
-							__style_element__.remove();
-							__style_element__ = null;
-						}
-					}
-				};
-				var external_n_inject_n_if_style_element_style_element_remove_n_style_element_document_head_appendChild_Object_assign_document_createElement_style_textContent_plugin_styles_n_n_remove_n_if_style_element_n_style_element_remove_n_style_element_null_n_n_n_default = __webpack_require__.n(external_n_inject_n_if_style_element_style_element_remove_n_style_element_document_head_appendChild_Object_assign_document_createElement_style_textContent_plugin_styles_n_n_remove_n_if_style_element_n_style_element_remove_n_style_element_null_n_n_n_namespaceObject);
-				var style = __webpack_require__(523);
-				const external_BdApi_findModuleByProps_FormItem_namespaceObject = BdApi.findModuleByProps("FormItem");
+				const external_StyleLoader_namespaceObject = StyleLoader;
+				var external_StyleLoader_default = __webpack_require__.n(external_StyleLoader_namespaceObject);
+				var style = __webpack_require__(160);
+				const forms_namespaceObject = Modules["@discord/forms"];
 				function _extends() {
 					_extends = Object.assign || function(target) {
 						for (var i = 1; i < arguments.length; i++) {
@@ -4687,6 +4866,30 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						onChange: value => Settings.set("showInUserPopout", value)
 					}, "User Popout"));
 				}
+				var createUpdateWrapper_React = __webpack_require__(832);
+				function createUpdateWrapper_extends() {
+					createUpdateWrapper_extends = Object.assign || function(target) {
+						for (var i = 1; i < arguments.length; i++) {
+							var source = arguments[i];
+							for (var key in source)
+								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
+						}
+						return target;
+					};
+					return createUpdateWrapper_extends.apply(this, arguments);
+				}
+				const createUpdateWrapper_createUpdateWrapper = (Component, valueProp = "value", changeProp = "onChange", valueIndex = 0) => props => {
+					const [value, setValue] = createUpdateWrapper_React.useState(props[valueProp]);
+					return createUpdateWrapper_React.createElement(Component, createUpdateWrapper_extends({}, props, {
+						[valueProp]: value,
+						[changeProp]: (...args) => {
+							const value = args[valueIndex];
+							if ("function" === typeof props[changeProp]) props[changeProp](value);
+							setValue(value);
+						}
+					}));
+				};
+				const hooks_createUpdateWrapper = createUpdateWrapper_createUpdateWrapper;
 				function PronounDB_defineProperty(obj, key, value) {
 					if (key in obj) Object.defineProperty(obj, key, {
 						value,
@@ -4697,35 +4900,22 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					else obj[key] = value;
 					return obj;
 				}
-				function PronounDB_extends() {
-					PronounDB_extends = Object.assign || function(target) {
-						for (var i = 1; i < arguments.length; i++) {
-							var source = arguments[i];
-							for (var key in source)
-								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-						}
-						return target;
-					};
-					return PronounDB_extends.apply(this, arguments);
-				}
-				const PronounDB_createUpdateWrapper = (Component, valueProp = "value", changeProp = "onChange") => props => {
-					const [value, setValue] = (0, external_BdApi_React_.useState)(props[valueProp]);
-					return external_BdApi_React_default().createElement(Component, PronounDB_extends({}, props, {
-						[valueProp]: value,
-						[changeProp]: value => {
-							if ("function" === typeof props[changeProp]) props[changeProp](value);
-							setValue(value);
-						}
-					}));
-				};
-				const SelectInput = PronounDB_createUpdateWrapper(external_PluginApi_namespaceObject.WebpackModules.getByProps("SingleSelect").SingleSelect);
+				const SelectInput = hooks_createUpdateWrapper(external_PluginApi_namespaceObject.WebpackModules.getByProps("SingleSelect").SingleSelect);
+				const TextInput = hooks_createUpdateWrapper(external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("TextInput"));
+				const Header = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("Header");
 				class PronounDB extends(external_BasePlugin_default()) {
 					constructor(...args) {
 						super(...args);
+						PronounDB_defineProperty(this, "promises", {
+							cancelled: false,
+							cancel() {
+								this.cancelled = true;
+							}
+						});
 						PronounDB_defineProperty(this, "patches", []);
 					}
 					onStart() {
-						external_n_inject_n_if_style_element_style_element_remove_n_style_element_document_head_appendChild_Object_assign_document_createElement_style_textContent_plugin_styles_n_n_remove_n_if_style_element_n_style_element_remove_n_style_element_null_n_n_n_default().inject();
+						external_StyleLoader_default().inject();
 						external_PluginApi_namespaceObject.Utilities.suppressErrors(this.patchMessageTimestamp.bind(this), "MessageHeader patch")();
 						external_PluginApi_namespaceObject.Utilities.suppressErrors(this.patchUserContextMenus.bind(this), "UserContextMenu patch")();
 						external_PluginApi_namespaceObject.Utilities.suppressErrors(this.patchUserPopout.bind(this), "UserPopout patch")();
@@ -4734,10 +4924,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						return external_BdApi_React_default().createElement(SettingsPanel, null);
 					}
 					async patchMessageTimestamp() {
-						const OriginalMessageTimestamp = external_PluginApi_namespaceObject.WebpackModules.getModule((m => {
-							var _m$default;
-							return (null === m || void 0 === m ? void 0 : null === (_m$default = m.default) || void 0 === _m$default ? void 0 : _m$default.toString().indexOf("showTimestampOnHover")) > -1;
-						}));
+						const OriginalMessageTimestamp = external_PluginApi_namespaceObject.WebpackModules.getModule((m => m?.default?.toString().indexOf("showTimestampOnHover") > -1));
 						this.patches.push(external_PluginApi_namespaceObject.Patcher.after(OriginalMessageTimestamp, "default", ((_, [{
 							message: {
 								author: user
@@ -4750,13 +4937,10 @@ function buildPlugin([BasePlugin, PluginApi]) {
 								type: "showOnTimestamp"
 							}));
 						})));
-						const Modules = external_PluginApi_namespaceObject.WebpackModules.findAll((m => {
-							var _m$type;
-							return ~["ChannelMessage", "InboxMessage"].indexOf(null === m || void 0 === m ? void 0 : null === (_m$type = m.type) || void 0 === _m$type ? void 0 : _m$type.displayName);
-						}));
+						const Modules = external_PluginApi_namespaceObject.WebpackModules.findAll((m => ~["ChannelMessage", "InboxMessage"].indexOf(m?.type?.displayName)));
 						for (const Module of Modules) {
 							const unpatch = external_PluginApi_namespaceObject.Patcher.after(Module, "type", ((_, __, ret) => {
-								const tree = external_PluginApi_namespaceObject.Utilities.findInReactTree(ret, (m => null === m || void 0 === m ? void 0 : m.childrenHeader));
+								const tree = external_PluginApi_namespaceObject.Utilities.findInReactTree(ret, (m => m?.childrenHeader));
 								if (!tree) return;
 								const originalType = tree.childrenHeader.type.type;
 								tree.childrenHeader.type.type = OriginalMessageTimestamp.default;
@@ -4768,25 +4952,24 @@ function buildPlugin([BasePlugin, PluginApi]) {
 							this.patches.push(unpatch);
 						}
 					}
-					getSingleClass(className, isSelector = false) {
-						const selector = className.split(" ");
-						const module = external_PluginApi_namespaceObject.WebpackModules.findByUniqueProperties(selector);
-						if (!module) return "";
-						return (isSelector ? "." : "") + module[selector.shift()];
-					}
 					async patchUserPopout() {
-						const UserPopout = await external_PluginApi_namespaceObject.ReactComponents.getComponentByName("UserPopout", this.getSingleClass("userPopout", true));
-						this.patches.push(external_PluginApi_namespaceObject.Patcher.after(UserPopout.component.prototype, "renderBody", ((thisObject, _, res) => {
-							const children = external_PluginApi_namespaceObject.Utilities.getNestedProp(res, "props.children.props.children");
-							if (!Array.isArray(children) || children.some((e => (null === e || void 0 === e ? void 0 : e.type) === components_pronouns))) return;
-							children.unshift(external_BdApi_React_default().createElement(components_pronouns, {
-								userId: thisObject.props.userId,
+						const UserPopoutBody = external_PluginApi_namespaceObject.WebpackModules.getModule((m => "UserPopoutBody" === m.default.displayName));
+						this.patches.push(external_PluginApi_namespaceObject.Patcher.after(UserPopoutBody, "default", ((_, [{
+							user
+						}], res) => {
+							if (this.promises.cancelled) return;
+							if (!Array.isArray(res?.props?.children) || res.props.children.some((s => s?.type === components_pronouns))) return;
+							res.props.children.unshift(external_BdApi_React_default().createElement(components_pronouns, {
+								userId: user.id,
 								render: data => {
 									if (!data) return data;
 									return external_BdApi_React_default().createElement("div", {
 										className: style.Z.container
-									}, external_BdApi_React_default().createElement("div", {
-										className: style.Z.header
+									}, external_BdApi_React_default().createElement(Header, {
+										className: style.Z.header,
+										size: Header.Sizes.SIZE_12,
+										uppercase: true,
+										muted: true
 									}, "Pronouns"), external_BdApi_React_default().createElement("div", {
 										className: style.Z.tag
 									}, data));
@@ -4794,13 +4977,9 @@ function buildPlugin([BasePlugin, PluginApi]) {
 								type: "showInUserPopout"
 							}));
 						})));
-						UserPopout.forceUpdateAll();
 					}
 					async patchUserContextMenus() {
-						const Menus = external_PluginApi_namespaceObject.WebpackModules.findAll((m => {
-							var _m$default2, _m$default2$displayNa;
-							return (null === (_m$default2 = m.default) || void 0 === _m$default2 ? void 0 : null === (_m$default2$displayNa = _m$default2.displayName) || void 0 === _m$default2$displayNa ? void 0 : _m$default2$displayNa.search(/user.*contextmenu/i)) > -1;
-						}));
+						const Menus = external_PluginApi_namespaceObject.WebpackModules.findAll((m => m.default?.displayName?.search(/user.*contextmenu/i) > -1));
 						const SelectOptions = Object.entries(Pronouns).reduce(((items, [key, value]) => {
 							items.push({
 								label: value ?? key,
@@ -4814,55 +4993,54 @@ function buildPlugin([BasePlugin, PluginApi]) {
 							const children = external_PluginApi_namespaceObject.Utilities.getNestedProp(ret, "props.children.props.children");
 							if (!Array.isArray(children)) return;
 							const localOverride = Settings.get("customPronouns")[user.id];
-							children.push(external_PluginApi_namespaceObject.DCM.buildMenuChildren([{
-								label: localOverride ? "Remove Pronoun" : "Add Pronoun",
-								action: () => {
-									if (localOverride) {
-										delete Settings.get("customPronouns")[user.id];
-										PronounsDB.removePronoun(user.id);
-									} else {
-										let value = "";
-										external_PluginApi_namespaceObject.Modals.showModal("Set local Pronoun", [external_BdApi_React_default().createElement(external_BdApi_findModuleByProps_FormItem_namespaceObject.FormItem, {
-											title: "Pronoun"
-										}, external_BdApi_React_default().createElement(SelectInput, {
-											value,
-											options: SelectOptions,
-											onChange: val => value = val
-										}), external_BdApi_React_default().createElement(external_BdApi_findModuleByProps_FormItem_namespaceObject.FormText, {
-											type: "description"
-										}, "This will be displayed as your local pronoun. Only you will see this."))], {
-											onConfirm: () => {
-												PronounsDB.setPronouns(user.id, value);
-											}
-										});
+							const openModal = () => {
+								let value = "";
+								external_PluginApi_namespaceObject.Modals.showModal("Set local Pronoun", [external_BdApi_React_default().createElement(forms_namespaceObject.FormItem, {
+									title: "Pronoun"
+								}, external_BdApi_React_default().createElement(SelectInput, {
+									value,
+									options: SelectOptions,
+									onChange: val => value = val
+								}), external_BdApi_React_default().createElement(forms_namespaceObject.FormText, {
+									type: "description"
+								}, "This will be displayed as your local pronoun. Only you will see this."), external_BdApi_React_default().createElement(forms_namespaceObject.FormText, null, "OR"), external_BdApi_React_default().createElement(TextInput, {
+									value,
+									onChange: val => value = val,
+									placeholder: "Custom Pronoun"
+								}))], {
+									onConfirm: () => {
+										PronounsDB.setPronouns(user.id, value);
 									}
-								}
-							}]));
-							if (localOverride) children.push(external_PluginApi_namespaceObject.DCM.buildMenuChildren([{
-								label: "Edit Pronoun",
-								action: () => {
-									let value = Settings.get("customPronouns")[user.id];
-									external_PluginApi_namespaceObject.Modals.showModal("Edit Pronoun", [external_BdApi_React_default().createElement(external_BdApi_findModuleByProps_FormItem_namespaceObject.FormItem, {
-										title: "Pronoun"
-									}, external_BdApi_React_default().createElement(SelectInput, {
-										value,
-										options: SelectOptions,
-										onChange: val => value = val
-									}), external_BdApi_React_default().createElement(external_BdApi_findModuleByProps_FormItem_namespaceObject.FormText, {
-										type: "description"
-									}, "This will be displayed as your local pronoun. Only you will see this."))], {
-										onConfirm: () => {
-											PronounsDB.setPronouns(user.id, value);
-										}
-									});
-								}
+								});
+							};
+							children.push(external_PluginApi_namespaceObject.DCM.buildMenuChildren([{
+								type: "submenu",
+								id: "pronoun-db",
+								label: "PronounDB",
+								items: [{
+									id: "remove-or-add-pronoun",
+									label: localOverride ? "Remove Pronoun" : "Add Pronoun",
+									danger: Boolean(localOverride),
+									action: () => {
+										if (localOverride) {
+											delete Settings.get("customPronouns")[user.id];
+											Settings.saveState();
+											PronounsDB.removePronoun(user.id);
+										} else openModal();
+									}
+								}, localOverride && {
+									id: "edit-pronoun",
+									label: "Edit Pronoun",
+									action: () => openModal()
+								}].filter(Boolean)
 							}]));
 						})));
 					}
 					onStop() {
 						for (const unpatch of this.patches) unpatch();
 						external_PluginApi_namespaceObject.Patcher.unpatchAll();
-						external_n_inject_n_if_style_element_style_element_remove_n_style_element_document_head_appendChild_Object_assign_document_createElement_style_textContent_plugin_styles_n_n_remove_n_if_style_element_n_style_element_remove_n_style_element_null_n_n_n_default().remove();
+						external_StyleLoader_default().remove();
+						this.promises.cancel();
 					}
 				}
 			},
@@ -4898,8 +5076,8 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					return list;
 				};
 			},
-			698: module => {
-				module.exports = global["BdApi"]["React"];
+			832: module => {
+				module.exports = BdApi.React;
 			}
 		};
 		var __webpack_module_cache__ = {};
@@ -4944,7 +5122,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				});
 			};
 		})();
-		var __webpack_exports__ = __webpack_require__(615);
+		var __webpack_exports__ = __webpack_require__(116);
 		module.exports.LibraryPluginHack = __webpack_exports__;
 	})();
 	const PluginExports = module.exports.LibraryPluginHack;
