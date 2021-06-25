@@ -34,7 +34,7 @@ export default class PronounDB extends BasePlugin {
         return (
             <SettingsPanel />
         );
-    };
+    }
 
     async patchMessageTimestamp() {
         const OriginalMessageTimestamp = WebpackModules.getModule(m => m?.default?.toString().indexOf("showTimestampOnHover") > -1);
