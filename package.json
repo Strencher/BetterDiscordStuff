@@ -17,6 +17,6 @@
   },
   "homepage": "https://github.com/shitcord-plugins/BetterDiscordStuffTest#readme",
   "dependencies": {
-    "bdbuilder": "github:Kyza/bdbuilder"
+    "bdbuilder": "git://github.com/Kyza/bdbuilder.git#60067df"
   }
 }
