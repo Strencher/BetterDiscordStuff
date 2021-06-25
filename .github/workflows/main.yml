@@ -16,6 +16,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Test
+      run: |
+        rm -rf /home/runner/work/*
     - uses: actions/checkout@v2
       with:
         fetch-depth: 0
