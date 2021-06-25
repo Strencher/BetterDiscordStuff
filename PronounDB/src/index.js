@@ -127,7 +127,7 @@ export default class PronounDB extends BasePlugin {
                 children.push(DCM.buildMenuChildren([
                     {
                         type: "submenu",
-                        id: "pronoun-db-submenu",
+                        id: "pronoun-db",
                         label: "PronounDB",
                         items: [
                             {
