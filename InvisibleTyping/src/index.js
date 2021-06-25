@@ -8,7 +8,6 @@ import styles from "styles";
 export default class InvisibleTyping extends BasePlugin {
     onStart() {
         styles.inject();
-
         Utilities.suppressErrors(this.patchTextAreaButtons.bind(this), "textarea buttons patch")();
         Utilities.suppressErrors(this.patchStartTyping.bind(this), "start typing patch")();
     }
