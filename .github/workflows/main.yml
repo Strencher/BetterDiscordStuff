@@ -28,7 +28,7 @@ jobs:
     - id: files
       uses: jitterbit/get-changed-files@v1
     - run: |
-        npm ci
+        npm i
         for changed_file in ${{ steps.files.outputs.all }}; do
           plugin_name=$(echo ${changed_file} | cut -d/ -f 1)
           npx bdbuilder --plugin="$plugin_name" --build
