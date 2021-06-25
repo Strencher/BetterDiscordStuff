@@ -28,11 +28,10 @@ jobs:
     - id: files
       uses: jitterbit/get-changed-files@v1
     - run: |
+        npm ci
         for changed_file in ${{ steps.files.outputs.all }}; do
-          file_src=$(echo ${changed_file} | cut -d/ -f 1-3)
-          cd $file_src
-          npm ci
-          npx bdbuilder --plugin="$file_src" --build
+          plugin_name=$(echo ${changed_file} | cut -d/ -f 1)
+          npx bdbuilder --plugin="$plugin_name" --build
         done
       
     - name: Stage build files
