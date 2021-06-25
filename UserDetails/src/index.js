@@ -182,6 +182,7 @@ export default class Plugin extends BasePlugin {
         // Remove styles
         stylesheet.remove();
 
+        // Cancel promises
         this.promises.cancel();
     }
 }
