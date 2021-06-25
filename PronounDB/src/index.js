@@ -33,7 +33,7 @@ export default class PronounDB extends BasePlugin {
     getSettingsPanel() {
         return (
             <SettingsPanel />
-        );
+        )
     }
 
     async patchMessageTimestamp() {
