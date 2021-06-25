@@ -21,7 +21,6 @@ export function shutdown() {
 
 export function show(content, options = {}) {
     const id = parseInt(Math.random().toString().slice(2, 16));
-
     const props = {
         id,
         content,
