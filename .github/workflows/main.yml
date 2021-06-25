@@ -29,7 +29,7 @@ jobs:
       uses: jitterbit/get-changed-files@v1
     - run: |
         for changed_file in ${{ steps.files.outputs.all }}; do
-          file_src = $(echo ${changed_file} | cut -d/ -f 1-3)
+          file_src=$(echo ${changed_file} | cut -d/ -f 1-3)
           cd $file_src
           npm ci
           npx bdbuilder --plugin="$file_src" --build
