@@ -1,0 +1,51 @@
+name: Autobuild Plugins
+
+# Controls when the action will run. 
+on:
+  push:
+    paths:
+      - '*/src'
+  workflow_dispatch:
+
+concurrency: 
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+
+    - name: Setup Node.js 16.x
+      uses: actions/setup-node@v2
+      with:
+        node-version: 16.x
+    
+    - id: files
+      uses: jitterbit/get-changed-files@v1
+    - run: |
+        for changed_file in ${{ steps.files.outputs.all }}; do
+          file_src = $(echo ${changed_file} | cut -d/ -f 1-3)
+          cd $file_src
+          npm ci
+          npx bdbuilder --plugin="$file_src" --build
+        done
+      
+    - name: Stage build files
+      run: git add --all
+
+    - name: Commit build files
+      run: |
+        git config --local user.email "creatableog@protonmail.com"
+        git config --local user.name "PluginBuilder"
+        git commit -m "[CI Chore] Compile plugin(s)" || true
+    
+    - name: Push build commit
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        branch: ${{ github.ref }}

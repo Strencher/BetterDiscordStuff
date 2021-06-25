@@ -1,0 +1,20 @@
+{
+    "build": {
+        "watch": false,
+        "folder": "./{{plugin}}",
+        "readme": true
+    },
+    "discord": {
+        "userId": "415849376598982656",
+        "username": "Strencher"
+    },
+    "github": {
+        "username": "Strencher",
+        "branchName": "master",
+        "repo": "BetterDiscordStuff"
+    },
+    "paths": {
+        "bdfolder": "<secret>",
+        "release_folder": "<seret>"
+    }
+}
