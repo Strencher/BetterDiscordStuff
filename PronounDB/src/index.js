@@ -71,7 +71,7 @@ export default class PronounDB extends BasePlugin {
 
         this.patches.push(Patcher.after(UserPopoutBody, "default", (_, [{user}], res) => {
             if (this.promises.cancelled) return;
-            if (!Array.isArray(res?.props?.children) || res?.props?.children?.some(s => s?.type === PronounTag)) return;
+            if (!Array.isArray(res?.props?.children) || res.props.children.some(s => s?.type === PronounTag)) return;
 
             const renderPronoun = data => {
                 if (!data) return data;
