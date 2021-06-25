@@ -4,7 +4,7 @@ name: Autobuild Plugins
 on:
   push:
     paths:
-      - '*/src'
+      - '*/src/**'
   workflow_dispatch:
 
 concurrency: 
