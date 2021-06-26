@@ -30,6 +30,7 @@ const APIErrors = {
 	MISSING_PERMISSIONS: 50013
 };
 
+
 export default class BetterBannedUsers extends BasePlugin {
 	promises = {
 		cancelled: false,
