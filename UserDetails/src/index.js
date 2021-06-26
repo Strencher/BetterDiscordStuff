@@ -9,15 +9,22 @@ import Settings from "./modules/Settings";
 import SettingsPanel from "./modules/components/settings/index";
 import ErrorBoundary from "./modules/components/errorboundary";
 import BasePlugin from "@zlibrary/plugin";
-import {WebpackModules, Patcher, ReactComponents} from "@zlibrary";
+import {WebpackModules, Patcher, ReactComponents, ColorConverter} from "@zlibrary";
 import dateStyles from "./modules/apis/dates.scss";
 import Activity, {ActivitiesFilter} from "./modules/components/activity";
 import {ActivityTypes} from "@discord/constants";
 import Gamepad from "./modules/components/icons/gamepad";
 import {connectStores, useStateFromStores} from "@discord/flux";
 import Headphones from "./modules/components/icons/headphones";
+import Commands from "../../common/apis/commands";
+import Clyde from "../../common/apis/clyde";
+import {Members, Users, Activities} from "@discord/stores";
+import Strings from "./modules/data/translations/index.js";
+import LocaleManager from "../../common/apis/strings";
+import SuppressError from "../../common/util/noerror";
+import {Messages} from "@discord/i18n";
 
-/// <reference path="../../typings/zlib.d.ts" />
+
 const getClass = (props = [], items = props, exclude = [], selector = false) => {
     const module = WebpackModules.find(m => m && props.every(prop => m[prop] !== undefined) && exclude.every(e => m[e] == undefined));
     if (!module) return "";
@@ -38,6 +45,9 @@ export default class Plugin extends BasePlugin {
         // Bind stylesheet
         stylesheet.inject();
 
+        // Load Strings
+        LocaleManager.addStringsObject(Strings);
+
         // Api's
         this.createdApi = new CreatedAt(this);
         this.joinedApi = new JoinedAt(this);
@@ -49,6 +59,75 @@ export default class Plugin extends BasePlugin {
         this.patchUserProfile();
         this.patchMemberListItem();
         this.patchUserActivityStatus();
+
+        // Commands
+        Commands.registerCommand(this.getName(), {
+            id: "user-info",
+            name: "userinfo",
+            get description() {return Messages.USERINFO_CMD_DESC},
+            predicate: () => true,
+            execute: (props, {channel, guild}) => {
+                const users = props.user.map(e => Users.getUser(e.userId)).filter(e => e);
+
+                if (!users.length) return Clyde.sendMessage(channel.id, {content: "Sorry, but i can't resolve that user."});
+                Clyde.sendMessage(channel.id, {
+                    content: "That's what i've found so far:",
+                    embeds: users.map(user => this.createEmbedForUser(user, guild, channel))
+                });
+            },
+            options: [
+                {name: "user", type: 6, description: "The user"}
+            ],
+            type: 3
+        });
+    }
+
+    createEmbedForUser(user, guild, channel) {
+        const member = Members.getMember(guild.id, user.id);
+
+        const largeUrl = user.getAvatarURL().split("?size")[0] + "?size=2048";
+        const activities = Activities.getActivities(user.id);
+
+        return {
+            color: member?.colorString ? ColorConverter.hex2int(member.colorString) : void 0,
+            author: {
+                name: user.tag,
+                icon_url: user.getAvatarURL(),
+                proxy_icon_url: user.getAvatarURL()
+            },
+            thumbnail: {
+                height: 128,
+                proxy_url: largeUrl,
+                url: largeUrl,
+                width: 128
+            },
+            footer: {
+                text: "ID: " + user.id,
+            },
+            timestamp: new Date().toISOString(),
+            type: "rich",
+            description: `<@!${user.id}>`,
+            fields: [
+                {
+                    name: "Creation Date",
+                    inline: true,
+                    value: this.createdApi.extractDate(user.id).toGMTString()
+                },
+                member && {
+                    name: "Joined Date",
+                    inline: true,
+                    value: new Date(member.joinedAt).toGMTString()
+                },
+                member && {
+                    name: "Roles [" + member.roles.length + "]",
+                    value: member.roles.map(role => `<@&${role}>`).join(" | ")
+                },
+                activities.length && {
+                    name: "Activities",
+                    value: activities.map(ac => `- **${ac.name}**: \`${ac.state}\``).join("\n")
+                }
+            ].filter(e => e)
+        };
     }
 
     async patchUserPopout() {
@@ -63,9 +142,9 @@ export default class Plugin extends BasePlugin {
 
             tree.children.splice(2, 0, <ErrorBoundary key={type} id="UserPopoutHeader" mini>
                 <div className={Utilities.joinClassNames(dateStyles.container, Settings.get("useIcons", true) ? dateStyles.icons : dateStyles.text)}>
-                    {Settings.get("created_show_up", true) && <WrappedCreatedAt key="created-date"/>}
-                    {Settings.get("joined_show_up", true) && <WrappedJoinedAt key="joined-date"/>}
-                    {Settings.get("lastmessage_show_up", true) && <WrappedLastMessage key="lastmessage-date"/>}
+                    {Settings.get("created_show_up", true) && <WrappedCreatedAt key="created-date" />}
+                    {Settings.get("joined_show_up", true) && <WrappedJoinedAt key="joined-date" />}
+                    {Settings.get("lastmessage_show_up", true) && <WrappedLastMessage key="lastmessage-date" />}
                 </div>
             </ErrorBoundary>);
         };
@@ -78,7 +157,7 @@ export default class Plugin extends BasePlugin {
             patch(user, tree, "PopoutHeader");
         });
 
-        Patcher.after(UserPopoutInfo, "default", (_, [{user}],  returnValue) => {
+        Patcher.after(UserPopoutInfo, "default", (_, [{user}], returnValue) => {
             if (this.promises.cancelled) return;
             if (!Array.isArray(returnValue?.props?.children) || !user) return;
             patch(user, returnValue.props, "PopoutInfoHeader");
@@ -112,14 +191,14 @@ export default class Plugin extends BasePlugin {
 
         Patcher.after(UserProfileModalHeader, "default", (_, [{user}], res) => {
             if (this.promises.cancelled) return;
-            const tree = Utilities.findInReactTree(res, m => m?.className?.indexOf("headerInfo") > -1);
+            const tree = Utilities.findInReactTree(res, SuppressError(res => res.className.indexOf("headerTop") > -1));
 
             if (!Array.isArray(tree?.children)) return;
 
             const WrappedJoinedAt = this.joinedApi.task(user.id);
             const WrappedCreatedAt = this.createdApi.task(user.id);
             const WrappedLastMessage = this.lastMessageApi.task(user);
-            
+
             tree.children.splice(1, 0, <ErrorBoundary id="UserProfile" mini>
                 <div className={Utilities.joinClassNames(dateStyles.container, dateStyles.userProfile, Settings.get("useIcons", true) ? dateStyles.icons : dateStyles.text)}>
                     {Settings.get("created_show_profile", true) && <WrappedCreatedAt />}
@@ -159,22 +238,25 @@ export default class Plugin extends BasePlugin {
 
     async patchUserActivityStatus() {
         const RichActivity = WebpackModules.getModule(m => m.default.displayName === "RichActivity");
-    
+
         Patcher.after(RichActivity, "default", (_, [props]) => {
             const shouldShow = useStateFromStores([Settings], () => Settings.get("activityIconState", 0));
             switch (shouldShow) {
                 case 1: return;
                 case 2: return null;
             }
-            
-            switch(props.type) {
-                case ActivityTypes.PLAYING: return <Gamepad {...props}/>;
-                case ActivityTypes.LISTENING: return <Headphones {...props}/>;
+
+            switch (props.type) {
+                case ActivityTypes.PLAYING: return <Gamepad {...props} />;
+                case ActivityTypes.LISTENING: return <Headphones {...props} />;
             }
         });
     }
 
     onStop() {
+        // Remove strings
+        LocaleManager.removeStringsObject(Strings);
+
         // Unpatch
         Patcher.unpatchAll();
 
@@ -183,5 +265,8 @@ export default class Plugin extends BasePlugin {
 
         // Cancel promises
         this.promises.cancel();
+
+        // Unregister commands
+        Commands.unregisterAllCommands(this.getName());
     }
 }

@@ -17,7 +17,7 @@ function buildPlugin(pluginName) {
     cwd: pluginSrcDir,
     stdio: ["ignore", "inherit", "inherit"]
   });
-  _cp.execSync(`node ./bdbuilder --plugin="${pluginName}" --build`, {
+  _cp.execSync(`node ./bdbuilder --plugin="${pluginName}" --build --config="./bdbuilder.prod.config.json"`, {
     cwd: pluginSrcDir,
     stdio: ["ignore", "inherit", "inherit"]
   });

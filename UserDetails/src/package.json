@@ -1,7 +1,7 @@
 {
     "info": {
         "name": "UserDetails",
-        "version": "1.3.2",
+        "version": "1.3.3",
         "authors": [
             {
                 "name": "Strencher",
@@ -11,15 +11,23 @@
             }
         ],
         "description": "Shows you a lot information about users in popouts.",
-		"github": "https://github.com/Strencher/BetterDiscordStuff/UserDetails",
-		"github_raw": "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/UserDetails/UserDetails.plugin.js"
+        "github": "https://github.com/Strencher/BetterDiscordStuff/UserDetails",
+        "github_raw": "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/UserDetails/UserDetails.plugin.js"
     },
     "changelog": [
         {
-            "title": "Fixed",
+            "title": "Fixed - v1.3.3",
             "type": "fixed",
             "items": [
-                "Sorry but another update... i fixed the icons showing up in the profile modal."
+                "Fixed the icons showing up in the profile modal again. **STOP UPDATING DISCORD**"
+            ]
+        },
+        {
+            "title": "Added - v1.3.3",
+            "type": "added",
+            "items": [
+                "Added a chat command `/userinfo @user` to show quick user information.",
+                "Let me know if you like to see the new chat commands in any of my plugins."
             ]
         }
     ],
@@ -32,10 +40,10 @@
             "icons": "components/icons",
             "stores": "./modules/stores"
         },
-		"release": {
-			"public": true,
-			"source": true,
-			"readme": true
-		}
+        "release": {
+            "public": true,
+            "source": true,
+            "readme": true
+        }
     }
 }

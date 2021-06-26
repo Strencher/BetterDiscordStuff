@@ -28,7 +28,7 @@ const Util = WebpackModules.getByProps("cachedFunction");
 const APIErrors = {
 	UNKOWN_USER: 10013,
 	MISSING_PERMISSIONS: 50013
-};
+}
 
 export default class BetterBannedUsers extends BasePlugin {
 	promises = {

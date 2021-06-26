@@ -2,23 +2,12 @@ import {WebpackModules} from "@zlibrary";
 import Constants from "../data/constants";
 import {default as Settings} from "../modules/settings";
 import React from "react";
-
-const createUpdateWrapper = (Component, valueProp = "value", changeProp = "onChange") => props => {
-    const [value, setValue] = React.useState(props[valueProp]);
-
-    return <Component 
-        {...{
-            ...props,
-            [valueProp]: value,
-            [changeProp]: value => {
-                if (typeof props[changeProp] === "function") props[changeProp](value);
-                setValue(value);
-            }
-        }}
-    />;
-};
+import Category from "common/components/category";
+import createUpdateWrapper from "common/hooks/createUpdateWrapper";
+import {FormItem, FormText} from "@discord/forms";
 
 const SwitchItem = createUpdateWrapper(WebpackModules.getByDisplayName("SwitchItem"));
+const NotificationSetting = createUpdateWrapper(WebpackModules.getByDisplayName("NotificationSettings"), "position", "onChange", 1);
 
 export const otherSettings = {
     ignoreSelf: {
@@ -31,11 +20,6 @@ export const otherSettings = {
         note: "Suppress desktop notifications in DND, this automatically enables the In-App notification api.",
         name: "Suppress in DND"
     },
-    inppNotifications: {
-        value: true,
-        note: "Shows In-App Notifications instead of desktop notifications.",
-        name: "In-App Notifications"
-    },
     notifications: {
         value: true,
         note: "Defines if notifications should be shown when an event happens in your current call.",
@@ -46,28 +30,36 @@ export const otherSettings = {
 export default function SettingsPanel() {
     return (
         <div>
-            {
-                Object.keys(otherSettings).map(key => (
-                    <SwitchItem
-                        {...otherSettings[key]}
-                        value={Settings.get(key, otherSettings[key].value)}
-                        onChange={value => {Settings.set(key, value);}}
-                    >{otherSettings[key].name}</SwitchItem>
-                ))
-            }
-            {
-                Object.keys(Constants.VOICE_STATES).reduce((items, key) => {
-                    items.push(<SwitchItem
-                        value={Settings.get(key, true)}
-                        onChange={value => {
-                            Settings.set(key, value);
-                        }}
-                        note={Constants.VOICE_STATES[key].description}
-                    >{_.upperFirst(key)}</SwitchItem>)
+            <Category label="General" look={Category.Looks.COMPACT}>
+                {
+                    Object.keys(otherSettings).map(key => (
+                        <SwitchItem
+                            {...otherSettings[key]}
+                            value={Settings.get(key, otherSettings[key].value)}
+                            onChange={value => {Settings.set(key, value);}}
+                        >{otherSettings[key].name}</SwitchItem>
+                    ))
+                }
+                <FormItem title="InApp Notifications">
+                    <NotificationSetting position={Settings.get("inappPosition", "topleft")} onChange={value => Settings.set("inappPosition", value)} />
+                    <FormText type="description">Defines if notifications should be shown when an event happens in your current call.</FormText>
+                </FormItem>
+            </Category>
+            <Category label="Voice Updates" look={Category.Looks.COMPACT}>
+                {
+                    Object.keys(Constants.VOICE_STATES).reduce((items, key) => {
+                        items.push(<SwitchItem
+                            value={Settings.get(key, true)}
+                            onChange={value => {
+                                Settings.set(key, value);
+                            }}
+                            note={Constants.VOICE_STATES[key].description}
+                        >{_.upperFirst(key)}</SwitchItem>)
 
-                    return items;
-                }, [])   
-            }
-        </div>  
+                        return items;
+                    }, [])
+                }
+            </Category>
+        </div>
     );
 }

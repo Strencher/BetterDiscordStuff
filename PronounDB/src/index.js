@@ -33,7 +33,7 @@ export default class PronounDB extends BasePlugin {
     getSettingsPanel() {
         return (
             <SettingsPanel />
-        )
+        );
     }
 
     async patchMessageTimestamp() {
@@ -98,6 +98,7 @@ export default class PronounDB extends BasePlugin {
                 label: value ?? key,
                 value: key
             });
+
             return items;
         }, []);
 
@@ -115,7 +116,7 @@ export default class PronounDB extends BasePlugin {
                             <SelectInput value={value} options={SelectOptions} onChange={val => value = val} />
                             <FormText type="description">This will be displayed as your local pronoun. Only you will see this.</FormText>
                             <FormText>OR</FormText>
-                            <TextInput value={value} onChange={val => {value = val}} placeholder="Custom Pronoun" />
+                            <TextInput value={value} onChange={val => value = val} placeholder="Custom Pronoun" />
                         </FormItem>
                     ], {
                         onConfirm: () => {

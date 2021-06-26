@@ -117,7 +117,7 @@ export default class VoiceChatNotifications extends BasePlugin {
 
 	updateLogs({message, user, timestamp, channelId}) {
 		if (!Settings.get("notifications", true) || LogsPanel.Store.getState().paused) return;
-		const useInApp = (Settings.get("suppressInDnd", true) && SettingsStore.status === "dnd") || Settings.get("inppNotifications", true);
+		const useInApp = (Settings.get("suppressInDnd", true) && SettingsStore.status === "dnd") || Settings.get("inappPosition", "topLeft") !== "disabled";
 
 		if (useInApp) {
 			Notifications.show(

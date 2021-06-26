@@ -8,6 +8,7 @@ import styles from "styles";
 export default class InvisibleTyping extends BasePlugin {
     onStart() {
         styles.inject();
+
         Utilities.suppressErrors(this.patchTextAreaButtons.bind(this), "textarea buttons patch")();
         Utilities.suppressErrors(this.patchStartTyping.bind(this), "start typing patch")();
     }
@@ -27,7 +28,7 @@ export default class InvisibleTyping extends BasePlugin {
         const TypingModule = WebpackModules.getByProps("startTyping");
 
         Patcher.instead(TypingModule, "startTyping", (_, [channelId], originalMethod) => {
-            if(~Settings.get("exclude", []).indexOf(channelId)) originalMethod(channelId);
+            if(~Settings.get("exclude", []).indexOf(channelId) || Settings.get("autoEnable", false)) originalMethod(channelId);
         });
     }
 
