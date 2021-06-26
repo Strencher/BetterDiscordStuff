@@ -31,8 +31,8 @@ jobs:
     - id: files
       uses: jitterbit/get-changed-files@v1
     - run: |
-        rm -rf node_modules 
-        npm install --force
+        git fetch
+        git pull --recurse-submodules
         for changed_file in ${{ steps.files.outputs.all }}; do
           plugin_name=$(echo ${changed_file} | cut -d/ -f 1)
           node ./bdbuilder --plugin="$plugin_name" --build
