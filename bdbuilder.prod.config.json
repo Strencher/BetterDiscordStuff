@@ -3,7 +3,7 @@
         "./bdbuilder.config.json"
     ],
     "build": {
-        "output": "./[plugin]",
+        "output": "./[plugin]/src",
         "entry": "./[name]",
         "install": false,
         "production": true
