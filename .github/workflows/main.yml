@@ -19,13 +19,6 @@ jobs:
     - name: Test
       run: |
         rm -rf /home/runner/work/${{ github.repository }}
-    - name: Find Directories
-      run: |
-        ls ./
-        echo "--"
-        ls ../
-        echo "---"
-        ls ../../
     - uses: actions/checkout@v2
       with:
         fetch-depth: 0
@@ -40,6 +33,11 @@ jobs:
     - run: |
         git fetch
         git pull --recurse-submodules
+        ls ./
+        echo "--"
+        ls ../
+        echo "---"
+        ls ../../
         for changed_file in ${{ steps.files.outputs.all }}; do
           plugin_name=$(echo ${changed_file} | cut -d/ -f 1)
           node ../bdbuilder --plugin="$plugin_name" --build
