@@ -27,7 +27,11 @@ jobs:
           fetch-depth: 0
 
       - name: retrieve latest bdbuilder version
-        run: git fetch --recurse-submodules && git pull --recurse-submodules
+        run: |
+          git config submodule.bdbuilder.branch master
+          git config status.submodulesummary 1
+          git submodule update --remote
+          git status
 
       - name: Setup Node.js
         uses: actions/setup-node@v2
