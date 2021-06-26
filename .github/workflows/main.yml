@@ -35,7 +35,7 @@ jobs:
         git pull --recurse-submodules
         for changed_file in ${{ steps.files.outputs.all }}; do
           plugin_name=$(echo ${changed_file} | cut -d/ -f 1)
-          node ./bdbuilder --plugin="$plugin_name" --build
+          node ../bdbuilder --plugin="$plugin_name" --build
         done
       
     - name: Stage build files
