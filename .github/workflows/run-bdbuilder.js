@@ -19,18 +19,25 @@ for (let i = 0; i < changedPlugins.length; i++) {
   buildPlugin(changedPlugins[i]);
 }
 
-_fs.rmSync(_path.resolve(process.cwd(), "bdbuilder/node_modules"), { force: true, recursive: true });
-
+// reduce artifact size
+_fs.rmSync("bdbuilder/node_modules", { force: true, recursive: true });
+_fs.readdirSync(process.cwd()).filter(dirname => !changedPlugins.includes(dirname)).forEach(dirname => {
+  _fs.rmSync(dirname, { force: true, recursive: true });
+});
 
 function buildPlugin(pluginName) {
   const pluginSrcDir = _path.resolve(pluginName, "src");
+
   _cp.execSync("npm i", {
     cwd: pluginSrcDir,
     stdio: ["ignore", "inherit", "inherit"]
   });
+
   _cp.execSync(`node ./bdbuilder --plugin="${pluginName}" --build`, {
     cwd: ".",
     stdio: ["ignore", "inherit", "inherit"]
   });
+
+  // reduce artifact size
   _fs.rmSync(_path.resolve(pluginSrcDir, "node_modules"), { force: true, recursive: true });
 }

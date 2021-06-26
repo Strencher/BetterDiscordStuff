@@ -40,7 +40,7 @@ jobs:
         continue-on-error: true # needed for force-push support
 
       - name: build plugins
-        run: node .github/workflows/run-bdbuilder ${{ steps.files.outputs.all }}
+        run: workflows/run-bdbuilder ${{ steps.files.outputs.all }}
 
       - name: stage build
         uses: actions/upload-artifact@v2
@@ -63,7 +63,7 @@ jobs:
 
       - name: commit build
         run: |
-          git add -A
+          git add --no-all ./**
           git config --local user.email "actions@github.com"
           git config --local user.name "PluginBuilder"
           git commit -m "[CI Chore] Compile plugins" || true
