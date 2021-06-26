@@ -21,7 +21,7 @@ jobs:
         rm -rf /home/runner/work/${{ github.repository }}
     - uses: actions/checkout@v2
       with:
-        submodules: resursive
+        submodules: recursive
         fetch-depth: 0
 
     - name: Setup Node.js 16.x
@@ -32,8 +32,6 @@ jobs:
     - id: files
       uses: jitterbit/get-changed-files@v1
     - run: |
-        git fetch
-        git pull --force --recurse-submodules
         ls ./bdbuilder 
         for changed_file in ${{ steps.files.outputs.all }}; do
           plugin_name=$(echo ${changed_file} | cut -d/ -f 1)
