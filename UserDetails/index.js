@@ -16,12 +16,12 @@ import {ActivityTypes} from "@discord/constants";
 import Gamepad from "./modules/components/icons/gamepad";
 import {connectStores, useStateFromStores} from "@discord/flux";
 import Headphones from "./modules/components/icons/headphones";
-import Commands from "../../common/apis/commands";
-import Clyde from "../../common/apis/clyde";
+import Commands from "common/apis/commands";
+import Clyde from "common/apis/clyde";
 import {Members, Users, Activities} from "@discord/stores";
 import Strings from "./modules/data/translations/index.js";
-import LocaleManager from "../../common/apis/strings";
-import SuppressError from "../../common/util/noerror";
+import LocaleManager from "common/apis/strings";
+import SuppressError from "common/util/noerror";
 import {Messages} from "@discord/i18n";
 
 

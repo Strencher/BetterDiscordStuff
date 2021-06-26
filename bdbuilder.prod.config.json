@@ -4,7 +4,7 @@
     ],
     "build": {
         "output": "./[name]",
-        "entry": "./[name]/src",
+        "entry": "./[name]",
         "install": false,
         "production": true
     }

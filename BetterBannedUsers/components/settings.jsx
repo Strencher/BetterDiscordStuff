@@ -1,4 +1,4 @@
-import createUpdateWrapper from "../../../common/hooks/createUpdateWrapper"
+import createUpdateWrapper from "common/hooks/createUpdateWrapper"
 import {WebpackModules} from "@zlibrary";
 import Settings from "../settings";
 import _ from "lodash";
@@ -22,7 +22,7 @@ export default function SettingsPanel() {
             {
                 Object.keys(settings).map(id => {
                     return (
-                        <SwitchItem 
+                        <SwitchItem
                             children={_.upperFirst(id)}
                             note={settings[id].note}
                             value={Settings.get(id, settings[id].value)}

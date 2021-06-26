@@ -14,8 +14,8 @@ import LogsPanel from "./components/panel";
 import Constants from "./data/constants";
 import SettingsPanel from "./components/Settings";
 import * as Notifications from "./modules/notifications";
-import Commands from "../../common/apis/commands";
-import Clyde from "../../common/apis/clyde";
+import Commands from "common/apis/commands";
+import Clyde from "common/apis/clyde";
 
 const VoiceStateStore = WebpackModules.getByProps("getVoiceStates");
 const SelectedVoiceChannelStore = WebpackModules.getByProps("getVoiceChannelId");

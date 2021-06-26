@@ -1,5 +1,5 @@
 import config from "./package.json";
-import SettingsManager from "../../common/classes/settings";
+import SettingsManager from "common/classes/settings";
 
 const Settings = new SettingsManager(config.info.name);
 

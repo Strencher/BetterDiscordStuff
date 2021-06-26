@@ -4,32 +4,44 @@ const _path = require("path");
 const _cp = require("child_process");
 const _fs = require("fs");
 
+const changedFilesIgnore = [
+  "bdbuilder",
+  "scripts",
+  "UserDetails" // can't compile atm
+];
+const releaseExtensions = [".md", ".plugin.js"];
+
 const changedFiles = process.argv.slice(2);
-const changedPlugins = [...new Set(changedFiles.map(filename => filename.split(_path.sep)[0]))].filter(pluginName => "." !== pluginName[0]);
+const changedPlugins = [...new Set(changedFiles.map(filename => filename.split(_path.sep)[0]))].filter(pluginName =>
+  "." !== pluginName[0] &&
+  !changedFilesIgnore.includes(pluginName) &&
+  _fs.existsSync(_path.resolve(pluginName, "package.json")) &&
+  _fs.statSync(pluginName).isDirectory()
+);
 
 // Needed while bdbuilder is a submodule; obsolete after npm release
-if (0 < changedPlugins.length) {
+if (changedPlugins.length) {
   _cp.execSync("npm i", {
     cwd: "bdbuilder",
     stdio: ["ignore", "inherit", "inherit"]
   });
 }
 
-for (let i = 0; i < changedPlugins.length; i++) {
-  buildPlugin(changedPlugins[i]);
+for (const pluginName of changedPlugins) {
+  buildPlugin(pluginName);
 }
 
 // reduce artifact size
-_fs.rmSync("bdbuilder", { force: true, recursive: true });
-_fs.readdirSync(process.cwd()).filter(dirname => !changedPlugins.includes(dirname)).forEach(dirname => {
+_fs.readdirSync(".").filter(dirname => !changedPlugins.includes(dirname)).forEach(dirname => {
   _fs.rmSync(dirname, { force: true, recursive: true });
 });
 
 function buildPlugin(pluginName) {
-  const pluginSrcDir = _path.resolve(pluginName, "src");
+  console.log(`Compiling ${pluginName} now.`);
+  const pluginDir = _path.resolve(pluginName);
 
   _cp.execSync("npm i", {
-    cwd: pluginSrcDir,
+    cwd: pluginDir,
     stdio: ["ignore", "inherit", "inherit"]
   });
 
@@ -39,5 +51,9 @@ function buildPlugin(pluginName) {
   });
 
   // reduce artifact size
-  _fs.rmSync(_path.resolve(pluginSrcDir), { force: true, recursive: true });
+  _fs.readdirSync(pluginDir).filter(filename =>
+    !releaseExtensions.some(extension => filename.endsWith(extension))
+  ).forEach(filename => {
+    _fs.rmSync(_path.resolve(pluginDir, filename), { force: true, recursive: true });
+  });
 }
