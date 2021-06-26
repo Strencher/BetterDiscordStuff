@@ -51,6 +51,7 @@ jobs:
           node ./bdbuilder --plugin="$plugin_name" --build
         done
   commit:
+    needs: build
     runs-on: ubuntu-latest
   
     steps:
