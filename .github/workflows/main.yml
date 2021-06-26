@@ -32,6 +32,7 @@ jobs:
     - id: files
       uses: jitterbit/get-changed-files@v1
     - run: |
+        echo "Waiting for builder response..."
         cd ./bdbuilder
         npm i
         cd ../
