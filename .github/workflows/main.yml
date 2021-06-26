@@ -18,7 +18,7 @@ jobs:
     steps:
     - name: Test
       run: |
-        rm -rf /home/runner/work/*
+        rm -rf /home/runner/work/${{ github.repository }}
     - uses: actions/checkout@v2
       with:
         fetch-depth: 0
