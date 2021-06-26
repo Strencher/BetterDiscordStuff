@@ -5013,7 +5013,9 @@ function buildPlugin([BasePlugin, PluginApi]) {
 									type: "description"
 								}, "This will be displayed as your local pronoun. Only you will see this."), external_BdApi_React_default().createElement(forms_namespaceObject.FormText, null, "OR"), external_BdApi_React_default().createElement(TextInput, {
 									value,
-									onChange: val => value = val,
+									onChange: val => {
+										value = val;
+									},
 									placeholder: "Custom Pronoun"
 								}))], {
 									onConfirm: () => {
