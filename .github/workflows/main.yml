@@ -3,9 +3,10 @@ name: Autobuild Plugins
 # Controls when the action will run.
 on:
   push:
+    branches:
+      - development
     paths:
       - '*/src/**'
-  workflow_dispatch:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -29,11 +30,11 @@ jobs:
       - name: retrieve latest bdbuilder version
         run: |
           git config submodule.bdbuilder.branch master
-          git config status.submodulesummary 1
           git submodule update --remote
+          git config status.submodulesummary 1
           git status
 
-      - name: Setup Node.js
+      - name: setup nodejs
         uses: actions/setup-node@v2
         with:
           node-version: 16.x
@@ -62,8 +63,7 @@ jobs:
       - name: restore repo
         uses: actions/checkout@v2
         with:
-          submodules: recursive
-          fetch-depth: 0
+          ref: master
 
       - name: apply build
         uses: actions/download-artifact@v2
@@ -71,15 +71,15 @@ jobs:
           name: build-artifact
           path: .
 
-      - name: commit build
+      - name: commit
         run: |
           git config advice.addIgnoredFile false
           git add --no-all ./**
           git config --local user.email "actions@github.com"
           git config --local user.name "PluginBuilder"
-          git commit -m "[CI Chore] Compile plugins" || true
+          git commit -m "publish build" || true
 
-      - name: Push build commit
+      - name: push
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ github.token }}

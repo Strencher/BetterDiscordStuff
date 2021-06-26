@@ -20,9 +20,9 @@ for (let i = 0; i < changedPlugins.length; i++) {
 }
 
 // reduce artifact size
-_fs.rmSync("bdbuilder", {force: true, recursive: true});
+_fs.rmSync("bdbuilder", { force: true, recursive: true });
 _fs.readdirSync(process.cwd()).filter(dirname => !changedPlugins.includes(dirname)).forEach(dirname => {
-  _fs.rmSync(dirname, {force: true, recursive: true});
+  _fs.rmSync(dirname, { force: true, recursive: true });
 });
 
 function buildPlugin(pluginName) {
@@ -39,5 +39,5 @@ function buildPlugin(pluginName) {
   });
 
   // reduce artifact size
-  _fs.rmSync(_path.resolve(pluginSrcDir), {force: true, recursive: true});
+  _fs.rmSync(_path.resolve(pluginSrcDir), { force: true, recursive: true });
 }
