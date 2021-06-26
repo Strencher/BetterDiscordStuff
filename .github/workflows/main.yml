@@ -40,7 +40,7 @@ jobs:
         continue-on-error: true # needed for force-push support
 
       - name: build plugins
-        run: workflows/run-bdbuilder ${{ steps.files.outputs.all }}
+        run: .github/workflows/run-bdbuilder ${{ steps.files.outputs.all }}
 
       - name: stage build
         uses: actions/upload-artifact@v2
