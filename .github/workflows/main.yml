@@ -36,6 +36,8 @@ jobs:
         cd ./bdbuilder
         npm i
         cd ../
+        ls ./
+        echo "---------------"
         ls ./PronounDB
         echo "----"
         ls ./PronounDB/src
