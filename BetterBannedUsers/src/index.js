@@ -25,7 +25,6 @@ const SearchBar = WebpackModules.getByDisplayName("SearchBar");
 const GuildSettings = WebpackModules.getByProps("updateMemberRoles");
 const Util = WebpackModules.getByProps("cachedFunction");
 
-
 const APIErrors = {
 	UNKOWN_USER: 10013,
 	MISSING_PERMISSIONS: 50013
