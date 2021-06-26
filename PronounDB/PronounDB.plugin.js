@@ -4,7 +4,7 @@
  * @description Shows you the pronoun of a user right next to their name. Pronouns by https://pronoundb.org. Source code can be found in the ./src folder of the github repo.
  * @source https://github.com/Strencher/BetterDiscordStuff/tree/master/PronounDB
  * @updateUrl https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/PronounDB/PronounDB.plugin.js
- * @version 0.0.5
+ * @version 0.0.4
  */
 /*@cc_on
 @if (@_jscript)
@@ -12,16 +12,14 @@
     // Offer to self-install for clueless users that try to run this directly.
     var shell = WScript.CreateObject("WScript.Shell");
     var fs = new ActiveXObject("Scripting.FileSystemObject");
-    var pathPlugins = shell.ExpandEnvironmentStrings("%APPDATA%BetterDiscordplugins");
+    var pathPlugins = shell.ExpandEnvironmentStrings("%APPDATA%\BetterDiscord\plugins");
     var pathSelf = WScript.ScriptFullName;
     // Put the user at ease by addressing them in the first person
-    shell.Popup("It looks like you've mistakenly tried to run me directly. 
-(Don't do that!)", 0, "I'm a plugin for BetterDiscord", 0x30);
+    shell.Popup("It looks like you've mistakenly tried to run me directly. \n(Don't do that!)", 0, "I'm a plugin for BetterDiscord", 0x30);
     if (fs.GetParentFolderName(pathSelf) === fs.GetAbsolutePathName(pathPlugins)) {
         shell.Popup("I'm in the correct folder already.", 0, "I'm already installed", 0x40);
     } else if (!fs.FolderExists(pathPlugins)) {
-        shell.Popup("I can't find the BetterDiscord plugins folder.
-Are you sure it's even installed?", 0, "Can't install myself", 0x10);
+        shell.Popup("I can't find the BetterDiscord plugins folder.\nAre you sure it's even installed?", 0, "Can't install myself", 0x10);
     } else if (shell.Popup("Should I copy myself to BetterDiscord's plugins folder for you?", 0, "Do you need some help?", 0x34) === 6) {
         fs.CopyFile(pathSelf, fs.BuildPath(pathPlugins, fs.GetFileName(pathSelf)), true);
         // Show the user where to put plugins in the future
@@ -55,7 +53,7 @@ const config = {
 		"description": "Shows you the pronoun of a user right next to their name. Pronouns by https://pronoundb.org. Source code can be found in the ./src folder of the github repo.",
 		"github": "https://github.com/Strencher/BetterDiscordStuff/tree/master/PronounDB",
 		"github_raw": "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/PronounDB/PronounDB.plugin.js",
-		"version": "0.0.5"
+		"version": "0.0.4"
 	},
 	"build": {
 		"zlibrary": true,
@@ -78,17 +76,19 @@ const config = {
 		}
 	},
 	"changelog": [{
-			"type": "fixed",
-			"title": "Discord Fixes...",
+			"type": "added",
+			"title": "v0.0.3",
 			"items": [
-				"Guess what... discord updated and broke pronoun tag in user popout. Fixed that for now."
+				"`Edit Prounoun` button."
 			]
 		},
 		{
-			"type": "improved",
-			"title": "Improved",
+			"type": "added",
+			"title": "v0.0.4",
 			"items": [
-				"Added a text box for custom pronouns."
+				"Setting to hide Pronoun tag in specific areas",
+				"Dropdown menus to select local pronoun.",
+				"Hopefully fixed multiple prounoun tags showing up."
 			]
 		}
 	],
@@ -324,7 +324,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				var ___CSS_LOADER_EXPORT___ = _bdbuilder_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
 					return i[1];
 				}));
-				___CSS_LOADER_EXPORT___.push([module.id, ".PronounDB-style-container{display:flex;align-items:center}.PronounDB-style-container .PronounDB-style-header{font-weight:700}.PronounDB-style-container .PronounDB-style-tag{font-size:12px;color:var(--text-normal);margin-left:5px}", ""]);
+				___CSS_LOADER_EXPORT___.push([module.id, ".PronounDB-style-container{align-content:center;display:flex}.PronounDB-style-container .PronounDB-style-header{font-weight:700;text-transform:uppercase;font-size:12px;margin-bottom:8px;color:var(--header-secondary)}.PronounDB-style-container .PronounDB-style-tag{font-size:12px;color:var(--text-normal);margin-left:5px}", ""]);
 				___CSS_LOADER_EXPORT___.locals = {
 					container: "PronounDB-style-container",
 					header: "PronounDB-style-header",
@@ -343,7 +343,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				var external_BasePlugin_default = __webpack_require__.n(external_BasePlugin_namespaceObject);
 				const external_events_namespaceObject = require("events");
 				var external_events_default = __webpack_require__.n(external_events_namespaceObject);
-				const package_namespaceObject = JSON.parse('{"um":{"u2":"PronounDB","i8":"0.0.5"}}');
+				const package_namespaceObject = JSON.parse('{"um":{"u2":"PronounDB","i8":"0.0.4"}}');
 				var external_BdApi_React_ = __webpack_require__(832);
 				var external_BdApi_React_default = __webpack_require__.n(external_BdApi_React_);
 				const useForceUpdate = () => (0, external_BdApi_React_.useReducer)((n => n + 1), 0)[1];
@@ -5013,9 +5013,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 									type: "description"
 								}, "This will be displayed as your local pronoun. Only you will see this."), external_BdApi_React_default().createElement(forms_namespaceObject.FormText, null, "OR"), external_BdApi_React_default().createElement(TextInput, {
 									value,
-									onChange: val => {
-										value = val;
-									},
+									onChange: val => value = val,
 									placeholder: "Custom Pronoun"
 								}))], {
 									onConfirm: () => {
