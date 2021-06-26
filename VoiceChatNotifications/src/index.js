@@ -1,5 +1,4 @@
 /// <reference path="../../typings/discord.d.ts" />
-
 import {Timestamp} from "@discord/classes";
 import {ModalRoot, openModal} from "@discord/modal";
 import {Channels, Info, SettingsStore, Status, Users} from "@discord/stores";
