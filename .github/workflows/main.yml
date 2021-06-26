@@ -19,6 +19,11 @@ jobs:
     - name: Test
       run: |
         rm -rf /home/runner/work/${{ github.repository }}
+    - name: Find Directories
+      run: |
+        ls .
+        echo "--"
+        ls ../
     - uses: actions/checkout@v2
       with:
         fetch-depth: 0
