@@ -26,6 +26,9 @@ jobs:
           submodules: recursive
           fetch-depth: 0
 
+      - name: retrieve latest bdbuilder version
+        run: git pull --recurse-submodules
+
       - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
@@ -47,9 +50,9 @@ jobs:
           retention-days: 1
 
   publish:
-    name: publish
-    needs: build
+    name: publish plugins
     runs-on: ubuntu-latest
+    needs: build
 
     steps:
       - name: use build
@@ -60,10 +63,10 @@ jobs:
 
       - name: commit build
         run: |
-          git add -a
+          git add -A
           git config --local user.email "actions@github.com"
           git config --local user.name "PluginBuilder"
-          git commit -m "[CI Chore] Compile plugin(s)" || true
+          git commit -m "[CI Chore] Compile plugins" || true
 
       - name: Push build commit
         uses: ad-m/github-push-action@master
