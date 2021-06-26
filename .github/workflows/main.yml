@@ -35,7 +35,9 @@ jobs:
         cd ./bdbuilder
         npm i
         cd ../
-        ls ./bdbuilder 
+        ls ./PronounDB
+        echo "----"
+        ls ./PronounDB/src
         for changed_file in ${{ steps.files.outputs.all }}; do
           plugin_name=$(echo ${changed_file} | cut -d/ -f 1)
           node ./bdbuilder --plugin="$plugin_name" --build
