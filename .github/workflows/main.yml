@@ -46,6 +46,7 @@ jobs:
           cd ./$plugin_name
           echo "Installing Plugin dependencies..."
           npm i
+          ls ./
           cd ../
           node ./bdbuilder --plugin="$plugin_name" --build
         done
