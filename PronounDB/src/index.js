@@ -158,6 +158,7 @@ export default class PronounDB extends BasePlugin {
         for (const unpatch of this.patches) unpatch();
         Patcher.unpatchAll();
         style.remove();
+        
         this.promises.cancel();
     }
 }
