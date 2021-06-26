@@ -32,10 +32,8 @@ jobs:
       uses: jitterbit/get-changed-files@v1
     - run: |
         git fetch
-        git pull --recurse-submodules
+        git pull  --force
         ls ./bdbuilder 
-        echo "---"
-        cat ./bdbuilder
         for changed_file in ${{ steps.files.outputs.all }}; do
           plugin_name=$(echo ${changed_file} | cut -d/ -f 1)
           node ../bdbuilder --plugin="$plugin_name" --build
