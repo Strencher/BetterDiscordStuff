@@ -11,6 +11,7 @@ import {Pronouns} from "./data/constants";
 import SettingsPanel from "./components/Settings";
 import createUpdateWrapper from "common/hooks/createUpdateWrapper";
 
+
 const SelectInput = createUpdateWrapper(WebpackModules.getByProps("SingleSelect").SingleSelect);
 const TextInput = createUpdateWrapper(WebpackModules.getByDisplayName("TextInput"));
 const Header = WebpackModules.getByDisplayName("Header");
@@ -24,7 +25,7 @@ export default class PronounDB extends BasePlugin {
 
     onStart() {
         style.inject();
-        
+
         Utilities.suppressErrors(this.patchMessageTimestamp.bind(this), "MessageHeader patch")();
         Utilities.suppressErrors(this.patchUserContextMenus.bind(this), "UserContextMenu patch")();
         Utilities.suppressErrors(this.patchUserPopout.bind(this), "UserPopout patch")();

@@ -1,65 +1,85 @@
 name: Autobuild Plugins
 
-# Controls when the action will run. 
+# Controls when the action will run.
 on:
   push:
     paths:
       - '*/src/**'
   workflow_dispatch:
 
-concurrency: 
+concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
   build:
+    name: compile plugins
     runs-on: ubuntu-latest
 
     steps:
-    - name: Test
-      run: |
-        rm -rf /home/runner/work/${{ github.repository }}
-    - uses: actions/checkout@v2
-      with:
-        submodules: recursive
-        fetch-depth: 0
+      - name: clean working directory
+        run: |
+          rm -rf /home/runner/work/${{ github.repository }}
 
-    - name: Setup Node.js 16.x
-      uses: actions/setup-node@v2
-      with:
-        node-version: 16.x
-    
-    - id: files
-      uses: jitterbit/get-changed-files@v1
-    - run: |
-        echo "Waiting for builder response..."
-        cd ./bdbuilder
-        npm i
-        cd ../
-        ls ./
-        echo "---------------"
-        ls ./PronounDB
-        echo "----"
-        ls ./PronounDB/src
-        for changed_file in ${{ steps.files.outputs.all }}; do
-          plugin_name=$(echo ${changed_file} | cut -d/ -f 1)
-          cd ./$plugin_name/src
-          echo "Installing Plugin dependencies..."
+      - name: checkout code
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16.x
+
+      - id: files
+        uses: jitterbit/get-changed-files@v1
+
+      - run: |
+          echo "Waiting for builder response..."
+          cd ./bdbuilder
           npm i
-          ls .
-          cd ../../
-          node ./bdbuilder --plugin="$plugin_name" --build
-        done
-  commit:
+          cd ../
+          ls ./
+          echo "---------------"
+          ls ./PronounDB
+          echo "----"
+          ls ./PronounDB/src
+
+      - name: build plugins
+        run: |
+          for changed_file in ${{ steps.files.outputs.all }}; do
+            plugin_name=$(echo ${changed_file} | cut -d/ -f 1)
+            cd ./$plugin_name/src
+            echo "Installing Plugin dependencies..."
+            npm i
+            ls .
+            cd ../../
+            node ./bdbuilder --plugin="$plugin_name" --build
+          done
+
+      - name: stage build
+        uses: actions/upload-artifact@v2
+        with:
+          name: build-artifact
+          path: .
+          retention-days: 1
+
+  publish:
+    name: publish
     needs: build
     runs-on: ubuntu-latest
-  
-    steps:
-      - name: Stage build files
-        run: git add --all
 
-      - name: Commit build files
+    steps:
+      - name: use build
+        uses: actions/download-artifact@v2
+        with:
+          name: build-artifact
+          path: .
+
+      - name: commit build
         run: |
+          git add -a
           git config --local user.email "actions@github.com"
           git config --local user.name "PluginBuilder"
           git commit -m "[CI Chore] Compile plugin(s)" || true
