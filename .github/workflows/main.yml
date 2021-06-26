@@ -33,11 +33,7 @@ jobs:
     - run: |
         git fetch
         git pull --recurse-submodules
-        ls ./
-        echo "--"
-        ls ../
-        echo "---"
-        ls ../../
+        ls ./bdbuilder
         for changed_file in ${{ steps.files.outputs.all }}; do
           plugin_name=$(echo ${changed_file} | cut -d/ -f 1)
           node ../bdbuilder --plugin="$plugin_name" --build
