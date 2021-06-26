@@ -55,7 +55,13 @@ jobs:
     needs: build
 
     steps:
-      - name: use build
+      - name: restore repo
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
+          fetch-depth: 0
+
+      - name: apply build
         uses: actions/download-artifact@v2
         with:
           name: build-artifact
