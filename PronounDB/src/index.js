@@ -9,12 +9,11 @@ import React, {useState} from "react";
 import {FormItem, FormText} from "@discord/forms";
 import {Pronouns} from "./data/constants";
 import SettingsPanel from "./components/Settings";
-import createUpdateWrapper from "../../common/hooks/createUpdateWrapper";
+import createUpdateWrapper from "common/hooks/createUpdateWrapper";
 
 const SelectInput = createUpdateWrapper(WebpackModules.getByProps("SingleSelect").SingleSelect);
 const TextInput = createUpdateWrapper(WebpackModules.getByDisplayName("TextInput"));
 const Header = WebpackModules.getByDisplayName("Header");
-
 
 export default class PronounDB extends BasePlugin {
     promises = {

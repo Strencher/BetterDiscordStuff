@@ -43,6 +43,11 @@ jobs:
         ls ./PronounDB/src
         for changed_file in ${{ steps.files.outputs.all }}; do
           plugin_name=$(echo ${changed_file} | cut -d/ -f 1)
+          cd ./$plugin_name/src
+          echo "Installing Plugin dependencies..."
+          npm i
+          ls .
+          cd ../../
           node ./bdbuilder --plugin="$plugin_name" --build
         done
       
