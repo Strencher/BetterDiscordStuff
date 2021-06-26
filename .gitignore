@@ -10,10 +10,8 @@ Test
 ShowSessions
 ServerLookup
 PcCompat
-MessageLinkEmbed
 CustomActions
 CoffeeTest
 ChatAliases
 builds
-PlatformIndicators
 ./*.plugin.js
