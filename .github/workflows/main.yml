@@ -56,7 +56,7 @@ jobs:
 
     - name: Commit build files
       run: |
-        git config --local user.email "creatableog@protonmail.com"
+        git config --local user.email "actions@github.com"
         git config --local user.name "PluginBuilder"
         git commit -m "[CI Chore] Compile plugin(s)" || true
     
