@@ -26,6 +26,7 @@ export default class PronounDB extends BasePlugin {
     onStart() {
         style.inject();
 
+        
         Utilities.suppressErrors(this.patchMessageTimestamp.bind(this), "MessageHeader patch")();
         Utilities.suppressErrors(this.patchUserContextMenus.bind(this), "UserContextMenu patch")();
         Utilities.suppressErrors(this.patchUserPopout.bind(this), "UserPopout patch")();
