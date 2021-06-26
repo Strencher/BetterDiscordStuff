@@ -18,8 +18,7 @@ jobs:
 
     steps:
       - name: clean working directory
-        run: |
-          rm -rf /home/runner/work/${{ github.repository }}
+        run: rm -rf /home/runner/work/${{ github.repository }}
 
       - name: checkout code
         uses: actions/checkout@v2
@@ -32,31 +31,13 @@ jobs:
         with:
           node-version: 16.x
 
-      - id: files
+      - name: detect changed files
+        id: files
         uses: jitterbit/get-changed-files@v1
-
-      - run: |
-          echo "Waiting for builder response..."
-          cd ./bdbuilder
-          npm i
-          cd ../
-          ls ./
-          echo "---------------"
-          ls ./PronounDB
-          echo "----"
-          ls ./PronounDB/src
+        continue-on-error: true # needed for force-push support
 
       - name: build plugins
-        run: |
-          for changed_file in ${{ steps.files.outputs.all }}; do
-            plugin_name=$(echo ${changed_file} | cut -d/ -f 1)
-            cd ./$plugin_name/src
-            echo "Installing Plugin dependencies..."
-            npm i
-            ls .
-            cd ../../
-            node ./bdbuilder --plugin="$plugin_name" --build
-          done
+        run: node .github/workflows/run-bdbuilder ${{ steps.files.outputs.all }}
 
       - name: stage build
         uses: actions/upload-artifact@v2
