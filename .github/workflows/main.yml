@@ -5,6 +5,11 @@ on:
   push:
     branches:
       - development
+  workflow_dispatch:
+    inputs:
+      plugin:
+        description: What plugin to build. Omit for all.
+        required: false
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -43,7 +48,11 @@ jobs:
         continue-on-error: true # needed for force-push support
 
       - name: build plugins
-        run: .github/workflows/run-bdbuilder ${{ steps.files.outputs.all }}
+        run: >-
+          .github/workflows/run-bdbuilder
+          "--trigger=${{ github.event_name }}"
+          "--plugin=${{ github.event.inputs.plugin }}"
+          ${{ steps.files.outputs.all }}
 
       - name: stage build
         uses: actions/upload-artifact@v2

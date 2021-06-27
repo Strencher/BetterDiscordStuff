@@ -11,37 +11,54 @@ const changedFilesIgnore = [
 ];
 const releaseExtensions = [".md", ".plugin.js"];
 
-const changedFiles = process.argv.slice(2);
-const changedPlugins = [...new Set(changedFiles.map(filename => filename.split(_path.sep)[0]))].filter(pluginName =>
+const argv = process.argv.slice(2);
+
+// supported: `trigger`, `plugin`.
+const cliSwitches = Object.assign(...argv.filter(arg => arg.startsWith("--")).map(arg =>
+  ({ [arg.slice(2, arg.indexOf("="))]: arg.slice(1 + arg.indexOf("=")) })
+));
+
+const isManualRun = "workflow_dispatch" === cliSwitches.trigger;
+const changedFiles = argv.filter(arg => !arg.startsWith("--"));
+
+let changedPlugins;
+if (isManualRun)
+  changedPlugins = cliSwitches.plugin ? [cliSwitches.plugin] : _fs.readdirSync(".");
+else
+  changedPlugins = [...new Set(changedFiles.map(filename => filename.split(_path.sep)[0]))];
+
+// filter out what can't actually be built.
+changedPlugins = changedPlugins.filter(pluginName =>
   "." !== pluginName[0] &&
   !changedFilesIgnore.includes(pluginName) &&
   _fs.existsSync(_path.resolve(pluginName, "package.json")) &&
   _fs.statSync(pluginName).isDirectory()
 );
 
-// Needed while bdbuilder is a submodule; obsolete after npm release
-if (changedPlugins.length) {
+console.log("Will build the following plugins:", changedPlugins.join(", "));
+actuallyDoSomething();
+
+function actuallyDoSomething() {
+  if (!changedPlugins.length) throw new Error("Got nothing to build");
+
+  // Needed while bdbuilder is a submodule; obsolete after npm release
   _cp.execSync("npm i", {
     cwd: "bdbuilder",
     stdio: ["ignore", "inherit", "inherit"]
   });
-}
 
-for (const pluginName of changedPlugins) {
-  buildPlugin(pluginName);
-}
+  for (const pluginName of changedPlugins) {
+    buildPlugin(pluginName);
+  }
 
-// reduce artifact size
-_fs.readdirSync(".").filter(dirname => !changedPlugins.includes(dirname)).forEach(dirname => {
-  _fs.rmSync(dirname, { force: true, recursive: true });
-});
+  cleanup();
+}
 
 function buildPlugin(pluginName) {
-  console.log(`Compiling ${pluginName} now.`);
-  const pluginDir = _path.resolve(pluginName);
+  console.log(`Building ${pluginName}...`);
 
   _cp.execSync("npm i", {
-    cwd: pluginDir,
+    cwd: pluginName,
     stdio: ["ignore", "inherit", "inherit"]
   });
 
@@ -49,11 +66,22 @@ function buildPlugin(pluginName) {
     cwd: ".",
     stdio: ["ignore", "inherit", "inherit"]
   });
+}
 
-  // reduce artifact size
-  _fs.readdirSync(pluginDir).filter(filename =>
-    !releaseExtensions.some(extension => filename.endsWith(extension))
-  ).forEach(filename => {
-    _fs.rmSync(_path.resolve(pluginDir, filename), { force: true, recursive: true });
+/**
+ * Leaves only files that should be pushed to the release branch.
+ * Probably shouldn't run this at home.
+ */
+function cleanup() {
+  _fs.readdirSync(".").filter(dirname => !changedPlugins.includes(dirname)).forEach(dirname => {
+    _fs.rmSync(dirname, { force: true, recursive: true });
   });
+
+  for (const pluginName of changedPlugins) {
+    _fs.readdirSync(pluginName).filter(filename =>
+      !releaseExtensions.some(extension => filename.endsWith(extension))
+    ).forEach(filename => {
+      _fs.rmSync(_path.resolve(pluginName, filename), { force: true, recursive: true });
+    });
+  }
 }
