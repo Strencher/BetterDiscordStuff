@@ -188,7 +188,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					return ___createMemoize___(this, 'SelectedChannels', () => BdApi.findModuleByProps('getChannelId', 'getLastSelectedChannelId'))
 				},
 				get 'Info'() {
-					return ___createMemoize___(this, 'Info', () => BdApi.findModuleByProps('getCurrentUser'))
+					return ___createMemoize___(this, 'Info', () => BdApi.findModuleByProps('getSessionId'))
 				},
 				get 'Status'() {
 					return ___createMemoize___(this, 'Status', () => BdApi.findModuleByProps('getStatus'))
@@ -276,13 +276,13 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			}
 		};
 		var __webpack_modules__ = {
-			901: (module, __webpack_exports__, __webpack_require__) => {
+			925: (module, __webpack_exports__, __webpack_require__) => {
 				__webpack_require__.d(__webpack_exports__, {
 					Z: () => __WEBPACK_DEFAULT_EXPORT__
 				});
-				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(645);
-				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
-				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
+				var _bdbuilder_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(118);
+				var _bdbuilder_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_bdbuilder_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
+				var ___CSS_LOADER_EXPORT___ = _bdbuilder_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
 					return i[1];
 				}));
 				___CSS_LOADER_EXPORT___.push([module.id, ".VoiceChatNotifications-button-icon{cursor:pointer;align-items:center;display:flex}", ""]);
@@ -292,18 +292,22 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
 				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
 			},
-			571: (module, __webpack_exports__, __webpack_require__) => {
+			235: (module, __webpack_exports__, __webpack_require__) => {
 				__webpack_require__.d(__webpack_exports__, {
 					Z: () => __WEBPACK_DEFAULT_EXPORT__
 				});
-				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(645);
-				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
-				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
+				var _bdbuilder_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(118);
+				var _bdbuilder_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_bdbuilder_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
+				var ___CSS_LOADER_EXPORT___ = _bdbuilder_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
 					return i[1];
 				}));
-				___CSS_LOADER_EXPORT___.push([module.id, "#voicechatnotifications{position:absolute;left:20px;z-index:9}.VoiceChatNotifications-notification-container{min-width:220px;margin-top:20px;position:relative;align-items:center;overflow:hidden;display:flex;pointer-events:all;padding:15px;border-radius:4px}.VoiceChatNotifications-notification-closeButton{color:#ddd;position:absolute;right:3px;top:3px;opacity:.7}.VoiceChatNotifications-notification-progress{bottom:0;height:3px;position:absolute;width:100%;left:0}.VoiceChatNotifications-notification-progressBar{height:3px;background:#0870f3}.VoiceChatNotifications-notification-content{color:#ddd;display:flex}.VoiceChatNotifications-notification-closeButton:hover{opacity:1}.VoiceChatNotifications-notification-wrapper{display:flex;flex-direction:column;margin-left:10px}.VoiceChatNotifications-notification-wrapper .VoiceChatNotifications-notification-header{display:flex;flex-direction:row}.VoiceChatNotifications-notification-wrapper .VoiceChatNotifications-notification-header .VoiceChatNotifications-notification-username{color:#fff;font-weight:700}.VoiceChatNotifications-notification-wrapper .VoiceChatNotifications-notification-header .VoiceChatNotifications-notification-timestamp{font-size:.75rem;padding-top:3px;color:var(--channels-default)}.VoiceChatNotifications-notification-wrapper .VoiceChatNotifications-notification-message{line-height:10px}", ""]);
+				___CSS_LOADER_EXPORT___.push([module.id, "#voicechatnotifications{position:absolute;z-index:999}#voicechatnotifications .VoiceChatNotifications-notification-container{z-index:999}.VoiceChatNotifications-notification-container{min-width:220px;margin-top:20px;position:relative;align-items:center;overflow:hidden;display:flex;pointer-events:all;padding:15px;border-radius:4px}.VoiceChatNotifications-notification-topLeft{left:20px}.VoiceChatNotifications-notification-topRight{right:20px}.VoiceChatNotifications-notification-bottomLeft{bottom:20px;left:20px}.VoiceChatNotifications-notification-bottomRight{bottom:20px;right:20px}.VoiceChatNotifications-notification-closeButton{color:#ddd;position:absolute;right:3px;top:3px;opacity:.7}.VoiceChatNotifications-notification-progress{bottom:0;height:3px;position:absolute;width:100%;left:0}.VoiceChatNotifications-notification-progressBar{height:3px;background:#0870f3}.VoiceChatNotifications-notification-content{color:#ddd;display:flex}.VoiceChatNotifications-notification-closeButton:hover{opacity:1}.VoiceChatNotifications-notification-wrapper{display:flex;flex-direction:column;margin-left:10px}.VoiceChatNotifications-notification-wrapper .VoiceChatNotifications-notification-header{display:flex;flex-direction:row}.VoiceChatNotifications-notification-wrapper .VoiceChatNotifications-notification-header .VoiceChatNotifications-notification-username{color:#fff;font-weight:700}.VoiceChatNotifications-notification-wrapper .VoiceChatNotifications-notification-header .VoiceChatNotifications-notification-timestamp{font-size:.75rem;padding-top:3px;color:var(--channels-default)}.VoiceChatNotifications-notification-wrapper .VoiceChatNotifications-notification-message{line-height:10px}", ""]);
 				___CSS_LOADER_EXPORT___.locals = {
 					container: "VoiceChatNotifications-notification-container",
+					topLeft: "VoiceChatNotifications-notification-topLeft",
+					topRight: "VoiceChatNotifications-notification-topRight",
+					bottomLeft: "VoiceChatNotifications-notification-bottomLeft",
+					bottomRight: "VoiceChatNotifications-notification-bottomRight",
 					closeButton: "VoiceChatNotifications-notification-closeButton",
 					progress: "VoiceChatNotifications-notification-progress",
 					progressBar: "VoiceChatNotifications-notification-progressBar",
@@ -317,13 +321,13 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
 				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
 			},
-			0: (module, __webpack_exports__, __webpack_require__) => {
+			728: (module, __webpack_exports__, __webpack_require__) => {
 				__webpack_require__.d(__webpack_exports__, {
 					Z: () => __WEBPACK_DEFAULT_EXPORT__
 				});
-				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(645);
-				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
-				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
+				var _bdbuilder_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(118);
+				var _bdbuilder_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_bdbuilder_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
+				var ___CSS_LOADER_EXPORT___ = _bdbuilder_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
 					return i[1];
 				}));
 				___CSS_LOADER_EXPORT___.push([module.id, ".VoiceChatNotifications-panel-clearButton{min-width:100px;width:100px;margin:10px;position:absolute;right:15px;z-index:99999}.VoiceChatNotifications-panel-contents{height:500px;overflow-y:scroll;overflow-x:hidden}.VoiceChatNotifications-panel-message{margin-top:1.0625rem}.VoiceChatNotifications-panel-empty{color:#ddd;margin:20px;text-align:center}", ""]);
@@ -336,7 +340,32 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
 				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
 			},
-			101: (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+			861: (module, __webpack_exports__, __webpack_require__) => {
+				__webpack_require__.d(__webpack_exports__, {
+					Z: () => __WEBPACK_DEFAULT_EXPORT__
+				});
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(118);
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
+				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
+					return i[1];
+				}));
+				___CSS_LOADER_EXPORT___.push([module.id, ".VoiceChatNotifications-category-category.VoiceChatNotifications-category-compact{position:inherit}.VoiceChatNotifications-category-category.VoiceChatNotifications-category-compact .VoiceChatNotifications-category-header{display:flex;align-items:center;justify-content:space-between;padding:2px;padding-left:10px;text-transform:uppercase;font-weight:600;font-size:.9rem}.VoiceChatNotifications-category-category.VoiceChatNotifications-category-compact .VoiceChatNotifications-category-header .VoiceChatNotifications-category-caret{float:right;display:inline-flex;color:var(--interactive-normal)}.VoiceChatNotifications-category-category.VoiceChatNotifications-category-compact .VoiceChatNotifications-category-header .VoiceChatNotifications-category-stroke{background-color:var(--background-modifier-accent);height:2px;flex:1;margin:0 5px 0 10px}.VoiceChatNotifications-category-category.VoiceChatNotifications-category-compact .VoiceChatNotifications-category-header .VoiceChatNotifications-category-label{color:var(--interactive-normal)}.VoiceChatNotifications-category-category.VoiceChatNotifications-category-compact .VoiceChatNotifications-category-content{padding-left:20px;width:calc(100% - 40px)}.VoiceChatNotifications-category-category.VoiceChatNotifications-category-default{background:rgba(32,34,37,.3);border:1px solid #202225;margin:5px;cursor:pointer;border-radius:3px;--color: var(--interactive-normal)}.VoiceChatNotifications-category-category.VoiceChatNotifications-category-default:hover{--color: var(--interactive-hover)}.VoiceChatNotifications-category-category.VoiceChatNotifications-category-default .VoiceChatNotifications-category-header{padding-right:5px;padding:10px 15px;padding-bottom:0;display:flex;align-items:center;justify-content:space-between}.VoiceChatNotifications-category-category.VoiceChatNotifications-category-default .VoiceChatNotifications-category-header .VoiceChatNotifications-category-stroke{display:none}.VoiceChatNotifications-category-category.VoiceChatNotifications-category-default .VoiceChatNotifications-category-header .VoiceChatNotifications-category-divider{position:relative}.VoiceChatNotifications-category-category.VoiceChatNotifications-category-default .VoiceChatNotifications-category-header .VoiceChatNotifications-category-label{font-size:1rem;font-weight:600;color:#fff;text-transform:uppercase}.VoiceChatNotifications-category-category.VoiceChatNotifications-category-default .VoiceChatNotifications-category-header .VoiceChatNotifications-category-caret{color:var(--color);transition:color .3s}.VoiceChatNotifications-category-category.VoiceChatNotifications-category-default.VoiceChatNotifications-category-opened .VoiceChatNotifications-category-content{padding:8px}.VoiceChatNotifications-category-category.VoiceChatNotifications-category-default.VoiceChatNotifications-category-opened .VoiceChatNotifications-category-header{background:rgba(32,34,37,.6)}", ""]);
+				___CSS_LOADER_EXPORT___.locals = {
+					category: "VoiceChatNotifications-category-category",
+					compact: "VoiceChatNotifications-category-compact",
+					header: "VoiceChatNotifications-category-header",
+					caret: "VoiceChatNotifications-category-caret",
+					stroke: "VoiceChatNotifications-category-stroke",
+					label: "VoiceChatNotifications-category-label",
+					content: "VoiceChatNotifications-category-content",
+					default: "VoiceChatNotifications-category-default",
+					divider: "VoiceChatNotifications-category-divider",
+					opened: "VoiceChatNotifications-category-opened"
+				};
+				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
+				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
+			},
+			551: (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 				__webpack_require__.r(__webpack_exports__);
 				__webpack_require__.d(__webpack_exports__, {
 					default: () => VoiceChatNotifications
@@ -348,26 +377,16 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				const external_BasePlugin_namespaceObject = BasePlugin;
 				var external_BasePlugin_default = __webpack_require__.n(external_BasePlugin_namespaceObject);
 				const components_namespaceObject = Modules["@discord/components"];
-				var components_button = __webpack_require__(901);
+				var components_button = __webpack_require__(925);
 				var React = __webpack_require__(832);
-				function _extends() {
-					_extends = Object.assign || function(target) {
-						for (var i = 1; i < arguments.length; i++) {
-							var source = arguments[i];
-							for (var key in source)
-								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-						}
-						return target;
-					};
-					return _extends.apply(this, arguments);
-				}
 				function VoiceNotificationsButton(props) {
 					return React.createElement(components_namespaceObject.TooltipContainer, {
 						position: "bottom",
 						text: "Open VoiceLogs"
-					}, React.createElement("div", _extends({
-						className: components_button.Z.icon
-					}, props), React.createElement("svg", {
+					}, React.createElement("div", {
+						className: components_button.Z.icon,
+						...props
+					}, React.createElement("svg", {
 						fill: "currentColor",
 						xmlns: "http://www.w3.org/2000/svg",
 						x: "0px",
@@ -385,36 +404,34 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				}
 				const flux_namespaceObject = Modules["@discord/flux"];
 				const modules_namespaceObject = Modules["@discord/modules"];
-				function _defineProperty(obj, key, value) {
-					if (key in obj) Object.defineProperty(obj, key, {
-						value,
-						enumerable: true,
-						configurable: true,
-						writable: true
-					});
-					else obj[key] = value;
-					return obj;
+				function _nullishCoalesce(lhs, rhsFn) {
+					if (null != lhs) return lhs;
+					else return rhsFn();
 				}
 				class SettingsManager extends flux_namespaceObject.Store {
 					constructor(pluginName) {
 						super(modules_namespaceObject.Dispatcher, {});
-						_defineProperty(this, "settings", void 0);
-						_defineProperty(this, "pluginName", void 0);
-						_defineProperty(this, "get", ((key, defaultValue) => this.settings[key] ?? defaultValue));
-						_defineProperty(this, "set", ((key, value) => {
+						SettingsManager.prototype.__init.call(this);
+						SettingsManager.prototype.__init2.call(this);
+						this.pluginName = pluginName;
+						this.settings = external_PluginApi_namespaceObject.PluginUtilities.loadSettings(pluginName, {});
+					}
+					__init() {
+						this.get = (key, defaultValue) => _nullishCoalesce(this.settings[key], (() => defaultValue));
+					}
+					__init2() {
+						this.set = (key, value) => {
 							this.settings[key] = value;
 							external_PluginApi_namespaceObject.PluginUtilities.saveSettings(this.pluginName, this.settings);
 							this.emitChange();
 							return value;
-						}));
-						this.pluginName = pluginName;
-						this.settings = external_PluginApi_namespaceObject.PluginUtilities.loadSettings(pluginName, {});
+						};
 					}
 				}
 				const package_namespaceObject = JSON.parse('{"um":{"u2":"VoiceChatNotifications"}}');
 				const Settings = new SettingsManager(package_namespaceObject.um.u2, {});
 				const settings = Settings;
-				var notification = __webpack_require__(571);
+				var notification = __webpack_require__(235);
 				const external_StyleLoader_namespaceObject = StyleLoader;
 				var external_StyleLoader_default = __webpack_require__.n(external_StyleLoader_namespaceObject);
 				const external_PluginApi_DiscordModules_namespaceObject = PluginApi.DiscordModules;
@@ -446,7 +463,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 							return listeners.delete(listener);
 						}
 					};
-					return [function(collector = (_ => _)) {
+					function useState(collector = (_ => _)) {
 						const forceUpdate = (0, external_BdApi_React_.useReducer)((e => e + 1), 0)[1];
 						(0, external_BdApi_React_.useEffect)((() => {
 							const handler = () => forceUpdate();
@@ -454,11 +471,31 @@ function buildPlugin([BasePlugin, PluginApi]) {
 							return () => listeners.delete(handler);
 						}), []);
 						return collector(api.getState());
-					}, api];
+					}
+					return [useState, api];
 				}
-				var panel = __webpack_require__(0);
+				var panel = __webpack_require__(728);
 				var panel_React = __webpack_require__(832);
-				const ChannelMessage = external_PluginApi_namespaceObject.WebpackModules.getModule((m => "ChannelMessage" === m?.type?.displayName));
+				function _optionalChain(ops) {
+					let lastAccessLHS;
+					let value = ops[0];
+					let i = 1;
+					while (i < ops.length) {
+						const op = ops[i];
+						const fn = ops[i + 1];
+						i += 2;
+						if (("optionalAccess" === op || "optionalCall" === op) && null == value) return;
+						if ("access" === op || "optionalAccess" === op) {
+							lastAccessLHS = value;
+							value = fn(value);
+						} else if ("call" === op || "optionalCall" === op) {
+							value = fn(((...args) => value.call(lastAccessLHS, ...args)));
+							lastAccessLHS = void 0;
+						}
+					}
+					return value;
+				}
+				const ChannelMessage = external_PluginApi_namespaceObject.WebpackModules.getModule((m => "ChannelMessage" === _optionalChain([m, "optionalAccess", _ => _.type, "optionalAccess", _2 => _2.displayName])));
 				const dummyChannel = new classes_namespaceObject.Channel({
 					name: "dumb-channel",
 					id: "-1"
@@ -474,7 +511,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					const formattedLogs = [];
 					let lastItem = null;
 					for (const item of logs) {
-						let isGroupStart = lastItem?.user?.id === item.user.id;
+						let isGroupStart = _optionalChain([lastItem, "optionalAccess", _3 => _3.user, "optionalAccess", _4 => _4.id]) === item.user.id;
 						const message = new classes_namespaceObject.Message({
 							content: item.message,
 							timestamp: item.timestamp,
@@ -534,28 +571,60 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						}
 					}
 				};
-				function Settings_extends() {
-					Settings_extends = Object.assign || function(target) {
-						for (var i = 1; i < arguments.length; i++) {
-							var source = arguments[i];
-							for (var key in source)
-								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-						}
-						return target;
-					};
-					return Settings_extends.apply(this, arguments);
+				const icons_namespaceObject = Modules["@discord/icons"];
+				const utils_namespaceObject = Modules["@discord/utils"];
+				var category = __webpack_require__(861);
+				function Category({
+					label,
+					children,
+					className,
+					look = Category.Looks.DEFAULT
+				}) {
+					const [opened, toggle] = (0, external_BdApi_React_.useState)(false);
+					const isCompact = look === category.Z.compact;
+					return external_BdApi_React_default().createElement("div", {
+						className: (0, utils_namespaceObject.joinClassNames)(className, look, category.Z.category, {
+							[category.Z.opened]: opened
+						})
+					}, external_BdApi_React_default().createElement("div", {
+						className: category.Z.header,
+						onClick: () => toggle(!opened)
+					}, external_BdApi_React_default().createElement("div", {
+						className: category.Z.label
+					}, label), isCompact ? external_BdApi_React_default().createElement("div", {
+						className: category.Z.stroke
+					}) : null, external_BdApi_React_default().createElement(icons_namespaceObject.Caret, {
+						direction: opened ? icons_namespaceObject.Caret.Directions.DOWN : isCompact ? icons_namespaceObject.Caret.Directions.LEFT : icons_namespaceObject.Caret.Directions.RIGHT,
+						className: category.Z.caret
+					})), !isCompact ? external_BdApi_React_default().createElement("div", {
+						className: category.Z.divider
+					}) : null, external_BdApi_React_default().createElement("div", {
+						className: category.Z.content
+					}, opened ? children : null));
 				}
-				const createUpdateWrapper = (Component, valueProp = "value", changeProp = "onChange") => props => {
-					const [value, setValue] = external_BdApi_React_default().useState(props[valueProp]);
-					return external_BdApi_React_default().createElement(Component, Settings_extends({}, props, {
-						[valueProp]: value,
-						[changeProp]: value => {
-							if ("function" === typeof props[changeProp]) props[changeProp](value);
-							setValue(value);
-						}
-					}));
+				Category.Looks = {
+					COMPACT: category.Z.compact,
+					DEFAULT: category.Z.default
 				};
-				const SwitchItem = createUpdateWrapper(external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("SwitchItem"));
+				var createUpdateWrapper_React = __webpack_require__(832);
+				const createUpdateWrapper = (Component, valueProp = "value", changeProp = "onChange", valueIndex = 0) => props => {
+					const [value, setValue] = createUpdateWrapper_React.useState(props[valueProp]);
+					return createUpdateWrapper_React.createElement(Component, {
+						...{
+							...props,
+							[valueProp]: value,
+							[changeProp]: (...args) => {
+								const value = args[valueIndex];
+								if ("function" === typeof props[changeProp]) props[changeProp](value);
+								setValue(value);
+							}
+						}
+					});
+				};
+				const hooks_createUpdateWrapper = createUpdateWrapper;
+				const forms_namespaceObject = Modules["@discord/forms"];
+				const SwitchItem = hooks_createUpdateWrapper(external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("SwitchItem"));
+				const NotificationSetting = hooks_createUpdateWrapper(external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("NotificationSettings"), "position", "onChange", 1);
 				const otherSettings = {
 					ignoreSelf: {
 						value: false,
@@ -567,11 +636,6 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						note: "Suppress desktop notifications in DND, this automatically enables the In-App notification api.",
 						name: "Suppress in DND"
 					},
-					inppNotifications: {
-						value: true,
-						note: "Shows In-App Notifications instead of desktop notifications.",
-						name: "In-App Notifications"
-					},
 					notifications: {
 						value: true,
 						note: "Defines if notifications should be shown when an event happens in your current call.",
@@ -579,12 +643,26 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					}
 				};
 				function SettingsPanel() {
-					return external_BdApi_React_default().createElement("div", null, Object.keys(otherSettings).map((key => external_BdApi_React_default().createElement(SwitchItem, Settings_extends({}, otherSettings[key], {
+					return external_BdApi_React_default().createElement("div", null, external_BdApi_React_default().createElement(Category, {
+						label: "General",
+						look: Category.Looks.COMPACT
+					}, Object.keys(otherSettings).map((key => external_BdApi_React_default().createElement(SwitchItem, {
+						...otherSettings[key],
 						value: settings.get(key, otherSettings[key].value),
 						onChange: value => {
 							settings.set(key, value);
 						}
-					}), otherSettings[key].name))), Object.keys(constants.VOICE_STATES).reduce(((items, key) => {
+					}, otherSettings[key].name))), external_BdApi_React_default().createElement(forms_namespaceObject.FormItem, {
+						title: "InApp Notifications"
+					}, external_BdApi_React_default().createElement(NotificationSetting, {
+						position: settings.get("inappPosition", "topleft"),
+						onChange: value => settings.set("inappPosition", value)
+					}), external_BdApi_React_default().createElement(forms_namespaceObject.FormText, {
+						type: "description"
+					}, "Defines if notifications should be shown when an event happens in your current call."))), external_BdApi_React_default().createElement(Category, {
+						label: "Voice Updates",
+						look: Category.Looks.COMPACT
+					}, Object.keys(constants.VOICE_STATES).reduce(((items, key) => {
 						items.push(external_BdApi_React_default().createElement(SwitchItem, {
 							value: settings.get(key, true),
 							onChange: value => {
@@ -593,27 +671,16 @@ function buildPlugin([BasePlugin, PluginApi]) {
 							note: constants.VOICE_STATES[key].description
 						}, _.upperFirst(key)));
 						return items;
-					}), []));
+					}), [])));
 				}
-				const utils_namespaceObject = Modules["@discord/utils"];
 				const external_Modules_react_spring_namespaceObject = Modules["react-spring"];
 				var notification_React = __webpack_require__(832);
-				function notification_extends() {
-					notification_extends = Object.assign || function(target) {
-						for (var i = 1; i < arguments.length; i++) {
-							var source = arguments[i];
-							for (var key in source)
-								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-						}
-						return target;
-					};
-					return notification_extends.apply(this, arguments);
-				}
-				const RemoveIcon = props => notification_React.createElement("svg", notification_extends({
+				const RemoveIcon = props => notification_React.createElement("svg", {
 					width: "12",
 					height: "12",
-					viewBox: "0 0 24 24"
-				}, props), notification_React.createElement("path", {
+					viewBox: "0 0 24 24",
+					...props
+				}, notification_React.createElement("path", {
 					fill: "currentColor",
 					d: "M18.4 4L12 10.4L5.6 4L4 5.6L10.4 12L4 18.4L5.6 20L12 13.6L18.4 20L20 18.4L13.6 12L20 5.6L18.4 4Z"
 				}));
@@ -677,25 +744,15 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				const external_BdApi_ReactDOM_namespaceObject = BdApi.ReactDOM;
 				var external_BdApi_ReactDOM_default = __webpack_require__.n(external_BdApi_ReactDOM_namespaceObject);
 				var notifications_React = __webpack_require__(832);
-				function notifications_extends() {
-					notifications_extends = Object.assign || function(target) {
-						for (var i = 1; i < arguments.length; i++) {
-							var source = arguments[i];
-							for (var key in source)
-								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-						}
-						return target;
-					};
-					return notifications_extends.apply(this, arguments);
-				}
 				const [notifications_useStore, notifications_Api] = createStore({
 					notifications: {},
 					paused: false
 				});
+				const DOMNode = Object.assign(document.createElement("div"), {
+					id: "voicechatnotifications",
+					className: "VoiceChatNotifications-notification-" + settings.get("inappPosition", "topleft")
+				});
 				function initialize() {
-					const DOMNode = Object.assign(document.createElement("div"), {
-						id: "voicechatnotifications"
-					});
 					external_BdApi_ReactDOM_default().render(notifications_React.createElement(VoiceNotifications, null), DOMNode);
 					document.getElementById("app-mount").appendChild(DOMNode);
 				}
@@ -728,13 +785,22 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					})));
 					return id;
 				}
+				settings.addChangeListener((() => {
+					const value = settings.get("inappPosition", "topleft");
+					DOMNode.className = "VoiceChatNotifications-notification-" + value;
+				}));
 				function VoiceNotifications() {
 					const state = notifications_useStore((e => Object.entries(e.notifications)));
-					return state.map((([id, props]) => notifications_React.createElement(notification_Notification, notifications_extends({}, props, {
+					return state.map((([id, props]) => notifications_React.createElement(notification_Notification, {
+						...props,
 						key: id
-					}))));
+					})));
 				}
 				const DiscordCommands = BdApi.findModuleByProps("BUILT_IN_COMMANDS");
+				const DiscordCommandTypes = BdApi.findModuleByProps("ApplicationCommandType");
+				const Types = DiscordCommandTypes.ApplicationCommandType;
+				const OptionTypes = DiscordCommandTypes.ApplicationCommandOptionType;
+				const PermissionTypes = DiscordCommandTypes.ApplicationCommandPermissionType;
 				if (!DiscordCommands.BUILT_IN_SECTIONS.some((e => "betterdiscord" === e.id))) DiscordCommands.BUILT_IN_SECTIONS.push({
 					icon: "https://github.com/BetterDiscord.png",
 					id: "betterdiscord",
@@ -744,11 +810,12 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				function registerCommand(caller, options) {
 					const cmd = Object.assign({}, options, {
 						__registerId: caller,
-						applicationId: "betterdiscord"
+						applicationId: "betterdiscord",
+						type: Types.BOT
 					});
 					DiscordCommands.BUILT_IN_COMMANDS.push(cmd);
 					return () => {
-						const index = DiscordCommands.BUILT_IN_COMMANDS.findIndex((c => c === cmd));
+						const index = DiscordCommands.BUILT_IN_COMMANDS.indexOf(cmd);
 						if (index < 0) return false;
 						DiscordCommands.BUILT_IN_COMMANDS.splice(index, 1);
 					};
@@ -765,6 +832,25 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					unregisterAllCommands
 				};
 				const commands = Commands;
+				function clyde_optionalChain(ops) {
+					let lastAccessLHS;
+					let value = ops[0];
+					let i = 1;
+					while (i < ops.length) {
+						const op = ops[i];
+						const fn = ops[i + 1];
+						i += 2;
+						if (("optionalAccess" === op || "optionalCall" === op) && null == value) return;
+						if ("access" === op || "optionalAccess" === op) {
+							lastAccessLHS = value;
+							value = fn(value);
+						} else if ("call" === op || "optionalCall" === op) {
+							value = fn(((...args) => value.call(lastAccessLHS, ...args)));
+							lastAccessLHS = void 0;
+						}
+					}
+					return value;
+				}
 				const DefaultMessage = {
 					state: "SENT",
 					author: {
@@ -779,9 +865,9 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				const MessageCreators = BdApi.findModuleByProps("createBotMessage");
 				const MessageActions = BdApi.findModuleByProps("receiveMessage");
 				const AvatarDefaults = BdApi.findModuleByProps("BOT_AVATARS");
-				if (AvatarDefaults?.BOT_AVATARS && !AvatarDefaults.BOT_AVATARS.betterdiscord) AvatarDefaults.BOT_AVATARS.betterdiscord = "https://github.com/BetterDiscord.png";
+				if (clyde_optionalChain([AvatarDefaults, "optionalAccess", _ => _.BOT_AVATARS]) && !AvatarDefaults.BOT_AVATARS.betterdiscord) AvatarDefaults.BOT_AVATARS.betterdiscord = "https://github.com/BetterDiscord.png";
 				function sendMessage(channelId, message) {
-					MessageActions.receiveMessage(channelId, Object.assign({}, MessageCreators.createBotMessage(channelId, message?.content), DefaultMessage, message));
+					MessageActions.receiveMessage(channelId, Object.assign({}, MessageCreators.createBotMessage(channelId, clyde_optionalChain([message, "optionalAccess", _2 => _2.content])), DefaultMessage, message));
 				}
 				const Clyde = {
 					sendMessage,
@@ -789,15 +875,24 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				};
 				const clyde = Clyde;
 				var VoiceChatNotifications_React = __webpack_require__(832);
-				function VoiceChatNotifications_defineProperty(obj, key, value) {
-					if (key in obj) Object.defineProperty(obj, key, {
-						value,
-						enumerable: true,
-						configurable: true,
-						writable: true
-					});
-					else obj[key] = value;
-					return obj;
+				function VoiceChatNotifications_optionalChain(ops) {
+					let lastAccessLHS;
+					let value = ops[0];
+					let i = 1;
+					while (i < ops.length) {
+						const op = ops[i];
+						const fn = ops[i + 1];
+						i += 2;
+						if (("optionalAccess" === op || "optionalCall" === op) && null == value) return;
+						if ("access" === op || "optionalAccess" === op) {
+							lastAccessLHS = value;
+							value = fn(value);
+						} else if ("call" === op || "optionalCall" === op) {
+							value = fn(((...args) => value.call(lastAccessLHS, ...args)));
+							lastAccessLHS = void 0;
+						}
+					}
+					return value;
 				}
 				const VoiceStateStore = external_PluginApi_namespaceObject.WebpackModules.getByProps("getVoiceStates");
 				const SelectedVoiceChannelStore = external_PluginApi_namespaceObject.WebpackModules.getByProps("getVoiceChannelId");
@@ -810,55 +905,25 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				class VoiceChatNotifications extends(external_BasePlugin_default()) {
 					constructor(...args) {
 						super(...args);
-						VoiceChatNotifications_defineProperty(this, "logs", []);
-						VoiceChatNotifications_defineProperty(this, "lastStates", {});
-						VoiceChatNotifications_defineProperty(this, "logsRef", VoiceChatNotifications_React.createRef());
-						VoiceChatNotifications_defineProperty(this, "currentVoiceChannelId", void 0);
-						VoiceChatNotifications_defineProperty(this, "openLogs", (() => {
-							(0, modal_namespaceObject.openModal)((props => VoiceChatNotifications_React.createElement(modal_namespaceObject.ModalRoot, props, VoiceChatNotifications_React.createElement(LogsPanel, null))));
-						}));
-						VoiceChatNotifications_defineProperty(this, "onVoiceStateChange", (props => {
-							let user = stores_namespaceObject.Users.getUser(props.userId) || {};
-							if (settings.get("ignoreSelf", false) && user.id === stores_namespaceObject.Info.getCurrentUser().id) return;
-							const pushToLog = message => {
-								const timestamp = new classes_namespaceObject.Timestamp(new Date);
-								const log = {
-									user,
-									timestamp,
-									message,
-									channelId: props.channelId
-								};
-								this.updateLogs(log);
-								LogsPanel.Store.setState((state => {
-									state.logs.unshift(log);
-									return {
-										logs: state.logs
-									};
-								}));
-							};
-							if (this.lastStates[props.userId] && !props.channelId && settings.get("leave", true)) {
-								pushToLog("Left the call.");
-								delete this.lastStates[props.userId];
-							}
-							if (!props.channelId || props.channelId !== this.currentVoiceChannelId) return;
-							if (!this.lastStates[props.userId]) {
-								if (settings.get("join", true)) pushToLog("Joined the call.");
-								this.lastStates[props.userId] = props;
-							} else {
-								if (_.isEqual(this.lastStates[props.userId], props)) return;
-								for (const prop in constants.VOICE_STATES) {
-									const value = constants.VOICE_STATES[prop];
-									const hasChanges = this.lastStates[props.userId][prop] !== props[prop];
-									if (settings.get(value.setting, true) && hasChanges) pushToLog(value.strings[Number(Boolean(props[prop]))]);
-								}
-								this.lastStates[props.userId] = props;
-							}
-						}));
-						VoiceChatNotifications_defineProperty(this, "onSelect", (e => {
-							this.logs = [];
-							this.lastStates = {};
-							this.currentVoiceChannelId = e.channelId;
-						}));
+						VoiceChatNotifications.prototype.__init.call(this);
+						VoiceChatNotifications.prototype.__init2.call(this);
+						VoiceChatNotifications.prototype.__init3.call(this);
+						VoiceChatNotifications.prototype.__init4.call(this);
+						VoiceChatNotifications.prototype.__init5.call(this);
+						VoiceChatNotifications.prototype.__init6.call(this);
+						VoiceChatNotifications.prototype.__init7.call(this);
+					}
+					__init() {
+						this.logs = [];
+					}
+					__init2() {
+						this.lastStates = {};
+					}
+					__init3() {
+						this.logsRef = VoiceChatNotifications_React.createRef();
+					}
+					__init4() {
+						this.currentVoiceChannelId = void 0;
 					}
 					get subscriptions() {
 						return [
@@ -942,7 +1007,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						channelId
 					}) {
 						if (!settings.get("notifications", true) || LogsPanel.Store.getState().paused) return;
-						const useInApp = settings.get("suppressInDnd", true) && "dnd" === stores_namespaceObject.SettingsStore.status || settings.get("inppNotifications", true);
+						const useInApp = settings.get("suppressInDnd", true) && "dnd" === stores_namespaceObject.SettingsStore.status || "disabled" !== settings.get("inappPosition", "topLeft");
 						if (useInApp) show(VoiceChatNotifications_React.createElement(VoiceChatNotifications_React.Fragment, null, VoiceChatNotifications_React.createElement(AnimatedAvatar, {
 							isMobile: false,
 							status: stores_namespaceObject.Status.getStatus(user.id),
@@ -961,7 +1026,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						})), VoiceChatNotifications_React.createElement("div", {
 							className: notification.Z.message
 						}, message))), {
-							color: Members.getMember(stores_namespaceObject.Channels.getChannel(channelId)?.guild_id, user.id)?.colorString
+							color: VoiceChatNotifications_optionalChain([Members, "access", _2 => _2.getMember, "call", _3 => _3(VoiceChatNotifications_optionalChain([stores_namespaceObject.Channels, "access", _4 => _4.getChannel, "call", _5 => _5(channelId), "optionalAccess", _6 => _6.guild_id]), user.id), "optionalAccess", _7 => _7.colorString])
 						});
 						else {
 							const notification = new Notification(user.username + " - " + timestamp.toLocaleString(), {
@@ -972,6 +1037,59 @@ function buildPlugin([BasePlugin, PluginApi]) {
 							notification.addEventListener("click", (() => this.openLogs()));
 						}
 					}
+					__init5() {
+						this.openLogs = () => {
+							(0, modal_namespaceObject.openModal)((props => VoiceChatNotifications_React.createElement(modal_namespaceObject.ModalRoot, {
+								...props
+							}, VoiceChatNotifications_React.createElement(LogsPanel, null))));
+						};
+					}
+					__init6() {
+						this.onVoiceStateChange = props => {
+							let user = stores_namespaceObject.Users.getUser(props.userId) || {};
+							if (settings.get("ignoreSelf", false) && user.id === stores_namespaceObject.Info.getCurrentUser().id) return;
+							const pushToLog = message => {
+								const timestamp = new classes_namespaceObject.Timestamp(new Date);
+								const log = {
+									user,
+									timestamp,
+									message,
+									channelId: props.channelId
+								};
+								this.updateLogs(log);
+								LogsPanel.Store.setState((state => {
+									state.logs.unshift(log);
+									return {
+										logs: state.logs
+									};
+								}));
+							};
+							if (this.lastStates[props.userId] && !props.channelId && settings.get("leave", true)) {
+								pushToLog("Left the call.");
+								delete this.lastStates[props.userId];
+							}
+							if (!props.channelId || props.channelId !== this.currentVoiceChannelId) return;
+							if (!this.lastStates[props.userId]) {
+								if (settings.get("join", true)) pushToLog("Joined the call.");
+								this.lastStates[props.userId] = props;
+							} else {
+								if (_.isEqual(this.lastStates[props.userId], props)) return;
+								for (const prop in constants.VOICE_STATES) {
+									const value = constants.VOICE_STATES[prop];
+									const hasChanges = this.lastStates[props.userId][prop] !== props[prop];
+									if (settings.get(value.setting, true) && hasChanges) pushToLog(value.strings[Number(Boolean(props[prop]))]);
+								}
+								this.lastStates[props.userId] = props;
+							}
+						};
+					}
+					__init7() {
+						this.onSelect = e => {
+							this.logs = [];
+							this.lastStates = {};
+							this.currentVoiceChannelId = e.channelId;
+						};
+					}
 					onStop() {
 						external_StyleLoader_default().remove();
 						external_PluginApi_namespaceObject.Patcher.unpatchAll();
@@ -981,7 +1099,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					}
 				}
 			},
-			645: module => {
+			118: module => {
 				module.exports = function(cssWithMappingToString) {
 					var list = [];
 					list.toString = function toString() {
@@ -1059,7 +1177,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				});
 			};
 		})();
-		var __webpack_exports__ = __webpack_require__(101);
+		var __webpack_exports__ = __webpack_require__(551);
 		module.exports.LibraryPluginHack = __webpack_exports__;
 	})();
 	const PluginExports = module.exports.LibraryPluginHack;

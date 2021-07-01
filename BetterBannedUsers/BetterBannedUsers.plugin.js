@@ -193,7 +193,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					return ___createMemoize___(this, 'SelectedChannels', () => BdApi.findModuleByProps('getChannelId', 'getLastSelectedChannelId'))
 				},
 				get 'Info'() {
-					return ___createMemoize___(this, 'Info', () => BdApi.findModuleByProps('getCurrentUser'))
+					return ___createMemoize___(this, 'Info', () => BdApi.findModuleByProps('getSessionId'))
 				},
 				get 'Status'() {
 					return ___createMemoize___(this, 'Status', () => BdApi.findModuleByProps('getStatus'))
@@ -281,13 +281,13 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			}
 		};
 		var __webpack_modules__ = {
-			527: (module, __webpack_exports__, __webpack_require__) => {
+			902: (module, __webpack_exports__, __webpack_require__) => {
 				__webpack_require__.d(__webpack_exports__, {
 					Z: () => __WEBPACK_DEFAULT_EXPORT__
 				});
-				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(645);
-				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
-				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
+				var _bdbuilder_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(118);
+				var _bdbuilder_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_bdbuilder_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
+				var ___CSS_LOADER_EXPORT___ = _bdbuilder_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
 					return i[1];
 				}));
 				___CSS_LOADER_EXPORT___.push([module.id, ".BetterBannedUsers-banned-remove{display:none;position:absolute;top:-15px;right:-30px}.bannedUser-1IalTM::before{background-color:rgba(32,34,37,.3);border-color:#202225}.bannedUser-1IalTM .username-1b3MVI{white-space:nowrap;padding-left:0}.bannedUser-1IalTM:hover .BetterBannedUsers-banned-remove{display:flex}.BetterBannedUsers-banned-banReason{text-overflow:ellipsis;color:var(--interactive-normal);overflow:hidden;white-space:nowrap;padding-bottom:1px;max-width:600px;display:inline-block;align-items:center}.BetterBannedUsers-banned-wrapper{margin-left:10px;z-index:10}.BetterBannedUsers-banned-container{margin-bottom:20px}.BetterBannedUsers-banned-search{margin-top:10px}", ""]);
@@ -301,13 +301,13 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
 				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
 			},
-			698: (module, __webpack_exports__, __webpack_require__) => {
+			201: (module, __webpack_exports__, __webpack_require__) => {
 				__webpack_require__.d(__webpack_exports__, {
 					Z: () => __WEBPACK_DEFAULT_EXPORT__
 				});
-				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(645);
-				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
-				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
+				var _bdbuilder_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(118);
+				var _bdbuilder_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_bdbuilder_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
+				var ___CSS_LOADER_EXPORT___ = _bdbuilder_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
 					return i[1];
 				}));
 				___CSS_LOADER_EXPORT___.push([module.id, ".BetterBannedUsers-select-container{background:var(--background-secondary);border:1px solid var(--background-tertiary);border-radius:4px}.BetterBannedUsers-select-container .BetterBannedUsers-select-option{padding:7px 10px;color:#ddd;text-align:center}.BetterBannedUsers-select-container .BetterBannedUsers-select-option.BetterBannedUsers-select-selected{background:var(--background-secondary-alt);color:#fff}.BetterBannedUsers-select-container .BetterBannedUsers-select-option:not(.BetterBannedUsers-select-selected):hover{color:#fff;cursor:pointer;background:var(--background-modifier-hover)}.BetterBannedUsers-select-selectedText{margin:0 5px}.BetterBannedUsers-select-select{cursor:pointer}", ""]);
@@ -321,7 +321,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
 				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
 			},
-			778: (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+			134: (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 				__webpack_require__.r(__webpack_exports__);
 				__webpack_require__.d(__webpack_exports__, {
 					default: () => BetterBannedUsers
@@ -329,36 +329,34 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				const external_BasePlugin_namespaceObject = BasePlugin;
 				var external_BasePlugin_default = __webpack_require__.n(external_BasePlugin_namespaceObject);
 				const external_PluginApi_namespaceObject = PluginApi;
-				var banned = __webpack_require__(527);
+				var banned = __webpack_require__(902);
 				const external_StyleLoader_namespaceObject = StyleLoader;
 				var external_StyleLoader_default = __webpack_require__.n(external_StyleLoader_namespaceObject);
 				const package_namespaceObject = JSON.parse('{"um":{"u2":"BetterBannedUsers"}}');
 				const flux_namespaceObject = Modules["@discord/flux"];
 				const modules_namespaceObject = Modules["@discord/modules"];
-				function _defineProperty(obj, key, value) {
-					if (key in obj) Object.defineProperty(obj, key, {
-						value,
-						enumerable: true,
-						configurable: true,
-						writable: true
-					});
-					else obj[key] = value;
-					return obj;
+				function _nullishCoalesce(lhs, rhsFn) {
+					if (null != lhs) return lhs;
+					else return rhsFn();
 				}
 				class SettingsManager extends flux_namespaceObject.Store {
 					constructor(pluginName) {
 						super(modules_namespaceObject.Dispatcher, {});
-						_defineProperty(this, "settings", void 0);
-						_defineProperty(this, "pluginName", void 0);
-						_defineProperty(this, "get", ((key, defaultValue) => this.settings[key] ?? defaultValue));
-						_defineProperty(this, "set", ((key, value) => {
+						SettingsManager.prototype.__init.call(this);
+						SettingsManager.prototype.__init2.call(this);
+						this.pluginName = pluginName;
+						this.settings = external_PluginApi_namespaceObject.PluginUtilities.loadSettings(pluginName, {});
+					}
+					__init() {
+						this.get = (key, defaultValue) => _nullishCoalesce(this.settings[key], (() => defaultValue));
+					}
+					__init2() {
+						this.set = (key, value) => {
 							this.settings[key] = value;
 							external_PluginApi_namespaceObject.PluginUtilities.saveSettings(this.pluginName, this.settings);
 							this.emitChange();
 							return value;
-						}));
-						this.pluginName = pluginName;
-						this.settings = external_PluginApi_namespaceObject.PluginUtilities.loadSettings(pluginName, {});
+						};
 					}
 				}
 				const Settings = new SettingsManager(package_namespaceObject.um.u2);
@@ -369,19 +367,27 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				const components_namespaceObject = Modules["@discord/components"];
 				const i18n_namespaceObject = Modules["@discord/i18n"];
 				var external_BdApi_React_ = __webpack_require__(832);
-				var components_select = __webpack_require__(698);
+				var components_select = __webpack_require__(201);
 				const utils_namespaceObject = Modules["@discord/utils"];
 				var React = __webpack_require__(832);
-				function _extends() {
-					_extends = Object.assign || function(target) {
-						for (var i = 1; i < arguments.length; i++) {
-							var source = arguments[i];
-							for (var key in source)
-								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
+				function _optionalChain(ops) {
+					let lastAccessLHS;
+					let value = ops[0];
+					let i = 1;
+					while (i < ops.length) {
+						const op = ops[i];
+						const fn = ops[i + 1];
+						i += 2;
+						if (("optionalAccess" === op || "optionalCall" === op) && null == value) return;
+						if ("access" === op || "optionalAccess" === op) {
+							lastAccessLHS = value;
+							value = fn(value);
+						} else if ("call" === op || "optionalCall" === op) {
+							value = fn(((...args) => value.call(lastAccessLHS, ...args)));
+							lastAccessLHS = void 0;
 						}
-						return target;
-					};
-					return _extends.apply(this, arguments);
+					}
+					return value;
 				}
 				const Popout = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("Popout");
 				const Caret = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("Caret");
@@ -392,11 +398,12 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					onChange
 				}) {
 					const [selected, setSelected] = (0, external_BdApi_React_.useState)(value);
-					const renderPopout = props => React.createElement("div", _extends({}, props, {
+					const renderPopout = props => React.createElement("div", {
+						...props,
 						className: components_select.Z.container
-					}), options.map(((option, index) => React.createElement("div", {
+					}, options.map(((option, index) => React.createElement("div", {
 						className: (0, utils_namespaceObject.joinClassNames)(components_select.Z.option, {
-							[components_select.Z.selected]: selected?.value === option.value
+							[components_select.Z.selected]: _optionalChain([selected, "optionalAccess", _ => _.value]) === option.value
 						}),
 						key: index,
 						onClick: () => {
@@ -422,33 +429,25 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					}, label), React.createElement(components_namespaceObject.Text, {
 						className: components_select.Z.selectedText,
 						color: components_namespaceObject.Text.Colors.INTERACTIVE_NORMAL
-					}, selected?.label), React.createElement(Caret, {
+					}, _optionalChain([selected, "optionalAccess", _2 => _2.label])), React.createElement(Caret, {
 						direction: Caret.Directions.DOWN,
 						className: components_namespaceObject.Text.Colors.INTERACTIVE_NORMAL
 					}))));
 				}
 				var createUpdateWrapper_React = __webpack_require__(832);
-				function createUpdateWrapper_extends() {
-					createUpdateWrapper_extends = Object.assign || function(target) {
-						for (var i = 1; i < arguments.length; i++) {
-							var source = arguments[i];
-							for (var key in source)
-								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-						}
-						return target;
-					};
-					return createUpdateWrapper_extends.apply(this, arguments);
-				}
 				const createUpdateWrapper = (Component, valueProp = "value", changeProp = "onChange", valueIndex = 0) => props => {
 					const [value, setValue] = createUpdateWrapper_React.useState(props[valueProp]);
-					return createUpdateWrapper_React.createElement(Component, createUpdateWrapper_extends({}, props, {
-						[valueProp]: value,
-						[changeProp]: (...args) => {
-							const value = args[valueIndex];
-							if ("function" === typeof props[changeProp]) props[changeProp](value);
-							setValue(value);
+					return createUpdateWrapper_React.createElement(Component, {
+						...{
+							...props,
+							[valueProp]: value,
+							[changeProp]: (...args) => {
+								const value = args[valueIndex];
+								if ("function" === typeof props[changeProp]) props[changeProp](value);
+								setValue(value);
+							}
 						}
-					}));
+					});
 				};
 				const hooks_createUpdateWrapper = createUpdateWrapper;
 				var settings_React = __webpack_require__(832);
@@ -471,10 +470,29 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						onChange: value => settings.set(id, value)
 					}))));
 				}
+				function prevent_optionalChain(ops) {
+					let lastAccessLHS;
+					let value = ops[0];
+					let i = 1;
+					while (i < ops.length) {
+						const op = ops[i];
+						const fn = ops[i + 1];
+						i += 2;
+						if (("optionalAccess" === op || "optionalCall" === op) && null == value) return;
+						if ("access" === op || "optionalAccess" === op) {
+							lastAccessLHS = value;
+							value = fn(value);
+						} else if ("call" === op || "optionalCall" === op) {
+							value = fn(((...args) => value.call(lastAccessLHS, ...args)));
+							lastAccessLHS = void 0;
+						}
+					}
+					return value;
+				}
 				function preventPropagation(func) {
 					return function(event) {
-						event.preventDefault?.();
-						event.stopPropagation?.();
+						prevent_optionalChain([event, "access", _ => _.preventDefault, "optionalCall", _2 => _2()]);
+						prevent_optionalChain([event, "access", _3 => _3.stopPropagation, "optionalCall", _4 => _4()]);
 						return func.apply(this, arguments);
 					};
 				}
@@ -515,6 +533,25 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					unregisterAllCommands
 				};
 				const commands = Commands;
+				function clyde_optionalChain(ops) {
+					let lastAccessLHS;
+					let value = ops[0];
+					let i = 1;
+					while (i < ops.length) {
+						const op = ops[i];
+						const fn = ops[i + 1];
+						i += 2;
+						if (("optionalAccess" === op || "optionalCall" === op) && null == value) return;
+						if ("access" === op || "optionalAccess" === op) {
+							lastAccessLHS = value;
+							value = fn(value);
+						} else if ("call" === op || "optionalCall" === op) {
+							value = fn(((...args) => value.call(lastAccessLHS, ...args)));
+							lastAccessLHS = void 0;
+						}
+					}
+					return value;
+				}
 				const DefaultMessage = {
 					state: "SENT",
 					author: {
@@ -529,9 +566,9 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				const MessageCreators = BdApi.findModuleByProps("createBotMessage");
 				const MessageActions = BdApi.findModuleByProps("receiveMessage");
 				const AvatarDefaults = BdApi.findModuleByProps("BOT_AVATARS");
-				if (AvatarDefaults?.BOT_AVATARS && !AvatarDefaults.BOT_AVATARS.betterdiscord) AvatarDefaults.BOT_AVATARS.betterdiscord = "https://github.com/BetterDiscord.png";
+				if (clyde_optionalChain([AvatarDefaults, "optionalAccess", _ => _.BOT_AVATARS]) && !AvatarDefaults.BOT_AVATARS.betterdiscord) AvatarDefaults.BOT_AVATARS.betterdiscord = "https://github.com/BetterDiscord.png";
 				function sendMessage(channelId, message) {
-					MessageActions.receiveMessage(channelId, Object.assign({}, MessageCreators.createBotMessage(channelId, message?.content), DefaultMessage, message));
+					MessageActions.receiveMessage(channelId, Object.assign({}, MessageCreators.createBotMessage(channelId, clyde_optionalChain([message, "optionalAccess", _2 => _2.content])), DefaultMessage, message));
 				}
 				const Clyde = {
 					sendMessage,
@@ -552,15 +589,28 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					return defaultValue;
 				}
 				var BetterBannedUsers_React = __webpack_require__(832);
-				function BetterBannedUsers_defineProperty(obj, key, value) {
-					if (key in obj) Object.defineProperty(obj, key, {
-						value,
-						enumerable: true,
-						configurable: true,
-						writable: true
-					});
-					else obj[key] = value;
-					return obj;
+				function BetterBannedUsers_nullishCoalesce(lhs, rhsFn) {
+					if (null != lhs) return lhs;
+					else return rhsFn();
+				}
+				function BetterBannedUsers_optionalChain(ops) {
+					let lastAccessLHS;
+					let value = ops[0];
+					let i = 1;
+					while (i < ops.length) {
+						const op = ops[i];
+						const fn = ops[i + 1];
+						i += 2;
+						if (("optionalAccess" === op || "optionalCall" === op) && null == value) return;
+						if ("access" === op || "optionalAccess" === op) {
+							lastAccessLHS = value;
+							value = fn(value);
+						} else if ("call" === op || "optionalCall" === op) {
+							value = fn(((...args) => value.call(lastAccessLHS, ...args)));
+							lastAccessLHS = void 0;
+						}
+					}
+					return value;
 				}
 				const RemoveButton = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("RemoveButton");
 				const GuildActions = external_PluginApi_namespaceObject.WebpackModules.getByProps("unbanUser");
@@ -574,22 +624,28 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				class BetterBannedUsers extends(external_BasePlugin_default()) {
 					constructor(...args) {
 						super(...args);
-						BetterBannedUsers_defineProperty(this, "promises", {
+						BetterBannedUsers.prototype.__init.call(this);
+						BetterBannedUsers.prototype.__init2.call(this);
+					}
+					__init() {
+						this.promises = {
 							cancelled: false,
 							cancel() {
 								this.cancelled = true;
 							}
-						});
-						BetterBannedUsers_defineProperty(this, "regex", {
+						};
+					}
+					__init2() {
+						this.regex = {
 							userId: /^\d{15}/
-						});
+						};
 					}
 					async banUserWithCommand(guild, userId, reason) {
 						try {
 							await GuildActions.banUser(guild.id, userId, void 0, `${stores_namespaceObject.Users.getCurrentUser().tag}: ${reason ? reason : "No reason provided."}`);
 						} catch (error) {
 							external_PluginApi_namespaceObject.Logger.error(`Failed to ban ${userId}:\n`, error);
-							return switchCase(error?.body?.code, [
+							return switchCase(BetterBannedUsers_optionalChain([error, "optionalAccess", _2 => _2.body, "optionalAccess", _3 => _3.code]), [
 								[APIErrors.MISSING_PERMISSIONS, "Sorry, but you don't have enough power to perform that action. 😕"],
 								[APIErrors.UNKOWN_USER, "Sorry, but i couldn't find that user. Are you sure it's their user id? 🤔"]
 							], "Something when wrong when i tried to ban them. Check your console for more details.");
@@ -601,7 +657,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 							await GuildActions.unbanUser(guild.id, userId);
 						} catch (error) {
 							external_PluginApi_namespaceObject.Logger.error(`Failed to unban ${userId}:\n`, error);
-							return switchCase(error?.body?.code, [
+							return switchCase(BetterBannedUsers_optionalChain([error, "optionalAccess", _4 => _4.body, "optionalAccess", _5 => _5.code]), [
 								[APIErrors.MISSING_PERMISSIONS, "Sorry, but you don't have enough power to perform that action. 😕"],
 								[APIErrors.UNKOWN_USER, "Sorry, but i couldn't find that user. Are you sure it's their user id? 🤔"]
 							], "Something when wrong when i tried to unban them. Check your console for more details.");
@@ -620,17 +676,17 @@ function buildPlugin([BasePlugin, PluginApi]) {
 							name: "ban",
 							predicate: ({
 								guild
-							}) => modules_namespaceObject.PermissionUtils.can(constants_namespaceObject.Permissions.BAN_MEMBERS, stores_namespaceObject.Users.getCurrentUser(), stores_namespaceObject.Guilds.getGuild(guild?.id)),
+							}) => modules_namespaceObject.PermissionUtils.can(constants_namespaceObject.Permissions.BAN_MEMBERS, stores_namespaceObject.Users.getCurrentUser(), stores_namespaceObject.Guilds.getGuild(BetterBannedUsers_optionalChain([guild, "optionalAccess", _6 => _6.id]))),
 							description: "Ban someone from this guild. Click the options to choose which method you want.",
 							execute: (props, {
 								guild,
 								channel
 							}) => {
-								const userId = props.userId ? props.userId[0].text : props.mention?.[0]?.userId;
-								if (!this.regex.userId.test(userId?.trim?.())) return clyde.sendMessage(channel.id, {
+								const userId = props.userId ? props.userId[0].text : BetterBannedUsers_optionalChain([props, "access", _7 => _7.mention, "optionalAccess", _8 => _8[0], "optionalAccess", _9 => _9.userId]);
+								if (!this.regex.userId.test(BetterBannedUsers_optionalChain([userId, "optionalAccess", _10 => _10.trim, "optionalCall", _11 => _11()]))) return clyde.sendMessage(channel.id, {
 									content: "You must specify a user!"
 								});
-								this.banUserWithCommand(guild, userId, props.reason?.[0]?.text).then((message => {
+								this.banUserWithCommand(guild, userId, BetterBannedUsers_optionalChain([props, "access", _12 => _12.reason, "optionalAccess", _13 => _13[0], "optionalAccess", _14 => _14.text])).then((message => {
 									clyde.sendMessage(channel.id, {
 										content: message
 									});
@@ -659,16 +715,16 @@ function buildPlugin([BasePlugin, PluginApi]) {
 							description: "Unbans a user by id or mention from this guild. Click the options to choose the method you want.",
 							predicate: ({
 								guild
-							}) => modules_namespaceObject.PermissionUtils.can(constants_namespaceObject.Permissions.BAN_MEMBERS, stores_namespaceObject.Users.getCurrentUser(), stores_namespaceObject.Guilds.getGuild(guild?.id)),
+							}) => modules_namespaceObject.PermissionUtils.can(constants_namespaceObject.Permissions.BAN_MEMBERS, stores_namespaceObject.Users.getCurrentUser(), stores_namespaceObject.Guilds.getGuild(BetterBannedUsers_optionalChain([guild, "optionalAccess", _15 => _15.id]))),
 							execute: (props, {
 								guild,
 								channel
 							}) => {
-								const userId = props.userId ? props.userId[0].text : props.mention?.[0]?.userId;
-								if (!this.regex.userId.test(userId?.trim?.())) return clyde.sendMessage(channel.id, {
+								const userId = props.userId ? props.userId[0].text : BetterBannedUsers_optionalChain([props, "access", _16 => _16.mention, "optionalAccess", _17 => _17[0], "optionalAccess", _18 => _18.userId]);
+								if (!this.regex.userId.test(BetterBannedUsers_optionalChain([userId, "optionalAccess", _19 => _19.trim, "optionalCall", _20 => _20()]))) return clyde.sendMessage(channel.id, {
 									content: "You must specify a user!"
 								});
-								this.unbanUserWithCommand(guild, userId, props.reason?.[0]?.text).then((message => {
+								this.unbanUserWithCommand(guild, userId, BetterBannedUsers_optionalChain([props, "access", _21 => _21.reason, "optionalAccess", _22 => _22[0], "optionalAccess", _23 => _23.text])).then((message => {
 									clyde.sendMessage(channel.id, {
 										content: message
 									});
@@ -691,13 +747,13 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						return BetterBannedUsers_React.createElement(SettingsPanel, null);
 					}
 					getSingleClass(...props) {
-						return "." + external_PluginApi_namespaceObject.WebpackModules.getByProps(...props)?.[props[0]];
+						return "." + BetterBannedUsers_optionalChain([external_PluginApi_namespaceObject.WebpackModules, "access", _24 => _24.getByProps, "call", _25 => _25(...props), "optionalAccess", _26 => _26[props[0]]]);
 					}
 					async patchBannedUser() {
 						const BannedUser = await external_PluginApi_namespaceObject.ReactComponents.getComponentByName("BannedUser", this.getSingleClass(["bannedUser"]));
 						external_PluginApi_namespaceObject.Patcher.after(BannedUser.component.prototype, "render", ((that, _, res) => {
 							if (this.promises.cancelled) return;
-							if (!Array.isArray(res?.props?.children)) return;
+							if (!Array.isArray(BetterBannedUsers_optionalChain([res, "optionalAccess", _27 => _27.props, "optionalAccess", _28 => _28.children]))) return;
 							const {
 								guild,
 								user,
@@ -708,9 +764,9 @@ function buildPlugin([BasePlugin, PluginApi]) {
 								className: banned.Z.wrapper
 							}, name, settings.get("showReason", true) ? BetterBannedUsers_React.createElement("span", {
 								className: banned.Z.banReason
-							}, ban.reason ?? i18n_namespaceObject.Messages.NO_BAN_REASON) : null), settings.get("quickUnban", true) ? BetterBannedUsers_React.createElement(RemoveButton, {
+							}, BetterBannedUsers_nullishCoalesce(ban.reason, (() => i18n_namespaceObject.Messages.NO_BAN_REASON))) : null), settings.get("quickUnban", true) ? BetterBannedUsers_React.createElement(RemoveButton, {
 								className: banned.Z.remove,
-								onClick: preventPropagation((() => {
+								onClick: preventPropagation((e => {
 									this.unbanUser(guild.id, user);
 								}))
 							}) : null);
@@ -737,8 +793,8 @@ function buildPlugin([BasePlugin, PluginApi]) {
 								if (~userIds.indexOf(searchQuery)) return [stores_namespaceObject.Users.getUser(searchQuery)];
 								let users = userIds.map(stores_namespaceObject.Users.getUser);
 								const tester = new RegExp(`^${external_window_default().escape(searchQuery)}`, "i");
-								if (searchQuery) users = users.filter((user => tester.test(user?.username) || tester.test(bans[user.id]?.reason)));
-								users = users.sortBy((e => "username" === sort.value ? e.username.toLowerCase() : bans[e.id]?.reason?.length ?? 0));
+								if (searchQuery) users = users.filter((user => tester.test(BetterBannedUsers_optionalChain([user, "optionalAccess", _29 => _29.username])) || tester.test(BetterBannedUsers_optionalChain([bans, "access", _30 => _30[user.id], "optionalAccess", _31 => _31.reason]))));
+								users = users.sortBy((e => "username" === sort.value ? e.username.toLowerCase() : BetterBannedUsers_nullishCoalesce(BetterBannedUsers_optionalChain([bans, "access", _32 => _32[e.id], "optionalAccess", _33 => _33.reason, "optionalAccess", _34 => _34.length]), (() => 0))));
 								if ("ascending" === order.value) users = users.reverse();
 								return users.value();
 							}));
@@ -805,7 +861,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					}
 				}
 			},
-			645: module => {
+			118: module => {
 				module.exports = function(cssWithMappingToString) {
 					var list = [];
 					list.toString = function toString() {
@@ -883,7 +939,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				});
 			};
 		})();
-		var __webpack_exports__ = __webpack_require__(778);
+		var __webpack_exports__ = __webpack_require__(134);
 		module.exports.LibraryPluginHack = __webpack_exports__;
 	})();
 	const PluginExports = module.exports.LibraryPluginHack;
