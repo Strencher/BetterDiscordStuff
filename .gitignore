@@ -1,0 +1,22 @@
+# Misc
+.idea
+
+node_modules
+./**/node_modules
+builds
+./*.plugin.js
+
+# unreleased plugins
+ChatAliases
+CoffeeTest
+CustomActions
+PcCompat
+ServerLookup
+ShowSessions
+Test
+TestPlugin
+TopRolesEverywhere
+UserBackgrounds
+UserBirthdays
+WeatherDisplay
+WebhookSender

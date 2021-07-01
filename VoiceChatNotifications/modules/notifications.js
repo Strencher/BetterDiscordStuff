@@ -1,11 +1,12 @@
 import Notification from "../components/notification";
 import createStore from "common/hooks/zustand";
 import ReactDOM from "react-dom";
+import Settings from "./settings";
 
 const [useStore, Api] = createStore({notifications: {}, paused: false});
 
+const DOMNode = Object.assign(document.createElement("div"), {id: "voicechatnotifications", className: "VoiceChatNotifications-notification-" + Settings.get("inappPosition", "topleft")});
 export function initialize() {
-    const DOMNode = Object.assign(document.createElement("div"), {id: "voicechatnotifications"});
     ReactDOM.render(<VoiceNotifications />, DOMNode);
 
     document.getElementById("app-mount").appendChild(DOMNode);
@@ -39,6 +40,11 @@ export function show(content, options = {}) {
 
     return id;
 }
+
+Settings.addChangeListener(() => {
+    const value = Settings.get("inappPosition", "topleft");
+    DOMNode.className = "VoiceChatNotifications-notification-" + value;
+});
 
 export function VoiceNotifications() {
     const state = useStore(e => Object.entries(e.notifications));

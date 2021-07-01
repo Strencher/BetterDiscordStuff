@@ -1,5 +1,4 @@
 /// <reference path="../../typings/discord.d.ts" />
-
 import {Timestamp} from "@discord/classes";
 import {ModalRoot, openModal} from "@discord/modal";
 import {Channels, Info, SettingsStore, Status, Users} from "@discord/stores";
@@ -15,8 +14,8 @@ import LogsPanel from "./components/panel";
 import Constants from "./data/constants";
 import SettingsPanel from "./components/Settings";
 import * as Notifications from "./modules/notifications";
-import Commands from "../../common/apis/commands";
-import Clyde from "../../common/apis/clyde";
+import Commands from "common/apis/commands";
+import Clyde from "common/apis/clyde";
 
 const VoiceStateStore = WebpackModules.getByProps("getVoiceStates");
 const SelectedVoiceChannelStore = WebpackModules.getByProps("getVoiceChannelId");
@@ -117,7 +116,7 @@ export default class VoiceChatNotifications extends BasePlugin {
 
 	updateLogs({message, user, timestamp, channelId}) {
 		if (!Settings.get("notifications", true) || LogsPanel.Store.getState().paused) return;
-		const useInApp = (Settings.get("suppressInDnd", true) && SettingsStore.status === "dnd") || Settings.get("inppNotifications", true);
+		const useInApp = (Settings.get("suppressInDnd", true) && SettingsStore.status === "dnd") || Settings.get("inappPosition", "topLeft") !== "disabled";
 
 		if (useInApp) {
 			Notifications.show(

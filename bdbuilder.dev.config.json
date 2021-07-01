@@ -1,0 +1,12 @@
+{
+    "basePath": "../../",
+    "extends": [
+        "./bdbuilder.config.json"
+    ],
+    "build": {
+        "production": false,
+        "entry": "./[name]",
+        "output": "./builds",
+        "install": true
+    }
+}

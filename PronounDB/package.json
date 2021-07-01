@@ -23,7 +23,7 @@
         "description": "Shows you the pronoun of a user right next to their name. Pronouns by https://pronoundb.org. Source code can be found in the ./src folder of the github repo.",
         "github": "https://github.com/Strencher/BetterDiscordStuff/tree/master/PronounDB",
         "github_raw": "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/PronounDB/PronounDB.plugin.js",
-        "version": "0.0.5"
+        "version": "0.0.4"
     },
     "build": {
         "zlibrary": true,
@@ -48,17 +48,19 @@
     },
     "changelog": [
         {
-            "type": "fixed",
-            "title": "Discord Fixes...",
+            "type": "added",
+            "title": "v0.0.3",
             "items": [
-                "Guess what... discord updated and broke pronoun tag in user popout. Fixed that for now."
+                "`Edit Prounoun` button."
             ]
         },
         {
-            "type": "improved",
-            "title": "Improved",
+            "type": "added",
+            "title": "v0.0.4",
             "items": [
-                "Added a text box for custom pronouns."
+                "Setting to hide Pronoun tag in specific areas",
+                "Dropdown menus to select local pronoun.",
+                "Hopefully fixed multiple prounoun tags showing up."
             ]
         }
     ],

@@ -1,0 +1,22 @@
+{
+  "name": "betterdiscordaddons",
+  "version": "1.0.0",
+  "description": "Some useful Discord-Addons for BetterDiscord.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shitcord-plugins/BetterDiscordStuffTest.git"
+  },
+  "author": "Strencher",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/shitcord-plugins/BetterDiscordStuffTest/issues"
+  },
+  "homepage": "https://github.com/shitcord-plugins/BetterDiscordStuffTest#readme",
+  "dependencies": {
+    "bdbuilder": "git://github.com/Kyza/bdbuilder.git"
+  }
+}

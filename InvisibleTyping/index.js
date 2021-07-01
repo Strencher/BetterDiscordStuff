@@ -28,7 +28,7 @@ export default class InvisibleTyping extends BasePlugin {
         const TypingModule = WebpackModules.getByProps("startTyping");
 
         Patcher.instead(TypingModule, "startTyping", (_, [channelId], originalMethod) => {
-            if(~Settings.get("exclude", []).indexOf(channelId)) originalMethod(channelId);
+            if(~Settings.get("exclude", []).indexOf(channelId) || Settings.get("autoEnable", false)) originalMethod(channelId);
         });
     }
 

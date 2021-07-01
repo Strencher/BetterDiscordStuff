@@ -1,7 +1,12 @@
+$padding: 20px;
+
 :global(#voicechatnotifications) {
     position: absolute;
-    left: 20px;
-    z-index: 9;
+    z-index: 999;
+
+    .container {
+        z-index: 999;
+    }
 }
 
 .container {
@@ -14,6 +19,24 @@
     pointer-events: all;
     padding: 15px;
     border-radius: 4px;
+}
+
+.topLeft {
+    left: $padding;
+}
+
+.topRight {
+    right: $padding;
+}
+
+.bottomLeft {
+    bottom: $padding;
+    left: $padding;
+}
+
+.bottomRight {
+    bottom: $padding;
+    right: $padding;
 }
 
 .closeButton {

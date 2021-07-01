@@ -1,0 +1,21 @@
+{
+    "build": {
+        "watch": false,
+        "folder": "./[plugin]",
+        "readme": true,
+        "filename": "[name].plugin.js"
+    },
+    "discord": {
+        "userId": "415849376598982656",
+        "username": "Strencher"
+    },
+    "github": {
+        "username": "Strencher",
+        "branch": "master",
+        "repo": "BetterDiscordStuff"
+    },
+    "paths": {
+        "bdfolder": "C:/Users/Strencher/AppData/Roaming/BetterDiscord",
+        "release_folder": "<seret>"
+    }
+}
