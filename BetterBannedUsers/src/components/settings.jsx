@@ -1,4 +1,4 @@
-import createUpdateWrapper from "../../../common/hooks/createUpdateWrapper"
+import createUpdateWrapper from "common/hooks/createUpdateWrapper"
 import {WebpackModules} from "@zlibrary";
 import Settings from "../settings";
 import _ from "lodash";

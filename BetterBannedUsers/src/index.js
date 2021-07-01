@@ -9,12 +9,12 @@ import {Flex} from "@discord/components";
 import {Messages} from "@discord/i18n";
 import Select from "./components/select.jsx";
 import SettingsPanel from "./components/settings";
-import preventPropagation from "../../common/util/prevent";
+import preventPropagation from "common/util/prevent";
 import {NOOP, Permissions} from "@discord/constants";
-import Commands, {OptionTypes, Types} from "../../common/apis/commands";
+import Commands, {OptionTypes, Types} from "common/apis/commands";
 import {PermissionUtils} from "@discord/modules";
-import Clyde from "../../common/apis/clyde";
-import {switchCase} from "../../common/util/any";
+import Clyde from "common/apis/clyde";
+import {switchCase} from "common/util/any";
 
 /// <reference path="../../typings/discord.d.ts"/>
 /// <reference path="../../typings/zlib.d.ts"/>
