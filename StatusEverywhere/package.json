@@ -1,0 +1,39 @@
+{
+    "info": {
+        "name": "StatusEverywhere",
+        "version": "1.0.0",
+        "authors": [
+            {
+                "name": "Strencher",
+                "discord_id": "415849376598982656",
+                "github_username": "Strencher",
+                "twitter_username": "Strencher3"
+            },
+            {
+                "name": "Zerebos",
+                "discord_id": "249746236008169473",
+                "github_username": "rauenzi",
+                "twitter_username": "ZackRauen"
+            }
+        ],
+        "description": "Adds user status everywhere Discord doesn't.",
+        "github": "https://github.com/Strencher/BetterDiscordStuff/tree/master/StatusEverywhere",
+        "github_raw": "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/StatusEverywhere/StatusEverywhere.plugin.js"
+    },
+    "changelog": [],
+    "build": {
+        "zlibrary": true,
+        "copy": true,
+        "production": false,
+        "scssHash": false,
+        "alias": {
+            "icons": "components/icons",
+            "stores": "./modules/stores"
+        },
+        "release": {
+            "public": true,
+            "source": true,
+            "readme": true
+        }
+    }
+}
