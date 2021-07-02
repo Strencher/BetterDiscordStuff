@@ -40,21 +40,16 @@ const config = {
                 twitter_username: "Strencher3"
             }
         ],
-        version: "0.0.6",
+        version: "0.0.7",
         description: "Allows you to copy certain stuff with custom options.",
         github: "https://github.com/Strencher/BetterDiscordStuff/blob/master/Copier/Copier.plugin.js",
         github_raw: "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/Copier/Copier.plugin.js"
     },
     changelog: [
         {
-            title: "Added",
-            type: "added",
-            items: ["Added a copy option to channel categories."]
-        },
-        {
             title: "Fixed",
             type: "fixed",
-            items: ["Fixed copy menu on categories."]
+            items: ["Fixed copy role id not copying."]
         }
     ]
 };
@@ -1076,7 +1071,7 @@ const buildPlugin = ([Plugin, Api]) => {
                                 label: "Id",
                                 id: "copy-role-id",
                                 action: () => {
-                                    ElectronModule.copy(props.id);
+                                    ElectronModule.copy(role.id);
                                     Toasts.success("Copied role id.");
                                 }
                             },
