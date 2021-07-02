@@ -40,8 +40,9 @@ export default class StatusEverywhere extends BasePlugin {
 
         Patcher.after(ChatMessage, "default", (_, [props]: PatchArgs[], res) => {
             const tree = Utilities.findInReactTree(res, e => e?.renderPopout);
-            if (!tree?.children || tree.children.__patched) return;
-
+            const user = props?.message?.author;
+            if (!user || !tree?.children || tree.children.__patched || (user.bot && user.discriminator === "0000")) return;
+            
             tree.children = () => <StatusAvatar {...props} />;
 
             tree.children.__patched = true;

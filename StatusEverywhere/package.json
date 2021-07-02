@@ -1,7 +1,7 @@
 {
     "info": {
         "name": "StatusEverywhere",
-        "version": "1.0.0",
+        "version": "1.0.1",
         "authors": [
             {
                 "name": "Strencher",
@@ -20,7 +20,15 @@
         "github": "https://github.com/Strencher/BetterDiscordStuff/tree/master/StatusEverywhere",
         "github_raw": "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/StatusEverywhere/StatusEverywhere.plugin.js"
     },
-    "changelog": [],
+    "changelog": [
+        {
+            "type": "fixed",
+            "title": "Rewrite",
+            "items": [
+                "This plugin was rewritten."
+            ]
+        }
+    ],
     "build": {
         "zlibrary": true,
         "copy": true,
