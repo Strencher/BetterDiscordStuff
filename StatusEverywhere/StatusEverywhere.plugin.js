@@ -1,6 +1,6 @@
 /**
  * @name StatusEverywhere
- * @version 1.0.0
+ * @version 1.0.1
  * @author Strencher, Zerebos
  * @description Adds user status everywhere Discord doesn't.
  * @source https://github.com/Strencher/BetterDiscordStuff/tree/master/StatusEverywhere
@@ -32,7 +32,7 @@
 const config = {
 	"info": {
 		"name": "StatusEverywhere",
-		"version": "1.0.0",
+		"version": "1.0.1",
 		"authors": [{
 				"name": "Strencher",
 				"discord_id": "415849376598982656",
@@ -50,7 +50,13 @@ const config = {
 		"github": "https://github.com/Strencher/BetterDiscordStuff/tree/master/StatusEverywhere",
 		"github_raw": "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/StatusEverywhere/StatusEverywhere.plugin.js"
 	},
-	"changelog": [],
+	"changelog": [{
+		"type": "fixed",
+		"title": "Rewrite",
+		"items": [
+			"This plugin was rewritten."
+		]
+	}],
 	"build": {
 		"zlibrary": true,
 		"copy": true,
@@ -437,7 +443,8 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						const ChatMessage = external_PluginApi_namespaceObject.WebpackModules.getModule((m => _optionalChain([m, "optionalAccess", _2 => _2.default, "optionalAccess", _3 => _3.toString, "optionalCall", _4 => _4(), "access", _5 => _5.indexOf, "call", _6 => _6("ANIMATE_CHAT_AVATAR")]) > -1));
 						external_PluginApi_namespaceObject.Patcher.after(ChatMessage, "default", ((_, [props], res) => {
 							const tree = external_PluginApi_namespaceObject.Utilities.findInReactTree(res, (e => _optionalChain([e, "optionalAccess", _7 => _7.renderPopout])));
-							if (!_optionalChain([tree, "optionalAccess", _8 => _8.children]) || tree.children.__patched) return;
+							const user = _optionalChain([props, "optionalAccess", _8 => _8.message, "optionalAccess", _9 => _9.author]);
+							if (!user || !_optionalChain([tree, "optionalAccess", _10 => _10.children]) || tree.children.__patched || user.bot && "0000" === user.discriminator) return;
 							tree.children = () => external_BdApi_React_default().createElement(StatusAvatar, {
 								...props
 							});
@@ -447,7 +454,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					async patchChannelMessage() {
 						const ChannelMessage = external_PluginApi_namespaceObject.WebpackModules.getModule((m => "ChannelMessage" === m.type.displayName));
 						const cancelPatch = external_PluginApi_namespaceObject.Patcher.after(ChannelMessage, "type", ((_, __, res) => {
-							const tree = external_PluginApi_namespaceObject.Utilities.findInReactTree(res, (e => _optionalChain([e, "optionalAccess", _9 => _9.childrenHeader])));
+							const tree = external_PluginApi_namespaceObject.Utilities.findInReactTree(res, (e => _optionalChain([e, "optionalAccess", _11 => _11.childrenHeader])));
 							if (!tree) return;
 							external_PluginApi_namespaceObject.Patcher.after(tree.childrenHeader.type, "type", ((_, [props], res) => {
 								res.props.children[0] = external_BdApi_React_default().createElement(StatusAvatar, {
