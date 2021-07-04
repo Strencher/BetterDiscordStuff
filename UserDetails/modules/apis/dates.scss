@@ -4,6 +4,7 @@
 
     &.text {
         flex-direction: column;
+        margin-top: 10px;
     }
 
     &.icons {
@@ -29,16 +30,25 @@
             font-size: 14px;
             width: -webkit-fill-available;
             text-align: left;
+            line-height: 18px;
         }
     
-        &.userProfile .scrollableText {
-            text-align: left !important;
+        &.userProfile {
+            padding-left: 18px;
+
+            .scrollableText {
+                text-align: left !important;
+            }
         }
     }
 
     .errorIcon {
         fill: #ed4245 !important;
     }
+}
+
+.wrapper {
+    display: block;
 }
 
 @keyframes blink {

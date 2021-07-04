@@ -4,8 +4,8 @@ import Badge from "../components/badge";
 import ApiModule from "./api";
 import Circle from "../components/blankslates/circle";
 import Error from "../components/icons/error";
-import Utilities from "../Utilities";
 import Settings from "../Settings";
+import {WebpackModules} from "@zlibrary";
 import styles from "./connections.scss";
 import {TooltipContainer as Tooltip} from "@discord/components";
 import {useStateFromStores} from "@discord/flux";
@@ -14,15 +14,16 @@ import {ProfileActions} from "@discord/actions";
 import {Logger} from "@zlibrary";
 import Connections from "@discord/connections";
 
+const Header = WebpackModules.getByDisplayName("Header");
 export default class Userconnections extends ApiModule {
     get api() {return this.constructor.name;}
 
     task(user) {
-        return ({titleClassName}) => {
+        return () => {
             if (!Connections.filter(c => Settings.get("shownConnections", {})[c.type]).length || user.bot) return null;
             const connections = useStateFromStores([UserProfile], () => UserProfile.getUserProfile(user.id)?.connectedAccounts);
             const [message, setMessage] = useState("");
-
+            
             useEffect(() => {
                 if (UserProfile.isFetching(user.id)) return;
                 ProfileActions.fetchProfile(user.id)
@@ -36,7 +37,7 @@ export default class Userconnections extends ApiModule {
             return <div className={styles.connectionsBody}>
                 {   
                     (!connections?.length && Settings.get("showEmptyConnections", true)) || connections?.length
-                        ? <div className={Utilities.joinClassNames(titleClassName, styles.container)}>{connections?.length ? "connections" : "no connections"}</div>
+                        ? <Header className={styles.container} size={Header.Sizes.SIZE_12} className={styles.header} uppercase muted>{connections?.length ? "connections" : "no connections"}</Header>
                         : null
                 }
                 {

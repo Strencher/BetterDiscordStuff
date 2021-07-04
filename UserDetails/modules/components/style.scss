@@ -1,3 +1,8 @@
+.loadingText {
+    color: var(--text-normal);
+    text-align: center;
+}
+
 .scrollableText {
     color: var(--text-normal);
     white-space: nowrap;
@@ -5,4 +10,5 @@
     font-size: 14px;
     width: -webkit-fill-available;
     text-align: center;
+    line-height: 18px;
 }

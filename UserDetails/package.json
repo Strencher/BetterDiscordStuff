@@ -1,7 +1,7 @@
 {
     "info": {
         "name": "UserDetails",
-        "version": "1.3.3",
+        "version": "1.4.3",
         "authors": [
             {
                 "name": "Strencher",
@@ -16,18 +16,19 @@
     },
     "changelog": [
         {
-            "title": "Fixed - v1.3.3",
+            "title": "Fixed - v1.4.3",
             "type": "fixed",
             "items": [
-                "Fixed the icons showing up in the profile modal again. **STOP UPDATING DISCORD**"
+                "I'm sorry that it took so long to fix the plugin. :c Finally got some time and motivation to fix all the bugs.",
+                "If there's still something not working, let me know!"
             ]
         },
         {
-            "title": "Added - v1.3.3",
+            "title": "Added - v1.4.3",
             "type": "added",
             "items": [
-                "Added a chat command `/userinfo @user` to show quick user information.",
-                "Let me know if you like to see the new chat commands in any of my plugins."
+                "I also added translations for German, Turkey & Dutch.",
+                "Become a translator on my server and your translation will be added within the next version!"
             ]
         }
     ],

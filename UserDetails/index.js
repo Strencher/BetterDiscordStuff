@@ -1,3 +1,5 @@
+/// <reference path="../bdbuilder/typings/main.d.ts" />
+
 import stylesheet from "styles";
 import React from "react";
 import UserConnections from "./modules/apis/connections";
@@ -23,7 +25,7 @@ import Strings from "./modules/data/translations/index.js";
 import LocaleManager from "common/apis/strings";
 import SuppressError from "common/util/noerror";
 import {Messages} from "@discord/i18n";
-
+import Logger from "./modules/logger";
 
 const getClass = (props = [], items = props, exclude = [], selector = false) => {
     const module = WebpackModules.find(m => m && props.every(prop => m[prop] !== undefined) && exclude.every(e => m[e] == undefined));
@@ -129,61 +131,38 @@ export default class Plugin extends BasePlugin {
             ].filter(e => e)
         };
     }
-
+    
     async patchUserPopout() {
-        const UserPopout = await ReactComponents.getComponentByName("UserPopout", getClass(["userPopout"], ["userPopout"], [], true));
-        const UserPopoutInfo = WebpackModules.getModule(m => m.default?.displayName === "UserPopoutInfo");
-        const UserPopoutHeader = WebpackModules.getModule(m => m.default?.displayName === "UserPopoutHeader");
+        const UserPopoutInfo = WebpackModules.getByProps("UserPopoutInfo");
+        const UserPopoutBody = WebpackModules.getModule(m => m.default.displayName === "UserPopoutBody");
 
-        const patch = (user, tree, type) => {
+        Patcher.after(UserPopoutInfo, "UserPopoutInfo", (_, [{user}], returnValue) => {
+            if (this.promises.cancelled) return;
+            const tree = Utilities.findInReactTree(returnValue, SuppressError(e => e.className.indexOf("headerText") > -1));
+            if (!Array.isArray(tree?.children) || !user) return;
             const WrappedJoinedAt = this.joinedApi.task(user.id);
             const WrappedCreatedAt = this.createdApi.task(user.id);
             const WrappedLastMessage = this.lastMessageApi.task(user);
 
-            tree.children.splice(2, 0, <ErrorBoundary key={type} id="UserPopoutHeader" mini>
+            tree.children.push(<ErrorBoundary key="UserPopoutHeader" id="UserPopoutHeader" mini>
                 <div className={Utilities.joinClassNames(dateStyles.container, Settings.get("useIcons", true) ? dateStyles.icons : dateStyles.text)}>
                     {Settings.get("created_show_up", true) && <WrappedCreatedAt key="created-date" />}
                     {Settings.get("joined_show_up", true) && <WrappedJoinedAt key="joined-date" />}
                     {Settings.get("lastmessage_show_up", true) && <WrappedLastMessage key="lastmessage-date" />}
                 </div>
             </ErrorBoundary>);
-        };
-
-        Patcher.after(UserPopoutHeader, "default", (_, [{user}], returnValue) => {
-            if (this.promises.cancelled) return;
-            const tree = Utilities.findInReactTree(returnValue, m => m?.className?.indexOf("headerTop") > -1);
-            if (!Array.isArray(tree?.children)) return;
-
-            patch(user, tree, "PopoutHeader");
         });
 
-        Patcher.after(UserPopoutInfo, "default", (_, [{user}], returnValue) => {
+        Patcher.after(UserPopoutBody, "default", (_, [{user}], returnValue) => {
             if (this.promises.cancelled) return;
-            if (!Array.isArray(returnValue?.props?.children) || !user) return;
-            patch(user, returnValue.props, "PopoutInfoHeader");
-        });
-
-        Patcher.after(UserPopout.component.prototype, "renderHeader", (thisObject, _, returnValue) => {
-            const tree = Utilities.findInReactTree(returnValue, e => e && e.direction);
-            if (!Array.isArray(tree?.children) || !thisObject.props.user) return returnValue;
-            patch(thisObject.props.user, tree, "RenderHeader");
-        });
-
-        const titleClassName = getClass(["bodyTitle"], ["bodyTitle"]);
-
-        Patcher.after(UserPopout.component.prototype, "renderBody", (thisObject, _, returnValue) => {
-            if (this.promises.cancelled) return;
-            const tree = Utilities.findInReactTree(returnValue, e => e?.className && Array.isArray(e.children));
-            if (!Array.isArray(tree?.children)) return returnValue;
-            const Connections = this.connectionsApi.task(thisObject.props.user);
-            tree.children.unshift(
+            if (!Array.isArray(returnValue?.props?.children)) return returnValue;
+            const Connections = this.connectionsApi.task(user);
+            returnValue.props.children.unshift(
                 <ErrorBoundary id="UserPopoutBody" mini key="connections">
-                    <Connections titleClassName={titleClassName} />
+                    <Connections />
                 </ErrorBoundary>
             );
         });
-
-        UserPopout.forceUpdateAll();
     }
 
     async patchUserProfile() {
@@ -191,21 +170,40 @@ export default class Plugin extends BasePlugin {
 
         Patcher.after(UserProfileModalHeader, "default", (_, [{user}], res) => {
             if (this.promises.cancelled) return;
-            const tree = Utilities.findInReactTree(res, SuppressError(res => res.className.indexOf("headerTop") > -1));
+            const tree = Utilities.findInReactTree(res, SuppressError(res => res.type.displayName === "DiscordTag"));
 
-            if (!Array.isArray(tree?.children)) return;
+            if (!tree || tree.type?.__patched) return;
 
-            const WrappedJoinedAt = this.joinedApi.task(user.id);
-            const WrappedCreatedAt = this.createdApi.task(user.id);
-            const WrappedLastMessage = this.lastMessageApi.task(user);
+            const original = tree.type;
+            tree.type = (...args) => {
+                const ret = original.apply(this, args);
+                
+                try {
+                    const WrappedJoinedAt = this.joinedApi.task(user.id);
+                    const WrappedCreatedAt = this.createdApi.task(user.id);
+                    const WrappedLastMessage = this.lastMessageApi.task(user);
 
-            tree.children.splice(1, 0, <ErrorBoundary id="UserProfile" mini>
-                <div className={Utilities.joinClassNames(dateStyles.container, dateStyles.userProfile, Settings.get("useIcons", true) ? dateStyles.icons : dateStyles.text)}>
-                    {Settings.get("created_show_profile", true) && <WrappedCreatedAt />}
-                    {Settings.get("joined_show_profile", true) && <WrappedJoinedAt />}
-                    {Settings.get("lastmessage_show_profile", true) && <WrappedLastMessage />}
-                </div>
-            </ErrorBoundary>);
+                    return (
+                        <div className={dateStyles.wrapper}>
+                            {ret}
+                            <ErrorBoundary id="UserProfile" mini>
+                                <div className={Utilities.joinClassNames(dateStyles.container, dateStyles.userProfile, Settings.get("useIcons", true) ? dateStyles.icons : dateStyles.text)}>
+                                    {Settings.get("created_show_profile", true) && <WrappedCreatedAt />}
+                                    {Settings.get("joined_show_profile", true) && <WrappedJoinedAt />}
+                                    {Settings.get("lastmessage_show_profile", true) && <WrappedLastMessage />}
+                                </div>
+                            </ErrorBoundary>
+                        </div>
+                    );
+                } catch (error) {
+                    Logger.error("Failed to inject into ProfileModal:", error);
+                }
+
+                return ret;
+            };
+
+            tree.type.__patched = true;
+            tree.name = "DiscordTag";
         });
     }
 
@@ -237,7 +235,7 @@ export default class Plugin extends BasePlugin {
     }
 
     async patchUserActivityStatus() {
-        const RichActivity = WebpackModules.getModule(m => m.default.displayName === "RichActivity");
+        const RichActivity = WebpackModules.getModule(m => m?.default?.displayName === "RichActivity");
 
         Patcher.after(RichActivity, "default", (_, [props]) => {
             const shouldShow = useStateFromStores([Settings], () => Settings.get("activityIconState", 0));
