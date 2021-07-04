@@ -224,6 +224,9 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			'@discord/actions': {
 				get 'ProfileActions'() {
 					return ___createMemoize___(this, 'ProfileActions', () => BdApi.findModuleByProps('fetchProfile'))
+				},
+				get 'GuildActions'() {
+					return ___createMemoize___(this, 'GuildActions', () => BdApi.findModuleByProps('requestMembersById'))
 				}
 			},
 			get '@discord/i18n'() {
