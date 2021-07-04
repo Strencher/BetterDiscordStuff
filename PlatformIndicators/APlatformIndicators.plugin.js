@@ -27,6 +27,7 @@
     WScript.Quit();
 
 @else@*/
+
 module.exports = (() => {
     const config = {
         info: {
