@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - development
+      - feature/*
   workflow_dispatch:
     inputs:
       plugin:
@@ -31,11 +32,7 @@ jobs:
           fetch-depth: 0
 
       - name: retrieve latest bdbuilder version
-        run: |
-          git config submodule.bdbuilder.branch master
-          git submodule update --remote
-          git config status.submodulesummary 1
-          git status
+        run: npm i @inve1951/bdbuilder@latest
 
       - name: setup nodejs
         uses: actions/setup-node@v2
@@ -65,6 +62,7 @@ jobs:
     name: publish plugins
     runs-on: ubuntu-latest
     needs: build
+    if: ${{ 'refs/heads/development' == github.ref }}
 
     steps:
       - name: restore repo

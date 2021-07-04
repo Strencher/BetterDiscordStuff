@@ -40,12 +40,6 @@ actuallyDoSomething();
 function actuallyDoSomething() {
   if (!changedPlugins.length) throw new Error("Got nothing to build");
 
-  // Needed while bdbuilder is a submodule; obsolete after npm release
-  _cp.execSync("npm i", {
-    cwd: "bdbuilder",
-    stdio: ["ignore", "inherit", "inherit"]
-  });
-
   for (const pluginName of changedPlugins) {
     buildPlugin(pluginName);
   }
@@ -61,7 +55,7 @@ function buildPlugin(pluginName) {
     stdio: ["ignore", "inherit", "inherit"]
   });
 
-  _cp.execSync(`node ./bdbuilder --plugin="${pluginName}" --build --config=bdbuilder.prod.config.json`, {
+  _cp.execSync(`npm exec -- bdbuilder --plugin="${pluginName}" --build --config=bdbuilder.prod.config.json`, {
     cwd: ".",
     stdio: ["ignore", "inherit", "inherit"]
   });
