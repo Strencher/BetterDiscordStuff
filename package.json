@@ -8,15 +8,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/shitcord-plugins/BetterDiscordStuffTest.git"
+    "url": "git://github.com/Strencher/BetterDiscordStuff.git"
   },
   "author": "Strencher",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/shitcord-plugins/BetterDiscordStuffTest/issues"
+    "url": "https://github.com/Strencher/BetterDiscordStuff/issues"
   },
-  "homepage": "https://github.com/shitcord-plugins/BetterDiscordStuffTest#readme",
-  "dependencies": {
-    "@inve1951/bdbuilder": "^1.2.2-beta.1"
+  "homepage": "https://github.com/Strencher/BetterDiscordStuff#readme",
+  "devDependencies": {
+    "@kyza/bdbuilder": "^1.2.2"
   }
 }
