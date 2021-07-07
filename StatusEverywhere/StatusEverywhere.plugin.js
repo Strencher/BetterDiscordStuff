@@ -194,7 +194,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					return ___createMemoize___(this, 'Status', () => BdApi.findModuleByProps('getStatus'))
 				},
 				get 'Users'() {
-					return ___createMemoize___(this, 'Users', () => BdApi.findModuleByProps('getUser'))
+					return ___createMemoize___(this, 'Users', () => BdApi.findModuleByProps('getUser', 'getCurrentUser'))
 				},
 				get 'SettingsStore'() {
 					return ___createMemoize___(this, 'SettingsStore', () => BdApi.findModuleByProps('afkTimeout', 'status'))
@@ -221,6 +221,9 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			'@discord/actions': {
 				get 'ProfileActions'() {
 					return ___createMemoize___(this, 'ProfileActions', () => BdApi.findModuleByProps('fetchProfile'))
+				},
+				get 'GuildActions'() {
+					return ___createMemoize___(this, 'GuildActions', () => BdApi.findModuleByProps('requestMembersById'))
 				}
 			},
 			get '@discord/i18n'() {
@@ -276,13 +279,13 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			}
 		};
 		var __webpack_modules__ = {
-			435: (module, __webpack_exports__, __webpack_require__) => {
+			854: (module, __webpack_exports__, __webpack_require__) => {
 				__webpack_require__.d(__webpack_exports__, {
 					Z: () => __WEBPACK_DEFAULT_EXPORT__
 				});
-				var _bdbuilder_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(118);
-				var _bdbuilder_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_bdbuilder_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
-				var ___CSS_LOADER_EXPORT___ = _bdbuilder_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(645);
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
+				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
 					return i[1];
 				}));
 				___CSS_LOADER_EXPORT___.push([module.id, ".StatusEverywhere-avatar-chatAvatar{overflow:visible !important}", ""]);
@@ -292,7 +295,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
 				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
 			},
-			530: (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+			800: (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 				__webpack_require__.r(__webpack_exports__);
 				__webpack_require__.d(__webpack_exports__, {
 					default: () => StatusEverywhere
@@ -306,31 +309,33 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				const stores_namespaceObject = Modules["@discord/stores"];
 				const constants_namespaceObject = Modules["@discord/constants"];
 				const utils_namespaceObject = Modules["@discord/utils"];
-				var avatar = __webpack_require__(435);
+				var avatar = __webpack_require__(854);
 				const package_namespaceObject = JSON.parse('{"um":{"u2":"StatusEverywhere"}}');
 				const modules_namespaceObject = Modules["@discord/modules"];
-				function _nullishCoalesce(lhs, rhsFn) {
-					if (null != lhs) return lhs;
-					else return rhsFn();
+				function _defineProperty(obj, key, value) {
+					if (key in obj) Object.defineProperty(obj, key, {
+						value,
+						enumerable: true,
+						configurable: true,
+						writable: true
+					});
+					else obj[key] = value;
+					return obj;
 				}
 				class SettingsManager extends flux_namespaceObject.Store {
 					constructor(pluginName) {
 						super(modules_namespaceObject.Dispatcher, {});
-						SettingsManager.prototype.__init.call(this);
-						SettingsManager.prototype.__init2.call(this);
-						this.pluginName = pluginName;
-						this.settings = external_PluginApi_namespaceObject.PluginUtilities.loadSettings(pluginName, {});
-					}
-					__init() {
-						this.get = (key, defaultValue) => _nullishCoalesce(this.settings[key], (() => defaultValue));
-					}
-					__init2() {
-						this.set = (key, value) => {
+						_defineProperty(this, "settings", void 0);
+						_defineProperty(this, "pluginName", void 0);
+						_defineProperty(this, "get", ((key, defaultValue) => this.settings[key] ?? defaultValue));
+						_defineProperty(this, "set", ((key, value) => {
 							this.settings[key] = value;
 							external_PluginApi_namespaceObject.PluginUtilities.saveSettings(this.pluginName, this.settings);
 							this.emitChange();
 							return value;
-						};
+						}));
+						this.pluginName = pluginName;
+						this.settings = external_PluginApi_namespaceObject.PluginUtilities.loadSettings(pluginName, {});
 					}
 				}
 				const Settings = new SettingsManager(package_namespaceObject.um.u2);
@@ -342,6 +347,11 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					Sizes: AvatarSizes,
 					AnimatedAvatar
 				} = external_PluginApi_namespaceObject.WebpackModules.getByProps("AnimatedAvatar");
+				const {
+					useContextMenuUser
+				} = external_PluginApi_namespaceObject.WebpackModules.getByProps("useContextMenuUser") ?? {
+					useContextMenuUser: () => {}
+				};
 				const classes = {
 					...external_PluginApi_namespaceObject.WebpackModules.getByProps("sizeEmoji", "avatar")
 				};
@@ -358,7 +368,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						const id = constants_namespaceObject.ComponentActions.ANIMATE_CHAT_AVATAR(`${props.subscribeToGroupId}:${user.id}`);
 						ComponentDispatch.subscribe(id, setAnimate);
 						return () => void ComponentDispatch.unsubscribe(id, setAnimate);
-					}), []);
+					}), [user, props.subscribeToGroupId]);
 					return external_BdApi_React_default().createElement("div", {
 						className: "avatarWrapper",
 						"data-status": status,
@@ -378,25 +388,34 @@ function buildPlugin([BasePlugin, PluginApi]) {
 							} catch (error) {
 								external_PluginApi_namespaceObject.Logger.error("Failed to open UserPopout:", error);
 							}
-						}
+						},
+						onContextMenu: useContextMenuUser(user.id, channel_id)
 					}));
 				}
 				const external_StyleLoader_namespaceObject = StyleLoader;
 				var external_StyleLoader_default = __webpack_require__.n(external_StyleLoader_namespaceObject);
 				var React = __webpack_require__(832);
+				function _extends() {
+					_extends = Object.assign || function(target) {
+						for (var i = 1; i < arguments.length; i++) {
+							var source = arguments[i];
+							for (var key in source)
+								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
+						}
+						return target;
+					};
+					return _extends.apply(this, arguments);
+				}
 				const createUpdateWrapper = (Component, valueProp = "value", changeProp = "onChange", valueIndex = 0) => props => {
 					const [value, setValue] = React.useState(props[valueProp]);
-					return React.createElement(Component, {
-						...{
-							...props,
-							[valueProp]: value,
-							[changeProp]: (...args) => {
-								const value = args[valueIndex];
-								if ("function" === typeof props[changeProp]) props[changeProp](value);
-								setValue(value);
-							}
+					return React.createElement(Component, _extends({}, props, {
+						[valueProp]: value,
+						[changeProp]: (...args) => {
+							const value = args[valueIndex];
+							if ("function" === typeof props[changeProp]) props[changeProp](value);
+							setValue(value);
 						}
-					});
+					}));
 				};
 				const hooks_createUpdateWrapper = createUpdateWrapper;
 				const SwitchItem = hooks_createUpdateWrapper(external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("SwitchItem"));
@@ -406,25 +425,6 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						value: settings.get("showTyping", true),
 						onChange: value => settings.set("showTyping", value)
 					}, "Typing"));
-				}
-				function _optionalChain(ops) {
-					let lastAccessLHS;
-					let value = ops[0];
-					let i = 1;
-					while (i < ops.length) {
-						const op = ops[i];
-						const fn = ops[i + 1];
-						i += 2;
-						if (("optionalAccess" === op || "optionalCall" === op) && null == value) return;
-						if ("access" === op || "optionalAccess" === op) {
-							lastAccessLHS = value;
-							value = fn(value);
-						} else if ("call" === op || "optionalCall" === op) {
-							value = fn(((...args) => value.call(lastAccessLHS, ...args)));
-							lastAccessLHS = void 0;
-						}
-					}
-					return value;
 				}
 				class StatusEverywhere extends(external_BasePlugin_default()) {
 					getSettingsPanel() {
@@ -440,26 +440,22 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						});
 					}
 					async patchChatAvatar() {
-						const ChatMessage = external_PluginApi_namespaceObject.WebpackModules.getModule((m => _optionalChain([m, "optionalAccess", _2 => _2.default, "optionalAccess", _3 => _3.toString, "optionalCall", _4 => _4(), "access", _5 => _5.indexOf, "call", _6 => _6("ANIMATE_CHAT_AVATAR")]) > -1));
+						const ChatMessage = external_PluginApi_namespaceObject.WebpackModules.getModule((m => m?.default?.toString?.().indexOf("ANIMATE_CHAT_AVATAR") > -1));
 						external_PluginApi_namespaceObject.Patcher.after(ChatMessage, "default", ((_, [props], res) => {
-							const tree = external_PluginApi_namespaceObject.Utilities.findInReactTree(res, (e => _optionalChain([e, "optionalAccess", _7 => _7.renderPopout])));
-							const user = _optionalChain([props, "optionalAccess", _8 => _8.message, "optionalAccess", _9 => _9.author]);
-							if (!user || !_optionalChain([tree, "optionalAccess", _10 => _10.children]) || tree.children.__patched || user.bot && "0000" === user.discriminator) return;
-							tree.children = () => external_BdApi_React_default().createElement(StatusAvatar, {
-								...props
-							});
+							const tree = external_PluginApi_namespaceObject.Utilities.findInReactTree(res, (e => e?.renderPopout));
+							const user = props?.message?.author;
+							if (!user || !tree?.children || tree.children.__patched || user.bot && "0000" === user.discriminator) return;
+							tree.children = () => external_BdApi_React_default().createElement(StatusAvatar, props);
 							tree.children.__patched = true;
 						}));
 					}
 					async patchChannelMessage() {
 						const ChannelMessage = external_PluginApi_namespaceObject.WebpackModules.getModule((m => "ChannelMessage" === m.type.displayName));
 						const cancelPatch = external_PluginApi_namespaceObject.Patcher.after(ChannelMessage, "type", ((_, __, res) => {
-							const tree = external_PluginApi_namespaceObject.Utilities.findInReactTree(res, (e => _optionalChain([e, "optionalAccess", _11 => _11.childrenHeader])));
+							const tree = external_PluginApi_namespaceObject.Utilities.findInReactTree(res, (e => e?.childrenHeader));
 							if (!tree) return;
 							external_PluginApi_namespaceObject.Patcher.after(tree.childrenHeader.type, "type", ((_, [props], res) => {
-								res.props.children[0] = external_BdApi_React_default().createElement(StatusAvatar, {
-									...props
-								});
+								res.props.children[0] = external_BdApi_React_default().createElement(StatusAvatar, props);
 							}));
 							cancelPatch();
 						}));
@@ -470,7 +466,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					}
 				}
 			},
-			118: module => {
+			645: module => {
 				module.exports = function(cssWithMappingToString) {
 					var list = [];
 					list.toString = function toString() {
@@ -548,7 +544,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				});
 			};
 		})();
-		var __webpack_exports__ = __webpack_require__(530);
+		var __webpack_exports__ = __webpack_require__(800);
 		module.exports.LibraryPluginHack = __webpack_exports__;
 	})();
 	const PluginExports = module.exports.LibraryPluginHack;
