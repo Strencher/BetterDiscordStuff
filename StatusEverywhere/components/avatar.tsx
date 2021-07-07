@@ -15,6 +15,7 @@ type ComponentDispatcher = {
 
 const { ComponentDispatch }: { ComponentDispatch: ComponentDispatcher } = WebpackModules.getByProps("ComponentDispatch");
 const { Sizes: AvatarSizes, AnimatedAvatar } = WebpackModules.getByProps("AnimatedAvatar");
+const { useContextMenuUser } = WebpackModules.getByProps("useContextMenuUser") ?? {useContextMenuUser: () => void 0};
 
 const classes = {
     ...WebpackModules.getByProps("sizeEmoji", "avatar")
@@ -34,7 +35,7 @@ export default function StatusAvatar(props) {
         const id = ComponentActions.ANIMATE_CHAT_AVATAR(`${props.subscribeToGroupId}:${user.id}`);
         ComponentDispatch.subscribe(id, setAnimate);
         return () => void ComponentDispatch.unsubscribe(id, setAnimate);
-    }, []);
+    }, [user, props.subscribeToGroupId]);
     
     return (
         <div className="avatarWrapper" data-status={status} data-mobile={isMobile} data-typing={isTyping} data-user-id={user.id}>
@@ -52,6 +53,7 @@ export default function StatusAvatar(props) {
                         Logger.error("Failed to open UserPopout:", error);
                     }
                 }}
+                onContextMenu={useContextMenuUser(user.id, channel_id)}
             />
         </div>
     );
