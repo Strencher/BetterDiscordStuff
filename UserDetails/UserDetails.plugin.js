@@ -197,7 +197,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					return ___createMemoize___(this, 'Status', () => BdApi.findModuleByProps('getStatus'))
 				},
 				get 'Users'() {
-					return ___createMemoize___(this, 'Users', () => BdApi.findModuleByProps('getUser'))
+					return ___createMemoize___(this, 'Users', () => BdApi.findModuleByProps('getUser', 'getCurrentUser'))
 				},
 				get 'SettingsStore'() {
 					return ___createMemoize___(this, 'SettingsStore', () => BdApi.findModuleByProps('afkTimeout', 'status'))
@@ -282,151 +282,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			}
 		};
 		var __webpack_modules__ = {
-			504: (module, __webpack_exports__, __webpack_require__) => {
-				__webpack_require__.d(__webpack_exports__, {
-					Z: () => __WEBPACK_DEFAULT_EXPORT__
-				});
-				var _bdbuilder_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(118);
-				var _bdbuilder_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_bdbuilder_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
-				var ___CSS_LOADER_EXPORT___ = _bdbuilder_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
-					return i[1];
-				}));
-				___CSS_LOADER_EXPORT___.push([module.id, ".UserDetails-connections-header{font-weight:700;text-transform:uppercase;font-size:12px;margin-bottom:8px;color:var(--header-secondary)}.UserDetails-connections-connectionsBody div:not(.UserDetails-connections-connections,.UserDetails-connections-container){display:inline-flex;margin:5px}.UserDetails-connections-connectionsBody .UserDetails-connections-loading{fill:var(--interactive-muted);animation:UserDetails-connections-blink infinite 2s;width:30px;height:30px;margin:5px;margin-top:0;margin-left:0}.UserDetails-connections-connectionsBody .UserDetails-connections-connections{display:flex;flex-wrap:wrap;margin-bottom:8px}.UserDetails-connections-connectionsBody .UserDetails-connections-connections img{width:30px;height:30px}.UserDetails-connections-connectionsBody .UserDetails-connections-errorIcon{width:35px;height:35px;margin-top:-5px}.UserDetails-connections-connectionsBody .UserDetails-connections-errorIcon{fill:#ed4245 !important}@keyframes UserDetails-connections-blink{0%{opacity:.6}50%{opacity:.3}100%{opacity:.6}}", ""]);
-				___CSS_LOADER_EXPORT___.locals = {
-					header: "UserDetails-connections-header",
-					connectionsBody: "UserDetails-connections-connectionsBody",
-					connections: "UserDetails-connections-connections",
-					container: "UserDetails-connections-container",
-					loading: "UserDetails-connections-loading",
-					blink: "UserDetails-connections-blink",
-					errorIcon: "UserDetails-connections-errorIcon"
-				};
-				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
-				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
-			},
-			307: (module, __webpack_exports__, __webpack_require__) => {
-				__webpack_require__.d(__webpack_exports__, {
-					Z: () => __WEBPACK_DEFAULT_EXPORT__
-				});
-				var _bdbuilder_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(118);
-				var _bdbuilder_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_bdbuilder_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
-				var ___CSS_LOADER_EXPORT___ = _bdbuilder_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
-					return i[1];
-				}));
-				___CSS_LOADER_EXPORT___.push([module.id, ".UserDetails-dates-container{display:flex;max-width:-webkit-fill-available}.UserDetails-dates-container.UserDetails-dates-text{flex-direction:column;margin-top:10px}.UserDetails-dates-container.UserDetails-dates-icons{flex-direction:row}.UserDetails-dates-container.UserDetails-dates-icons .UserDetails-dates-loading{animation:UserDetails-dates-blink infinite 2s ease-in-out}.UserDetails-dates-container svg{fill:#ddd;margin:5px;width:20px;height:20px}.UserDetails-dates-container.UserDetails-dates-text .UserDetails-dates-scrollableText{color:var(--text-normal);white-space:nowrap;position:relative;font-size:14px;width:-webkit-fill-available;text-align:left;line-height:18px}.UserDetails-dates-container.UserDetails-dates-text.UserDetails-dates-userProfile{padding-left:18px}.UserDetails-dates-container.UserDetails-dates-text.UserDetails-dates-userProfile .UserDetails-dates-scrollableText{text-align:left !important}.UserDetails-dates-container .UserDetails-dates-errorIcon{fill:#ed4245 !important}.UserDetails-dates-wrapper{display:block}@keyframes UserDetails-dates-blink{0%{opacity:.6}50%{opacity:.3}100%{opacity:.6}}", ""]);
-				___CSS_LOADER_EXPORT___.locals = {
-					container: "UserDetails-dates-container",
-					text: "UserDetails-dates-text",
-					icons: "UserDetails-dates-icons",
-					loading: "UserDetails-dates-loading",
-					blink: "UserDetails-dates-blink",
-					scrollableText: "UserDetails-dates-scrollableText",
-					userProfile: "UserDetails-dates-userProfile",
-					errorIcon: "UserDetails-dates-errorIcon",
-					wrapper: "UserDetails-dates-wrapper"
-				};
-				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
-				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
-			},
-			313: (module, __webpack_exports__, __webpack_require__) => {
-				__webpack_require__.d(__webpack_exports__, {
-					Z: () => __WEBPACK_DEFAULT_EXPORT__
-				});
-				var _bdbuilder_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(118);
-				var _bdbuilder_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_bdbuilder_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
-				var ___CSS_LOADER_EXPORT___ = _bdbuilder_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
-					return i[1];
-				}));
-				___CSS_LOADER_EXPORT___.push([module.id, ".UserDetails-activity-icon{display:flex;float:right}.UserDetails-activity-container{display:flex}", ""]);
-				___CSS_LOADER_EXPORT___.locals = {
-					icon: "UserDetails-activity-icon",
-					container: "UserDetails-activity-container"
-				};
-				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
-				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
-			},
-			191: (module, __webpack_exports__, __webpack_require__) => {
-				__webpack_require__.d(__webpack_exports__, {
-					Z: () => __WEBPACK_DEFAULT_EXPORT__
-				});
-				var _bdbuilder_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(118);
-				var _bdbuilder_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_bdbuilder_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
-				var ___CSS_LOADER_EXPORT___ = _bdbuilder_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
-					return i[1];
-				}));
-				___CSS_LOADER_EXPORT___.push([module.id, ".UserDetails-badge-connection{width:30px;height:30px;position:relative}.UserDetails-badge-connection.UserDetails-badge-verified{border-radius:50%;overflow:hidden}.UserDetails-badge-connection.UserDetails-badge-verified .UserDetails-badge-verifiedBadge{width:12px;height:12px;position:absolute;bottom:0;right:0px;background:var(--background-floating);border-radius:50%;overflow:hidden;padding:2px}", ""]);
-				___CSS_LOADER_EXPORT___.locals = {
-					connection: "UserDetails-badge-connection",
-					verified: "UserDetails-badge-verified",
-					verifiedBadge: "UserDetails-badge-verifiedBadge"
-				};
-				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
-				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
-			},
-			56: (module, __webpack_exports__, __webpack_require__) => {
-				__webpack_require__.d(__webpack_exports__, {
-					Z: () => __WEBPACK_DEFAULT_EXPORT__
-				});
-				var _bdbuilder_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(118);
-				var _bdbuilder_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_bdbuilder_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
-				var ___CSS_LOADER_EXPORT___ = _bdbuilder_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
-					return i[1];
-				}));
-				___CSS_LOADER_EXPORT___.push([module.id, ".UserDetails-flowerstar-wrapper{position:relative;display:flex;align-items:center;justify-content:center}.UserDetails-flowerstar-wrapper .UserDetails-flowerstar-container{display:block}.UserDetails-flowerstar-wrapper .UserDetails-flowerstar-tick{position:absolute;top:50%;left:50%;transform:translate(-50%, -50%)}", ""]);
-				___CSS_LOADER_EXPORT___.locals = {
-					wrapper: "UserDetails-flowerstar-wrapper",
-					container: "UserDetails-flowerstar-container",
-					tick: "UserDetails-flowerstar-tick"
-				};
-				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
-				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
-			},
-			691: (module, __webpack_exports__, __webpack_require__) => {
-				__webpack_require__.d(__webpack_exports__, {
-					Z: () => __WEBPACK_DEFAULT_EXPORT__
-				});
-				var _bdbuilder_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(118);
-				var _bdbuilder_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_bdbuilder_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
-				var ___CSS_LOADER_EXPORT___ = _bdbuilder_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
-					return i[1];
-				}));
-				___CSS_LOADER_EXPORT___.push([module.id, ".UserDetails-settings-settingsPanel .UserDetails-settings-formItem{margin-bottom:10px}.UserDetails-settings-settingsPanel .UserDetails-settings-icons{flex-wrap:wrap}.UserDetails-settings-settingsPanel .UserDetails-settings-icons .UserDetails-settings-settingsBadgeContainer{display:inline-flex;cursor:pointer}.UserDetails-settings-settingsPanel .UserDetails-settings-icons .UserDetails-settings-settingsBadgeContainer .UserDetails-settings-settingsBadgeIcon{width:40px;height:40px}.UserDetails-settings-settingsPanel .UserDetails-settings-icons .UserDetails-settings-settingsBadgeContainer .UserDetails-settings-settingsBadgeIcon.UserDetails-settings-disabled{opacity:.4}.UserDetails-settings-settingsPanel .UserDetails-settings-category{color:#ddd}.UserDetails-settings-settingsPanel .UserDetails-settings-category.UserDetails-settings-opened .UserDetails-settings-categoryContent{padding:10px;padding:10px}.UserDetails-settings-settingsPanel .UserDetails-settings-category.UserDetails-settings-opened .UserDetails-settings-categoryContent .UserDetails-settings-replacementVariable{user-select:text;margin-bottom:6px;padding-bottom:6px;border-bottom:thin solid var(--background-modifier-accent)}.UserDetails-settings-settingsPanel .UserDetails-settings-category.UserDetails-settings-opened .UserDetails-settings-categoryContent .UserDetails-settings-replacementVariable b{margin-right:3px}.UserDetails-settings-settingsPanel .UserDetails-settings-category .UserDetails-settings-categoryHeader{cursor:pointer;padding:10px;font-size:15px;background:var(--background-tertiary);font-weight:600;text-transform:uppercase;display:flex;align-items:center}.UserDetails-settings-settingsPanel .UserDetails-settings-category .UserDetails-settings-categoryHeader .UserDetails-settings-categoryCaret{margin-left:auto}.UserDetails-settings-settingsPanel .UserDetails-settings-pageIcon{color:var(--interactive-normal);fill:var(--interactive-normal)}", ""]);
-				___CSS_LOADER_EXPORT___.locals = {
-					settingsPanel: "UserDetails-settings-settingsPanel",
-					formItem: "UserDetails-settings-formItem",
-					icons: "UserDetails-settings-icons",
-					settingsBadgeContainer: "UserDetails-settings-settingsBadgeContainer",
-					settingsBadgeIcon: "UserDetails-settings-settingsBadgeIcon",
-					disabled: "UserDetails-settings-disabled",
-					category: "UserDetails-settings-category",
-					opened: "UserDetails-settings-opened",
-					categoryContent: "UserDetails-settings-categoryContent",
-					replacementVariable: "UserDetails-settings-replacementVariable",
-					categoryHeader: "UserDetails-settings-categoryHeader",
-					categoryCaret: "UserDetails-settings-categoryCaret",
-					pageIcon: "UserDetails-settings-pageIcon"
-				};
-				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
-				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
-			},
-			821: (module, __webpack_exports__, __webpack_require__) => {
-				__webpack_require__.d(__webpack_exports__, {
-					Z: () => __WEBPACK_DEFAULT_EXPORT__
-				});
-				var _bdbuilder_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(118);
-				var _bdbuilder_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_bdbuilder_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
-				var ___CSS_LOADER_EXPORT___ = _bdbuilder_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
-					return i[1];
-				}));
-				___CSS_LOADER_EXPORT___.push([module.id, ".UserDetails-style-loadingText{color:var(--text-normal);text-align:center}.UserDetails-style-scrollableText{color:var(--text-normal);white-space:nowrap;position:relative;font-size:14px;width:-webkit-fill-available;text-align:center;line-height:18px}", ""]);
-				___CSS_LOADER_EXPORT___.locals = {
-					loadingText: "UserDetails-style-loadingText",
-					scrollableText: "UserDetails-style-scrollableText"
-				};
-				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
-				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
-			},
-			195: (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+			737: (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 				__webpack_require__.r(__webpack_exports__);
 				__webpack_require__.d(__webpack_exports__, {
 					default: () => Plugin
@@ -438,43 +294,103 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				const components_namespaceObject = Modules["@discord/components"];
 				const connections_namespaceObject = Modules["@discord/connections"];
 				var connections_default = __webpack_require__.n(connections_namespaceObject);
-				var badge = __webpack_require__(191);
+				var badge = __webpack_require__(541);
 				const utils_namespaceObject = Modules["@discord/utils"];
 				const external_PluginApi_namespaceObject = PluginApi;
 				const package_namespaceObject = JSON.parse('{"um":{"u2":"UserDetails"}}');
+				function _extends() {
+					_extends = Object.assign || function(target) {
+						for (var i = 1; i < arguments.length; i++) {
+							var source = arguments[i];
+							for (var key in source)
+								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
+						}
+						return target;
+					};
+					return _extends.apply(this, arguments);
+				}
+				const FormItem = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("FormItem");
+				const FormText = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("FormText");
+				const FormDivider = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("FormDivider");
+				const Flex = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("Flex");
+				const {
+					marginBottom8
+				} = external_PluginApi_namespaceObject.WebpackModules.getByProps("marginBottom8");
+				class Utilities extends external_PluginApi_namespaceObject.Utilities {
+					static joinClassNames(...classNames) {
+						return classNames.filter((e => e)).join(" ");
+					}
+					static get useForceUpdate() {
+						return () => (0, external_BdApi_React_.useReducer)((n => n + 1), 0)[1];
+					}
+					static createUpdateWrapper(Component, form = true, valueProp = "value") {
+						return props => {
+							const [state, setState] = (0, external_BdApi_React_.useState)(props[valueProp]);
+							props[valueProp] = state;
+							if (form) return external_BdApi_React_default().createElement(Flex, {
+								className: marginBottom8,
+								direction: Flex.Direction.VERTICAL
+							}, external_BdApi_React_default().createElement(FormItem, {
+								title: props.name
+							}, external_BdApi_React_default().createElement(Component, _extends({}, props, {
+								onChange: value => {
+									value = value.value ?? value;
+									setState(value);
+									props.onChange(value);
+								}
+							})), external_BdApi_React_default().createElement(FormText, {
+								type: "description",
+								disabled: Boolean(props.note)
+							}, props.note)), external_BdApi_React_default().createElement(FormDivider, null));
+							else return external_BdApi_React_default().createElement(Component, _extends({}, props, {
+								onChange: value => {
+									value = value.value ?? value;
+									setState(value);
+									props.onChange(value);
+								}
+							}));
+						};
+					}
+				}
 				const modules_namespaceObject = Modules["@discord/modules"];
 				const flux_namespaceObject = Modules["@discord/flux"];
-				function _nullishCoalesce(lhs, rhsFn) {
-					if (null != lhs) return lhs;
-					else return rhsFn();
+				function _defineProperty(obj, key, value) {
+					if (key in obj) Object.defineProperty(obj, key, {
+						value,
+						enumerable: true,
+						configurable: true,
+						writable: true
+					});
+					else obj[key] = value;
+					return obj;
 				}
-				var _class;
-				const Settings = new(_class = class Settings extends flux_namespaceObject.Store {
+				const Settings = new class extends flux_namespaceObject.Store {
 					constructor() {
 						super(modules_namespaceObject.Dispatcher, {});
-						_class.prototype.__init.call(this);
-						_class.prototype.__init2.call(this);
-						_class.prototype.__init3.call(this);
-					}
-					__init() {
-						this.settings = external_PluginApi_namespaceObject.PluginUtilities.loadSettings(package_namespaceObject.um.u2, {});
-					}
-					__init2() {
-						this.get = (key, defaultValue) => _nullishCoalesce(this.settings[key], (() => defaultValue));
-					}
-					__init3() {
-						this.set = (key, value) => {
+						_defineProperty(this, "settings", external_PluginApi_namespaceObject.PluginUtilities.loadSettings(package_namespaceObject.um.u2, {}));
+						_defineProperty(this, "get", ((key, defaultValue) => this.settings[key] ?? defaultValue));
+						_defineProperty(this, "set", ((key, value) => {
 							this.settings[key] = value;
 							external_PluginApi_namespaceObject.PluginUtilities.saveSettings(package_namespaceObject.um.u2, this.settings);
 							this.emitChange();
-						};
+						}));
 					}
-				}, _class);
-				var flowerstar = __webpack_require__(56);
-				const icons_flowerstar = props => external_BdApi_React_default().createElement("div", {
-					...props,
+				};
+				var flowerstar = __webpack_require__(834);
+				function flowerstar_extends() {
+					flowerstar_extends = Object.assign || function(target) {
+						for (var i = 1; i < arguments.length; i++) {
+							var source = arguments[i];
+							for (var key in source)
+								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
+						}
+						return target;
+					};
+					return flowerstar_extends.apply(this, arguments);
+				}
+				const icons_flowerstar = props => external_BdApi_React_default().createElement("div", flowerstar_extends({}, props, {
 					className: (0, utils_namespaceObject.joinClassNames)(flowerstar.Z.wrapper, props.className)
-				}, external_BdApi_React_default().createElement("svg", {
+				}), external_BdApi_React_default().createElement("svg", {
 					width: "16",
 					height: "16",
 					viewBox: "0 0 16 15.2",
@@ -496,12 +412,6 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					item
 				}) {
 					const connection = connections_default().get(item.type);
-					const onClick = () => {
-						try {
-							open(connection.getPlatformUserUrl(item), "_blank");
-						} catch (e2) {}
-					};
-					const onContextMenu = e => {};
 					const shouldVerified = Settings.get("showVerifiedConnections", true) && item.verified;
 					return external_BdApi_React_default().createElement(components_namespaceObject.TooltipContainer, {
 						text: item.name,
@@ -509,8 +419,12 @@ function buildPlugin([BasePlugin, PluginApi]) {
 							[badge.Z.verified]: shouldVerified
 						})
 					}, external_BdApi_React_default().createElement("img", {
-						onContextMenu,
-						onClick,
+						onContextMenu: () => {},
+						onClick: () => {
+							try {
+								open(connection.getPlatformUserUrl(item), "_blank");
+							} catch {}
+						},
 						src: connection.icon.color
 					}), shouldVerified && external_BdApi_React_default().createElement(icons_flowerstar, {
 						className: badge.Z.verifiedBadge
@@ -533,15 +447,34 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						console[level](`%c[${package_namespaceObject.um.u2}]%c`, "color: #0870f3; font-weight: 700;", "", ...message);
 					}
 				}
+				function queue_defineProperty(obj, key, value) {
+					if (key in obj) Object.defineProperty(obj, key, {
+						value,
+						enumerable: true,
+						configurable: true,
+						writable: true
+					});
+					else obj[key] = value;
+					return obj;
+				}
 				class WaitQueue {
 					constructor({
 						autostart = true,
 						functions = [],
 						delay = 1e3
 					} = {}) {
-						WaitQueue.prototype.__init.call(this);
-						WaitQueue.prototype.__init2.call(this);
-						WaitQueue.prototype.__init3.call(this);
+						queue_defineProperty(this, "next", (() => {
+							if (!this.functions.length || this.paused) return this.running = false;
+							this.running = true;
+							this._runCallback(this.functions.shift()).then((() => setTimeout(this.next, this.delay)));
+						}));
+						queue_defineProperty(this, "continue", (() => {
+							this.paused = false;
+							this.next();
+						}));
+						queue_defineProperty(this, "pause", (() => {
+							this.paused = true;
+						}));
 						this.autostart = autostart;
 						this.functions = functions;
 						this.delay = delay;
@@ -563,24 +496,6 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						}));
 						if (this.autostart && !this.running) this.next();
 					}
-					__init() {
-						this.next = () => {
-							if (!this.functions.length || this.paused) return this.running = false;
-							this.running = true;
-							this._runCallback(this.functions.shift()).then((() => setTimeout(this.next, this.delay)));
-						};
-					}
-					__init2() {
-						this.continue = () => {
-							this.paused = false;
-							this.next();
-						};
-					}
-					__init3() {
-						this.pause = () => {
-							this.paused = true;
-						};
-					}
 					async _runCallback(callback) {
 						if ("function" !== typeof callback) return;
 						try {
@@ -591,33 +506,10 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						}
 					}
 				}
-				function api_nullishCoalesce(lhs, rhsFn) {
-					if (null != lhs) return lhs;
-					else return rhsFn();
-				}
-				function _optionalChain(ops) {
-					let lastAccessLHS;
-					let value = ops[0];
-					let i = 1;
-					while (i < ops.length) {
-						const op = ops[i];
-						const fn = ops[i + 1];
-						i += 2;
-						if (("optionalAccess" === op || "optionalCall" === op) && null == value) return;
-						if ("access" === op || "optionalAccess" === op) {
-							lastAccessLHS = value;
-							value = fn(value);
-						} else if ("call" === op || "optionalCall" === op) {
-							value = fn(((...args) => value.call(lastAccessLHS, ...args)));
-							lastAccessLHS = void 0;
-						}
-					}
-					return value;
-				}
 				const {
 					APIModule
 				} = external_PluginApi_namespaceObject.DiscordModules;
-				let cache = api_nullishCoalesce(window.__ud_cache, (() => window.__ud_cache = {})),
+				let cache = window.__ud_cache ?? (window.__ud_cache = {}),
 					queue = new WaitQueue({
 						delay: 2500
 					});
@@ -646,7 +538,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						return cache[this.api][guildId][userId] = data;
 					}
 					getByCache(guildId, userId) {
-						const chunk = _optionalChain([cache, "access", _ => _[this.api], "optionalAccess", _2 => _2[guildId], "optionalAccess", _3 => _3[userId]]);
+						const chunk = cache[this.api]?.[guildId]?.[userId];
 						if (!chunk || Date.now() - chunk.fetch > 6e5) return null;
 						return chunk.data;
 					}
@@ -668,7 +560,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 							})).on("error", (error => {
 								if (429 === error.status) {
 									queue.pause();
-									setTimeout(queue.continue, 1e3 * api_nullishCoalesce(_optionalChain([error, "access", _4 => _4.body, "optionalAccess", _5 => _5.retry_after]), (() => 5)));
+									setTimeout(queue.continue, 1e3 * (error.body?.retry_after ?? 5));
 								}
 							}));
 						} else event.reply("done", data);
@@ -677,8 +569,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						return zeroable <= 9 ? "0" + zeroable : zeroable;
 					}
 					monthsAgo(date1, date2) {
-						let months;
-						months = 12 * (date2.getFullYear() - date1.getFullYear());
+						let months = 12 * (date2.getFullYear() - date1.getFullYear());
 						months -= date1.getMonth();
 						months += date2.getMonth();
 						months = Math.abs(months);
@@ -710,50 +601,51 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						})).replace(/\$weeksago/g, Math.floor(daysago / 7)).replace(/\$yearsago/g, Math.floor(this.yearsAgo(today, date))).replace(/\$year/g, date.getFullYear()).replace(/\$hour/g, this.parseZeroPadding(hour12 ? date.getHours() % 12 : date.getHours())).replace(/\$minute/g, this.parseZeroPadding(date.getMinutes())).replace(/\$second/g, this.parseZeroPadding(date.getSeconds()));
 					}
 				}
-				const circle = props => external_BdApi_React_default().createElement("svg", {
-					...props,
+				function circle_extends() {
+					circle_extends = Object.assign || function(target) {
+						for (var i = 1; i < arguments.length; i++) {
+							var source = arguments[i];
+							for (var key in source)
+								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
+						}
+						return target;
+					};
+					return circle_extends.apply(this, arguments);
+				}
+				const circle = props => external_BdApi_React_default().createElement("svg", circle_extends({}, props, {
 					xmlns: "http://www.w3.org/2000/svg",
 					viewBox: "0 0 36 36"
-				}, external_BdApi_React_default().createElement("circle", {
+				}), external_BdApi_React_default().createElement("circle", {
 					cx: "18",
 					cy: "18",
 					r: "18"
 				}));
-				const error = props => external_BdApi_React_default().createElement("svg", {
+				function error_extends() {
+					error_extends = Object.assign || function(target) {
+						for (var i = 1; i < arguments.length; i++) {
+							var source = arguments[i];
+							for (var key in source)
+								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
+						}
+						return target;
+					};
+					return error_extends.apply(this, arguments);
+				}
+				const error = props => external_BdApi_React_default().createElement("svg", error_extends({
 					xmlns: "http://www.w3.org/2000/svg",
 					viewBox: "0 0 24 24",
 					fill: "black",
 					width: "18px",
-					height: "18px",
-					...props
-				}, external_BdApi_React_default().createElement("path", {
+					height: "18px"
+				}, props), external_BdApi_React_default().createElement("path", {
 					d: "M0 0h24v24H0z",
 					fill: "none"
 				}), external_BdApi_React_default().createElement("path", {
 					d: "M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"
 				}));
-				var apis_connections = __webpack_require__(504);
+				var apis_connections = __webpack_require__(448);
 				const stores_namespaceObject = Modules["@discord/stores"];
 				const actions_namespaceObject = Modules["@discord/actions"];
-				function connections_optionalChain(ops) {
-					let lastAccessLHS;
-					let value = ops[0];
-					let i = 1;
-					while (i < ops.length) {
-						const op = ops[i];
-						const fn = ops[i + 1];
-						i += 2;
-						if (("optionalAccess" === op || "optionalCall" === op) && null == value) return;
-						if ("access" === op || "optionalAccess" === op) {
-							lastAccessLHS = value;
-							value = fn(value);
-						} else if ("call" === op || "optionalCall" === op) {
-							value = fn(((...args) => value.call(lastAccessLHS, ...args)));
-							lastAccessLHS = void 0;
-						}
-					}
-					return value;
-				}
 				const Header = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("Header");
 				class Userconnections extends ApiModule {
 					get api() {
@@ -762,25 +654,25 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					task(user) {
 						return () => {
 							if (!connections_default().filter((c => Settings.get("shownConnections", {})[c.type])).length || user.bot) return null;
-							const connections = (0, flux_namespaceObject.useStateFromStores)([stores_namespaceObject.UserProfile], (() => connections_optionalChain([stores_namespaceObject.UserProfile, "access", _ => _.getUserProfile, "call", _2 => _2(user.id), "optionalAccess", _3 => _3.connectedAccounts])));
+							const connections = (0, flux_namespaceObject.useStateFromStores)([stores_namespaceObject.UserProfile], (() => stores_namespaceObject.UserProfile.getUserProfile(user.id)?.connectedAccounts));
 							const [message, setMessage] = (0, external_BdApi_React_.useState)("");
 							(0, external_BdApi_React_.useEffect)((() => {
 								if (stores_namespaceObject.UserProfile.isFetching(user.id)) return;
 								actions_namespaceObject.ProfileActions.fetchProfile(user.id).catch((error => {
-									if (~connections_optionalChain([error, "optionalAccess", _4 => _4.message, "optionalAccess", _5 => _5.indexOf, "call", _6 => _6("Already dispatching")])) return;
+									if (~error?.message?.indexOf("Already dispatching")) return;
 									external_PluginApi_namespaceObject.Logger.error(`Failed to fetch profile for ${user.id}:\n`, error);
 									setMessage("Failed to fetch!");
 								}));
 							}), [true]);
 							return external_BdApi_React_default().createElement("div", {
 								className: apis_connections.Z.connectionsBody
-							}, !connections_optionalChain([connections, "optionalAccess", _7 => _7.length]) && Settings.get("showEmptyConnections", true) || connections_optionalChain([connections, "optionalAccess", _8 => _8.length]) ? external_BdApi_React_default().createElement(Header, {
+							}, !connections?.length && Settings.get("showEmptyConnections", true) || connections?.length ? external_BdApi_React_default().createElement(Header, {
 								className: apis_connections.Z.container,
 								size: Header.Sizes.SIZE_12,
 								className: apis_connections.Z.header,
 								uppercase: true,
 								muted: true
-							}, connections_optionalChain([connections, "optionalAccess", _9 => _9.length]) ? "connections" : "no connections") : null, Array.isArray(connections) ? connections_optionalChain([connections, "optionalAccess", _10 => _10.length]) ? external_BdApi_React_default().createElement("div", {
+							}, connections?.length ? "connections" : "no connections") : null, Array.isArray(connections) ? connections?.length ? external_BdApi_React_default().createElement("div", {
 								className: apis_connections.Z.connections
 							}, connections.filter((e => Settings.get("shownConnections")[e.type])).map((badge => external_BdApi_React_default().createElement(Badge, {
 								item: badge,
@@ -797,13 +689,23 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						};
 					}
 				}
-				const cake = props => external_BdApi_React_default().createElement("svg", {
-					...props,
+				function cake_extends() {
+					cake_extends = Object.assign || function(target) {
+						for (var i = 1; i < arguments.length; i++) {
+							var source = arguments[i];
+							for (var key in source)
+								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
+						}
+						return target;
+					};
+					return cake_extends.apply(this, arguments);
+				}
+				const cake = props => external_BdApi_React_default().createElement("svg", cake_extends({}, props, {
 					xmlns: "http://www.w3.org/2000/svg",
 					height: "24",
 					viewBox: "0 0 24 24",
 					width: "24"
-				}, external_BdApi_React_default().createElement("g", null, external_BdApi_React_default().createElement("rect", {
+				}), external_BdApi_React_default().createElement("g", null, external_BdApi_React_default().createElement("rect", {
 					fill: "none",
 					height: "24",
 					width: "24"
@@ -820,67 +722,22 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				}))));
 				const external_BdApi_ReactDOM_namespaceObject = BdApi.ReactDOM;
 				var external_BdApi_ReactDOM_default = __webpack_require__.n(external_BdApi_ReactDOM_namespaceObject);
-				function Utilities_nullishCoalesce(lhs, rhsFn) {
-					if (null != lhs) return lhs;
-					else return rhsFn();
+				var dates = __webpack_require__(227);
+				function textscroller_defineProperty(obj, key, value) {
+					if (key in obj) Object.defineProperty(obj, key, {
+						value,
+						enumerable: true,
+						configurable: true,
+						writable: true
+					});
+					else obj[key] = value;
+					return obj;
 				}
-				const FormItem = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("FormItem");
-				const FormText = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("FormText");
-				const FormDivider = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("FormDivider");
-				const Flex = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("Flex");
-				const {
-					marginBottom8
-				} = external_PluginApi_namespaceObject.WebpackModules.getByProps("marginBottom8");
-				class Utilities extends external_PluginApi_namespaceObject.Utilities {
-					static joinClassNames(...classNames) {
-						return classNames.filter((e => e)).join(" ");
-					}
-					static get useForceUpdate() {
-						return () => (0, external_BdApi_React_.useReducer)((n => n + 1), 0)[1];
-					}
-					static createUpdateWrapper(Component, form = true, valueProp = "value") {
-						return props => {
-							const [state, setState] = (0, external_BdApi_React_.useState)(props[valueProp]);
-							props[valueProp] = state;
-							if (form) return external_BdApi_React_default().createElement(Flex, {
-								className: marginBottom8,
-								direction: Flex.Direction.VERTICAL
-							}, external_BdApi_React_default().createElement(FormItem, {
-								title: props.name
-							}, external_BdApi_React_default().createElement(Component, {
-								...props,
-								onChange: value => {
-									value = Utilities_nullishCoalesce(value.value, (() => value));
-									setState(value);
-									props.onChange(value);
-								}
-							}), external_BdApi_React_default().createElement(FormText, {
-								type: "description",
-								disabled: Boolean(props.note)
-							}, props.note)), external_BdApi_React_default().createElement(FormDivider, null));
-							else return external_BdApi_React_default().createElement(Component, {
-								...props,
-								onChange: value => {
-									value = Utilities_nullishCoalesce(value.value, (() => value));
-									setState(value);
-									props.onChange(value);
-								}
-							});
-						};
-					}
-				}
-				var dates = __webpack_require__(307);
 				const Animations = external_PluginApi_namespaceObject.WebpackModules.getByProps("Value");
 				class TextScroller extends external_BdApi_React_default().Component {
 					constructor(...args) {
 						super(...args);
-						TextScroller.prototype.__init.call(this);
-						TextScroller.prototype.__init2.call(this);
-						TextScroller.prototype.__init3.call(this);
-						TextScroller.prototype.__init4.call(this);
-					}
-					__init() {
-						this._ref = instance => {
+						textscroller_defineProperty(this, "_ref", (instance => {
 							let element = external_BdApi_ReactDOM_default().findDOMNode(instance);
 							if (element && element.parentElement) {
 								let maxWidth = element.parentElement.innerWidth;
@@ -908,30 +765,24 @@ function buildPlugin([BasePlugin, PluginApi]) {
 									})]).start();
 								};
 							}
-						};
-					}
-					__init2() {
-						this._onClick = e => {
+						}));
+						textscroller_defineProperty(this, "_onClick", (e => {
 							if ("function" == typeof this.props.onClick) this.props.onClick(e, this);
-						};
-					}
-					__init3() {
-						this._onMouseEnter = e => {
+						}));
+						textscroller_defineProperty(this, "_onMouseEnter", (e => {
 							if (e.currentTarget.offsetWidth < e.currentTarget.firstElementChild.offsetWidth) {
 								this.scrolling = true;
 								e.currentTarget.firstElementChild.style.setProperty("display", "block");
 								this.scroll(1);
 							}
-						};
-					}
-					__init4() {
-						this._onMouseLeave = e => {
+						}));
+						textscroller_defineProperty(this, "_onMouseLeave", (e => {
 							if (this.scrolling) {
 								delete this.scrolling;
 								e.currentTarget.firstElementChild.style.setProperty("display", "inline");
 								this.scroll(0);
 							}
-						};
+						}));
 					}
 					render() {
 						const style = Object.assign({}, this.props.style, {
@@ -939,12 +790,6 @@ function buildPlugin([BasePlugin, PluginApi]) {
 							display: "block",
 							overflow: "hidden"
 						});
-						const childStyle = {
-							left: "0",
-							position: "relative",
-							display: "inline",
-							whiteSpace: "nowrap"
-						};
 						return external_BdApi_React_default().createElement("div", {
 							className: Utilities.joinClassNames(this.props.className, dates.Z.scrollableText),
 							style,
@@ -953,7 +798,12 @@ function buildPlugin([BasePlugin, PluginApi]) {
 							onMouseEnter: this._onMouseEnter,
 							onMouseLeave: this._onMouseLeave
 						}, external_BdApi_React_default().createElement("div", {
-							style: childStyle
+							style: {
+								left: "0",
+								position: "relative",
+								display: "inline",
+								whiteSpace: "nowrap"
+							}
 						}, this.props.children));
 					}
 				}
@@ -965,26 +815,46 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						}, external_BdApi_React_default().createElement(cake, null)) : external_BdApi_React_default().createElement(TextScroller, null, text);
 					}
 				}
-				const calendar = props => external_BdApi_React_default().createElement("svg", {
-					...props,
+				function calendar_extends() {
+					calendar_extends = Object.assign || function(target) {
+						for (var i = 1; i < arguments.length; i++) {
+							var source = arguments[i];
+							for (var key in source)
+								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
+						}
+						return target;
+					};
+					return calendar_extends.apply(this, arguments);
+				}
+				const calendar = props => external_BdApi_React_default().createElement("svg", calendar_extends({}, props, {
 					xmlns: "http://www.w3.org/2000/svg",
 					height: "24",
 					viewBox: "0 0 24 24",
 					width: "24"
-				}, external_BdApi_React_default().createElement("path", {
+				}), external_BdApi_React_default().createElement("path", {
 					d: "M0 0h24v24H0z",
 					fill: "none"
 				}), external_BdApi_React_default().createElement("path", {
 					d: "M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"
 				}));
-				const cube = props => external_BdApi_React_default().createElement("svg", {
-					...props,
+				function cube_extends() {
+					cube_extends = Object.assign || function(target) {
+						for (var i = 1; i < arguments.length; i++) {
+							var source = arguments[i];
+							for (var key in source)
+								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
+						}
+						return target;
+					};
+					return cube_extends.apply(this, arguments);
+				}
+				const cube = props => external_BdApi_React_default().createElement("svg", cube_extends({}, props, {
 					xmlns: "http://www.w3.org/2000/svg",
 					viewBox: "0 0 36 36"
-				}, external_BdApi_React_default().createElement("path", {
+				}), external_BdApi_React_default().createElement("path", {
 					d: "M36 32c0 2.209-1.791 4-4 4H4c-2.209 0-4-1.791-4-4V4c0-2.209 1.791-4 4-4h28c2.209 0 4 1.791 4 4v28z"
 				}));
-				var style = __webpack_require__(821);
+				var style = __webpack_require__(430);
 				function reducer(state) {
 					if (state >= 3) return 1;
 					else return state + 1;
@@ -1003,28 +873,9 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						className: style.Z.loadingText
 					}, ".".repeat(state));
 				}
-				function joinedAt_optionalChain(ops) {
-					let lastAccessLHS;
-					let value = ops[0];
-					let i = 1;
-					while (i < ops.length) {
-						const op = ops[i];
-						const fn = ops[i + 1];
-						i += 2;
-						if (("optionalAccess" === op || "optionalCall" === op) && null == value) return;
-						if ("access" === op || "optionalAccess" === op) {
-							lastAccessLHS = value;
-							value = fn(value);
-						} else if ("call" === op || "optionalCall" === op) {
-							value = fn(((...args) => value.call(lastAccessLHS, ...args)));
-							lastAccessLHS = void 0;
-						}
-					}
-					return value;
-				}
 				const JoinedAtDates = new Map,
 					fetchingQueue = new Set;
-				const JoinedAt = new class JoinedAt extends flux_namespaceObject.Store {
+				const JoinedAt = new class extends flux_namespaceObject.Store {
 					resolveId(...args) {
 						return args.join("_");
 					}
@@ -1079,7 +930,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						this.registerCallback(guildId, userId, (data => {
 							if (data.notFound.indexOf(userId) > -1) this.setFailed(id, "MEMBER_WAS_NOT_FOUND");
 							else {
-								const member = data.members.find((e => joinedAt_optionalChain([e, "optionalAccess", _ => _.user, "optionalAccess", _2 => _2.id]) === userId));
+								const member = data.members.find((e => e?.user?.id === userId));
 								if (member) JoinedAtDates.set(id, {
 									data: new Date(member.joined_at),
 									fetch: Date.now(),
@@ -1097,25 +948,6 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				const joinedAt = JoinedAt;
 				const i18n_namespaceObject = Modules["@discord/i18n"];
 				var i18n_default = __webpack_require__.n(i18n_namespaceObject);
-				function joinedDate_optionalChain(ops) {
-					let lastAccessLHS;
-					let value = ops[0];
-					let i = 1;
-					while (i < ops.length) {
-						const op = ops[i];
-						const fn = ops[i + 1];
-						i += 2;
-						if (("optionalAccess" === op || "optionalCall" === op) && null == value) return;
-						if ("access" === op || "optionalAccess" === op) {
-							lastAccessLHS = value;
-							value = fn(value);
-						} else if ("call" === op || "optionalCall" === op) {
-							value = fn(((...args) => value.call(lastAccessLHS, ...args)));
-							lastAccessLHS = void 0;
-						}
-					}
-					return value;
-				}
 				class joinedDate_JoinedAt extends ApiModule {
 					get api() {
 						return this.constructor.name;
@@ -1138,7 +970,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 							const isFailed = !joined || "failure" === joined.status;
 							return !isFailed ? useIcons ? external_BdApi_React_default().createElement(components_namespaceObject.TooltipContainer, {
 								text: this.parseTime(this.format, joined.data)
-							}, external_BdApi_React_default().createElement(calendar, null)) : external_BdApi_React_default().createElement(TextScroller, null, this.parseTime(this.format, joined.data)) : message || isFailed && i18n_namespaceObject.Messages[joinedDate_optionalChain([joined, "optionalAccess", _ => _.data])] ? useIcons ? external_BdApi_React_default().createElement(components_namespaceObject.TooltipContainer, {
+							}, external_BdApi_React_default().createElement(calendar, null)) : external_BdApi_React_default().createElement(TextScroller, null, this.parseTime(this.format, joined.data)) : message || isFailed && i18n_namespaceObject.Messages[joined?.data] ? useIcons ? external_BdApi_React_default().createElement(components_namespaceObject.TooltipContainer, {
 								text: message || i18n_namespaceObject.Messages[joined.data]
 							}, external_BdApi_React_default().createElement(error, {
 								className: dates.Z.errorIcon
@@ -1154,13 +986,23 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						}));
 					}
 				}
-				const textbubble = props => external_BdApi_React_default().createElement("svg", {
-					...props,
+				function textbubble_extends() {
+					textbubble_extends = Object.assign || function(target) {
+						for (var i = 1; i < arguments.length; i++) {
+							var source = arguments[i];
+							for (var key in source)
+								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
+						}
+						return target;
+					};
+					return textbubble_extends.apply(this, arguments);
+				}
+				const textbubble = props => external_BdApi_React_default().createElement("svg", textbubble_extends({}, props, {
 					xmlns: "http://www.w3.org/2000/svg",
 					height: "24",
 					viewBox: "0 0 24 24",
 					width: "24"
-				}, external_BdApi_React_default().createElement("path", {
+				}), external_BdApi_React_default().createElement("path", {
 					d: "M0 0h24v24H0z",
 					fill: "none"
 				}), external_BdApi_React_default().createElement("path", {
@@ -1169,24 +1011,15 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				const constants_namespaceObject = Modules["@discord/constants"];
 				const sanitize_namespaceObject = Modules["@discord/sanitize"];
 				const external_PluginApi_DiscordModules_namespaceObject = PluginApi.DiscordModules;
-				function lastMessage_optionalChain(ops) {
-					let lastAccessLHS;
-					let value = ops[0];
-					let i = 1;
-					while (i < ops.length) {
-						const op = ops[i];
-						const fn = ops[i + 1];
-						i += 2;
-						if (("optionalAccess" === op || "optionalCall" === op) && null == value) return;
-						if ("access" === op || "optionalAccess" === op) {
-							lastAccessLHS = value;
-							value = fn(value);
-						} else if ("call" === op || "optionalCall" === op) {
-							value = fn(((...args) => value.call(lastAccessLHS, ...args)));
-							lastAccessLHS = void 0;
-						}
-					}
-					return value;
+				function lastMessage_defineProperty(obj, key, value) {
+					if (key in obj) Object.defineProperty(obj, key, {
+						value,
+						enumerable: true,
+						configurable: true,
+						writable: true
+					});
+					else obj[key] = value;
+					return obj;
 				}
 				function resolveId(...args) {
 					return args.join("_");
@@ -1217,12 +1050,9 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					}
 				}
 				class LastMessageStore extends flux_namespaceObject.Store {
-					constructor(...args2) {
-						super(...args2);
-						LastMessageStore.prototype.__init.call(this);
-					}
-					__init() {
-						this.paused = false;
+					constructor(...args) {
+						super(...args);
+						lastMessage_defineProperty(this, "paused", false);
 					}
 					get _users() {
 						return lastMessages;
@@ -1262,7 +1092,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 							}).then((data => {
 								lastMessage_fetchingQueue.delete(id);
 								let message = null;
-								if (lastMessage_optionalChain([data, "optionalAccess", _ => _.body, "optionalAccess", _2 => _2.messages, "optionalAccess", _3 => _3.length]))
+								if (data?.body?.messages?.length)
 									for (const result of data.body.messages[0])
 										if (result.hit && result.author.id === userId) {
 											message = result;
@@ -1302,25 +1132,6 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					MESSAGE_DELETE: handleMessageDelete
 				});
 				const stores_lastMessage = LastMessage;
-				function apis_lastMessage_optionalChain(ops) {
-					let lastAccessLHS;
-					let value = ops[0];
-					let i = 1;
-					while (i < ops.length) {
-						const op = ops[i];
-						const fn = ops[i + 1];
-						i += 2;
-						if (("optionalAccess" === op || "optionalCall" === op) && null == value) return;
-						if ("access" === op || "optionalAccess" === op) {
-							lastAccessLHS = value;
-							value = fn(value);
-						} else if ("call" === op || "optionalCall" === op) {
-							value = fn(((...args) => value.call(lastAccessLHS, ...args)));
-							lastAccessLHS = void 0;
-						}
-					}
-					return value;
-				}
 				class LastMessageApi extends ApiModule {
 					get api() {
 						return this.constructor.name;
@@ -1345,9 +1156,9 @@ function buildPlugin([BasePlugin, PluginApi]) {
 								if (!lastMessage.channelId || !lastMessage.messageId) return;
 								utils_namespaceObject.Navigation.replaceWith(isGuild ? `/channels/${stores_namespaceObject.SelectedGuilds.getGuildId()}/${lastMessage.channelId}/${lastMessage.messageId}` : `/channels/@me/${lastMessage.channelId}/${lastMessage.messageId}`);
 							};
-							const failed = "failure" === apis_lastMessage_optionalChain([lastMessage, "optionalAccess", _ => _.status]);
+							const failed = "failure" === lastMessage?.status;
 							const shouldUseIcon = Settings.get("useIcons", true);
-							return apis_lastMessage_optionalChain([lastMessage, "optionalAccess", _2 => _2.data]) && !failed ? shouldUseIcon ? external_BdApi_React_default().createElement(components_namespaceObject.TooltipContainer, {
+							return lastMessage?.data && !failed ? shouldUseIcon ? external_BdApi_React_default().createElement(components_namespaceObject.TooltipContainer, {
 								text: this.parseTime(this.format, lastMessage.data)
 							}, external_BdApi_React_default().createElement(textbubble, {
 								onClick: transitionToMessage
@@ -1365,19 +1176,69 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						};
 					}
 				}
+				const defaultConnections = {
+					battlenet: {
+						icon: "/assets/8c289d499232cd8e9582b4a5639d9d1d.png"
+					},
+					facebook: {
+						icon: "/assets/8d8f815f3d81a33b1e70ec7c22e1b6fe.png",
+						link: "https://www.facebook.com/profile.php?id={{userId}}"
+					},
+					leagueoflegends: {
+						icon: "/assets/806953fe1cc616477175cbcdf90d5cd3.png"
+					},
+					reddit: {
+						icon: "/assets/3abe9ce5a00cc24bd8aae04bf5968f4c.png",
+						link: "https://www.reddit.com/user/{{user}}"
+					},
+					spotify: {
+						icon: "/assets/f0655521c19c08c4ea4e508044ec7d8c.png",
+						link: "https://open.spotify.com/user/{{user}}"
+					},
+					steam: {
+						icon: "/assets/f09c1c70a67ceaaeb455d163f3f9cbb8.png",
+						link: "https://steamcommunity.com/profiles/{{userId}}"
+					},
+					twitch: {
+						icon: "/assets/edbbf6107b2cd4334d582b26e1ac786d.png",
+						link: "https://twitch.tv/{{user}}"
+					},
+					twitter: {
+						icon: "/assets/4662875160dc4c56954003ebda995414.png",
+						link: "https://twitter.com/{{user}}"
+					},
+					xbox: {
+						icon: "/assets/0d44ba28e39303de3832db580a252456.png"
+					},
+					youtube: {
+						icon: "/assets/449cca50c1452b4ace3cbe9bc5ae0fd6.png",
+						link: "https://www.youtube.com/channel/{{userId}}"
+					},
+					github: {
+						icon: "/assets/5d69e29f0d71aaa04ed9725100199b4e.png",
+						link: "https://github.com/{{user}}"
+					}
+				};
 				const pages_namespaceObject = JSON.parse('[{"name":"General","icon":"Wrench","items":[{"type":"switch","name":"Use Icons","note":"Defines if icons should be used to show any date.","id":"useIcons","value":true},{"type":"radio","name":"Time Format","value":1,"id":"12hour","options":[{"value":1,"name":"24 hour"},{"value":0,"name":"12 hour"}]},{"type":"divider"},{"type":"category","name":"Variables","items":[{"type":"replacement","prefix":"$timelabel","description":"Replaces the current time label. eg AM or PM."},{"type":"replacement","prefix":"$day","description":"Replaces the current day."},{"type":"replacement","prefix":"$daysago","description":"Replaces with a number of how many days it\'s ago."},{"type":"replacement","prefix":"$dayname","description":"Replaces the shorted dayname."},{"type":"replacement","prefix":"$weeksago","description":"Replaces with a number of how many weeks it\'s ago."},{"type":"replacement","prefix":"$month","description":"Replaces the month."},{"type":"replacement","prefix":"$monthname","description":"Replaces the shorted monthname."},{"type":"replacement","prefix":"$monthsago","description":"Replaces with a number of how many months it\'s ago."},{"type":"replacement","prefix":"$year","description":"Replaces the year."},{"type":"replacement","prefix":"$yearsago","description":"Replaces with a number of how many years it\'s ago."},{"type":"replacement","prefix":"$hour","description":"Replaces the hour(s)"},{"type":"replacement","prefix":"$minute","description":"Replaces the minute(s)"},{"type":"replacement","prefix":"$second","description":"Replaces the second(s)"}]}]},{"name":"Created At","icon":"Cake","items":[{"type":"switch","name":"Show in UserPopout","id":"created_show_up","note":"Defines if the creation date should be shown in the UserPopout.","value":true},{"type":"switch","name":"Show in UserProfile","id":"created_show_profile","note":"Defines if the creation date should be shown in the UserProfile.","value":true},{"type":"text","name":"Created At","note":"Format of the Created at date. Read the variables section in the general settings to understand how it works.","id":"created_format","value":"Created At: $hour:$minute:$second, $day.$month.$year $daysago days"}]},{"name":"Joined At","icon":"Calendar","items":[{"type":"switch","name":"Show in UserPopout","id":"joined_show_up","note":"Defines if the joined date should be shown in the UserPopout.","value":true},{"type":"switch","name":"Show in UserProfile","id":"joined_show_profile","note":"Defines if the joined date should be shown in the UserProfile.","value":true},{"type":"text","name":"Joined At","note":"Format of the joined at date. Read the variables section in the general settings to understand how it works.","id":"joined_format","value":"Joined At: $hour:$minute:$second, $day.$month.$year $daysago days"}]},{"name":"Last Message At","icon":"TextBubble","items":[{"type":"switch","name":"Show in UserPopout","id":"lastmessage_show_up","note":"Defines if the last message date should be shown in the UserPopout.","value":true},{"type":"switch","name":"Show in UserProfile","id":"lastmessage_show_profile","note":"Defines if the last message date should be shown in the UserProfile.","value":true},{"type":"text","name":"Last Message","note":"Format of the LastMessage at date. Read the variables section in the general settings to understand how it works.","id":"lastmessage_format","value":"Last Message At: $hour:$minute:$second, $day.$month.$year $daysago days"}]},{"name":"Connections","icon":"Chain","items":[{"type":"switch","name":"Show Empty","note":"Show a \\"NO CONNECTIONS\\" placeholder if the user has no connections.","id":"showEmptyConnections","value":true},{"type":"switch","name":"Show Verified","note":"Shows a little verified badge below the icon if the connection is verified.","id":"showVerifiedConnections","value":true},{"type":"icons"}]},{"name":"Activity Icons","icon":"GamePad","items":[{"type":"switch","name":"Enable Activity Icons","note":null,"id":"activityIcons","value":true},{"type":"radio","name":"Activity Icon State","note":"Replaces the activity icon in the activity text of the member list.","id":"activityIconState","value":0,"disabled":false,"options":[{"name":"Replace with associated icon","value":0},{"name":"Don\'t do anything","value":1},{"name":"Hide it","value":2}]},{"type":"switch","name":"Show Gamepad","note":"This shows a gamepad icon if an icon for the activity isn\'t available.","id":"showGamepad","value":true}]}]');
-				var settings = __webpack_require__(691);
+				var settings = __webpack_require__(279);
+				function errorboundary_defineProperty(obj, key, value) {
+					if (key in obj) Object.defineProperty(obj, key, {
+						value,
+						enumerable: true,
+						configurable: true,
+						writable: true
+					});
+					else obj[key] = value;
+					return obj;
+				}
 				class ErrorBoundary extends external_BdApi_React_default().Component {
 					constructor(...args) {
 						super(...args);
-						ErrorBoundary.prototype.__init.call(this);
-					}
-					__init() {
-						this.state = {
+						errorboundary_defineProperty(this, "state", {
 							hasError: false,
 							error: null,
 							info: null
-						};
+						});
 					}
 					componentDidCatch(error, info) {
 						this.setState({
@@ -1397,39 +1258,79 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					}
 				}
 				const forms_namespaceObject = Modules["@discord/forms"];
-				const chain = props => external_BdApi_React_default().createElement("svg", {
+				function chain_extends() {
+					chain_extends = Object.assign || function(target) {
+						for (var i = 1; i < arguments.length; i++) {
+							var source = arguments[i];
+							for (var key in source)
+								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
+						}
+						return target;
+					};
+					return chain_extends.apply(this, arguments);
+				}
+				const chain = props => external_BdApi_React_default().createElement("svg", chain_extends({
 					viewBox: "0 0 512 512",
 					width: "24",
-					height: "24",
-					...props
-				}, external_BdApi_React_default().createElement("path", {
+					height: "24"
+				}, props), external_BdApi_React_default().createElement("path", {
 					d: "M326.612 185.391c59.747 59.809 58.927 155.698.36 214.59-.11.12-.24.25-.36.37l-67.2 67.2c-59.27 59.27-155.699 59.262-214.96 0-59.27-59.26-59.27-155.7 0-214.96l37.106-37.106c9.84-9.84 26.786-3.3 27.294 10.606.648 17.722 3.826 35.527 9.69 52.721 1.986 5.822.567 12.262-3.783 16.612l-13.087 13.087c-28.026 28.026-28.905 73.66-1.155 101.96 28.024 28.579 74.086 28.749 102.325.51l67.2-67.19c28.191-28.191 28.073-73.757 0-101.83-3.701-3.694-7.429-6.564-10.341-8.569a16.037 16.037 0 0 1-6.947-12.606c-.396-10.567 3.348-21.456 11.698-29.806l21.054-21.055c5.521-5.521 14.182-6.199 20.584-1.731a152.482 152.482 0 0 1 20.522 17.197zM467.547 44.449c-59.261-59.262-155.69-59.27-214.96 0l-67.2 67.2c-.12.12-.25.25-.36.37-58.566 58.892-59.387 154.781.36 214.59a152.454 152.454 0 0 0 20.521 17.196c6.402 4.468 15.064 3.789 20.584-1.731l21.054-21.055c8.35-8.35 12.094-19.239 11.698-29.806a16.037 16.037 0 0 0-6.947-12.606c-2.912-2.005-6.64-4.875-10.341-8.569-28.073-28.073-28.191-73.639 0-101.83l67.2-67.19c28.239-28.239 74.3-28.069 102.325.51 27.75 28.3 26.872 73.934-1.155 101.96l-13.087 13.087c-4.35 4.35-5.769 10.79-3.783 16.612 5.864 17.194 9.042 34.999 9.69 52.721.509 13.906 17.454 20.446 27.294 10.606l37.106-37.106c59.271-59.259 59.271-155.699.001-214.959z"
 				}));
-				const wrench = props => external_BdApi_React_default().createElement("svg", {
-					...props,
+				function wrench_extends() {
+					wrench_extends = Object.assign || function(target) {
+						for (var i = 1; i < arguments.length; i++) {
+							var source = arguments[i];
+							for (var key in source)
+								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
+						}
+						return target;
+					};
+					return wrench_extends.apply(this, arguments);
+				}
+				const wrench = props => external_BdApi_React_default().createElement("svg", wrench_extends({}, props, {
 					viewBox: "0 0 512 512",
 					height: "24",
 					width: "24"
-				}, external_BdApi_React_default().createElement("path", {
+				}), external_BdApi_React_default().createElement("path", {
 					d: "M501.1 395.7L384 278.6c-23.1-23.1-57.6-27.6-85.4-13.9L192 158.1V96L64 0 0 64l96 128h62.1l106.6 106.6c-13.6 27.8-9.2 62.3 13.9 85.4l117.1 117.1c14.6 14.6 38.2 14.6 52.7 0l52.7-52.7c14.5-14.6 14.5-38.2 0-52.7zM331.7 225c28.3 0 54.9 11 74.9 31l19.4 19.4c15.8-6.9 30.8-16.5 43.8-29.5 37.1-37.1 49.7-89.3 37.9-136.7-2.2-9-13.5-12.1-20.1-5.5l-74.4 74.4-67.9-11.3L334 98.9l74.4-74.4c6.6-6.6 3.4-17.9-5.7-20.2-47.4-11.7-99.6.9-136.6 37.9-28.5 28.5-41.9 66.1-41.2 103.6l82.1 82.1c8.1-1.9 16.5-2.9 24.7-2.9zm-103.9 82l-56.7-56.7L18.7 402.8c-25 25-25 65.5 0 90.5s65.5 25 90.5 0l123.6-123.6c-7.6-19.9-9.9-41.6-5-62.7zM64 472c-13.2 0-24-10.8-24-24 0-13.3 10.7-24 24-24s24 10.7 24 24c0 13.2-10.7 24-24 24z"
 				}));
 				var React = __webpack_require__(832);
-				const spotify = props => React.createElement("svg", {
-					...props,
+				function spotify_extends() {
+					spotify_extends = Object.assign || function(target) {
+						for (var i = 1; i < arguments.length; i++) {
+							var source = arguments[i];
+							for (var key in source)
+								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
+						}
+						return target;
+					};
+					return spotify_extends.apply(this, arguments);
+				}
+				const spotify = props => React.createElement("svg", spotify_extends({}, props, {
 					width: "20",
 					height: "20",
 					viewBox: "0 0 65 65"
-				}, React.createElement("path", {
+				}), React.createElement("path", {
 					fill: "#1ED760",
 					d: "M32.5,0.5 C14.826888,0.5 0.5,14.826888 0.5,32.5 C0.5,50.173112 14.826888,64.5 32.5,64.5 C50.173112,64.5 64.5,50.173112 64.5,32.5 C64.5,14.826888 50.173112,0.5 32.5,0.5 Z M47.18,46.66 C46.6031412,47.595466 45.3795381,47.8902025 44.44,47.32 C36.93,42.73 27.44,41.69 16.33,44.23 C15.6145818,44.4464575 14.8381683,44.245926 14.3170501,43.7100969 C13.7959319,43.1742677 13.6170868,42.3925738 13.8533716,41.6834571 C14.0896564,40.9743403 14.7016337,40.4561564 15.44,40.34 C27.63,37.55 38.09,38.75 46.52,43.91 C47.4615306,44.487221 47.7569974,45.7183323 47.18,46.66 Z M51.1,37.95 C50.3770773,39.1205793 48.8441907,39.487042 47.67,38.77 C39.07,33.48 25.96,31.95 15.78,35.04 C14.9279216,35.2990176 14.0023844,35.0837812 13.3520294,34.4753684 C12.7016744,33.8669556 12.425306,32.9577988 12.6270294,32.0903684 C12.8287528,31.2229381 13.4779216,30.5290176 14.33,30.27 C25.95,26.74 40.4,28.45 50.28,34.52 C51.445766,35.2424019 51.8079122,36.7714637 51.09,37.94 L51.1,37.95 Z M51.44,28.88 C41.13,22.75 24.11,22.19 14.26,25.18 C13.2140022,25.5702637 12.0378133,25.3474036 11.207084,24.6015444 C10.3763547,23.8556852 10.0285164,22.7102178 10.3042349,21.6283692 C10.5799535,20.5465206 11.4336155,19.707266 12.52,19.45 C23.82,16.02 42.61,16.68 54.52,23.73 C55.8401426,24.6185116 56.2368626,26.3831995 55.4240137,27.7512295 C54.6111649,29.1192595 52.8715856,29.6146124 51.46,28.88 L51.44,28.88 Z"
 				}));
 				var twitch_React = __webpack_require__(832);
-				const twitch = props => twitch_React.createElement("svg", {
+				function twitch_extends() {
+					twitch_extends = Object.assign || function(target) {
+						for (var i = 1; i < arguments.length; i++) {
+							var source = arguments[i];
+							for (var key in source)
+								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
+						}
+						return target;
+					};
+					return twitch_extends.apply(this, arguments);
+				}
+				const twitch = props => twitch_React.createElement("svg", twitch_extends({
 					width: "20",
 					height: "20",
-					viewBox: "0 0 128 128",
-					...props
-				}, twitch_React.createElement("defs", null, twitch_React.createElement("path", {
+					viewBox: "0 0 128 128"
+				}, props), twitch_React.createElement("defs", null, twitch_React.createElement("path", {
 					id: "color-a",
 					d: "M8.5542826,0 L0,22 L0,111.8 L30.7954173,111.8 L30.7954173,128 L48.1052598,128 L64.408716,111.8 L89.3670935,111.8 L122.980392,78.4 L122.980392,0 L8.5542826,0 Z M111.406951,72.6 L92.0843362,91.8 L61.2889188,91.8 L44.9854626,108 L44.9854626,91.8 L19.020699,91.8 L19.020699,11.4 L111.406951,11.4 L111.406951,72.6 Z M92.2856134,33.4 L92.2856134,66.8 L80.8128109,66.8 L80.8128109,33.4 L92.2856134,33.4 Z M61.4901961,33.4 L61.4901961,66.8 L50.0173935,66.8 L50.0173935,33.4 L61.4901961,33.4 Z"
 				})), twitch_React.createElement("g", {
@@ -1451,12 +1352,22 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					xlinkHref: "#color-a"
 				})));
 				var valorant_React = __webpack_require__(832);
-				const valorant = props => valorant_React.createElement("svg", {
+				function valorant_extends() {
+					valorant_extends = Object.assign || function(target) {
+						for (var i = 1; i < arguments.length; i++) {
+							var source = arguments[i];
+							for (var key in source)
+								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
+						}
+						return target;
+					};
+					return valorant_extends.apply(this, arguments);
+				}
+				const valorant = props => valorant_React.createElement("svg", valorant_extends({
 					width: "20",
 					height: "20",
-					viewBox: "0 0 216.000000 216.000000",
-					...props
-				}, valorant_React.createElement("g", {
+					viewBox: "0 0 216.000000 216.000000"
+				}, props), valorant_React.createElement("g", {
 					transform: "translate(0.000000,216.000000) scale(0.100000,-0.100000)",
 					fill: "#000000",
 					stroke: "none"
@@ -1464,22 +1375,42 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					d: "M0 1080 l0 -1080 1080 0 1080 0 0 1080 0 1080 -1080 0 -1080 0 0-1080z"
 				})));
 				var youtube_React = __webpack_require__(832);
-				const youtube = props => youtube_React.createElement("svg", {
+				function youtube_extends() {
+					youtube_extends = Object.assign || function(target) {
+						for (var i = 1; i < arguments.length; i++) {
+							var source = arguments[i];
+							for (var key in source)
+								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
+						}
+						return target;
+					};
+					return youtube_extends.apply(this, arguments);
+				}
+				const youtube = props => youtube_React.createElement("svg", youtube_extends({
 					height: "20",
 					width: "20",
-					viewBox: "0 0 576 512",
-					...props
-				}, youtube_React.createElement("path", {
+					viewBox: "0 0 576 512"
+				}, props), youtube_React.createElement("path", {
 					fill: "#FF1A1A",
 					d: "M549.655 124.083c-6.281-23.65-24.787-42.276-48.284-48.597C458.781 64 288 64 288 64S117.22 64 74.629 75.486c-23.497 6.322-42.003 24.947-48.284 48.597-11.412 42.867-11.412 132.305-11.412 132.305s0 89.438 11.412 132.305c6.281 23.65 24.787 41.5 48.284 47.821C117.22 448 288 448 288 448s170.78 0 213.371-11.486c23.497-6.321 42.003-24.171 48.284-47.821 11.412-42.867 11.412-132.305 11.412-132.305s0-89.438-11.412-132.305zm-317.51 213.508V175.185l142.739 81.205-142.739 81.201z"
 				}));
 				var gamepad_React = __webpack_require__(832);
-				const gamepad = props => gamepad_React.createElement("svg", {
+				function gamepad_extends() {
+					gamepad_extends = Object.assign || function(target) {
+						for (var i = 1; i < arguments.length; i++) {
+							var source = arguments[i];
+							for (var key in source)
+								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
+						}
+						return target;
+					};
+					return gamepad_extends.apply(this, arguments);
+				}
+				const gamepad = props => gamepad_React.createElement("svg", gamepad_extends({
 					width: "20",
 					height: "20",
-					viewBox: "0 0 24 24",
-					...props
-				}, gamepad_React.createElement("g", {
+					viewBox: "0 0 24 24"
+				}, props), gamepad_React.createElement("g", {
 					fill: "none",
 					"fill-rule": "evenodd"
 				}, gamepad_React.createElement("path", {
@@ -1490,12 +1421,22 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					height: "24"
 				})));
 				var googleChrome_React = __webpack_require__(832);
-				const googleChrome = props => googleChrome_React.createElement("svg", {
+				function googleChrome_extends() {
+					googleChrome_extends = Object.assign || function(target) {
+						for (var i = 1; i < arguments.length; i++) {
+							var source = arguments[i];
+							for (var key in source)
+								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
+						}
+						return target;
+					};
+					return googleChrome_extends.apply(this, arguments);
+				}
+				const googleChrome = props => googleChrome_React.createElement("svg", googleChrome_extends({
 					width: "20",
 					height: "20",
-					viewBox: "0 0 48 48",
-					...props
-				}, googleChrome_React.createElement("path", {
+					viewBox: "0 0 48 48"
+				}, props), googleChrome_React.createElement("path", {
 					fill: "#4caf50",
 					d: "M44,24c0,11.044-8.956,20-20,20S4,35.044,4,24S12.956,4,24,4S44,12.956,44,24z"
 				}), googleChrome_React.createElement("path", {
@@ -1527,12 +1468,22 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					d: "M31,24c0,3.867-3.133,7-7,7s-7-3.133-7-7s3.133-7,7-7S31,20.133,31,24z"
 				}));
 				var headphones_React = __webpack_require__(832);
-				const headphones = props => headphones_React.createElement("svg", {
+				function headphones_extends() {
+					headphones_extends = Object.assign || function(target) {
+						for (var i = 1; i < arguments.length; i++) {
+							var source = arguments[i];
+							for (var key in source)
+								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
+						}
+						return target;
+					};
+					return headphones_extends.apply(this, arguments);
+				}
+				const headphones = props => headphones_React.createElement("svg", headphones_extends({
 					width: "20",
 					height: "20",
-					viewBox: "0 0 24 24",
-					...props
-				}, headphones_React.createElement("svg", {
+					viewBox: "0 0 24 24"
+				}, props), headphones_React.createElement("svg", {
 					width: "24",
 					height: "24",
 					viewBox: "0 0 24 24"
@@ -1541,10 +1492,6 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					fill: "currentColor"
 				})));
 				var icons_React = __webpack_require__(832);
-				function icons_nullishCoalesce(lhs, rhsFn) {
-					if (null != lhs) return lhs;
-					else return rhsFn();
-				}
 				const Icons = {
 					Cake: cake,
 					Calendar: calendar,
@@ -1568,33 +1515,19 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					name,
 					...props
 				}) {
-					const IconComponent = icons_nullishCoalesce(Icons[name], (() => noop));
-					return icons_React.createElement(IconComponent, {
-						...props
-					});
+					const IconComponent = Icons[name] ?? noop;
+					return icons_React.createElement(IconComponent, props);
 				}
-				function settings_nullishCoalesce(lhs, rhsFn) {
-					if (null != lhs) return lhs;
-					else return rhsFn();
-				}
-				function settings_optionalChain(ops) {
-					let lastAccessLHS;
-					let value = ops[0];
-					let i = 1;
-					while (i < ops.length) {
-						const op = ops[i];
-						const fn = ops[i + 1];
-						i += 2;
-						if (("optionalAccess" === op || "optionalCall" === op) && null == value) return;
-						if ("access" === op || "optionalAccess" === op) {
-							lastAccessLHS = value;
-							value = fn(value);
-						} else if ("call" === op || "optionalCall" === op) {
-							value = fn(((...args) => value.call(lastAccessLHS, ...args)));
-							lastAccessLHS = void 0;
+				function settings_extends() {
+					settings_extends = Object.assign || function(target) {
+						for (var i = 1; i < arguments.length; i++) {
+							var source = arguments[i];
+							for (var key in source)
+								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
 						}
-					}
-					return value;
+						return target;
+					};
+					return settings_extends.apply(this, arguments);
 				}
 				const RadioGroup = Utilities.createUpdateWrapper(external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("RadioGroup"));
 				const SwitchItem = Utilities.createUpdateWrapper(external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("SwitchItem"), false);
@@ -1607,9 +1540,9 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				const settings_Flex = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("Flex");
 				const {
 					default: CardItem
-				} = settings_nullishCoalesce(external_PluginApi_namespaceObject.WebpackModules.find((m => settings_optionalChain([m, "optionalAccess", _ => _.default, "optionalAccess", _2 => _2.toString, "call", _3 => _3(), "access", _4 => _4.indexOf, "call", _5 => _5("hasNextSection")]) > -1)), (() => ({
+				} = external_PluginApi_namespaceObject.WebpackModules.find((m => m?.default?.toString().indexOf("hasNextSection") > -1)) ?? {
 					default: () => null
-				})));
+				};
 				const Card = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("Card");
 				const Caret = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("Caret");
 				const Clickable = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("Clickable");
@@ -1668,13 +1601,12 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				const renderSetting = setting => {
 					switch (setting.type) {
 						case "switch":
-							return external_BdApi_React_default().createElement(SwitchItem, {
-								...setting,
+							return external_BdApi_React_default().createElement(SwitchItem, settings_extends({}, setting, {
 								value: Settings.get(setting.id, setting.value),
 								onChange: value => {
 									Settings.set(setting.id, value);
 								}
-							}, setting.name);
+							}), setting.name);
 						case "replacement":
 							return external_BdApi_React_default().createElement(settings_Flex, {
 								direction: settings_Flex.Direction.HORIZONTAL,
@@ -1690,27 +1622,23 @@ function buildPlugin([BasePlugin, PluginApi]) {
 								title: name
 							}, note && external_BdApi_React_default().createElement(forms_namespaceObject.FormText, {
 								type: "description"
-							}, note), external_BdApi_React_default().createElement(RadioGroup, {
-								...setting,
+							}, note), external_BdApi_React_default().createElement(RadioGroup, settings_extends({}, setting, {
+								value: Settings.get(setting.id, setting.value),
+								onChange: value => {
+									Settings.set(setting.id, value);
+								}
+							})));
+						case "text":
+							return external_BdApi_React_default().createElement(TextItem, settings_extends({}, setting, {
 								value: Settings.get(setting.id, setting.value),
 								onChange: value => {
 									Settings.set(setting.id, value);
 								}
 							}));
-						case "text":
-							return external_BdApi_React_default().createElement(TextItem, {
-								...setting,
-								value: Settings.get(setting.id, setting.value),
-								onChange: value => {
-									Settings.set(setting.id, value);
-								}
-							});
 						case "icons":
 							return external_BdApi_React_default().createElement(IconSetting, null);
 						case "category":
-							return external_BdApi_React_default().createElement(Category, {
-								...setting
-							});
+							return external_BdApi_React_default().createElement(Category, setting);
 						case "divider":
 							return external_BdApi_React_default().createElement(forms_namespaceObject.FormDivider, null);
 					}
@@ -1765,27 +1693,8 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				}
 				const external_BasePlugin_namespaceObject = BasePlugin;
 				var external_BasePlugin_default = __webpack_require__.n(external_BasePlugin_namespaceObject);
-				var components_activity = __webpack_require__(313);
+				var components_activity = __webpack_require__(925);
 				var activity_React = __webpack_require__(832);
-				function activity_optionalChain(ops) {
-					let lastAccessLHS;
-					let value = ops[0];
-					let i = 1;
-					while (i < ops.length) {
-						const op = ops[i];
-						const fn = ops[i + 1];
-						i += 2;
-						if (("optionalAccess" === op || "optionalCall" === op) && null == value) return;
-						if ("access" === op || "optionalAccess" === op) {
-							lastAccessLHS = value;
-							value = fn(value);
-						} else if ("call" === op || "optionalCall" === op) {
-							value = fn(((...args) => value.call(lastAccessLHS, ...args)));
-							lastAccessLHS = void 0;
-						}
-					}
-					return value;
-				}
 				const byName = [
 					[/spotify/i, spotify],
 					[/youtube/i, () => activity_React.createElement("img", {
@@ -1822,7 +1731,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					return null;
 				}
 				function ActivitiesFilter(activity, index, target) {
-					if (4 === activity_optionalChain([activity, "optionalAccess", _2 => _2.type])) return false;
+					if (4 === activity?.type) return false;
 					return target.indexOf(activity) === index;
 				}
 				function Activity({
@@ -1860,7 +1769,8 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					const cmd = Object.assign({}, options, {
 						__registerId: caller,
 						applicationId: "betterdiscord",
-						type: Types.BOT
+						type: Types.BOT,
+						target: 1
 					});
 					DiscordCommands.BUILT_IN_COMMANDS.push(cmd);
 					return () => {
@@ -1881,25 +1791,6 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					unregisterAllCommands
 				};
 				const commands = Commands;
-				function clyde_optionalChain(ops) {
-					let lastAccessLHS;
-					let value = ops[0];
-					let i = 1;
-					while (i < ops.length) {
-						const op = ops[i];
-						const fn = ops[i + 1];
-						i += 2;
-						if (("optionalAccess" === op || "optionalCall" === op) && null == value) return;
-						if ("access" === op || "optionalAccess" === op) {
-							lastAccessLHS = value;
-							value = fn(value);
-						} else if ("call" === op || "optionalCall" === op) {
-							value = fn(((...args) => value.call(lastAccessLHS, ...args)));
-							lastAccessLHS = void 0;
-						}
-					}
-					return value;
-				}
 				const DefaultMessage = {
 					state: "SENT",
 					author: {
@@ -1914,9 +1805,9 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				const MessageCreators = BdApi.findModuleByProps("createBotMessage");
 				const MessageActions = BdApi.findModuleByProps("receiveMessage");
 				const AvatarDefaults = BdApi.findModuleByProps("BOT_AVATARS");
-				if (clyde_optionalChain([AvatarDefaults, "optionalAccess", _ => _.BOT_AVATARS]) && !AvatarDefaults.BOT_AVATARS.betterdiscord) AvatarDefaults.BOT_AVATARS.betterdiscord = "https://github.com/BetterDiscord.png";
+				if (AvatarDefaults?.BOT_AVATARS && !AvatarDefaults.BOT_AVATARS.betterdiscord) AvatarDefaults.BOT_AVATARS.betterdiscord = "https://github.com/BetterDiscord.png";
 				function sendMessage(channelId, message) {
-					MessageActions.receiveMessage(channelId, Object.assign({}, MessageCreators.createBotMessage(channelId, clyde_optionalChain([message, "optionalAccess", _2 => _2.content])), DefaultMessage, message));
+					MessageActions.receiveMessage(channelId, Object.assign({}, MessageCreators.createBotMessage(channelId, message?.content), DefaultMessage, message));
 				}
 				const Clyde = {
 					sendMessage,
@@ -1937,14 +1828,10 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					"en-US": translations_en_US_namespaceObject,
 					tr: translations_tr_namespaceObject
 				};
-				function strings_nullishCoalesce(lhs, rhsFn) {
-					if (null != lhs) return lhs;
-					else return rhsFn();
-				}
 				const loadedStrings = {};
 				stores_namespaceObject.SettingsStore.addChangeListener(injectStrings);
 				function injectStrings() {
-					Object.assign(i18n_default()._proxyContext.messages, strings_nullishCoalesce(loadedStrings[i18n_default().getLocale()], (() => ({}))));
+					Object.assign(i18n_default()._proxyContext.messages, loadedStrings[i18n_default().getLocale()] ?? {});
 					if (loadedStrings["en-US"]) Object.assign(i18n_default()._proxyContext.defaultMessages, loadedStrings["en-US"]);
 				}
 				function addStrings(locale, strings) {
@@ -1970,7 +1857,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					removeStrings
 				};
 				const strings = LocaleManager;
-				function SuppressErrors(func, onError = (error => {})) {
+				function SuppressErrors(func, onError = (() => {})) {
 					const wrapped = function() {
 						try {
 							return func.apply(this, arguments);
@@ -1982,24 +1869,15 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					wrapped.toString = () => func.toString();
 					return wrapped;
 				}
-				function UserDetails_optionalChain(ops) {
-					let lastAccessLHS;
-					let value = ops[0];
-					let i = 1;
-					while (i < ops.length) {
-						const op = ops[i];
-						const fn = ops[i + 1];
-						i += 2;
-						if (("optionalAccess" === op || "optionalCall" === op) && null == value) return;
-						if ("access" === op || "optionalAccess" === op) {
-							lastAccessLHS = value;
-							value = fn(value);
-						} else if ("call" === op || "optionalCall" === op) {
-							value = fn(((...args) => value.call(lastAccessLHS, ...args)));
-							lastAccessLHS = void 0;
-						}
-					}
-					return value;
+				function UserDetails_defineProperty(obj, key, value) {
+					if (key in obj) Object.defineProperty(obj, key, {
+						value,
+						enumerable: true,
+						configurable: true,
+						writable: true
+					});
+					else obj[key] = value;
+					return obj;
 				}
 				const getClass = (props = [], items = props, exclude = [], selector = false) => {
 					const module = external_PluginApi_namespaceObject.WebpackModules.find((m => m && props.every((prop => void 0 !== m[prop])) && exclude.every((e => void 0 == m[e]))));
@@ -2007,17 +1885,14 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					return (selector ? "." : "") + items.map((item => module[item])).join(selector ? "." : " ");
 				};
 				class Plugin extends(external_BasePlugin_default()) {
-					constructor(...args2) {
-						super(...args2);
-						Plugin.prototype.__init.call(this);
-					}
-					__init() {
-						this.promises = {
+					constructor(...args) {
+						super(...args);
+						UserDetails_defineProperty(this, "promises", {
 							cancelled: false,
 							cancel() {
 								this.cancelled = true;
 							}
-						};
+						});
 					}
 					getSettingsPanel() {
 						return external_BdApi_React_default().createElement(SettingsPanel, null);
@@ -2061,12 +1936,12 @@ function buildPlugin([BasePlugin, PluginApi]) {
 							type: 3
 						});
 					}
-					createEmbedForUser(user, guild, channel) {
+					createEmbedForUser(user, guild) {
 						const member = stores_namespaceObject.Members.getMember(guild.id, user.id);
 						const largeUrl = user.getAvatarURL().split("?size")[0] + "?size=2048";
 						const activities = stores_namespaceObject.Activities.getActivities(user.id);
 						return {
-							color: UserDetails_optionalChain([member, "optionalAccess", _2 => _2.colorString]) ? external_PluginApi_namespaceObject.ColorConverter.hex2int(member.colorString) : void 0,
+							color: member?.colorString ? external_PluginApi_namespaceObject.ColorConverter.hex2int(member.colorString) : void 0,
 							author: {
 								name: user.tag,
 								icon_url: user.getAvatarURL(),
@@ -2109,7 +1984,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						}], returnValue) => {
 							if (this.promises.cancelled) return;
 							const tree = Utilities.findInReactTree(returnValue, SuppressErrors((e => e.className.indexOf("headerText") > -1)));
-							if (!Array.isArray(UserDetails_optionalChain([tree, "optionalAccess", _3 => _3.children])) || !user) return;
+							if (!Array.isArray(tree?.children) || !user) return;
 							const WrappedJoinedAt = this.joinedApi.task(user.id);
 							const WrappedCreatedAt = this.createdApi.task(user.id);
 							const WrappedLastMessage = this.lastMessageApi.task(user);
@@ -2131,7 +2006,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 							user
 						}], returnValue) => {
 							if (this.promises.cancelled) return;
-							if (!Array.isArray(UserDetails_optionalChain([returnValue, "optionalAccess", _4 => _4.props, "optionalAccess", _5 => _5.children]))) return returnValue;
+							if (!Array.isArray(returnValue?.props?.children)) return returnValue;
 							const Connections = this.connectionsApi.task(user);
 							returnValue.props.children.unshift(external_BdApi_React_default().createElement(ErrorBoundary, {
 								id: "UserPopoutBody",
@@ -2147,7 +2022,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						}], res) => {
 							if (this.promises.cancelled) return;
 							const tree = Utilities.findInReactTree(res, SuppressErrors((res => "DiscordTag" === res.type.displayName)));
-							if (!tree || UserDetails_optionalChain([tree, "access", _6 => _6.type, "optionalAccess", _7 => _7.__patched])) return;
+							if (!tree || tree.type?.__patched) return;
 							const original = tree.type;
 							tree.type = (...args) => {
 								const ret = original.apply(this, args);
@@ -2186,7 +2061,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						external_PluginApi_namespaceObject.Patcher.after(ActivityStatus, "default", ((_, [{
 							activities
 						}], res) => {
-							const element = UserDetails_optionalChain([res, "optionalAccess", _8 => _8.props, "optionalAccess", _9 => _9.children, "optionalAccess", _10 => _10[2]]);
+							const element = res?.props?.children?.[2];
 							if (!element) return;
 							Object.assign(element.props, {
 								type: activities.filter(ActivitiesFilter)[0].type
@@ -2195,7 +2070,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						MemberListItem.forceUpdateAll();
 					}
 					async patchUserActivityStatus() {
-						const RichActivity = external_PluginApi_namespaceObject.WebpackModules.getModule((m => "RichActivity" === UserDetails_optionalChain([m, "optionalAccess", _11 => _11.default, "optionalAccess", _12 => _12.displayName])));
+						const RichActivity = external_PluginApi_namespaceObject.WebpackModules.getModule((m => "RichActivity" === m?.default?.displayName));
 						external_PluginApi_namespaceObject.Patcher.after(RichActivity, "default", ((_, [props]) => {
 							const shouldShow = (0, flux_namespaceObject.useStateFromStores)([Settings], (() => Settings.get("activityIconState", 0)));
 							switch (shouldShow) {
@@ -2206,13 +2081,9 @@ function buildPlugin([BasePlugin, PluginApi]) {
 							}
 							switch (props.type) {
 								case constants_namespaceObject.ActivityTypes.PLAYING:
-									return external_BdApi_React_default().createElement(gamepad, {
-										...props
-									});
+									return external_BdApi_React_default().createElement(gamepad, props);
 								case constants_namespaceObject.ActivityTypes.LISTENING:
-									return external_BdApi_React_default().createElement(headphones, {
-										...props
-									});
+									return external_BdApi_React_default().createElement(headphones, props);
 							}
 						}));
 					}
@@ -2225,7 +2096,151 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					}
 				}
 			},
-			118: module => {
+			448: (module, __webpack_exports__, __webpack_require__) => {
+				__webpack_require__.d(__webpack_exports__, {
+					Z: () => __WEBPACK_DEFAULT_EXPORT__
+				});
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(645);
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
+				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
+					return i[1];
+				}));
+				___CSS_LOADER_EXPORT___.push([module.id, ".UserDetails-connections-header{font-weight:700;text-transform:uppercase;font-size:12px;margin-bottom:8px;color:var(--header-secondary)}.UserDetails-connections-connectionsBody div:not(.UserDetails-connections-connections,.UserDetails-connections-container){display:inline-flex;margin:5px}.UserDetails-connections-connectionsBody .UserDetails-connections-loading{fill:var(--interactive-muted);animation:UserDetails-connections-blink infinite 2s;width:30px;height:30px;margin:5px;margin-top:0;margin-left:0}.UserDetails-connections-connectionsBody .UserDetails-connections-connections{display:flex;flex-wrap:wrap;margin-bottom:8px}.UserDetails-connections-connectionsBody .UserDetails-connections-connections img{width:30px;height:30px}.UserDetails-connections-connectionsBody .UserDetails-connections-errorIcon{width:35px;height:35px;margin-top:-5px}.UserDetails-connections-connectionsBody .UserDetails-connections-errorIcon{fill:#ed4245 !important}@keyframes UserDetails-connections-blink{0%{opacity:.6}50%{opacity:.3}100%{opacity:.6}}", ""]);
+				___CSS_LOADER_EXPORT___.locals = {
+					header: "UserDetails-connections-header",
+					connectionsBody: "UserDetails-connections-connectionsBody",
+					connections: "UserDetails-connections-connections",
+					container: "UserDetails-connections-container",
+					loading: "UserDetails-connections-loading",
+					blink: "UserDetails-connections-blink",
+					errorIcon: "UserDetails-connections-errorIcon"
+				};
+				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
+				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
+			},
+			227: (module, __webpack_exports__, __webpack_require__) => {
+				__webpack_require__.d(__webpack_exports__, {
+					Z: () => __WEBPACK_DEFAULT_EXPORT__
+				});
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(645);
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
+				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
+					return i[1];
+				}));
+				___CSS_LOADER_EXPORT___.push([module.id, ".UserDetails-dates-container{display:flex;max-width:-webkit-fill-available}.UserDetails-dates-container.UserDetails-dates-text{flex-direction:column;margin-top:10px}.UserDetails-dates-container.UserDetails-dates-icons{flex-direction:row}.UserDetails-dates-container.UserDetails-dates-icons .UserDetails-dates-loading{animation:UserDetails-dates-blink infinite 2s ease-in-out}.UserDetails-dates-container svg{fill:#ddd;margin:5px;width:20px;height:20px}.UserDetails-dates-container.UserDetails-dates-text .UserDetails-dates-scrollableText{color:var(--text-normal);white-space:nowrap;position:relative;font-size:14px;width:-webkit-fill-available;text-align:left;line-height:18px}.UserDetails-dates-container.UserDetails-dates-text.UserDetails-dates-userProfile{padding-left:18px}.UserDetails-dates-container.UserDetails-dates-text.UserDetails-dates-userProfile .UserDetails-dates-scrollableText{text-align:left !important}.UserDetails-dates-container .UserDetails-dates-errorIcon{fill:#ed4245 !important}.UserDetails-dates-wrapper{display:block}@keyframes UserDetails-dates-blink{0%{opacity:.6}50%{opacity:.3}100%{opacity:.6}}", ""]);
+				___CSS_LOADER_EXPORT___.locals = {
+					container: "UserDetails-dates-container",
+					text: "UserDetails-dates-text",
+					icons: "UserDetails-dates-icons",
+					loading: "UserDetails-dates-loading",
+					blink: "UserDetails-dates-blink",
+					scrollableText: "UserDetails-dates-scrollableText",
+					userProfile: "UserDetails-dates-userProfile",
+					errorIcon: "UserDetails-dates-errorIcon",
+					wrapper: "UserDetails-dates-wrapper"
+				};
+				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
+				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
+			},
+			925: (module, __webpack_exports__, __webpack_require__) => {
+				__webpack_require__.d(__webpack_exports__, {
+					Z: () => __WEBPACK_DEFAULT_EXPORT__
+				});
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(645);
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
+				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
+					return i[1];
+				}));
+				___CSS_LOADER_EXPORT___.push([module.id, ".UserDetails-activity-icon{display:flex;float:right}.UserDetails-activity-container{display:flex}", ""]);
+				___CSS_LOADER_EXPORT___.locals = {
+					icon: "UserDetails-activity-icon",
+					container: "UserDetails-activity-container"
+				};
+				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
+				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
+			},
+			541: (module, __webpack_exports__, __webpack_require__) => {
+				__webpack_require__.d(__webpack_exports__, {
+					Z: () => __WEBPACK_DEFAULT_EXPORT__
+				});
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(645);
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
+				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
+					return i[1];
+				}));
+				___CSS_LOADER_EXPORT___.push([module.id, ".UserDetails-badge-connection{width:30px;height:30px;position:relative}.UserDetails-badge-connection.UserDetails-badge-verified{border-radius:50%;overflow:hidden}.UserDetails-badge-connection.UserDetails-badge-verified .UserDetails-badge-verifiedBadge{width:12px;height:12px;position:absolute;bottom:0;right:0px;background:var(--background-floating);border-radius:50%;overflow:hidden;padding:2px}", ""]);
+				___CSS_LOADER_EXPORT___.locals = {
+					connection: "UserDetails-badge-connection",
+					verified: "UserDetails-badge-verified",
+					verifiedBadge: "UserDetails-badge-verifiedBadge"
+				};
+				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
+				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
+			},
+			834: (module, __webpack_exports__, __webpack_require__) => {
+				__webpack_require__.d(__webpack_exports__, {
+					Z: () => __WEBPACK_DEFAULT_EXPORT__
+				});
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(645);
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
+				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
+					return i[1];
+				}));
+				___CSS_LOADER_EXPORT___.push([module.id, ".UserDetails-flowerstar-wrapper{position:relative;display:flex;align-items:center;justify-content:center}.UserDetails-flowerstar-wrapper .UserDetails-flowerstar-container{display:block}.UserDetails-flowerstar-wrapper .UserDetails-flowerstar-tick{position:absolute;top:50%;left:50%;transform:translate(-50%, -50%)}", ""]);
+				___CSS_LOADER_EXPORT___.locals = {
+					wrapper: "UserDetails-flowerstar-wrapper",
+					container: "UserDetails-flowerstar-container",
+					tick: "UserDetails-flowerstar-tick"
+				};
+				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
+				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
+			},
+			279: (module, __webpack_exports__, __webpack_require__) => {
+				__webpack_require__.d(__webpack_exports__, {
+					Z: () => __WEBPACK_DEFAULT_EXPORT__
+				});
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(645);
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
+				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
+					return i[1];
+				}));
+				___CSS_LOADER_EXPORT___.push([module.id, ".UserDetails-settings-settingsPanel .UserDetails-settings-formItem{margin-bottom:10px}.UserDetails-settings-settingsPanel .UserDetails-settings-icons{flex-wrap:wrap}.UserDetails-settings-settingsPanel .UserDetails-settings-icons .UserDetails-settings-settingsBadgeContainer{display:inline-flex;cursor:pointer}.UserDetails-settings-settingsPanel .UserDetails-settings-icons .UserDetails-settings-settingsBadgeContainer .UserDetails-settings-settingsBadgeIcon{width:40px;height:40px}.UserDetails-settings-settingsPanel .UserDetails-settings-icons .UserDetails-settings-settingsBadgeContainer .UserDetails-settings-settingsBadgeIcon.UserDetails-settings-disabled{opacity:.4}.UserDetails-settings-settingsPanel .UserDetails-settings-category{color:#ddd}.UserDetails-settings-settingsPanel .UserDetails-settings-category.UserDetails-settings-opened .UserDetails-settings-categoryContent{padding:10px;padding:10px}.UserDetails-settings-settingsPanel .UserDetails-settings-category.UserDetails-settings-opened .UserDetails-settings-categoryContent .UserDetails-settings-replacementVariable{user-select:text;margin-bottom:6px;padding-bottom:6px;border-bottom:thin solid var(--background-modifier-accent)}.UserDetails-settings-settingsPanel .UserDetails-settings-category.UserDetails-settings-opened .UserDetails-settings-categoryContent .UserDetails-settings-replacementVariable b{margin-right:3px}.UserDetails-settings-settingsPanel .UserDetails-settings-category .UserDetails-settings-categoryHeader{cursor:pointer;padding:10px;font-size:15px;background:var(--background-tertiary);font-weight:600;text-transform:uppercase;display:flex;align-items:center}.UserDetails-settings-settingsPanel .UserDetails-settings-category .UserDetails-settings-categoryHeader .UserDetails-settings-categoryCaret{margin-left:auto}.UserDetails-settings-settingsPanel .UserDetails-settings-pageIcon{color:var(--interactive-normal);fill:var(--interactive-normal)}", ""]);
+				___CSS_LOADER_EXPORT___.locals = {
+					settingsPanel: "UserDetails-settings-settingsPanel",
+					formItem: "UserDetails-settings-formItem",
+					icons: "UserDetails-settings-icons",
+					settingsBadgeContainer: "UserDetails-settings-settingsBadgeContainer",
+					settingsBadgeIcon: "UserDetails-settings-settingsBadgeIcon",
+					disabled: "UserDetails-settings-disabled",
+					category: "UserDetails-settings-category",
+					opened: "UserDetails-settings-opened",
+					categoryContent: "UserDetails-settings-categoryContent",
+					replacementVariable: "UserDetails-settings-replacementVariable",
+					categoryHeader: "UserDetails-settings-categoryHeader",
+					categoryCaret: "UserDetails-settings-categoryCaret",
+					pageIcon: "UserDetails-settings-pageIcon"
+				};
+				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
+				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
+			},
+			430: (module, __webpack_exports__, __webpack_require__) => {
+				__webpack_require__.d(__webpack_exports__, {
+					Z: () => __WEBPACK_DEFAULT_EXPORT__
+				});
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(645);
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
+				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
+					return i[1];
+				}));
+				___CSS_LOADER_EXPORT___.push([module.id, ".UserDetails-style-loadingText{color:var(--text-normal);text-align:center}.UserDetails-style-scrollableText{color:var(--text-normal);white-space:nowrap;position:relative;font-size:14px;width:-webkit-fill-available;text-align:center;line-height:18px}", ""]);
+				___CSS_LOADER_EXPORT___.locals = {
+					loadingText: "UserDetails-style-loadingText",
+					scrollableText: "UserDetails-style-scrollableText"
+				};
+				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
+				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
+			},
+			645: module => {
 				module.exports = function(cssWithMappingToString) {
 					var list = [];
 					list.toString = function toString() {
@@ -2324,7 +2339,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				});
 			};
 		})();
-		var __webpack_exports__ = __webpack_require__(195);
+		var __webpack_exports__ = __webpack_require__(737);
 		module.exports.LibraryPluginHack = __webpack_exports__;
 	})();
 	const PluginExports = module.exports.LibraryPluginHack;

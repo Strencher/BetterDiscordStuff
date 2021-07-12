@@ -182,7 +182,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					return ___createMemoize___(this, 'Status', () => BdApi.findModuleByProps('getStatus'))
 				},
 				get 'Users'() {
-					return ___createMemoize___(this, 'Users', () => BdApi.findModuleByProps('getUser'))
+					return ___createMemoize___(this, 'Users', () => BdApi.findModuleByProps('getUser', 'getCurrentUser'))
 				},
 				get 'SettingsStore'() {
 					return ___createMemoize___(this, 'SettingsStore', () => BdApi.findModuleByProps('afkTimeout', 'status'))
@@ -209,6 +209,9 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			'@discord/actions': {
 				get 'ProfileActions'() {
 					return ___createMemoize___(this, 'ProfileActions', () => BdApi.findModuleByProps('fetchProfile'))
+				},
+				get 'GuildActions'() {
+					return ___createMemoize___(this, 'GuildActions', () => BdApi.findModuleByProps('requestMembersById'))
 				}
 			},
 			get '@discord/i18n'() {
@@ -264,26 +267,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			}
 		};
 		var __webpack_modules__ = {
-			531: (module, __webpack_exports__, __webpack_require__) => {
-				__webpack_require__.d(__webpack_exports__, {
-					Z: () => __WEBPACK_DEFAULT_EXPORT__
-				});
-				var _bdbuilder_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(118);
-				var _bdbuilder_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_bdbuilder_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
-				var ___CSS_LOADER_EXPORT___ = _bdbuilder_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
-					return i[1];
-				}));
-				___CSS_LOADER_EXPORT___.push([module.id, ".InvisibleTyping-typingButton-invisibleTypingButton svg{color:var(--interactive-normal);overflow:visible}.InvisibleTyping-typingButton-invisibleTypingButton .InvisibleTyping-typingButton-disabledStrokeThrough{position:absolute;transform:translateX(-15px) translateY(530px) rotate(-45deg)}.InvisibleTyping-typingButton-invisibleTypingButton{margin-top:3px;background:transparent}.InvisibleTyping-typingButton-invisibleTypingButton:hover:not(.InvisibleTyping-typingButton-disabled) svg{color:var(--interactive-hover)}.InvisibleTyping-typingButton-invisibleTypingTooltip{display:inline-flex}", ""]);
-				___CSS_LOADER_EXPORT___.locals = {
-					invisibleTypingButton: "InvisibleTyping-typingButton-invisibleTypingButton",
-					disabledStrokeThrough: "InvisibleTyping-typingButton-disabledStrokeThrough",
-					disabled: "InvisibleTyping-typingButton-disabled",
-					invisibleTypingTooltip: "InvisibleTyping-typingButton-invisibleTypingTooltip"
-				};
-				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
-				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
-			},
-			451: (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+			623: (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 				__webpack_require__.r(__webpack_exports__);
 				__webpack_require__.d(__webpack_exports__, {
 					default: () => InvisibleTyping
@@ -292,14 +276,21 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				const external_BasePlugin_namespaceObject = BasePlugin;
 				var external_BasePlugin_default = __webpack_require__.n(external_BasePlugin_namespaceObject);
 				const package_namespaceObject = JSON.parse('{"um":{"u2":"InvisibleTyping"}}');
+				function _defineProperty(obj, key, value) {
+					if (key in obj) Object.defineProperty(obj, key, {
+						value,
+						enumerable: true,
+						configurable: true,
+						writable: true
+					});
+					else obj[key] = value;
+					return obj;
+				}
 				class Eventhandler {
-					__init() {
-						this.subsriptions = {};
-					}
 					constructor({
 						events = ["done", "cancel"]
 					} = {}) {
-						Eventhandler.prototype.__init.call(this);
+						_defineProperty(this, "subsriptions", {});
 						events.forEach((ev => this.subsriptions[ev] = []));
 					}
 					on(event, callback) {
@@ -345,27 +336,17 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						return (0, external_BdApi_React_.useReducer)((n => n + 1), 0)[1];
 					}
 				}
-				function _nullishCoalesce(lhs, rhsFn) {
-					if (null != lhs) return lhs;
-					else return rhsFn();
+				function settings_defineProperty(obj, key, value) {
+					if (key in obj) Object.defineProperty(obj, key, {
+						value,
+						enumerable: true,
+						configurable: true,
+						writable: true
+					});
+					else obj[key] = value;
+					return obj;
 				}
 				class Settings {
-					static __initStatic() {
-						this.updater = new Eventhandler;
-					}
-					static __initStatic2() {
-						this.settings = external_PluginApi_namespaceObject.PluginUtilities.loadSettings(package_namespaceObject.um.u2, {});
-					}
-					static __initStatic3() {
-						this.get = (key, defaultValue) => _nullishCoalesce(this.settings[key], (() => defaultValue));
-					}
-					static __initStatic4() {
-						this.set = (key, value) => {
-							this.settings[key] = value;
-							external_PluginApi_namespaceObject.PluginUtilities.saveSettings(package_namespaceObject.um.u2, this.settings);
-							this.updater.reply("update");
-						};
-					}
 					static removeFromArray(key, item, defaultValue = []) {
 						const setting = this.get(key, defaultValue);
 						while (setting.indexOf(item) > -1) setting.splice(setting.indexOf(item), 1);
@@ -392,28 +373,40 @@ function buildPlugin([BasePlugin, PluginApi]) {
 								this.updater.on("update", forceUpdate);
 								return () => this.updater.off("update", forceUpdate);
 							}), []);
-							return external_BdApi_React_default().createElement(Component, {
-								...props
-							});
+							return external_BdApi_React_default().createElement(Component, props);
 						};
 					}
 				}
-				Settings.__initStatic();
-				Settings.__initStatic2();
-				Settings.__initStatic3();
-				Settings.__initStatic4();
-				var typingButton = __webpack_require__(531);
+				settings_defineProperty(Settings, "updater", new Eventhandler);
+				settings_defineProperty(Settings, "settings", external_PluginApi_namespaceObject.PluginUtilities.loadSettings(package_namespaceObject.um.u2, {}));
+				settings_defineProperty(Settings, "get", ((key, defaultValue) => Settings.settings[key] ?? defaultValue));
+				settings_defineProperty(Settings, "set", ((key, value) => {
+					Settings.settings[key] = value;
+					external_PluginApi_namespaceObject.PluginUtilities.saveSettings(package_namespaceObject.um.u2, Settings.settings);
+					Settings.updater.reply("update");
+				}));
+				var typingButton = __webpack_require__(850);
 				var React = __webpack_require__(832);
+				function _extends() {
+					_extends = Object.assign || function(target) {
+						for (var i = 1; i < arguments.length; i++) {
+							var source = arguments[i];
+							for (var key in source)
+								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
+						}
+						return target;
+					};
+					return _extends.apply(this, arguments);
+				}
 				function Keyboard({
 					disabled,
 					...props
 				}) {
-					return React.createElement("svg", {
-						...props,
+					return React.createElement("svg", _extends({}, props, {
 						width: "25",
 						height: "25",
 						viewBox: "0 0 576 512"
-					}, React.createElement("path", {
+					}), React.createElement("path", {
 						fill: "currentColor",
 						d: "M528 448H48c-26.51 0-48-21.49-48-48V112c0-26.51 21.49-48 48-48h480c26.51 0 48 21.49 48 48v288c0 26.51-21.49 48-48 48zM128 180v-40c0-6.627-5.373-12-12-12H76c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12zm96 0v-40c0-6.627-5.373-12-12-12h-40c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12zm96 0v-40c0-6.627-5.373-12-12-12h-40c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12zm96 0v-40c0-6.627-5.373-12-12-12h-40c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12zm96 0v-40c0-6.627-5.373-12-12-12h-40c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12zm-336 96v-40c0-6.627-5.373-12-12-12h-40c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12zm96 0v-40c0-6.627-5.373-12-12-12h-40c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12zm96 0v-40c0-6.627-5.373-12-12-12h-40c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12zm96 0v-40c0-6.627-5.373-12-12-12h-40c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12zm-336 96v-40c0-6.627-5.373-12-12-12H76c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12zm288 0v-40c0-6.627-5.373-12-12-12H172c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h232c6.627 0 12-5.373 12-12zm96 0v-40c0-6.627-5.373-12-12-12h-40c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12z"
 					}), disabled ? React.createElement("rect", {
@@ -463,25 +456,6 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				const external_StyleLoader_namespaceObject = StyleLoader;
 				var external_StyleLoader_default = __webpack_require__.n(external_StyleLoader_namespaceObject);
 				var InvisibleTyping_React = __webpack_require__(832);
-				function _optionalChain(ops) {
-					let lastAccessLHS;
-					let value = ops[0];
-					let i = 1;
-					while (i < ops.length) {
-						const op = ops[i];
-						const fn = ops[i + 1];
-						i += 2;
-						if (("optionalAccess" === op || "optionalCall" === op) && null == value) return;
-						if ("access" === op || "optionalAccess" === op) {
-							lastAccessLHS = value;
-							value = fn(value);
-						} else if ("call" === op || "optionalCall" === op) {
-							value = fn(((...args) => value.call(lastAccessLHS, ...args)));
-							lastAccessLHS = void 0;
-						}
-					}
-					return value;
-				}
 				class InvisibleTyping extends(external_BasePlugin_default()) {
 					onStart() {
 						external_StyleLoader_default().inject();
@@ -489,13 +463,13 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						Utilities.suppressErrors(this.patchStartTyping.bind(this), "start typing patch")();
 					}
 					async patchTextAreaButtons() {
-						const ChannelTextAreaContainer = _optionalChain([external_PluginApi_namespaceObject.WebpackModules, "access", _2 => _2.find, "call", _3 => _3((m => "ChannelTextAreaContainer" === _optionalChain([m, "optionalAccess", _4 => _4.type, "optionalAccess", _5 => _5.render, "optionalAccess", _6 => _6.displayName]))), "optionalAccess", _7 => _7.type]);
+						const ChannelTextAreaContainer = external_PluginApi_namespaceObject.WebpackModules.find((m => "ChannelTextAreaContainer" === m?.type?.render?.displayName))?.type;
 						external_PluginApi_namespaceObject.Patcher.after(ChannelTextAreaContainer, "render", ((_, [{
 							channel,
 							textValue
 						}], returnValue) => {
-							const tree = Utilities.findInReactTree(returnValue, (e => _optionalChain([e, "optionalAccess", _8 => _8.className, "optionalAccess", _9 => _9.indexOf, "call", _10 => _10("buttons-")]) > -1));
-							if (!Array.isArray(_optionalChain([tree, "optionalAccess", _11 => _11.children]))) return returnValue;
+							const tree = Utilities.findInReactTree(returnValue, (e => e?.className?.indexOf("buttons-") > -1));
+							if (!Array.isArray(tree?.children)) return returnValue;
 							tree.children.unshift(InvisibleTyping_React.createElement(InvisibleTypingButton, {
 								channel,
 								textValue
@@ -514,7 +488,26 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					}
 				}
 			},
-			118: module => {
+			850: (module, __webpack_exports__, __webpack_require__) => {
+				__webpack_require__.d(__webpack_exports__, {
+					Z: () => __WEBPACK_DEFAULT_EXPORT__
+				});
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(645);
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
+				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
+					return i[1];
+				}));
+				___CSS_LOADER_EXPORT___.push([module.id, ".InvisibleTyping-typingButton-invisibleTypingButton svg{color:var(--interactive-normal);overflow:visible}.InvisibleTyping-typingButton-invisibleTypingButton .InvisibleTyping-typingButton-disabledStrokeThrough{position:absolute;transform:translateX(-15px) translateY(530px) rotate(-45deg)}.InvisibleTyping-typingButton-invisibleTypingButton{margin-top:3px;background:transparent}.InvisibleTyping-typingButton-invisibleTypingButton:hover:not(.InvisibleTyping-typingButton-disabled) svg{color:var(--interactive-hover)}.InvisibleTyping-typingButton-invisibleTypingTooltip{display:inline-flex}", ""]);
+				___CSS_LOADER_EXPORT___.locals = {
+					invisibleTypingButton: "InvisibleTyping-typingButton-invisibleTypingButton",
+					disabledStrokeThrough: "InvisibleTyping-typingButton-disabledStrokeThrough",
+					disabled: "InvisibleTyping-typingButton-disabled",
+					invisibleTypingTooltip: "InvisibleTyping-typingButton-invisibleTypingTooltip"
+				};
+				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
+				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
+			},
+			645: module => {
 				module.exports = function(cssWithMappingToString) {
 					var list = [];
 					list.toString = function toString() {
@@ -592,7 +585,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				});
 			};
 		})();
-		var __webpack_exports__ = __webpack_require__(451);
+		var __webpack_exports__ = __webpack_require__(623);
 		module.exports.LibraryPluginHack = __webpack_exports__;
 	})();
 	const PluginExports = module.exports.LibraryPluginHack;
