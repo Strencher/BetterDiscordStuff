@@ -8,7 +8,7 @@ const changedFilesIgnore = [
   "bdbuilder",
   "scripts"
 ];
-const releaseExtensions = [".md", ".plugin.js"];
+const releaseExtensions = [".md", ".plugin.js", "assets"];
 
 const argv = process.argv.slice(2);
 
