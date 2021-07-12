@@ -1,0 +1,33 @@
+$padding: 20px;
+
+.arrow {
+    position: absolute;
+    top: 0;
+    z-index: 99;
+    padding-top: $padding;
+    padding-bottom: $padding;
+
+    svg {
+        color: var(--interactive-normal);
+    }
+
+    &.left {
+        left: 0;
+    }
+
+    &.right {
+        right: 0;
+    }
+}
+
+.container {
+    display: flex;
+    position: relative;
+}
+
+.badge {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    z-index: 99;
+}

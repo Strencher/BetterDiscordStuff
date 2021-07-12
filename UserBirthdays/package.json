@@ -1,0 +1,29 @@
+{
+    "info": {
+        "name": "UserBirthdays",
+        "version": "1.0.0",
+        "authors": [
+            {
+                "name": "Strencher",
+                "discord_id": "415849376598982656",
+                "github_username": "Strencher",
+                "twitter_username": "Strencher3"
+            },
+            {
+				"name": "Metalloriff",
+				"discord_id": "264163473179672576",
+				"github_username": "metalloriff",
+				"twitter_username": "Metalloriff"
+			}
+        ],
+        "description": "Shows you the date of people's birthdate also helps you to not forgot about it. Original author is **Metalloriff#2891**"
+    },
+    "build": {
+        "zlibrary": true,
+        "copy": true,
+        "production": false,
+        "alias": {
+            "icons": "components/icons"
+        }
+    }
+}

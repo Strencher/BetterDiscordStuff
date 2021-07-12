@@ -1,0 +1,48 @@
+$size: 35px;
+
+.guild img, .guildAcronym {
+    pointer-events: none;
+}
+
+.guildAcronym {
+    display: flex;
+    background: var(--background-floating);
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
+    font-size: 12px;
+    width: $size;
+    height: $size;
+    color: #ddd;
+
+    &:hover {
+        border-radius: 20%;
+    }
+}
+
+.guild {
+    border-radius: 50%;
+    overflow: hidden;
+    transition: border-radius, opacity .3s;
+    margin: 5px;
+    width: $size;
+    height: $size;
+
+    &.disabled {
+        opacity: .3;
+    }
+}
+
+.guild img {
+    width: $size;
+    height: $size;
+}
+
+.guildsList {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.previewTitle {
+    padding-left: 10px;
+}

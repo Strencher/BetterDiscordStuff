@@ -41,7 +41,13 @@
         "release": {
             "public": true,
             "source": true,
-            "readme": true
+            "readme": true,
+            "previews": [
+                {
+                    "name": "Preview",
+                    "src": "./assets/preview.png"
+                }
+            ]
         }
     }
 }

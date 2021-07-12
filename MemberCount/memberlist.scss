@@ -1,0 +1,8 @@
+.wrapper {
+    display: flex;
+    flex-direction: column;
+
+    :global(.membersWrap-2h-GB4) {
+        max-height: 500px;
+    }
+}

@@ -1,0 +1,39 @@
+{
+    "info": {
+        "name": "UnreadCountBadges",
+        "version": "1.0.0",
+        "authors": [
+            {
+                "name": "Strencher",
+                "discord_id": "415849376598982656",
+                "github_username": "Strencher",
+                "twitter_username": "Strencher3"
+            },
+            {
+				"name": "Metalloriff",
+				"discord_id": "264163473179672576",
+				"github_username": "metalloriff",
+				"twitter_username": "Metalloriff"
+			}
+        ],
+        "description": "Adds unread badges to guilds, channels & more.",
+        "github": "https://github.com/Strencher/BetterDiscordStuff/tree/master/UnreadCountBadges",
+        "github_raw": "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/UnreadCountBadges/UnreadCountBadges.plugin.js"
+    },
+    "changelog": [],
+    "build": {
+        "zlibrary": true,
+        "copy": true,
+        "production": false,
+        "scssHash": false,
+        "alias": {
+            "icons": "components/icons",
+            "stores": "./modules/stores"
+        },
+        "release": {
+            "public": true,
+            "source": true,
+            "readme": true
+        }
+    }
+}

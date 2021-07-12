@@ -1,0 +1,41 @@
+{
+	"info": {
+		"name": "MemberCount",
+		"authors": [
+			{
+				"name": "Strencher",
+				"discord_id": "415849376598982656",
+				"github_username": "Strencher",
+				"twitter_username": "Strencher3"
+			},
+            {
+                "name": "Kyza",
+                "discord_id": "220584715265114113",
+                "github_username": "Kyza"
+            }
+		],
+		"version": "0.0.1",
+		"description": "Adds online-offline member count to the member list.",
+		"github": "https://github.com/Strencher/BetterDiscordStuff/blob/master/MemberCount/MemberCount.plugin.js",
+		"github_raw": "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/MemberCount/MemberCount.plugin.js"
+	},
+	"build": {
+		"copy": true,
+		"zlibrary": true,
+		"production": true,
+		"release": {
+			"source": true,
+			"readme": true,
+			"public": true
+		}
+	},
+	"changelog": [
+		{
+			"title": "Yeah",
+			"type": "added",
+			"items": [
+				"The plugin exist"
+			]
+		}
+	]
+}

@@ -1,0 +1,30 @@
+{
+	"info": {
+		"name": "ShowSessions",
+		"version": "1.0.0",
+		"description": "Shows your current sessions with a chat command '/sessions' or in the accounts panel.",
+		"authors": [
+			{
+				"name": "Strencher",
+				"discord_id": "415849376598982656",
+				"github_username": "Strencher"
+			}
+		],
+		"github": "https://github.com/Strencher/BetterDiscordStuff/tree/master/ShowSessions",
+		"github_raw": "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/ShowSessions/ShowSessions.plugin.js"
+	},
+	"build": {
+		"zlibrary": true,
+		"copy": true,
+		"production": false,
+		"scssHash": false,
+		"alias": {
+			"components": "components/index.js"
+		},
+		"release": {
+			"source": true,
+			"readme": true,
+			"contributors": null
+		}
+	}
+}
