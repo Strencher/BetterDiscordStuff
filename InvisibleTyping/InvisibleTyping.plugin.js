@@ -267,7 +267,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			}
 		};
 		var __webpack_modules__ = {
-			623: (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+			880: (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 				__webpack_require__.r(__webpack_exports__);
 				__webpack_require__.d(__webpack_exports__, {
 					default: () => InvisibleTyping
@@ -275,7 +275,12 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				const external_PluginApi_namespaceObject = PluginApi;
 				const external_BasePlugin_namespaceObject = BasePlugin;
 				var external_BasePlugin_default = __webpack_require__.n(external_BasePlugin_namespaceObject);
-				const package_namespaceObject = JSON.parse('{"um":{"u2":"InvisibleTyping"}}');
+				const utils_namespaceObject = Modules["@discord/utils"];
+				const components_namespaceObject = Modules["@discord/components"];
+				var external_BdApi_React_ = __webpack_require__(832);
+				var external_BdApi_React_default = __webpack_require__.n(external_BdApi_React_);
+				const flux_namespaceObject = Modules["@discord/flux"];
+				const modules_namespaceObject = Modules["@discord/modules"];
 				function _defineProperty(obj, key, value) {
 					if (key in obj) Object.defineProperty(obj, key, {
 						value,
@@ -286,107 +291,26 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					else obj[key] = value;
 					return obj;
 				}
-				class Eventhandler {
-					constructor({
-						events = ["done", "cancel"]
-					} = {}) {
-						_defineProperty(this, "subsriptions", {});
-						events.forEach((ev => this.subsriptions[ev] = []));
-					}
-					on(event, callback) {
-						if (!this.subsriptions[event]) this.subsriptions[event] = [];
-						this.subsriptions[event].push(callback);
-						return this;
-					}
-					off(event, callback) {
-						if (!this.subsriptions[event]) return false;
-						const index = this.subsriptions[event].indexOf(callback);
-						if (-1 === index) return false;
-						this.subsriptions[event].splice(index, 1);
-						return this;
-					}
-					reply(event, ...args) {
-						if (!this.subsriptions[event]) return false;
-						for (const callback of this.subsriptions[event]) try {
-							callback(...args);
-						} catch (error) {
-							external_PluginApi_namespaceObject.Logger.error(`Cannot run callback for event "${event}": "` + callback.toString().slice(0, 10) + '..."', "\n", error);
-						}
-					}
-					onDone(callback) {
-						return this.on("done", callback);
-					}
-					cancel() {
-						this.reply("cancel");
-					}
-					get emit() {
-						return this.reply;
+				class SettingsManager extends flux_namespaceObject.Store {
+					constructor(pluginName) {
+						super(modules_namespaceObject.Dispatcher, {});
+						_defineProperty(this, "settings", void 0);
+						_defineProperty(this, "pluginName", void 0);
+						_defineProperty(this, "get", ((key, defaultValue) => this.settings[key] ?? defaultValue));
+						_defineProperty(this, "set", ((key, value) => {
+							this.settings[key] = value;
+							external_PluginApi_namespaceObject.PluginUtilities.saveSettings(this.pluginName, this.settings);
+							this.emitChange();
+							return value;
+						}));
+						this.pluginName = pluginName;
+						this.settings = external_PluginApi_namespaceObject.PluginUtilities.loadSettings(pluginName, {});
 					}
 				}
-				var external_BdApi_React_ = __webpack_require__(832);
-				var external_BdApi_React_default = __webpack_require__.n(external_BdApi_React_);
-				class Utilities extends external_PluginApi_namespaceObject.Utilities {
-					static get joinClassNames() {
-						return this.className;
-					}
-					static capitalize(string) {
-						return string[0].toUpperCase() + string.slice(1);
-					}
-					static useForceUpdate() {
-						return (0, external_BdApi_React_.useReducer)((n => n + 1), 0)[1];
-					}
-				}
-				function settings_defineProperty(obj, key, value) {
-					if (key in obj) Object.defineProperty(obj, key, {
-						value,
-						enumerable: true,
-						configurable: true,
-						writable: true
-					});
-					else obj[key] = value;
-					return obj;
-				}
-				class Settings {
-					static removeFromArray(key, item, defaultValue = []) {
-						const setting = this.get(key, defaultValue);
-						while (setting.indexOf(item) > -1) setting.splice(setting.indexOf(item), 1);
-						this.set(key, setting);
-						return true;
-					}
-					static appendToArray(key, item, defaultValue = []) {
-						const setting = this.get(key, defaultValue);
-						setting.push(item);
-						this.set(key, setting);
-						return true;
-					}
-					static connectStore(Component) {
-						return props => {
-							if (!props.getSetting) Object.assign(props, {
-								getSetting: this.get,
-								updateSetting: this.set,
-								toggleSetting: id => {
-									this.set(!this.get(id));
-								}
-							});
-							const forceUpdate = Utilities.useForceUpdate();
-							(0, external_BdApi_React_.useEffect)((() => {
-								this.updater.on("update", forceUpdate);
-								return () => this.updater.off("update", forceUpdate);
-							}), []);
-							return external_BdApi_React_default().createElement(Component, props);
-						};
-					}
-				}
-				settings_defineProperty(Settings, "updater", new Eventhandler);
-				settings_defineProperty(Settings, "settings", external_PluginApi_namespaceObject.PluginUtilities.loadSettings(package_namespaceObject.um.u2, {}));
-				settings_defineProperty(Settings, "get", ((key, defaultValue) => Settings.settings[key] ?? defaultValue));
-				settings_defineProperty(Settings, "set", ((key, value) => {
-					Settings.settings[key] = value;
-					external_PluginApi_namespaceObject.PluginUtilities.saveSettings(package_namespaceObject.um.u2, Settings.settings);
-					Settings.updater.reply("update");
-				}));
+				const package_namespaceObject = JSON.parse('{"um":{"u2":"InvisibleTyping"}}');
+				const Settings = new SettingsManager(package_namespaceObject.um.u2);
+				const settings = Settings;
 				var typingButton = __webpack_require__(850);
-				var React = __webpack_require__(832);
 				function _extends() {
 					_extends = Object.assign || function(target) {
 						for (var i = 1; i < arguments.length; i++) {
@@ -402,14 +326,14 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					disabled,
 					...props
 				}) {
-					return React.createElement("svg", _extends({}, props, {
+					return external_BdApi_React_default().createElement("svg", _extends({}, props, {
 						width: "25",
 						height: "25",
 						viewBox: "0 0 576 512"
-					}), React.createElement("path", {
+					}), external_BdApi_React_default().createElement("path", {
 						fill: "currentColor",
 						d: "M528 448H48c-26.51 0-48-21.49-48-48V112c0-26.51 21.49-48 48-48h480c26.51 0 48 21.49 48 48v288c0 26.51-21.49 48-48 48zM128 180v-40c0-6.627-5.373-12-12-12H76c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12zm96 0v-40c0-6.627-5.373-12-12-12h-40c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12zm96 0v-40c0-6.627-5.373-12-12-12h-40c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12zm96 0v-40c0-6.627-5.373-12-12-12h-40c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12zm96 0v-40c0-6.627-5.373-12-12-12h-40c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12zm-336 96v-40c0-6.627-5.373-12-12-12h-40c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12zm96 0v-40c0-6.627-5.373-12-12-12h-40c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12zm96 0v-40c0-6.627-5.373-12-12-12h-40c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12zm96 0v-40c0-6.627-5.373-12-12-12h-40c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12zm-336 96v-40c0-6.627-5.373-12-12-12H76c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12zm288 0v-40c0-6.627-5.373-12-12-12H172c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h232c6.627 0 12-5.373 12-12zm96 0v-40c0-6.627-5.373-12-12-12h-40c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12z"
-					}), disabled ? React.createElement("rect", {
+					}), disabled ? external_BdApi_React_default().createElement("rect", {
 						className: typingButton.Z.disabledStrokeThrough,
 						x: "10",
 						y: "10",
@@ -418,49 +342,138 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						fill: "#f04747"
 					}) : null);
 				}
-				var typingbutton_React = __webpack_require__(832);
+				const contextmenu_namespaceObject = Modules["@discord/contextmenu"];
 				const TypingModule = external_PluginApi_namespaceObject.WebpackModules.getByProps("startTyping");
-				const {
-					TooltipContainer: Tooltip
-				} = external_PluginApi_namespaceObject.WebpackModules.getByProps("TooltipContainer");
+				const removeItem = function(array, item) {
+					while (array.includes(item)) array.splice(array.indexOf(item), 1);
+					return array;
+				};
+				function InvisibleTypingContextMenu({
+					channelId
+				}) {
+					const enabled = (0, flux_namespaceObject.useStateFromStores)([settings], (() => settings.get("autoEnable", true)));
+					return external_BdApi_React_default().createElement(contextmenu_namespaceObject.Menu, {
+						navId: "invisible-typing-context-menu",
+						onClose: contextmenu_namespaceObject.closeContextMenu
+					}, external_BdApi_React_default().createElement(contextmenu_namespaceObject.MenuItem, {
+						id: "globally-disable-or-enable-typing",
+						label: enabled ? "Disable Globally" : "Enable Globally",
+						action: () => {
+							settings.set("autoEnable", !enabled);
+						}
+					}), external_BdApi_React_default().createElement(contextmenu_namespaceObject.MenuItem, {
+						color: "colorDanger",
+						label: "Reset Config",
+						disabled: !settings.get("exclude", []).length,
+						id: "reset-config",
+						action: () => {
+							settings.set("exclude", []);
+							external_PluginApi_namespaceObject.Toasts.success("Successfully reset config for all channels.");
+						}
+					}));
+				}
 				function InvisibleTypingButton({
 					channel,
 					textValue
 				}) {
-					const [enabled, setEnabled] = (0, external_BdApi_React_.useState)(Settings.get("exclude", []).indexOf(channel.id) > -1);
+					const enabled = (0, flux_namespaceObject.useStateFromStores)([settings], (() => {
+						if (settings.get("exclude", []).includes(channel.id)) return true;
+						if (settings.get("autoEnable", true)) return true;
+						return false;
+					}));
 					const handleClick = (0, external_BdApi_React_.useCallback)((() => {
+						const excludeList = [...settings.get("exclude")];
 						if (enabled) {
-							Settings.removeFromArray("exclude", channel.id);
+							removeItem(excludeList, channel.id);
 							TypingModule.stopTyping(channel.id);
-							setEnabled(false);
 						} else {
-							Settings.appendToArray("exclude", channel.id);
+							excludeList.push(channel.id);
 							if (textValue) TypingModule.startTyping(channel.id);
-							setEnabled(true);
 						}
+						settings.set("exclude", excludeList);
 					}), [enabled]);
-					return typingbutton_React.createElement(Tooltip, {
+					const handleContextMenu = (0, external_BdApi_React_.useCallback)((event => {
+						(0, contextmenu_namespaceObject.openContextMenu)(event, (() => external_BdApi_React_default().createElement(InvisibleTypingContextMenu, {
+							channelId: channel.id
+						})));
+					}), [enabled]);
+					return external_BdApi_React_default().createElement(components_namespaceObject.TooltipContainer, {
 						text: enabled ? "Typing Enabled" : "Typing Disabled",
 						position: "top",
 						className: typingButton.Z.invisibleTypingTooltip
-					}, typingbutton_React.createElement("button", {
-						className: Utilities.joinClassNames(typingButton.Z.invisibleTypingButton, {
+					}, external_BdApi_React_default().createElement("button", {
+						className: (0, utils_namespaceObject.joinClassNames)(typingButton.Z.invisibleTypingButton, {
 							enabled,
 							disabled: !enabled
 						}),
-						onClick: handleClick
-					}, typingbutton_React.createElement(Keyboard, {
+						onClick: handleClick,
+						onContextMenu: handleContextMenu
+					}, external_BdApi_React_default().createElement(Keyboard, {
 						disabled: !enabled
 					})));
 				}
 				const external_StyleLoader_namespaceObject = StyleLoader;
 				var external_StyleLoader_default = __webpack_require__.n(external_StyleLoader_namespaceObject);
+				var React = __webpack_require__(832);
+				function createUpdateWrapper_extends() {
+					createUpdateWrapper_extends = Object.assign || function(target) {
+						for (var i = 1; i < arguments.length; i++) {
+							var source = arguments[i];
+							for (var key in source)
+								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
+						}
+						return target;
+					};
+					return createUpdateWrapper_extends.apply(this, arguments);
+				}
+				const createUpdateWrapper = (Component, valueProp = "value", changeProp = "onChange", valueIndex = 0) => props => {
+					const [value, setValue] = React.useState(props[valueProp]);
+					return React.createElement(Component, createUpdateWrapper_extends({}, props, {
+						[valueProp]: value,
+						[changeProp]: (...args) => {
+							const value = args[valueIndex];
+							if ("function" === typeof props[changeProp]) props[changeProp](value);
+							setValue(value);
+						}
+					}));
+				};
+				const hooks_createUpdateWrapper = createUpdateWrapper;
+				var components_settings = __webpack_require__(518);
+				const SwitchItem = hooks_createUpdateWrapper(external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("SwitchItem"));
+				function SettingsPanel() {
+					const disabledChannels = (0, flux_namespaceObject.useStateFromStores)([settings], (() => settings.get("exclude", [])));
+					return external_BdApi_React_default().createElement(external_BdApi_React_default().Fragment, null, external_BdApi_React_default().createElement(SwitchItem, {
+						note: "Automatically enables the typing indicator for each channel that isn't manually disabled.",
+						value: settings.get("autoEnable", true),
+						onChange: value => settings.set("autoEnable", value)
+					}, "Automatically enable"), external_BdApi_React_default().createElement(components_namespaceObject.Flex, {
+						justify: components_namespaceObject.Flex.Justify.END,
+						direction: components_namespaceObject.Flex.Direction.VERTICAL
+					}, external_BdApi_React_default().createElement("p", {
+						className: components_settings.Z.panel
+					}, "Current disabled channels: ", disabledChannels.length), external_BdApi_React_default().createElement(components_namespaceObject.Button, {
+						look: components_namespaceObject.Button.Looks.OUTLINED,
+						color: components_namespaceObject.Button.Colors.RED,
+						disabled: !Boolean(disabledChannels.length),
+						size: components_namespaceObject.Button.Sizes.SMALL,
+						onClick: () => {
+							settings.set("exclude", []);
+						}
+					}, "Reset")));
+				}
 				var InvisibleTyping_React = __webpack_require__(832);
 				class InvisibleTyping extends(external_BasePlugin_default()) {
 					onStart() {
 						external_StyleLoader_default().inject();
-						Utilities.suppressErrors(this.patchTextAreaButtons.bind(this), "textarea buttons patch")();
-						Utilities.suppressErrors(this.patchStartTyping.bind(this), "start typing patch")();
+						external_PluginApi_namespaceObject.Utilities.suppressErrors((() => {
+							this.patchTextAreaButtons();
+						}), "textarea buttons patch")();
+						external_PluginApi_namespaceObject.Utilities.suppressErrors((() => {
+							this.patchStartTyping();
+						}), "start typing patch")();
+					}
+					getSettingsPanel() {
+						return InvisibleTyping_React.createElement(SettingsPanel, null);
 					}
 					async patchTextAreaButtons() {
 						const ChannelTextAreaContainer = external_PluginApi_namespaceObject.WebpackModules.find((m => "ChannelTextAreaContainer" === m?.type?.render?.displayName))?.type;
@@ -468,8 +481,8 @@ function buildPlugin([BasePlugin, PluginApi]) {
 							channel,
 							textValue
 						}], returnValue) => {
-							const tree = Utilities.findInReactTree(returnValue, (e => e?.className?.indexOf("buttons-") > -1));
-							if (!Array.isArray(tree?.children)) return returnValue;
+							const tree = external_PluginApi_namespaceObject.Utilities.findInReactTree(returnValue, (e => e?.className?.includes("buttons-")));
+							if (!Array.isArray(tree?.children) || tree.children.some((child => child?.type === InvisibleTyping))) return returnValue;
 							tree.children.unshift(InvisibleTyping_React.createElement(InvisibleTypingButton, {
 								channel,
 								textValue
@@ -479,7 +492,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					async patchStartTyping() {
 						const TypingModule = external_PluginApi_namespaceObject.WebpackModules.getByProps("startTyping");
 						external_PluginApi_namespaceObject.Patcher.instead(TypingModule, "startTyping", ((_, [channelId], originalMethod) => {
-							if (~Settings.get("exclude", []).indexOf(channelId) || Settings.get("autoEnable", false)) originalMethod(channelId);
+							if (settings.get("exclude", []).includes(channelId) || settings.get("autoEnable", true)) originalMethod(channelId);
 						}));
 					}
 					onStop() {
@@ -487,6 +500,22 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						external_StyleLoader_default().remove();
 					}
 				}
+			},
+			518: (module, __webpack_exports__, __webpack_require__) => {
+				__webpack_require__.d(__webpack_exports__, {
+					Z: () => __WEBPACK_DEFAULT_EXPORT__
+				});
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(645);
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
+				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
+					return i[1];
+				}));
+				___CSS_LOADER_EXPORT___.push([module.id, ".InvisibleTyping-settings-panel{color:#ddd}", ""]);
+				___CSS_LOADER_EXPORT___.locals = {
+					panel: "InvisibleTyping-settings-panel"
+				};
+				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
+				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
 			},
 			850: (module, __webpack_exports__, __webpack_require__) => {
 				__webpack_require__.d(__webpack_exports__, {
@@ -585,7 +614,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				});
 			};
 		})();
-		var __webpack_exports__ = __webpack_require__(623);
+		var __webpack_exports__ = __webpack_require__(880);
 		module.exports.LibraryPluginHack = __webpack_exports__;
 	})();
 	const PluginExports = module.exports.LibraryPluginHack;
