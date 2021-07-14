@@ -1,4 +1,5 @@
 import styles from "../typingButton.scss";
+import React from "react";
 
 export default function Keyboard({disabled, ...props}) {
     return (
@@ -10,4 +11,4 @@ export default function Keyboard({disabled, ...props}) {
             }
         </svg>
     );
-}
+};
