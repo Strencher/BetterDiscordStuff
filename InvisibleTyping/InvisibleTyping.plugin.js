@@ -1,7 +1,7 @@
 /**
  * @name InvisibleTyping
  * @author Strencher
- * @version 1.0.1
+ * @version 1.0.2
  * @description Enhanced version of silent typing.
  * @source https://github.com/Strencher/BetterDiscordStuff/blob/master/InvisibleTyping/InvisibleTyping.plugin.js
  * @updateUrl https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/InvisibleTyping/InvisibleTyping.plugin.js
@@ -38,7 +38,7 @@ const config = {
 			"github_username": "Strencher",
 			"twitter_username": "Strencher3"
 		}],
-		"version": "1.0.1",
+		"version": "1.0.2",
 		"description": "Enhanced version of silent typing.",
 		"github": "https://github.com/Strencher/BetterDiscordStuff/blob/master/InvisibleTyping/InvisibleTyping.plugin.js",
 		"github_raw": "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/InvisibleTyping/InvisibleTyping.plugin.js"
@@ -54,13 +54,21 @@ const config = {
 		}
 	},
 	"changelog": [{
-		"type": "added",
-		"title": "Added",
-		"items": [
-			"Added settings for automatically enable/disable",
-			"Added a smol context menu on the button."
-		]
-	}]
+			"type": "fixed",
+			"title": "Fixed",
+			"items": [
+				"Fixed disabling button in global mode."
+			]
+		},
+		{
+			"type": "added",
+			"title": "Added",
+			"items": [
+				"Added settings for automatically enable/disable",
+				"Added a smol context menu on the button."
+			]
+		}
+	]
 };
 function buildPlugin([BasePlugin, PluginApi]) {
 	const module = {
@@ -377,14 +385,10 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					channel,
 					textValue
 				}) {
-					const enabled = (0, flux_namespaceObject.useStateFromStores)([settings], (() => {
-						if (settings.get("exclude", []).includes(channel.id)) return true;
-						if (settings.get("autoEnable", true)) return true;
-						return false;
-					}));
+					const enabled = (0, flux_namespaceObject.useStateFromStores)([settings], InvisibleTypingButton.getState.bind(this, channel.id));
 					const handleClick = (0, external_BdApi_React_.useCallback)((() => {
 						const excludeList = [...settings.get("exclude")];
-						if (enabled) {
+						if (excludeList.includes(channel.id)) {
 							removeItem(excludeList, channel.id);
 							TypingModule.stopTyping(channel.id);
 						} else {
@@ -413,6 +417,13 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						disabled: !enabled
 					})));
 				}
+				InvisibleTypingButton.getState = function(channelId) {
+					const isGlobal = settings.get("autoEnable", true);
+					const isExcluded = settings.get("exclude", []).includes(channelId);
+					if (isGlobal && isExcluded) return false;
+					if (isExcluded && !isGlobal) return true;
+					return isGlobal;
+				};
 				const external_StyleLoader_namespaceObject = StyleLoader;
 				var external_StyleLoader_default = __webpack_require__.n(external_StyleLoader_namespaceObject);
 				var React = __webpack_require__(832);
@@ -493,7 +504,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					async patchStartTyping() {
 						const TypingModule = external_PluginApi_namespaceObject.WebpackModules.getByProps("startTyping");
 						external_PluginApi_namespaceObject.Patcher.instead(TypingModule, "startTyping", ((_, [channelId], originalMethod) => {
-							if (settings.get("exclude", []).includes(channelId) || settings.get("autoEnable", true)) originalMethod(channelId);
+							if (InvisibleTypingButton.getState(channelId)) originalMethod(channelId);
 						}));
 					}
 					onStop() {
