@@ -1,7 +1,7 @@
 /**
  * @name InvisibleTyping
  * @author Strencher
- * @version 0.0.1
+ * @version 1.0.1
  * @description Enhanced version of silent typing.
  * @source https://github.com/Strencher/BetterDiscordStuff/blob/master/InvisibleTyping/InvisibleTyping.plugin.js
  * @updateUrl https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/InvisibleTyping/InvisibleTyping.plugin.js
@@ -38,7 +38,7 @@ const config = {
 			"github_username": "Strencher",
 			"twitter_username": "Strencher3"
 		}],
-		"version": "0.0.1",
+		"version": "1.0.1",
 		"description": "Enhanced version of silent typing.",
 		"github": "https://github.com/Strencher/BetterDiscordStuff/blob/master/InvisibleTyping/InvisibleTyping.plugin.js",
 		"github_raw": "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/InvisibleTyping/InvisibleTyping.plugin.js"
@@ -54,10 +54,11 @@ const config = {
 		}
 	},
 	"changelog": [{
-		"title": "Yeah",
 		"type": "added",
+		"title": "Added",
 		"items": [
-			"The plugin exist"
+			"Added settings for automatically enable/disable",
+			"Added a smol context menu on the button."
 		]
 	}]
 };
