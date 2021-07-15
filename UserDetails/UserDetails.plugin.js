@@ -1,6 +1,6 @@
 /**
  * @name UserDetails
- * @version 1.4.3
+ * @version 1.4.4
  * @author Strencher
  * @description Shows you a lot information about users in popouts.
  * @source https://github.com/Strencher/BetterDiscordStuff/UserDetails
@@ -32,7 +32,7 @@
 const config = {
 	"info": {
 		"name": "UserDetails",
-		"version": "1.4.3",
+		"version": "1.4.4",
 		"authors": [{
 			"name": "Strencher",
 			"discord_id": "415849376598982656",
@@ -44,22 +44,12 @@ const config = {
 		"github_raw": "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/UserDetails/UserDetails.plugin.js"
 	},
 	"changelog": [{
-			"title": "Fixed - v1.4.3",
-			"type": "fixed",
-			"items": [
-				"I'm sorry that it took so long to fix the plugin. :c Finally got some time and motivation to fix all the bugs.",
-				"If there's still something not working, let me know!"
-			]
-		},
-		{
-			"title": "Added - v1.4.3",
-			"type": "added",
-			"items": [
-				"I also added translations for German, Turkey & Dutch.",
-				"Become a translator on my server and your translation will be added within the next version!"
-			]
-		}
-	],
+		"title": "Fixed - v1.4.4",
+		"type": "fixed",
+		"items": [
+			"Fixed the crash related to the latest discord update."
+		]
+	}],
 	"build": {
 		"zlibrary": true,
 		"copy": true,
@@ -282,7 +272,151 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			}
 		};
 		var __webpack_modules__ = {
-			737: (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+			597: (module, __webpack_exports__, __webpack_require__) => {
+				__webpack_require__.d(__webpack_exports__, {
+					Z: () => __WEBPACK_DEFAULT_EXPORT__
+				});
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(645);
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
+				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
+					return i[1];
+				}));
+				___CSS_LOADER_EXPORT___.push([module.id, ".UserDetails-connections-header{font-weight:700;text-transform:uppercase;font-size:12px;margin-bottom:8px;color:var(--header-secondary)}.UserDetails-connections-connectionsBody div:not(.UserDetails-connections-connections,.UserDetails-connections-container){display:inline-flex;margin:5px}.UserDetails-connections-connectionsBody .UserDetails-connections-loading{fill:var(--interactive-muted);animation:UserDetails-connections-blink infinite 2s;width:30px;height:30px;margin:5px;margin-top:0;margin-left:0}.UserDetails-connections-connectionsBody .UserDetails-connections-connections{display:flex;flex-wrap:wrap;margin-bottom:8px}.UserDetails-connections-connectionsBody .UserDetails-connections-connections img{width:30px;height:30px}.UserDetails-connections-connectionsBody .UserDetails-connections-errorIcon{width:35px;height:35px;margin-top:-5px}.UserDetails-connections-connectionsBody .UserDetails-connections-errorIcon{fill:#ed4245 !important}@keyframes UserDetails-connections-blink{0%{opacity:.6}50%{opacity:.3}100%{opacity:.6}}", ""]);
+				___CSS_LOADER_EXPORT___.locals = {
+					header: "UserDetails-connections-header",
+					connectionsBody: "UserDetails-connections-connectionsBody",
+					connections: "UserDetails-connections-connections",
+					container: "UserDetails-connections-container",
+					loading: "UserDetails-connections-loading",
+					blink: "UserDetails-connections-blink",
+					errorIcon: "UserDetails-connections-errorIcon"
+				};
+				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
+				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
+			},
+			242: (module, __webpack_exports__, __webpack_require__) => {
+				__webpack_require__.d(__webpack_exports__, {
+					Z: () => __WEBPACK_DEFAULT_EXPORT__
+				});
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(645);
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
+				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
+					return i[1];
+				}));
+				___CSS_LOADER_EXPORT___.push([module.id, ".UserDetails-dates-container{display:flex;max-width:-webkit-fill-available}.UserDetails-dates-container.UserDetails-dates-text{flex-direction:column;margin-top:10px}.UserDetails-dates-container.UserDetails-dates-icons{flex-direction:row}.UserDetails-dates-container.UserDetails-dates-icons .UserDetails-dates-loading{animation:UserDetails-dates-blink infinite 2s ease-in-out}.UserDetails-dates-container svg{fill:#ddd;margin:5px;width:20px;height:20px}.UserDetails-dates-container.UserDetails-dates-text .UserDetails-dates-scrollableText{color:var(--text-normal);white-space:nowrap;position:relative;font-size:14px;width:-webkit-fill-available;text-align:left;line-height:18px}.UserDetails-dates-container.UserDetails-dates-text.UserDetails-dates-userProfile{padding-left:18px}.UserDetails-dates-container.UserDetails-dates-text.UserDetails-dates-userProfile .UserDetails-dates-scrollableText{text-align:left !important}.UserDetails-dates-container .UserDetails-dates-errorIcon{fill:#ed4245 !important}.UserDetails-dates-wrapper{display:block}@keyframes UserDetails-dates-blink{0%{opacity:.6}50%{opacity:.3}100%{opacity:.6}}", ""]);
+				___CSS_LOADER_EXPORT___.locals = {
+					container: "UserDetails-dates-container",
+					text: "UserDetails-dates-text",
+					icons: "UserDetails-dates-icons",
+					loading: "UserDetails-dates-loading",
+					blink: "UserDetails-dates-blink",
+					scrollableText: "UserDetails-dates-scrollableText",
+					userProfile: "UserDetails-dates-userProfile",
+					errorIcon: "UserDetails-dates-errorIcon",
+					wrapper: "UserDetails-dates-wrapper"
+				};
+				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
+				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
+			},
+			755: (module, __webpack_exports__, __webpack_require__) => {
+				__webpack_require__.d(__webpack_exports__, {
+					Z: () => __WEBPACK_DEFAULT_EXPORT__
+				});
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(645);
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
+				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
+					return i[1];
+				}));
+				___CSS_LOADER_EXPORT___.push([module.id, ".UserDetails-activity-icon{display:flex;float:right}.UserDetails-activity-container{display:flex}", ""]);
+				___CSS_LOADER_EXPORT___.locals = {
+					icon: "UserDetails-activity-icon",
+					container: "UserDetails-activity-container"
+				};
+				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
+				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
+			},
+			173: (module, __webpack_exports__, __webpack_require__) => {
+				__webpack_require__.d(__webpack_exports__, {
+					Z: () => __WEBPACK_DEFAULT_EXPORT__
+				});
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(645);
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
+				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
+					return i[1];
+				}));
+				___CSS_LOADER_EXPORT___.push([module.id, ".UserDetails-badge-connection{width:30px;height:30px;position:relative}.UserDetails-badge-connection.UserDetails-badge-verified{border-radius:50%;overflow:hidden}.UserDetails-badge-connection.UserDetails-badge-verified .UserDetails-badge-verifiedBadge{width:12px;height:12px;position:absolute;bottom:0;right:0px;background:var(--background-floating);border-radius:50%;overflow:hidden;padding:2px}", ""]);
+				___CSS_LOADER_EXPORT___.locals = {
+					connection: "UserDetails-badge-connection",
+					verified: "UserDetails-badge-verified",
+					verifiedBadge: "UserDetails-badge-verifiedBadge"
+				};
+				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
+				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
+			},
+			564: (module, __webpack_exports__, __webpack_require__) => {
+				__webpack_require__.d(__webpack_exports__, {
+					Z: () => __WEBPACK_DEFAULT_EXPORT__
+				});
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(645);
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
+				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
+					return i[1];
+				}));
+				___CSS_LOADER_EXPORT___.push([module.id, ".UserDetails-flowerstar-wrapper{position:relative;display:flex;align-items:center;justify-content:center}.UserDetails-flowerstar-wrapper .UserDetails-flowerstar-container{display:block}.UserDetails-flowerstar-wrapper .UserDetails-flowerstar-tick{position:absolute;top:50%;left:50%;transform:translate(-50%, -50%)}", ""]);
+				___CSS_LOADER_EXPORT___.locals = {
+					wrapper: "UserDetails-flowerstar-wrapper",
+					container: "UserDetails-flowerstar-container",
+					tick: "UserDetails-flowerstar-tick"
+				};
+				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
+				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
+			},
+			128: (module, __webpack_exports__, __webpack_require__) => {
+				__webpack_require__.d(__webpack_exports__, {
+					Z: () => __WEBPACK_DEFAULT_EXPORT__
+				});
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(645);
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
+				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
+					return i[1];
+				}));
+				___CSS_LOADER_EXPORT___.push([module.id, ".UserDetails-settings-settingsPanel .UserDetails-settings-formItem{margin-bottom:10px}.UserDetails-settings-settingsPanel .UserDetails-settings-icons{flex-wrap:wrap}.UserDetails-settings-settingsPanel .UserDetails-settings-icons .UserDetails-settings-settingsBadgeContainer{display:inline-flex;cursor:pointer}.UserDetails-settings-settingsPanel .UserDetails-settings-icons .UserDetails-settings-settingsBadgeContainer .UserDetails-settings-settingsBadgeIcon{width:40px;height:40px}.UserDetails-settings-settingsPanel .UserDetails-settings-icons .UserDetails-settings-settingsBadgeContainer .UserDetails-settings-settingsBadgeIcon.UserDetails-settings-disabled{opacity:.4}.UserDetails-settings-settingsPanel .UserDetails-settings-category{color:#ddd}.UserDetails-settings-settingsPanel .UserDetails-settings-category.UserDetails-settings-opened .UserDetails-settings-categoryContent{padding:10px;padding:10px}.UserDetails-settings-settingsPanel .UserDetails-settings-category.UserDetails-settings-opened .UserDetails-settings-categoryContent .UserDetails-settings-replacementVariable{user-select:text;margin-bottom:6px;padding-bottom:6px;border-bottom:thin solid var(--background-modifier-accent)}.UserDetails-settings-settingsPanel .UserDetails-settings-category.UserDetails-settings-opened .UserDetails-settings-categoryContent .UserDetails-settings-replacementVariable b{margin-right:3px}.UserDetails-settings-settingsPanel .UserDetails-settings-category .UserDetails-settings-categoryHeader{cursor:pointer;padding:10px;font-size:15px;background:var(--background-tertiary);font-weight:600;text-transform:uppercase;display:flex;align-items:center}.UserDetails-settings-settingsPanel .UserDetails-settings-category .UserDetails-settings-categoryHeader .UserDetails-settings-categoryCaret{margin-left:auto}.UserDetails-settings-settingsPanel .UserDetails-settings-pageIcon{color:var(--interactive-normal);fill:var(--interactive-normal)}", ""]);
+				___CSS_LOADER_EXPORT___.locals = {
+					settingsPanel: "UserDetails-settings-settingsPanel",
+					formItem: "UserDetails-settings-formItem",
+					icons: "UserDetails-settings-icons",
+					settingsBadgeContainer: "UserDetails-settings-settingsBadgeContainer",
+					settingsBadgeIcon: "UserDetails-settings-settingsBadgeIcon",
+					disabled: "UserDetails-settings-disabled",
+					category: "UserDetails-settings-category",
+					opened: "UserDetails-settings-opened",
+					categoryContent: "UserDetails-settings-categoryContent",
+					replacementVariable: "UserDetails-settings-replacementVariable",
+					categoryHeader: "UserDetails-settings-categoryHeader",
+					categoryCaret: "UserDetails-settings-categoryCaret",
+					pageIcon: "UserDetails-settings-pageIcon"
+				};
+				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
+				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
+			},
+			562: (module, __webpack_exports__, __webpack_require__) => {
+				__webpack_require__.d(__webpack_exports__, {
+					Z: () => __WEBPACK_DEFAULT_EXPORT__
+				});
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(645);
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
+				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
+					return i[1];
+				}));
+				___CSS_LOADER_EXPORT___.push([module.id, ".UserDetails-style-loadingText{color:var(--text-normal);text-align:center}.UserDetails-style-scrollableText{color:var(--text-normal);white-space:nowrap;position:relative;font-size:14px;width:-webkit-fill-available;text-align:center;line-height:18px}", ""]);
+				___CSS_LOADER_EXPORT___.locals = {
+					loadingText: "UserDetails-style-loadingText",
+					scrollableText: "UserDetails-style-scrollableText"
+				};
+				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
+				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
+			},
+			177: (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 				__webpack_require__.r(__webpack_exports__);
 				__webpack_require__.d(__webpack_exports__, {
 					default: () => Plugin
@@ -294,7 +428,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				const components_namespaceObject = Modules["@discord/components"];
 				const connections_namespaceObject = Modules["@discord/connections"];
 				var connections_default = __webpack_require__.n(connections_namespaceObject);
-				var badge = __webpack_require__(541);
+				var badge = __webpack_require__(173);
 				const utils_namespaceObject = Modules["@discord/utils"];
 				const external_PluginApi_namespaceObject = PluginApi;
 				const package_namespaceObject = JSON.parse('{"um":{"u2":"UserDetails"}}');
@@ -376,7 +510,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						}));
 					}
 				};
-				var flowerstar = __webpack_require__(834);
+				var flowerstar = __webpack_require__(564);
 				function flowerstar_extends() {
 					flowerstar_extends = Object.assign || function(target) {
 						for (var i = 1; i < arguments.length; i++) {
@@ -643,7 +777,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				}), external_BdApi_React_default().createElement("path", {
 					d: "M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"
 				}));
-				var apis_connections = __webpack_require__(448);
+				var apis_connections = __webpack_require__(597);
 				const stores_namespaceObject = Modules["@discord/stores"];
 				const actions_namespaceObject = Modules["@discord/actions"];
 				const Header = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("Header");
@@ -722,7 +856,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				}))));
 				const external_BdApi_ReactDOM_namespaceObject = BdApi.ReactDOM;
 				var external_BdApi_ReactDOM_default = __webpack_require__.n(external_BdApi_ReactDOM_namespaceObject);
-				var dates = __webpack_require__(227);
+				var dates = __webpack_require__(242);
 				function textscroller_defineProperty(obj, key, value) {
 					if (key in obj) Object.defineProperty(obj, key, {
 						value,
@@ -854,7 +988,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				}), external_BdApi_React_default().createElement("path", {
 					d: "M36 32c0 2.209-1.791 4-4 4H4c-2.209 0-4-1.791-4-4V4c0-2.209 1.791-4 4-4h28c2.209 0 4 1.791 4 4v28z"
 				}));
-				var style = __webpack_require__(430);
+				var style = __webpack_require__(562);
 				function reducer(state) {
 					if (state >= 3) return 1;
 					else return state + 1;
@@ -1220,7 +1354,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					}
 				};
 				const pages_namespaceObject = JSON.parse('[{"name":"General","icon":"Wrench","items":[{"type":"switch","name":"Use Icons","note":"Defines if icons should be used to show any date.","id":"useIcons","value":true},{"type":"radio","name":"Time Format","value":1,"id":"12hour","options":[{"value":1,"name":"24 hour"},{"value":0,"name":"12 hour"}]},{"type":"divider"},{"type":"category","name":"Variables","items":[{"type":"replacement","prefix":"$timelabel","description":"Replaces the current time label. eg AM or PM."},{"type":"replacement","prefix":"$day","description":"Replaces the current day."},{"type":"replacement","prefix":"$daysago","description":"Replaces with a number of how many days it\'s ago."},{"type":"replacement","prefix":"$dayname","description":"Replaces the shorted dayname."},{"type":"replacement","prefix":"$weeksago","description":"Replaces with a number of how many weeks it\'s ago."},{"type":"replacement","prefix":"$month","description":"Replaces the month."},{"type":"replacement","prefix":"$monthname","description":"Replaces the shorted monthname."},{"type":"replacement","prefix":"$monthsago","description":"Replaces with a number of how many months it\'s ago."},{"type":"replacement","prefix":"$year","description":"Replaces the year."},{"type":"replacement","prefix":"$yearsago","description":"Replaces with a number of how many years it\'s ago."},{"type":"replacement","prefix":"$hour","description":"Replaces the hour(s)"},{"type":"replacement","prefix":"$minute","description":"Replaces the minute(s)"},{"type":"replacement","prefix":"$second","description":"Replaces the second(s)"}]}]},{"name":"Created At","icon":"Cake","items":[{"type":"switch","name":"Show in UserPopout","id":"created_show_up","note":"Defines if the creation date should be shown in the UserPopout.","value":true},{"type":"switch","name":"Show in UserProfile","id":"created_show_profile","note":"Defines if the creation date should be shown in the UserProfile.","value":true},{"type":"text","name":"Created At","note":"Format of the Created at date. Read the variables section in the general settings to understand how it works.","id":"created_format","value":"Created At: $hour:$minute:$second, $day.$month.$year $daysago days"}]},{"name":"Joined At","icon":"Calendar","items":[{"type":"switch","name":"Show in UserPopout","id":"joined_show_up","note":"Defines if the joined date should be shown in the UserPopout.","value":true},{"type":"switch","name":"Show in UserProfile","id":"joined_show_profile","note":"Defines if the joined date should be shown in the UserProfile.","value":true},{"type":"text","name":"Joined At","note":"Format of the joined at date. Read the variables section in the general settings to understand how it works.","id":"joined_format","value":"Joined At: $hour:$minute:$second, $day.$month.$year $daysago days"}]},{"name":"Last Message At","icon":"TextBubble","items":[{"type":"switch","name":"Show in UserPopout","id":"lastmessage_show_up","note":"Defines if the last message date should be shown in the UserPopout.","value":true},{"type":"switch","name":"Show in UserProfile","id":"lastmessage_show_profile","note":"Defines if the last message date should be shown in the UserProfile.","value":true},{"type":"text","name":"Last Message","note":"Format of the LastMessage at date. Read the variables section in the general settings to understand how it works.","id":"lastmessage_format","value":"Last Message At: $hour:$minute:$second, $day.$month.$year $daysago days"}]},{"name":"Connections","icon":"Chain","items":[{"type":"switch","name":"Show Empty","note":"Show a \\"NO CONNECTIONS\\" placeholder if the user has no connections.","id":"showEmptyConnections","value":true},{"type":"switch","name":"Show Verified","note":"Shows a little verified badge below the icon if the connection is verified.","id":"showVerifiedConnections","value":true},{"type":"icons"}]},{"name":"Activity Icons","icon":"GamePad","items":[{"type":"switch","name":"Enable Activity Icons","note":null,"id":"activityIcons","value":true},{"type":"radio","name":"Activity Icon State","note":"Replaces the activity icon in the activity text of the member list.","id":"activityIconState","value":0,"disabled":false,"options":[{"name":"Replace with associated icon","value":0},{"name":"Don\'t do anything","value":1},{"name":"Hide it","value":2}]},{"type":"switch","name":"Show Gamepad","note":"This shows a gamepad icon if an icon for the activity isn\'t available.","id":"showGamepad","value":true}]}]');
-				var settings = __webpack_require__(279);
+				var settings = __webpack_require__(128);
 				function errorboundary_defineProperty(obj, key, value) {
 					if (key in obj) Object.defineProperty(obj, key, {
 						value,
@@ -1693,7 +1827,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				}
 				const external_BasePlugin_namespaceObject = BasePlugin;
 				var external_BasePlugin_default = __webpack_require__.n(external_BasePlugin_namespaceObject);
-				var components_activity = __webpack_require__(925);
+				var components_activity = __webpack_require__(755);
 				var activity_React = __webpack_require__(832);
 				const byName = [
 					[/spotify/i, spotify],
@@ -1831,8 +1965,8 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				const loadedStrings = {};
 				stores_namespaceObject.SettingsStore.addChangeListener(injectStrings);
 				function injectStrings() {
-					Object.assign(i18n_default()._proxyContext.messages, loadedStrings[i18n_default().getLocale()] ?? {});
-					if (loadedStrings["en-US"]) Object.assign(i18n_default()._proxyContext.defaultMessages, loadedStrings["en-US"]);
+					Object.assign(i18n_default()._provider._context.messages, loadedStrings[i18n_default().getLocale()] ?? {});
+					if (loadedStrings["en-US"]) Object.assign(i18n_default()._provider._context.defaultMessages, loadedStrings["en-US"]);
 				}
 				function addStrings(locale, strings) {
 					if (!loadedStrings[locale]) loadedStrings[locale] = {};
@@ -2096,150 +2230,6 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					}
 				}
 			},
-			448: (module, __webpack_exports__, __webpack_require__) => {
-				__webpack_require__.d(__webpack_exports__, {
-					Z: () => __WEBPACK_DEFAULT_EXPORT__
-				});
-				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(645);
-				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
-				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
-					return i[1];
-				}));
-				___CSS_LOADER_EXPORT___.push([module.id, ".UserDetails-connections-header{font-weight:700;text-transform:uppercase;font-size:12px;margin-bottom:8px;color:var(--header-secondary)}.UserDetails-connections-connectionsBody div:not(.UserDetails-connections-connections,.UserDetails-connections-container){display:inline-flex;margin:5px}.UserDetails-connections-connectionsBody .UserDetails-connections-loading{fill:var(--interactive-muted);animation:UserDetails-connections-blink infinite 2s;width:30px;height:30px;margin:5px;margin-top:0;margin-left:0}.UserDetails-connections-connectionsBody .UserDetails-connections-connections{display:flex;flex-wrap:wrap;margin-bottom:8px}.UserDetails-connections-connectionsBody .UserDetails-connections-connections img{width:30px;height:30px}.UserDetails-connections-connectionsBody .UserDetails-connections-errorIcon{width:35px;height:35px;margin-top:-5px}.UserDetails-connections-connectionsBody .UserDetails-connections-errorIcon{fill:#ed4245 !important}@keyframes UserDetails-connections-blink{0%{opacity:.6}50%{opacity:.3}100%{opacity:.6}}", ""]);
-				___CSS_LOADER_EXPORT___.locals = {
-					header: "UserDetails-connections-header",
-					connectionsBody: "UserDetails-connections-connectionsBody",
-					connections: "UserDetails-connections-connections",
-					container: "UserDetails-connections-container",
-					loading: "UserDetails-connections-loading",
-					blink: "UserDetails-connections-blink",
-					errorIcon: "UserDetails-connections-errorIcon"
-				};
-				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
-				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
-			},
-			227: (module, __webpack_exports__, __webpack_require__) => {
-				__webpack_require__.d(__webpack_exports__, {
-					Z: () => __WEBPACK_DEFAULT_EXPORT__
-				});
-				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(645);
-				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
-				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
-					return i[1];
-				}));
-				___CSS_LOADER_EXPORT___.push([module.id, ".UserDetails-dates-container{display:flex;max-width:-webkit-fill-available}.UserDetails-dates-container.UserDetails-dates-text{flex-direction:column;margin-top:10px}.UserDetails-dates-container.UserDetails-dates-icons{flex-direction:row}.UserDetails-dates-container.UserDetails-dates-icons .UserDetails-dates-loading{animation:UserDetails-dates-blink infinite 2s ease-in-out}.UserDetails-dates-container svg{fill:#ddd;margin:5px;width:20px;height:20px}.UserDetails-dates-container.UserDetails-dates-text .UserDetails-dates-scrollableText{color:var(--text-normal);white-space:nowrap;position:relative;font-size:14px;width:-webkit-fill-available;text-align:left;line-height:18px}.UserDetails-dates-container.UserDetails-dates-text.UserDetails-dates-userProfile{padding-left:18px}.UserDetails-dates-container.UserDetails-dates-text.UserDetails-dates-userProfile .UserDetails-dates-scrollableText{text-align:left !important}.UserDetails-dates-container .UserDetails-dates-errorIcon{fill:#ed4245 !important}.UserDetails-dates-wrapper{display:block}@keyframes UserDetails-dates-blink{0%{opacity:.6}50%{opacity:.3}100%{opacity:.6}}", ""]);
-				___CSS_LOADER_EXPORT___.locals = {
-					container: "UserDetails-dates-container",
-					text: "UserDetails-dates-text",
-					icons: "UserDetails-dates-icons",
-					loading: "UserDetails-dates-loading",
-					blink: "UserDetails-dates-blink",
-					scrollableText: "UserDetails-dates-scrollableText",
-					userProfile: "UserDetails-dates-userProfile",
-					errorIcon: "UserDetails-dates-errorIcon",
-					wrapper: "UserDetails-dates-wrapper"
-				};
-				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
-				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
-			},
-			925: (module, __webpack_exports__, __webpack_require__) => {
-				__webpack_require__.d(__webpack_exports__, {
-					Z: () => __WEBPACK_DEFAULT_EXPORT__
-				});
-				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(645);
-				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
-				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
-					return i[1];
-				}));
-				___CSS_LOADER_EXPORT___.push([module.id, ".UserDetails-activity-icon{display:flex;float:right}.UserDetails-activity-container{display:flex}", ""]);
-				___CSS_LOADER_EXPORT___.locals = {
-					icon: "UserDetails-activity-icon",
-					container: "UserDetails-activity-container"
-				};
-				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
-				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
-			},
-			541: (module, __webpack_exports__, __webpack_require__) => {
-				__webpack_require__.d(__webpack_exports__, {
-					Z: () => __WEBPACK_DEFAULT_EXPORT__
-				});
-				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(645);
-				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
-				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
-					return i[1];
-				}));
-				___CSS_LOADER_EXPORT___.push([module.id, ".UserDetails-badge-connection{width:30px;height:30px;position:relative}.UserDetails-badge-connection.UserDetails-badge-verified{border-radius:50%;overflow:hidden}.UserDetails-badge-connection.UserDetails-badge-verified .UserDetails-badge-verifiedBadge{width:12px;height:12px;position:absolute;bottom:0;right:0px;background:var(--background-floating);border-radius:50%;overflow:hidden;padding:2px}", ""]);
-				___CSS_LOADER_EXPORT___.locals = {
-					connection: "UserDetails-badge-connection",
-					verified: "UserDetails-badge-verified",
-					verifiedBadge: "UserDetails-badge-verifiedBadge"
-				};
-				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
-				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
-			},
-			834: (module, __webpack_exports__, __webpack_require__) => {
-				__webpack_require__.d(__webpack_exports__, {
-					Z: () => __WEBPACK_DEFAULT_EXPORT__
-				});
-				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(645);
-				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
-				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
-					return i[1];
-				}));
-				___CSS_LOADER_EXPORT___.push([module.id, ".UserDetails-flowerstar-wrapper{position:relative;display:flex;align-items:center;justify-content:center}.UserDetails-flowerstar-wrapper .UserDetails-flowerstar-container{display:block}.UserDetails-flowerstar-wrapper .UserDetails-flowerstar-tick{position:absolute;top:50%;left:50%;transform:translate(-50%, -50%)}", ""]);
-				___CSS_LOADER_EXPORT___.locals = {
-					wrapper: "UserDetails-flowerstar-wrapper",
-					container: "UserDetails-flowerstar-container",
-					tick: "UserDetails-flowerstar-tick"
-				};
-				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
-				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
-			},
-			279: (module, __webpack_exports__, __webpack_require__) => {
-				__webpack_require__.d(__webpack_exports__, {
-					Z: () => __WEBPACK_DEFAULT_EXPORT__
-				});
-				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(645);
-				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
-				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
-					return i[1];
-				}));
-				___CSS_LOADER_EXPORT___.push([module.id, ".UserDetails-settings-settingsPanel .UserDetails-settings-formItem{margin-bottom:10px}.UserDetails-settings-settingsPanel .UserDetails-settings-icons{flex-wrap:wrap}.UserDetails-settings-settingsPanel .UserDetails-settings-icons .UserDetails-settings-settingsBadgeContainer{display:inline-flex;cursor:pointer}.UserDetails-settings-settingsPanel .UserDetails-settings-icons .UserDetails-settings-settingsBadgeContainer .UserDetails-settings-settingsBadgeIcon{width:40px;height:40px}.UserDetails-settings-settingsPanel .UserDetails-settings-icons .UserDetails-settings-settingsBadgeContainer .UserDetails-settings-settingsBadgeIcon.UserDetails-settings-disabled{opacity:.4}.UserDetails-settings-settingsPanel .UserDetails-settings-category{color:#ddd}.UserDetails-settings-settingsPanel .UserDetails-settings-category.UserDetails-settings-opened .UserDetails-settings-categoryContent{padding:10px;padding:10px}.UserDetails-settings-settingsPanel .UserDetails-settings-category.UserDetails-settings-opened .UserDetails-settings-categoryContent .UserDetails-settings-replacementVariable{user-select:text;margin-bottom:6px;padding-bottom:6px;border-bottom:thin solid var(--background-modifier-accent)}.UserDetails-settings-settingsPanel .UserDetails-settings-category.UserDetails-settings-opened .UserDetails-settings-categoryContent .UserDetails-settings-replacementVariable b{margin-right:3px}.UserDetails-settings-settingsPanel .UserDetails-settings-category .UserDetails-settings-categoryHeader{cursor:pointer;padding:10px;font-size:15px;background:var(--background-tertiary);font-weight:600;text-transform:uppercase;display:flex;align-items:center}.UserDetails-settings-settingsPanel .UserDetails-settings-category .UserDetails-settings-categoryHeader .UserDetails-settings-categoryCaret{margin-left:auto}.UserDetails-settings-settingsPanel .UserDetails-settings-pageIcon{color:var(--interactive-normal);fill:var(--interactive-normal)}", ""]);
-				___CSS_LOADER_EXPORT___.locals = {
-					settingsPanel: "UserDetails-settings-settingsPanel",
-					formItem: "UserDetails-settings-formItem",
-					icons: "UserDetails-settings-icons",
-					settingsBadgeContainer: "UserDetails-settings-settingsBadgeContainer",
-					settingsBadgeIcon: "UserDetails-settings-settingsBadgeIcon",
-					disabled: "UserDetails-settings-disabled",
-					category: "UserDetails-settings-category",
-					opened: "UserDetails-settings-opened",
-					categoryContent: "UserDetails-settings-categoryContent",
-					replacementVariable: "UserDetails-settings-replacementVariable",
-					categoryHeader: "UserDetails-settings-categoryHeader",
-					categoryCaret: "UserDetails-settings-categoryCaret",
-					pageIcon: "UserDetails-settings-pageIcon"
-				};
-				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
-				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
-			},
-			430: (module, __webpack_exports__, __webpack_require__) => {
-				__webpack_require__.d(__webpack_exports__, {
-					Z: () => __WEBPACK_DEFAULT_EXPORT__
-				});
-				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(645);
-				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
-				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
-					return i[1];
-				}));
-				___CSS_LOADER_EXPORT___.push([module.id, ".UserDetails-style-loadingText{color:var(--text-normal);text-align:center}.UserDetails-style-scrollableText{color:var(--text-normal);white-space:nowrap;position:relative;font-size:14px;width:-webkit-fill-available;text-align:center;line-height:18px}", ""]);
-				___CSS_LOADER_EXPORT___.locals = {
-					loadingText: "UserDetails-style-loadingText",
-					scrollableText: "UserDetails-style-scrollableText"
-				};
-				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
-				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
-			},
 			645: module => {
 				module.exports = function(cssWithMappingToString) {
 					var list = [];
@@ -2339,7 +2329,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				});
 			};
 		})();
-		var __webpack_exports__ = __webpack_require__(737);
+		var __webpack_exports__ = __webpack_require__(177);
 		module.exports.LibraryPluginHack = __webpack_exports__;
 	})();
 	const PluginExports = module.exports.LibraryPluginHack;
