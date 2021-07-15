@@ -80,7 +80,7 @@ jobs:
 
       - name: commit
         run: |
-          MSG=${{github.event.head_commit.message}}
+          MSG="${{github.event.head_commit.message}}"
           git config advice.addIgnoredFile false
           git add --no-all ./**
           git config --local user.email "actions@github.com"
