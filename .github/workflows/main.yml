@@ -34,7 +34,7 @@ jobs:
       - name: retrieve latest bdbuilder version
         run: |
           echo '//npm.pkg.github.com/:_authToken=${{ secrets.GH_NPM_TOKEN }}' >> .npmrc
-          npm i bdbuilder@latest
+          npm i @betterdiscordbuilder/bdbuilder@latest
 
       - name: setup nodejs
         uses: actions/setup-node@v2
@@ -84,7 +84,7 @@ jobs:
           git add --no-all ./**
           git config --local user.email "actions@github.com"
           git config --local user.name "PluginBuilder"
-          git commit -m "publish build" || true
+          git commit -m "(build): ${{github.event.head_commit.message}}" || true
 
       - name: push
         uses: ad-m/github-push-action@master
