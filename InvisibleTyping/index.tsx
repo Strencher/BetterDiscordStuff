@@ -32,7 +32,7 @@ export default class InvisibleTyping extends BasePlugin {
         const TypingModule = WebpackModules.getByProps("startTyping");
 
         Patcher.instead(TypingModule, "startTyping", (_, [channelId], originalMethod) => {
-            if (Settings.get("exclude", []).includes(channelId) || Settings.get("autoEnable", true)) originalMethod(channelId);
+            if (InvisibleTypingButton.getState(channelId)) originalMethod(channelId);
         });
     }
 

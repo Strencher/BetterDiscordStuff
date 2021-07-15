@@ -45,17 +45,12 @@ function InvisibleTypingContextMenu({ channelId }) {
 }
 
 export default function InvisibleTypingButton({ channel, textValue }) {
-    const enabled = useStateFromStores([Settings], () => {
-        if (Settings.get("exclude", []).includes(channel.id)) return true;
-        if (Settings.get<boolean>("autoEnable", true)) return true;
-
-        return false;
-    });
+    const enabled = useStateFromStores([Settings], InvisibleTypingButton.getState.bind(this, channel.id));
     
     const handleClick = useCallback(() => {
         const excludeList = [...Settings.get<string[]>("exclude")];
 
-        if (enabled) {
+        if (excludeList.includes(channel.id)) {
             removeItem(excludeList, channel.id);
             TypingModule.stopTyping(channel.id);
         } else {
@@ -79,4 +74,14 @@ export default function InvisibleTypingButton({ channel, textValue }) {
             </button>
         </Tooltip>
     );
+};
+
+InvisibleTypingButton.getState = function (channelId: string) {
+    const isGlobal = Settings.get<boolean>("autoEnable", true);
+    const isExcluded = Settings.get("exclude", []).includes(channelId);
+
+    if (isGlobal && isExcluded) return false;
+    if (isExcluded && !isGlobal) return true;
+
+    return isGlobal;
 };

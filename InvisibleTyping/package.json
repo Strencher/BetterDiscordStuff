@@ -9,7 +9,7 @@
 				"twitter_username": "Strencher3"
 			}
 		],
-		"version": "1.0.1",
+		"version": "1.0.2",
 		"description": "Enhanced version of silent typing.",
 		"github": "https://github.com/Strencher/BetterDiscordStuff/blob/master/InvisibleTyping/InvisibleTyping.plugin.js",
 		"github_raw": "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/InvisibleTyping/InvisibleTyping.plugin.js"
@@ -25,6 +25,13 @@
 		}
 	},
 	"changelog": [
+		{
+			"type": "fixed",
+			"title": "Fixed",
+			"items": [
+				"Fixed disabling button in global mode."
+			]
+		},
 		{
 			"type": "added",
 			"title": "Added",
