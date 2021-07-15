@@ -1,7 +1,7 @@
 {
     "info": {
         "name": "UserDetails",
-        "version": "1.4.3",
+        "version": "1.4.4",
         "authors": [
             {
                 "name": "Strencher",
@@ -16,19 +16,10 @@
     },
     "changelog": [
         {
-            "title": "Fixed - v1.4.3",
+            "title": "Fixed - v1.4.4",
             "type": "fixed",
             "items": [
-                "I'm sorry that it took so long to fix the plugin. :c Finally got some time and motivation to fix all the bugs.",
-                "If there's still something not working, let me know!"
-            ]
-        },
-        {
-            "title": "Added - v1.4.3",
-            "type": "added",
-            "items": [
-                "I also added translations for German, Turkey & Dutch.",
-                "Become a translator on my server and your translation will be added within the next version!"
+                "Fixed the crash related to the latest discord update."
             ]
         }
     ],
