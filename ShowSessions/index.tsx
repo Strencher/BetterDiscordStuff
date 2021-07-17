@@ -106,6 +106,8 @@ export default class ShowSessions extends BasePlugin {
 		const UserSettingsAccount = await ReactComponents.getComponentByName("UserSettingsAccount", "." + WebpackModules.getByProps("contentColumnDefault").contentColumnDefault + " > div");
 
 		Patcher.after(UserSettingsAccount.component.prototype, "render", (_this, _, res) => {
+			if (!Array.isArray(res?.props?.children)) return;
+
 			res.props.children.push(
 				<SessionsList />
 			);
