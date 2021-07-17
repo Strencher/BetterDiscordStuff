@@ -6,7 +6,7 @@ const onlineMembers = new Map<string, number>();
 const OriginalStore = WebpackModules.getByProps("getMemberCount");
 
 function handleMemberListUpdate({ guildId, groups }) {
-    if (MemberCountStore._destroyed) return;
+    if (MemberCountStore._destroyed || !groups.some(group => group.id === "online")) return;
     const onlineCount = groups.reduce((total, group) => {
         if (group.id === "offline") return total;
         return total += group.count;

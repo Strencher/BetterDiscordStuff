@@ -14,7 +14,7 @@
                 "github_username": "Kyza"
             }
 		],
-		"version": "0.0.1",
+		"version": "0.0.2",
 		"description": "Adds online-offline member count to the member list.",
 		"github": "https://github.com/Strencher/BetterDiscordStuff/blob/master/MemberCount/MemberCount.plugin.js",
 		"github_raw": "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/MemberCount/MemberCount.plugin.js"
@@ -31,10 +31,10 @@
 	},
 	"changelog": [
 		{
-			"title": "Yeah",
-			"type": "added",
+			"title": "Fixed",
+			"type": "fixed",
 			"items": [
-				"The plugin exist"
+				"Fixed online count for private channels."
 			]
 		}
 	]
