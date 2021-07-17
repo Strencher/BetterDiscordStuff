@@ -263,7 +263,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			}
 		};
 		var __webpack_modules__ = {
-			163: (module, __webpack_exports__, __webpack_require__) => {
+			700: (module, __webpack_exports__, __webpack_require__) => {
 				__webpack_require__.d(__webpack_exports__, {
 					Z: () => __WEBPACK_DEFAULT_EXPORT__
 				});
@@ -436,7 +436,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			const commands = Commands;
 			const external_BdApi_React_namespaceObject = BdApi.React;
 			var external_BdApi_React_default = __webpack_require__.n(external_BdApi_React_namespaceObject);
-			var list = __webpack_require__(163);
+			var list = __webpack_require__(700);
 			const forms_namespaceObject = Modules["@discord/forms"];
 			const external_window_namespaceObject = window._;
 			var external_window_default = __webpack_require__.n(external_window_namespaceObject);
@@ -646,6 +646,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				async patchAccountSection() {
 					const UserSettingsAccount = await external_PluginApi_namespaceObject.ReactComponents.getComponentByName("UserSettingsAccount", "." + external_PluginApi_namespaceObject.WebpackModules.getByProps("contentColumnDefault").contentColumnDefault + " > div");
 					external_PluginApi_namespaceObject.Patcher.after(UserSettingsAccount.component.prototype, "render", ((_this, _, res) => {
+						if (!Array.isArray(res?.props?.children)) return;
 						res.props.children.push(external_BdApi_React_default().createElement(SessionsList, null));
 					}));
 					UserSettingsAccount.forceUpdateAll();
