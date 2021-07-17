@@ -1,7 +1,7 @@
 /**
  * @name MemberCount
  * @author Strencher, Kyza
- * @version 0.0.1
+ * @version 0.0.2
  * @description Adds online-offline member count to the member list.
  * @source https://github.com/Strencher/BetterDiscordStuff/blob/master/MemberCount/MemberCount.plugin.js
  * @updateUrl https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/MemberCount/MemberCount.plugin.js
@@ -44,7 +44,7 @@ const config = {
 				"github_username": "Kyza"
 			}
 		],
-		"version": "0.0.1",
+		"version": "0.0.2",
 		"description": "Adds online-offline member count to the member list.",
 		"github": "https://github.com/Strencher/BetterDiscordStuff/blob/master/MemberCount/MemberCount.plugin.js",
 		"github_raw": "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/MemberCount/MemberCount.plugin.js"
@@ -60,10 +60,10 @@ const config = {
 		}
 	},
 	"changelog": [{
-		"title": "Yeah",
-		"type": "added",
+		"title": "Fixed",
+		"type": "fixed",
 		"items": [
-			"The plugin exist"
+			"Fixed online count for private channels."
 		]
 	}]
 };
@@ -273,7 +273,78 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			}
 		};
 		var __webpack_modules__ = {
-			874: (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+			383: (module, __webpack_exports__, __webpack_require__) => {
+				__webpack_require__.d(__webpack_exports__, {
+					Z: () => __WEBPACK_DEFAULT_EXPORT__
+				});
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(645);
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
+				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
+					return i[1];
+				}));
+				___CSS_LOADER_EXPORT___.push([module.id, ".MemberCount-memberCount-memberCounter{display:flex;justify-content:center;position:sticky;top:0}.MemberCount-memberCount-count{color:#ddd;font-size:12px}.MemberCount-memberCount-pill{width:10px;height:10px;display:block;border-radius:50%;margin:5px}.MemberCount-memberCount-online{background:hsl(139, calc(var(--saturation-factor, 1) * 47.3%), 43.9%)}.MemberCount-memberCount-offline{background:hsl(214, calc(var(--saturation-factor, 1) * 9.9%), 50.4%)}.MemberCount-memberCount-total{background:var(--brand-experiment)}.MemberCount-memberCount-group{display:inline-flex;position:relative;align-items:center;height:25px}.MemberCount-memberCount-wrapper{text-align:-webkit-center;padding-top:10px;align-items:center}.MemberCount-memberCount-wrapper:not([aria-type=complex]){display:flex;flex-direction:column}.MemberCount-memberCount-wrapper:not([aria-type=compact]){padding-left:10px}.MemberCount-memberCount-wrapper.MemberCount-memberCount-sticky{overflow-y:visible;position:sticky;z-index:1;top:0}.MemberCount-memberCount-label{color:var(--channels-default);font-weight:600;text-transform:uppercase;font-size:13px}.MemberCount-memberCount-inner{padding:10px;background:var(--activity-card-background);border-radius:10px;max-width:100px;align-items:center;border:thin solid var(--background-floating)}.MemberCount-memberCount-inner .MemberCount-memberCount-label{margin-right:2px}", ""]);
+				___CSS_LOADER_EXPORT___.locals = {
+					memberCounter: "MemberCount-memberCount-memberCounter",
+					count: "MemberCount-memberCount-count",
+					pill: "MemberCount-memberCount-pill",
+					online: "MemberCount-memberCount-online",
+					offline: "MemberCount-memberCount-offline",
+					total: "MemberCount-memberCount-total",
+					group: "MemberCount-memberCount-group",
+					wrapper: "MemberCount-memberCount-wrapper",
+					sticky: "MemberCount-memberCount-sticky",
+					label: "MemberCount-memberCount-label",
+					inner: "MemberCount-memberCount-inner"
+				};
+				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
+				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
+			},
+			47: (module, __webpack_exports__, __webpack_require__) => {
+				__webpack_require__.d(__webpack_exports__, {
+					Z: () => __WEBPACK_DEFAULT_EXPORT__
+				});
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(645);
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
+				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
+					return i[1];
+				}));
+				___CSS_LOADER_EXPORT___.push([module.id, ".MemberCount-settings-guild img,.MemberCount-settings-guildAcronym{pointer-events:none}.MemberCount-settings-guildAcronym{display:flex;background:var(--background-floating);align-items:center;justify-content:center;white-space:nowrap;font-size:12px;width:35px;height:35px;color:#ddd}.MemberCount-settings-guildAcronym:hover{border-radius:20%}.MemberCount-settings-guild{border-radius:50%;overflow:hidden;transition:border-radius,opacity .3s;margin:5px;width:35px;height:35px}.MemberCount-settings-guild.MemberCount-settings-disabled{opacity:.3}.MemberCount-settings-guild img{width:35px;height:35px}.MemberCount-settings-guildsList{display:flex;flex-wrap:wrap}.MemberCount-settings-previewTitle{padding-left:10px}", ""]);
+				___CSS_LOADER_EXPORT___.locals = {
+					guild: "MemberCount-settings-guild",
+					guildAcronym: "MemberCount-settings-guildAcronym",
+					disabled: "MemberCount-settings-disabled",
+					guildsList: "MemberCount-settings-guildsList",
+					previewTitle: "MemberCount-settings-previewTitle"
+				};
+				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
+				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
+			},
+			911: (module, __webpack_exports__, __webpack_require__) => {
+				__webpack_require__.d(__webpack_exports__, {
+					Z: () => __WEBPACK_DEFAULT_EXPORT__
+				});
+				var _css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(645);
+				var _css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
+				var ___CSS_LOADER_EXPORT___ = _css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
+					return i[1];
+				}));
+				___CSS_LOADER_EXPORT___.push([module.id, ".MemberCount-category-category.MemberCount-category-compact{position:inherit}.MemberCount-category-category.MemberCount-category-compact .MemberCount-category-header{display:flex;align-items:center;justify-content:space-between;padding:2px;padding-left:10px;text-transform:uppercase;font-weight:600;font-size:.9rem}.MemberCount-category-category.MemberCount-category-compact .MemberCount-category-header .MemberCount-category-caret{float:right;display:inline-flex;color:var(--interactive-normal)}.MemberCount-category-category.MemberCount-category-compact .MemberCount-category-header .MemberCount-category-stroke{background-color:var(--background-modifier-accent);height:2px;flex:1;margin:0 5px 0 10px}.MemberCount-category-category.MemberCount-category-compact .MemberCount-category-header .MemberCount-category-label{color:var(--interactive-normal)}.MemberCount-category-category.MemberCount-category-compact .MemberCount-category-content{padding-left:20px;width:calc(100% - 40px)}.MemberCount-category-category.MemberCount-category-default{background:rgba(32,34,37,.3);border:1px solid #202225;margin:5px;cursor:pointer;border-radius:3px;--color: var(--interactive-normal)}.MemberCount-category-category.MemberCount-category-default:hover{--color: var(--interactive-hover)}.MemberCount-category-category.MemberCount-category-default .MemberCount-category-header{padding-right:5px;padding:10px 15px;padding-bottom:0;display:flex;align-items:center;justify-content:space-between}.MemberCount-category-category.MemberCount-category-default .MemberCount-category-header .MemberCount-category-stroke{display:none}.MemberCount-category-category.MemberCount-category-default .MemberCount-category-header .MemberCount-category-divider{position:relative}.MemberCount-category-category.MemberCount-category-default .MemberCount-category-header .MemberCount-category-label{font-size:1rem;font-weight:600;color:#fff;text-transform:uppercase}.MemberCount-category-category.MemberCount-category-default .MemberCount-category-header .MemberCount-category-caret{color:var(--color);transition:color .3s}.MemberCount-category-category.MemberCount-category-default.MemberCount-category-opened .MemberCount-category-content{padding:8px}.MemberCount-category-category.MemberCount-category-default.MemberCount-category-opened .MemberCount-category-header{background:rgba(32,34,37,.6)}", ""]);
+				___CSS_LOADER_EXPORT___.locals = {
+					category: "MemberCount-category-category",
+					compact: "MemberCount-category-compact",
+					header: "MemberCount-category-header",
+					caret: "MemberCount-category-caret",
+					stroke: "MemberCount-category-stroke",
+					label: "MemberCount-category-label",
+					content: "MemberCount-category-content",
+					default: "MemberCount-category-default",
+					divider: "MemberCount-category-divider",
+					opened: "MemberCount-category-opened"
+				};
+				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
+				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
+			},
+			188: (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 				__webpack_require__.r(__webpack_exports__);
 				__webpack_require__.d(__webpack_exports__, {
 					default: () => MemberCount
@@ -299,7 +370,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					return obj;
 				}
 				class SettingsManager extends flux_namespaceObject.Store {
-					constructor(pluginName) {
+					constructor(pluginName, defaultSettings = {}) {
 						super(modules_namespaceObject.Dispatcher, {});
 						_defineProperty(this, "settings", void 0);
 						_defineProperty(this, "pluginName", void 0);
@@ -311,7 +382,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 							return value;
 						}));
 						this.pluginName = pluginName;
-						this.settings = external_PluginApi_namespaceObject.PluginUtilities.loadSettings(pluginName, {});
+						this.settings = external_PluginApi_namespaceObject.PluginUtilities.loadSettings(pluginName, defaultSettings);
 					}
 				}
 				const package_namespaceObject = JSON.parse('{"um":{"u2":"MemberCount"}}');
@@ -333,7 +404,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					guildId,
 					groups
 				}) {
-					if (MemberCountStore._destroyed) return;
+					if (MemberCountStore._destroyed || !groups.some((group => "online" === group.id))) return;
 					const onlineCount = groups.reduce(((total, group) => {
 						if ("offline" === group.id) return total;
 						return total += group.count;
@@ -363,7 +434,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					}
 				};
 				const memberCount = MemberCountStore;
-				var components_memberCount = __webpack_require__(186);
+				var components_memberCount = __webpack_require__(383);
 				function _extends() {
 					_extends = Object.assign || function(target) {
 						for (var i = 1; i < arguments.length; i++) {
@@ -469,7 +540,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				const stores_namespaceObject = Modules["@discord/stores"];
 				const forms_namespaceObject = Modules["@discord/forms"];
 				const icons_namespaceObject = Modules["@discord/icons"];
-				var category = __webpack_require__(375);
+				var category = __webpack_require__(911);
 				function Category({
 					label,
 					children,
@@ -502,7 +573,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					COMPACT: category.Z.compact,
 					DEFAULT: category.Z.default
 				};
-				var settings = __webpack_require__(717);
+				var settings = __webpack_require__(47);
 				var React = __webpack_require__(832);
 				function Settings_extends() {
 					Settings_extends = Object.assign || function(target) {
@@ -649,77 +720,6 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					}
 				}
 			},
-			186: (module, __webpack_exports__, __webpack_require__) => {
-				__webpack_require__.d(__webpack_exports__, {
-					Z: () => __WEBPACK_DEFAULT_EXPORT__
-				});
-				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(645);
-				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
-				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
-					return i[1];
-				}));
-				___CSS_LOADER_EXPORT___.push([module.id, ".MemberCount-memberCount-memberCounter{display:flex;justify-content:center;position:sticky;top:0}.MemberCount-memberCount-count{color:#ddd;font-size:12px}.MemberCount-memberCount-pill{width:10px;height:10px;display:block;border-radius:50%;margin:5px}.MemberCount-memberCount-online{background:hsl(139, calc(var(--saturation-factor, 1) * 47.3%), 43.9%)}.MemberCount-memberCount-offline{background:hsl(214, calc(var(--saturation-factor, 1) * 9.9%), 50.4%)}.MemberCount-memberCount-total{background:var(--brand-experiment)}.MemberCount-memberCount-group{display:inline-flex;position:relative;align-items:center;height:25px}.MemberCount-memberCount-wrapper{text-align:-webkit-center;padding-top:10px;align-items:center}.MemberCount-memberCount-wrapper:not([aria-type=complex]){display:flex;flex-direction:column}.MemberCount-memberCount-wrapper:not([aria-type=compact]){padding-left:10px}.MemberCount-memberCount-wrapper.MemberCount-memberCount-sticky{overflow-y:visible;position:sticky;z-index:1;top:0}.MemberCount-memberCount-label{color:var(--channels-default);font-weight:600;text-transform:uppercase;font-size:13px}.MemberCount-memberCount-inner{padding:10px;background:var(--activity-card-background);border-radius:10px;max-width:100px;align-items:center;border:thin solid var(--background-floating)}.MemberCount-memberCount-inner .MemberCount-memberCount-label{margin-right:2px}", ""]);
-				___CSS_LOADER_EXPORT___.locals = {
-					memberCounter: "MemberCount-memberCount-memberCounter",
-					count: "MemberCount-memberCount-count",
-					pill: "MemberCount-memberCount-pill",
-					online: "MemberCount-memberCount-online",
-					offline: "MemberCount-memberCount-offline",
-					total: "MemberCount-memberCount-total",
-					group: "MemberCount-memberCount-group",
-					wrapper: "MemberCount-memberCount-wrapper",
-					sticky: "MemberCount-memberCount-sticky",
-					label: "MemberCount-memberCount-label",
-					inner: "MemberCount-memberCount-inner"
-				};
-				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
-				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
-			},
-			717: (module, __webpack_exports__, __webpack_require__) => {
-				__webpack_require__.d(__webpack_exports__, {
-					Z: () => __WEBPACK_DEFAULT_EXPORT__
-				});
-				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(645);
-				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
-				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
-					return i[1];
-				}));
-				___CSS_LOADER_EXPORT___.push([module.id, ".MemberCount-settings-guild img,.MemberCount-settings-guildAcronym{pointer-events:none}.MemberCount-settings-guildAcronym{display:flex;background:var(--background-floating);align-items:center;justify-content:center;white-space:nowrap;font-size:12px;width:35px;height:35px;color:#ddd}.MemberCount-settings-guildAcronym:hover{border-radius:20%}.MemberCount-settings-guild{border-radius:50%;overflow:hidden;transition:border-radius,opacity .3s;margin:5px;width:35px;height:35px}.MemberCount-settings-guild.MemberCount-settings-disabled{opacity:.3}.MemberCount-settings-guild img{width:35px;height:35px}.MemberCount-settings-guildsList{display:flex;flex-wrap:wrap}.MemberCount-settings-previewTitle{padding-left:10px}", ""]);
-				___CSS_LOADER_EXPORT___.locals = {
-					guild: "MemberCount-settings-guild",
-					guildAcronym: "MemberCount-settings-guildAcronym",
-					disabled: "MemberCount-settings-disabled",
-					guildsList: "MemberCount-settings-guildsList",
-					previewTitle: "MemberCount-settings-previewTitle"
-				};
-				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
-				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
-			},
-			375: (module, __webpack_exports__, __webpack_require__) => {
-				__webpack_require__.d(__webpack_exports__, {
-					Z: () => __WEBPACK_DEFAULT_EXPORT__
-				});
-				var _css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(645);
-				var _css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
-				var ___CSS_LOADER_EXPORT___ = _css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
-					return i[1];
-				}));
-				___CSS_LOADER_EXPORT___.push([module.id, ".MemberCount-category-category.MemberCount-category-compact{position:inherit}.MemberCount-category-category.MemberCount-category-compact .MemberCount-category-header{display:flex;align-items:center;justify-content:space-between;padding:2px;padding-left:10px;text-transform:uppercase;font-weight:600;font-size:.9rem}.MemberCount-category-category.MemberCount-category-compact .MemberCount-category-header .MemberCount-category-caret{float:right;display:inline-flex;color:var(--interactive-normal)}.MemberCount-category-category.MemberCount-category-compact .MemberCount-category-header .MemberCount-category-stroke{background-color:var(--background-modifier-accent);height:2px;flex:1;margin:0 5px 0 10px}.MemberCount-category-category.MemberCount-category-compact .MemberCount-category-header .MemberCount-category-label{color:var(--interactive-normal)}.MemberCount-category-category.MemberCount-category-compact .MemberCount-category-content{padding-left:20px;width:calc(100% - 40px)}.MemberCount-category-category.MemberCount-category-default{background:rgba(32,34,37,.3);border:1px solid #202225;margin:5px;cursor:pointer;border-radius:3px;--color: var(--interactive-normal)}.MemberCount-category-category.MemberCount-category-default:hover{--color: var(--interactive-hover)}.MemberCount-category-category.MemberCount-category-default .MemberCount-category-header{padding-right:5px;padding:10px 15px;padding-bottom:0;display:flex;align-items:center;justify-content:space-between}.MemberCount-category-category.MemberCount-category-default .MemberCount-category-header .MemberCount-category-stroke{display:none}.MemberCount-category-category.MemberCount-category-default .MemberCount-category-header .MemberCount-category-divider{position:relative}.MemberCount-category-category.MemberCount-category-default .MemberCount-category-header .MemberCount-category-label{font-size:1rem;font-weight:600;color:#fff;text-transform:uppercase}.MemberCount-category-category.MemberCount-category-default .MemberCount-category-header .MemberCount-category-caret{color:var(--color);transition:color .3s}.MemberCount-category-category.MemberCount-category-default.MemberCount-category-opened .MemberCount-category-content{padding:8px}.MemberCount-category-category.MemberCount-category-default.MemberCount-category-opened .MemberCount-category-header{background:rgba(32,34,37,.6)}", ""]);
-				___CSS_LOADER_EXPORT___.locals = {
-					category: "MemberCount-category-category",
-					compact: "MemberCount-category-compact",
-					header: "MemberCount-category-header",
-					caret: "MemberCount-category-caret",
-					stroke: "MemberCount-category-stroke",
-					label: "MemberCount-category-label",
-					content: "MemberCount-category-content",
-					default: "MemberCount-category-default",
-					divider: "MemberCount-category-divider",
-					opened: "MemberCount-category-opened"
-				};
-				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
-				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
-			},
 			645: module => {
 				module.exports = function(cssWithMappingToString) {
 					var list = [];
@@ -798,7 +798,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				});
 			};
 		})();
-		var __webpack_exports__ = __webpack_require__(874);
+		var __webpack_exports__ = __webpack_require__(188);
 		module.exports.LibraryPluginHack = __webpack_exports__;
 	})();
 	const PluginExports = module.exports.LibraryPluginHack;
