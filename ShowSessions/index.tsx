@@ -59,7 +59,7 @@ export default class ShowSessions extends BasePlugin {
 									`
 									).join("\n");
 							}],
-							[e => !e.length, "I didn't found any active clients. Maybe discord didn't told me about them? :thinking:"]
+							[e => !e.length, "I didn't find any active clients. Maybe discord didn't told me about them? :thinking:"]
 						]),
 					});
 				} catch (error) {
