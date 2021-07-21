@@ -1,5 +1,5 @@
-/// <reference path="../../../../../typings/discord.d.ts" />
-import React, {useState} from "react";
+/// <reference path="../../../../bdbuilder/typings/main.d.ts" />
+import React, {useMemo, useState} from "react";
 import defaultconnections from "../../data/defaultConnections";
 import Pages from "./pages.json";
 import {WebpackModules} from "@zlibrary"; 
@@ -8,9 +8,10 @@ import Settings from "../../Settings";
 import styles from "./settings.scss";
 import ErrorBoundary from "../errorboundary";
 import {FormItem, FormText, FormTitle, FormDivider} from "@discord/forms";
-import {TooltipContainer as Tooltip} from "@discord/components";
+import {Flex, TooltipContainer as Tooltip} from "@discord/components";
 import Icon from "../icons/index";
 import Connections from "@discord/connections";
+import {joinClassNames} from "@discord/utils";
 
 const RadioGroup = Utilities.createUpdateWrapper(WebpackModules.getByDisplayName("RadioGroup"));
 const SwitchItem = Utilities.createUpdateWrapper(WebpackModules.getByDisplayName("SwitchItem"), false);
@@ -18,11 +19,11 @@ const TextInput = Utilities.createUpdateWrapper(WebpackModules.getByDisplayName(
 const breadCrumbs = WebpackModules.getByProps("breadcrumbActive");
 const {marginBottom8} = WebpackModules.getByProps("marginBottom8");
 const Breadcrumbs = WebpackModules.getByDisplayName("Breadcrumbs");
-const Flex = WebpackModules.getByDisplayName("Flex");
 const {default: CardItem} = WebpackModules.find(m => m?.default?.toString().indexOf("hasNextSection") > -1) ?? {default: () => null};
 const Card = WebpackModules.getByDisplayName("Card");
 const Caret = WebpackModules.getByDisplayName("Caret");
 const Clickable = WebpackModules.getByDisplayName("Clickable");
+const FlagsStore = WebpackModules.getModule(m => typeof m.keys === "function" && m.resolve && m.keys().some(e => e.includes("en-US")));
 
 const TextItem = ({value, onChange, name, note}) => {
     return (<Flex className={marginBottom8} direction={Flex.Direction.VERTICAL}>
@@ -52,6 +53,29 @@ const IconSetting = () => {
             </Tooltip>)
         }
     </Flex>;
+};
+
+const Translation = ({name, note, id}) => {
+    const icon = useMemo(() => {
+        try {
+            return <img src={FlagsStore("./" + id + ".png")} className={joinClassNames(styles.translation, styles.marginBottom8)} />
+        } catch {
+            return null;
+        }
+    }, [id]);
+
+    return (
+        <React.Fragment>
+            <Flex direction={Flex.Direction.HORIZONTAL} justify={Flex.Justify.BETWEEN} align={Flex.Align.CENTER} className={styles.descriptionItem}>
+                {icon}
+                <FormTitle tag={FormTitle.Tags.H5}>{name}</FormTitle>
+                <Flex justify={Flex.Justify.END} align={Flex.Align.START} className={styles.marginBottom8}>
+                    <FormText>{note}</FormText>
+                </Flex>
+            </Flex>
+            <FormDivider />
+        </React.Fragment>
+    );
 };
 
 const Category = props => {
@@ -111,6 +135,7 @@ const renderSetting = setting => {
             />;
         case "icons": return <IconSetting />;
         case "category": return <Category {...setting} />;
+        case "translation": return <Translation {...setting} />;
         case "divider": return <FormDivider />;
     }
 };

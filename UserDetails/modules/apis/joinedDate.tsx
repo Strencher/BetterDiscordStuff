@@ -26,7 +26,7 @@ export default class JoinedAt extends ApiModule {
             useEffect(() => {
                 if (JoinedAtStore.has(guildId, userId) || JoinedAtStore.isFetching(guildId, userId)) return void 0;
                 if (!guildId) return void setMessage(Messages.FAILED_TO_FETCH);
-                console.log(JoinedAtStore.has(guildId, userId), JoinedAtStore);
+                
                 JoinedAtStore.fetch(guildId, userId);
             }, []);
 
@@ -41,7 +41,7 @@ export default class JoinedAt extends ApiModule {
                     ? useIcons
                         ? <Tooltip text={message || Messages[joined.data as string]}><Error className={styles.errorIcon} /></Tooltip>
                         : <TextScroller style={{color: "red"}}>{message || Messages[joined.data as string]}</TextScroller>
-                    : <Tooltip text="Loading JoinedAt...">
+                    : <Tooltip text={Messages.LOADING_JOINED_AT}>
                         {
                             useIcons 
                                 ? <Cube className={styles.loading} />

@@ -5,6 +5,7 @@ import {Store} from "@discord/flux";
 import { Messages } from "@discord/i18n";
 import {Dispatcher} from "@discord/modules";
 import {stringify} from "@discord/sanitize";
+import { Logger } from "@discord/utils";
 import {APIModule} from "@zlibrary/discord";
 
 export type LastMessageResponse = {
@@ -60,8 +61,11 @@ function handleMessageDelete({messageId, channelId}) {
 
 class LastMessageStore extends Store {
     public paused = false;
-    get _users() {return lastMessages;}
-    isFetching(userId: string, channelId: string) {return fetchingQueue.has(resolveId(userId, channelId));}
+    get _users() { return lastMessages; }
+    get fetching() { return fetchingQueue; }
+    isFetching(userId: string, channelId: string) { return fetchingQueue.has(resolveId(userId, channelId)); }
+    logger = new Logger("LastMessageStore");
+    MAX_RETRIES = 5;
 
     get(userId: string, channelId: string): LastMessageResponse {
         const cached = lastMessages.get(resolveId(userId, channelId));
@@ -71,13 +75,13 @@ class LastMessageStore extends Store {
     }
 
     has(userId: string, channelId: string): boolean {
-        return lastMessages.has(resolveId(userId, channelId));
+        return this.get(userId, channelId) !== null && lastMessages.has(resolveId(userId, channelId));
     }
 
     fetch(userId: string, roomId: string, isGuild = false, attemp = 1): Promise<void> {
         const id = resolveId(userId, roomId);
         if (fetchingQueue.has(id) || this.paused) return Promise.resolve();
-        if (attemp > 5) {
+        if (attemp > this.MAX_RETRIES) {
             fetchingQueue.delete(id);
             lastMessages.set(id, {
                 channelId: roomId,
@@ -86,6 +90,7 @@ class LastMessageStore extends Store {
                 messageId: null,
                 status: "failure"
             });
+            this.logger.error(`Request failed after ${this.MAX_RETRIES} attempts.`);
             return Promise.resolve();
         }
         fetchingQueue.add(id);
@@ -119,6 +124,8 @@ class LastMessageStore extends Store {
                         messageId: null,
                         status: "failure"
                     });
+
+                    this.logger.info(`No messages for ${userId} were found in ${roomId}.`);
                 }
                 
                 this.emitChange();

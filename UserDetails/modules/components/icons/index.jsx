@@ -12,6 +12,8 @@ import YouTube from "./youtube";
 import GamePad from "./gamepad";
 import GoogleChrome from "./googleChrome";
 import Headphones from "./headphones";
+import Language from "./language";
+import Mutual from "./mutual";
 
 export const Icons = {
     Cake,
@@ -27,7 +29,9 @@ export const Icons = {
     YouTube,
     GamePad,
     GoogleChrome,
-    Headphones
+    Headphones,
+    Language,
+    Mutual
 };
 
 export function noop() {return null;}

@@ -1,0 +1,12 @@
+{
+    "CONNECTIONS": "Conexiones",
+    "NO_CONNECTIONS": "Sin conexiones",
+    "LOADING_CONNECTIONS": "Cargando conexiones...",
+    "LOADING_LAST_MESSAGE": "Cargando el último mensaje...",
+    "LOADING_JOINED_AT": "Cargando la fecha de ingreso...",
+    "MEMBER_WAS_NOT_FOUND": "¡El miembro no fue encontrado!",
+    "FAILED_TO_FETCH": "¡No se pudo obtener!",
+    "USERINFO_CMD_DESC": "Muestra información sobre un usuario en específico.",
+    "NO_MUTUAL_GUILDS": "Sin servidores en común",
+    "LOADING_MUTUAL_GUILDS": "Cargando los servidores en común..."
+}

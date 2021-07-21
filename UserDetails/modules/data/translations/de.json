@@ -6,5 +6,7 @@
     "LOADING_JOINED_AT": "Lade Beitrittsdatum...",
     "MEMBER_WAS_NOT_FOUND": "Mitglied konnte nicht gefunden werden.",
     "FAILED_TO_FETCH": "Fehler beim Laden",
-    "USERINFO_CMD_DESC": "Zeigt einige Informationen über einen bestimmten Nutzer."
+    "USERINFO_CMD_DESC": "Zeigt einige Informationen über einen bestimmten Nutzer.",
+    "NO_MUTUAL_GUILDS": "Keine gemeinsamen Server.",
+    "LOADING_MUTUAL_GUILDS": "Gemeinsame Server werden geladen."
 }

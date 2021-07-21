@@ -54,12 +54,13 @@ export function ActivitiesFilter(activity, index, target) {
 };
 
 export default function Activity({user}) {
-    const {activity, showActivityIcons} = useStateFromStores([Activities, Settings], () => ({
+    const {activity, showActivityIcons, disabled} = useStateFromStores([Activities, Settings], () => ({
         activity: Activities.getActivities(user.id).filter(ActivitiesFilter)[0],
-        showActivityIcons: Settings.get("activityIcons", true)
+        showActivityIcons: Settings.get("activityIcons", true),
+        disabled: (user?.bot && Settings.get("disableIconsForBots", true))
     }), null, _.isEqual);
     
-    if (!showActivityIcons || !activity) return null;
+    if (!showActivityIcons || !activity || disabled) return null;
 
     return (
         <Tooltip text={activity.name} className={styles.container} position="left">

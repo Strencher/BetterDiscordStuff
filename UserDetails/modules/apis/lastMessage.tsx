@@ -58,8 +58,8 @@ export default class LastMessageApi extends ApiModule {
                 : errorMessage || (failed && Messages[lastMessage.data as string])
                     ? shouldUseIcon
                         ? <Tooltip text={errorMessage || Messages[lastMessage.data as string]}><Error className={styles.errorIcon} /></Tooltip>
-                        : <TextScroller>{errorMessage || Messages[lastMessage.data as string]}</TextScroller>
-                    : <Tooltip text="Loading Last Message...">
+                        : <TextScroller style={{color: "red"}}>{errorMessage || Messages[lastMessage.data as string]}</TextScroller>
+                    : <Tooltip text={Messages.LOADING_LAST_MESSAGE}>
                         {
                             shouldUseIcon
                                 ? <Cube className={styles.loading} />

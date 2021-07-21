@@ -6,5 +6,7 @@
     "LOADING_JOINED_AT": "Giriş tarihi yükleniyor..",
     "MEMBER_WAS_NOT_FOUND": "Kullanıcı bulunamadı!",
     "FAILED_TO_FETCH": "Alınamadı!",
-    "USERINFO_CMD_DESC": "Belirli bir kullanıcı hakkında bazı bilgiler verir."
+    "USERINFO_CMD_DESC": "Belirli bir kullanıcı hakkında bazı bilgiler verir.",
+    "NO_MUTUAL_GUILDS": "Ortak sunucu yok!",
+    "LOADING_MUTUAL_GUILDS": "Ortak sunucular yükleniyor!"
 }

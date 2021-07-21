@@ -1,4 +1,4 @@
-/// <reference path="../../../../typings/discord.d.ts" />
+/// <reference path="../../../bdbuilder/typings/main.d.ts" />
 import React, {useState, useEffect} from "react";
 import Badge from "../components/badge";
 import ApiModule from "./api";
@@ -13,6 +13,7 @@ import {UserProfile} from "@discord/stores";
 import {ProfileActions} from "@discord/actions";
 import {Logger} from "@zlibrary";
 import Connections from "@discord/connections";
+import {Messages} from "@discord/i18n";
 
 const Header = WebpackModules.getByDisplayName("Header");
 export default class Userconnections extends ApiModule {
@@ -20,24 +21,24 @@ export default class Userconnections extends ApiModule {
 
     task(user) {
         return () => {
-            if (!Connections.filter(c => Settings.get("shownConnections", {})[c.type]).length || user.bot) return null;
+            if (!Connections.filter(c => Settings.get("shownConnections", {})[c.type]).length || user.bot || !Settings.get("showConnectionsSection", true)) return null;
             const connections = useStateFromStores([UserProfile], () => UserProfile.getUserProfile(user.id)?.connectedAccounts);
             const [message, setMessage] = useState("");
             
             useEffect(() => {
-                if (UserProfile.isFetching(user.id)) return;
+                if (Array.isArray(connections) || UserProfile.isFetching(user.id)) return;
                 ProfileActions.fetchProfile(user.id)
                     .catch(error => {
                         if (~error?.message?.indexOf("Already dispatching")) return;
                         Logger.error(`Failed to fetch profile for ${user.id}:\n`, error);
-                        setMessage("Failed to fetch!");
+                        setMessage(Messages.FAILED_TO_FETCH);
                     });
             }, [true]);
 
             return <div className={styles.connectionsBody}>
                 {   
                     (!connections?.length && Settings.get("showEmptyConnections", true)) || connections?.length
-                        ? <Header className={styles.container} size={Header.Sizes.SIZE_12} className={styles.header} uppercase muted>{connections?.length ? "connections" : "no connections"}</Header>
+                        ? <Header className={styles.container} size={Header.Sizes.SIZE_12} className={styles.header} uppercase muted>{connections?.length ? Messages.CONNECTIONS : Messages.NO_CONNECTIONS}</Header>
                         : null
                 }
                 {
@@ -53,7 +54,7 @@ export default class Userconnections extends ApiModule {
                             : null
                         : message
                             ? <Tooltip text={message}><Error className={styles.errorIcon} /></Tooltip>
-                            : <Tooltip text="Loading Connections...">{Connections.filter(e => Settings.get("shownConnections")[e.type]).map(() => <Circle className={styles.loading} />)}</Tooltip>
+                            : <Tooltip text={Messages.LOADING_CONNECTIONS}>{Connections.filter(e => Settings.get("shownConnections")[e.type]).map(() => <Circle className={styles.loading} />)}</Tooltip>
                 }
             </div>;
         };

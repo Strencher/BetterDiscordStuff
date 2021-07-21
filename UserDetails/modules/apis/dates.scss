@@ -8,6 +8,10 @@
     }
 
     &.icons {
+        &.userProfile {
+            padding-left: 13px;
+        }
+
         flex-direction: row;
 
         .loading {

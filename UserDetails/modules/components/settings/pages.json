@@ -187,6 +187,13 @@
         "items": [
             {
                 "type": "switch",
+                "name": "Enable Section",
+                "note": "Enables this section in the user popout.",
+                "id": "showConnectionsSection",
+                "value": true
+            },
+            {
+                "type": "switch",
                 "name": "Show Empty",
                 "note": "Show a \"NO CONNECTIONS\" placeholder if the user has no connections.",
                 "id": "showEmptyConnections",
@@ -211,6 +218,13 @@
                 "name": "Enable Activity Icons",
                 "note": null,
                 "id": "activityIcons",
+                "value": true
+            },
+            {
+                "type": "switch",
+                "name": "Disable Bots",
+                "note": "Disables the icon for bots, since the most always have something with 'Playing: {...}' in their statuses.",
+                "id": "disableIconsForBots",
                 "value": true
             },
             {
@@ -241,6 +255,100 @@
                 "note": "This shows a gamepad icon if an icon for the activity isn't available.",
                 "id": "showGamepad",
                 "value": true
+            }
+        ]
+    },
+    {
+        "name": "Mutual Servers",
+        "icon": "Mutual",
+        "items": [
+            {
+                "type": "switch",
+                "name": "Enable Mutual Servers",
+                "note": "This enables/disables the mutual servers section in the user popout",
+                "id": "showMutualGuilds",
+                "value": true
+            },
+            {
+                "type": "switch",
+                "name": "Disable for yourself",
+                "note": "Disables the mutual servers section for you. (it will just show all your guilds)",
+                "id": "hideMutualGuildsCurrentUser",
+                "value": true
+            },
+            {
+                "type": "switch",
+                "name": "Show empty message",
+                "note": "This defines if an empty message 'no mutual servers' should be shown if the user has no mutual servers with you",
+                "id": "showEmptyMutualGuilds",
+                "value": true
+            },
+            {
+                "type": "switch",
+                "name": "Stack Icons",
+                "note": "Stacks the icons so it takes less space.",
+                "id": "stackMutualServers",
+                "value": false
+            }
+        ]
+    },
+    {
+        "name": "Translation Credits",
+        "icon": "Language",
+        "items": [
+            {
+                "type": "translation",
+                "name": "Turkish",
+                "id": "tr",
+                "note": "@IMaWeebツ#6931"
+            },
+            {
+                "type": "translation",
+                "name": "English",
+                "id": "en-US",
+                "note": "@It's Rad, Not Red#0001"
+            },
+            {
+                "type": "translation",
+                "name": "German",
+                "id": "de",
+                "note": "@l0c4lh057#9748, @SteffoSpieler#1868"
+            },
+            {
+                "type": "translation",
+                "name": "Dutch",
+                "id": "nl",
+                "note": "@th0masterharambe#0001"
+            },
+            {
+                "type": "translation",
+                "name": "Vietnamese",
+                "id": "vi",
+                "note": "@MH#5893"
+            },
+            {
+                "type": "translation",
+                "name": "Spanish",
+                "id": "es-ES",
+                "note": "@DrPuc##2048"
+            },
+            {
+                "type": "translation",
+                "name": "Swedish",
+                "id": "sv-SE",
+                "note": "@toatl#7460"
+            },
+            {
+                "type": "translation",
+                "name": "Portuguese (Brazil)",
+                "id": "pt-BR",
+                "note": "@Dominic#1111"
+            },
+            {
+                "type": "translation",
+                "name": "French",
+                "id": "fr",
+                "note": "@LemCent321#1663"
             }
         ]
     }

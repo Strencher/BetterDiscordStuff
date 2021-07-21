@@ -26,6 +26,8 @@ import LocaleManager from "common/apis/strings";
 import SuppressError from "common/util/noerror";
 import {Messages} from "@discord/i18n";
 import Logger from "./modules/logger";
+import MutualServers from "./modules/apis/mutualServers";
+import * as Stores from "./modules/stores";
 
 const getClass = (props = [], items = props, exclude = [], selector = false) => {
     const module = WebpackModules.find(m => m && props.every(prop => m[prop] !== undefined) && exclude.every(e => m[e] == undefined));
@@ -34,6 +36,8 @@ const getClass = (props = [], items = props, exclude = [], selector = false) => 
 };
 
 export default class Plugin extends BasePlugin {
+    get Stores() {return Stores;}
+
     promises = {
         cancelled: false,
         cancel() {this.cancelled = true;}
@@ -55,6 +59,7 @@ export default class Plugin extends BasePlugin {
         this.joinedApi = new JoinedAt(this);
         this.lastMessageApi = new LastMessage(this);
         this.connectionsApi = new UserConnections(this);
+        this.mutualsApi = new MutualServers(this);
 
         // Patches
         this.patchUserPopout();
@@ -155,11 +160,17 @@ export default class Plugin extends BasePlugin {
 
         Patcher.after(UserPopoutBody, "default", (_, [{user}], returnValue) => {
             if (this.promises.cancelled) return;
-            if (!Array.isArray(returnValue?.props?.children)) return returnValue;
+            if (!Array.isArray(returnValue?.props?.children) || returnValue.props.children.some(child => child?.type === ErrorBoundary)) return returnValue;
+
             const Connections = this.connectionsApi.task(user);
+            const MutualServers = this.mutualsApi.task(user);
+
             returnValue.props.children.unshift(
                 <ErrorBoundary id="UserPopoutBody" mini key="connections">
                     <Connections />
+                </ErrorBoundary>,
+                <ErrorBoundary id="UserPopoutBody" mini key="mutual_servers">
+                    <MutualServers />
                 </ErrorBoundary>
             );
         });

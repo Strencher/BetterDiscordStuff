@@ -6,5 +6,7 @@
     "LOADING_JOINED_AT": "Lid geworden op aan het laden...",
     "MEMBER_WAS_NOT_FOUND": "Lid kon niet worden gevonden!",
     "FAILED_TO_FETCH": "Gefaald om op te halen!",
-    "USERINFO_CMD_DESC": "Laat bepaalde informatie zien over een bepaald lid."
+    "USERINFO_CMD_DESC": "Laat bepaalde informatie zien over een bepaald lid.",
+    "NO_MUTUAL_GUILDS": "Geen gemeenschappelijke servers",
+    "LOADING_MUTUAL_GUILDS": "Gemeenschappelijke servers aan het laden..."
 }
