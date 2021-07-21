@@ -7,6 +7,7 @@ import _ from "lodash";
 import Category from "common/components/category";
 import createUpdateWrapper from "common/hooks/createUpdateWrapper";
 import { WebpackModules } from "@zlibrary";
+import styles from "./Settings.scss";
 
 const SwitchItem = createUpdateWrapper(WebpackModules.getByDisplayName("SwitchItem"));
 
@@ -30,7 +31,7 @@ function ColorSetting({ id, name, note, defaultValue }) {
                 colors={defaultColors}
             />
             <FormText type="description">{note}</FormText>
-            <FormDivider />
+            <FormDivider className={styles.divider} />
         </FormItem>
     );
 }

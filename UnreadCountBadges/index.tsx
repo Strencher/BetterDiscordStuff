@@ -42,8 +42,10 @@ export default class UnreadCountBadges extends BasePlugin {
     settings = Settings;
 
     getSettingsPanel() {
+        const Panel = SettingsPanel as () => JSX.Element;
+
         return (
-            <SettingsPanel />
+            <Panel />
         );
     }
 
@@ -270,7 +272,7 @@ export default class UnreadCountBadges extends BasePlugin {
                         return count += this.getUnreadCountForGuild(guild.id, Settings.get("includeMutedChannelsInTotal", false));
                     }, 0);
     
-                    const dms = Object.values(GuildChannelsStore.getMutableGuildChannels()).reduce((count, channel: any) => {
+                    const dms = Object.values(GuildChannelsStore.getMutablePrivateChannels()).reduce((count, channel: any) => {
                         if (Settings.get("includeDmsInTotal", true) && channel.type === ChannelTypes.DM && (Settings.get("includeMutedDms", false) ? !MutedStore.isChannelMuted(channel.guild_id, channel.id) : true)) {
                             count += UnreadStore.getUnreadCount(channel.id);
                         }
@@ -280,7 +282,7 @@ export default class UnreadCountBadges extends BasePlugin {
                         
                         return count;
                     }, 0) as number;
-                    
+
                     return this.checkCount(guilds + dms);
                 },
                 color: "totalColor",

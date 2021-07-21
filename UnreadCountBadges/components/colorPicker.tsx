@@ -1,9 +1,8 @@
 import { Flex, Tooltip } from "@discord/components";
-import { ColorConverter, Logger, Utilities, WebpackModules } from "@zlibrary";
+import { ColorConverter } from "@zlibrary";
 import React, { useCallback, useMemo, useState } from "react";
 import styles from "./colorPicker.scss";
 
-const GuildFolderSettingsModal = WebpackModules.getByDisplayName("GuildFolderSettingsModal");
 const Checkmark = React.memo((props: any) => (
     <svg width="16" height="16" viewBox="0 0 24 24" {...props}>
         <path fillRule="evenodd" clipRule="evenodd" fill={props.color ?? "#ddd"} d="M8.99991 16.17L4.82991 12L3.40991 13.41L8.99991 19L20.9999 7.00003L19.5899 5.59003L8.99991 16.17Z" />
@@ -31,7 +30,7 @@ export const resolveColor = (color, hex = true) => {
     }
 };
 
-const BackupColorPicker = ({ value, defaultValue, onChange, colors = defaultColors }) => {
+const ColorPicker = ({ value, defaultValue, onChange, colors = defaultColors }) => {
     const [color, setColor] = useState(resolveColor(value));
     const intValue = useMemo(() => resolveColor(color, false), [color]);
 
@@ -78,20 +77,4 @@ const BackupColorPicker = ({ value, defaultValue, onChange, colors = defaultColo
     );
 };
 
-export default (() => {
-    return BackupColorPicker;
-    // const fromWebpack = WebpackModules.getByDisplayName("ColorPicker");
-    // if (typeof fromWebpack === "function") return fromWebpack;
-
-    // try {
-    //     const ret = GuildFolderSettingsModal.prototype.render.call({ props: {}, state: {} });
-    //     const ColorPicker = Utilities.findInReactTree(ret, e => e?.props?.hasOwnProperty("defaultColor")).type;
-    //     if (!ColorPicker) throw new Error("Type was not found.");
-
-    //     return ColorPicker;
-    // } catch (err) {
-    //     Logger.error("Failed to get ColorPicker.™", err);
-
-    //     return BackupColorPicker;
-    // }
-})();
+export default ColorPicker;
