@@ -1,6 +1,6 @@
 /**
  * @name UnreadCountBadges
- * @version 1.0.0
+ * @version 1.0.1
  * @author Strencher, Metalloriff
  * @description Adds unread badges to guilds, channels & more.
  * @source https://github.com/Strencher/BetterDiscordStuff/tree/master/UnreadCountBadges
@@ -32,7 +32,7 @@
 const config = {
 	"info": {
 		"name": "UnreadCountBadges",
-		"version": "1.0.0",
+		"version": "1.0.1",
 		"authors": [{
 				"name": "Strencher",
 				"discord_id": "415849376598982656",
@@ -273,7 +273,86 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			}
 		};
 		var __webpack_modules__ = {
-			829: (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+			185: (module, __webpack_exports__, __webpack_require__) => {
+				__webpack_require__.d(__webpack_exports__, {
+					Z: () => __WEBPACK_DEFAULT_EXPORT__
+				});
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(645);
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
+				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
+					return i[1];
+				}));
+				___CSS_LOADER_EXPORT___.push([module.id, ".UnreadCountBadges-badge-channelUnread{margin-left:3px}.UnreadCountBadges-badge-unread{left:0;position:absolute;bottom:0}", ""]);
+				___CSS_LOADER_EXPORT___.locals = {
+					channelUnread: "UnreadCountBadges-badge-channelUnread",
+					unread: "UnreadCountBadges-badge-unread"
+				};
+				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
+				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
+			},
+			927: (module, __webpack_exports__, __webpack_require__) => {
+				__webpack_require__.d(__webpack_exports__, {
+					Z: () => __WEBPACK_DEFAULT_EXPORT__
+				});
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(645);
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
+				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
+					return i[1];
+				}));
+				___CSS_LOADER_EXPORT___.push([module.id, ".UnreadCountBadges-Settings-divider{margin:20px 0}", ""]);
+				___CSS_LOADER_EXPORT___.locals = {
+					divider: "UnreadCountBadges-Settings-divider"
+				};
+				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
+				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
+			},
+			605: (module, __webpack_exports__, __webpack_require__) => {
+				__webpack_require__.d(__webpack_exports__, {
+					Z: () => __WEBPACK_DEFAULT_EXPORT__
+				});
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(645);
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
+				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
+					return i[1];
+				}));
+				___CSS_LOADER_EXPORT___.push([module.id, ".UnreadCountBadges-colorPicker-inputContainer{position:relative;display:inline-table}.UnreadCountBadges-colorPicker-inputContainer svg{position:absolute;top:5px;right:5px}.UnreadCountBadges-colorPicker-colorInput{outline:none;width:70px;border:none;height:54px;margin-top:1px;border-radius:4px;cursor:pointer}.UnreadCountBadges-colorPicker-colorInput::-webkit-color-swatch{border:none}.UnreadCountBadges-colorPicker-controls{padding-left:1px;padding-top:2px;display:flex}.UnreadCountBadges-colorPicker-colorSwatch{cursor:pointer;border-radius:4px;width:23px;height:23px;margin:4px;display:flex;align-items:center;justify-content:center}.UnreadCountBadges-colorPicker-colorSwatches{align-content:flex-start;margin-left:5px !important;max-width:340px}.UnreadCountBadges-colorPicker-defaultColor{cursor:pointer;width:72px;height:54px;border-radius:4px;margin-right:9px;display:flex;align-items:center;justify-content:center;margin-top:1px}", ""]);
+				___CSS_LOADER_EXPORT___.locals = {
+					inputContainer: "UnreadCountBadges-colorPicker-inputContainer",
+					colorInput: "UnreadCountBadges-colorPicker-colorInput",
+					controls: "UnreadCountBadges-colorPicker-controls",
+					colorSwatch: "UnreadCountBadges-colorPicker-colorSwatch",
+					colorSwatches: "UnreadCountBadges-colorPicker-colorSwatches",
+					defaultColor: "UnreadCountBadges-colorPicker-defaultColor"
+				};
+				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
+				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
+			},
+			911: (module, __webpack_exports__, __webpack_require__) => {
+				__webpack_require__.d(__webpack_exports__, {
+					Z: () => __WEBPACK_DEFAULT_EXPORT__
+				});
+				var _css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(645);
+				var _css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
+				var ___CSS_LOADER_EXPORT___ = _css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
+					return i[1];
+				}));
+				___CSS_LOADER_EXPORT___.push([module.id, ".UnreadCountBadges-category-category.UnreadCountBadges-category-compact{position:inherit}.UnreadCountBadges-category-category.UnreadCountBadges-category-compact .UnreadCountBadges-category-header{display:flex;align-items:center;justify-content:space-between;padding:2px;padding-left:10px;text-transform:uppercase;font-weight:600;font-size:.9rem}.UnreadCountBadges-category-category.UnreadCountBadges-category-compact .UnreadCountBadges-category-header .UnreadCountBadges-category-caret{float:right;display:inline-flex;color:var(--interactive-normal)}.UnreadCountBadges-category-category.UnreadCountBadges-category-compact .UnreadCountBadges-category-header .UnreadCountBadges-category-stroke{background-color:var(--background-modifier-accent);height:2px;flex:1;margin:0 5px 0 10px}.UnreadCountBadges-category-category.UnreadCountBadges-category-compact .UnreadCountBadges-category-header .UnreadCountBadges-category-label{color:var(--interactive-normal)}.UnreadCountBadges-category-category.UnreadCountBadges-category-compact .UnreadCountBadges-category-content{padding-left:20px;width:calc(100% - 40px)}.UnreadCountBadges-category-category.UnreadCountBadges-category-default{background:rgba(32,34,37,.3);border:1px solid #202225;margin:5px;cursor:pointer;border-radius:3px;--color: var(--interactive-normal)}.UnreadCountBadges-category-category.UnreadCountBadges-category-default:hover{--color: var(--interactive-hover)}.UnreadCountBadges-category-category.UnreadCountBadges-category-default .UnreadCountBadges-category-header{padding-right:5px;padding:10px 15px;padding-bottom:0;display:flex;align-items:center;justify-content:space-between}.UnreadCountBadges-category-category.UnreadCountBadges-category-default .UnreadCountBadges-category-header .UnreadCountBadges-category-stroke{display:none}.UnreadCountBadges-category-category.UnreadCountBadges-category-default .UnreadCountBadges-category-header .UnreadCountBadges-category-divider{position:relative}.UnreadCountBadges-category-category.UnreadCountBadges-category-default .UnreadCountBadges-category-header .UnreadCountBadges-category-label{font-size:1rem;font-weight:600;color:#fff;text-transform:uppercase}.UnreadCountBadges-category-category.UnreadCountBadges-category-default .UnreadCountBadges-category-header .UnreadCountBadges-category-caret{color:var(--color);transition:color .3s}.UnreadCountBadges-category-category.UnreadCountBadges-category-default.UnreadCountBadges-category-opened .UnreadCountBadges-category-content{padding:8px}.UnreadCountBadges-category-category.UnreadCountBadges-category-default.UnreadCountBadges-category-opened .UnreadCountBadges-category-header{background:rgba(32,34,37,.6)}", ""]);
+				___CSS_LOADER_EXPORT___.locals = {
+					category: "UnreadCountBadges-category-category",
+					compact: "UnreadCountBadges-category-compact",
+					header: "UnreadCountBadges-category-header",
+					caret: "UnreadCountBadges-category-caret",
+					stroke: "UnreadCountBadges-category-stroke",
+					label: "UnreadCountBadges-category-label",
+					content: "UnreadCountBadges-category-content",
+					default: "UnreadCountBadges-category-default",
+					divider: "UnreadCountBadges-category-divider",
+					opened: "UnreadCountBadges-category-opened"
+				};
+				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
+				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
+			},
+			762: (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 				__webpack_require__.r(__webpack_exports__);
 				__webpack_require__.d(__webpack_exports__, {
 					default: () => UnreadCountBadges
@@ -284,7 +363,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				var external_BdApi_React_ = __webpack_require__(832);
 				var external_BdApi_React_default = __webpack_require__.n(external_BdApi_React_);
 				const external_Modules_react_spring_namespaceObject = Modules["react-spring"];
-				var badge = __webpack_require__(15);
+				var badge = __webpack_require__(185);
 				const external_StyleLoader_namespaceObject = StyleLoader;
 				var external_StyleLoader_default = __webpack_require__.n(external_StyleLoader_namespaceObject);
 				const flux_namespaceObject = Modules["@discord/flux"];
@@ -300,7 +379,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					return obj;
 				}
 				class SettingsManager extends flux_namespaceObject.Store {
-					constructor(pluginName) {
+					constructor(pluginName, defaultSettings = {}) {
 						super(modules_namespaceObject.Dispatcher, {});
 						_defineProperty(this, "settings", void 0);
 						_defineProperty(this, "pluginName", void 0);
@@ -312,7 +391,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 							return value;
 						}));
 						this.pluginName = pluginName;
-						this.settings = external_PluginApi_namespaceObject.PluginUtilities.loadSettings(pluginName, {});
+						this.settings = external_PluginApi_namespaceObject.PluginUtilities.loadSettings(pluginName, defaultSettings);
 					}
 				}
 				const package_namespaceObject = JSON.parse('{"um":{"u2":"UnreadCountBadges"}}');
@@ -401,7 +480,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				}
 				const forms_namespaceObject = Modules["@discord/forms"];
 				const components_namespaceObject = Modules["@discord/components"];
-				var colorPicker = __webpack_require__(117);
+				var colorPicker = __webpack_require__(605);
 				function colorPicker_extends() {
 					colorPicker_extends = Object.assign || function(target) {
 						for (var i = 1; i < arguments.length; i++) {
@@ -413,7 +492,6 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					};
 					return colorPicker_extends.apply(this, arguments);
 				}
-				const GuildFolderSettingsModal = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("GuildFolderSettingsModal");
 				const Checkmark = external_BdApi_React_default().memo((props => external_BdApi_React_default().createElement("svg", colorPicker_extends({
 					width: "16",
 					height: "16",
@@ -451,7 +529,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 							return color;
 					}
 				};
-				const BackupColorPicker = ({
+				const ColorPicker = ({
 					value,
 					defaultValue,
 					onChange,
@@ -516,12 +594,12 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						})
 					}, intValue === int ? external_BdApi_React_default().createElement(Checkmark, null) : null)))));
 				};
-				const components_colorPicker = (() => BackupColorPicker)();
+				const components_colorPicker = ColorPicker;
 				const external_window_namespaceObject = window._;
 				var external_window_default = __webpack_require__.n(external_window_namespaceObject);
 				const icons_namespaceObject = Modules["@discord/icons"];
 				const utils_namespaceObject = Modules["@discord/utils"];
-				var category = __webpack_require__(375);
+				var category = __webpack_require__(911);
 				function Category({
 					label,
 					children,
@@ -578,6 +656,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					}));
 				};
 				const hooks_createUpdateWrapper = createUpdateWrapper;
+				var components_Settings = __webpack_require__(927);
 				function Settings_extends() {
 					Settings_extends = Object.assign || function(target) {
 						for (var i = 1; i < arguments.length; i++) {
@@ -617,7 +696,9 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						colors: defaultColors
 					}), external_BdApi_React_default().createElement(forms_namespaceObject.FormText, {
 						type: "description"
-					}, note), external_BdApi_React_default().createElement(forms_namespaceObject.FormDivider, null));
+					}, note), external_BdApi_React_default().createElement(forms_namespaceObject.FormDivider, {
+						className: components_Settings.Z.divider
+					}));
 				}
 				const settingsItems = {
 					total: {
@@ -1006,7 +1087,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 										if (!settings.get("includeMutedGuildsInTotal", false) && UnreadCountBadges_MutedStore.isMuted(guild.id)) return count;
 										return count += this.getUnreadCountForGuild(guild.id, settings.get("includeMutedChannelsInTotal", false));
 									}), 0);
-									const dms = Object.values(GuildChannelsStore.getMutableGuildChannels()).reduce(((count, channel) => {
+									const dms = Object.values(GuildChannelsStore.getMutablePrivateChannels()).reduce(((count, channel) => {
 										if (settings.get("includeDmsInTotal", true) && channel.type === constants_namespaceObject.ChannelTypes.DM && (settings.get("includeMutedDms", false) ? !UnreadCountBadges_MutedStore.isChannelMuted(channel.guild_id, channel.id) : true)) count += UnreadCountBadges_UnreadStore.getUnreadCount(channel.id);
 										if (!settings.get("includeGroupsInTotal", true) && channel.type === constants_namespaceObject.ChannelTypes.GROUP_DM && (settings.get("includeMutedGroups", false) ? !UnreadCountBadges_MutedStore.isChannelMuted(channel.guild_id, channel.id) : true)) count += UnreadCountBadges_UnreadStore.getUnreadCount(channel.id);
 										return count;
@@ -1053,69 +1134,6 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						if ("function" === typeof this.updateHomeIcon) this.updateHomeIcon();
 					}
 				}
-			},
-			15: (module, __webpack_exports__, __webpack_require__) => {
-				__webpack_require__.d(__webpack_exports__, {
-					Z: () => __WEBPACK_DEFAULT_EXPORT__
-				});
-				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(645);
-				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
-				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
-					return i[1];
-				}));
-				___CSS_LOADER_EXPORT___.push([module.id, ".UnreadCountBadges-badge-channelUnread{margin-left:3px}.UnreadCountBadges-badge-unread{left:0;position:absolute;bottom:0}", ""]);
-				___CSS_LOADER_EXPORT___.locals = {
-					channelUnread: "UnreadCountBadges-badge-channelUnread",
-					unread: "UnreadCountBadges-badge-unread"
-				};
-				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
-				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
-			},
-			117: (module, __webpack_exports__, __webpack_require__) => {
-				__webpack_require__.d(__webpack_exports__, {
-					Z: () => __WEBPACK_DEFAULT_EXPORT__
-				});
-				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(645);
-				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
-				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
-					return i[1];
-				}));
-				___CSS_LOADER_EXPORT___.push([module.id, ".UnreadCountBadges-colorPicker-inputContainer{position:relative;display:inline-table}.UnreadCountBadges-colorPicker-inputContainer svg{position:absolute;top:5px;right:5px}.UnreadCountBadges-colorPicker-colorInput{outline:none;width:70px;border:none;height:54px;margin-top:1px;border-radius:4px;cursor:pointer}.UnreadCountBadges-colorPicker-colorInput::-webkit-color-swatch{border:none}.UnreadCountBadges-colorPicker-controls{padding-left:1px;padding-top:2px;display:flex}.UnreadCountBadges-colorPicker-colorSwatch{cursor:pointer;border-radius:4px;width:23px;height:23px;margin:4px;display:flex;align-items:center;justify-content:center}.UnreadCountBadges-colorPicker-colorSwatches{align-content:flex-start;margin-left:5px !important;max-width:340px}.UnreadCountBadges-colorPicker-defaultColor{cursor:pointer;width:70px;height:58px;border-radius:4px;margin-right:9px;display:flex;align-items:center;justify-content:center}", ""]);
-				___CSS_LOADER_EXPORT___.locals = {
-					inputContainer: "UnreadCountBadges-colorPicker-inputContainer",
-					colorInput: "UnreadCountBadges-colorPicker-colorInput",
-					controls: "UnreadCountBadges-colorPicker-controls",
-					colorSwatch: "UnreadCountBadges-colorPicker-colorSwatch",
-					colorSwatches: "UnreadCountBadges-colorPicker-colorSwatches",
-					defaultColor: "UnreadCountBadges-colorPicker-defaultColor"
-				};
-				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
-				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
-			},
-			375: (module, __webpack_exports__, __webpack_require__) => {
-				__webpack_require__.d(__webpack_exports__, {
-					Z: () => __WEBPACK_DEFAULT_EXPORT__
-				});
-				var _css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(645);
-				var _css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
-				var ___CSS_LOADER_EXPORT___ = _css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
-					return i[1];
-				}));
-				___CSS_LOADER_EXPORT___.push([module.id, ".UnreadCountBadges-category-category.UnreadCountBadges-category-compact{position:inherit}.UnreadCountBadges-category-category.UnreadCountBadges-category-compact .UnreadCountBadges-category-header{display:flex;align-items:center;justify-content:space-between;padding:2px;padding-left:10px;text-transform:uppercase;font-weight:600;font-size:.9rem}.UnreadCountBadges-category-category.UnreadCountBadges-category-compact .UnreadCountBadges-category-header .UnreadCountBadges-category-caret{float:right;display:inline-flex;color:var(--interactive-normal)}.UnreadCountBadges-category-category.UnreadCountBadges-category-compact .UnreadCountBadges-category-header .UnreadCountBadges-category-stroke{background-color:var(--background-modifier-accent);height:2px;flex:1;margin:0 5px 0 10px}.UnreadCountBadges-category-category.UnreadCountBadges-category-compact .UnreadCountBadges-category-header .UnreadCountBadges-category-label{color:var(--interactive-normal)}.UnreadCountBadges-category-category.UnreadCountBadges-category-compact .UnreadCountBadges-category-content{padding-left:20px;width:calc(100% - 40px)}.UnreadCountBadges-category-category.UnreadCountBadges-category-default{background:rgba(32,34,37,.3);border:1px solid #202225;margin:5px;cursor:pointer;border-radius:3px;--color: var(--interactive-normal)}.UnreadCountBadges-category-category.UnreadCountBadges-category-default:hover{--color: var(--interactive-hover)}.UnreadCountBadges-category-category.UnreadCountBadges-category-default .UnreadCountBadges-category-header{padding-right:5px;padding:10px 15px;padding-bottom:0;display:flex;align-items:center;justify-content:space-between}.UnreadCountBadges-category-category.UnreadCountBadges-category-default .UnreadCountBadges-category-header .UnreadCountBadges-category-stroke{display:none}.UnreadCountBadges-category-category.UnreadCountBadges-category-default .UnreadCountBadges-category-header .UnreadCountBadges-category-divider{position:relative}.UnreadCountBadges-category-category.UnreadCountBadges-category-default .UnreadCountBadges-category-header .UnreadCountBadges-category-label{font-size:1rem;font-weight:600;color:#fff;text-transform:uppercase}.UnreadCountBadges-category-category.UnreadCountBadges-category-default .UnreadCountBadges-category-header .UnreadCountBadges-category-caret{color:var(--color);transition:color .3s}.UnreadCountBadges-category-category.UnreadCountBadges-category-default.UnreadCountBadges-category-opened .UnreadCountBadges-category-content{padding:8px}.UnreadCountBadges-category-category.UnreadCountBadges-category-default.UnreadCountBadges-category-opened .UnreadCountBadges-category-header{background:rgba(32,34,37,.6)}", ""]);
-				___CSS_LOADER_EXPORT___.locals = {
-					category: "UnreadCountBadges-category-category",
-					compact: "UnreadCountBadges-category-compact",
-					header: "UnreadCountBadges-category-header",
-					caret: "UnreadCountBadges-category-caret",
-					stroke: "UnreadCountBadges-category-stroke",
-					label: "UnreadCountBadges-category-label",
-					content: "UnreadCountBadges-category-content",
-					default: "UnreadCountBadges-category-default",
-					divider: "UnreadCountBadges-category-divider",
-					opened: "UnreadCountBadges-category-opened"
-				};
-				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
-				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
 			},
 			645: module => {
 				module.exports = function(cssWithMappingToString) {
@@ -1195,7 +1213,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				});
 			};
 		})();
-		var __webpack_exports__ = __webpack_require__(829);
+		var __webpack_exports__ = __webpack_require__(762);
 		module.exports.LibraryPluginHack = __webpack_exports__;
 	})();
 	const PluginExports = module.exports.LibraryPluginHack;
