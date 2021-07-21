@@ -1,6 +1,6 @@
 /**
  * @name UserDetails
- * @version 1.4.4
+ * @version 1.5.0
  * @author Strencher
  * @description Shows you a lot information about users in popouts.
  * @source https://github.com/Strencher/BetterDiscordStuff/UserDetails
@@ -32,7 +32,7 @@
 const config = {
 	"info": {
 		"name": "UserDetails",
-		"version": "1.4.4",
+		"version": "1.5.0",
 		"authors": [{
 			"name": "Strencher",
 			"discord_id": "415849376598982656",
@@ -44,12 +44,23 @@ const config = {
 		"github_raw": "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/UserDetails/UserDetails.plugin.js"
 	},
 	"changelog": [{
-		"title": "Fixed - v1.4.4",
-		"type": "fixed",
-		"items": [
-			"Fixed the crash related to the latest discord update."
-		]
-	}],
+			"title": "Fixed",
+			"type": "fixed",
+			"items": [
+				"Fixed dates cache not refreshing.",
+				"Fixed some other weird bugs."
+			]
+		},
+		{
+			"title": "Added",
+			"type": "added",
+			"items": [
+				"**MutualServers** section in the user popout.",
+				"**ActivityIcons** setting to disable for bots.",
+				"**Translations** credits for the translators."
+			]
+		}
+	],
 	"build": {
 		"zlibrary": true,
 		"copy": true,
@@ -303,17 +314,38 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
 					return i[1];
 				}));
-				___CSS_LOADER_EXPORT___.push([module.id, ".UserDetails-dates-container{display:flex;max-width:-webkit-fill-available}.UserDetails-dates-container.UserDetails-dates-text{flex-direction:column;margin-top:10px}.UserDetails-dates-container.UserDetails-dates-icons{flex-direction:row}.UserDetails-dates-container.UserDetails-dates-icons .UserDetails-dates-loading{animation:UserDetails-dates-blink infinite 2s ease-in-out}.UserDetails-dates-container svg{fill:#ddd;margin:5px;width:20px;height:20px}.UserDetails-dates-container.UserDetails-dates-text .UserDetails-dates-scrollableText{color:var(--text-normal);white-space:nowrap;position:relative;font-size:14px;width:-webkit-fill-available;text-align:left;line-height:18px}.UserDetails-dates-container.UserDetails-dates-text.UserDetails-dates-userProfile{padding-left:18px}.UserDetails-dates-container.UserDetails-dates-text.UserDetails-dates-userProfile .UserDetails-dates-scrollableText{text-align:left !important}.UserDetails-dates-container .UserDetails-dates-errorIcon{fill:#ed4245 !important}.UserDetails-dates-wrapper{display:block}@keyframes UserDetails-dates-blink{0%{opacity:.6}50%{opacity:.3}100%{opacity:.6}}", ""]);
+				___CSS_LOADER_EXPORT___.push([module.id, ".UserDetails-dates-container{display:flex;max-width:-webkit-fill-available}.UserDetails-dates-container.UserDetails-dates-text{flex-direction:column;margin-top:10px}.UserDetails-dates-container.UserDetails-dates-icons{flex-direction:row}.UserDetails-dates-container.UserDetails-dates-icons.UserDetails-dates-userProfile{padding-left:13px}.UserDetails-dates-container.UserDetails-dates-icons .UserDetails-dates-loading{animation:UserDetails-dates-blink infinite 2s ease-in-out}.UserDetails-dates-container svg{fill:#ddd;margin:5px;width:20px;height:20px}.UserDetails-dates-container.UserDetails-dates-text .UserDetails-dates-scrollableText{color:var(--text-normal);white-space:nowrap;position:relative;font-size:14px;width:-webkit-fill-available;text-align:left;line-height:18px}.UserDetails-dates-container.UserDetails-dates-text.UserDetails-dates-userProfile{padding-left:18px}.UserDetails-dates-container.UserDetails-dates-text.UserDetails-dates-userProfile .UserDetails-dates-scrollableText{text-align:left !important}.UserDetails-dates-container .UserDetails-dates-errorIcon{fill:#ed4245 !important}.UserDetails-dates-wrapper{display:block}@keyframes UserDetails-dates-blink{0%{opacity:.6}50%{opacity:.3}100%{opacity:.6}}", ""]);
 				___CSS_LOADER_EXPORT___.locals = {
 					container: "UserDetails-dates-container",
 					text: "UserDetails-dates-text",
 					icons: "UserDetails-dates-icons",
+					userProfile: "UserDetails-dates-userProfile",
 					loading: "UserDetails-dates-loading",
 					blink: "UserDetails-dates-blink",
 					scrollableText: "UserDetails-dates-scrollableText",
-					userProfile: "UserDetails-dates-userProfile",
 					errorIcon: "UserDetails-dates-errorIcon",
 					wrapper: "UserDetails-dates-wrapper"
+				};
+				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
+				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
+			},
+			416: (module, __webpack_exports__, __webpack_require__) => {
+				__webpack_require__.d(__webpack_exports__, {
+					Z: () => __WEBPACK_DEFAULT_EXPORT__
+				});
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(645);
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
+				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
+					return i[1];
+				}));
+				___CSS_LOADER_EXPORT___.push([module.id, ".UserDetails-mutualServers-header{font-weight:700;text-transform:uppercase;font-size:12px;margin-bottom:8px;color:var(--header-secondary)}.UserDetails-mutualServers-body{display:block;margin-bottom:8px}.UserDetails-mutualServers-guilds{display:flex;flex-wrap:wrap}.UserDetails-mutualServers-mutualGuild{margin:2px}.UserDetails-mutualServers-mutualGuild,.UserDetails-mutualServers-guildAcronym{width:30px;height:30px;border-radius:50%;overflow:hidden;transition:border-radius .3s}.UserDetails-mutualServers-mutualGuild:hover,.UserDetails-mutualServers-guildAcronym:hover{border-radius:20%}.UserDetails-mutualServers-mutualGuild img{width:30px;height:30px}.UserDetails-mutualServers-guildAcronym{display:flex;background:var(--background-floating);align-items:center;justify-content:center;white-space:nowrap;font-size:12px}.UserDetails-mutualServers-stack .UserDetails-mutualServers-mutualGuild{margin:0;margin-right:-10px;background:var(--background-floating)}", ""]);
+				___CSS_LOADER_EXPORT___.locals = {
+					header: "UserDetails-mutualServers-header",
+					body: "UserDetails-mutualServers-body",
+					guilds: "UserDetails-mutualServers-guilds",
+					mutualGuild: "UserDetails-mutualServers-mutualGuild",
+					guildAcronym: "UserDetails-mutualServers-guildAcronym",
+					stack: "UserDetails-mutualServers-stack"
 				};
 				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
 				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
@@ -380,9 +412,12 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
 					return i[1];
 				}));
-				___CSS_LOADER_EXPORT___.push([module.id, ".UserDetails-settings-settingsPanel .UserDetails-settings-formItem{margin-bottom:10px}.UserDetails-settings-settingsPanel .UserDetails-settings-icons{flex-wrap:wrap}.UserDetails-settings-settingsPanel .UserDetails-settings-icons .UserDetails-settings-settingsBadgeContainer{display:inline-flex;cursor:pointer}.UserDetails-settings-settingsPanel .UserDetails-settings-icons .UserDetails-settings-settingsBadgeContainer .UserDetails-settings-settingsBadgeIcon{width:40px;height:40px}.UserDetails-settings-settingsPanel .UserDetails-settings-icons .UserDetails-settings-settingsBadgeContainer .UserDetails-settings-settingsBadgeIcon.UserDetails-settings-disabled{opacity:.4}.UserDetails-settings-settingsPanel .UserDetails-settings-category{color:#ddd}.UserDetails-settings-settingsPanel .UserDetails-settings-category.UserDetails-settings-opened .UserDetails-settings-categoryContent{padding:10px;padding:10px}.UserDetails-settings-settingsPanel .UserDetails-settings-category.UserDetails-settings-opened .UserDetails-settings-categoryContent .UserDetails-settings-replacementVariable{user-select:text;margin-bottom:6px;padding-bottom:6px;border-bottom:thin solid var(--background-modifier-accent)}.UserDetails-settings-settingsPanel .UserDetails-settings-category.UserDetails-settings-opened .UserDetails-settings-categoryContent .UserDetails-settings-replacementVariable b{margin-right:3px}.UserDetails-settings-settingsPanel .UserDetails-settings-category .UserDetails-settings-categoryHeader{cursor:pointer;padding:10px;font-size:15px;background:var(--background-tertiary);font-weight:600;text-transform:uppercase;display:flex;align-items:center}.UserDetails-settings-settingsPanel .UserDetails-settings-category .UserDetails-settings-categoryHeader .UserDetails-settings-categoryCaret{margin-left:auto}.UserDetails-settings-settingsPanel .UserDetails-settings-pageIcon{color:var(--interactive-normal);fill:var(--interactive-normal)}", ""]);
+				___CSS_LOADER_EXPORT___.push([module.id, ".UserDetails-settings-settingsPanel .UserDetails-settings-descriptionItem{margin-top:8px}.UserDetails-settings-settingsPanel .UserDetails-settings-translation{width:27px;height:18px;margin-right:8px}.UserDetails-settings-settingsPanel .UserDetails-settings-marginBottom8{margin-bottom:8px}.UserDetails-settings-settingsPanel .UserDetails-settings-formItem{margin-bottom:10px}.UserDetails-settings-settingsPanel .UserDetails-settings-icons{flex-wrap:wrap}.UserDetails-settings-settingsPanel .UserDetails-settings-icons .UserDetails-settings-settingsBadgeContainer{display:inline-flex;cursor:pointer}.UserDetails-settings-settingsPanel .UserDetails-settings-icons .UserDetails-settings-settingsBadgeContainer .UserDetails-settings-settingsBadgeIcon{width:40px;height:40px}.UserDetails-settings-settingsPanel .UserDetails-settings-icons .UserDetails-settings-settingsBadgeContainer .UserDetails-settings-settingsBadgeIcon.UserDetails-settings-disabled{opacity:.4}.UserDetails-settings-settingsPanel .UserDetails-settings-category{color:#ddd}.UserDetails-settings-settingsPanel .UserDetails-settings-category.UserDetails-settings-opened .UserDetails-settings-categoryContent{padding:10px;padding:10px}.UserDetails-settings-settingsPanel .UserDetails-settings-category.UserDetails-settings-opened .UserDetails-settings-categoryContent .UserDetails-settings-replacementVariable{user-select:text;margin-bottom:6px;padding-bottom:6px;border-bottom:thin solid var(--background-modifier-accent)}.UserDetails-settings-settingsPanel .UserDetails-settings-category.UserDetails-settings-opened .UserDetails-settings-categoryContent .UserDetails-settings-replacementVariable b{margin-right:3px}.UserDetails-settings-settingsPanel .UserDetails-settings-category .UserDetails-settings-categoryHeader{cursor:pointer;padding:10px;font-size:15px;background:var(--background-tertiary);font-weight:600;text-transform:uppercase;display:flex;align-items:center}.UserDetails-settings-settingsPanel .UserDetails-settings-category .UserDetails-settings-categoryHeader .UserDetails-settings-categoryCaret{margin-left:auto}.UserDetails-settings-settingsPanel .UserDetails-settings-pageIcon{color:var(--interactive-normal);fill:var(--interactive-normal)}", ""]);
 				___CSS_LOADER_EXPORT___.locals = {
 					settingsPanel: "UserDetails-settings-settingsPanel",
+					descriptionItem: "UserDetails-settings-descriptionItem",
+					translation: "UserDetails-settings-translation",
+					marginBottom8: "UserDetails-settings-marginBottom8",
 					formItem: "UserDetails-settings-formItem",
 					icons: "UserDetails-settings-icons",
 					settingsBadgeContainer: "UserDetails-settings-settingsBadgeContainer",
@@ -416,10 +451,16 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
 				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
 			},
-			177: (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+			214: (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 				__webpack_require__.r(__webpack_exports__);
 				__webpack_require__.d(__webpack_exports__, {
 					default: () => Plugin
+				});
+				var modules_stores_namespaceObject = {};
+				__webpack_require__.r(modules_stores_namespaceObject);
+				__webpack_require__.d(modules_stores_namespaceObject, {
+					JoinedAt: () => joinedAt,
+					LastMessage: () => stores_lastMessage
 				});
 				const external_StyleLoader_namespaceObject = StyleLoader;
 				var external_StyleLoader_default = __webpack_require__.n(external_StyleLoader_namespaceObject);
@@ -780,6 +821,8 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				var apis_connections = __webpack_require__(597);
 				const stores_namespaceObject = Modules["@discord/stores"];
 				const actions_namespaceObject = Modules["@discord/actions"];
+				const i18n_namespaceObject = Modules["@discord/i18n"];
+				var i18n_default = __webpack_require__.n(i18n_namespaceObject);
 				const Header = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("Header");
 				class Userconnections extends ApiModule {
 					get api() {
@@ -787,15 +830,15 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					}
 					task(user) {
 						return () => {
-							if (!connections_default().filter((c => Settings.get("shownConnections", {})[c.type])).length || user.bot) return null;
+							if (!connections_default().filter((c => Settings.get("shownConnections", {})[c.type])).length || user.bot || !Settings.get("showConnectionsSection", true)) return null;
 							const connections = (0, flux_namespaceObject.useStateFromStores)([stores_namespaceObject.UserProfile], (() => stores_namespaceObject.UserProfile.getUserProfile(user.id)?.connectedAccounts));
 							const [message, setMessage] = (0, external_BdApi_React_.useState)("");
 							(0, external_BdApi_React_.useEffect)((() => {
-								if (stores_namespaceObject.UserProfile.isFetching(user.id)) return;
+								if (Array.isArray(connections) || stores_namespaceObject.UserProfile.isFetching(user.id)) return;
 								actions_namespaceObject.ProfileActions.fetchProfile(user.id).catch((error => {
 									if (~error?.message?.indexOf("Already dispatching")) return;
 									external_PluginApi_namespaceObject.Logger.error(`Failed to fetch profile for ${user.id}:\n`, error);
-									setMessage("Failed to fetch!");
+									setMessage(i18n_namespaceObject.Messages.FAILED_TO_FETCH);
 								}));
 							}), [true]);
 							return external_BdApi_React_default().createElement("div", {
@@ -806,7 +849,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 								className: apis_connections.Z.header,
 								uppercase: true,
 								muted: true
-							}, connections?.length ? "connections" : "no connections") : null, Array.isArray(connections) ? connections?.length ? external_BdApi_React_default().createElement("div", {
+							}, connections?.length ? i18n_namespaceObject.Messages.CONNECTIONS : i18n_namespaceObject.Messages.NO_CONNECTIONS) : null, Array.isArray(connections) ? connections?.length ? external_BdApi_React_default().createElement("div", {
 								className: apis_connections.Z.connections
 							}, connections.filter((e => Settings.get("shownConnections")[e.type])).map((badge => external_BdApi_React_default().createElement(Badge, {
 								item: badge,
@@ -816,7 +859,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 							}, external_BdApi_React_default().createElement(error, {
 								className: apis_connections.Z.errorIcon
 							})) : external_BdApi_React_default().createElement(components_namespaceObject.TooltipContainer, {
-								text: "Loading Connections..."
+								text: i18n_namespaceObject.Messages.LOADING_CONNECTIONS
 							}, connections_default().filter((e => Settings.get("shownConnections")[e.type])).map((() => external_BdApi_React_default().createElement(circle, {
 								className: apis_connections.Z.loading
 							})))));
@@ -1007,27 +1050,41 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						className: style.Z.loadingText
 					}, ".".repeat(state));
 				}
+				function joinedAt_defineProperty(obj, key, value) {
+					if (key in obj) Object.defineProperty(obj, key, {
+						value,
+						enumerable: true,
+						configurable: true,
+						writable: true
+					});
+					else obj[key] = value;
+					return obj;
+				}
 				const JoinedAtDates = new Map,
 					fetchingQueue = new Set;
 				const JoinedAt = new class extends flux_namespaceObject.Store {
 					resolveId(...args) {
 						return args.join("_");
 					}
+					get fetching() {
+						return fetchingQueue;
+					}
 					constructor() {
 						super(modules_namespaceObject.Dispatcher, {});
+						joinedAt_defineProperty(this, "logger", new utils_namespaceObject.Logger("JoinedAtStore"));
 					}
 					getState() {
 						return JoinedAtDates;
 					}
 					has(guildId, userId) {
-						return JoinedAtDates.has(this.resolveId(guildId, userId));
+						return null !== this.getDate(guildId, userId) && JoinedAtDates.has(this.resolveId(guildId, userId));
 					}
 					isFetching(guildId, userId) {
 						return fetchingQueue.has(this.resolveId(guildId, userId));
 					}
 					getDate(guildId, userId) {
 						const data = JoinedAtDates.get(this.resolveId(guildId, userId));
-						if (!data || Date.now() - data.fetch > 6e5) return;
+						if (!data || Date.now() - data.fetch > 6e5) return null;
 						return data;
 					}
 					registerCallback(guildId, userId, callback) {
@@ -1039,6 +1096,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						modules_namespaceObject.Dispatcher.subscribe("GUILD_MEMBERS_CHUNK", handleCallback);
 					}
 					setFailed(id, reason) {
+						fetchingQueue.delete(id);
 						JoinedAtDates.set(id, {
 							data: reason,
 							fetch: Date.now(),
@@ -1051,6 +1109,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						if (fetchingQueue.has(id)) return;
 						fetchingQueue.add(id);
 						if (stores_namespaceObject.Members.getMember(guildId, userId)) {
+							fetchingQueue.delete(id);
 							JoinedAtDates.set(id, {
 								data: new Date(stores_namespaceObject.Members.getMember(guildId, userId).joinedAt),
 								fetch: Date.now(),
@@ -1060,6 +1119,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						}
 						const timeout = setTimeout((() => {
 							this.setFailed(id, "FAILED_TO_FETCH");
+							this.logger.error("Request timed out, didn't got a response after 1 minute.");
 						}), 6 * 1e4);
 						this.registerCallback(guildId, userId, (data => {
 							if (data.notFound.indexOf(userId) > -1) this.setFailed(id, "MEMBER_WAS_NOT_FOUND");
@@ -1070,7 +1130,10 @@ function buildPlugin([BasePlugin, PluginApi]) {
 									fetch: Date.now(),
 									status: "success"
 								});
-								else this.setFailed(id, "MEMBER_WAS_NOT_FOUND");
+								else {
+									this.setFailed(id, "MEMBER_WAS_NOT_FOUND");
+									this.logger.info(`Member ${userId} of guild ${guildId} was not found!`);
+								}
 							}
 							fetchingQueue.delete(id);
 							clearTimeout(timeout);
@@ -1080,8 +1143,6 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					}
 				};
 				const joinedAt = JoinedAt;
-				const i18n_namespaceObject = Modules["@discord/i18n"];
-				var i18n_default = __webpack_require__.n(i18n_namespaceObject);
 				class joinedDate_JoinedAt extends ApiModule {
 					get api() {
 						return this.constructor.name;
@@ -1097,7 +1158,6 @@ function buildPlugin([BasePlugin, PluginApi]) {
 							(0, external_BdApi_React_.useEffect)((() => {
 								if (joinedAt.has(guildId, userId) || joinedAt.isFetching(guildId, userId)) return;
 								if (!guildId) return void setMessage(i18n_namespaceObject.Messages.FAILED_TO_FETCH);
-								console.log(joinedAt.has(guildId, userId), joinedAt);
 								joinedAt.fetch(guildId, userId);
 							}), []);
 							const useIcons = Settings.get("useIcons", true);
@@ -1113,7 +1173,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 									color: "red"
 								}
 							}, message || i18n_namespaceObject.Messages[joined.data]) : external_BdApi_React_default().createElement(components_namespaceObject.TooltipContainer, {
-								text: "Loading JoinedAt..."
+								text: i18n_namespaceObject.Messages.LOADING_JOINED_AT
 							}, useIcons ? external_BdApi_React_default().createElement(cube, {
 								className: dates.Z.loading
 							}) : external_BdApi_React_default().createElement(LoadingText, null));
@@ -1187,9 +1247,14 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					constructor(...args) {
 						super(...args);
 						lastMessage_defineProperty(this, "paused", false);
+						lastMessage_defineProperty(this, "logger", new utils_namespaceObject.Logger("LastMessageStore"));
+						lastMessage_defineProperty(this, "MAX_RETRIES", 5);
 					}
 					get _users() {
 						return lastMessages;
+					}
+					get fetching() {
+						return lastMessage_fetchingQueue;
 					}
 					isFetching(userId, channelId) {
 						return lastMessage_fetchingQueue.has(resolveId(userId, channelId));
@@ -1200,12 +1265,12 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						return cached;
 					}
 					has(userId, channelId) {
-						return lastMessages.has(resolveId(userId, channelId));
+						return null !== this.get(userId, channelId) && lastMessages.has(resolveId(userId, channelId));
 					}
 					fetch(userId, roomId, isGuild = false, attemp = 1) {
 						const id = resolveId(userId, roomId);
 						if (lastMessage_fetchingQueue.has(id) || this.paused) return Promise.resolve();
-						if (attemp > 5) {
+						if (attemp > this.MAX_RETRIES) {
 							lastMessage_fetchingQueue.delete(id);
 							lastMessages.set(id, {
 								channelId: roomId,
@@ -1214,6 +1279,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 								messageId: null,
 								status: "failure"
 							});
+							this.logger.error(`Request failed after ${this.MAX_RETRIES} attempts.`);
 							return Promise.resolve();
 						}
 						lastMessage_fetchingQueue.add(id);
@@ -1239,13 +1305,16 @@ function buildPlugin([BasePlugin, PluginApi]) {
 									messageId: message.id,
 									status: "success"
 								});
-								else lastMessages.set(id, {
-									data: "FAILED_TO_FETCH",
-									fetch: Date.now(),
-									channelId: roomId,
-									messageId: null,
-									status: "failure"
-								});
+								else {
+									lastMessages.set(id, {
+										data: "FAILED_TO_FETCH",
+										fetch: Date.now(),
+										channelId: roomId,
+										messageId: null,
+										status: "failure"
+									});
+									this.logger.info(`No messages for ${userId} were found in ${roomId}.`);
+								}
 								this.emitChange();
 								resolve();
 							})).catch((error => {
@@ -1302,8 +1371,12 @@ function buildPlugin([BasePlugin, PluginApi]) {
 								text: errorMessage || i18n_namespaceObject.Messages[lastMessage.data]
 							}, external_BdApi_React_default().createElement(error, {
 								className: dates.Z.errorIcon
-							})) : external_BdApi_React_default().createElement(TextScroller, null, errorMessage || i18n_namespaceObject.Messages[lastMessage.data]) : external_BdApi_React_default().createElement(components_namespaceObject.TooltipContainer, {
-								text: "Loading Last Message..."
+							})) : external_BdApi_React_default().createElement(TextScroller, {
+								style: {
+									color: "red"
+								}
+							}, errorMessage || i18n_namespaceObject.Messages[lastMessage.data]) : external_BdApi_React_default().createElement(components_namespaceObject.TooltipContainer, {
+								text: i18n_namespaceObject.Messages.LOADING_LAST_MESSAGE
 							}, shouldUseIcon ? external_BdApi_React_default().createElement(cube, {
 								className: dates.Z.loading
 							}) : external_BdApi_React_default().createElement(LoadingText, null));
@@ -1353,7 +1426,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						link: "https://github.com/{{user}}"
 					}
 				};
-				const pages_namespaceObject = JSON.parse('[{"name":"General","icon":"Wrench","items":[{"type":"switch","name":"Use Icons","note":"Defines if icons should be used to show any date.","id":"useIcons","value":true},{"type":"radio","name":"Time Format","value":1,"id":"12hour","options":[{"value":1,"name":"24 hour"},{"value":0,"name":"12 hour"}]},{"type":"divider"},{"type":"category","name":"Variables","items":[{"type":"replacement","prefix":"$timelabel","description":"Replaces the current time label. eg AM or PM."},{"type":"replacement","prefix":"$day","description":"Replaces the current day."},{"type":"replacement","prefix":"$daysago","description":"Replaces with a number of how many days it\'s ago."},{"type":"replacement","prefix":"$dayname","description":"Replaces the shorted dayname."},{"type":"replacement","prefix":"$weeksago","description":"Replaces with a number of how many weeks it\'s ago."},{"type":"replacement","prefix":"$month","description":"Replaces the month."},{"type":"replacement","prefix":"$monthname","description":"Replaces the shorted monthname."},{"type":"replacement","prefix":"$monthsago","description":"Replaces with a number of how many months it\'s ago."},{"type":"replacement","prefix":"$year","description":"Replaces the year."},{"type":"replacement","prefix":"$yearsago","description":"Replaces with a number of how many years it\'s ago."},{"type":"replacement","prefix":"$hour","description":"Replaces the hour(s)"},{"type":"replacement","prefix":"$minute","description":"Replaces the minute(s)"},{"type":"replacement","prefix":"$second","description":"Replaces the second(s)"}]}]},{"name":"Created At","icon":"Cake","items":[{"type":"switch","name":"Show in UserPopout","id":"created_show_up","note":"Defines if the creation date should be shown in the UserPopout.","value":true},{"type":"switch","name":"Show in UserProfile","id":"created_show_profile","note":"Defines if the creation date should be shown in the UserProfile.","value":true},{"type":"text","name":"Created At","note":"Format of the Created at date. Read the variables section in the general settings to understand how it works.","id":"created_format","value":"Created At: $hour:$minute:$second, $day.$month.$year $daysago days"}]},{"name":"Joined At","icon":"Calendar","items":[{"type":"switch","name":"Show in UserPopout","id":"joined_show_up","note":"Defines if the joined date should be shown in the UserPopout.","value":true},{"type":"switch","name":"Show in UserProfile","id":"joined_show_profile","note":"Defines if the joined date should be shown in the UserProfile.","value":true},{"type":"text","name":"Joined At","note":"Format of the joined at date. Read the variables section in the general settings to understand how it works.","id":"joined_format","value":"Joined At: $hour:$minute:$second, $day.$month.$year $daysago days"}]},{"name":"Last Message At","icon":"TextBubble","items":[{"type":"switch","name":"Show in UserPopout","id":"lastmessage_show_up","note":"Defines if the last message date should be shown in the UserPopout.","value":true},{"type":"switch","name":"Show in UserProfile","id":"lastmessage_show_profile","note":"Defines if the last message date should be shown in the UserProfile.","value":true},{"type":"text","name":"Last Message","note":"Format of the LastMessage at date. Read the variables section in the general settings to understand how it works.","id":"lastmessage_format","value":"Last Message At: $hour:$minute:$second, $day.$month.$year $daysago days"}]},{"name":"Connections","icon":"Chain","items":[{"type":"switch","name":"Show Empty","note":"Show a \\"NO CONNECTIONS\\" placeholder if the user has no connections.","id":"showEmptyConnections","value":true},{"type":"switch","name":"Show Verified","note":"Shows a little verified badge below the icon if the connection is verified.","id":"showVerifiedConnections","value":true},{"type":"icons"}]},{"name":"Activity Icons","icon":"GamePad","items":[{"type":"switch","name":"Enable Activity Icons","note":null,"id":"activityIcons","value":true},{"type":"radio","name":"Activity Icon State","note":"Replaces the activity icon in the activity text of the member list.","id":"activityIconState","value":0,"disabled":false,"options":[{"name":"Replace with associated icon","value":0},{"name":"Don\'t do anything","value":1},{"name":"Hide it","value":2}]},{"type":"switch","name":"Show Gamepad","note":"This shows a gamepad icon if an icon for the activity isn\'t available.","id":"showGamepad","value":true}]}]');
+				const pages_namespaceObject = JSON.parse('[{"name":"General","icon":"Wrench","items":[{"type":"switch","name":"Use Icons","note":"Defines if icons should be used to show any date.","id":"useIcons","value":true},{"type":"radio","name":"Time Format","value":1,"id":"12hour","options":[{"value":1,"name":"24 hour"},{"value":0,"name":"12 hour"}]},{"type":"divider"},{"type":"category","name":"Variables","items":[{"type":"replacement","prefix":"$timelabel","description":"Replaces the current time label. eg AM or PM."},{"type":"replacement","prefix":"$day","description":"Replaces the current day."},{"type":"replacement","prefix":"$daysago","description":"Replaces with a number of how many days it\'s ago."},{"type":"replacement","prefix":"$dayname","description":"Replaces the shorted dayname."},{"type":"replacement","prefix":"$weeksago","description":"Replaces with a number of how many weeks it\'s ago."},{"type":"replacement","prefix":"$month","description":"Replaces the month."},{"type":"replacement","prefix":"$monthname","description":"Replaces the shorted monthname."},{"type":"replacement","prefix":"$monthsago","description":"Replaces with a number of how many months it\'s ago."},{"type":"replacement","prefix":"$year","description":"Replaces the year."},{"type":"replacement","prefix":"$yearsago","description":"Replaces with a number of how many years it\'s ago."},{"type":"replacement","prefix":"$hour","description":"Replaces the hour(s)"},{"type":"replacement","prefix":"$minute","description":"Replaces the minute(s)"},{"type":"replacement","prefix":"$second","description":"Replaces the second(s)"}]}]},{"name":"Created At","icon":"Cake","items":[{"type":"switch","name":"Show in UserPopout","id":"created_show_up","note":"Defines if the creation date should be shown in the UserPopout.","value":true},{"type":"switch","name":"Show in UserProfile","id":"created_show_profile","note":"Defines if the creation date should be shown in the UserProfile.","value":true},{"type":"text","name":"Created At","note":"Format of the Created at date. Read the variables section in the general settings to understand how it works.","id":"created_format","value":"Created At: $hour:$minute:$second, $day.$month.$year $daysago days"}]},{"name":"Joined At","icon":"Calendar","items":[{"type":"switch","name":"Show in UserPopout","id":"joined_show_up","note":"Defines if the joined date should be shown in the UserPopout.","value":true},{"type":"switch","name":"Show in UserProfile","id":"joined_show_profile","note":"Defines if the joined date should be shown in the UserProfile.","value":true},{"type":"text","name":"Joined At","note":"Format of the joined at date. Read the variables section in the general settings to understand how it works.","id":"joined_format","value":"Joined At: $hour:$minute:$second, $day.$month.$year $daysago days"}]},{"name":"Last Message At","icon":"TextBubble","items":[{"type":"switch","name":"Show in UserPopout","id":"lastmessage_show_up","note":"Defines if the last message date should be shown in the UserPopout.","value":true},{"type":"switch","name":"Show in UserProfile","id":"lastmessage_show_profile","note":"Defines if the last message date should be shown in the UserProfile.","value":true},{"type":"text","name":"Last Message","note":"Format of the LastMessage at date. Read the variables section in the general settings to understand how it works.","id":"lastmessage_format","value":"Last Message At: $hour:$minute:$second, $day.$month.$year $daysago days"}]},{"name":"Connections","icon":"Chain","items":[{"type":"switch","name":"Enable Section","note":"Enables this section in the user popout.","id":"showConnectionsSection","value":true},{"type":"switch","name":"Show Empty","note":"Show a \\"NO CONNECTIONS\\" placeholder if the user has no connections.","id":"showEmptyConnections","value":true},{"type":"switch","name":"Show Verified","note":"Shows a little verified badge below the icon if the connection is verified.","id":"showVerifiedConnections","value":true},{"type":"icons"}]},{"name":"Activity Icons","icon":"GamePad","items":[{"type":"switch","name":"Enable Activity Icons","note":null,"id":"activityIcons","value":true},{"type":"switch","name":"Disable Bots","note":"Disables the icon for bots, since the most always have something with \'Playing: {...}\' in their statuses.","id":"disableIconsForBots","value":true},{"type":"radio","name":"Activity Icon State","note":"Replaces the activity icon in the activity text of the member list.","id":"activityIconState","value":0,"disabled":false,"options":[{"name":"Replace with associated icon","value":0},{"name":"Don\'t do anything","value":1},{"name":"Hide it","value":2}]},{"type":"switch","name":"Show Gamepad","note":"This shows a gamepad icon if an icon for the activity isn\'t available.","id":"showGamepad","value":true}]},{"name":"Mutual Servers","icon":"Mutual","items":[{"type":"switch","name":"Enable Mutual Servers","note":"This enables/disables the mutual servers section in the user popout","id":"showMutualGuilds","value":true},{"type":"switch","name":"Disable for yourself","note":"Disables the mutual servers section for you. (it will just show all your guilds)","id":"hideMutualGuildsCurrentUser","value":true},{"type":"switch","name":"Show empty message","note":"This defines if an empty message \'no mutual servers\' should be shown if the user has no mutual servers with you","id":"showEmptyMutualGuilds","value":true},{"type":"switch","name":"Stack Icons","note":"Stacks the icons so it takes less space.","id":"stackMutualServers","value":false}]},{"name":"Translation Credits","icon":"Language","items":[{"type":"translation","name":"Turkish","id":"tr","note":"@IMaWeebツ#6931"},{"type":"translation","name":"English","id":"en-US","note":"@It\'s Rad, Not Red#0001"},{"type":"translation","name":"German","id":"de","note":"@l0c4lh057#9748, @SteffoSpieler#1868"},{"type":"translation","name":"Dutch","id":"nl","note":"@th0masterharambe#0001"},{"type":"translation","name":"Vietnamese","id":"vi","note":"@MH#5893"},{"type":"translation","name":"Spanish","id":"es-ES","note":"@DrPuc##2048"},{"type":"translation","name":"Swedish","id":"sv-SE","note":"@toatl#7460"},{"type":"translation","name":"Portuguese (Brazil)","id":"pt-BR","note":"@Dominic#1111"},{"type":"translation","name":"French","id":"fr","note":"@LemCent321#1663"}]}]');
 				var settings = __webpack_require__(128);
 				function errorboundary_defineProperty(obj, key, value) {
 					if (key in obj) Object.defineProperty(obj, key, {
@@ -1625,6 +1698,56 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					d: "M12 2.00305C6.486 2.00305 2 6.48805 2 12.0031V20.0031C2 21.1071 2.895 22.0031 4 22.0031H6C7.104 22.0031 8 21.1071 8 20.0031V17.0031C8 15.8991 7.104 15.0031 6 15.0031H4V12.0031C4 7.59105 7.589 4.00305 12 4.00305C16.411 4.00305 20 7.59105 20 12.0031V15.0031H18C16.896 15.0031 16 15.8991 16 17.0031V20.0031C16 21.1071 16.896 22.0031 18 22.0031H20C21.104 22.0031 22 21.1071 22 20.0031V12.0031C22 6.48805 17.514 2.00305 12 2.00305Z",
 					fill: "currentColor"
 				})));
+				var language_React = __webpack_require__(832);
+				function language_extends() {
+					language_extends = Object.assign || function(target) {
+						for (var i = 1; i < arguments.length; i++) {
+							var source = arguments[i];
+							for (var key in source)
+								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
+						}
+						return target;
+					};
+					return language_extends.apply(this, arguments);
+				}
+				const language = props => language_React.createElement("svg", language_extends({
+					xmlns: "http://www.w3.org/2000/svg",
+					height: "24px",
+					viewBox: "0 0 24 24",
+					width: "24px",
+					fill: "currentColor"
+				}, props), language_React.createElement("path", {
+					d: "M21 4H11l-1-3H3c-1.1 0-2 .9-2 2v15c0 1.1.9 2 2 2h8l1 3h9c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zM7 16c-2.76 0-5-2.24-5-5s2.24-5 5-5c1.35 0 2.48.5 3.35 1.3L9.03 8.57c-.38-.36-1.04-.78-2.03-.78-1.74 0-3.15 1.44-3.15 3.21S5.26 14.21 7 14.21c2.01 0 2.84-1.44 2.92-2.41H7v-1.71h4.68c.07.31.12.61.12 1.02C11.8 13.97 9.89 16 7 16zm6.17-5.42h3.7c-.43 1.25-1.11 2.43-2.05 3.47-.31-.35-.6-.72-.86-1.1l-.79-2.37zm8.33 9.92c0 .55-.45 1-1 1H14l2-2.5-1.04-3.1 3.1 3.1.92-.92-3.3-3.25.02-.02c1.13-1.25 1.93-2.69 2.4-4.22H20v-1.3h-4.53V8h-1.29v1.29h-1.44L11.46 5.5h9.04c.55 0 1 .45 1 1v14z"
+				}), language_React.createElement("path", {
+					d: "M0 0h24v24H0zm0 0h24v24H0z",
+					fill: "none"
+				}));
+				var mutual_React = __webpack_require__(832);
+				function mutual_extends() {
+					mutual_extends = Object.assign || function(target) {
+						for (var i = 1; i < arguments.length; i++) {
+							var source = arguments[i];
+							for (var key in source)
+								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
+						}
+						return target;
+					};
+					return mutual_extends.apply(this, arguments);
+				}
+				const mutual = props => mutual_React.createElement("svg", mutual_extends({
+					xmlns: "http://www.w3.org/2000/svg",
+					height: "24px",
+					viewBox: "0 0 24 24",
+					width: "24px",
+					fill: "currentColor"
+				}, props), mutual_React.createElement("g", null, mutual_React.createElement("rect", {
+					fill: "none",
+					height: "24",
+					width: "24",
+					x: "0"
+				})), mutual_React.createElement("g", null, mutual_React.createElement("g", null, mutual_React.createElement("g", null, mutual_React.createElement("path", {
+					d: "M9.01,14H2v2h7.01v3L13,15l-3.99-4V14z M14.99,13v-3H22V8h-7.01V5L11,9L14.99,13z"
+				})))));
 				var icons_React = __webpack_require__(832);
 				const Icons = {
 					Cake: cake,
@@ -1640,7 +1763,9 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					YouTube: youtube,
 					GamePad: gamepad,
 					GoogleChrome: googleChrome,
-					Headphones: headphones
+					Headphones: headphones,
+					Language: language,
+					Mutual: mutual
 				};
 				function noop() {
 					return null;
@@ -1671,7 +1796,6 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					marginBottom8: settings_marginBottom8
 				} = external_PluginApi_namespaceObject.WebpackModules.getByProps("marginBottom8");
 				const Breadcrumbs = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("Breadcrumbs");
-				const settings_Flex = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("Flex");
 				const {
 					default: CardItem
 				} = external_PluginApi_namespaceObject.WebpackModules.find((m => m?.default?.toString().indexOf("hasNextSection") > -1)) ?? {
@@ -1680,14 +1804,15 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				const Card = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("Card");
 				const Caret = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("Caret");
 				const Clickable = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("Clickable");
+				const FlagsStore = external_PluginApi_namespaceObject.WebpackModules.getModule((m => "function" === typeof m.keys && m.resolve && m.keys().some((e => e.includes("en-US")))));
 				const TextItem = ({
 					value,
 					onChange,
 					name,
 					note
-				}) => external_BdApi_React_default().createElement(settings_Flex, {
+				}) => external_BdApi_React_default().createElement(components_namespaceObject.Flex, {
 					className: settings_marginBottom8,
-					direction: settings_Flex.Direction.VERTICAL
+					direction: components_namespaceObject.Flex.Direction.VERTICAL
 				}, external_BdApi_React_default().createElement(forms_namespaceObject.FormItem, {
 					title: name,
 					className: settings.Z.formItem
@@ -1701,7 +1826,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				const IconSetting = () => {
 					const forceUpdate = Utilities.useForceUpdate();
 					const shownIcons = Settings.get("shownConnections", Object.fromEntries(connections_default().map((e => [e.type, true]))));
-					return external_BdApi_React_default().createElement(settings_Flex, {
+					return external_BdApi_React_default().createElement(components_namespaceObject.Flex, {
 						className: settings.Z.icons
 					}, connections_default().filter((e => e.enabled)).map((k => external_BdApi_React_default().createElement(components_namespaceObject.TooltipContainer, {
 						className: settings.Z.settingsBadgeContainer,
@@ -1716,15 +1841,43 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						}
 					})))));
 				};
+				const Translation = ({
+					name,
+					note,
+					id
+				}) => {
+					const icon = (0, external_BdApi_React_.useMemo)((() => {
+						try {
+							return external_BdApi_React_default().createElement("img", {
+								src: FlagsStore("./" + id + ".png"),
+								className: (0, utils_namespaceObject.joinClassNames)(settings.Z.translation, settings.Z.marginBottom8)
+							});
+						} catch {
+							return null;
+						}
+					}), [id]);
+					return external_BdApi_React_default().createElement(external_BdApi_React_default().Fragment, null, external_BdApi_React_default().createElement(components_namespaceObject.Flex, {
+						direction: components_namespaceObject.Flex.Direction.HORIZONTAL,
+						justify: components_namespaceObject.Flex.Justify.BETWEEN,
+						align: components_namespaceObject.Flex.Align.CENTER,
+						className: settings.Z.descriptionItem
+					}, icon, external_BdApi_React_default().createElement(forms_namespaceObject.FormTitle, {
+						tag: forms_namespaceObject.FormTitle.Tags.H5
+					}, name), external_BdApi_React_default().createElement(components_namespaceObject.Flex, {
+						justify: components_namespaceObject.Flex.Justify.END,
+						align: components_namespaceObject.Flex.Align.START,
+						className: settings.Z.marginBottom8
+					}, external_BdApi_React_default().createElement(forms_namespaceObject.FormText, null, note))), external_BdApi_React_default().createElement(forms_namespaceObject.FormDivider, null));
+				};
 				const Category = props => {
 					const [opened, setOpened] = (0, external_BdApi_React_.useState)(false);
 					return external_BdApi_React_default().createElement(Card, {
 						className: Utilities.joinClassNames(settings.Z.category, opened && settings.Z.opened)
 					}, external_BdApi_React_default().createElement(Clickable, {
 						onClick: () => setOpened(!opened)
-					}, external_BdApi_React_default().createElement(settings_Flex, {
+					}, external_BdApi_React_default().createElement(components_namespaceObject.Flex, {
 						className: settings.Z.categoryHeader,
-						direction: settings_Flex.Direction.HORIZONTAL
+						direction: components_namespaceObject.Flex.Direction.HORIZONTAL
 					}, props.name, external_BdApi_React_default().createElement(Caret, {
 						className: settings.Z.categoryCaret,
 						direction: Caret.Directions[opened ? "DOWN" : "LEFT"]
@@ -1742,8 +1895,8 @@ function buildPlugin([BasePlugin, PluginApi]) {
 								}
 							}), setting.name);
 						case "replacement":
-							return external_BdApi_React_default().createElement(settings_Flex, {
-								direction: settings_Flex.Direction.HORIZONTAL,
+							return external_BdApi_React_default().createElement(components_namespaceObject.Flex, {
+								direction: components_namespaceObject.Flex.Direction.HORIZONTAL,
 								className: settings.Z.replacementVariable
 							}, external_BdApi_React_default().createElement("b", null, setting.prefix), external_BdApi_React_default().createElement("span", null, setting.description));
 						case "radio":
@@ -1773,6 +1926,8 @@ function buildPlugin([BasePlugin, PluginApi]) {
 							return external_BdApi_React_default().createElement(IconSetting, null);
 						case "category":
 							return external_BdApi_React_default().createElement(Category, setting);
+						case "translation":
+							return external_BdApi_React_default().createElement(Translation, setting);
 						case "divider":
 							return external_BdApi_React_default().createElement(forms_namespaceObject.FormDivider, null);
 					}
@@ -1793,8 +1948,8 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						id: "SettingsPanel"
 					}, external_BdApi_React_default().createElement("div", {
 						className: settings.Z.settingsPanel
-					}, external_BdApi_React_default().createElement(settings_Flex, {
-						align: settings_Flex.Align.CENTER,
+					}, external_BdApi_React_default().createElement(components_namespaceObject.Flex, {
+						align: components_namespaceObject.Flex.Align.CENTER,
 						basis: "auto",
 						className: breadCrumbs.breadcrumbs,
 						grow: 1,
@@ -1873,12 +2028,14 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				}) {
 					const {
 						activity,
-						showActivityIcons
+						showActivityIcons,
+						disabled
 					} = (0, flux_namespaceObject.useStateFromStores)([stores_namespaceObject.Activities, Settings], (() => ({
 						activity: stores_namespaceObject.Activities.getActivities(user.id).filter(ActivitiesFilter)[0],
-						showActivityIcons: Settings.get("activityIcons", true)
+						showActivityIcons: Settings.get("activityIcons", true),
+						disabled: user?.bot && Settings.get("disableIconsForBots", true)
 					})), null, _.isEqual);
-					if (!showActivityIcons || !activity) return null;
+					if (!showActivityIcons || !activity || disabled) return null;
 					return activity_React.createElement(components_namespaceObject.TooltipContainer, {
 						text: activity.name,
 						className: components_activity.Z.container,
@@ -1948,19 +2105,29 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					DefaultMessage
 				};
 				const clyde = Clyde;
-				const nl_namespaceObject = JSON.parse('{"CONNECTIONS":"Verbindingen","NO_CONNECTIONS":"Geen verbindingen!","LOADING_CONNECTIONS":"Verbindingen aan het laden...","LOADING_LAST_MESSAGE":"Laatste bericht aan het laden...","LOADING_JOINED_AT":"Lid geworden op aan het laden...","MEMBER_WAS_NOT_FOUND":"Lid kon niet worden gevonden!","FAILED_TO_FETCH":"Gefaald om op te halen!","USERINFO_CMD_DESC":"Laat bepaalde informatie zien over een bepaald lid."}');
+				const nl_namespaceObject = JSON.parse('{"CONNECTIONS":"Verbindingen","NO_CONNECTIONS":"Geen verbindingen!","LOADING_CONNECTIONS":"Verbindingen aan het laden...","LOADING_LAST_MESSAGE":"Laatste bericht aan het laden...","LOADING_JOINED_AT":"Lid geworden op aan het laden...","MEMBER_WAS_NOT_FOUND":"Lid kon niet worden gevonden!","FAILED_TO_FETCH":"Gefaald om op te halen!","USERINFO_CMD_DESC":"Laat bepaalde informatie zien over een bepaald lid.","NO_MUTUAL_GUILDS":"Geen gemeenschappelijke servers","LOADING_MUTUAL_GUILDS":"Gemeenschappelijke servers aan het laden..."}');
 				var translations_nl_namespaceObject = __webpack_require__.t(nl_namespaceObject, 2);
-				const de_namespaceObject = JSON.parse('{"CONNECTIONS":"Verknüpfungen","NO_CONNECTIONS":"Keine Verknüpfungen","LOADING_CONNECTIONS":"Lade Verknüpfungen...","LOADING_LAST_MESSAGE":"Lade letzte Nachricht...","LOADING_JOINED_AT":"Lade Beitrittsdatum...","MEMBER_WAS_NOT_FOUND":"Mitglied konnte nicht gefunden werden.","FAILED_TO_FETCH":"Fehler beim Laden","USERINFO_CMD_DESC":"Zeigt einige Informationen über einen bestimmten Nutzer."}');
+				const de_namespaceObject = JSON.parse('{"CONNECTIONS":"Verknüpfungen","NO_CONNECTIONS":"Keine Verknüpfungen","LOADING_CONNECTIONS":"Lade Verknüpfungen...","LOADING_LAST_MESSAGE":"Lade letzte Nachricht...","LOADING_JOINED_AT":"Lade Beitrittsdatum...","MEMBER_WAS_NOT_FOUND":"Mitglied konnte nicht gefunden werden.","FAILED_TO_FETCH":"Fehler beim Laden","USERINFO_CMD_DESC":"Zeigt einige Informationen über einen bestimmten Nutzer.","NO_MUTUAL_GUILDS":"Keine gemeinsamen Server.","LOADING_MUTUAL_GUILDS":"Gemeinsame Server werden geladen."}');
 				var translations_de_namespaceObject = __webpack_require__.t(de_namespaceObject, 2);
 				const en_US_namespaceObject = JSON.parse('{"CONNECTIONS":"Connections","NO_CONNECTIONS":"No Connections","LOADING_CONNECTIONS":"Loading Connections...","LOADING_LAST_MESSAGE":"Loading Last Message","LOADING_JOINED_AT":"Loading Joined At","MEMBER_WAS_NOT_FOUND":"Member Was Not Found!","FAILED_TO_FETCH":"Failed To Fetch","USERINFO_CMD_DESC":"User Information"}');
 				var translations_en_US_namespaceObject = __webpack_require__.t(en_US_namespaceObject, 2);
-				const tr_namespaceObject = JSON.parse('{"CONNECTIONS":"Bağlantılar","NO_CONNECTIONS":"Bağlantı yok!","LOADING_CONNECTIONS":"Bağlantılar yükleniyor..","LOADING_LAST_MESSAGE":"Son mesaj yükleniyor..","LOADING_JOINED_AT":"Giriş tarihi yükleniyor..","MEMBER_WAS_NOT_FOUND":"Kullanıcı bulunamadı!","FAILED_TO_FETCH":"Alınamadı!","USERINFO_CMD_DESC":"Belirli bir kullanıcı hakkında bazı bilgiler verir."}');
+				const tr_namespaceObject = JSON.parse('{"CONNECTIONS":"Bağlantılar","NO_CONNECTIONS":"Bağlantı yok!","LOADING_CONNECTIONS":"Bağlantılar yükleniyor..","LOADING_LAST_MESSAGE":"Son mesaj yükleniyor..","LOADING_JOINED_AT":"Giriş tarihi yükleniyor..","MEMBER_WAS_NOT_FOUND":"Kullanıcı bulunamadı!","FAILED_TO_FETCH":"Alınamadı!","USERINFO_CMD_DESC":"Belirli bir kullanıcı hakkında bazı bilgiler verir.","NO_MUTUAL_GUILDS":"Ortak sunucu yok!","LOADING_MUTUAL_GUILDS":"Ortak sunucular yükleniyor!"}');
 				var translations_tr_namespaceObject = __webpack_require__.t(tr_namespaceObject, 2);
+				const fr_namespaceObject = JSON.parse('{"CONNECTIONS":"Connexions","NO_CONNECTIONS":"Pas de connexion!","LOADING_CONNECTIONS":"Chargement des connexions...","LOADING_LAST_MESSAGE":"Chargement du dernier message...","LOADING_JOINED_AT":"Chargement de la date d\'entrée...","MEMBER_WAS_NOT_FOUND":"Membre non trouvé","FAILED_TO_FETCH":"Échec de la récupération","USERINFO_CMD_DESC":"Informations sur un utilisateur spécifique","NO_MUTUAL_GUILDS":"Pas de serveur en commun","LOADING_MUTUAL_GUILDS":"Chargement des serveurs en communs..."}');
+				const vi_namespaceObject = JSON.parse('{"CONNECTIONS":"Kết nối","NO_CONNECTIONS":"Không có kết nối!","LOADING_CONNECTIONS":"Đang tải các kết nối...","LOADING_LAST_MESSAGE":"Đang tải tin nhắn cuối cùng...","LOADING_JOINED_AT":"Đang tải ngày tham gia...","MEMBER_WAS_NOT_FOUND":"Không tìm thấy thành viên!","FAILED_TO_FETCH":"Nạp dữ liệu thất bại!","USERINFO_CMD_DESC":"Hiển thị một số thông tin về một người dùng cụ thể.","NO_MUTUAL_GUILDS":"Không có server chung nào","LOADING_MUTUAL_GUILDS":"Đang tải server chung..."}');
+				const es_ES_namespaceObject = JSON.parse('{"CONNECTIONS":"Conexiones","NO_CONNECTIONS":"Sin conexiones","LOADING_CONNECTIONS":"Cargando conexiones...","LOADING_LAST_MESSAGE":"Cargando el último mensaje...","LOADING_JOINED_AT":"Cargando la fecha de ingreso...","MEMBER_WAS_NOT_FOUND":"¡El miembro no fue encontrado!","FAILED_TO_FETCH":"¡No se pudo obtener!","USERINFO_CMD_DESC":"Muestra información sobre un usuario en específico.","NO_MUTUAL_GUILDS":"Sin servidores en común","LOADING_MUTUAL_GUILDS":"Cargando los servidores en común..."}');
+				const sv_SE_namespaceObject = JSON.parse('{"CONNECTIONS":"anslutningar","NO_CONNECTIONS":"inga anslutningar","LOADING_CONNECTIONS":"laddar anslutningar","LOADING_LAST_MESSAGE":"läser in det senaste meddelandet","LOADING_JOINED_AT":"lastning gick med vid","MEMBER_WAS_NOT_FOUND":"medlem hittades inte","FAILED_TO_FETCH":"misslyckades med att hämta","USERINFO_CMD_DESC":"visar lite information om en specifik användare","NO_MUTUAL_GUILDS":"inga ömsesidiga servrar","LOADING_MUTUAL_GUILDS":"laddar ömsesidiga servrar"}');
+				const pt_BR_namespaceObject = JSON.parse('{"CONNECTIONS":"Conexões","NO_CONNECTIONS":"Sem conexões","LOADING_CONNECTIONS":"Carregando conexões","LOADING_LAST_MESSAGE":"Carregando última mensagem","LOADING_JOINED_AT":"Carregando entrou há","MEMBER_WAS_NOT_FOUND":"Membro não encontrado!","FAILED_TO_FETCH":"Falha na busca","USERINFO_CMD_DESC":"Mostra algumas informações de um usuário específico.","NO_MUTUAL_GUILDS":"Sem servidores em comum","LOADING_MUTUAL_GUILDS":"Carregando os servidores em comum"}');
 				const translations = {
+					"en-US": translations_en_US_namespaceObject,
+					"es-ES": es_ES_namespaceObject,
+					"sv-SE": sv_SE_namespaceObject,
+					"pt-BR": pt_BR_namespaceObject,
 					nl: translations_nl_namespaceObject,
 					de: translations_de_namespaceObject,
-					"en-US": translations_en_US_namespaceObject,
-					tr: translations_tr_namespaceObject
+					tr: translations_tr_namespaceObject,
+					fr: fr_namespaceObject,
+					vi: vi_namespaceObject
 				};
 				const loadedStrings = {};
 				stores_namespaceObject.SettingsStore.addChangeListener(injectStrings);
@@ -2003,6 +2170,87 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					wrapped.toString = () => func.toString();
 					return wrapped;
 				}
+				var mutualServers = __webpack_require__(416);
+				var mutualServers_React = __webpack_require__(832);
+				function mutualServers_extends() {
+					mutualServers_extends = Object.assign || function(target) {
+						for (var i = 1; i < arguments.length; i++) {
+							var source = arguments[i];
+							for (var key in source)
+								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
+						}
+						return target;
+					};
+					return mutualServers_extends.apply(this, arguments);
+				}
+				const FriendsStore = external_PluginApi_namespaceObject.WebpackModules.getByProps("getMutualGuilds");
+				const mutualServers_Header = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("Header");
+				const WindowStore = external_PluginApi_namespaceObject.WebpackModules.getByProps("isFocused");
+				function MutualServer({
+					guild,
+					nick,
+					onClick
+				}) {
+					const [isMouseOver, setMouseOver] = (0, external_BdApi_React_.useState)(false);
+					const isWindowFocused = (0, flux_namespaceObject.useStateFromStores)([WindowStore], (() => WindowStore.isFocused()));
+					return mutualServers_React.createElement(components_namespaceObject.TooltipContainer, {
+						key: guild.id,
+						text: nick ? `${guild.name} (${nick})` : guild.name,
+						position: "top",
+						className: mutualServers.Z.mutualGuild
+					}, guild.icon ? mutualServers_React.createElement("img", {
+						onMouseOver: () => setMouseOver(true),
+						onMouseLeave: () => setMouseOver(false),
+						src: guild.getIconURL(isMouseOver && isWindowFocused),
+						onClick: () => onClick(guild.id)
+					}) : mutualServers_React.createElement("div", {
+						className: mutualServers.Z.guildAcronym,
+						onClick: () => onClick(guild.id)
+					}, guild.acronym));
+				}
+				class MutualServers extends ApiModule {
+					get currentUserId() {
+						return stores_namespaceObject.Users.getCurrentUser().id;
+					}
+					transitionToGuild(guildId) {
+						actions_namespaceObject.GuildActions.transitionToGuildSync(guildId);
+					}
+					task(user) {
+						return () => {
+							if (!Settings.get("showMutualGuilds", true) || Settings.get("hideMutualGuildsCurrentUser", true) && user.id === this.currentUserId) return null;
+							const mutualGuilds = (0, flux_namespaceObject.useStateFromStores)([FriendsStore], (() => FriendsStore.getMutualGuilds(user.id)));
+							const [message, setMessage] = (0, external_BdApi_React_.useState)("");
+							(0, external_BdApi_React_.useEffect)((() => {
+								if (Array.isArray(mutualGuilds) || stores_namespaceObject.UserProfile.isFetching(user.id)) return;
+								actions_namespaceObject.ProfileActions.fetchProfile(user.id).catch((error => {
+									if (~error?.message?.indexOf("Already dispatching")) return;
+									external_PluginApi_namespaceObject.Logger.error(`Failed to fetch profile for ${user.id}:\n`, error);
+									setMessage(i18n_namespaceObject.Messages.FAILED_TO_FETCH);
+								}));
+							}), []);
+							return Array.isArray(mutualGuilds) ? Settings.get("showEmptyMutualGuilds", true) && !mutualGuilds.length ? null : mutualServers_React.createElement("div", {
+								className: mutualServers.Z.body
+							}, mutualServers_React.createElement(mutualServers_Header, {
+								size: mutualServers_Header.Sizes.SIZE_12,
+								className: mutualServers.Z.header,
+								uppercase: true,
+								muted: true
+							}, i18n_namespaceObject.Messages.MUTUAL_GUILDS), mutualServers_React.createElement("div", {
+								className: (0, utils_namespaceObject.joinClassNames)(mutualServers.Z.guilds, Settings.get("stackMutualServers", true) && mutualServers.Z.stack)
+							}, mutualGuilds.map((props => mutualServers_React.createElement(MutualServer, mutualServers_extends({}, props, {
+								onClick: this.transitionToGuild
+							})))))) : [mutualServers_React.createElement(mutualServers_Header, {
+								size: mutualServers_Header.Sizes.SIZE_12,
+								className: mutualServers.Z.header,
+								uppercase: true,
+								muted: true
+							}, message ? i18n_namespaceObject.Messages.NO_MUTUAL_GUILDS : i18n_namespaceObject.Messages.LOADING_MUTUAL_GUILDS), message ? mutualServers_React.createElement(components_namespaceObject.TooltipContainer, {
+								text: message,
+								position: "top"
+							}, mutualServers_React.createElement(error, null)) : null].filter((e => e));
+						};
+					}
+				}
 				function UserDetails_defineProperty(obj, key, value) {
 					if (key in obj) Object.defineProperty(obj, key, {
 						value,
@@ -2028,6 +2276,9 @@ function buildPlugin([BasePlugin, PluginApi]) {
 							}
 						});
 					}
+					get Stores() {
+						return modules_stores_namespaceObject;
+					}
 					getSettingsPanel() {
 						return external_BdApi_React_default().createElement(SettingsPanel, null);
 					}
@@ -2038,6 +2289,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						this.joinedApi = new joinedDate_JoinedAt(this);
 						this.lastMessageApi = new LastMessageApi(this);
 						this.connectionsApi = new Userconnections(this);
+						this.mutualsApi = new MutualServers(this);
 						this.patchUserPopout();
 						this.patchUserProfile();
 						this.patchMemberListItem();
@@ -2140,13 +2392,18 @@ function buildPlugin([BasePlugin, PluginApi]) {
 							user
 						}], returnValue) => {
 							if (this.promises.cancelled) return;
-							if (!Array.isArray(returnValue?.props?.children)) return returnValue;
+							if (!Array.isArray(returnValue?.props?.children) || returnValue.props.children.some((child => child?.type === ErrorBoundary))) return returnValue;
 							const Connections = this.connectionsApi.task(user);
+							const MutualServers = this.mutualsApi.task(user);
 							returnValue.props.children.unshift(external_BdApi_React_default().createElement(ErrorBoundary, {
 								id: "UserPopoutBody",
 								mini: true,
 								key: "connections"
-							}, external_BdApi_React_default().createElement(Connections, null)));
+							}, external_BdApi_React_default().createElement(Connections, null)), external_BdApi_React_default().createElement(ErrorBoundary, {
+								id: "UserPopoutBody",
+								mini: true,
+								key: "mutual_servers"
+							}, external_BdApi_React_default().createElement(MutualServers, null)));
 						}));
 					}
 					async patchUserProfile() {
@@ -2329,7 +2586,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				});
 			};
 		})();
-		var __webpack_exports__ = __webpack_require__(177);
+		var __webpack_exports__ = __webpack_require__(214);
 		module.exports.LibraryPluginHack = __webpack_exports__;
 	})();
 	const PluginExports = module.exports.LibraryPluginHack;
