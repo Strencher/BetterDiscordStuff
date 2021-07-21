@@ -1,7 +1,7 @@
 /**
  * @name InvisibleTyping
  * @author Strencher
- * @version 1.0.2
+ * @version 1.0.3
  * @description Enhanced version of silent typing.
  * @source https://github.com/Strencher/BetterDiscordStuff/blob/master/InvisibleTyping/InvisibleTyping.plugin.js
  * @updateUrl https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/InvisibleTyping/InvisibleTyping.plugin.js
@@ -38,7 +38,7 @@ const config = {
 			"github_username": "Strencher",
 			"twitter_username": "Strencher3"
 		}],
-		"version": "1.0.2",
+		"version": "1.0.3",
 		"description": "Enhanced version of silent typing.",
 		"github": "https://github.com/Strencher/BetterDiscordStuff/blob/master/InvisibleTyping/InvisibleTyping.plugin.js",
 		"github_raw": "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/InvisibleTyping/InvisibleTyping.plugin.js"
@@ -54,21 +54,12 @@ const config = {
 		}
 	},
 	"changelog": [{
-			"type": "fixed",
-			"title": "Fixed",
-			"items": [
-				"Fixed disabling button in global mode."
-			]
-		},
-		{
-			"type": "added",
-			"title": "Added",
-			"items": [
-				"Added settings for automatically enable/disable",
-				"Added a smol context menu on the button."
-			]
-		}
-	]
+		"type": "fixed",
+		"title": "Fixed",
+		"items": [
+			"Fixed disabling button in global mode *again*."
+		]
+	}]
 };
 function buildPlugin([BasePlugin, PluginApi]) {
 	const module = {
@@ -276,7 +267,42 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			}
 		};
 		var __webpack_modules__ = {
-			880: (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+			646: (module, __webpack_exports__, __webpack_require__) => {
+				__webpack_require__.d(__webpack_exports__, {
+					Z: () => __WEBPACK_DEFAULT_EXPORT__
+				});
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(645);
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
+				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
+					return i[1];
+				}));
+				___CSS_LOADER_EXPORT___.push([module.id, ".InvisibleTyping-settings-panel{color:#ddd}", ""]);
+				___CSS_LOADER_EXPORT___.locals = {
+					panel: "InvisibleTyping-settings-panel"
+				};
+				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
+				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
+			},
+			166: (module, __webpack_exports__, __webpack_require__) => {
+				__webpack_require__.d(__webpack_exports__, {
+					Z: () => __WEBPACK_DEFAULT_EXPORT__
+				});
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(645);
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
+				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
+					return i[1];
+				}));
+				___CSS_LOADER_EXPORT___.push([module.id, ".InvisibleTyping-typingButton-invisibleTypingButton svg{color:var(--interactive-normal);overflow:visible}.InvisibleTyping-typingButton-invisibleTypingButton .InvisibleTyping-typingButton-disabledStrokeThrough{position:absolute;transform:translateX(-15px) translateY(530px) rotate(-45deg)}.InvisibleTyping-typingButton-invisibleTypingButton{margin-top:3px;background:transparent}.InvisibleTyping-typingButton-invisibleTypingButton:hover:not(.InvisibleTyping-typingButton-disabled) svg{color:var(--interactive-hover)}.InvisibleTyping-typingButton-invisibleTypingTooltip{display:inline-flex}", ""]);
+				___CSS_LOADER_EXPORT___.locals = {
+					invisibleTypingButton: "InvisibleTyping-typingButton-invisibleTypingButton",
+					disabledStrokeThrough: "InvisibleTyping-typingButton-disabledStrokeThrough",
+					disabled: "InvisibleTyping-typingButton-disabled",
+					invisibleTypingTooltip: "InvisibleTyping-typingButton-invisibleTypingTooltip"
+				};
+				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
+				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
+			},
+			953: (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 				__webpack_require__.r(__webpack_exports__);
 				__webpack_require__.d(__webpack_exports__, {
 					default: () => InvisibleTyping
@@ -301,7 +327,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					return obj;
 				}
 				class SettingsManager extends flux_namespaceObject.Store {
-					constructor(pluginName) {
+					constructor(pluginName, defaultSettings = {}) {
 						super(modules_namespaceObject.Dispatcher, {});
 						_defineProperty(this, "settings", void 0);
 						_defineProperty(this, "pluginName", void 0);
@@ -313,13 +339,13 @@ function buildPlugin([BasePlugin, PluginApi]) {
 							return value;
 						}));
 						this.pluginName = pluginName;
-						this.settings = external_PluginApi_namespaceObject.PluginUtilities.loadSettings(pluginName, {});
+						this.settings = external_PluginApi_namespaceObject.PluginUtilities.loadSettings(pluginName, defaultSettings);
 					}
 				}
 				const package_namespaceObject = JSON.parse('{"um":{"u2":"InvisibleTyping"}}');
 				const Settings = new SettingsManager(package_namespaceObject.um.u2);
 				const settings = Settings;
-				var typingButton = __webpack_require__(850);
+				var typingButton = __webpack_require__(166);
 				function _extends() {
 					_extends = Object.assign || function(target) {
 						for (var i = 1; i < arguments.length; i++) {
@@ -387,7 +413,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				}) {
 					const enabled = (0, flux_namespaceObject.useStateFromStores)([settings], InvisibleTypingButton.getState.bind(this, channel.id));
 					const handleClick = (0, external_BdApi_React_.useCallback)((() => {
-						const excludeList = [...settings.get("exclude")];
+						const excludeList = [...settings.get("exclude", [])];
 						if (excludeList.includes(channel.id)) {
 							removeItem(excludeList, channel.id);
 							TypingModule.stopTyping(channel.id);
@@ -450,7 +476,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					}));
 				};
 				const hooks_createUpdateWrapper = createUpdateWrapper;
-				var components_settings = __webpack_require__(518);
+				var components_settings = __webpack_require__(646);
 				const SwitchItem = hooks_createUpdateWrapper(external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("SwitchItem"));
 				function SettingsPanel() {
 					const disabledChannels = (0, flux_namespaceObject.useStateFromStores)([settings], (() => settings.get("exclude", [])));
@@ -512,41 +538,6 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						external_StyleLoader_default().remove();
 					}
 				}
-			},
-			518: (module, __webpack_exports__, __webpack_require__) => {
-				__webpack_require__.d(__webpack_exports__, {
-					Z: () => __WEBPACK_DEFAULT_EXPORT__
-				});
-				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(645);
-				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
-				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
-					return i[1];
-				}));
-				___CSS_LOADER_EXPORT___.push([module.id, ".InvisibleTyping-settings-panel{color:#ddd}", ""]);
-				___CSS_LOADER_EXPORT___.locals = {
-					panel: "InvisibleTyping-settings-panel"
-				};
-				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
-				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
-			},
-			850: (module, __webpack_exports__, __webpack_require__) => {
-				__webpack_require__.d(__webpack_exports__, {
-					Z: () => __WEBPACK_DEFAULT_EXPORT__
-				});
-				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(645);
-				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
-				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
-					return i[1];
-				}));
-				___CSS_LOADER_EXPORT___.push([module.id, ".InvisibleTyping-typingButton-invisibleTypingButton svg{color:var(--interactive-normal);overflow:visible}.InvisibleTyping-typingButton-invisibleTypingButton .InvisibleTyping-typingButton-disabledStrokeThrough{position:absolute;transform:translateX(-15px) translateY(530px) rotate(-45deg)}.InvisibleTyping-typingButton-invisibleTypingButton{margin-top:3px;background:transparent}.InvisibleTyping-typingButton-invisibleTypingButton:hover:not(.InvisibleTyping-typingButton-disabled) svg{color:var(--interactive-hover)}.InvisibleTyping-typingButton-invisibleTypingTooltip{display:inline-flex}", ""]);
-				___CSS_LOADER_EXPORT___.locals = {
-					invisibleTypingButton: "InvisibleTyping-typingButton-invisibleTypingButton",
-					disabledStrokeThrough: "InvisibleTyping-typingButton-disabledStrokeThrough",
-					disabled: "InvisibleTyping-typingButton-disabled",
-					invisibleTypingTooltip: "InvisibleTyping-typingButton-invisibleTypingTooltip"
-				};
-				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
-				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
 			},
 			645: module => {
 				module.exports = function(cssWithMappingToString) {
@@ -626,7 +617,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				});
 			};
 		})();
-		var __webpack_exports__ = __webpack_require__(880);
+		var __webpack_exports__ = __webpack_require__(953);
 		module.exports.LibraryPluginHack = __webpack_exports__;
 	})();
 	const PluginExports = module.exports.LibraryPluginHack;
