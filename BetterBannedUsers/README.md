@@ -1,9 +1,7 @@
 # BetterBannedUsers
 
-> Enhances the banned users page.
+> Enhances the banned users page (a lot).
 <hr/>
-
-<!-- ignore me -->
 
 # Previews
 
