@@ -284,7 +284,47 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			}
 		};
 		var __webpack_modules__ = {
-			593: (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+			465: (module, __webpack_exports__, __webpack_require__) => {
+				__webpack_require__.d(__webpack_exports__, {
+					Z: () => __WEBPACK_DEFAULT_EXPORT__
+				});
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(645);
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
+				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
+					return i[1];
+				}));
+				___CSS_LOADER_EXPORT___.push([module.id, ".BetterBannedUsers-banned-remove{display:none;position:absolute;top:-15px;right:-30px}.bannedUser-1IalTM::before{background-color:rgba(32,34,37,.3);border-color:#202225}.bannedUser-1IalTM .username-1b3MVI{white-space:nowrap;padding-left:0}.bannedUser-1IalTM:hover .BetterBannedUsers-banned-remove{display:flex}.BetterBannedUsers-banned-banReason{text-overflow:ellipsis;color:var(--interactive-normal);overflow:hidden;white-space:nowrap;padding-bottom:1px;max-width:600px;display:inline-block;align-items:center}.BetterBannedUsers-banned-wrapper{margin-left:10px;z-index:10}.BetterBannedUsers-banned-container{margin-bottom:20px}.BetterBannedUsers-banned-search{margin-top:10px}", ""]);
+				___CSS_LOADER_EXPORT___.locals = {
+					remove: "BetterBannedUsers-banned-remove",
+					banReason: "BetterBannedUsers-banned-banReason",
+					wrapper: "BetterBannedUsers-banned-wrapper",
+					container: "BetterBannedUsers-banned-container",
+					search: "BetterBannedUsers-banned-search"
+				};
+				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
+				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
+			},
+			894: (module, __webpack_exports__, __webpack_require__) => {
+				__webpack_require__.d(__webpack_exports__, {
+					Z: () => __WEBPACK_DEFAULT_EXPORT__
+				});
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(645);
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
+				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
+					return i[1];
+				}));
+				___CSS_LOADER_EXPORT___.push([module.id, ".BetterBannedUsers-select-container{background:var(--background-secondary);border:1px solid var(--background-tertiary);border-radius:4px}.BetterBannedUsers-select-container .BetterBannedUsers-select-option{padding:7px 10px;color:#ddd;text-align:center}.BetterBannedUsers-select-container .BetterBannedUsers-select-option.BetterBannedUsers-select-selected{background:var(--background-secondary-alt);color:#fff}.BetterBannedUsers-select-container .BetterBannedUsers-select-option:not(.BetterBannedUsers-select-selected):hover{color:#fff;cursor:pointer;background:var(--background-modifier-hover)}.BetterBannedUsers-select-selectedText{margin:0 5px}.BetterBannedUsers-select-select{cursor:pointer}", ""]);
+				___CSS_LOADER_EXPORT___.locals = {
+					container: "BetterBannedUsers-select-container",
+					option: "BetterBannedUsers-select-option",
+					selected: "BetterBannedUsers-select-selected",
+					selectedText: "BetterBannedUsers-select-selectedText",
+					select: "BetterBannedUsers-select-select"
+				};
+				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
+				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
+			},
+			657: (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 				__webpack_require__.r(__webpack_exports__);
 				__webpack_require__.d(__webpack_exports__, {
 					default: () => BetterBannedUsers
@@ -292,7 +332,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				const external_BasePlugin_namespaceObject = BasePlugin;
 				var external_BasePlugin_default = __webpack_require__.n(external_BasePlugin_namespaceObject);
 				const external_PluginApi_namespaceObject = PluginApi;
-				var banned = __webpack_require__(191);
+				var banned = __webpack_require__(465);
 				const external_StyleLoader_namespaceObject = StyleLoader;
 				var external_StyleLoader_default = __webpack_require__.n(external_StyleLoader_namespaceObject);
 				const package_namespaceObject = JSON.parse('{"um":{"u2":"BetterBannedUsers"}}');
@@ -309,7 +349,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					return obj;
 				}
 				class SettingsManager extends flux_namespaceObject.Store {
-					constructor(pluginName) {
+					constructor(pluginName, defaultSettings = {}) {
 						super(modules_namespaceObject.Dispatcher, {});
 						_defineProperty(this, "settings", void 0);
 						_defineProperty(this, "pluginName", void 0);
@@ -321,7 +361,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 							return value;
 						}));
 						this.pluginName = pluginName;
-						this.settings = external_PluginApi_namespaceObject.PluginUtilities.loadSettings(pluginName, {});
+						this.settings = external_PluginApi_namespaceObject.PluginUtilities.loadSettings(pluginName, defaultSettings);
 					}
 				}
 				const Settings = new SettingsManager(package_namespaceObject.um.u2);
@@ -332,7 +372,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				const components_namespaceObject = Modules["@discord/components"];
 				const i18n_namespaceObject = Modules["@discord/i18n"];
 				var external_BdApi_React_ = __webpack_require__(832);
-				var components_select = __webpack_require__(640);
+				var components_select = __webpack_require__(894);
 				const utils_namespaceObject = Modules["@discord/utils"];
 				var React = __webpack_require__(832);
 				function _extends() {
@@ -775,46 +815,6 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					}
 				}
 			},
-			191: (module, __webpack_exports__, __webpack_require__) => {
-				__webpack_require__.d(__webpack_exports__, {
-					Z: () => __WEBPACK_DEFAULT_EXPORT__
-				});
-				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(645);
-				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
-				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
-					return i[1];
-				}));
-				___CSS_LOADER_EXPORT___.push([module.id, ".BetterBannedUsers-banned-remove{display:none;position:absolute;top:-15px;right:-30px}.bannedUser-1IalTM::before{background-color:rgba(32,34,37,.3);border-color:#202225}.bannedUser-1IalTM .username-1b3MVI{white-space:nowrap;padding-left:0}.bannedUser-1IalTM:hover .BetterBannedUsers-banned-remove{display:flex}.BetterBannedUsers-banned-banReason{text-overflow:ellipsis;color:var(--interactive-normal);overflow:hidden;white-space:nowrap;padding-bottom:1px;max-width:600px;display:inline-block;align-items:center}.BetterBannedUsers-banned-wrapper{margin-left:10px;z-index:10}.BetterBannedUsers-banned-container{margin-bottom:20px}.BetterBannedUsers-banned-search{margin-top:10px}", ""]);
-				___CSS_LOADER_EXPORT___.locals = {
-					remove: "BetterBannedUsers-banned-remove",
-					banReason: "BetterBannedUsers-banned-banReason",
-					wrapper: "BetterBannedUsers-banned-wrapper",
-					container: "BetterBannedUsers-banned-container",
-					search: "BetterBannedUsers-banned-search"
-				};
-				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
-				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
-			},
-			640: (module, __webpack_exports__, __webpack_require__) => {
-				__webpack_require__.d(__webpack_exports__, {
-					Z: () => __WEBPACK_DEFAULT_EXPORT__
-				});
-				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(645);
-				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
-				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
-					return i[1];
-				}));
-				___CSS_LOADER_EXPORT___.push([module.id, ".BetterBannedUsers-select-container{background:var(--background-secondary);border:1px solid var(--background-tertiary);border-radius:4px}.BetterBannedUsers-select-container .BetterBannedUsers-select-option{padding:7px 10px;color:#ddd;text-align:center}.BetterBannedUsers-select-container .BetterBannedUsers-select-option.BetterBannedUsers-select-selected{background:var(--background-secondary-alt);color:#fff}.BetterBannedUsers-select-container .BetterBannedUsers-select-option:not(.BetterBannedUsers-select-selected):hover{color:#fff;cursor:pointer;background:var(--background-modifier-hover)}.BetterBannedUsers-select-selectedText{margin:0 5px}.BetterBannedUsers-select-select{cursor:pointer}", ""]);
-				___CSS_LOADER_EXPORT___.locals = {
-					container: "BetterBannedUsers-select-container",
-					option: "BetterBannedUsers-select-option",
-					selected: "BetterBannedUsers-select-selected",
-					selectedText: "BetterBannedUsers-select-selectedText",
-					select: "BetterBannedUsers-select-select"
-				};
-				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
-				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
-			},
 			645: module => {
 				module.exports = function(cssWithMappingToString) {
 					var list = [];
@@ -893,7 +893,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				});
 			};
 		})();
-		var __webpack_exports__ = __webpack_require__(593);
+		var __webpack_exports__ = __webpack_require__(657);
 		module.exports.LibraryPluginHack = __webpack_exports__;
 	})();
 	const PluginExports = module.exports.LibraryPluginHack;
