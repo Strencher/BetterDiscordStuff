@@ -283,7 +283,23 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			}
 		};
 		var __webpack_modules__ = {
-			846: (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+			672: (module, __webpack_exports__, __webpack_require__) => {
+				__webpack_require__.d(__webpack_exports__, {
+					Z: () => __WEBPACK_DEFAULT_EXPORT__
+				});
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(645);
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
+				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
+					return i[1];
+				}));
+				___CSS_LOADER_EXPORT___.push([module.id, ".StatusEverywhere-avatar-chatAvatar{overflow:visible !important}", ""]);
+				___CSS_LOADER_EXPORT___.locals = {
+					chatAvatar: "StatusEverywhere-avatar-chatAvatar"
+				};
+				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
+				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
+			},
+			1: (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 				__webpack_require__.r(__webpack_exports__);
 				__webpack_require__.d(__webpack_exports__, {
 					default: () => StatusEverywhere
@@ -297,7 +313,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				const stores_namespaceObject = Modules["@discord/stores"];
 				const constants_namespaceObject = Modules["@discord/constants"];
 				const utils_namespaceObject = Modules["@discord/utils"];
-				var avatar = __webpack_require__(257);
+				var avatar = __webpack_require__(672);
 				const package_namespaceObject = JSON.parse('{"um":{"u2":"StatusEverywhere"}}');
 				const modules_namespaceObject = Modules["@discord/modules"];
 				function _defineProperty(obj, key, value) {
@@ -311,7 +327,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					return obj;
 				}
 				class SettingsManager extends flux_namespaceObject.Store {
-					constructor(pluginName) {
+					constructor(pluginName, defaultSettings = {}) {
 						super(modules_namespaceObject.Dispatcher, {});
 						_defineProperty(this, "settings", void 0);
 						_defineProperty(this, "pluginName", void 0);
@@ -323,7 +339,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 							return value;
 						}));
 						this.pluginName = pluginName;
-						this.settings = external_PluginApi_namespaceObject.PluginUtilities.loadSettings(pluginName, {});
+						this.settings = external_PluginApi_namespaceObject.PluginUtilities.loadSettings(pluginName, defaultSettings);
 					}
 				}
 				const Settings = new SettingsManager(package_namespaceObject.um.u2);
@@ -454,22 +470,6 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					}
 				}
 			},
-			257: (module, __webpack_exports__, __webpack_require__) => {
-				__webpack_require__.d(__webpack_exports__, {
-					Z: () => __WEBPACK_DEFAULT_EXPORT__
-				});
-				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(645);
-				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
-				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
-					return i[1];
-				}));
-				___CSS_LOADER_EXPORT___.push([module.id, ".StatusEverywhere-avatar-chatAvatar{overflow:visible !important}", ""]);
-				___CSS_LOADER_EXPORT___.locals = {
-					chatAvatar: "StatusEverywhere-avatar-chatAvatar"
-				};
-				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
-				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
-			},
 			645: module => {
 				module.exports = function(cssWithMappingToString) {
 					var list = [];
@@ -548,7 +548,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				});
 			};
 		})();
-		var __webpack_exports__ = __webpack_require__(846);
+		var __webpack_exports__ = __webpack_require__(1);
 		module.exports.LibraryPluginHack = __webpack_exports__;
 	})();
 	const PluginExports = module.exports.LibraryPluginHack;

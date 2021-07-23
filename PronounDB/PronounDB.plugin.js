@@ -302,7 +302,41 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			}
 		};
 		var __webpack_modules__ = {
-			82: (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+			591: (module, __webpack_exports__, __webpack_require__) => {
+				__webpack_require__.d(__webpack_exports__, {
+					Z: () => __WEBPACK_DEFAULT_EXPORT__
+				});
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(645);
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
+				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
+					return i[1];
+				}));
+				___CSS_LOADER_EXPORT___.push([module.id, ".PronounDB-pronouns-text{font-size:.75rem}", ""]);
+				___CSS_LOADER_EXPORT___.locals = {
+					text: "PronounDB-pronouns-text"
+				};
+				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
+				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
+			},
+			357: (module, __webpack_exports__, __webpack_require__) => {
+				__webpack_require__.d(__webpack_exports__, {
+					Z: () => __WEBPACK_DEFAULT_EXPORT__
+				});
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(645);
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
+				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
+					return i[1];
+				}));
+				___CSS_LOADER_EXPORT___.push([module.id, ".PronounDB-style-container{align-content:center;display:flex}.PronounDB-style-container .PronounDB-style-header{font-weight:700;text-transform:uppercase;font-size:12px;margin-bottom:8px;color:var(--header-secondary)}.PronounDB-style-container .PronounDB-style-tag{font-size:12px;color:var(--text-normal);margin-left:5px}", ""]);
+				___CSS_LOADER_EXPORT___.locals = {
+					container: "PronounDB-style-container",
+					header: "PronounDB-style-header",
+					tag: "PronounDB-style-tag"
+				};
+				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
+				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
+			},
+			18: (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 				__webpack_require__.r(__webpack_exports__);
 				__webpack_require__.d(__webpack_exports__, {
 					default: () => PronounDB
@@ -4785,7 +4819,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						};
 					}
 				}
-				var pronouns = __webpack_require__(459);
+				var pronouns = __webpack_require__(591);
 				var pronouns_React = __webpack_require__(832);
 				const components_pronouns = Settings.connectStore(PronounsDB.connect((function({
 					data,
@@ -4802,7 +4836,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				})));
 				const external_StyleLoader_namespaceObject = StyleLoader;
 				var external_StyleLoader_default = __webpack_require__.n(external_StyleLoader_namespaceObject);
-				var style = __webpack_require__(241);
+				var style = __webpack_require__(357);
 				const forms_namespaceObject = Modules["@discord/forms"];
 				function _extends() {
 					_extends = Object.assign || function(target) {
@@ -5017,40 +5051,6 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					}
 				}
 			},
-			459: (module, __webpack_exports__, __webpack_require__) => {
-				__webpack_require__.d(__webpack_exports__, {
-					Z: () => __WEBPACK_DEFAULT_EXPORT__
-				});
-				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(645);
-				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
-				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
-					return i[1];
-				}));
-				___CSS_LOADER_EXPORT___.push([module.id, ".PronounDB-pronouns-text{font-size:.75rem}", ""]);
-				___CSS_LOADER_EXPORT___.locals = {
-					text: "PronounDB-pronouns-text"
-				};
-				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
-				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
-			},
-			241: (module, __webpack_exports__, __webpack_require__) => {
-				__webpack_require__.d(__webpack_exports__, {
-					Z: () => __WEBPACK_DEFAULT_EXPORT__
-				});
-				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(645);
-				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
-				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
-					return i[1];
-				}));
-				___CSS_LOADER_EXPORT___.push([module.id, ".PronounDB-style-container{align-content:center;display:flex}.PronounDB-style-container .PronounDB-style-header{font-weight:700;text-transform:uppercase;font-size:12px;margin-bottom:8px;color:var(--header-secondary)}.PronounDB-style-container .PronounDB-style-tag{font-size:12px;color:var(--text-normal);margin-left:5px}", ""]);
-				___CSS_LOADER_EXPORT___.locals = {
-					container: "PronounDB-style-container",
-					header: "PronounDB-style-header",
-					tag: "PronounDB-style-tag"
-				};
-				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
-				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
-			},
 			645: module => {
 				module.exports = function(cssWithMappingToString) {
 					var list = [];
@@ -5129,7 +5129,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				});
 			};
 		})();
-		var __webpack_exports__ = __webpack_require__(82);
+		var __webpack_exports__ = __webpack_require__(18);
 		module.exports.LibraryPluginHack = __webpack_exports__;
 	})();
 	const PluginExports = module.exports.LibraryPluginHack;

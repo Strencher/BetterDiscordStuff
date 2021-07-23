@@ -1,20 +1,21 @@
 # BetterBannedUsers
 
-> Enhances the banned users page (a lot).
+> Enhances the banned users page.
 <hr/>
+
 
 # Previews
 
 ## Banned Users Page
-![image](https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/BetterBannedUsers/assets/preview.png)
+![image](https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/BetterBannedUsers/src/assets/preview.png)
 <br/>
 
 ## Settings Panel
-![image](https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/BetterBannedUsers/assets/settings.png)
+![image](https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/BetterBannedUsers/src/assets/settings.png)
 <br/>
 
 ## Commands API
-![image](https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/BetterBannedUsers/assets/commands.png)
+![image](https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/BetterBannedUsers/src/assets/commands.png)
 
 <br/>
-<span>Made with <img src="https://discord.com/assets/0483f2b648dcc986d01385062052ae1c.svg" width="15" /> by <a href="https://github.com/BetterDiscordBuilder/bdbuilder">BDBuilder</a></span>
+<span>Made with <img src="https://discord.com/assets/0483f2b648dcc986d01385062052ae1c.svg" width="15" /> by <a href="https://github.com/Kyza/bdbuilder">BDBuilder</a></span>

@@ -279,7 +279,96 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			}
 		};
 		var __webpack_modules__ = {
-			958: (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+			36: (module, __webpack_exports__, __webpack_require__) => {
+				__webpack_require__.d(__webpack_exports__, {
+					Z: () => __WEBPACK_DEFAULT_EXPORT__
+				});
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(645);
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
+				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
+					return i[1];
+				}));
+				___CSS_LOADER_EXPORT___.push([module.id, ".VoiceChatNotifications-button-icon{cursor:pointer;align-items:center;display:flex}", ""]);
+				___CSS_LOADER_EXPORT___.locals = {
+					icon: "VoiceChatNotifications-button-icon"
+				};
+				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
+				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
+			},
+			713: (module, __webpack_exports__, __webpack_require__) => {
+				__webpack_require__.d(__webpack_exports__, {
+					Z: () => __WEBPACK_DEFAULT_EXPORT__
+				});
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(645);
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
+				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
+					return i[1];
+				}));
+				___CSS_LOADER_EXPORT___.push([module.id, "#voicechatnotifications{position:absolute;z-index:999}#voicechatnotifications .VoiceChatNotifications-notification-container{z-index:999}.VoiceChatNotifications-notification-container{min-width:220px;margin-top:20px;position:relative;align-items:center;overflow:hidden;display:flex;pointer-events:all;padding:15px;border-radius:4px}.VoiceChatNotifications-notification-topLeft{left:20px}.VoiceChatNotifications-notification-topRight{right:20px}.VoiceChatNotifications-notification-bottomLeft{bottom:20px;left:20px}.VoiceChatNotifications-notification-bottomRight{bottom:20px;right:20px}.VoiceChatNotifications-notification-closeButton{color:#ddd;position:absolute;right:3px;top:3px;opacity:.7}.VoiceChatNotifications-notification-progress{bottom:0;height:3px;position:absolute;width:100%;left:0}.VoiceChatNotifications-notification-progressBar{height:3px;background:#0870f3}.VoiceChatNotifications-notification-content{color:#ddd;display:flex}.VoiceChatNotifications-notification-closeButton:hover{opacity:1}.VoiceChatNotifications-notification-wrapper{display:flex;flex-direction:column;margin-left:10px}.VoiceChatNotifications-notification-wrapper .VoiceChatNotifications-notification-header{display:flex;flex-direction:row}.VoiceChatNotifications-notification-wrapper .VoiceChatNotifications-notification-header .VoiceChatNotifications-notification-username{color:#fff;font-weight:700}.VoiceChatNotifications-notification-wrapper .VoiceChatNotifications-notification-header .VoiceChatNotifications-notification-timestamp{font-size:.75rem;padding-top:3px;color:var(--channels-default)}.VoiceChatNotifications-notification-wrapper .VoiceChatNotifications-notification-message{line-height:10px}", ""]);
+				___CSS_LOADER_EXPORT___.locals = {
+					container: "VoiceChatNotifications-notification-container",
+					topLeft: "VoiceChatNotifications-notification-topLeft",
+					topRight: "VoiceChatNotifications-notification-topRight",
+					bottomLeft: "VoiceChatNotifications-notification-bottomLeft",
+					bottomRight: "VoiceChatNotifications-notification-bottomRight",
+					closeButton: "VoiceChatNotifications-notification-closeButton",
+					progress: "VoiceChatNotifications-notification-progress",
+					progressBar: "VoiceChatNotifications-notification-progressBar",
+					content: "VoiceChatNotifications-notification-content",
+					wrapper: "VoiceChatNotifications-notification-wrapper",
+					header: "VoiceChatNotifications-notification-header",
+					username: "VoiceChatNotifications-notification-username",
+					timestamp: "VoiceChatNotifications-notification-timestamp",
+					message: "VoiceChatNotifications-notification-message"
+				};
+				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
+				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
+			},
+			865: (module, __webpack_exports__, __webpack_require__) => {
+				__webpack_require__.d(__webpack_exports__, {
+					Z: () => __WEBPACK_DEFAULT_EXPORT__
+				});
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(645);
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
+				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
+					return i[1];
+				}));
+				___CSS_LOADER_EXPORT___.push([module.id, ".VoiceChatNotifications-panel-clearButton{min-width:100px;width:100px;margin:10px;position:absolute;right:15px;z-index:99999}.VoiceChatNotifications-panel-contents{height:500px;overflow-y:scroll;overflow-x:hidden}.VoiceChatNotifications-panel-message{margin-top:1.0625rem}.VoiceChatNotifications-panel-empty{color:#ddd;margin:20px;text-align:center}", ""]);
+				___CSS_LOADER_EXPORT___.locals = {
+					clearButton: "VoiceChatNotifications-panel-clearButton",
+					contents: "VoiceChatNotifications-panel-contents",
+					message: "VoiceChatNotifications-panel-message",
+					empty: "VoiceChatNotifications-panel-empty"
+				};
+				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
+				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
+			},
+			911: (module, __webpack_exports__, __webpack_require__) => {
+				__webpack_require__.d(__webpack_exports__, {
+					Z: () => __WEBPACK_DEFAULT_EXPORT__
+				});
+				var _css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(645);
+				var _css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
+				var ___CSS_LOADER_EXPORT___ = _css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
+					return i[1];
+				}));
+				___CSS_LOADER_EXPORT___.push([module.id, ".VoiceChatNotifications-category-category.VoiceChatNotifications-category-compact{position:inherit}.VoiceChatNotifications-category-category.VoiceChatNotifications-category-compact .VoiceChatNotifications-category-header{display:flex;align-items:center;justify-content:space-between;padding:2px;padding-left:10px;text-transform:uppercase;font-weight:600;font-size:.9rem}.VoiceChatNotifications-category-category.VoiceChatNotifications-category-compact .VoiceChatNotifications-category-header .VoiceChatNotifications-category-caret{float:right;display:inline-flex;color:var(--interactive-normal)}.VoiceChatNotifications-category-category.VoiceChatNotifications-category-compact .VoiceChatNotifications-category-header .VoiceChatNotifications-category-stroke{background-color:var(--background-modifier-accent);height:2px;flex:1;margin:0 5px 0 10px}.VoiceChatNotifications-category-category.VoiceChatNotifications-category-compact .VoiceChatNotifications-category-header .VoiceChatNotifications-category-label{color:var(--interactive-normal)}.VoiceChatNotifications-category-category.VoiceChatNotifications-category-compact .VoiceChatNotifications-category-content{padding-left:20px;width:calc(100% - 40px)}.VoiceChatNotifications-category-category.VoiceChatNotifications-category-default{background:rgba(32,34,37,.3);border:1px solid #202225;margin:5px;cursor:pointer;border-radius:3px;--color: var(--interactive-normal)}.VoiceChatNotifications-category-category.VoiceChatNotifications-category-default:hover{--color: var(--interactive-hover)}.VoiceChatNotifications-category-category.VoiceChatNotifications-category-default .VoiceChatNotifications-category-header{padding-right:5px;padding:10px 15px;padding-bottom:0;display:flex;align-items:center;justify-content:space-between}.VoiceChatNotifications-category-category.VoiceChatNotifications-category-default .VoiceChatNotifications-category-header .VoiceChatNotifications-category-stroke{display:none}.VoiceChatNotifications-category-category.VoiceChatNotifications-category-default .VoiceChatNotifications-category-header .VoiceChatNotifications-category-divider{position:relative}.VoiceChatNotifications-category-category.VoiceChatNotifications-category-default .VoiceChatNotifications-category-header .VoiceChatNotifications-category-label{font-size:1rem;font-weight:600;color:#fff;text-transform:uppercase}.VoiceChatNotifications-category-category.VoiceChatNotifications-category-default .VoiceChatNotifications-category-header .VoiceChatNotifications-category-caret{color:var(--color);transition:color .3s}.VoiceChatNotifications-category-category.VoiceChatNotifications-category-default.VoiceChatNotifications-category-opened .VoiceChatNotifications-category-content{padding:8px}.VoiceChatNotifications-category-category.VoiceChatNotifications-category-default.VoiceChatNotifications-category-opened .VoiceChatNotifications-category-header{background:rgba(32,34,37,.6)}", ""]);
+				___CSS_LOADER_EXPORT___.locals = {
+					category: "VoiceChatNotifications-category-category",
+					compact: "VoiceChatNotifications-category-compact",
+					header: "VoiceChatNotifications-category-header",
+					caret: "VoiceChatNotifications-category-caret",
+					stroke: "VoiceChatNotifications-category-stroke",
+					label: "VoiceChatNotifications-category-label",
+					content: "VoiceChatNotifications-category-content",
+					default: "VoiceChatNotifications-category-default",
+					divider: "VoiceChatNotifications-category-divider",
+					opened: "VoiceChatNotifications-category-opened"
+				};
+				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
+				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
+			},
+			856: (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 				__webpack_require__.r(__webpack_exports__);
 				__webpack_require__.d(__webpack_exports__, {
 					default: () => VoiceChatNotifications
@@ -291,7 +380,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				const external_BasePlugin_namespaceObject = BasePlugin;
 				var external_BasePlugin_default = __webpack_require__.n(external_BasePlugin_namespaceObject);
 				const components_namespaceObject = Modules["@discord/components"];
-				var components_button = __webpack_require__(134);
+				var components_button = __webpack_require__(36);
 				var React = __webpack_require__(832);
 				function _extends() {
 					_extends = Object.assign || function(target) {
@@ -339,7 +428,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					return obj;
 				}
 				class SettingsManager extends flux_namespaceObject.Store {
-					constructor(pluginName) {
+					constructor(pluginName, defaultSettings = {}) {
 						super(modules_namespaceObject.Dispatcher, {});
 						_defineProperty(this, "settings", void 0);
 						_defineProperty(this, "pluginName", void 0);
@@ -351,13 +440,13 @@ function buildPlugin([BasePlugin, PluginApi]) {
 							return value;
 						}));
 						this.pluginName = pluginName;
-						this.settings = external_PluginApi_namespaceObject.PluginUtilities.loadSettings(pluginName, {});
+						this.settings = external_PluginApi_namespaceObject.PluginUtilities.loadSettings(pluginName, defaultSettings);
 					}
 				}
 				const package_namespaceObject = JSON.parse('{"um":{"u2":"VoiceChatNotifications"}}');
 				const Settings = new SettingsManager(package_namespaceObject.um.u2, {});
 				const settings = Settings;
-				var notification = __webpack_require__(855);
+				var notification = __webpack_require__(713);
 				const external_StyleLoader_namespaceObject = StyleLoader;
 				var external_StyleLoader_default = __webpack_require__.n(external_StyleLoader_namespaceObject);
 				const external_PluginApi_DiscordModules_namespaceObject = PluginApi.DiscordModules;
@@ -399,7 +488,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						return collector(api.getState());
 					}, api];
 				}
-				var panel = __webpack_require__(174);
+				var panel = __webpack_require__(865);
 				var panel_React = __webpack_require__(832);
 				const ChannelMessage = external_PluginApi_namespaceObject.WebpackModules.getModule((m => "ChannelMessage" === m?.type?.displayName));
 				const dummyChannel = new classes_namespaceObject.Channel({
@@ -479,7 +568,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				};
 				const icons_namespaceObject = Modules["@discord/icons"];
 				const utils_namespaceObject = Modules["@discord/utils"];
-				var category = __webpack_require__(375);
+				var category = __webpack_require__(911);
 				function Category({
 					label,
 					children,
@@ -745,12 +834,12 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				const Types = DiscordCommandTypes.ApplicationCommandType;
 				const OptionTypes = DiscordCommandTypes.ApplicationCommandOptionType;
 				const PermissionTypes = DiscordCommandTypes.ApplicationCommandPermissionType;
-				if (!DiscordCommands.BUILT_IN_SECTIONS.some((e => "betterdiscord" === e.id))) DiscordCommands.BUILT_IN_SECTIONS.push({
+				if (!DiscordCommands.BUILT_IN_SECTIONS["betterdiscord"]) DiscordCommands.BUILT_IN_SECTIONS["betterdiscord"] = {
 					icon: "https://github.com/BetterDiscord.png",
 					id: "betterdiscord",
 					name: "BetterDiscord",
 					type: 0
-				});
+				};
 				function registerCommand(caller, options) {
 					const cmd = Object.assign({}, options, {
 						__registerId: caller,
@@ -993,95 +1082,6 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					}
 				}
 			},
-			134: (module, __webpack_exports__, __webpack_require__) => {
-				__webpack_require__.d(__webpack_exports__, {
-					Z: () => __WEBPACK_DEFAULT_EXPORT__
-				});
-				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(645);
-				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
-				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
-					return i[1];
-				}));
-				___CSS_LOADER_EXPORT___.push([module.id, ".VoiceChatNotifications-button-icon{cursor:pointer;align-items:center;display:flex}", ""]);
-				___CSS_LOADER_EXPORT___.locals = {
-					icon: "VoiceChatNotifications-button-icon"
-				};
-				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
-				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
-			},
-			855: (module, __webpack_exports__, __webpack_require__) => {
-				__webpack_require__.d(__webpack_exports__, {
-					Z: () => __WEBPACK_DEFAULT_EXPORT__
-				});
-				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(645);
-				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
-				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
-					return i[1];
-				}));
-				___CSS_LOADER_EXPORT___.push([module.id, "#voicechatnotifications{position:absolute;z-index:999}#voicechatnotifications .VoiceChatNotifications-notification-container{z-index:999}.VoiceChatNotifications-notification-container{min-width:220px;margin-top:20px;position:relative;align-items:center;overflow:hidden;display:flex;pointer-events:all;padding:15px;border-radius:4px}.VoiceChatNotifications-notification-topLeft{left:20px}.VoiceChatNotifications-notification-topRight{right:20px}.VoiceChatNotifications-notification-bottomLeft{bottom:20px;left:20px}.VoiceChatNotifications-notification-bottomRight{bottom:20px;right:20px}.VoiceChatNotifications-notification-closeButton{color:#ddd;position:absolute;right:3px;top:3px;opacity:.7}.VoiceChatNotifications-notification-progress{bottom:0;height:3px;position:absolute;width:100%;left:0}.VoiceChatNotifications-notification-progressBar{height:3px;background:#0870f3}.VoiceChatNotifications-notification-content{color:#ddd;display:flex}.VoiceChatNotifications-notification-closeButton:hover{opacity:1}.VoiceChatNotifications-notification-wrapper{display:flex;flex-direction:column;margin-left:10px}.VoiceChatNotifications-notification-wrapper .VoiceChatNotifications-notification-header{display:flex;flex-direction:row}.VoiceChatNotifications-notification-wrapper .VoiceChatNotifications-notification-header .VoiceChatNotifications-notification-username{color:#fff;font-weight:700}.VoiceChatNotifications-notification-wrapper .VoiceChatNotifications-notification-header .VoiceChatNotifications-notification-timestamp{font-size:.75rem;padding-top:3px;color:var(--channels-default)}.VoiceChatNotifications-notification-wrapper .VoiceChatNotifications-notification-message{line-height:10px}", ""]);
-				___CSS_LOADER_EXPORT___.locals = {
-					container: "VoiceChatNotifications-notification-container",
-					topLeft: "VoiceChatNotifications-notification-topLeft",
-					topRight: "VoiceChatNotifications-notification-topRight",
-					bottomLeft: "VoiceChatNotifications-notification-bottomLeft",
-					bottomRight: "VoiceChatNotifications-notification-bottomRight",
-					closeButton: "VoiceChatNotifications-notification-closeButton",
-					progress: "VoiceChatNotifications-notification-progress",
-					progressBar: "VoiceChatNotifications-notification-progressBar",
-					content: "VoiceChatNotifications-notification-content",
-					wrapper: "VoiceChatNotifications-notification-wrapper",
-					header: "VoiceChatNotifications-notification-header",
-					username: "VoiceChatNotifications-notification-username",
-					timestamp: "VoiceChatNotifications-notification-timestamp",
-					message: "VoiceChatNotifications-notification-message"
-				};
-				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
-				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
-			},
-			174: (module, __webpack_exports__, __webpack_require__) => {
-				__webpack_require__.d(__webpack_exports__, {
-					Z: () => __WEBPACK_DEFAULT_EXPORT__
-				});
-				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(645);
-				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
-				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
-					return i[1];
-				}));
-				___CSS_LOADER_EXPORT___.push([module.id, ".VoiceChatNotifications-panel-clearButton{min-width:100px;width:100px;margin:10px;position:absolute;right:15px;z-index:99999}.VoiceChatNotifications-panel-contents{height:500px;overflow-y:scroll;overflow-x:hidden}.VoiceChatNotifications-panel-message{margin-top:1.0625rem}.VoiceChatNotifications-panel-empty{color:#ddd;margin:20px;text-align:center}", ""]);
-				___CSS_LOADER_EXPORT___.locals = {
-					clearButton: "VoiceChatNotifications-panel-clearButton",
-					contents: "VoiceChatNotifications-panel-contents",
-					message: "VoiceChatNotifications-panel-message",
-					empty: "VoiceChatNotifications-panel-empty"
-				};
-				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
-				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
-			},
-			375: (module, __webpack_exports__, __webpack_require__) => {
-				__webpack_require__.d(__webpack_exports__, {
-					Z: () => __WEBPACK_DEFAULT_EXPORT__
-				});
-				var _css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(645);
-				var _css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
-				var ___CSS_LOADER_EXPORT___ = _css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
-					return i[1];
-				}));
-				___CSS_LOADER_EXPORT___.push([module.id, ".VoiceChatNotifications-category-category.VoiceChatNotifications-category-compact{position:inherit}.VoiceChatNotifications-category-category.VoiceChatNotifications-category-compact .VoiceChatNotifications-category-header{display:flex;align-items:center;justify-content:space-between;padding:2px;padding-left:10px;text-transform:uppercase;font-weight:600;font-size:.9rem}.VoiceChatNotifications-category-category.VoiceChatNotifications-category-compact .VoiceChatNotifications-category-header .VoiceChatNotifications-category-caret{float:right;display:inline-flex;color:var(--interactive-normal)}.VoiceChatNotifications-category-category.VoiceChatNotifications-category-compact .VoiceChatNotifications-category-header .VoiceChatNotifications-category-stroke{background-color:var(--background-modifier-accent);height:2px;flex:1;margin:0 5px 0 10px}.VoiceChatNotifications-category-category.VoiceChatNotifications-category-compact .VoiceChatNotifications-category-header .VoiceChatNotifications-category-label{color:var(--interactive-normal)}.VoiceChatNotifications-category-category.VoiceChatNotifications-category-compact .VoiceChatNotifications-category-content{padding-left:20px;width:calc(100% - 40px)}.VoiceChatNotifications-category-category.VoiceChatNotifications-category-default{background:rgba(32,34,37,.3);border:1px solid #202225;margin:5px;cursor:pointer;border-radius:3px;--color: var(--interactive-normal)}.VoiceChatNotifications-category-category.VoiceChatNotifications-category-default:hover{--color: var(--interactive-hover)}.VoiceChatNotifications-category-category.VoiceChatNotifications-category-default .VoiceChatNotifications-category-header{padding-right:5px;padding:10px 15px;padding-bottom:0;display:flex;align-items:center;justify-content:space-between}.VoiceChatNotifications-category-category.VoiceChatNotifications-category-default .VoiceChatNotifications-category-header .VoiceChatNotifications-category-stroke{display:none}.VoiceChatNotifications-category-category.VoiceChatNotifications-category-default .VoiceChatNotifications-category-header .VoiceChatNotifications-category-divider{position:relative}.VoiceChatNotifications-category-category.VoiceChatNotifications-category-default .VoiceChatNotifications-category-header .VoiceChatNotifications-category-label{font-size:1rem;font-weight:600;color:#fff;text-transform:uppercase}.VoiceChatNotifications-category-category.VoiceChatNotifications-category-default .VoiceChatNotifications-category-header .VoiceChatNotifications-category-caret{color:var(--color);transition:color .3s}.VoiceChatNotifications-category-category.VoiceChatNotifications-category-default.VoiceChatNotifications-category-opened .VoiceChatNotifications-category-content{padding:8px}.VoiceChatNotifications-category-category.VoiceChatNotifications-category-default.VoiceChatNotifications-category-opened .VoiceChatNotifications-category-header{background:rgba(32,34,37,.6)}", ""]);
-				___CSS_LOADER_EXPORT___.locals = {
-					category: "VoiceChatNotifications-category-category",
-					compact: "VoiceChatNotifications-category-compact",
-					header: "VoiceChatNotifications-category-header",
-					caret: "VoiceChatNotifications-category-caret",
-					stroke: "VoiceChatNotifications-category-stroke",
-					label: "VoiceChatNotifications-category-label",
-					content: "VoiceChatNotifications-category-content",
-					default: "VoiceChatNotifications-category-default",
-					divider: "VoiceChatNotifications-category-divider",
-					opened: "VoiceChatNotifications-category-opened"
-				};
-				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
-				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
-			},
 			645: module => {
 				module.exports = function(cssWithMappingToString) {
 					var list = [];
@@ -1160,7 +1160,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				});
 			};
 		})();
-		var __webpack_exports__ = __webpack_require__(958);
+		var __webpack_exports__ = __webpack_require__(856);
 		module.exports.LibraryPluginHack = __webpack_exports__;
 	})();
 	const PluginExports = module.exports.LibraryPluginHack;

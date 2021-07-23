@@ -2050,12 +2050,12 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				const Types = DiscordCommandTypes.ApplicationCommandType;
 				const OptionTypes = DiscordCommandTypes.ApplicationCommandOptionType;
 				const PermissionTypes = DiscordCommandTypes.ApplicationCommandPermissionType;
-				if (!DiscordCommands.BUILT_IN_SECTIONS.some((e => "betterdiscord" === e.id))) DiscordCommands.BUILT_IN_SECTIONS.push({
+				if (!DiscordCommands.BUILT_IN_SECTIONS["betterdiscord"]) DiscordCommands.BUILT_IN_SECTIONS["betterdiscord"] = {
 					icon: "https://github.com/BetterDiscord.png",
 					id: "betterdiscord",
 					name: "BetterDiscord",
 					type: 0
-				});
+				};
 				function registerCommand(caller, options) {
 					const cmd = Object.assign({}, options, {
 						__registerId: caller,

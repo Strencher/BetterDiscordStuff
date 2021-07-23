@@ -272,7 +272,27 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			}
 		};
 		var __webpack_modules__ = {
-			59: (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+			440: (module, __webpack_exports__, __webpack_require__) => {
+				__webpack_require__.d(__webpack_exports__, {
+					Z: () => __WEBPACK_DEFAULT_EXPORT__
+				});
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(645);
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
+				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
+					return i[1];
+				}));
+				___CSS_LOADER_EXPORT___.push([module.id, ".UserBackgrounds-banner-arrow{position:absolute;top:0;z-index:99;padding-top:20px;padding-bottom:20px}.UserBackgrounds-banner-arrow svg{color:var(--interactive-normal)}.UserBackgrounds-banner-arrow.UserBackgrounds-banner-left{left:0}.UserBackgrounds-banner-arrow.UserBackgrounds-banner-right{right:0}.UserBackgrounds-banner-container{display:flex;position:relative}.UserBackgrounds-banner-badge{position:absolute;bottom:10px;right:10px;z-index:99}", ""]);
+				___CSS_LOADER_EXPORT___.locals = {
+					arrow: "UserBackgrounds-banner-arrow",
+					left: "UserBackgrounds-banner-left",
+					right: "UserBackgrounds-banner-right",
+					container: "UserBackgrounds-banner-container",
+					badge: "UserBackgrounds-banner-badge"
+				};
+				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
+				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
+			},
+			700: (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 				__webpack_require__.r(__webpack_exports__);
 				__webpack_require__.d(__webpack_exports__, {
 					default: () => UserBackgrounds
@@ -347,7 +367,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					return obj;
 				}
 				class SettingsManager extends flux_namespaceObject.Store {
-					constructor(pluginName) {
+					constructor(pluginName, defaultSettings = {}) {
 						super(modules_namespaceObject.Dispatcher, {});
 						settings_defineProperty(this, "settings", void 0);
 						settings_defineProperty(this, "pluginName", void 0);
@@ -359,7 +379,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 							return value;
 						}));
 						this.pluginName = pluginName;
-						this.settings = external_PluginApi_namespaceObject.PluginUtilities.loadSettings(pluginName, {});
+						this.settings = external_PluginApi_namespaceObject.PluginUtilities.loadSettings(pluginName, defaultSettings);
 					}
 				}
 				const package_namespaceObject = JSON.parse('{"u":{"u2":"UserBackgrounds"}}');
@@ -439,7 +459,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						return Element;
 					}
 				}
-				var UserBackgrounds_banner = __webpack_require__(21);
+				var UserBackgrounds_banner = __webpack_require__(440);
 				const external_StyleLoader_namespaceObject = StyleLoader;
 				var external_StyleLoader_default = __webpack_require__.n(external_StyleLoader_namespaceObject);
 				const components_namespaceObject = Modules["@discord/components"];
@@ -545,26 +565,6 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					}
 				}
 			},
-			21: (module, __webpack_exports__, __webpack_require__) => {
-				__webpack_require__.d(__webpack_exports__, {
-					Z: () => __WEBPACK_DEFAULT_EXPORT__
-				});
-				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(645);
-				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
-				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
-					return i[1];
-				}));
-				___CSS_LOADER_EXPORT___.push([module.id, ".UserBackgrounds-banner-arrow{position:absolute;top:0;z-index:99;padding-top:20px;padding-bottom:20px}.UserBackgrounds-banner-arrow svg{color:var(--interactive-normal)}.UserBackgrounds-banner-arrow.UserBackgrounds-banner-left{left:0}.UserBackgrounds-banner-arrow.UserBackgrounds-banner-right{right:0}.UserBackgrounds-banner-container{display:flex;position:relative}.UserBackgrounds-banner-badge{position:absolute;bottom:10px;right:10px;z-index:99}", ""]);
-				___CSS_LOADER_EXPORT___.locals = {
-					arrow: "UserBackgrounds-banner-arrow",
-					left: "UserBackgrounds-banner-left",
-					right: "UserBackgrounds-banner-right",
-					container: "UserBackgrounds-banner-container",
-					badge: "UserBackgrounds-banner-badge"
-				};
-				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
-				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
-			},
 			645: module => {
 				module.exports = function(cssWithMappingToString) {
 					var list = [];
@@ -640,7 +640,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				});
 			};
 		})();
-		var __webpack_exports__ = __webpack_require__(59);
+		var __webpack_exports__ = __webpack_require__(700);
 		module.exports.LibraryPluginHack = __webpack_exports__;
 	})();
 	const PluginExports = module.exports.LibraryPluginHack;
