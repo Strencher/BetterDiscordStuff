@@ -3,7 +3,7 @@
  * @version 1.0.1
  * @description Enhances the banned users page.
  * @author Strencher
- * @source https://github.com/Strencher/BetterDiscordStuff/BetterBannedUsers
+ * @source https://github.com/Strencher/BetterDiscordStuff/tree/master/BetterBannedUsers
  * @updateUrl https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/BetterBannedUsers/BetterBannedUsers.plugin.js
  */
 /*@cc_on
@@ -39,7 +39,7 @@ const config = {
 			"discord_id": "415849376598982656",
 			"github_username": "Strencher"
 		}],
-		"github": "https://github.com/Strencher/BetterDiscordStuff/BetterBannedUsers",
+		"github": "https://github.com/Strencher/BetterDiscordStuff/tree/master/BetterBannedUsers",
 		"github_raw": "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/BetterBannedUsers/BetterBannedUsers.plugin.js"
 	},
 	"changelog": [{
