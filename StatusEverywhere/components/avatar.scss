@@ -1,3 +1,57 @@
 .chatAvatar {
     overflow: visible !important;
+    box-sizing: border-box;
+}
+
+.userPopout {
+    border-radius: 50%;
+    background: var(--background-floating);
+    border: 6px solid var(--background-floating);
+    box-sizing: border-box;
+
+    &[data-mobile=false] {
+        &~svg {
+            foreignObject {
+                mask: none;
+                border-radius: 50%;
+                overflow: hidden;
+            }
+        }
+    }
+}
+
+.speaking foreignObject, .radial foreignObject {
+    border: 2px solid var(--status-color);
+    border-spacing: 2px;
+    border-radius: 50%;
+    box-sizing: border-box;
+}
+
+.radial {
+    foreignObject {
+        border-width: 3px;
+    }
+    &[data-mobile="false"][data-typing=false] {
+        foreignObject {
+            border-width: 3px;
+            mask: none;
+        }
+    
+        rect {
+            display: none;
+        }
+    }
+}
+
+:global(.userInfo-iCloHO) {
+    justify-content: flex-start;
+    padding: 16px 16px 0 146px;
+
+    :global(.button-38aScr) {
+        margin-left: auto;
+    }
+}
+
+:global(.accountSettingsAvatar) {
+    top: 46px;
 }

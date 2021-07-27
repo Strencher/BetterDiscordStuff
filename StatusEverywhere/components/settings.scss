@@ -1,0 +1,12 @@
+.settingContainer {
+    position: relative;
+    border-bottom: thin solid var(--background-modifier-accent);
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+}
+
+.colorPickerItem {
+    position: absolute;
+    top: 0;
+    right: 5px;
+}

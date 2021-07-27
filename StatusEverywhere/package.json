@@ -1,7 +1,7 @@
 {
     "info": {
         "name": "StatusEverywhere",
-        "version": "1.0.1",
+        "version": "2.0.0",
         "authors": [
             {
                 "name": "Strencher",
@@ -22,10 +22,12 @@
     },
     "changelog": [
         {
-            "type": "fixed",
-            "title": "Rewrite",
+            "title": "Big Update",
+            "type": "added",
             "items": [
-                "This plugin was rewritten."
+                "Made status everywhere work __everywhere__",
+                "Added customiation for basically anything",
+                "Chat avatars should now load instead of just showing the person as offline."
             ]
         }
     ],
@@ -44,8 +46,20 @@
             "readme": true,
             "previews": [
                 {
-                    "name": "Preview",
-                    "src": "./assets/preview.png"
+                    "name": "Chat",
+                    "src": "assets/chat.png"
+                },
+                {
+                    "name": "MemberList",
+                    "src": "assets/memberlist.png"
+                },
+                {
+                    "name": "Account",
+                    "src": "assets/account.png"
+                },
+                {
+                    "name": "Customization",
+                    "src": "assets/settings.png"
                 }
             ]
         }

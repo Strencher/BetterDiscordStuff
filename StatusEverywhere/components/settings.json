@@ -1,0 +1,156 @@
+{
+    "performance": {
+        "forceLoadStatus": {
+            "name": "Force Load Status",
+            "note": "This setting force-loads the status of users from the WebSocket. Be aware that this can cause high performance usage because after a while a lot users are in the cache. I try to work on something that improves that, if you don't want it, simply disable.",
+            "value": true,
+            "type": "switch"
+        }
+    },
+	"colors": {
+		"dndColor": {
+			"name": "Do Not Disturb Color",
+			"note": "Color for \"Do Not Disturb\" status indicator.",
+			"value": "#ED4245",
+			"type": "color"
+		},
+		"idleColor": {
+			"name": "Idle Color",
+			"note": "Color for \"Idle\" status indicator.",
+			"value": "#FAA81A",
+			"type": "color"
+		},
+		"onlineColor": {
+			"name": "Online Color",
+			"note": "Color for \"Online\" status indicator.",
+			"value": "#3BA55D",
+			"type": "color"
+		},
+		"streamingColor": {
+			"name": "Streaming Color",
+			"note": "Color for \"Streaming\" status indicator.",
+			"value": "#593695",
+			"type": "color"
+		},
+		"offlineColor": {
+			"name": "Offline Color",
+			"note": "Color for \"Offline\" status indicator.",
+			"value": "#747F8D",
+			"type": "color"
+		}
+	},
+	"chat": {
+		"showChatTyping": {
+			"name": "Typing",
+			"note": "Show typing state in the chat.",
+			"value": true,
+			"type": "switch"
+		},
+		"chatRadialStatus": {
+			"name": "Radial Status",
+			"note": "Shows the status as border instead of pointer.",
+			"value": false,
+			"type": "switch"
+		}
+	},
+	"member_list": {
+		"showMemberlistTyping": {
+			"name": "Typing",
+			"note": "Show typing state in the member list.",
+			"value": true,
+			"type": "switch"
+		},
+		"memberlistRadialStatus": {
+			"name": "Radial Status",
+			"note": "Shows the status as border instead of pointer.",
+			"value": false,
+			"type": "switch"
+		}
+	},
+	"friends_page": {
+		"showFriendsPageTyping": {
+			"name": "Typing",
+			"note": "Show typing state in the friends page.",
+			"value": true,
+			"type": "switch"
+		},
+		"friendsPageRadialStatus": {
+			"name": "Radial Status",
+			"note": "Shows the status as border instead of pointer.",
+			"value": false,
+			"type": "switch"
+		}
+	},
+	"user_popout": {
+		"showUserPopoutTyping": {
+			"name": "Typing",
+			"note": "Show typing state in user popout.",
+			"value": true,
+			"type": "switch"
+		},
+		"userPopoutRadialStatus": {
+			"name": "Radial Status",
+			"note": "Shows the status as border instead of pointer.",
+			"value": false,
+			"type": "switch"
+		}
+	},
+	"direct_messages": {
+		"showDirectMessagesTyping": {
+			"name": "Typing",
+			"note": "Show typing state in direct messages.",
+			"value": true,
+			"type": "switch"
+		},
+		"directMessagesRadialStatus": {
+			"name": "Radial Status",
+			"note": "Shows the status as border instead of pointer.",
+			"value": false,
+			"type": "switch"
+		}
+	},
+	"user_profile": {
+		"showUserProfileTyping": {
+			"name": "Typing",
+			"note": "Show typing state in user profile modal.",
+			"value": true,
+			"type": "switch"
+		},
+		"userProfileRadialStatus": {
+			"name": "Radial Status",
+			"note": "Shows the status as border instead of pointer.",
+			"value": false,
+			"type": "switch"
+		}
+	},
+	"guild_settings": {
+		"showGuildSettingsTyping": {
+			"name": "Typing",
+			"note": "Show typing state in the guild settings",
+			"value": true,
+			"type": "switch"
+		},
+		"guildSettingsRadialStatus": {
+			"name": "Radial Status",
+			"note": "Shows the status as border instead of pointer.",
+			"value": false,
+			"type": "switch"
+		}
+	},
+	"voice_chat": {
+		"showVoiceChatTyping": {
+			"name": "Typing",
+			"note": "Show typing state in the voice chat.",
+			"value": true,
+			"type": "switch"
+		}
+	},
+	"accounts_section": {
+		"accountSettingsRadialStatus": {
+			"name": "Radial Status",
+			"note": "Shows the status as border instead of pointer.",
+			"value": false,
+			"type": "switch"
+		}
+	}
+}
