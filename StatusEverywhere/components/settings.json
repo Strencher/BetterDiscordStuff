@@ -2,7 +2,7 @@
     "performance": {
         "forceLoadStatus": {
             "name": "Force Load Status",
-            "note": "This setting force-loads the status's of users from the WebSocket. Be aware, this can cause high usage of resources because of the amount of users in the cache. I can try to work on something that improves this but for now, if you don't want it, simply disable.",
+            "note": "This setting force-loads the statuses of users from the WebSocket. Be aware, this can cause high usage of resources because of the amount of users in the cache. I can try to work on something that improves this but for now, if you don't want it, simply disable it.",
             "value": true,
             "type": "switch"
         }
@@ -48,7 +48,7 @@
 		},
 		"chatRadialStatus": {
 			"name": "Radial Status",
-			"note": "Shows the status as border instead of pointer.",
+			"note": "Shows the status as a border instead of a pointer.",
 			"value": false,
 			"type": "switch"
 		}
@@ -62,7 +62,7 @@
 		},
 		"memberlistRadialStatus": {
 			"name": "Radial Status",
-			"note": "Shows the status as border instead of pointer.",
+			"note": "Shows the status as a border instead of a pointer.",
 			"value": false,
 			"type": "switch"
 		}
@@ -76,7 +76,7 @@
 		},
 		"friendsPageRadialStatus": {
 			"name": "Radial Status",
-			"note": "Shows the status as border instead of pointer.",
+			"note": "Shows the status as a border instead of a pointer.",
 			"value": false,
 			"type": "switch"
 		}
@@ -84,13 +84,13 @@
 	"user_popout": {
 		"showUserPopoutTyping": {
 			"name": "Typing",
-			"note": "Show typing state in user popout.",
+			"note": "Show typing state in the user popout.",
 			"value": true,
 			"type": "switch"
 		},
 		"userPopoutRadialStatus": {
 			"name": "Radial Status",
-			"note": "Shows the status as border instead of pointer.",
+			"note": "Shows the status as a border instead of a pointer.",
 			"value": false,
 			"type": "switch"
 		}
@@ -104,7 +104,7 @@
 		},
 		"directMessagesRadialStatus": {
 			"name": "Radial Status",
-			"note": "Shows the status as border instead of pointer.",
+			"note": "Shows the status as a border instead of a pointer.",
 			"value": false,
 			"type": "switch"
 		}
@@ -112,13 +112,13 @@
 	"user_profile": {
 		"showUserProfileTyping": {
 			"name": "Typing",
-			"note": "Show typing state in user profile modal.",
+			"note": "Show typing state in the user profile modal.",
 			"value": true,
 			"type": "switch"
 		},
 		"userProfileRadialStatus": {
 			"name": "Radial Status",
-			"note": "Shows the status as border instead of pointer.",
+			"note": "Shows the status as a border instead of a pointer.",
 			"value": false,
 			"type": "switch"
 		}
@@ -132,7 +132,7 @@
 		},
 		"guildSettingsRadialStatus": {
 			"name": "Radial Status",
-			"note": "Shows the status as border instead of pointer.",
+			"note": "Shows the status as a border instead of a pointer.",
 			"value": false,
 			"type": "switch"
 		}
@@ -140,7 +140,7 @@
 	"voice_chat": {
 		"showVoiceChatTyping": {
 			"name": "Typing",
-			"note": "Show typing state in the voice chat.",
+			"note": "Show typing state in voice chats.",
 			"value": true,
 			"type": "switch"
 		}
@@ -148,7 +148,7 @@
 	"accounts_section": {
 		"accountSettingsRadialStatus": {
 			"name": "Radial Status",
-			"note": "Shows the status as border instead of pointer.",
+			"note": "Shows the status as a border instead of a pointer.",
 			"value": false,
 			"type": "switch"
 		}
