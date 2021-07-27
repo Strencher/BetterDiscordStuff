@@ -2,7 +2,7 @@
     "performance": {
         "forceLoadStatus": {
             "name": "Force Load Status",
-            "note": "This setting force-loads the status of users from the WebSocket. Be aware that this can cause high performance usage because after a while a lot users are in the cache. I try to work on something that improves that, if you don't want it, simply disable.",
+            "note": "This setting force-loads the status's of users from the WebSocket. Be aware, this can cause high usage of resources because of the amount of users in the cache. I can try to work on something that improves this but for now, if you don't want it, simply disable.",
             "value": true,
             "type": "switch"
         }
