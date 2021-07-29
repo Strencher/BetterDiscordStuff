@@ -1,6 +1,6 @@
 /**
  * @name VoiceChatNotifications
- * @version 1.0.1
+ * @version 1.0.2
  * @description Shows you certain events from voicechats in a logs panel or as desktop notification.
  * @author Strencher
  * @source https://github.com/Strencher/BetterDiscordStuff/tree/master/VoiceChatNotifications
@@ -32,7 +32,7 @@
 const config = {
 	"info": {
 		"name": "VoiceChatNotifications",
-		"version": "1.0.1",
+		"version": "1.0.2",
 		"description": "Shows you certain events from voicechats in a logs panel or as desktop notification.",
 		"authors": [{
 			"name": "Strencher",
@@ -920,7 +920,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						}));
 						VoiceChatNotifications_defineProperty(this, "onVoiceStateChange", (props => {
 							let user = stores_namespaceObject.Users.getUser(props.userId) || {};
-							if (settings.get("ignoreSelf", false) && user.id === stores_namespaceObject.Info.getCurrentUser().id) return;
+							if (settings.get("ignoreSelf", false) && user.id === stores_namespaceObject.Users.getCurrentUser().id) return;
 							const pushToLog = message => {
 								const timestamp = new classes_namespaceObject.Timestamp(new Date);
 								const log = {
