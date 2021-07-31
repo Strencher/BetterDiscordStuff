@@ -645,7 +645,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						note: "Defines if logs about your own actions should be ignored.",
 						name: "Ignore yourself"
 					},
-					supressInDnd: {
+					suppressInDnd: {
 						value: true,
 						note: "Suppress desktop notifications in DND, this automatically enables the In-App notification api.",
 						name: "Suppress in DND"
@@ -672,7 +672,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						onChange: value => settings.set("inappPosition", value)
 					}), external_BdApi_React_default().createElement(forms_namespaceObject.FormText, {
 						type: "description"
-					}, "Defines if notifications should be shown when an event happens in your current call."))), external_BdApi_React_default().createElement(Category, {
+					}, 'Defines if notifications should be shown when an event happens in your current call. Set it to the middle to receive desktop notifications if you\'re NOT in "Do Not Disturb" status'))), external_BdApi_React_default().createElement(Category, {
 						label: "Voice Updates",
 						look: Category.Looks.COMPACT
 					}, Object.keys(constants.VOICE_STATES).reduce(((items, key) => {
