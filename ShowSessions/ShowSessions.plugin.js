@@ -630,8 +630,8 @@ function buildPlugin([BasePlugin, PluginApi]) {
 							try {
 								clyde.sendMessage(channel.id, {
 									content: switchCase(Object.entries(ShowSessions_SessionsStore.getSessions()), [
-										[e => e.length, sessions => "**__I found these clients are currently active:__**\n\n" + sessions.filter((([id]) => "all" !== id)).map((([id, info]) => `> **Id:** \`${id}\`\n\t\t\t\t\t\t\t\t\t> **Active:** \`${info.active}\`\n\t\t\t\t\t\t\t\t\t> **Status:** \`${info.status}\`\n\t\t\t\t\t\t\t\t\t> **Activities: [${info.activities.length}]**${(info.activities.length ? "\n>" : "") + info.activities.map((ac => `  **•** ${ac.name}: \`${ac.state}\``)).join("\n")}\n\t\t\t\t\t\t\t\t\t> **Client:**\n\t\t\t\t\t\t\t\t\t>  **•** os: \`${info.clientInfo.os}\`\n\t\t\t\t\t\t\t\t\t>  **•** client: \`${info.clientInfo.client}\`\n\t\t\t\t\t\t\t\t\t`)).join("\n")],
-										[e => !e.length, "I didn't find any active clients. Maybe discord didn't told me about them? :thinking:"]
+										[e => e.length, sessions => "**I found these clients are currently active:**\n\n" + sessions.filter((([id]) => "all" !== id)).map((([id, info]) => `> **ID:** \`${id}\`\n\t\t\t\t\t\t\t\t\t> **Active:** \`${info.active}\`\n\t\t\t\t\t\t\t\t\t> **Status:** \`${info.status}\`\n\t\t\t\t\t\t\t\t\t> **Activities: ${info.activities.length}**${(info.activities.length ? "\n>" : "") + info.activities.map((ac => `  **・** ${ac.name}: \`${ac.state}\``)).join("\n")}\n\t\t\t\t\t\t\t\t\t> **Client:**\n\t\t\t\t\t\t\t\t\t>  **・** os: \`${info.clientInfo.os}\`\n\t\t\t\t\t\t\t\t\t>  **・** client: \`${info.clientInfo.client}\`\n\t\t\t\t\t\t\t\t\t`)).join("\n")],
+										[e => !e.length, "I couldn't find any active clients. Maybe discord didn't tell me about them? :thinking:"]
 									])
 								});
 							} catch (error) {
