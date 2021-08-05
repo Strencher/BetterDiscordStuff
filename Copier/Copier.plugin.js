@@ -27,7 +27,7 @@
     WScript.Quit();
 
 @else@*/
-/// <reference path="../_plugins/typings/BdApi.d.ts" />
+// <reference path="../" />
 
 const config = {
     info: {
@@ -40,21 +40,19 @@ const config = {
                 twitter_username: "Strencher3"
             }
         ],
-        version: "0.0.6",
+        version: "1.1.0",
         description: "Allows you to copy certain stuff with custom options.",
         github: "https://github.com/Strencher/BetterDiscordStuff/blob/master/Copier/Copier.plugin.js",
         github_raw: "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/Copier/Copier.plugin.js"
     },
     changelog: [
         {
-            title: "Added",
             type: "added",
-            items: ["Added a copy option to channel categories."]
-        },
-        {
-            title: "Fixed",
-            type: "fixed",
-            items: ["Fixed copy menu on categories."]
+            title: "Added",
+            items: [
+                "Added copy button for About Me.",
+                "Added context menu entry to copy dm channel id."
+            ]
         }
     ]
 };
@@ -346,17 +344,18 @@ const buildPlugin = ([Plugin, Api]) => {
     const findWithDefault = filter => WebpackModules.getModule(m => m && m.default && filter(m.default));
     const DatesModule = WebpackModules.getByProps("dateFormat", "calendarFormat");
     const MemberCountStore = WebpackModules.getByProps("getMemberCount");
-    const {TooltipContainer: Tooltip} = WebpackModules.getByProps("TooltipContainer");
+    const {TooltipContainer: Tooltip, TooltipColors} = WebpackModules.getByProps("TooltipContainer");
     const MiniPopover = findWithDefault(m => m.displayName == "MiniPopover");
     const {Routes} = WebpackModules.getByProps("Routes");
     const VoiceStatesStore = WebpackModules.getByProps("getVoiceStatesForChannel");
     const ChannelsStore = WebpackModules.getByProps("getMutableGuildChannels");
+    const Button = WebpackModules.getByProps("DropdownSizes");
     const CopyIcon = props => React.createElement("svg", {height: 24, width: 24, viewBox: "0 0 24 24", fill: "currentColor", ...props}, React.createElement("path", {fill: "none", d: "M0 0h24v24H0z"}), React.createElement("path", {d: "M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"}));
 
     const createUpdateWrapper = component => props => {
         const {onChange = () => {}} = props;
         const [value, setValue] = useState(props.value);
-        
+
         return React.createElement(component, {
             ...props,
             value,
@@ -425,14 +424,14 @@ const buildPlugin = ([Plugin, Api]) => {
 
             return React.createElement(MenuItem, {
                 ...item,
-                id: (item.id ? item.id : item.label.toLowerCase().replace(/ /g, "-")) 
+                id: (item.id ? item.id : item.label.toLowerCase().replace(/ /g, "-"))
                     + (item.children ? "" : "-submenu"),
             });
         }
 
         static buildItems(items) {
             return items.map(e => this.buildItem(e));
-        } 
+        }
 
         static buildMenu(items) {
             return React.createElement(
@@ -448,12 +447,12 @@ const buildPlugin = ([Plugin, Api]) => {
         useEffect(() => {
             const handleChange = e => {
                 setActive(
-                    e.ctrlKey && e.shiftKey 
-                        ? "both" 
-                        : e.ctrlKey 
-                            ? "ctrl" 
-                            : e.shiftKey 
-                                ? "shift" 
+                    e.ctrlKey && e.shiftKey
+                        ? "both"
+                        : e.ctrlKey
+                            ? "ctrl"
+                            : e.shiftKey
+                                ? "shift"
                                 : "none"
                 );
             };
@@ -475,11 +474,11 @@ const buildPlugin = ([Plugin, Api]) => {
         const {message} = props;
 
         return React.createElement(Tooltip, {
-                text: active === "none" ? "Copy RAW Message" : "Copy Message (Custom)"
-            },
+            text: active === "none" ? "Copy RAW Message" : "Copy Message (Custom)"
+        },
             React.createElement(MiniPopover.Button, {
                 onClick: () => {
-                    switch(active) {
+                    switch (active) {
                         case "none":
                             ElectronModule.copy(message.content);
                             break;
@@ -490,21 +489,21 @@ const buildPlugin = ([Plugin, Api]) => {
                                 Formatter.formatString(
                                     Settings.getSetting("messageCustom"),
                                     MessageCopyOptions.reduce((options, option) => {
-                                        options[option.name] = option.name === "timestamp" 
-                                            ? Formatter.formatDate(message.timestamp) 
+                                        options[option.name] = option.name === "timestamp"
+                                            ? Formatter.formatDate(message.timestamp)
                                             : Utilities.getNestedProp(message, option.prop);
                                         return options;
                                     }, {})
                                 )
-                            );  
+                            );
                             break;
                     }
                 }
             },
-            React.createElement(CopyIcon, {
-                fill: active === "none" ? "currentColor" : "#0870f3"
-            })
-        ));
+                React.createElement(CopyIcon, {
+                    fill: active === "none" ? "currentColor" : "#0870f3"
+                })
+            ));
     }
 
     function RoleColoredLabel(props) {
@@ -583,19 +582,32 @@ const buildPlugin = ([Plugin, Api]) => {
                 width: 100%;
                 height: 1px;
             }
+
+            .copr-button {
+                color: #0870f3;
+                display: inline-flex;
+                margin-left: 5px;
+                margin-top: -9px;
+            }
+
+            .cpr-buttonContainer {
+                display: flex;
+                align-items: center;
+            }
         `;
 
         onStart() {
             PluginUtilities.addStyle(config.info.name, this.css);
 
-            Utilities.suppressErrors(this.checkForCanaryLinks.bind(this),       "canary links check")();
-            Utilities.suppressErrors(this.patchMessageContextMenu.bind(this),   "MessageContextMenu patch")();
-            Utilities.suppressErrors(this.patchMessageToolbar.bind(this),       "MessageToolbar patch")();
-            Utilities.suppressErrors(this.patchChannelContextMenu.bind(this),   "ChannelContextMenu patch")();
-            Utilities.suppressErrors(this.patchCopyIdItem.bind(this),           "CopyIdItem patch")();
-            Utilities.suppressErrors(this.patchGuildContextMenu.bind(this),     "GuildContextMenu patch")();
-            Utilities.suppressErrors(this.patchUserContextMenu.bind(this),      "UserContextMenu patch")();
+            Utilities.suppressErrors(this.checkForCanaryLinks.bind(this), "canary links check")();
+            Utilities.suppressErrors(this.patchMessageContextMenu.bind(this), "MessageContextMenu patch")();
+            Utilities.suppressErrors(this.patchMessageToolbar.bind(this), "MessageToolbar patch")();
+            Utilities.suppressErrors(this.patchChannelContextMenu.bind(this), "ChannelContextMenu patch")();
+            Utilities.suppressErrors(this.patchCopyIdItem.bind(this), "CopyIdItem patch")();
+            Utilities.suppressErrors(this.patchGuildContextMenu.bind(this), "GuildContextMenu patch")();
+            Utilities.suppressErrors(this.patchUserContextMenu.bind(this), "UserContextMenu patch")();
             Utilities.suppressErrors(this.patchDeveloperContextMenu.bind(this), "DeveloperContextMenu patch")();
+            Utilities.suppressErrors(this.patchUserPopoutProfileText.bind(this), "UserPopoutProfileText patch")();
         }
 
         checkForCanaryLinks() {
@@ -610,7 +622,7 @@ const buildPlugin = ([Plugin, Api]) => {
                         BdApi.Plugins.get("CanaryLinks").instance.copyLink(channel, message);
                     } catch (error) {
                         Logger.error("Failed to use CanaryLinks.copyLink method! Using fallback...\n", error);
-                        if(!BdApi.Plugins.isEnabled("CanaryLinks")) this.hasCanaryLinks = false;
+                        if (!BdApi.Plugins.isEnabled("CanaryLinks")) this.hasCanaryLinks = false;
                         oCopyMessageLink(guildId, channel, message);
                     }
                 }
@@ -623,8 +635,8 @@ const buildPlugin = ([Plugin, Api]) => {
             Patcher.after(MessageContextMenu, "default", (_, [{message}], ret) => {
                 const children = Utilities.getNestedProp(ret, "props.children");
                 if (!Array.isArray(children)) return;
-            
-                children.splice(4, 0, 
+
+                children.splice(4, 0,
                     ContextMenu.buildMenu([
                         {
                             id: "copy-message",
@@ -642,12 +654,12 @@ const buildPlugin = ([Plugin, Api]) => {
                                     }
                                 },
                                 {
-                                   label: "Custom Format",
-                                   id: "copy-message-custom-format",
-                                   action: () => {
+                                    label: "Custom Format",
+                                    id: "copy-message-custom-format",
+                                    action: () => {
                                         ElectronModule.copy(
                                             Formatter.formatString(
-                                                Settings.getSetting("messageCustom"), 
+                                                Settings.getSetting("messageCustom"),
                                                 MessageCopyOptions.reduce((options, option) => {
                                                     options[option.name] = option.getValue({message}, Modules);
                                                     return options;
@@ -655,7 +667,7 @@ const buildPlugin = ([Plugin, Api]) => {
                                             )
                                         );
                                         Toasts.success("Copied message with custom format.");
-                                    } 
+                                    }
                                 },
                                 {
                                     label: "Message Link",
@@ -701,19 +713,37 @@ const buildPlugin = ([Plugin, Api]) => {
                 if (!props) return;
                 const children = Utilities.getNestedProp(ret, "props.children");
                 if (!Array.isArray(children)) return;
-                children.unshift(
-                    React.createElement(
-                        CopyButton,
-                        props
-                    )
-                );
+
+                const lastChild = children[children.length - 1];
+                if (!lastChild || lastChild.type.__patched) return;
+                const originalType = lastChild.type;
+
+                lastChild.type = function () {
+                    const ret = originalType.apply(this, arguments);
+
+                    try {
+                        ret.props.children.unshift(
+                            React.createElement(
+                                CopyButton,
+                                props
+                            )
+                        );
+                    } catch (error) {
+                        Logger.error("Could not inject CopyButton:", error);
+                    }
+
+                    return ret;
+                }
+
+                lastChild.type.__patched = true;
+                lastChild._originalFunction = originalType;
             });
         }
 
         patchChannelContextMenu() {
-            const [ChannelListTextChannelContextMenu,, CategoryContextMenu] = WebpackModules.findAll(m => m.default && m.default.displayName === "ChannelListTextChannelContextMenu");
+            const [ChannelListTextChannelContextMenu, , CategoryContextMenu] = WebpackModules.findAll(m => m.default && m.default.displayName === "ChannelListTextChannelContextMenu");
             const ChannelListVoiceChannelContextMenu = findWithDefault(m => m.displayName === "ChannelListVoiceChannelContextMenu");
-            
+
             Patcher.after(CategoryContextMenu, "default", (_, [props], ret) => {
                 const children = Utilities.getNestedProp(ret, "props.children");
                 if (!Array.isArray(children)) return;
@@ -774,7 +804,7 @@ const buildPlugin = ([Plugin, Api]) => {
                 if (!Array.isArray(children)) return;
 
                 const {channel} = props;
-                
+
                 children.splice(
                     6,
                     0,
@@ -1024,6 +1054,14 @@ const buildPlugin = ([Plugin, Api]) => {
                                         ElectronModule.copy(user.getAvatarURL("gif"));
                                         Toasts.success("Copied user avatar url.");
                                     }
+                                },
+                                Menu.default.displayName === "DMUserContextMenu" && {
+                                    label: "DM Id",
+                                    id: "copy-dm-id",
+                                    action: () => {
+                                        ElectronModule.copy(ChannelStore.getDMFromUserId(user.id));
+                                        Toasts.success("Copied dm channelId of user.");
+                                    }
                                 }
                             ]
                         }
@@ -1076,7 +1114,7 @@ const buildPlugin = ([Plugin, Api]) => {
                                 label: "Id",
                                 id: "copy-role-id",
                                 action: () => {
-                                    ElectronModule.copy(props.id);
+                                    ElectronModule.copy(role.id);
                                     Toasts.success("Copied role id.");
                                 }
                             },
@@ -1158,10 +1196,48 @@ const buildPlugin = ([Plugin, Api]) => {
             });
         }
 
+        patchUserPopoutProfileText() {
+            const UserPopoutComponents = WebpackModules.getByProps("UserPopoutProfileText");
+
+            Patcher.after(UserPopoutComponents, "UserPopoutProfileText", (_, [props], ret) => {
+                if (!props.userBio) return;
+                const header = Utilities.findInReactTree(ret, e => e?.props?.className?.indexOf("aboutMeTitle") > -1);
+                if (!header) return;
+
+                const originalType = header.type;
+                header.type = (...args) => {
+                    const originalChildren = originalType(...args);
+
+                    return React.createElement("div", {
+                        className: "cpr-buttonContainer",
+                        children: [
+                            originalChildren,
+                            React.createElement(Tooltip, {
+                                className: "copr-button",
+                                text: "Copy About me",
+                                position: "top",
+                                color: TooltipColors.BRAND
+                            }, React.createElement(Button, {
+                                look: Button.Looks.BLANK,
+                                size: Button.Sizes.NONE,
+                                onClick: () => {
+                                    ElectronModule.copy(props.userBio);
+                                    Toasts.success("Successfully copied user bio.");
+                                }
+                            }, React.createElement(CopyIcon, {
+                                width: 14,
+                                height: 14
+                            })))
+                        ]
+                    });
+                };
+
+            });
+        }
+
         getSettingsPanel() {
-            const Caret = props => React.createElement("svg" , {...props, viewBox: "0 0 256 512", width: 20, height: 25}, React.createElement("path", {fill: "currentColor", d: "M31.7 239l136-136c9.4-9.4 24.6-9.4 33.9 0l22.6 22.6c9.4 9.4 9.4 24.6 0 33.9L127.9 256l96.4 96.4c9.4 9.4 9.4 24.6 0 33.9L201.7 409c-9.4 9.4-24.6 9.4-33.9 0l-136-136c-9.5-9.4-9.5-24.6-.1-34z"}));
-            let i = 0;
-            
+            const Caret = props => React.createElement("svg", {...props, viewBox: "0 0 256 512", width: 20, height: 25}, React.createElement("path", {fill: "currentColor", d: "M31.7 239l136-136c9.4-9.4 24.6-9.4 33.9 0l22.6 22.6c9.4 9.4 9.4 24.6 0 33.9L127.9 256l96.4 96.4c9.4 9.4 9.4 24.6 0 33.9L201.7 409c-9.4 9.4-24.6 9.4-33.9 0l-136-136c-9.5-9.4-9.5-24.6-.1-34z"}));
+
             function CollapseCategory(props) {
                 const {label, children, opened = false} = props;
                 const [isOpened, setOpened] = useState(opened);
@@ -1195,7 +1271,7 @@ const buildPlugin = ([Plugin, Api]) => {
 
                 return React.createElement(CollapseCategory, {
                     label: name,
-                    key: i++,
+                    key: settingsId,
                     children: [
                         React.createElement(TextInput, {
                             value: Settings.getSetting(settingsId),
@@ -1206,7 +1282,7 @@ const buildPlugin = ([Plugin, Api]) => {
                         }),
                         React.createElement("div", {className: "copr-separator"}),
                         React.createElement(CollapseCategory, {
-                            key: i++,
+                            key: settingsId + "-replacements",
                             label: "Show Replacements",
                             children: customOptions.map(opt => [
                                 React.createElement("div", {
@@ -1296,8 +1372,8 @@ const buildPlugin = ([Plugin, Api]) => {
     }
 };
 
-module.exports = window.hasOwnProperty("ZeresPluginLibrary") 
-    ? buildPlugin(window.ZeresPluginLibrary.buildPlugin(config)) 
+module.exports = window.hasOwnProperty("ZeresPluginLibrary")
+    ? buildPlugin(window.ZeresPluginLibrary.buildPlugin(config))
     : class {
         getName() {return config.info.name;}
         getAuthor() {return config.info.authors.map(a => a.name).join(", ");}
@@ -1305,8 +1381,8 @@ module.exports = window.hasOwnProperty("ZeresPluginLibrary")
         getVersion() {return config.info.version;}
         load() {
             BdApi.showConfirmationModal(
-                "Library plugin is needed", 
-                [`The library plugin needed for ${config.info.name} is missing. Please click Download Now to install it.`], 
+                "Library plugin is needed",
+                [`The library plugin needed for ${config.info.name} is missing. Please click Download Now to install it.`],
                 {
                     confirmText: "Download",
                     cancelText: "Cancel",
