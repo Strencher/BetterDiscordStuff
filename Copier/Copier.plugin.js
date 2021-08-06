@@ -40,7 +40,7 @@ const config = {
                 twitter_username: "Strencher3"
             }
         ],
-        version: "1.1.0",
+        version: "1.1.1",
         description: "Allows you to copy certain stuff with custom options.",
         github: "https://github.com/Strencher/BetterDiscordStuff/blob/master/Copier/Copier.plugin.js",
         github_raw: "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/Copier/Copier.plugin.js"
@@ -1063,7 +1063,7 @@ const buildPlugin = ([Plugin, Api]) => {
                                         Toasts.success("Copied dm channelId of user.");
                                     }
                                 }
-                            ]
+                            ].filter(Boolean)
                         }
                     ])
                 );
