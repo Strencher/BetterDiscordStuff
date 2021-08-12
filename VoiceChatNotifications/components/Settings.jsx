@@ -15,7 +15,7 @@ export const otherSettings = {
         note: "Defines if logs about your own actions should be ignored.",
         name: "Ignore yourself"
     },
-    supressInDnd: {
+    suppressInDnd: {
         value: true,
         note: "Suppress desktop notifications in DND, this automatically enables the In-App notification api.",
         name: "Suppress in DND"

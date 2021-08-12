@@ -1,7 +1,7 @@
 {
 	"info": {
 		"name": "VoiceChatNotifications",
-		"version": "1.0.1",
+		"version": "1.1.0",
 		"description": "Shows you certain events from voicechats in a logs panel or as desktop notification.",
 		"authors": [
 			{
@@ -18,16 +18,8 @@
 			"type": "fixed",
 			"title": "Fixes",
 			"items": [
-				"Fixed logging from different voice channels.",
-				"Fixed notification popups."
-			]
-		},
-		{
-			"type": "added",
-			"title": "Added",
-			"items": [
-				"Added a new notification api, suppress in dnd mode.",
-				"Added a `/enable` and `/disable` command in the textarea to hide notifications."
+				"Discord update broke it entirely, i fixed it.",
+				"Also finally fixed the button padding."
 			]
 		}
 	],

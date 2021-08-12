@@ -1,7 +1,7 @@
 /// <reference path="../../typings/discord.d.ts" />
 import {Timestamp} from "@discord/classes";
 import {ModalRoot, openModal} from "@discord/modal";
-import {Channels, Info, SettingsStore, Status, Users} from "@discord/stores";
+import {Channels, SettingsStore, Status, Users} from "@discord/stores";
 import {Logger, Patcher, ReactComponents, Utilities, WebpackModules} from "@zlibrary";
 import BasePlugin from "@zlibrary/plugin";
 import VoiceNotificationsButton from "./components/button";
@@ -31,7 +31,7 @@ export default class VoiceChatNotifications extends BasePlugin {
 
 	get subscriptions() {
 		return [
-			[DiscordConstants.ActionTypes.VOICE_STATE_UPDATE, this.onVoiceStateChange],
+			[DiscordConstants.ActionTypes.VOICE_STATE_UPDATES, this.onVoiceStateChange],
 			[DiscordConstants.ActionTypes.VOICE_CHANNEL_SELECT, this.onSelect],
 		];
 	}
@@ -160,48 +160,50 @@ export default class VoiceChatNotifications extends BasePlugin {
 	}
 
 	onVoiceStateChange = props => {
-		let user = Users.getUser(props.userId) || {};
-		if (Settings.get("ignoreSelf", false) && user.id === Info.getCurrentUser().id) return;
+		for (const update of props.voiceStates) {
+			let user = Users.getUser(update.userId) || {};
+			if (Settings.get("ignoreSelf", false) && user.id === Users.getCurrentUser().id) return;
 
-		const pushToLog = message => {
-			const timestamp = new Timestamp(new Date());
+			const pushToLog = message => {
+				const timestamp = new Timestamp(new Date());
 
-			const log = {
-				user,
-				timestamp: timestamp,
-				message,
-				channelId: props.channelId
+				const log = {
+					user,
+					timestamp: timestamp,
+					message,
+					channelId: update.channelId
+				};
+
+				this.updateLogs(log);
+				LogsPanel.Store.setState(state => {
+					state.logs.unshift(log);
+					return {logs: state.logs};
+				});
 			};
 
-			this.updateLogs(log);
-			LogsPanel.Store.setState(state => {
-				state.logs.unshift(log);
-				return {logs: state.logs};
-			});
-		};
-
-		if (this.lastStates[props.userId] && !props.channelId && Settings.get("leave", true)) {
-			pushToLog("Left the call.");
-			delete this.lastStates[props.userId];
-		}
-		if (!props.channelId || (props.channelId !== this.currentVoiceChannelId)) return;
-
-		if (!this.lastStates[props.userId]) {
-			if (Settings.get("join", true)) pushToLog("Joined the call.");
-			this.lastStates[props.userId] = props;
-		} else {
-			if (_.isEqual(this.lastStates[props.userId], props)) return;
-
-			for (const prop in Constants.VOICE_STATES) {
-				const value = Constants.VOICE_STATES[prop];
-				const hasChanges = this.lastStates[props.userId][prop] !== props[prop];
-
-				if (Settings.get(value.setting, true) && hasChanges) {
-					pushToLog(value.strings[Number(Boolean(props[prop]))]);
-				}
+			if (this.lastStates[update.userId] && !update.channelId && Settings.get("leave", true)) {
+				pushToLog("Left the call.");
+				delete this.lastStates[update.userId];
 			}
+			if (!update.channelId || (update.channelId !== this.currentVoiceChannelId)) return;
 
-			this.lastStates[props.userId] = props;
+			if (!this.lastStates[update.userId]) {
+				if (Settings.get("join", true)) pushToLog("Joined the call.");
+				this.lastStates[update.userId] = update;
+			} else {
+				if (_.isEqual(this.lastStates[update.userId], update)) return;
+
+				for (const prop in Constants.VOICE_STATES) {
+					const value = Constants.VOICE_STATES[prop];
+					const hasChanges = this.lastStates[update.userId][prop] !== update[prop];
+
+					if (Settings.get(value.setting, true) && hasChanges) {
+						pushToLog(value.strings[Number(Boolean(update[prop]))]);
+					}
+				}
+
+				this.lastStates[update.userId] = update;
+			}
 		}
 	}
 
