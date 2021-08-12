@@ -1,6 +1,6 @@
 /**
  * @name VoiceChatNotifications
- * @version 1.0.2
+ * @version 1.1.0
  * @description Shows you certain events from voicechats in a logs panel or as desktop notification.
  * @author Strencher
  * @source https://github.com/Strencher/BetterDiscordStuff/tree/master/VoiceChatNotifications
@@ -32,7 +32,7 @@
 const config = {
 	"info": {
 		"name": "VoiceChatNotifications",
-		"version": "1.0.2",
+		"version": "1.1.0",
 		"description": "Shows you certain events from voicechats in a logs panel or as desktop notification.",
 		"authors": [{
 			"name": "Strencher",
@@ -43,22 +43,13 @@ const config = {
 		"github_raw": "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/VoiceChatNotifications/VoiceChatNotifications.plugin.js"
 	},
 	"changelog": [{
-			"type": "fixed",
-			"title": "Fixes",
-			"items": [
-				"Fixed logging from different voice channels.",
-				"Fixed notification popups."
-			]
-		},
-		{
-			"type": "added",
-			"title": "Added",
-			"items": [
-				"Added a new notification api, suppress in dnd mode.",
-				"Added a `/enable` and `/disable` command in the textarea to hide notifications."
-			]
-		}
-	],
+		"type": "fixed",
+		"title": "Fixes",
+		"items": [
+			"Discord update broke it entirely, i fixed it.",
+			"Also finally fixed the button padding."
+		]
+	}],
 	"build": {
 		"zlibrary": true,
 		"copy": true,
@@ -288,7 +279,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
 					return i[1];
 				}));
-				___CSS_LOADER_EXPORT___.push([module.id, ".VoiceChatNotifications-button-icon{cursor:pointer;align-items:center;display:flex}", ""]);
+				___CSS_LOADER_EXPORT___.push([module.id, ".VoiceChatNotifications-button-icon{cursor:pointer;align-items:center;display:flex;margin:0 8px;color:var(--interactive-normal)}", ""]);
 				___CSS_LOADER_EXPORT___.locals = {
 					icon: "VoiceChatNotifications-button-icon"
 				};
@@ -368,7 +359,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
 				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
 			},
-			856: (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+			423: (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 				__webpack_require__.r(__webpack_exports__);
 				__webpack_require__.d(__webpack_exports__, {
 					default: () => VoiceChatNotifications
@@ -672,7 +663,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						onChange: value => settings.set("inappPosition", value)
 					}), external_BdApi_React_default().createElement(forms_namespaceObject.FormText, {
 						type: "description"
-					}, 'Defines if notifications should be shown when an event happens in your current call. Set it to the middle to receive desktop notifications if you\'re NOT in "Do Not Disturb" status'))), external_BdApi_React_default().createElement(Category, {
+					}, "Defines if notifications should be shown when an event happens in your current call."))), external_BdApi_React_default().createElement(Category, {
 						label: "Voice Updates",
 						look: Category.Looks.COMPACT
 					}, Object.keys(constants.VOICE_STATES).reduce(((items, key) => {
@@ -919,40 +910,42 @@ function buildPlugin([BasePlugin, PluginApi]) {
 							(0, modal_namespaceObject.openModal)((props => VoiceChatNotifications_React.createElement(modal_namespaceObject.ModalRoot, props, VoiceChatNotifications_React.createElement(LogsPanel, null))));
 						}));
 						VoiceChatNotifications_defineProperty(this, "onVoiceStateChange", (props => {
-							let user = stores_namespaceObject.Users.getUser(props.userId) || {};
-							if (settings.get("ignoreSelf", false) && user.id === stores_namespaceObject.Users.getCurrentUser().id) return;
-							const pushToLog = message => {
-								const timestamp = new classes_namespaceObject.Timestamp(new Date);
-								const log = {
-									user,
-									timestamp,
-									message,
-									channelId: props.channelId
-								};
-								this.updateLogs(log);
-								LogsPanel.Store.setState((state => {
-									state.logs.unshift(log);
-									return {
-										logs: state.logs
+							for (const update of props.voiceStates) {
+								let user = stores_namespaceObject.Users.getUser(update.userId) || {};
+								if (settings.get("ignoreSelf", false) && user.id === stores_namespaceObject.Users.getCurrentUser().id) return;
+								const pushToLog = message => {
+									const timestamp = new classes_namespaceObject.Timestamp(new Date);
+									const log = {
+										user,
+										timestamp,
+										message,
+										channelId: update.channelId
 									};
-								}));
-							};
-							if (this.lastStates[props.userId] && !props.channelId && settings.get("leave", true)) {
-								pushToLog("Left the call.");
-								delete this.lastStates[props.userId];
-							}
-							if (!props.channelId || props.channelId !== this.currentVoiceChannelId) return;
-							if (!this.lastStates[props.userId]) {
-								if (settings.get("join", true)) pushToLog("Joined the call.");
-								this.lastStates[props.userId] = props;
-							} else {
-								if (_.isEqual(this.lastStates[props.userId], props)) return;
-								for (const prop in constants.VOICE_STATES) {
-									const value = constants.VOICE_STATES[prop];
-									const hasChanges = this.lastStates[props.userId][prop] !== props[prop];
-									if (settings.get(value.setting, true) && hasChanges) pushToLog(value.strings[Number(Boolean(props[prop]))]);
+									this.updateLogs(log);
+									LogsPanel.Store.setState((state => {
+										state.logs.unshift(log);
+										return {
+											logs: state.logs
+										};
+									}));
+								};
+								if (this.lastStates[update.userId] && !update.channelId && settings.get("leave", true)) {
+									pushToLog("Left the call.");
+									delete this.lastStates[update.userId];
 								}
-								this.lastStates[props.userId] = props;
+								if (!update.channelId || update.channelId !== this.currentVoiceChannelId) return;
+								if (!this.lastStates[update.userId]) {
+									if (settings.get("join", true)) pushToLog("Joined the call.");
+									this.lastStates[update.userId] = update;
+								} else {
+									if (_.isEqual(this.lastStates[update.userId], update)) return;
+									for (const prop in constants.VOICE_STATES) {
+										const value = constants.VOICE_STATES[prop];
+										const hasChanges = this.lastStates[update.userId][prop] !== update[prop];
+										if (settings.get(value.setting, true) && hasChanges) pushToLog(value.strings[Number(Boolean(update[prop]))]);
+									}
+									this.lastStates[update.userId] = update;
+								}
 							}
 						}));
 						VoiceChatNotifications_defineProperty(this, "onSelect", (e => {
@@ -963,7 +956,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					}
 					get subscriptions() {
 						return [
-							[external_PluginApi_DiscordModules_namespaceObject.DiscordConstants.ActionTypes.VOICE_STATE_UPDATE, this.onVoiceStateChange],
+							[external_PluginApi_DiscordModules_namespaceObject.DiscordConstants.ActionTypes.VOICE_STATE_UPDATES, this.onVoiceStateChange],
 							[external_PluginApi_DiscordModules_namespaceObject.DiscordConstants.ActionTypes.VOICE_CHANNEL_SELECT, this.onSelect]
 						];
 					}
@@ -1160,7 +1153,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				});
 			};
 		})();
-		var __webpack_exports__ = __webpack_require__(856);
+		var __webpack_exports__ = __webpack_require__(423);
 		module.exports.LibraryPluginHack = __webpack_exports__;
 	})();
 	const PluginExports = module.exports.LibraryPluginHack;
