@@ -40,17 +40,17 @@ module.exports = (() => {
                     twitter_username: "Strencher3"
                 }
             ],
-            version: "1.0.3",
+            version: "1.0.4",
             description: "Adds an Icon to channels that copys <#channelId>. (channelId is replaced) Shift + Click to insert the channel in the textarea.",
             github: "https://github.com/Strencher/BetterDiscordStuff/blob/master/LinkChannels/LinkChannels.plugin.js",
             github_raw: "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/LinkChannels/LinkChannels.plugin.js"
         },
         changelog: [
             {
-                title: 'fixed',
-                type: 'fixed',
+                title: 'added',
+                type: 'added',
                 items: [
-                    'Fixed the last update of discord. take 4.'
+                    'Added the ability to link voice channels'
                 ]
             }
         ]
@@ -129,7 +129,6 @@ module.exports = (() => {
                     const ChannelItem = WebpackModules.getModule(m => Object(m.default).displayName === "ChannelItem");
                     if ("default" in ChannelItem) Patcher.after(ChannelItem, "default", (_, [props], ret) => {
                         if (!("channel" in props)) return ret;
-                        if (props.channel.type === DiscordConstants.ChannelTypes.GUILD_VOICE) return ret;
                         const children = Utilities.getNestedProp(props, "children");
                         if (!Array.isArray(children)) return ret;
                         if (children.find(e => e && e.type === LinkIcon)) return ret;
@@ -138,7 +137,7 @@ module.exports = (() => {
                                 if (e.shiftKey) insertText("<#"+props.channel.id+">")
                                 else {
                                     DiscordModules.ElectronModule.copy("<#"+props.channel.id+">");
-                                    Toasts.success("Copied link for #"+props.channel.name)
+                                    Toasts.success(`Copied link for ${props.channel.type === DiscordConstants.ChannelTypes.GUILD_VOICE ? "\ud83d\udd0a" : "#"}${props.channel.name}`)
                                 }
                             }
                         }));
