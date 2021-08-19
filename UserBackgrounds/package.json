@@ -1,7 +1,7 @@
 {
 	"info": {
 		"name": "UserBackgrounds",
-		"version": "1.0.0",
+		"version": "1.1.0",
 		"description": "A database of custom user requested backgrounds designed for BetterDiscord and Powercord.",
 		"authors": [
 			{
@@ -16,9 +16,28 @@
                 "github_username": "Tropix126"
             }
 		],
-		"github": "https://github.com/Strencher/BetterDiscordStuff/UserBackgrounds",
-		"github_raw": "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/UserBackgrounds/UserBackgrounds.plugin.js"
+		"github": "https://github.com/Strencher/BetterDiscordStuff/tree/development/UserBackgrounds",
+		"github_raw": "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/UserBackgrounds/UserBackgrounds.plugin.js",
+        "invite": "gvA2ree"
 	},
+	"changelog": [
+		{
+			"type": "fixed",
+			"title": "Fixed",
+			"items": [
+				"Fixed the user settings profile card being bugged, thanks to @_david_#0218",
+				"Fixed weird crashing",
+				"Removed a silly console.log."
+			]
+		},
+		{
+			"type": "added",
+			"title": "Added",
+			"items": [
+				"Added context menu entry to view the full banner in full resolution."
+			]
+		}
+	],
 	"build": {
 		"zlibrary": true,
 		"copy": true,
@@ -33,6 +52,10 @@
 				{
 					"name": "Tropical",
 					"github": "https://github.com/Tropix126"
+				},
+				{
+					"name": "_david_",
+					"github": "https://github.com/dav1312"
 				}
 			]
 		}

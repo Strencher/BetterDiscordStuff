@@ -31,3 +31,13 @@ $padding: 20px;
     right: 10px;
     z-index: 99;
 }
+
+/* UserBackground Plugin My Account fix by _david_ */
+:global(.accountProfileCard-1XCH88) > .container {
+    height: 100px;
+}
+:global(.accountProfileCard-1XCH88) .badge + div,
+:global(.accountProfileCard-1XCH88) .left + div {
+    width: 100%;
+    background: center / cover;
+}
