@@ -1,10 +1,11 @@
 /**
  * @name UserBackgrounds
- * @version 1.0.0
+ * @version 1.1.0
  * @description A database of custom user requested backgrounds designed for BetterDiscord and Powercord.
  * @author Strencher, Tropical
- * @source https://github.com/Strencher/BetterDiscordStuff/UserBackgrounds
+ * @source https://github.com/Strencher/BetterDiscordStuff/tree/development/UserBackgrounds
  * @updateUrl https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/UserBackgrounds/UserBackgrounds.plugin.js
+ * @invite gvA2ree
  */
 /*@cc_on
 @if (@_jscript)
@@ -32,7 +33,7 @@
 const config = {
 	"info": {
 		"name": "UserBackgrounds",
-		"version": "1.0.0",
+		"version": "1.1.0",
 		"description": "A database of custom user requested backgrounds designed for BetterDiscord and Powercord.",
 		"authors": [{
 				"name": "Strencher",
@@ -46,9 +47,27 @@ const config = {
 				"github_username": "Tropix126"
 			}
 		],
-		"github": "https://github.com/Strencher/BetterDiscordStuff/UserBackgrounds",
-		"github_raw": "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/UserBackgrounds/UserBackgrounds.plugin.js"
+		"github": "https://github.com/Strencher/BetterDiscordStuff/tree/development/UserBackgrounds",
+		"github_raw": "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/UserBackgrounds/UserBackgrounds.plugin.js",
+		"invite": "gvA2ree"
 	},
+	"changelog": [{
+			"type": "fixed",
+			"title": "Fixed",
+			"items": [
+				"Fixed the user settings profile card being bugged, thanks to @_david_#0218",
+				"Fixed weird crashing",
+				"Removed a silly console.log."
+			]
+		},
+		{
+			"type": "added",
+			"title": "Added",
+			"items": [
+				"Added context menu entry to view the full banner in full resolution."
+			]
+		}
+	],
 	"build": {
 		"zlibrary": true,
 		"copy": true,
@@ -60,9 +79,14 @@ const config = {
 			"source": true,
 			"readme": true,
 			"contributors": [{
-				"name": "Tropical",
-				"github": "https://github.com/Tropix126"
-			}]
+					"name": "Tropical",
+					"github": "https://github.com/Tropix126"
+				},
+				{
+					"name": "_david_",
+					"github": "https://github.com/dav1312"
+				}
+			]
 		}
 	}
 };
@@ -281,7 +305,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
 					return i[1];
 				}));
-				___CSS_LOADER_EXPORT___.push([module.id, ".UserBackgrounds-banner-arrow{position:absolute;top:0;z-index:99;padding-top:20px;padding-bottom:20px}.UserBackgrounds-banner-arrow svg{color:var(--interactive-normal)}.UserBackgrounds-banner-arrow.UserBackgrounds-banner-left{left:0}.UserBackgrounds-banner-arrow.UserBackgrounds-banner-right{right:0}.UserBackgrounds-banner-container{display:flex;position:relative}.UserBackgrounds-banner-badge{position:absolute;bottom:10px;right:10px;z-index:99}", ""]);
+				___CSS_LOADER_EXPORT___.push([module.id, ".UserBackgrounds-banner-arrow{position:absolute;top:0;z-index:99;padding-top:20px;padding-bottom:20px}.UserBackgrounds-banner-arrow svg{color:var(--interactive-normal)}.UserBackgrounds-banner-arrow.UserBackgrounds-banner-left{left:0}.UserBackgrounds-banner-arrow.UserBackgrounds-banner-right{right:0}.UserBackgrounds-banner-container{display:flex;position:relative}.UserBackgrounds-banner-badge{position:absolute;bottom:10px;right:10px;z-index:99}.accountProfileCard-1XCH88>.UserBackgrounds-banner-container{height:100px}.accountProfileCard-1XCH88 .UserBackgrounds-banner-badge+div,.accountProfileCard-1XCH88 .UserBackgrounds-banner-left+div{width:100%;background:center/cover}", ""]);
 				___CSS_LOADER_EXPORT___.locals = {
 					arrow: "UserBackgrounds-banner-arrow",
 					left: "UserBackgrounds-banner-left",
@@ -292,7 +316,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
 				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
 			},
-			700: (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+			459: (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 				__webpack_require__.r(__webpack_exports__);
 				__webpack_require__.d(__webpack_exports__, {
 					default: () => UserBackgrounds
@@ -382,8 +406,8 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						this.settings = external_PluginApi_namespaceObject.PluginUtilities.loadSettings(pluginName, defaultSettings);
 					}
 				}
-				const package_namespaceObject = JSON.parse('{"u":{"u2":"UserBackgrounds"}}');
-				const Settings = new SettingsManager(package_namespaceObject.u.u2);
+				const package_namespaceObject = JSON.parse('{"um":{"u2":"UserBackgrounds"}}');
+				const Settings = new SettingsManager(package_namespaceObject.um.u2);
 				const settings = Settings;
 				const external_window_namespaceObject = window._;
 				var external_window_default = __webpack_require__.n(external_window_namespaceObject);
@@ -464,6 +488,8 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				var external_StyleLoader_default = __webpack_require__.n(external_StyleLoader_namespaceObject);
 				const components_namespaceObject = Modules["@discord/components"];
 				const constants_namespaceObject = Modules["@discord/constants"];
+				const contextmenu_namespaceObject = Modules["@discord/contextmenu"];
+				const modal_namespaceObject = Modules["@discord/modal"];
 				function UserBackgrounds_defineProperty(obj, key, value) {
 					if (key in obj) Object.defineProperty(obj, key, {
 						value,
@@ -474,12 +500,58 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					else obj[key] = value;
 					return obj;
 				}
+				function _extends() {
+					_extends = Object.assign || function(target) {
+						for (var i = 1; i < arguments.length; i++) {
+							var source = arguments[i];
+							for (var key in source)
+								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
+						}
+						return target;
+					};
+					return _extends.apply(this, arguments);
+				}
 				const Arrow = ErrorBoundary.from(external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("Arrow"), "Arrow");
 				const TextBadge = ErrorBoundary.from(external_PluginApi_namespaceObject.WebpackModules.getByProps("TextBadge")?.TextBadge);
+				const ImageModal = ErrorBoundary.from(external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("ImageModal"));
+				const MaskedLink = ErrorBoundary.from(external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("MaskedLink"));
+				const ModalClasses = external_PluginApi_namespaceObject.WebpackModules.find((e => "object" === typeof e && 2 === Object.keys(e).length && e.modal && e.image));
+				const showImageModal = async function(src, original = src, width, height, animated, children, placeholder) {
+					const bounds = await new Promise((resolve => {
+						Object.assign(new Image, {
+							src,
+							onload: ({
+								target
+							}) => {
+								resolve({
+									width: target.naturalWidth,
+									height: target.naturalHeight
+								});
+							},
+							onerror: () => resolve({
+								width,
+								height
+							})
+						});
+					}));
+					(0, modal_namespaceObject.openModal)((props => external_BdApi_React_default().createElement(modal_namespaceObject.ModalRoot, _extends({}, props, {
+						className: ModalClasses.modal,
+						size: modal_namespaceObject.ModalSize.DYNAMIC
+					}), external_BdApi_React_default().createElement(ImageModal, _extends({
+						src,
+						original
+					}, bounds, {
+						animated,
+						children,
+						renderLinkComponent: props => external_BdApi_React_default().createElement(MaskedLink, props),
+						placeholder,
+						className: ModalClasses.image,
+						shouldAnimate: external_PluginApi_namespaceObject.DiscordModules.WindowInfo.isFocused()
+					})))));
+				};
 				class UserBackgrounds extends(external_BasePlugin_default()) {
 					constructor(...args) {
 						super(...args);
-						UserBackgrounds_defineProperty(this, "modifiedUsers", new Set);
 						UserBackgrounds_defineProperty(this, "Store", bannerStore);
 					}
 					onStart() {
@@ -500,63 +572,83 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						external_PluginApi_namespaceObject.Patcher.after(UserPopout, "UserPopoutAvatar", ((_, [{
 							user
 						}], res) => {
-							console.log(res);
 							const props = res?.props?.children?.props;
 							if (!props || props.className?.indexOf?.(classes.avatarPositionPremium) > -1 || !bannerStore.hasBanner(user.id)) return;
 							props.className = props.className.replace(classes.avatarPositionNormal, classes.avatarPositionPremium);
 						}));
 					}
 					async patchBanners() {
-						const BannerClases = external_PluginApi_namespaceObject.WebpackModules.getByProps("banner", "popoutBanner");
+						const BannerClasses = external_PluginApi_namespaceObject.WebpackModules.getByProps("banner", "popoutBanner");
 						const UserBanner = external_PluginApi_namespaceObject.WebpackModules.getModule((m => "UserBanner" === m.default.displayName));
-						external_PluginApi_namespaceObject.Patcher.after(UserBanner, "default", ((__, [{
+						function BannerContainer({
 							user,
-							bannerType
-						}], res) => {
-							const [selection, setSelection] = (0, external_BdApi_React_namespaceObject.useState)(0);
+							bannerType,
+							children
+						}) {
 							const banner = (0, flux_namespaceObject.useStateFromStores)([bannerStore], (() => bannerStore.getBanner(user.id)), null, external_window_default().isEqual);
-							if (!banner || user.banner && !banner) return;
-							res.props["data-user-id"] = user.id;
-							res.props.className = switchCase(bannerType, [
-								[0, (0, utils_namespaceObject.joinClassNames)("user-background", BannerClases.banner, BannerClases.popoutBannerPremium)],
+							const [selection, setSelection] = (0, external_BdApi_React_namespaceObject.useState)(null == banner ? 1 : 0);
+							const ref = (0, external_BdApi_React_namespaceObject.useRef)(null);
+							const currentBanner = (0, external_BdApi_React_namespaceObject.useMemo)((() => 1 === selection || null == banner ? user.bannerURL : banner?.background), [banner, user, selection]);
+							const currentOrientation = (0, external_BdApi_React_namespaceObject.useMemo)((() => null != banner && 0 === selection ? banner.orientation : void 0), [banner, selection]);
+							if (!user.banner && !banner) return children;
+							children.props["data-user-id"] = user.id;
+							children.props.className = switchCase(bannerType, [
+								[0, (0, utils_namespaceObject.joinClassNames)("user-background", BannerClasses.banner, BannerClasses.popoutBannerPremium)],
 								[1, (0,
-									utils_namespaceObject.joinClassNames)("user-background", BannerClases.banner, BannerClases.profileBannerPremium)]
+									utils_namespaceObject.joinClassNames)("user-background", BannerClasses.banner, BannerClasses.profileBannerPremium)]
 							]);
-							res.props.style = {
-								backgroundImage: `url(${1 === selection ? user.bannerURL : banner?.background})`,
-								backgroundPosition: 0 === selection && banner?.orientation
+							children.ref = ref;
+							children.key = Math.random();
+							children.props.style = {
+								backgroundImage: `url(${currentBanner})`,
+								backgroundPosition: currentOrientation
 							};
-							if (res.props.children[0]) res.props.children[0] = null;
-							const handleBannerSelect = index => () => {
-								setSelection(index);
-							};
+							if (children.props.children[0]) children.props.children[0] = null;
 							return external_BdApi_React_default().createElement("div", {
-								className: UserBackgrounds_banner.Z.container
+								className: UserBackgrounds_banner.Z.container,
+								onContextMenu: event => {
+									const width = ref.current?.offsetWidth;
+									const height = ref.current?.offsetHeight;
+									(0, contextmenu_namespaceObject.openContextMenu)(event, (() => external_BdApi_React_default().createElement(contextmenu_namespaceObject.Menu, {
+										navId: "banner-context",
+										onClose: contextmenu_namespaceObject.closeContextMenu
+									}, external_BdApi_React_default().createElement(contextmenu_namespaceObject.MenuItem, {
+										id: "view-banner",
+										label: "View Banner",
+										key: "view-banner",
+										action: () => {
+											showImageModal(currentBanner, currentBanner, width, height, currentBanner?.endsWith(".gif"), null, currentBanner);
+										}
+									}))));
+								}
 							}, external_BdApi_React_default().createElement(TextBadge, {
 								color: constants_namespaceObject.Colors.BRAND_NEW_500,
 								text: 0 === selection ? "USRBG" : "NATIVE",
 								className: UserBackgrounds_banner.Z.badge
-							}), user.banner && external_BdApi_React_default().createElement(components_namespaceObject.Button, {
+							}), null != banner && null != user.banner && external_BdApi_React_default().createElement(components_namespaceObject.Button, {
 								className: (0, utils_namespaceObject.joinClassNames)(UserBackgrounds_banner.Z.arrow, UserBackgrounds_banner.Z.left),
 								key: "left",
 								look: components_namespaceObject.Button.Looks.BLANK,
 								size: components_namespaceObject.Button.Sizes.TINY,
-								onClick: handleBannerSelect(0),
-								disabled: 0 === selection
+								onClick: setSelection.bind(null, 0),
+								disabled: 0 === selection || null == user.banner
 							}, external_BdApi_React_default().createElement(Arrow, {
 								direction: Arrow.Directions.LEFT
-							})), res, user.banner && external_BdApi_React_default().createElement(components_namespaceObject.Button, {
+							})), children, null != banner && null != user.banner && external_BdApi_React_default().createElement(components_namespaceObject.Button, {
 								className: (0, utils_namespaceObject.joinClassNames)(UserBackgrounds_banner.Z.arrow, UserBackgrounds_banner.Z.right),
 								key: "right",
 								look: components_namespaceObject.Button.Looks.BLANK,
 								size: components_namespaceObject.Button.Sizes.TINY,
-								onClick: handleBannerSelect(1),
-								disabled: 1 === selection
+								onClick: setSelection.bind(null, 1),
+								disabled: 1 === selection || null == banner
 							}, external_BdApi_React_default().createElement(Arrow, {
 								direction: Arrow.Directions.RIGHT,
 								key: "right"
 							})));
-						}));
+						}
+						external_PluginApi_namespaceObject.Patcher.after(UserBanner, "default", ((__, [props], res) => external_BdApi_React_default().createElement(BannerContainer, _extends({}, props, {
+							children: res
+						}))));
 					}
 					onStop() {
 						external_StyleLoader_default().remove();
@@ -640,7 +732,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				});
 			};
 		})();
-		var __webpack_exports__ = __webpack_require__(700);
+		var __webpack_exports__ = __webpack_require__(459);
 		module.exports.LibraryPluginHack = __webpack_exports__;
 	})();
 	const PluginExports = module.exports.LibraryPluginHack;

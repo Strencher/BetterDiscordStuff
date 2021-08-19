@@ -12,6 +12,12 @@
     <a href="https://github.com/Tropix126"><strong>Tropical</strong></a>
 </td>
 
+
+<td align="center">
+    <img src="https://github.com/dav1312.png" width="25" /><br/>
+    <a href="https://github.com/dav1312"><strong>_david_</strong></a>
+</td>
+
 </tr>
 </table>
 <br/>
