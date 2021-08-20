@@ -128,7 +128,7 @@ module.exports = (() => {
         const plugin = (Plugin, Api) => {
             const {Components, DiscordModules: {React, UserSettingsStore}, WebpackModules, PluginUtilities, DiscordModules, Patcher, Utilities, Toasts} = Api;
             const {TooltipContainer} = WebpackModules.getByProps("TooltipContainer") ?? {};
-            const {ComponentDispatch: ComponentDispatcher} = WebpackModules.getByProps("ComponentDispatch");
+            const {ComponentDispatch: ComponentDispatcher} = WebpackModules.getByProps("ComponentDispatch") ?? {};
             const insertText = (text) => ComponentDispatcher.dispatchToLastSubscribed("INSERT_TEXT", {content: text});
             const classes = Object(WebpackModules.getByProps("iconItem"));
             const joinClass = (...classNames) => classNames.filter(Boolean).join(" ");
@@ -196,6 +196,7 @@ module.exports = (() => {
 
                         children.unshift(
                             React.createElement(Components.ErrorBoundary, {
+                                key: "link-icon-errorboundary",
                                 errorChildren: React.createElement("svg", {
                                     width: 16,
                                     height: 16,
