@@ -1,6 +1,6 @@
 /**
  * @name UnreadCountBadges
- * @version 1.0.1
+ * @version 1.0.2
  * @author Strencher, Metalloriff
  * @description Adds unread badges to guilds, channels & more.
  * @source https://github.com/Strencher/BetterDiscordStuff/tree/master/UnreadCountBadges
@@ -32,7 +32,7 @@
 const config = {
 	"info": {
 		"name": "UnreadCountBadges",
-		"version": "1.0.1",
+		"version": "1.0.2",
 		"authors": [{
 				"name": "Strencher",
 				"discord_id": "415849376598982656",
@@ -50,7 +50,13 @@ const config = {
 		"github": "https://github.com/Strencher/BetterDiscordStuff/tree/master/UnreadCountBadges",
 		"github_raw": "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/UnreadCountBadges/UnreadCountBadges.plugin.js"
 	},
-	"changelog": [],
+	"changelog": [{
+		"type": "fixed",
+		"title": "Fixes",
+		"items": [
+			"Fixed excluding muted categories."
+		]
+	}],
 	"build": {
 		"zlibrary": true,
 		"copy": true,
@@ -352,7 +358,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
 				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
 			},
-			762: (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+			842: (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 				__webpack_require__.r(__webpack_exports__);
 				__webpack_require__.d(__webpack_exports__, {
 					default: () => UnreadCountBadges
@@ -959,7 +965,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 								}),
 								unreadBadgeMask: null,
 								borderRadiusMask: state.borderRadiusMask || new external_Modules_react_spring_namespaceObject.Controller({
-									spring: 1
+									spring: 0
 								}),
 								renderComplex: false
 							};
@@ -1045,7 +1051,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 							channel
 						}) => {
 							if (!includeMutedChannels && UnreadCountBadges_MutedStore.isChannelMuted(channel.guild_id, channel.id)) return count;
-							if (!includeMutedChannels && channel.parent_id && UnreadCountBadges_MutedStore.isChannelMuted(channel.parent_id)) return count;
+							if (!includeMutedChannels && channel.parent_id && UnreadCountBadges_MutedStore.isChannelMuted(guildId, channel.parent_id)) return count;
 							return count += UnreadCountBadges_UnreadStore.getUnreadCount(channel.id);
 						}), 0);
 					}
@@ -1213,7 +1219,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				});
 			};
 		})();
-		var __webpack_exports__ = __webpack_require__(762);
+		var __webpack_exports__ = __webpack_require__(842);
 		module.exports.LibraryPluginHack = __webpack_exports__;
 	})();
 	const PluginExports = module.exports.LibraryPluginHack;
