@@ -1,7 +1,7 @@
 {
     "info": {
         "name": "UnreadCountBadges",
-        "version": "1.0.1",
+        "version": "1.0.2",
         "authors": [
             {
                 "name": "Strencher",
@@ -20,7 +20,15 @@
         "github": "https://github.com/Strencher/BetterDiscordStuff/tree/master/UnreadCountBadges",
         "github_raw": "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/UnreadCountBadges/UnreadCountBadges.plugin.js"
     },
-    "changelog": [],
+    "changelog": [
+        {
+            "type": "fixed",
+            "title": "Fixes",
+            "items": [
+                "Fixed excluding muted categories."
+            ]
+        }
+    ],
     "build": {
         "zlibrary": true,
         "copy": true,

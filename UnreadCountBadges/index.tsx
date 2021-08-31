@@ -106,7 +106,7 @@ export default class UnreadCountBadges extends BasePlugin {
                     ? state.upperBadgeMask.update({spring: props.upperBadge ? 1 : 0, immediate: true})
                     : new Controller({spring: props.upperBadge ? 1 : 0, immediate: true}),
                 unreadBadgeMask: null,
-                borderRadiusMask: state.borderRadiusMask || new Controller({spring: 1}),
+                borderRadiusMask: state.borderRadiusMask || new Controller({spring: 0}),
                 renderComplex: false
             };
             
@@ -215,7 +215,7 @@ export default class UnreadCountBadges extends BasePlugin {
 
         return channels.SELECTABLE.reduce<number>((count, {channel}) => {
             if (!includeMutedChannels && MutedStore.isChannelMuted(channel.guild_id, channel.id)) return count;
-            if (!includeMutedChannels && (channel.parent_id && MutedStore.isChannelMuted(channel.parent_id))) return count;
+            if (!includeMutedChannels && (channel.parent_id && MutedStore.isChannelMuted(guildId, channel.parent_id))) return count;
 
             return count += UnreadStore.getUnreadCount(channel.id);
         }, 0);
