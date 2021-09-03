@@ -1,9 +1,9 @@
 /**
  * @name BetterBannedUsers
- * @version 1.0.1
+ * @version 1.1.0
  * @description Enhances the banned users page.
  * @author Strencher
- * @source https://github.com/Strencher/BetterDiscordStuff/tree/master/BetterBannedUsers
+ * @source https://github.com/Strencher/BetterDiscordStuff/BetterBannedUsers
  * @updateUrl https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/BetterBannedUsers/BetterBannedUsers.plugin.js
  */
 /*@cc_on
@@ -32,22 +32,21 @@
 const config = {
 	"info": {
 		"name": "BetterBannedUsers",
-		"version": "1.0.1",
+		"version": "1.1.0",
 		"description": "Enhances the banned users page.",
 		"authors": [{
 			"name": "Strencher",
 			"discord_id": "415849376598982656",
 			"github_username": "Strencher"
 		}],
-		"github": "https://github.com/Strencher/BetterDiscordStuff/tree/master/BetterBannedUsers",
+		"github": "https://github.com/Strencher/BetterDiscordStuff/BetterBannedUsers",
 		"github_raw": "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/BetterBannedUsers/BetterBannedUsers.plugin.js"
 	},
 	"changelog": [{
 		"type": "fixed",
-		"title": "Fixed - 1.0.1",
+		"title": "Fixed - 1.1.0",
 		"items": [
-			"Fixed hovering style.",
-			"Quick unbanning should work again."
+			"Hotfix for the crashing issue."
 		]
 	}],
 	"build": {
@@ -324,7 +323,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
 				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
 			},
-			657: (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+			833: (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 				__webpack_require__.r(__webpack_exports__);
 				__webpack_require__.d(__webpack_exports__, {
 					default: () => BetterBannedUsers
@@ -371,10 +370,10 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				var external_window_default = __webpack_require__.n(external_window_namespaceObject);
 				const components_namespaceObject = Modules["@discord/components"];
 				const i18n_namespaceObject = Modules["@discord/i18n"];
-				var external_BdApi_React_ = __webpack_require__(832);
+				var external_BdApi_React_ = __webpack_require__(113);
 				var components_select = __webpack_require__(894);
 				const utils_namespaceObject = Modules["@discord/utils"];
-				var React = __webpack_require__(832);
+				var React = __webpack_require__(113);
 				function _extends() {
 					_extends = Object.assign || function(target) {
 						for (var i = 1; i < arguments.length; i++) {
@@ -430,7 +429,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						className: components_namespaceObject.Text.Colors.INTERACTIVE_NORMAL
 					}))));
 				}
-				var createUpdateWrapper_React = __webpack_require__(832);
+				var createUpdateWrapper_React = __webpack_require__(113);
 				function createUpdateWrapper_extends() {
 					createUpdateWrapper_extends = Object.assign || function(target) {
 						for (var i = 1; i < arguments.length; i++) {
@@ -454,7 +453,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					}));
 				};
 				const hooks_createUpdateWrapper = createUpdateWrapper;
-				var settings_React = __webpack_require__(832);
+				var settings_React = __webpack_require__(113);
 				const SwitchItem = hooks_createUpdateWrapper(external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("SwitchItem"));
 				const settings_settings = {
 					quickUnban: {
@@ -561,7 +560,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						} else if (Object.is(caze, caseTest.test)) return caseTest.value;
 					return defaultValue;
 				}
-				var BetterBannedUsers_React = __webpack_require__(832);
+				var BetterBannedUsers_React = __webpack_require__(113);
 				function BetterBannedUsers_defineProperty(obj, key, value) {
 					if (key in obj) Object.defineProperty(obj, key, {
 						value,
@@ -630,7 +629,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 							name: "ban",
 							predicate: ({
 								guild
-							}) => modules_namespaceObject.PermissionUtils.can(constants_namespaceObject.Permissions.BAN_MEMBERS, stores_namespaceObject.Users.getCurrentUser(), stores_namespaceObject.Guilds.getGuild(guild?.id)),
+							}) => modules_namespaceObject.PermissionUtils.can(constants_namespaceObject.Permissions.BAN_MEMBERS, stores_namespaceObject.Guilds.getGuild(guild?.id), stores_namespaceObject.Users.getCurrentUser()),
 							description: "Ban someone from this guild. Click the options to choose which method you want.",
 							execute: (props, {
 								guild,
@@ -669,7 +668,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 							description: "Unbans a user by id or mention from this guild. Click the options to choose the method you want.",
 							predicate: ({
 								guild
-							}) => modules_namespaceObject.PermissionUtils.can(constants_namespaceObject.Permissions.BAN_MEMBERS, stores_namespaceObject.Users.getCurrentUser(), stores_namespaceObject.Guilds.getGuild(guild?.id)),
+							}) => modules_namespaceObject.PermissionUtils.can(constants_namespaceObject.Permissions.BAN_MEMBERS, stores_namespaceObject.Guilds.getGuild(guild?.id), stores_namespaceObject.Users.getCurrentUser()),
 							execute: (props, {
 								guild,
 								channel
@@ -687,13 +686,11 @@ function buildPlugin([BasePlugin, PluginApi]) {
 							options: [{
 								type: OptionTypes.USER,
 								name: "mention",
-								description: "The user mention from chat.",
-								required: false
+								description: "The user mention from chat."
 							}, {
 								type: OptionTypes.STRING,
 								name: "userId",
-								description: "The user id string.",
-								required: false
+								description: "The user id string."
 							}]
 						});
 					}
@@ -847,7 +844,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					return list;
 				};
 			},
-			832: module => {
+			113: module => {
 				module.exports = BdApi.React;
 			}
 		};
@@ -893,7 +890,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				});
 			};
 		})();
-		var __webpack_exports__ = __webpack_require__(657);
+		var __webpack_exports__ = __webpack_require__(833);
 		module.exports.LibraryPluginHack = __webpack_exports__;
 	})();
 	const PluginExports = module.exports.LibraryPluginHack;
