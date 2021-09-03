@@ -1,7 +1,7 @@
 {
 	"info": {
 		"name": "BetterBannedUsers",
-		"version": "1.0.1",
+		"version": "1.1.0",
 		"description": "Enhances the banned users page.",
 		"authors": [
 			{
@@ -16,10 +16,9 @@
 	"changelog": [
 		{
 			"type": "fixed",
-			"title": "Fixed - 1.0.1",
+			"title": "Fixed - 1.1.0",
 			"items": [
-				"Fixed hovering style.",
-				"Quick unbanning should work again."
+				"Hotfix for the crashing issue."
 			]
 		}
 	],

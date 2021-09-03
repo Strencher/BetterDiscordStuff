@@ -79,7 +79,7 @@ export default class BetterBannedUsers extends BasePlugin {
 		Commands.registerCommand(this.getName(), {
 			id: "ban-user",
 			name: "ban",
-			predicate: ({guild}) => PermissionUtils.can(Permissions.BAN_MEMBERS, Users.getCurrentUser(), Guilds.getGuild(guild?.id)),
+			predicate: ({guild}) => PermissionUtils.can(Permissions.BAN_MEMBERS, Guilds.getGuild(guild?.id), Users.getCurrentUser()),
 			description: "Ban someone from this guild. Click the options to choose which method you want.",
 			execute: (props, {guild, channel}) => {
 				const userId = props.userId ? props.userId[0].text : props.mention?.[0]?.userId;
@@ -118,7 +118,7 @@ export default class BetterBannedUsers extends BasePlugin {
 			id: "unban-user",
 			name: "unban",
 			description: "Unbans a user by id or mention from this guild. Click the options to choose the method you want.",
-			predicate: ({guild}) => PermissionUtils.can(Permissions.BAN_MEMBERS, Users.getCurrentUser(), Guilds.getGuild(guild?.id)),
+			predicate: ({guild}) => PermissionUtils.can(Permissions.BAN_MEMBERS, Guilds.getGuild(guild?.id), Users.getCurrentUser()),
 			execute: (props, {guild, channel}) => {
 				const userId = props.userId ? props.userId[0].text : props.mention?.[0]?.userId;
 
@@ -135,13 +135,13 @@ export default class BetterBannedUsers extends BasePlugin {
 					type: OptionTypes.USER,
 					name: "mention",
 					description: "The user mention from chat.",
-					required: false
+					// required: false
 				},
 				{
 					type: OptionTypes.STRING,
 					name: "userId",
 					description: "The user id string.",
-					required: false
+					// required: false
 				}
 			]
 		});
