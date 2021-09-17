@@ -26,17 +26,17 @@ const shouldShowPermissions = function (channel) {
 
 export default class ChannelDetails extends BasePlugin {
     public onStart(): void {
-        this.#patchTextChannel();
-        this.#patchChannelContextMenu();
-        this.#patchActiveThreadsPopout();
-        this.#patchVoiceChannel();
-        this.#patchVoiceChannelActivities();
+        this.patchTextChannel();
+        this.patchChannelContextMenu();
+        this.patchActiveThreadsPopout();
+        this.patchVoiceChannel();
+        this.patchVoiceChannelActivities();
 
         Strings.init();
         styles.inject();
     }
 
-    async #patchVoiceChannelActivities() {
+    async patchVoiceChannelActivities() {
         const VoiceChannelActivities = WebpackModules.getModule(m => m?.default?.displayName === "VoiceChannelActivities");
 
         Patcher.after(VoiceChannelActivities, "default", (_, [props], ret) => {
@@ -59,7 +59,7 @@ export default class ChannelDetails extends BasePlugin {
         });
     }
 
-    async #patchVoiceChannel() {
+    async patchVoiceChannel() {
         const selector = `.${WebpackModules.getByProps("containerDefault", "containerDragAfter")?.containerDefault}`
         const VoiceChannel = await ReactComponents.getComponentByName("VoiceChannel", selector);
 
@@ -78,7 +78,7 @@ export default class ChannelDetails extends BasePlugin {
         })
     }
 
-    async #patchTextChannel(): Promise<void> {
+    async patchTextChannel(): Promise<void> {
         const selector = `.${WebpackModules.getByProps("containerDefault", "containerDragAfter")?.containerDefault}`
         const TextChannel = await ReactComponents.getComponentByName("TextChannel", selector);
 
@@ -98,7 +98,7 @@ export default class ChannelDetails extends BasePlugin {
         TextChannel.forceUpdateAll();
     }
 
-    async #patchActiveThreadsPopout() {
+    async patchActiveThreadsPopout() {
         const ActiveThreadsPopout = WebpackModules.getModule(m => m?.default?.displayName === "ActiveThreadsPopout");
         const UnreadStore = WebpackModules.getByProps("getUnreadCount");
         const ThreadsStore = WebpackModules.getByProps("getActiveUnjoinedThreadsForParent");
@@ -148,7 +148,7 @@ export default class ChannelDetails extends BasePlugin {
         ));
     }
 
-    async #patchChannelContextMenu() {
+    async patchChannelContextMenu() {
         // @ts-ignore
         const [ChannelListTextChannelContextMenu,, CategoryContextMenu] = WebpackModules.findAll(m => m?.default?.displayName === "ChannelListTextChannelContextMenu");
         const ChannelListVoiceChannelContextMenu = WebpackModules.getModule(m => m?.default?.displayName === "ChannelListVoiceChannelContextMenu");
