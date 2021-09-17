@@ -1,7 +1,7 @@
 {
 	"info": {
 		"name": "UserBackgrounds",
-		"version": "1.1.0",
+		"version": "1.2.0",
 		"description": "A database of custom user requested backgrounds designed for BetterDiscord and Powercord.",
 		"authors": [
 			{
@@ -22,19 +22,10 @@
 	},
 	"changelog": [
 		{
-			"type": "fixed",
-			"title": "Fixed",
+			"type": "improved",
+			"title": "Improvements",
 			"items": [
-				"Fixed the user settings profile card being bugged, thanks to @_david_#0218",
-				"Fixed weird crashing",
-				"Removed a silly console.log."
-			]
-		},
-		{
-			"type": "added",
-			"title": "Added",
-			"items": [
-				"Added context menu entry to view the full banner in full resolution."
+				"Started using the newest api."
 			]
 		}
 	],

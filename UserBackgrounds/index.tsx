@@ -2,7 +2,7 @@
 
 import BasePlugin from "@zlibrary/plugin";
 import { Patcher, Utilities, WebpackModules, DiscordModules } from "@zlibrary";
-import BannerStore, { banner } from "./bannerStore";
+import BannerStore from "./bannerStore";
 import Settings from "./settings";
 import { useStateFromStores } from "@discord/flux";
 import _ from "lodash";
@@ -16,6 +16,7 @@ import { Button } from "@discord/components";
 import { Colors } from "@discord/constants";
 import { closeContextMenu, Menu, MenuItem, openContextMenu } from "@discord/contextmenu";
 import { ModalRoot, ModalSize, openModal } from "@discord/modal";
+import {UserBanner as banner} from "./types";
 
 type UserBanner = {
     BannerTypes: {
@@ -110,7 +111,7 @@ export default class UserBackgrounds extends BasePlugin {
             children: React.ReactElement;
         };
 
-        function BannerContainer({ user, bannerType, children }: params) {
+        function BannerContainer({user, bannerType, children}: params) {
             const banner: banner = useStateFromStores([BannerStore], () => BannerStore.getBanner(user.id), null, _.isEqual);
             const [selection, setSelection] = useState(banner == null ? 1 : 0);
             const ref = useRef(null);
@@ -126,7 +127,7 @@ export default class UserBackgrounds extends BasePlugin {
             ]);
 
             children.ref = ref;
-            children.key = Math.random();
+            children.key = selection;
             children.props.style = {
                 backgroundImage: `url(${currentBanner})`,
                 backgroundPosition: currentOrientation
@@ -203,7 +204,7 @@ export default class UserBackgrounds extends BasePlugin {
 
         Patcher.after(UserBanner, "default", (__, [props], res) => {
             return (
-                <BannerContainer {...props} children={res} />
+                <BannerContainer {...props} children={res} key={props.user.id} />
             );
         });
     }
