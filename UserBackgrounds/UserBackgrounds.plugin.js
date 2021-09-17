@@ -1,6 +1,6 @@
 /**
  * @name UserBackgrounds
- * @version 1.1.0
+ * @version 1.2.0
  * @description A database of custom user requested backgrounds designed for BetterDiscord and Powercord.
  * @author Strencher, Tropical
  * @source https://github.com/Strencher/BetterDiscordStuff/tree/development/UserBackgrounds
@@ -33,7 +33,7 @@
 const config = {
 	"info": {
 		"name": "UserBackgrounds",
-		"version": "1.1.0",
+		"version": "1.2.0",
 		"description": "A database of custom user requested backgrounds designed for BetterDiscord and Powercord.",
 		"authors": [{
 				"name": "Strencher",
@@ -52,22 +52,12 @@ const config = {
 		"invite": "gvA2ree"
 	},
 	"changelog": [{
-			"type": "fixed",
-			"title": "Fixed",
-			"items": [
-				"Fixed the user settings profile card being bugged, thanks to @_david_#0218",
-				"Fixed weird crashing",
-				"Removed a silly console.log."
-			]
-		},
-		{
-			"type": "added",
-			"title": "Added",
-			"items": [
-				"Added context menu entry to view the full banner in full resolution."
-			]
-		}
-	],
+		"type": "improved",
+		"title": "Improvements",
+		"items": [
+			"Started using the newest api."
+		]
+	}],
 	"build": {
 		"zlibrary": true,
 		"copy": true,
@@ -316,7 +306,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
 				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
 			},
-			459: (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+			699: (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 				__webpack_require__.r(__webpack_exports__);
 				__webpack_require__.d(__webpack_exports__, {
 					default: () => UserBackgrounds
@@ -328,6 +318,37 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				const modules_namespaceObject = Modules["@discord/modules"];
 				const external_require_https_namespaceObject = require("https");
 				const utils_namespaceObject = Modules["@discord/utils"];
+				const extractRegex = /data-user-id="(.+)"/g;
+				class Converter {
+					static extractUserIds(selector) {
+						const map = selector.split(",").map((attr => {
+							const result = extractRegex.exec(attr);
+							if (!result?.[1]) return null;
+							return result[1];
+						})).filter((e => e));
+						return [...new Set(map)];
+					}
+					static async convert(css) {
+						const start = Date.now();
+						let output = new Map;
+						const sheet = new CSSStyleSheet({
+							media: "print"
+						});
+						const style = await sheet.replace(css);
+						for (const cssRule of [...style.cssRules]) {
+							const userIds = this.extractUserIds(cssRule.selectorText);
+							for (const id of userIds) {
+								const bgData = {
+									background: cssRule.style.getPropertyValue("--user-background").slice(5, -2)
+								};
+								if (cssRule.style.getPropertyValue("--")) bgData.orientation = cssRule.style.getPropertyValue("--user-popout-position");
+								output.set(id, bgData);
+							}
+						}
+						external_PluginApi_namespaceObject.Logger.log(`Compiled database (css -> json) in ${(Date.now() - start).toFixed(0)}ms.`);
+						return output;
+					}
+				}
 				function _defineProperty(obj, key, value) {
 					if (key in obj) Object.defineProperty(obj, key, {
 						value,
@@ -345,14 +366,18 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						_defineProperty(this, "logger", new utils_namespaceObject.Logger(this.constructor.name));
 						_defineProperty(this, "intervalTimer", 36e5);
 						_defineProperty(this, "_interval", void 0);
-						_defineProperty(this, "API_URL", "https://raw.githubusercontent.com/Discord-Custom-Covers/usrbg/master/dist/usrbg.json");
+						_defineProperty(this, "API_URL", "https://usrbg.cumcord.com/");
 						_defineProperty(this, "fetchBanners", (() => {
 							(0, external_require_https_namespaceObject.get)(this.API_URL, (res => {
 								const chunks = [];
 								res.on("data", (chunk => chunks.push(chunk)));
-								res.on("end", (() => {
-									banners = new Map(Object.entries(JSON.parse(chunks.join(""))));
-									this.emitChange();
+								res.on("end", (async () => {
+									try {
+										banners = await Converter.convert(chunks.join(""));
+										this.emitChange();
+									} catch (error) {
+										this.logger.error(error);
+									}
 								}));
 								res.on("error", (error => this.logger.error(error)));
 							}));
@@ -367,7 +392,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					}
 					initialize() {
 						this._initialized = true;
-						setInterval(this.fetchBanners, this.intervalTimer);
+						this._interval = setInterval(this.fetchBanners, this.intervalTimer);
 						this.fetchBanners();
 					}
 					getBannerURL(userId) {
@@ -598,7 +623,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 									utils_namespaceObject.joinClassNames)("user-background", BannerClasses.banner, BannerClasses.profileBannerPremium)]
 							]);
 							children.ref = ref;
-							children.key = Math.random();
+							children.key = selection;
 							children.props.style = {
 								backgroundImage: `url(${currentBanner})`,
 								backgroundPosition: currentOrientation
@@ -647,7 +672,8 @@ function buildPlugin([BasePlugin, PluginApi]) {
 							})));
 						}
 						external_PluginApi_namespaceObject.Patcher.after(UserBanner, "default", ((__, [props], res) => external_BdApi_React_default().createElement(BannerContainer, _extends({}, props, {
-							children: res
+							children: res,
+							key: props.user.id
 						}))));
 					}
 					onStop() {
@@ -732,7 +758,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				});
 			};
 		})();
-		var __webpack_exports__ = __webpack_require__(459);
+		var __webpack_exports__ = __webpack_require__(699);
 		module.exports.LibraryPluginHack = __webpack_exports__;
 	})();
 	const PluginExports = module.exports.LibraryPluginHack;
