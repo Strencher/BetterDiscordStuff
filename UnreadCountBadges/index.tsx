@@ -12,7 +12,9 @@ import { useStateFromStores } from "@discord/flux";
 import ChannelUnreadBadge, {ConnectedUnreadBadge} from "./components/unreadBadge";
 import BlobContainer from "./components/blobContainer";
 import SettingsPanel from "./components/Settings";
-import { Guilds } from "@discord/stores";
+import { Guilds, Users } from "@discord/stores";
+import {Dispatcher} from "@discord/modules";
+import { ActionTypes } from "@discord/constants";
 
 const MutedStore = WebpackModules.getByProps("isMuted");
 const UnreadStore = WebpackModules.getByProps("getUnreadCount");
@@ -23,7 +25,7 @@ const FolderStatesStore = WebpackModules.getByProps("isFolderExpanded");
 
 /* Thanks to lighty for figuring this out */
 function BlobMaskWrapper(props) {
-    const { collector, maskType, shouldShow, color } = props;
+    const {collector, maskType, shouldShow, color} = props;
 
     const unreadCount = useStateFromStores([Settings, MutedStore, UnreadStore], collector.bind(null, props));
 
@@ -36,7 +38,14 @@ function BlobMaskWrapper(props) {
 };
 
 export default class UnreadCountBadges extends BasePlugin {
-    updateGuilds: Function;
+    guildsClasses: any;
+
+    constructor() {
+        super();
+
+        this.guildsClasses = WebpackModules.getByProps("downloadProgressCircle", "guilds");
+    }
+
     updateHomeIcon: Function;
     id = Math.random().toString().slice(2, 10); // :tm:
     settings = Settings;
@@ -51,12 +60,22 @@ export default class UnreadCountBadges extends BasePlugin {
 
     onStart() {
         stylesheet.inject();
+        
+        if (!Users.getCurrentUser()) Dispatcher.subscribe(ActionTypes.CONNECTION_OPEN, this.patchAll);
+        else this.patchAll(false);
+    }
+
+    patchAll = (unsubscribe: boolean) => {
         this.patchBlobMask();
         this.patchGuild();
         this.patchChannelItem();
         this.patchFolder();
         this.patchHomeIcon();
-    }
+
+        if (unsubscribe !== false) {
+            Dispatcher.unsubscribe(ActionTypes.CONNECTION_OPEN, this.patchAll);
+        }
+    };
 
     async patchChannelItem() {
         const ChannelItem = WebpackModules.getModule(m => m?.default?.displayName === "ChannelItem");
@@ -221,35 +240,57 @@ export default class UnreadCountBadges extends BasePlugin {
         }, 0);
     }
 
+    updateGuilds() {
+        const [guilds] = document.getElementsByClassName(this.guildsClasses.guilds);
+        if (!guilds) return;
+        const instance = ReactTools.getOwnerInstance(guilds);
+        if (!instance || !instance.forceUpdate) return;
+
+        instance.forceUpdate();
+    }
+
     async patchGuild() {
-        const selector = `.${WebpackModules.getByProps("listItemWidth", "navigationIcon")?.listItem}`;
-        const Guild = await ReactComponents.getComponentByName("Guild", selector);
-        
-        Patcher.after(Guild.component.prototype, "render", (_this, __, res) => {
-            const mask = Utilities.findInReactTree(res, m => m?.props?.hasOwnProperty("lowerBadgeWidth"));
-            if (!mask || mask.type === BlobMaskWrapper) return;
+        const GuildComponents = WebpackModules.getByProps("HubGuild");
 
-            Object.assign(mask.props, {
-                maskType: mask.type,
-                shouldShow: (unread: number) => unread > 0,
-                collector: ({guildId}) => {
-                    if (!Settings.get("showOnGuilds", true)) return 0;
-                    if (!Settings.get("showMutedGuildUnread", false) && MutedStore.isMuted(guildId)) return 0;
-            
-                    return this.checkCount(
-                        this.getUnreadCountForGuild(guildId, Settings.get("includeMutedInGuild", false))
-                    );
-                },
-                color: "guildColor",
-                guildId: _this.props.guild.id
-            });
+        const PatchedGuild = ({__originalType, ...props}) => {
+            const res = Reflect.apply(__originalType, this, [props]);
 
-            mask.type = BlobMaskWrapper;
+            try {
+                const mask = Utilities.findInReactTree(res, m => m?.props?.hasOwnProperty("lowerBadgeWidth"));
+                if (!mask || mask.type === BlobMaskWrapper) return res;
+
+                Object.assign(mask.props, {
+                    maskType: mask.type,
+                    shouldShow: (unread: number) => unread > 0,
+                    collector: ({guildId}) => {
+                        if (!Settings.get("showOnGuilds", true)) return 0;
+                        if (!Settings.get("showMutedGuildUnread", false) && MutedStore.isMuted(guildId)) return 0;
+                
+                        return this.checkCount(
+                            this.getUnreadCountForGuild(guildId, Settings.get("includeMutedInGuild", false))
+                        );
+                    },
+                    color: "guildColor",
+                    guildId: props.guild.id
+                });
+
+                mask.type = BlobMaskWrapper;
+            } catch (error) {
+                Logger.error(error);
+            }
+
+            return res;
+        }
+
+        Patcher.after(GuildComponents, "default", (_this, __, res) => {
+            if (!res || !res.props) return;
+
+            const original = res.type;
+            res.props.__originalType = original;
+            res.type = PatchedGuild;
         });
 
-        Guild.forceUpdateAll();
-
-        this.updateGuilds = () => Guild.forceUpdateAll();
+        this.updateGuilds();
     }
 
     async patchHomeIcon() {
