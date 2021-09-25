@@ -1,10 +1,11 @@
 /**
  * @name UserDetails
- * @version 1.5.0
+ * @version 2.5.0
  * @author Strencher
  * @description Shows you a lot information about users in popouts.
- * @source https://github.com/Strencher/BetterDiscordStuff/UserDetails
+ * @source https://github.com/Strencher/BetterDiscordStuff/tree/development/UserDetails
  * @updateUrl https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/UserDetails/UserDetails.plugin.js
+ * @invite gvA2ree
  */
 /*@cc_on
 @if (@_jscript)
@@ -32,7 +33,7 @@
 const config = {
 	"info": {
 		"name": "UserDetails",
-		"version": "1.5.0",
+		"version": "2.5.0",
 		"authors": [{
 			"name": "Strencher",
 			"discord_id": "415849376598982656",
@@ -40,24 +41,25 @@ const config = {
 			"twitter_username": "Strencher3"
 		}],
 		"description": "Shows you a lot information about users in popouts.",
-		"github": "https://github.com/Strencher/BetterDiscordStuff/UserDetails",
-		"github_raw": "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/UserDetails/UserDetails.plugin.js"
+		"github": "https://github.com/Strencher/BetterDiscordStuff/tree/development/UserDetails",
+		"github_raw": "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/UserDetails/UserDetails.plugin.js",
+		"invite": "gvA2ree"
 	},
 	"changelog": [{
-			"title": "Fixed",
-			"type": "fixed",
+			"title": "Improvements",
+			"type": "improved",
 			"items": [
-				"Fixed dates cache not refreshing.",
-				"Fixed some other weird bugs."
+				"Improved the code behavior by minimal tweaks.",
+				"Rewrote the translation strings module to __not__ use the one by discord."
 			]
 		},
 		{
 			"title": "Added",
 			"type": "added",
 			"items": [
-				"**MutualServers** section in the user popout.",
-				"**ActivityIcons** setting to disable for bots.",
-				"**Translations** credits for the translators."
+				"Finally added a context menu on connection badges.",
+				"Added the 'type' of the connection in the tooltip. eg: 'Twitch: Strencher_'",
+				"Integrated PanelPopout by Qb."
 			]
 		}
 	],
@@ -292,7 +294,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
 					return i[1];
 				}));
-				___CSS_LOADER_EXPORT___.push([module.id, ".UserDetails-connections-header{font-weight:700;text-transform:uppercase;font-size:12px;margin-bottom:8px;color:var(--header-secondary)}.UserDetails-connections-connectionsBody div:not(.UserDetails-connections-connections,.UserDetails-connections-container){display:inline-flex;margin:5px}.UserDetails-connections-connectionsBody .UserDetails-connections-loading{fill:var(--interactive-muted);animation:UserDetails-connections-blink infinite 2s;width:30px;height:30px;margin:5px;margin-top:0;margin-left:0}.UserDetails-connections-connectionsBody .UserDetails-connections-connections{display:flex;flex-wrap:wrap;margin-bottom:8px}.UserDetails-connections-connectionsBody .UserDetails-connections-connections img{width:30px;height:30px}.UserDetails-connections-connectionsBody .UserDetails-connections-errorIcon{width:35px;height:35px;margin-top:-5px}.UserDetails-connections-connectionsBody .UserDetails-connections-errorIcon{fill:#ed4245 !important}@keyframes UserDetails-connections-blink{0%{opacity:.6}50%{opacity:.3}100%{opacity:.6}}", ""]);
+				___CSS_LOADER_EXPORT___.push([module.id, ".UserDetails-connections-header{font-weight:700;text-transform:uppercase;font-size:12px;margin-bottom:8px;color:var(--header-secondary)}.UserDetails-connections-connectionsBody div:not(.UserDetails-connections-connections,.UserDetails-connections-container){display:inline-flex;margin:2px}.UserDetails-connections-connectionsBody .UserDetails-connections-loading{fill:var(--interactive-muted);animation:UserDetails-connections-blink infinite 2s;width:30px;height:30px;margin:5px;margin-top:0;margin-left:0}.UserDetails-connections-connectionsBody .UserDetails-connections-connections{display:flex;flex-wrap:wrap;margin-bottom:8px}.UserDetails-connections-connectionsBody .UserDetails-connections-connections img{width:30px;height:30px}.UserDetails-connections-connectionsBody .UserDetails-connections-errorIcon{width:35px;height:35px;margin-top:-5px}.UserDetails-connections-connectionsBody .UserDetails-connections-errorIcon{fill:#ed4245 !important}@keyframes UserDetails-connections-blink{0%{opacity:.6}50%{opacity:.3}100%{opacity:.6}}", ""]);
 				___CSS_LOADER_EXPORT___.locals = {
 					header: "UserDetails-connections-header",
 					connectionsBody: "UserDetails-connections-connectionsBody",
@@ -314,7 +316,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
 					return i[1];
 				}));
-				___CSS_LOADER_EXPORT___.push([module.id, ".UserDetails-dates-container{display:flex;max-width:-webkit-fill-available}.UserDetails-dates-container.UserDetails-dates-text{flex-direction:column;margin-top:10px}.UserDetails-dates-container.UserDetails-dates-icons{flex-direction:row}.UserDetails-dates-container.UserDetails-dates-icons.UserDetails-dates-userProfile{padding-left:13px}.UserDetails-dates-container.UserDetails-dates-icons .UserDetails-dates-loading{animation:UserDetails-dates-blink infinite 2s ease-in-out}.UserDetails-dates-container svg{fill:#ddd;margin:5px;width:20px;height:20px}.UserDetails-dates-container.UserDetails-dates-text .UserDetails-dates-scrollableText{color:var(--text-normal);white-space:nowrap;position:relative;font-size:14px;width:-webkit-fill-available;text-align:left;line-height:18px}.UserDetails-dates-container.UserDetails-dates-text.UserDetails-dates-userProfile{padding-left:18px}.UserDetails-dates-container.UserDetails-dates-text.UserDetails-dates-userProfile .UserDetails-dates-scrollableText{text-align:left !important}.UserDetails-dates-container .UserDetails-dates-errorIcon{fill:#ed4245 !important}.UserDetails-dates-wrapper{display:block}@keyframes UserDetails-dates-blink{0%{opacity:.6}50%{opacity:.3}100%{opacity:.6}}", ""]);
+				___CSS_LOADER_EXPORT___.push([module.id, ".customStatus-oN4ZZY:not(:empty){padding-top:10px;border-top:thin solid var(--background-modifier-accent)}.UserDetails-dates-container{display:flex;max-width:-webkit-fill-available;margin-bottom:-5px}.UserDetails-dates-container.UserDetails-dates-text{flex-direction:column;margin-top:10px;border-top:thin solid var(--background-modifier-accent);padding-top:10px}.UserDetails-dates-container.UserDetails-dates-icons{flex-direction:row}.UserDetails-dates-container.UserDetails-dates-icons.UserDetails-dates-userProfile{padding-left:13px}.UserDetails-dates-container.UserDetails-dates-icons .UserDetails-dates-loading{animation:UserDetails-dates-blink infinite 2s ease-in-out}.UserDetails-dates-container svg{fill:#ddd;margin:5px;width:20px;height:20px}.UserDetails-dates-container.UserDetails-dates-text .UserDetails-dates-scrollableText{color:var(--text-normal);white-space:nowrap;position:relative;font-size:14px;width:-webkit-fill-available;text-align:left;line-height:18px}.UserDetails-dates-container.UserDetails-dates-text.UserDetails-dates-userProfile{padding-left:18px}.UserDetails-dates-container.UserDetails-dates-text.UserDetails-dates-userProfile .UserDetails-dates-scrollableText{text-align:left !important}.UserDetails-dates-container .UserDetails-dates-errorIcon{fill:#ed4245 !important}.UserDetails-dates-wrapper{display:block}@keyframes UserDetails-dates-blink{0%{opacity:.6}50%{opacity:.3}100%{opacity:.6}}", ""]);
 				___CSS_LOADER_EXPORT___.locals = {
 					container: "UserDetails-dates-container",
 					text: "UserDetails-dates-text",
@@ -376,7 +378,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
 					return i[1];
 				}));
-				___CSS_LOADER_EXPORT___.push([module.id, ".UserDetails-badge-connection{width:30px;height:30px;position:relative}.UserDetails-badge-connection.UserDetails-badge-verified{border-radius:50%;overflow:hidden}.UserDetails-badge-connection.UserDetails-badge-verified .UserDetails-badge-verifiedBadge{width:12px;height:12px;position:absolute;bottom:0;right:0px;background:var(--background-floating);border-radius:50%;overflow:hidden;padding:2px}", ""]);
+				___CSS_LOADER_EXPORT___.push([module.id, ".UserDetails-badge-connection{width:30px;height:30px;position:relative}.UserDetails-badge-connection.UserDetails-badge-verified{border-radius:50%;overflow:hidden}.UserDetails-badge-connection.UserDetails-badge-verified .UserDetails-badge-verifiedBadge{width:12px;height:12px;position:absolute;bottom:-1px;right:-1px;background:var(--background-floating);border-radius:50%;overflow:hidden;padding:2px}", ""]);
 				___CSS_LOADER_EXPORT___.locals = {
 					connection: "UserDetails-badge-connection",
 					verified: "UserDetails-badge-verified",
@@ -451,7 +453,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
 				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
 			},
-			214: (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+			403: (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 				__webpack_require__.r(__webpack_exports__);
 				__webpack_require__.d(__webpack_exports__, {
 					default: () => Plugin
@@ -464,15 +466,46 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				});
 				const external_StyleLoader_namespaceObject = StyleLoader;
 				var external_StyleLoader_default = __webpack_require__.n(external_StyleLoader_namespaceObject);
-				var external_BdApi_React_ = __webpack_require__(832);
+				var external_BdApi_React_ = __webpack_require__(113);
 				var external_BdApi_React_default = __webpack_require__.n(external_BdApi_React_);
 				const components_namespaceObject = Modules["@discord/components"];
 				const connections_namespaceObject = Modules["@discord/connections"];
 				var connections_default = __webpack_require__.n(connections_namespaceObject);
 				var badge = __webpack_require__(173);
 				const utils_namespaceObject = Modules["@discord/utils"];
-				const external_PluginApi_namespaceObject = PluginApi;
 				const package_namespaceObject = JSON.parse('{"um":{"u2":"UserDetails"}}');
+				const external_PluginApi_namespaceObject = PluginApi;
+				const flux_namespaceObject = Modules["@discord/flux"];
+				const modules_namespaceObject = Modules["@discord/modules"];
+				function _defineProperty(obj, key, value) {
+					if (key in obj) Object.defineProperty(obj, key, {
+						value,
+						enumerable: true,
+						configurable: true,
+						writable: true
+					});
+					else obj[key] = value;
+					return obj;
+				}
+				class SettingsManager extends flux_namespaceObject.Store {
+					constructor(pluginName, defaultSettings = {}) {
+						super(modules_namespaceObject.Dispatcher, {});
+						_defineProperty(this, "settings", void 0);
+						_defineProperty(this, "pluginName", void 0);
+						_defineProperty(this, "get", ((key, defaultValue) => this.settings[key] ?? defaultValue));
+						_defineProperty(this, "set", ((key, value) => {
+							this.settings[key] = value;
+							external_PluginApi_namespaceObject.PluginUtilities.saveSettings(this.pluginName, this.settings);
+							this.emitChange();
+							return value;
+						}));
+						this.pluginName = pluginName;
+						this.settings = external_PluginApi_namespaceObject.PluginUtilities.loadSettings(pluginName, defaultSettings);
+					}
+				}
+				const Settings = new SettingsManager(package_namespaceObject.um.u2);
+				const modules_Settings = Settings;
+				var flowerstar = __webpack_require__(564);
 				function _extends() {
 					_extends = Object.assign || function(target) {
 						for (var i = 1; i < arguments.length; i++) {
@@ -484,86 +517,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					};
 					return _extends.apply(this, arguments);
 				}
-				const FormItem = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("FormItem");
-				const FormText = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("FormText");
-				const FormDivider = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("FormDivider");
-				const Flex = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("Flex");
-				const {
-					marginBottom8
-				} = external_PluginApi_namespaceObject.WebpackModules.getByProps("marginBottom8");
-				class Utilities extends external_PluginApi_namespaceObject.Utilities {
-					static joinClassNames(...classNames) {
-						return classNames.filter((e => e)).join(" ");
-					}
-					static get useForceUpdate() {
-						return () => (0, external_BdApi_React_.useReducer)((n => n + 1), 0)[1];
-					}
-					static createUpdateWrapper(Component, form = true, valueProp = "value") {
-						return props => {
-							const [state, setState] = (0, external_BdApi_React_.useState)(props[valueProp]);
-							props[valueProp] = state;
-							if (form) return external_BdApi_React_default().createElement(Flex, {
-								className: marginBottom8,
-								direction: Flex.Direction.VERTICAL
-							}, external_BdApi_React_default().createElement(FormItem, {
-								title: props.name
-							}, external_BdApi_React_default().createElement(Component, _extends({}, props, {
-								onChange: value => {
-									value = value.value ?? value;
-									setState(value);
-									props.onChange(value);
-								}
-							})), external_BdApi_React_default().createElement(FormText, {
-								type: "description",
-								disabled: Boolean(props.note)
-							}, props.note)), external_BdApi_React_default().createElement(FormDivider, null));
-							else return external_BdApi_React_default().createElement(Component, _extends({}, props, {
-								onChange: value => {
-									value = value.value ?? value;
-									setState(value);
-									props.onChange(value);
-								}
-							}));
-						};
-					}
-				}
-				const modules_namespaceObject = Modules["@discord/modules"];
-				const flux_namespaceObject = Modules["@discord/flux"];
-				function _defineProperty(obj, key, value) {
-					if (key in obj) Object.defineProperty(obj, key, {
-						value,
-						enumerable: true,
-						configurable: true,
-						writable: true
-					});
-					else obj[key] = value;
-					return obj;
-				}
-				const Settings = new class extends flux_namespaceObject.Store {
-					constructor() {
-						super(modules_namespaceObject.Dispatcher, {});
-						_defineProperty(this, "settings", external_PluginApi_namespaceObject.PluginUtilities.loadSettings(package_namespaceObject.um.u2, {}));
-						_defineProperty(this, "get", ((key, defaultValue) => this.settings[key] ?? defaultValue));
-						_defineProperty(this, "set", ((key, value) => {
-							this.settings[key] = value;
-							external_PluginApi_namespaceObject.PluginUtilities.saveSettings(package_namespaceObject.um.u2, this.settings);
-							this.emitChange();
-						}));
-					}
-				};
-				var flowerstar = __webpack_require__(564);
-				function flowerstar_extends() {
-					flowerstar_extends = Object.assign || function(target) {
-						for (var i = 1; i < arguments.length; i++) {
-							var source = arguments[i];
-							for (var key in source)
-								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-						}
-						return target;
-					};
-					return flowerstar_extends.apply(this, arguments);
-				}
-				const icons_flowerstar = props => external_BdApi_React_default().createElement("div", flowerstar_extends({}, props, {
+				const icons_flowerstar = props => external_BdApi_React_default().createElement("div", _extends({}, props, {
 					className: (0, utils_namespaceObject.joinClassNames)(flowerstar.Z.wrapper, props.className)
 				}), external_BdApi_React_default().createElement("svg", {
 					width: "16",
@@ -583,198 +537,56 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					d: "M7.4,11.17,4,8.62,5,7.26l2,1.53L10.64,4l1.36,1Z",
 					fill: "#ffffff"
 				})));
+				const contextmenu_namespaceObject = Modules["@discord/contextmenu"];
+				const i18n_namespaceObject = Modules["@discord/i18n"];
+				var i18n_default = __webpack_require__.n(i18n_namespaceObject);
+				const native_namespaceObject = Modules["@discord/native"];
+				const external_window_namespaceObject = window._;
+				var external_window_default = __webpack_require__.n(external_window_namespaceObject);
+				function badge_extends() {
+					badge_extends = Object.assign || function(target) {
+						for (var i = 1; i < arguments.length; i++) {
+							var source = arguments[i];
+							for (var key in source)
+								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
+						}
+						return target;
+					};
+					return badge_extends.apply(this, arguments);
+				}
 				function Badge({
 					item
 				}) {
 					const connection = connections_default().get(item.type);
-					const shouldVerified = Settings.get("showVerifiedConnections", true) && item.verified;
-					return external_BdApi_React_default().createElement(components_namespaceObject.TooltipContainer, {
-						text: item.name,
+					const onClick = () => {
+						try {
+							open(connection.getPlatformUserUrl(item), "_blank");
+						} catch {}
+					};
+					const onContextMenu = e => {
+						(0, contextmenu_namespaceObject.openContextMenu)(e, (() => external_BdApi_React_default().createElement(contextmenu_namespaceObject.Menu, {
+							navId: "connections-context",
+							onClose: contextmenu_namespaceObject.closeContextMenu
+						}, external_BdApi_React_default().createElement(contextmenu_namespaceObject.MenuGroup, null, external_BdApi_React_default().createElement(contextmenu_namespaceObject.MenuItem, {
+							id: "copy-connection-id",
+							label: i18n_namespaceObject.Messages.COPY_ID,
+							action: () => (0, native_namespaceObject.copy)(item.id)
+						})))));
+					};
+					const shouldVerified = modules_Settings.get("showVerifiedConnections", true) && item.verified;
+					return external_BdApi_React_default().createElement(components_namespaceObject.Tooltip, {
+						text: `${external_window_default().upperFirst(item.type)}: ${item.name}`
+					}, (props => external_BdApi_React_default().createElement("div", badge_extends({}, props, {
 						className: (0, utils_namespaceObject.joinClassNames)(badge.Z.connection, {
 							[badge.Z.verified]: shouldVerified
 						})
-					}, external_BdApi_React_default().createElement("img", {
-						onContextMenu: () => {},
-						onClick: () => {
-							try {
-								open(connection.getPlatformUserUrl(item), "_blank");
-							} catch {}
-						},
+					}), external_BdApi_React_default().createElement("img", {
+						onContextMenu,
+						onClick,
 						src: connection.icon.color
 					}), shouldVerified && external_BdApi_React_default().createElement(icons_flowerstar, {
 						className: badge.Z.verifiedBadge
-					}));
-				}
-				class Logger {
-					static error(...message) {
-						this._log("error", ...message);
-					}
-					static warn(...message) {
-						this._log("warn", ...message);
-					}
-					static info(...message) {
-						this._log("info", ...message);
-					}
-					static log(...message) {
-						this._log("log", ...message);
-					}
-					static _log(level = "log", ...message) {
-						console[level](`%c[${package_namespaceObject.um.u2}]%c`, "color: #0870f3; font-weight: 700;", "", ...message);
-					}
-				}
-				function queue_defineProperty(obj, key, value) {
-					if (key in obj) Object.defineProperty(obj, key, {
-						value,
-						enumerable: true,
-						configurable: true,
-						writable: true
-					});
-					else obj[key] = value;
-					return obj;
-				}
-				class WaitQueue {
-					constructor({
-						autostart = true,
-						functions = [],
-						delay = 1e3
-					} = {}) {
-						queue_defineProperty(this, "next", (() => {
-							if (!this.functions.length || this.paused) return this.running = false;
-							this.running = true;
-							this._runCallback(this.functions.shift()).then((() => setTimeout(this.next, this.delay)));
-						}));
-						queue_defineProperty(this, "continue", (() => {
-							this.paused = false;
-							this.next();
-						}));
-						queue_defineProperty(this, "pause", (() => {
-							this.paused = true;
-						}));
-						this.autostart = autostart;
-						this.functions = functions;
-						this.delay = delay;
-						if (this.autostart && functions.length) this.next();
-					}
-					add(callback, caller, event) {
-						const func = async () => {
-							event.reply("done", await callback());
-						};
-						func.__caller = caller;
-						func.__error = error => {
-							event.reply("error", error);
-						};
-						this.functions.push(func);
-						event.on("cancel", (() => {
-							const index = this.functions.indexOf(func);
-							if (-1 == index) return;
-							this.functions.splice(index, 1);
-						}));
-						if (this.autostart && !this.running) this.next();
-					}
-					async _runCallback(callback) {
-						if ("function" !== typeof callback) return;
-						try {
-							await callback();
-						} catch (error) {
-							Logger.error(`Could not run callback for "${callback.__caller}":`, "\n", error);
-							callback.__error(error);
-						}
-					}
-				}
-				const {
-					APIModule
-				} = external_PluginApi_namespaceObject.DiscordModules;
-				let cache = window.__ud_cache ?? (window.__ud_cache = {}),
-					queue = new WaitQueue({
-						delay: 2500
-					});
-				class ApiModule {
-					constructor(plugin) {
-						this.plugin = plugin;
-						cache[this.api] = {};
-					}
-					extractDate(id) {
-						return new Date(id / 4194304 + 14200704e5);
-					}
-					get api() {
-						return "";
-					}
-					get cache() {
-						return cache[this.api];
-					}
-					error(...message) {
-						Logger.error(...message);
-					}
-					setCache(guildId, userId, data) {
-						if (!cache[this.api]) cache[this.api] = {
-							[guildId]: {}
-						};
-						if (!cache[this.api][guildId]) cache[this.api][guildId] = {};
-						return cache[this.api][guildId][userId] = data;
-					}
-					getByCache(guildId, userId) {
-						const chunk = cache[this.api]?.[guildId]?.[userId];
-						if (!chunk || Date.now() - chunk.fetch > 6e5) return null;
-						return chunk.data;
-					}
-					get(options, guildId, userId, event) {
-						if (!cache[this.api]) cache[this.api] = {
-							[guildId]: {}
-						};
-						if (!cache[this.api][guildId]) cache[this.api][guildId] = {};
-						let data;
-						const userFromCache = this.getByCache(guildId, userId);
-						if (userFromCache) data = userFromCache;
-						if (!data) {
-							queue.add((() => APIModule.get(options)), this.api, event);
-							event.on("done", (data => {
-								this.setCache(guildId, userId, {
-									data,
-									fetch: Date.now()
-								});
-							})).on("error", (error => {
-								if (429 === error.status) {
-									queue.pause();
-									setTimeout(queue.continue, 1e3 * (error.body?.retry_after ?? 5));
-								}
-							}));
-						} else event.reply("done", data);
-					}
-					parseZeroPadding(zeroable) {
-						return zeroable <= 9 ? "0" + zeroable : zeroable;
-					}
-					monthsAgo(date1, date2) {
-						let months = 12 * (date2.getFullYear() - date1.getFullYear());
-						months -= date1.getMonth();
-						months += date2.getMonth();
-						months = Math.abs(months);
-						return months <= 0 ? 0 : months;
-					}
-					daysAgo(date1, date2) {
-						return Math.floor((date1 - date2) / (1e3 * 60 * 60 * 24));
-					}
-					yearsAgo(date1, date2) {
-						return this.monthsAgo(date2, date1) / 12;
-					}
-					parseTime(format, date) {
-						if ("object" !== typeof date) date = new Date(date);
-						const today = new Date,
-							daysago = this.daysAgo(today, date),
-							hour12 = 0 === Settings.get("12hour", 1);
-						return format.replace(/\$timelabel/g, date.getHours() >= 12 ? "PM" : "AM").replace(/\$daysago/g, daysago).replace(/\$dayname/g, date.toLocaleDateString("default", {
-							weekday: "short",
-							hour12
-						})).replace(/\$day/g, date.toLocaleDateString("default", {
-							day: "2-digit",
-							hour12
-						})).replace(/\$monthname/g, date.toLocaleDateString("default", {
-							month: "short",
-							hour12
-						})).replace(/\$monthsago/g, this.monthsAgo(today, date)).replace(/\$month/g, date.toLocaleDateString("default", {
-							month: "2-digit",
-							hour12
-						})).replace(/\$weeksago/g, Math.floor(daysago / 7)).replace(/\$yearsago/g, Math.floor(this.yearsAgo(today, date))).replace(/\$year/g, date.getFullYear()).replace(/\$hour/g, this.parseZeroPadding(hour12 ? date.getHours() % 12 : date.getHours())).replace(/\$minute/g, this.parseZeroPadding(date.getMinutes())).replace(/\$second/g, this.parseZeroPadding(date.getSeconds()));
-					}
+					}))));
 				}
 				function circle_extends() {
 					circle_extends = Object.assign || function(target) {
@@ -821,50 +633,99 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				var apis_connections = __webpack_require__(597);
 				const stores_namespaceObject = Modules["@discord/stores"];
 				const actions_namespaceObject = Modules["@discord/actions"];
-				const i18n_namespaceObject = Modules["@discord/i18n"];
-				var i18n_default = __webpack_require__.n(i18n_namespaceObject);
+				const constants_namespaceObject = Modules["@discord/constants"];
+				const nl_namespaceObject = JSON.parse('{"CONNECTIONS":"Verbindingen","NO_CONNECTIONS":"Geen verbindingen!","LOADING_CONNECTIONS":"Verbindingen aan het laden...","LOADING_LAST_MESSAGE":"Laatste bericht aan het laden...","LOADING_JOINED_AT":"Lid geworden op aan het laden...","MEMBER_WAS_NOT_FOUND":"Lid kon niet worden gevonden!","FAILED_TO_FETCH":"Gefaald om op te halen!","USERINFO_CMD_DESC":"Laat bepaalde informatie zien over een bepaald lid.","NO_MUTUAL_GUILDS":"Geen gemeenschappelijke servers","LOADING_MUTUAL_GUILDS":"Gemeenschappelijke servers aan het laden..."}');
+				var locales_nl_namespaceObject = __webpack_require__.t(nl_namespaceObject, 2);
+				const de_namespaceObject = JSON.parse('{"CONNECTIONS":"Verknüpfungen","NO_CONNECTIONS":"Keine Verknüpfungen","LOADING_CONNECTIONS":"Lade Verknüpfungen...","LOADING_LAST_MESSAGE":"Lade letzte Nachricht...","LOADING_JOINED_AT":"Lade Beitrittsdatum...","MEMBER_WAS_NOT_FOUND":"Mitglied konnte nicht gefunden werden.","FAILED_TO_FETCH":"Fehler beim Laden","USERINFO_CMD_DESC":"Zeigt einige Informationen über einen bestimmten Nutzer.","NO_MUTUAL_GUILDS":"Keine gemeinsamen Server.","LOADING_MUTUAL_GUILDS":"Gemeinsame Server werden geladen."}');
+				var locales_de_namespaceObject = __webpack_require__.t(de_namespaceObject, 2);
+				const en_US_namespaceObject = JSON.parse('{"CONNECTIONS":"Connections","NO_CONNECTIONS":"No Connections","LOADING_CONNECTIONS":"Loading Connections...","LOADING_LAST_MESSAGE":"Loading Last Message","LOADING_JOINED_AT":"Loading Joined At","MEMBER_WAS_NOT_FOUND":"Member Was Not Found!","FAILED_TO_FETCH":"Failed To Fetch","USERINFO_CMD_DESC":"User Information","NO_MUTUAL_GUILDS":"No mutual guilds.","LOADING_MUTUAL_GUILDS":"Loading mutual guilds..."}');
+				var locales_en_US_namespaceObject = __webpack_require__.t(en_US_namespaceObject, 2);
+				const tr_namespaceObject = JSON.parse('{"CONNECTIONS":"Bağlantılar","NO_CONNECTIONS":"Bağlantı yok!","LOADING_CONNECTIONS":"Bağlantılar yükleniyor..","LOADING_LAST_MESSAGE":"Son mesaj yükleniyor..","LOADING_JOINED_AT":"Giriş tarihi yükleniyor..","MEMBER_WAS_NOT_FOUND":"Kullanıcı bulunamadı!","FAILED_TO_FETCH":"Alınamadı!","USERINFO_CMD_DESC":"Belirli bir kullanıcı hakkında bazı bilgiler verir.","NO_MUTUAL_GUILDS":"Ortak sunucu yok!","LOADING_MUTUAL_GUILDS":"Ortak sunucular yükleniyor!"}');
+				var locales_tr_namespaceObject = __webpack_require__.t(tr_namespaceObject, 2);
+				const fr_namespaceObject = JSON.parse('{"CONNECTIONS":"Connexions","NO_CONNECTIONS":"Pas de connexion!","LOADING_CONNECTIONS":"Chargement des connexions...","LOADING_LAST_MESSAGE":"Chargement du dernier message...","LOADING_JOINED_AT":"Chargement de la date d\'entrée...","MEMBER_WAS_NOT_FOUND":"Membre non trouvé","FAILED_TO_FETCH":"Échec de la récupération","USERINFO_CMD_DESC":"Informations sur un utilisateur spécifique","NO_MUTUAL_GUILDS":"Pas de serveur en commun","LOADING_MUTUAL_GUILDS":"Chargement des serveurs en communs..."}');
+				const vi_namespaceObject = JSON.parse('{"CONNECTIONS":"Kết nối","NO_CONNECTIONS":"Không có kết nối!","LOADING_CONNECTIONS":"Đang tải các kết nối...","LOADING_LAST_MESSAGE":"Đang tải tin nhắn cuối cùng...","LOADING_JOINED_AT":"Đang tải ngày tham gia...","MEMBER_WAS_NOT_FOUND":"Không tìm thấy thành viên!","FAILED_TO_FETCH":"Nạp dữ liệu thất bại!","USERINFO_CMD_DESC":"Hiển thị một số thông tin về một người dùng cụ thể.","NO_MUTUAL_GUILDS":"Không có server chung nào","LOADING_MUTUAL_GUILDS":"Đang tải server chung..."}');
+				const es_ES_namespaceObject = JSON.parse('{"CONNECTIONS":"Conexiones","NO_CONNECTIONS":"Sin conexiones","LOADING_CONNECTIONS":"Cargando conexiones...","LOADING_LAST_MESSAGE":"Cargando el último mensaje...","LOADING_JOINED_AT":"Cargando la fecha de ingreso...","MEMBER_WAS_NOT_FOUND":"¡El miembro no fue encontrado!","FAILED_TO_FETCH":"¡No se pudo obtener!","USERINFO_CMD_DESC":"Muestra información sobre un usuario en específico.","NO_MUTUAL_GUILDS":"Sin servidores en común","LOADING_MUTUAL_GUILDS":"Cargando los servidores en común..."}');
+				const sv_SE_namespaceObject = JSON.parse('{"CONNECTIONS":"anslutningar","NO_CONNECTIONS":"inga anslutningar","LOADING_CONNECTIONS":"laddar anslutningar","LOADING_LAST_MESSAGE":"läser in det senaste meddelandet","LOADING_JOINED_AT":"lastning gick med vid","MEMBER_WAS_NOT_FOUND":"medlem hittades inte","FAILED_TO_FETCH":"misslyckades med att hämta","USERINFO_CMD_DESC":"visar lite information om en specifik användare","NO_MUTUAL_GUILDS":"inga ömsesidiga servrar","LOADING_MUTUAL_GUILDS":"laddar ömsesidiga servrar"}');
+				const pt_BR_namespaceObject = JSON.parse('{"CONNECTIONS":"Conexões","NO_CONNECTIONS":"Sem conexões","LOADING_CONNECTIONS":"Carregando conexões","LOADING_LAST_MESSAGE":"Carregando última mensagem","LOADING_JOINED_AT":"Carregando entrou há","MEMBER_WAS_NOT_FOUND":"Membro não encontrado!","FAILED_TO_FETCH":"Falha na busca","USERINFO_CMD_DESC":"Mostra algumas informações de um usuário específico.","NO_MUTUAL_GUILDS":"Sem servidores em comum","LOADING_MUTUAL_GUILDS":"Carregando os servidores em comum"}');
+				const locales = {
+					"en-US": locales_en_US_namespaceObject,
+					"es-ES": es_ES_namespaceObject,
+					"sv-SE": sv_SE_namespaceObject,
+					"pt-BR": pt_BR_namespaceObject,
+					nl: locales_nl_namespaceObject,
+					de: locales_de_namespaceObject,
+					tr: locales_tr_namespaceObject,
+					fr: fr_namespaceObject,
+					vi: vi_namespaceObject
+				};
+				function strings_defineProperty(obj, key, value) {
+					if (key in obj) Object.defineProperty(obj, key, {
+						value,
+						enumerable: true,
+						configurable: true,
+						writable: true
+					});
+					else obj[key] = value;
+					return obj;
+				}
+				class Strings {
+					static init() {
+						this.setLanguage(i18n_default().getLocale());
+						modules_namespaceObject.Dispatcher.subscribe(constants_namespaceObject.ActionTypes.USER_SETTINGS_UPDATE, this.handleLocaleChange);
+					}
+					static shutdown() {
+						modules_namespaceObject.Dispatcher.unsubscribe(constants_namespaceObject.ActionTypes.USER_SETTINGS_UPDATE, this.handleLocaleChange);
+					}
+					static setLanguage(lang) {
+						this._strings = locales[lang] ?? locales["en-US"];
+					}
+					static hasString(key) {
+						return null != this._strings[key] || null != locales["en-US"][key];
+					}
+					static get(key) {
+						return this._strings[key] ?? locales["en-US"][key] ?? "String not found.";
+					}
+				}
+				strings_defineProperty(Strings, "_strings", void 0);
+				strings_defineProperty(Strings, "handleLocaleChange", (() => {
+					Strings.setLanguage(i18n_default().getLocale());
+				}));
 				const Header = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("Header");
-				class Userconnections extends ApiModule {
-					get api() {
-						return this.constructor.name;
-					}
-					task(user) {
-						return () => {
-							if (!connections_default().filter((c => Settings.get("shownConnections", {})[c.type])).length || user.bot || !Settings.get("showConnectionsSection", true)) return null;
-							const connections = (0, flux_namespaceObject.useStateFromStores)([stores_namespaceObject.UserProfile], (() => stores_namespaceObject.UserProfile.getUserProfile(user.id)?.connectedAccounts));
-							const [message, setMessage] = (0, external_BdApi_React_.useState)("");
-							(0, external_BdApi_React_.useEffect)((() => {
-								if (Array.isArray(connections) || stores_namespaceObject.UserProfile.isFetching(user.id)) return;
-								actions_namespaceObject.ProfileActions.fetchProfile(user.id).catch((error => {
-									if (~error?.message?.indexOf("Already dispatching")) return;
-									external_PluginApi_namespaceObject.Logger.error(`Failed to fetch profile for ${user.id}:\n`, error);
-									setMessage(i18n_namespaceObject.Messages.FAILED_TO_FETCH);
-								}));
-							}), [true]);
-							return external_BdApi_React_default().createElement("div", {
-								className: apis_connections.Z.connectionsBody
-							}, !connections?.length && Settings.get("showEmptyConnections", true) || connections?.length ? external_BdApi_React_default().createElement(Header, {
-								className: apis_connections.Z.container,
-								size: Header.Sizes.SIZE_12,
-								className: apis_connections.Z.header,
-								uppercase: true,
-								muted: true
-							}, connections?.length ? i18n_namespaceObject.Messages.CONNECTIONS : i18n_namespaceObject.Messages.NO_CONNECTIONS) : null, Array.isArray(connections) ? connections?.length ? external_BdApi_React_default().createElement("div", {
-								className: apis_connections.Z.connections
-							}, connections.filter((e => Settings.get("shownConnections")[e.type])).map((badge => external_BdApi_React_default().createElement(Badge, {
-								item: badge,
-								key: badge.type
-							})))) : null : message ? external_BdApi_React_default().createElement(components_namespaceObject.TooltipContainer, {
-								text: message
-							}, external_BdApi_React_default().createElement(error, {
-								className: apis_connections.Z.errorIcon
-							})) : external_BdApi_React_default().createElement(components_namespaceObject.TooltipContainer, {
-								text: i18n_namespaceObject.Messages.LOADING_CONNECTIONS
-							}, connections_default().filter((e => Settings.get("shownConnections")[e.type])).map((() => external_BdApi_React_default().createElement(circle, {
-								className: apis_connections.Z.loading
-							})))));
-						};
-					}
+				function UserConnections({
+					user
+				}) {
+					if (!connections_default().filter((c => modules_Settings.get("shownConnections", {})[c.type])).length || user.bot || !modules_Settings.get("showConnectionsSection", true)) return null;
+					const connections = (0, flux_namespaceObject.useStateFromStores)([stores_namespaceObject.UserProfile], (() => stores_namespaceObject.UserProfile.getUserProfile(user.id)?.connectedAccounts));
+					const [message, setMessage] = (0, external_BdApi_React_.useState)("");
+					(0, external_BdApi_React_.useEffect)((() => {
+						if (Array.isArray(connections) || stores_namespaceObject.UserProfile.isFetching(user.id)) return;
+						actions_namespaceObject.ProfileActions.fetchProfile(user.id).catch((error => {
+							if (~error?.message?.indexOf("Already dispatching")) return;
+							external_PluginApi_namespaceObject.Logger.error(`Failed to fetch profile for ${user.id}:\n`, error);
+							setMessage(Strings.get("FAILED_TO_FETCH"));
+						}));
+					}), []);
+					return external_BdApi_React_default().createElement("div", {
+						className: apis_connections.Z.connectionsBody
+					}, !connections?.length && modules_Settings.get("showEmptyConnections", true) || connections?.length ? external_BdApi_React_default().createElement(Header, {
+						className: (0, utils_namespaceObject.joinClassNames)(apis_connections.Z.container, apis_connections.Z.header),
+						size: Header.Sizes.SIZE_12,
+						uppercase: true,
+						muted: true
+					}, Strings.get(connections?.length ? "CONNECTIONS" : "NO_CONNECTIONS")) : null, Array.isArray(connections) ? connections?.length ? external_BdApi_React_default().createElement("div", {
+						className: apis_connections.Z.connections
+					}, connections.filter((e => modules_Settings.get("shownConnections")[e.type])).map((badge => external_BdApi_React_default().createElement(Badge, {
+						item: badge,
+						key: badge.type
+					})))) : null : message ? external_BdApi_React_default().createElement(components_namespaceObject.TooltipContainer, {
+						text: message
+					}, external_BdApi_React_default().createElement(error, {
+						className: apis_connections.Z.errorIcon
+					})) : external_BdApi_React_default().createElement(components_namespaceObject.TooltipContainer, {
+						text: Strings.get("LOADING_CONNECTIONS")
+					}, connections_default().filter((e => modules_Settings.get("shownConnections")[e.type])).map((() => external_BdApi_React_default().createElement(circle, {
+						className: apis_connections.Z.loading
+					})))));
 				}
 				function cake_extends() {
 					cake_extends = Object.assign || function(target) {
@@ -899,6 +760,60 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				}))));
 				const external_BdApi_ReactDOM_namespaceObject = BdApi.ReactDOM;
 				var external_BdApi_ReactDOM_default = __webpack_require__.n(external_BdApi_ReactDOM_namespaceObject);
+				function Utilities_extends() {
+					Utilities_extends = Object.assign || function(target) {
+						for (var i = 1; i < arguments.length; i++) {
+							var source = arguments[i];
+							for (var key in source)
+								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
+						}
+						return target;
+					};
+					return Utilities_extends.apply(this, arguments);
+				}
+				const FormItem = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("FormItem");
+				const FormText = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("FormText");
+				const FormDivider = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("FormDivider");
+				const Flex = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("Flex");
+				const {
+					marginBottom8
+				} = external_PluginApi_namespaceObject.WebpackModules.getByProps("marginBottom8");
+				class Utilities extends external_PluginApi_namespaceObject.Utilities {
+					static joinClassNames(...classNames) {
+						return classNames.filter((e => e)).join(" ");
+					}
+					static get useForceUpdate() {
+						return () => (0, external_BdApi_React_.useReducer)((n => n + 1), 0)[1];
+					}
+					static createUpdateWrapper(Component, form = true, valueProp = "value") {
+						return props => {
+							const [state, setState] = (0, external_BdApi_React_.useState)(props[valueProp]);
+							props[valueProp] = state;
+							if (form) return external_BdApi_React_default().createElement(Flex, {
+								className: marginBottom8,
+								direction: Flex.Direction.VERTICAL
+							}, external_BdApi_React_default().createElement(FormItem, {
+								title: props.name
+							}, external_BdApi_React_default().createElement(Component, Utilities_extends({}, props, {
+								onChange: value => {
+									value = value.value ?? value;
+									setState(value);
+									props.onChange(value);
+								}
+							})), external_BdApi_React_default().createElement(FormText, {
+								type: "description",
+								disabled: Boolean(props.note)
+							}, props.note)), external_BdApi_React_default().createElement(FormDivider, null));
+							else return external_BdApi_React_default().createElement(Component, Utilities_extends({}, props, {
+								onChange: value => {
+									value = value.value ?? value;
+									setState(value);
+									props.onChange(value);
+								}
+							}));
+						};
+					}
+				}
 				var dates = __webpack_require__(242);
 				function textscroller_defineProperty(obj, key, value) {
 					if (key in obj) Object.defineProperty(obj, key, {
@@ -984,13 +899,53 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						}, this.props.children));
 					}
 				}
-				class CreatedAt extends ApiModule {
-					task(userId) {
-						const text = this.parseTime(Settings.get("created_format", "Created At: $hour:$minute:$second, $day.$month.$year $daysago days"), this.extractDate(userId));
-						return () => Settings.get("useIcons", true) ? external_BdApi_React_default().createElement(components_namespaceObject.TooltipContainer, {
-							text
-						}, external_BdApi_React_default().createElement(cake, null)) : external_BdApi_React_default().createElement(TextScroller, null, text);
-					}
+				function extractDate(id) {
+					return new Date(id / 4194304 + 14200704e5);
+				}
+				function parseZeroPadding(zeroable) {
+					return zeroable <= 9 ? "0" + zeroable : zeroable;
+				}
+				function monthsAgo(date1, date2) {
+					let months = 12 * (date2.getFullYear() - date1.getFullYear());
+					months -= date1.getMonth();
+					months += date2.getMonth();
+					months = Math.abs(months);
+					return months <= 0 ? 0 : months;
+				}
+				function daysAgo(date1, date2) {
+					return Math.floor((date1.getTime() - date2.getTime()) / (1e3 * 60 * 60 * 24));
+				}
+				function yearsAgo(date1, date2) {
+					return monthsAgo(date2, date1) / 12;
+				}
+				function parseTime(format, date) {
+					if ("object" !== typeof date) date = new Date(date);
+					const today = new Date,
+						daysago = daysAgo(today, date),
+						hour12 = 0 === modules_Settings.get("12hour", 1);
+					return format.replace(/\$timelabel/g, date.getHours() >= 12 ? "PM" : "AM").replace(/\$daysago/g, daysago.toString()).replace(/\$dayname/g, date.toLocaleDateString("default", {
+						weekday: "short",
+						hour12
+					})).replace(/\$day/g, date.toLocaleDateString("default", {
+						day: "2-digit",
+						hour12
+					})).replace(/\$monthname/g, date.toLocaleDateString("default", {
+						month: "short",
+						hour12
+					})).replace(/\$monthsago/g, monthsAgo(today, date).toString()).replace(/\$month/g, date.toLocaleDateString("default", {
+						month: "2-digit",
+						hour12
+					})).replace(/\$weeksago/g, Math.floor(daysago / 7).toString()).replace(/\$yearsago/g, Math.floor(yearsAgo(today, date)).toString()).replace(/\$year/g, date.getFullYear().toString()).replace(/\$hour/g, parseZeroPadding(hour12 ? date.getHours() % 12 : date.getHours()).toString()).replace(/\$minute/g, parseZeroPadding(date.getMinutes()).toString()).replace(/\$second/g, parseZeroPadding(date.getSeconds()).toString());
+				}
+				const DEFAULT_FORMAT = "Created At: $hour:$minute:$second, $day.$month.$year $daysago days";
+				function CreatedAt({
+					userId
+				}) {
+					const format = modules_Settings.get("created_format", DEFAULT_FORMAT);
+					const text = parseTime(format, extractDate(userId));
+					return modules_Settings.get("useIcons", true) ? external_BdApi_React_default().createElement(components_namespaceObject.TooltipContainer, {
+						text
+					}, external_BdApi_React_default().createElement(cake, null)) : external_BdApi_React_default().createElement(TextScroller, null, text);
 				}
 				function calendar_extends() {
 					calendar_extends = Object.assign || function(target) {
@@ -1060,52 +1015,66 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					else obj[key] = value;
 					return obj;
 				}
+				const resolveId = function(guildId, userId) {
+					return `${guildId}_${userId}`;
+				};
 				const JoinedAtDates = new Map,
 					fetchingQueue = new Set;
-				const JoinedAt = new class extends flux_namespaceObject.Store {
-					resolveId(...args) {
-						return args.join("_");
+				let stopped = false;
+				const handleGuildMembersChunk = function(data) {
+					if (stopped || !data || !Array.isArray(data.members)) return;
+					if (data.notFound?.length)
+						for (let i = 0; i < data.notFound.length; i++) {
+							const userId = data.notFound[i];
+							fetchingQueue.delete(userId);
+							JoinedAtDates.set(resolveId(data.guildId, data.notFound[i]), {
+								data: "MEMBER_WAS_NOT_FOUND",
+								fetch: Date.now(),
+								status: "failure"
+							});
+						}
+					for (let i = 0; i < data.members.length; i++) {
+						const member = data.members[i];
+						if (!member || !member.user) continue;
+						fetchingQueue.delete(member.user.id);
+						JoinedAtDates.set(resolveId(data.guildId, member.user.id), {
+							data: new Date(member.joined_at),
+							fetch: Date.now(),
+							status: "success"
+						});
+					}
+				};
+				class JoinedAtStore extends flux_namespaceObject.Store {
+					constructor(...args) {
+						super(...args);
+						joinedAt_defineProperty(this, "logger", new utils_namespaceObject.Logger("JoinedAtStore"));
 					}
 					get fetching() {
 						return fetchingQueue;
 					}
-					constructor() {
-						super(modules_namespaceObject.Dispatcher, {});
-						joinedAt_defineProperty(this, "logger", new utils_namespaceObject.Logger("JoinedAtStore"));
-					}
 					getState() {
 						return JoinedAtDates;
 					}
+					clear() {
+						JoinedAtDates.clear();
+						fetchingQueue.clear();
+					}
 					has(guildId, userId) {
-						return null !== this.getDate(guildId, userId) && JoinedAtDates.has(this.resolveId(guildId, userId));
+						return null !== this.getDate(guildId, userId) && JoinedAtDates.has(resolveId(guildId, userId));
 					}
 					isFetching(guildId, userId) {
-						return fetchingQueue.has(this.resolveId(guildId, userId));
+						return fetchingQueue.has(resolveId(guildId, userId));
 					}
 					getDate(guildId, userId) {
-						const data = JoinedAtDates.get(this.resolveId(guildId, userId));
+						const data = JoinedAtDates.get(resolveId(guildId, userId));
 						if (!data || Date.now() - data.fetch > 6e5) return null;
 						return data;
 					}
-					registerCallback(guildId, userId, callback) {
-						const handleCallback = data => {
-							if (data.guildId !== guildId) return;
-							callback(data);
-							modules_namespaceObject.Dispatcher.unsubscribe("GUILD_MEMBERS_CHUNK", handleCallback);
-						};
-						modules_namespaceObject.Dispatcher.subscribe("GUILD_MEMBERS_CHUNK", handleCallback);
-					}
-					setFailed(id, reason) {
-						fetchingQueue.delete(id);
-						JoinedAtDates.set(id, {
-							data: reason,
-							fetch: Date.now(),
-							status: "failure"
-						});
-						this.emitChange();
+					destroy() {
+						stopped = true;
 					}
 					async fetch(guildId, userId) {
-						const id = this.resolveId(guildId, userId);
+						const id = resolveId(guildId, userId);
 						if (fetchingQueue.has(id)) return;
 						fetchingQueue.add(id);
 						if (stores_namespaceObject.Members.getMember(guildId, userId)) {
@@ -1117,68 +1086,52 @@ function buildPlugin([BasePlugin, PluginApi]) {
 							});
 							return this.emitChange();
 						}
-						const timeout = setTimeout((() => {
-							this.setFailed(id, "FAILED_TO_FETCH");
+						setTimeout((() => {
+							if (this.has(guildId, userId)) return;
+							JoinedAtDates.set(id, {
+								data: "FAILED_TO_FETCH",
+								fetch: Date.now(),
+								status: "failure"
+							});
 							this.logger.error("Request timed out, didn't got a response after 1 minute.");
 						}), 6 * 1e4);
-						this.registerCallback(guildId, userId, (data => {
-							if (data.notFound.indexOf(userId) > -1) this.setFailed(id, "MEMBER_WAS_NOT_FOUND");
-							else {
-								const member = data.members.find((e => e?.user?.id === userId));
-								if (member) JoinedAtDates.set(id, {
-									data: new Date(member.joined_at),
-									fetch: Date.now(),
-									status: "success"
-								});
-								else {
-									this.setFailed(id, "MEMBER_WAS_NOT_FOUND");
-									this.logger.info(`Member ${userId} of guild ${guildId} was not found!`);
-								}
-							}
-							fetchingQueue.delete(id);
-							clearTimeout(timeout);
-							this.emitChange();
-						}));
 						actions_namespaceObject.GuildActions.requestMembersById(guildId, userId);
 					}
-				};
+				}
+				const JoinedAt = new JoinedAtStore(modules_namespaceObject.Dispatcher, {
+					[constants_namespaceObject.ActionTypes.GUILD_MEMBERS_CHUNK]: handleGuildMembersChunk
+				});
 				const joinedAt = JoinedAt;
-				class joinedDate_JoinedAt extends ApiModule {
-					get api() {
-						return this.constructor.name;
-					}
-					get format() {
-						return Settings.get("joined_format", "Joined At: $hour:$minute:$second, $day.$month.$year $daysago days");
-					}
-					task(userId) {
-						return external_BdApi_React_default().memo((() => {
-							const guildId = stores_namespaceObject.SelectedGuilds.getGuildId();
-							const joined = (0, flux_namespaceObject.useStateFromStores)([joinedAt], (() => joinedAt.getDate(guildId, userId)));
-							const [message, setMessage] = (0, external_BdApi_React_.useState)("");
-							(0, external_BdApi_React_.useEffect)((() => {
-								if (joinedAt.has(guildId, userId) || joinedAt.isFetching(guildId, userId)) return;
-								if (!guildId) return void setMessage(i18n_namespaceObject.Messages.FAILED_TO_FETCH);
-								joinedAt.fetch(guildId, userId);
-							}), []);
-							const useIcons = Settings.get("useIcons", true);
-							const isFailed = !joined || "failure" === joined.status;
-							return !isFailed ? useIcons ? external_BdApi_React_default().createElement(components_namespaceObject.TooltipContainer, {
-								text: this.parseTime(this.format, joined.data)
-							}, external_BdApi_React_default().createElement(calendar, null)) : external_BdApi_React_default().createElement(TextScroller, null, this.parseTime(this.format, joined.data)) : message || isFailed && i18n_namespaceObject.Messages[joined?.data] ? useIcons ? external_BdApi_React_default().createElement(components_namespaceObject.TooltipContainer, {
-								text: message || i18n_namespaceObject.Messages[joined.data]
-							}, external_BdApi_React_default().createElement(error, {
-								className: dates.Z.errorIcon
-							})) : external_BdApi_React_default().createElement(TextScroller, {
-								style: {
-									color: "red"
-								}
-							}, message || i18n_namespaceObject.Messages[joined.data]) : external_BdApi_React_default().createElement(components_namespaceObject.TooltipContainer, {
-								text: i18n_namespaceObject.Messages.LOADING_JOINED_AT
-							}, useIcons ? external_BdApi_React_default().createElement(cube, {
-								className: dates.Z.loading
-							}) : external_BdApi_React_default().createElement(LoadingText, null));
-						}));
-					}
+				const joinedDate_DEFAULT_FORMAT = "Joined At: $hour:$minute:$second, $day.$month.$year $daysago days";
+				function JoinedAtDate({
+					userId
+				}) {
+					const format = modules_Settings.get("joined_format", joinedDate_DEFAULT_FORMAT);
+					const guildId = stores_namespaceObject.SelectedGuilds.getGuildId();
+					const joined = (0, flux_namespaceObject.useStateFromStores)([joinedAt], (() => joinedAt.getDate(guildId, userId)));
+					const [message, setMessage] = (0, external_BdApi_React_.useState)("");
+					(0, external_BdApi_React_.useEffect)((() => {
+						if (joinedAt.has(guildId, userId) || joinedAt.isFetching(guildId, userId)) return;
+						if (!guildId) return void setMessage(Strings.get("FAILED_TO_FETCH"));
+						joinedAt.fetch(guildId, userId);
+					}), []);
+					const useIcons = modules_Settings.get("useIcons", true);
+					const isFailed = !joined || "failure" === joined.status;
+					return !isFailed ? useIcons ? external_BdApi_React_default().createElement(components_namespaceObject.TooltipContainer, {
+						text: parseTime(format, joined.data)
+					}, external_BdApi_React_default().createElement(calendar, null)) : external_BdApi_React_default().createElement(TextScroller, null, parseTime(format, joined.data)) : message || isFailed && Strings.hasString(joined?.data) ? useIcons ? external_BdApi_React_default().createElement(components_namespaceObject.TooltipContainer, {
+						text: message || Strings.get(joined.data)
+					}, external_BdApi_React_default().createElement(error, {
+						className: dates.Z.errorIcon
+					})) : external_BdApi_React_default().createElement(TextScroller, {
+						style: {
+							color: "red"
+						}
+					}, message || Strings.get(joined.data)) : external_BdApi_React_default().createElement(components_namespaceObject.TooltipContainer, {
+						text: Strings.get("LOADING_JOINED_AT")
+					}, useIcons ? external_BdApi_React_default().createElement(cube, {
+						className: dates.Z.loading
+					}) : external_BdApi_React_default().createElement(LoadingText, null));
 				}
 				function textbubble_extends() {
 					textbubble_extends = Object.assign || function(target) {
@@ -1202,7 +1155,6 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				}), external_BdApi_React_default().createElement("path", {
 					d: "M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM9 11H7V9h2v2zm4 0h-2V9h2v2zm4 0h-2V9h2v2z"
 				}));
-				const constants_namespaceObject = Modules["@discord/constants"];
 				const sanitize_namespaceObject = Modules["@discord/sanitize"];
 				const external_PluginApi_DiscordModules_namespaceObject = PluginApi.DiscordModules;
 				function lastMessage_defineProperty(obj, key, value) {
@@ -1215,7 +1167,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					else obj[key] = value;
 					return obj;
 				}
-				function resolveId(...args) {
+				function lastMessage_resolveId(...args) {
 					return args.join("_");
 				}
 				const lastMessage_fetchingQueue = new Set,
@@ -1224,14 +1176,13 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					message,
 					channelId
 				}) {
-					lastMessages.set(resolveId(message.author.id, channelId), {
+					lastMessages.set(lastMessage_resolveId(message.author.id, channelId), {
 						channelId,
 						messageId: message.id,
 						data: new Date(message.timestamp),
 						fetch: Date.now(),
 						status: "success"
 					});
-					LastMessage.emitChange();
 				}
 				function handleMessageDelete({
 					messageId,
@@ -1239,8 +1190,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				}) {
 					for (const [userId, result] of lastMessages) {
 						if (result.messageId !== messageId || result.channelId !== channelId) continue;
-						lastMessages.delete(resolveId(userId, channelId));
-						LastMessage.emitChange();
+						lastMessages.delete(lastMessage_resolveId(userId, channelId));
 					}
 				}
 				class LastMessageStore extends flux_namespaceObject.Store {
@@ -1257,20 +1207,20 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						return lastMessage_fetchingQueue;
 					}
 					isFetching(userId, channelId) {
-						return lastMessage_fetchingQueue.has(resolveId(userId, channelId));
+						return lastMessage_fetchingQueue.has(lastMessage_resolveId(userId, channelId));
 					}
 					get(userId, channelId) {
-						const cached = lastMessages.get(resolveId(userId, channelId));
+						const cached = lastMessages.get(lastMessage_resolveId(userId, channelId));
 						if (!cached || Date.now() - cached.fetch > 6e5) return null;
 						return cached;
 					}
 					has(userId, channelId) {
-						return null !== this.get(userId, channelId) && lastMessages.has(resolveId(userId, channelId));
+						return null != this.get(userId, channelId) && lastMessages.has(lastMessage_resolveId(userId, channelId));
 					}
-					fetch(userId, roomId, isGuild = false, attemp = 1) {
-						const id = resolveId(userId, roomId);
+					fetch(userId, roomId, isGuild = false, attempt = 1) {
+						const id = lastMessage_resolveId(userId, roomId);
 						if (lastMessage_fetchingQueue.has(id) || this.paused) return Promise.resolve();
-						if (attemp > this.MAX_RETRIES) {
+						if (attempt > this.MAX_RETRIES) {
 							lastMessage_fetchingQueue.delete(id);
 							lastMessages.set(id, {
 								channelId: roomId,
@@ -1280,6 +1230,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 								status: "failure"
 							});
 							this.logger.error(`Request failed after ${this.MAX_RETRIES} attempts.`);
+							this.emitChange();
 							return Promise.resolve();
 						}
 						lastMessage_fetchingQueue.add(id);
@@ -1322,7 +1273,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 									this.paused = true;
 									setTimeout((() => {
 										this.paused = false;
-										this.fetch(userId, roomId, isGuild, attemp).then(resolve).catch(reject);
+										this.fetch(userId, roomId, isGuild, attempt).then(resolve).catch(reject);
 									}), error.body.retry_after + 1e3);
 								} else reject(error);
 								lastMessage_fetchingQueue.delete(id);
@@ -1335,99 +1286,67 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					MESSAGE_DELETE: handleMessageDelete
 				});
 				const stores_lastMessage = LastMessage;
-				class LastMessageApi extends ApiModule {
-					get api() {
-						return this.constructor.name;
+				const lastMessage_DEFAULT_FORMAT = "Last Message: $hour:$minute:$second, $day.$month.$year $daysago days";
+				function LastMessageDate({
+					user
+				}) {
+					const format = modules_Settings.get("lastmessage_format", lastMessage_DEFAULT_FORMAT);
+					const roomId = stores_namespaceObject.SelectedGuilds.getGuildId() || stores_namespaceObject.SelectedChannels.getChannelId();
+					const isGuild = Boolean(stores_namespaceObject.SelectedGuilds.getGuildId());
+					const lastMessage = (0, flux_namespaceObject.useStateFromStores)([stores_lastMessage], (() => stores_lastMessage.get(user.id, roomId)));
+					const [errorMessage, setErrorMessage] = (0, external_BdApi_React_.useState)("");
+					(0, external_BdApi_React_.useEffect)((() => {
+						if (stores_lastMessage.isFetching(user.id, roomId) || stores_lastMessage.has(user.id, roomId)) return;
+						if (!roomId) return setErrorMessage("Cannot resolve channel/guild id.");
+						stores_lastMessage.fetch(user.id, roomId, isGuild).catch((error => {
+							external_PluginApi_namespaceObject.Logger.error(`Failed to fetch LastMessage from ${user.tag}:\n`, error);
+						}));
+					}), []);
+					const transitionToMessage = () => {
+						if (!lastMessage.channelId || !lastMessage.messageId) return;
+						utils_namespaceObject.Navigation.replaceWith(isGuild ? `/channels/${stores_namespaceObject.SelectedGuilds.getGuildId()}/${lastMessage.channelId}/${lastMessage.messageId}` : `/channels/@me/${lastMessage.channelId}/${lastMessage.messageId}`);
+					};
+					const failed = "failure" === lastMessage?.status;
+					const shouldUseIcon = modules_Settings.get("useIcons", true);
+					return lastMessage?.data && !failed ? shouldUseIcon ? external_BdApi_React_default().createElement(components_namespaceObject.TooltipContainer, {
+						text: parseTime(format, lastMessage.data)
+					}, external_BdApi_React_default().createElement(textbubble, {
+						onClick: transitionToMessage
+					})) : external_BdApi_React_default().createElement(TextScroller, {
+						onClick: transitionToMessage
+					}, parseTime(format, lastMessage.data)) : errorMessage || failed && Strings.hasString(lastMessage.data) ? shouldUseIcon ? external_BdApi_React_default().createElement(components_namespaceObject.TooltipContainer, {
+						text: errorMessage || Strings.get(lastMessage.data)
+					}, external_BdApi_React_default().createElement(error, {
+						className: dates.Z.errorIcon
+					})) : external_BdApi_React_default().createElement(TextScroller, {
+						style: {
+							color: "red"
+						}
+					}, errorMessage || Strings.get(lastMessage.data)) : external_BdApi_React_default().createElement(components_namespaceObject.TooltipContainer, {
+						text: Strings.get("LOADING_LAST_MESSAGE")
+					}, shouldUseIcon ? external_BdApi_React_default().createElement(cube, {
+						className: dates.Z.loading
+					}) : external_BdApi_React_default().createElement(LoadingText, null));
+				}
+				const pages_namespaceObject = JSON.parse('[{"name":"General","icon":"Wrench","items":[{"type":"switch","name":"Use Icons","note":"Defines if icons should be used to show any date.","id":"useIcons","value":true},{"type":"radio","name":"Time Format","value":1,"id":"12hour","options":[{"value":1,"name":"24 hour"},{"value":0,"name":"12 hour"}]},{"type":"divider"},{"type":"category","name":"Variables","items":[{"type":"replacement","prefix":"$timelabel","description":"Replaces the current time label. eg AM or PM."},{"type":"replacement","prefix":"$day","description":"Replaces the current day."},{"type":"replacement","prefix":"$daysago","description":"Replaces with a number of how many days it\'s ago."},{"type":"replacement","prefix":"$dayname","description":"Replaces the shorted dayname."},{"type":"replacement","prefix":"$weeksago","description":"Replaces with a number of how many weeks it\'s ago."},{"type":"replacement","prefix":"$month","description":"Replaces the month."},{"type":"replacement","prefix":"$monthname","description":"Replaces the shorted monthname."},{"type":"replacement","prefix":"$monthsago","description":"Replaces with a number of how many months it\'s ago."},{"type":"replacement","prefix":"$year","description":"Replaces the year."},{"type":"replacement","prefix":"$yearsago","description":"Replaces with a number of how many years it\'s ago."},{"type":"replacement","prefix":"$hour","description":"Replaces the hour(s)"},{"type":"replacement","prefix":"$minute","description":"Replaces the minute(s)"},{"type":"replacement","prefix":"$second","description":"Replaces the second(s)"}]}]},{"name":"Panel Popout","icon":"User","items":[{"type":"switch","name":"Enable","id":"showPanelPopout","value":true},{"type":"radio","name":"Open on","id":"panelPopoutType","value":"click","options":[{"name":"Right Click","value":"contextmenu"},{"name":"Left Click","value":"click"}]}]},{"name":"Created At","icon":"Cake","items":[{"type":"switch","name":"Show in UserPopout","id":"created_show_up","note":"Defines if the creation date should be shown in the UserPopout.","value":true},{"type":"switch","name":"Show in UserProfile","id":"created_show_profile","note":"Defines if the creation date should be shown in the UserProfile.","value":true},{"type":"text","name":"Created At","note":"Format of the Created at date. Read the variables section in the general settings to understand how it works.","id":"created_format","value":"Created At: $hour:$minute:$second, $day.$month.$year $daysago days"}]},{"name":"Joined At","icon":"Calendar","items":[{"type":"switch","name":"Show in UserPopout","id":"joined_show_up","note":"Defines if the joined date should be shown in the UserPopout.","value":true},{"type":"switch","name":"Show in UserProfile","id":"joined_show_profile","note":"Defines if the joined date should be shown in the UserProfile.","value":true},{"type":"text","name":"Joined At","note":"Format of the joined at date. Read the variables section in the general settings to understand how it works.","id":"joined_format","value":"Joined At: $hour:$minute:$second, $day.$month.$year $daysago days"}]},{"name":"Last Message At","icon":"TextBubble","items":[{"type":"switch","name":"Show in UserPopout","id":"lastmessage_show_up","note":"Defines if the last message date should be shown in the UserPopout.","value":true},{"type":"switch","name":"Show in UserProfile","id":"lastmessage_show_profile","note":"Defines if the last message date should be shown in the UserProfile.","value":true},{"type":"text","name":"Last Message","note":"Format of the LastMessage at date. Read the variables section in the general settings to understand how it works.","id":"lastmessage_format","value":"Last Message At: $hour:$minute:$second, $day.$month.$year $daysago days"}]},{"name":"Connections","icon":"Chain","items":[{"type":"switch","name":"Enable Section","note":"Enables this section in the user popout.","id":"showConnectionsSection","value":true},{"type":"switch","name":"Show Empty","note":"Show a \\"NO CONNECTIONS\\" placeholder if the user has no connections.","id":"showEmptyConnections","value":true},{"type":"switch","name":"Show Verified","note":"Shows a little verified badge below the icon if the connection is verified.","id":"showVerifiedConnections","value":true},{"type":"icons"}]},{"name":"Activity Icons","icon":"GamePad","items":[{"type":"switch","name":"Enable Activity Icons","note":null,"id":"activityIcons","value":true},{"type":"switch","name":"Disable Bots","note":"Disables the icon for bots, since the most always have something with \'Playing: {...}\' in their statuses.","id":"disableIconsForBots","value":true},{"type":"radio","name":"Activity Icon State","note":"Replaces the activity icon in the activity text of the member list.","id":"activityIconState","value":0,"disabled":false,"options":[{"name":"Replace with associated icon","value":0},{"name":"Don\'t do anything","value":1},{"name":"Hide it","value":2}]},{"type":"switch","name":"Show Gamepad","note":"This shows a gamepad icon if an icon for the activity isn\'t available.","id":"showGamepad","value":true}]},{"name":"Mutual Servers","icon":"Mutual","items":[{"type":"switch","name":"Enable Mutual Servers","note":"This enables/disables the mutual servers section in the user popout","id":"showMutualGuilds","value":true},{"type":"switch","name":"Disable for yourself","note":"Disables the mutual servers section for you. (it will just show all your guilds)","id":"hideMutualGuildsCurrentUser","value":true},{"type":"switch","name":"Show empty message","note":"This defines if an empty message \'no mutual servers\' should be shown if the user has no mutual servers with you","id":"showEmptyMutualGuilds","value":true},{"type":"switch","name":"Stack Icons","note":"Stacks the icons so it takes less space.","id":"stackMutualServers","value":false}]},{"name":"Translation Credits","icon":"Language","items":[{"type":"translation","name":"Turkish","id":"tr","note":"@IMaWeebツ#6931"},{"type":"translation","name":"English","id":"en-US","note":"@It\'s Rad, Not Red#0001"},{"type":"translation","name":"German","id":"de","note":"@l0c4lh057#9748, @SteffoSpieler#1868"},{"type":"translation","name":"Dutch","id":"nl","note":"@th0masterharambe#0001"},{"type":"translation","name":"Vietnamese","id":"vi","note":"@MH#5893"},{"type":"translation","name":"Spanish","id":"es-ES","note":"@DrPuc##2048"},{"type":"translation","name":"Swedish","id":"sv-SE","note":"@toatl#7460"},{"type":"translation","name":"Portuguese (Brazil)","id":"pt-BR","note":"@Dominic#1111"},{"type":"translation","name":"French","id":"fr","note":"@LemCent321#1663"}]}]');
+				var settings = __webpack_require__(128);
+				class Logger {
+					static error(...message) {
+						this._log("error", ...message);
 					}
-					get format() {
-						return Settings.get("lastmessage_format", "Last Message: $hour:$minute:$second, $day.$month.$year $daysago days");
+					static warn(...message) {
+						this._log("warn", ...message);
 					}
-					task(user) {
-						return () => {
-							const roomId = stores_namespaceObject.SelectedGuilds.getGuildId() || stores_namespaceObject.SelectedChannels.getChannelId();
-							const isGuild = Boolean(stores_namespaceObject.SelectedGuilds.getGuildId());
-							const lastMessage = (0, flux_namespaceObject.useStateFromStores)([stores_lastMessage], (() => stores_lastMessage.get(user.id, roomId)));
-							const [errorMessage, setErrorMessage] = (0, external_BdApi_React_.useState)("");
-							(0, external_BdApi_React_.useEffect)((() => {
-								if (stores_lastMessage.isFetching(user.id, roomId) || stores_lastMessage.has(user.id, roomId)) return;
-								if (!roomId) return setErrorMessage("Cannot resolve channel/guild id.");
-								stores_lastMessage.fetch(user.id, roomId, isGuild).catch((error => {
-									this.error(`Failed to fetch LastMessage from ${user.tag}:\n`, error);
-								}));
-							}), []);
-							const transitionToMessage = () => {
-								if (!lastMessage.channelId || !lastMessage.messageId) return;
-								utils_namespaceObject.Navigation.replaceWith(isGuild ? `/channels/${stores_namespaceObject.SelectedGuilds.getGuildId()}/${lastMessage.channelId}/${lastMessage.messageId}` : `/channels/@me/${lastMessage.channelId}/${lastMessage.messageId}`);
-							};
-							const failed = "failure" === lastMessage?.status;
-							const shouldUseIcon = Settings.get("useIcons", true);
-							return lastMessage?.data && !failed ? shouldUseIcon ? external_BdApi_React_default().createElement(components_namespaceObject.TooltipContainer, {
-								text: this.parseTime(this.format, lastMessage.data)
-							}, external_BdApi_React_default().createElement(textbubble, {
-								onClick: transitionToMessage
-							})) : external_BdApi_React_default().createElement(TextScroller, {
-								onClick: transitionToMessage
-							}, this.parseTime(this.format, lastMessage.data)) : errorMessage || failed && i18n_namespaceObject.Messages[lastMessage.data] ? shouldUseIcon ? external_BdApi_React_default().createElement(components_namespaceObject.TooltipContainer, {
-								text: errorMessage || i18n_namespaceObject.Messages[lastMessage.data]
-							}, external_BdApi_React_default().createElement(error, {
-								className: dates.Z.errorIcon
-							})) : external_BdApi_React_default().createElement(TextScroller, {
-								style: {
-									color: "red"
-								}
-							}, errorMessage || i18n_namespaceObject.Messages[lastMessage.data]) : external_BdApi_React_default().createElement(components_namespaceObject.TooltipContainer, {
-								text: i18n_namespaceObject.Messages.LOADING_LAST_MESSAGE
-							}, shouldUseIcon ? external_BdApi_React_default().createElement(cube, {
-								className: dates.Z.loading
-							}) : external_BdApi_React_default().createElement(LoadingText, null));
-						};
+					static info(...message) {
+						this._log("info", ...message);
+					}
+					static log(...message) {
+						this._log("log", ...message);
+					}
+					static _log(level = "log", ...message) {
+						console[level](`%c[${package_namespaceObject.um.u2}]%c`, "color: #0870f3; font-weight: 700;", "", ...message);
 					}
 				}
-				const defaultConnections = {
-					battlenet: {
-						icon: "/assets/8c289d499232cd8e9582b4a5639d9d1d.png"
-					},
-					facebook: {
-						icon: "/assets/8d8f815f3d81a33b1e70ec7c22e1b6fe.png",
-						link: "https://www.facebook.com/profile.php?id={{userId}}"
-					},
-					leagueoflegends: {
-						icon: "/assets/806953fe1cc616477175cbcdf90d5cd3.png"
-					},
-					reddit: {
-						icon: "/assets/3abe9ce5a00cc24bd8aae04bf5968f4c.png",
-						link: "https://www.reddit.com/user/{{user}}"
-					},
-					spotify: {
-						icon: "/assets/f0655521c19c08c4ea4e508044ec7d8c.png",
-						link: "https://open.spotify.com/user/{{user}}"
-					},
-					steam: {
-						icon: "/assets/f09c1c70a67ceaaeb455d163f3f9cbb8.png",
-						link: "https://steamcommunity.com/profiles/{{userId}}"
-					},
-					twitch: {
-						icon: "/assets/edbbf6107b2cd4334d582b26e1ac786d.png",
-						link: "https://twitch.tv/{{user}}"
-					},
-					twitter: {
-						icon: "/assets/4662875160dc4c56954003ebda995414.png",
-						link: "https://twitter.com/{{user}}"
-					},
-					xbox: {
-						icon: "/assets/0d44ba28e39303de3832db580a252456.png"
-					},
-					youtube: {
-						icon: "/assets/449cca50c1452b4ace3cbe9bc5ae0fd6.png",
-						link: "https://www.youtube.com/channel/{{userId}}"
-					},
-					github: {
-						icon: "/assets/5d69e29f0d71aaa04ed9725100199b4e.png",
-						link: "https://github.com/{{user}}"
-					}
-				};
-				const pages_namespaceObject = JSON.parse('[{"name":"General","icon":"Wrench","items":[{"type":"switch","name":"Use Icons","note":"Defines if icons should be used to show any date.","id":"useIcons","value":true},{"type":"radio","name":"Time Format","value":1,"id":"12hour","options":[{"value":1,"name":"24 hour"},{"value":0,"name":"12 hour"}]},{"type":"divider"},{"type":"category","name":"Variables","items":[{"type":"replacement","prefix":"$timelabel","description":"Replaces the current time label. eg AM or PM."},{"type":"replacement","prefix":"$day","description":"Replaces the current day."},{"type":"replacement","prefix":"$daysago","description":"Replaces with a number of how many days it\'s ago."},{"type":"replacement","prefix":"$dayname","description":"Replaces the shorted dayname."},{"type":"replacement","prefix":"$weeksago","description":"Replaces with a number of how many weeks it\'s ago."},{"type":"replacement","prefix":"$month","description":"Replaces the month."},{"type":"replacement","prefix":"$monthname","description":"Replaces the shorted monthname."},{"type":"replacement","prefix":"$monthsago","description":"Replaces with a number of how many months it\'s ago."},{"type":"replacement","prefix":"$year","description":"Replaces the year."},{"type":"replacement","prefix":"$yearsago","description":"Replaces with a number of how many years it\'s ago."},{"type":"replacement","prefix":"$hour","description":"Replaces the hour(s)"},{"type":"replacement","prefix":"$minute","description":"Replaces the minute(s)"},{"type":"replacement","prefix":"$second","description":"Replaces the second(s)"}]}]},{"name":"Created At","icon":"Cake","items":[{"type":"switch","name":"Show in UserPopout","id":"created_show_up","note":"Defines if the creation date should be shown in the UserPopout.","value":true},{"type":"switch","name":"Show in UserProfile","id":"created_show_profile","note":"Defines if the creation date should be shown in the UserProfile.","value":true},{"type":"text","name":"Created At","note":"Format of the Created at date. Read the variables section in the general settings to understand how it works.","id":"created_format","value":"Created At: $hour:$minute:$second, $day.$month.$year $daysago days"}]},{"name":"Joined At","icon":"Calendar","items":[{"type":"switch","name":"Show in UserPopout","id":"joined_show_up","note":"Defines if the joined date should be shown in the UserPopout.","value":true},{"type":"switch","name":"Show in UserProfile","id":"joined_show_profile","note":"Defines if the joined date should be shown in the UserProfile.","value":true},{"type":"text","name":"Joined At","note":"Format of the joined at date. Read the variables section in the general settings to understand how it works.","id":"joined_format","value":"Joined At: $hour:$minute:$second, $day.$month.$year $daysago days"}]},{"name":"Last Message At","icon":"TextBubble","items":[{"type":"switch","name":"Show in UserPopout","id":"lastmessage_show_up","note":"Defines if the last message date should be shown in the UserPopout.","value":true},{"type":"switch","name":"Show in UserProfile","id":"lastmessage_show_profile","note":"Defines if the last message date should be shown in the UserProfile.","value":true},{"type":"text","name":"Last Message","note":"Format of the LastMessage at date. Read the variables section in the general settings to understand how it works.","id":"lastmessage_format","value":"Last Message At: $hour:$minute:$second, $day.$month.$year $daysago days"}]},{"name":"Connections","icon":"Chain","items":[{"type":"switch","name":"Enable Section","note":"Enables this section in the user popout.","id":"showConnectionsSection","value":true},{"type":"switch","name":"Show Empty","note":"Show a \\"NO CONNECTIONS\\" placeholder if the user has no connections.","id":"showEmptyConnections","value":true},{"type":"switch","name":"Show Verified","note":"Shows a little verified badge below the icon if the connection is verified.","id":"showVerifiedConnections","value":true},{"type":"icons"}]},{"name":"Activity Icons","icon":"GamePad","items":[{"type":"switch","name":"Enable Activity Icons","note":null,"id":"activityIcons","value":true},{"type":"switch","name":"Disable Bots","note":"Disables the icon for bots, since the most always have something with \'Playing: {...}\' in their statuses.","id":"disableIconsForBots","value":true},{"type":"radio","name":"Activity Icon State","note":"Replaces the activity icon in the activity text of the member list.","id":"activityIconState","value":0,"disabled":false,"options":[{"name":"Replace with associated icon","value":0},{"name":"Don\'t do anything","value":1},{"name":"Hide it","value":2}]},{"type":"switch","name":"Show Gamepad","note":"This shows a gamepad icon if an icon for the activity isn\'t available.","id":"showGamepad","value":true}]},{"name":"Mutual Servers","icon":"Mutual","items":[{"type":"switch","name":"Enable Mutual Servers","note":"This enables/disables the mutual servers section in the user popout","id":"showMutualGuilds","value":true},{"type":"switch","name":"Disable for yourself","note":"Disables the mutual servers section for you. (it will just show all your guilds)","id":"hideMutualGuildsCurrentUser","value":true},{"type":"switch","name":"Show empty message","note":"This defines if an empty message \'no mutual servers\' should be shown if the user has no mutual servers with you","id":"showEmptyMutualGuilds","value":true},{"type":"switch","name":"Stack Icons","note":"Stacks the icons so it takes less space.","id":"stackMutualServers","value":false}]},{"name":"Translation Credits","icon":"Language","items":[{"type":"translation","name":"Turkish","id":"tr","note":"@IMaWeebツ#6931"},{"type":"translation","name":"English","id":"en-US","note":"@It\'s Rad, Not Red#0001"},{"type":"translation","name":"German","id":"de","note":"@l0c4lh057#9748, @SteffoSpieler#1868"},{"type":"translation","name":"Dutch","id":"nl","note":"@th0masterharambe#0001"},{"type":"translation","name":"Vietnamese","id":"vi","note":"@MH#5893"},{"type":"translation","name":"Spanish","id":"es-ES","note":"@DrPuc##2048"},{"type":"translation","name":"Swedish","id":"sv-SE","note":"@toatl#7460"},{"type":"translation","name":"Portuguese (Brazil)","id":"pt-BR","note":"@Dominic#1111"},{"type":"translation","name":"French","id":"fr","note":"@LemCent321#1663"}]}]');
-				var settings = __webpack_require__(128);
 				function errorboundary_defineProperty(obj, key, value) {
 					if (key in obj) Object.defineProperty(obj, key, {
 						value,
@@ -1501,7 +1420,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				}), external_BdApi_React_default().createElement("path", {
 					d: "M501.1 395.7L384 278.6c-23.1-23.1-57.6-27.6-85.4-13.9L192 158.1V96L64 0 0 64l96 128h62.1l106.6 106.6c-13.6 27.8-9.2 62.3 13.9 85.4l117.1 117.1c14.6 14.6 38.2 14.6 52.7 0l52.7-52.7c14.5-14.6 14.5-38.2 0-52.7zM331.7 225c28.3 0 54.9 11 74.9 31l19.4 19.4c15.8-6.9 30.8-16.5 43.8-29.5 37.1-37.1 49.7-89.3 37.9-136.7-2.2-9-13.5-12.1-20.1-5.5l-74.4 74.4-67.9-11.3L334 98.9l74.4-74.4c6.6-6.6 3.4-17.9-5.7-20.2-47.4-11.7-99.6.9-136.6 37.9-28.5 28.5-41.9 66.1-41.2 103.6l82.1 82.1c8.1-1.9 16.5-2.9 24.7-2.9zm-103.9 82l-56.7-56.7L18.7 402.8c-25 25-25 65.5 0 90.5s65.5 25 90.5 0l123.6-123.6c-7.6-19.9-9.9-41.6-5-62.7zM64 472c-13.2 0-24-10.8-24-24 0-13.3 10.7-24 24-24s24 10.7 24 24c0 13.2-10.7 24-24 24z"
 				}));
-				var React = __webpack_require__(832);
+				var React = __webpack_require__(113);
 				function spotify_extends() {
 					spotify_extends = Object.assign || function(target) {
 						for (var i = 1; i < arguments.length; i++) {
@@ -1521,7 +1440,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					fill: "#1ED760",
 					d: "M32.5,0.5 C14.826888,0.5 0.5,14.826888 0.5,32.5 C0.5,50.173112 14.826888,64.5 32.5,64.5 C50.173112,64.5 64.5,50.173112 64.5,32.5 C64.5,14.826888 50.173112,0.5 32.5,0.5 Z M47.18,46.66 C46.6031412,47.595466 45.3795381,47.8902025 44.44,47.32 C36.93,42.73 27.44,41.69 16.33,44.23 C15.6145818,44.4464575 14.8381683,44.245926 14.3170501,43.7100969 C13.7959319,43.1742677 13.6170868,42.3925738 13.8533716,41.6834571 C14.0896564,40.9743403 14.7016337,40.4561564 15.44,40.34 C27.63,37.55 38.09,38.75 46.52,43.91 C47.4615306,44.487221 47.7569974,45.7183323 47.18,46.66 Z M51.1,37.95 C50.3770773,39.1205793 48.8441907,39.487042 47.67,38.77 C39.07,33.48 25.96,31.95 15.78,35.04 C14.9279216,35.2990176 14.0023844,35.0837812 13.3520294,34.4753684 C12.7016744,33.8669556 12.425306,32.9577988 12.6270294,32.0903684 C12.8287528,31.2229381 13.4779216,30.5290176 14.33,30.27 C25.95,26.74 40.4,28.45 50.28,34.52 C51.445766,35.2424019 51.8079122,36.7714637 51.09,37.94 L51.1,37.95 Z M51.44,28.88 C41.13,22.75 24.11,22.19 14.26,25.18 C13.2140022,25.5702637 12.0378133,25.3474036 11.207084,24.6015444 C10.3763547,23.8556852 10.0285164,22.7102178 10.3042349,21.6283692 C10.5799535,20.5465206 11.4336155,19.707266 12.52,19.45 C23.82,16.02 42.61,16.68 54.52,23.73 C55.8401426,24.6185116 56.2368626,26.3831995 55.4240137,27.7512295 C54.6111649,29.1192595 52.8715856,29.6146124 51.46,28.88 L51.44,28.88 Z"
 				}));
-				var twitch_React = __webpack_require__(832);
+				var twitch_React = __webpack_require__(113);
 				function twitch_extends() {
 					twitch_extends = Object.assign || function(target) {
 						for (var i = 1; i < arguments.length; i++) {
@@ -1558,7 +1477,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					"fill-rule": "nonzero",
 					xlinkHref: "#color-a"
 				})));
-				var valorant_React = __webpack_require__(832);
+				var valorant_React = __webpack_require__(113);
 				function valorant_extends() {
 					valorant_extends = Object.assign || function(target) {
 						for (var i = 1; i < arguments.length; i++) {
@@ -1581,7 +1500,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				}, valorant_React.createElement("path", {
 					d: "M0 1080 l0 -1080 1080 0 1080 0 0 1080 0 1080 -1080 0 -1080 0 0-1080z"
 				})));
-				var youtube_React = __webpack_require__(832);
+				var youtube_React = __webpack_require__(113);
 				function youtube_extends() {
 					youtube_extends = Object.assign || function(target) {
 						for (var i = 1; i < arguments.length; i++) {
@@ -1601,7 +1520,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					fill: "#FF1A1A",
 					d: "M549.655 124.083c-6.281-23.65-24.787-42.276-48.284-48.597C458.781 64 288 64 288 64S117.22 64 74.629 75.486c-23.497 6.322-42.003 24.947-48.284 48.597-11.412 42.867-11.412 132.305-11.412 132.305s0 89.438 11.412 132.305c6.281 23.65 24.787 41.5 48.284 47.821C117.22 448 288 448 288 448s170.78 0 213.371-11.486c23.497-6.321 42.003-24.171 48.284-47.821 11.412-42.867 11.412-132.305 11.412-132.305s0-89.438-11.412-132.305zm-317.51 213.508V175.185l142.739 81.205-142.739 81.201z"
 				}));
-				var gamepad_React = __webpack_require__(832);
+				var gamepad_React = __webpack_require__(113);
 				function gamepad_extends() {
 					gamepad_extends = Object.assign || function(target) {
 						for (var i = 1; i < arguments.length; i++) {
@@ -1627,7 +1546,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					width: "24",
 					height: "24"
 				})));
-				var googleChrome_React = __webpack_require__(832);
+				var googleChrome_React = __webpack_require__(113);
 				function googleChrome_extends() {
 					googleChrome_extends = Object.assign || function(target) {
 						for (var i = 1; i < arguments.length; i++) {
@@ -1674,7 +1593,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					fill: "#2196f3",
 					d: "M31,24c0,3.867-3.133,7-7,7s-7-3.133-7-7s3.133-7,7-7S31,20.133,31,24z"
 				}));
-				var headphones_React = __webpack_require__(832);
+				var headphones_React = __webpack_require__(113);
 				function headphones_extends() {
 					headphones_extends = Object.assign || function(target) {
 						for (var i = 1; i < arguments.length; i++) {
@@ -1698,7 +1617,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					d: "M12 2.00305C6.486 2.00305 2 6.48805 2 12.0031V20.0031C2 21.1071 2.895 22.0031 4 22.0031H6C7.104 22.0031 8 21.1071 8 20.0031V17.0031C8 15.8991 7.104 15.0031 6 15.0031H4V12.0031C4 7.59105 7.589 4.00305 12 4.00305C16.411 4.00305 20 7.59105 20 12.0031V15.0031H18C16.896 15.0031 16 15.8991 16 17.0031V20.0031C16 21.1071 16.896 22.0031 18 22.0031H20C21.104 22.0031 22 21.1071 22 20.0031V12.0031C22 6.48805 17.514 2.00305 12 2.00305Z",
 					fill: "currentColor"
 				})));
-				var language_React = __webpack_require__(832);
+				var language_React = __webpack_require__(113);
 				function language_extends() {
 					language_extends = Object.assign || function(target) {
 						for (var i = 1; i < arguments.length; i++) {
@@ -1722,7 +1641,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					d: "M0 0h24v24H0zm0 0h24v24H0z",
 					fill: "none"
 				}));
-				var mutual_React = __webpack_require__(832);
+				var mutual_React = __webpack_require__(113);
 				function mutual_extends() {
 					mutual_extends = Object.assign || function(target) {
 						for (var i = 1; i < arguments.length; i++) {
@@ -1748,7 +1667,29 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				})), mutual_React.createElement("g", null, mutual_React.createElement("g", null, mutual_React.createElement("g", null, mutual_React.createElement("path", {
 					d: "M9.01,14H2v2h7.01v3L13,15l-3.99-4V14z M14.99,13v-3H22V8h-7.01V5L11,9L14.99,13z"
 				})))));
-				var icons_React = __webpack_require__(832);
+				var user_React = __webpack_require__(113);
+				function user_extends() {
+					user_extends = Object.assign || function(target) {
+						for (var i = 1; i < arguments.length; i++) {
+							var source = arguments[i];
+							for (var key in source)
+								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
+						}
+						return target;
+					};
+					return user_extends.apply(this, arguments);
+				}
+				const user = props => user_React.createElement("svg", user_extends({
+					width: "24",
+					height: "24",
+					role: "img",
+					xmlns: "http://www.w3.org/2000/svg",
+					viewBox: "0 0 448 512"
+				}, props), user_React.createElement("path", {
+					fill: "currentColor",
+					d: "M224 256c70.7 0 128-57.3 128-128S294.7 0 224 0 96 57.3 96 128s57.3 128 128 128zm89.6 32h-16.7c-22.2 10.2-46.9 16-72.9 16s-50.6-5.8-72.9-16h-16.7C60.2 288 0 348.2 0 422.4V464c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48v-41.6c0-74.2-60.2-134.4-134.4-134.4z"
+				}));
+				var icons_React = __webpack_require__(113);
 				const Icons = {
 					Cake: cake,
 					Calendar: calendar,
@@ -1765,7 +1706,8 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					GoogleChrome: googleChrome,
 					Headphones: headphones,
 					Language: language,
-					Mutual: mutual
+					Mutual: mutual,
+					User: user
 				};
 				function noop() {
 					return null;
@@ -1825,7 +1767,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				}, note)), external_BdApi_React_default().createElement(forms_namespaceObject.FormDivider, null));
 				const IconSetting = () => {
 					const forceUpdate = Utilities.useForceUpdate();
-					const shownIcons = Settings.get("shownConnections", Object.fromEntries(connections_default().map((e => [e.type, true]))));
+					const shownIcons = modules_Settings.get("shownConnections", Object.fromEntries(connections_default().map((e => [e.type, true]))));
 					return external_BdApi_React_default().createElement(components_namespaceObject.Flex, {
 						className: settings.Z.icons
 					}, connections_default().filter((e => e.enabled)).map((k => external_BdApi_React_default().createElement(components_namespaceObject.TooltipContainer, {
@@ -1836,7 +1778,8 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						src: k.icon.color,
 						className: Utilities.joinClassNames(settings.Z.settingsBadgeIcon, shownIcons[k.type] ? "enabled" : settings.Z.disabled),
 						onClick: () => {
-							Settings.set("shownConnections", (shownIcons[k.type] = !shownIcons[k.type], shownIcons));
+							modules_Settings.set("shownConnections", (shownIcons[k.type] = !shownIcons[k.type],
+								shownIcons));
 							forceUpdate();
 						}
 					})))));
@@ -1886,13 +1829,12 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					}, opened && props.items.map(renderSetting)));
 				};
 				const renderSetting = setting => {
+					setting = _.cloneDeep(setting);
 					switch (setting.type) {
 						case "switch":
 							return external_BdApi_React_default().createElement(SwitchItem, settings_extends({}, setting, {
-								value: Settings.get(setting.id, setting.value),
-								onChange: value => {
-									Settings.set(setting.id, value);
-								}
+								value: modules_Settings.get(setting.id, setting.value),
+								onChange: modules_Settings.set.bind(modules_Settings, setting.id)
 							}), setting.name);
 						case "replacement":
 							return external_BdApi_React_default().createElement(components_namespaceObject.Flex, {
@@ -1905,22 +1847,20 @@ function buildPlugin([BasePlugin, PluginApi]) {
 							} = setting;
 							delete setting.name;
 							delete setting.note;
+							console.log(name, note);
 							return external_BdApi_React_default().createElement(forms_namespaceObject.FormItem, {
 								title: name
 							}, note && external_BdApi_React_default().createElement(forms_namespaceObject.FormText, {
-								type: "description"
+								type: "description",
+								className: settings.Z.marginBottom8
 							}, note), external_BdApi_React_default().createElement(RadioGroup, settings_extends({}, setting, {
-								value: Settings.get(setting.id, setting.value),
-								onChange: value => {
-									Settings.set(setting.id, value);
-								}
+								value: modules_Settings.get(setting.id, setting.value),
+								onChange: modules_Settings.set.bind(modules_Settings, setting.id)
 							})));
 						case "text":
 							return external_BdApi_React_default().createElement(TextItem, settings_extends({}, setting, {
-								value: Settings.get(setting.id, setting.value),
-								onChange: value => {
-									Settings.set(setting.id, value);
-								}
+								value: modules_Settings.get(setting.id, setting.value),
+								onChange: modules_Settings.set.bind(modules_Settings, setting.id)
 							}));
 						case "icons":
 							return external_BdApi_React_default().createElement(IconSetting, null);
@@ -1940,7 +1880,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				}, label);
 				const mainPages = [{
 					id: "main",
-					label: "General Settings"
+					label: "Modules"
 				}];
 				function SettingsPanel() {
 					const [activeItem, setActiveItem] = (0, external_BdApi_React_.useState)("main");
@@ -1957,7 +1897,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					}, "main" === activeItem ? external_BdApi_React_default().createElement(forms_namespaceObject.FormTitle, {
 						className: breadCrumbs.breakcrumb,
 						tag: forms_namespaceObject.FormTitle.Tags.H2
-					}, "General") : external_BdApi_React_default().createElement(Breadcrumbs, {
+					}, "Modules") : external_BdApi_React_default().createElement(Breadcrumbs, {
 						activeId: activeItem,
 						breadcrumbs: mainPages.concat({
 							id: activeItem,
@@ -1983,7 +1923,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				const external_BasePlugin_namespaceObject = BasePlugin;
 				var external_BasePlugin_default = __webpack_require__.n(external_BasePlugin_namespaceObject);
 				var components_activity = __webpack_require__(755);
-				var activity_React = __webpack_require__(832);
+				var activity_React = __webpack_require__(113);
 				const byName = [
 					[/spotify/i, spotify],
 					[/youtube/i, () => activity_React.createElement("img", {
@@ -2000,10 +1940,10 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					const {
 						game,
 						showGamepad
-					} = (0, flux_namespaceObject.useStateFromStores)([stores_namespaceObject.Games, Settings], (() => ({
-						showGamepad: Settings.get("showGamepad", true),
+					} = (0, flux_namespaceObject.useStateFromStoresObject)([stores_namespaceObject.Games, modules_Settings], (() => ({
+						showGamepad: modules_Settings.get("showGamepad", true),
 						game: stores_namespaceObject.Games.getGame(activity.application_id)
-					})), null, _.isEqual);
+					})), [activity]);
 					const icon = (0, external_BdApi_React_.useMemo)((() => byName.find((([regex]) => regex.test(activity.name || activity.id)))), [game]);
 					if (icon) {
 						const Icon = icon[1];
@@ -2030,11 +1970,11 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						activity,
 						showActivityIcons,
 						disabled
-					} = (0, flux_namespaceObject.useStateFromStores)([stores_namespaceObject.Activities, Settings], (() => ({
+					} = (0, flux_namespaceObject.useStateFromStoresObject)([stores_namespaceObject.Activities, modules_Settings], (() => ({
 						activity: stores_namespaceObject.Activities.getActivities(user.id).filter(ActivitiesFilter)[0],
-						showActivityIcons: Settings.get("activityIcons", true),
-						disabled: user?.bot && Settings.get("disableIconsForBots", true)
-					})), null, _.isEqual);
+						showActivityIcons: modules_Settings.get("activityIcons", true),
+						disabled: user?.bot && modules_Settings.get("disableIconsForBots", true)
+					})), [user]);
 					if (!showActivityIcons || !activity || disabled) return null;
 					return activity_React.createElement(components_namespaceObject.TooltipContainer, {
 						text: activity.name,
@@ -2105,59 +2045,6 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					DefaultMessage
 				};
 				const clyde = Clyde;
-				const nl_namespaceObject = JSON.parse('{"CONNECTIONS":"Verbindingen","NO_CONNECTIONS":"Geen verbindingen!","LOADING_CONNECTIONS":"Verbindingen aan het laden...","LOADING_LAST_MESSAGE":"Laatste bericht aan het laden...","LOADING_JOINED_AT":"Lid geworden op aan het laden...","MEMBER_WAS_NOT_FOUND":"Lid kon niet worden gevonden!","FAILED_TO_FETCH":"Gefaald om op te halen!","USERINFO_CMD_DESC":"Laat bepaalde informatie zien over een bepaald lid.","NO_MUTUAL_GUILDS":"Geen gemeenschappelijke servers","LOADING_MUTUAL_GUILDS":"Gemeenschappelijke servers aan het laden..."}');
-				var translations_nl_namespaceObject = __webpack_require__.t(nl_namespaceObject, 2);
-				const de_namespaceObject = JSON.parse('{"CONNECTIONS":"Verknüpfungen","NO_CONNECTIONS":"Keine Verknüpfungen","LOADING_CONNECTIONS":"Lade Verknüpfungen...","LOADING_LAST_MESSAGE":"Lade letzte Nachricht...","LOADING_JOINED_AT":"Lade Beitrittsdatum...","MEMBER_WAS_NOT_FOUND":"Mitglied konnte nicht gefunden werden.","FAILED_TO_FETCH":"Fehler beim Laden","USERINFO_CMD_DESC":"Zeigt einige Informationen über einen bestimmten Nutzer.","NO_MUTUAL_GUILDS":"Keine gemeinsamen Server.","LOADING_MUTUAL_GUILDS":"Gemeinsame Server werden geladen."}');
-				var translations_de_namespaceObject = __webpack_require__.t(de_namespaceObject, 2);
-				const en_US_namespaceObject = JSON.parse('{"CONNECTIONS":"Connections","NO_CONNECTIONS":"No Connections","LOADING_CONNECTIONS":"Loading Connections...","LOADING_LAST_MESSAGE":"Loading Last Message","LOADING_JOINED_AT":"Loading Joined At","MEMBER_WAS_NOT_FOUND":"Member Was Not Found!","FAILED_TO_FETCH":"Failed To Fetch","USERINFO_CMD_DESC":"User Information"}');
-				var translations_en_US_namespaceObject = __webpack_require__.t(en_US_namespaceObject, 2);
-				const tr_namespaceObject = JSON.parse('{"CONNECTIONS":"Bağlantılar","NO_CONNECTIONS":"Bağlantı yok!","LOADING_CONNECTIONS":"Bağlantılar yükleniyor..","LOADING_LAST_MESSAGE":"Son mesaj yükleniyor..","LOADING_JOINED_AT":"Giriş tarihi yükleniyor..","MEMBER_WAS_NOT_FOUND":"Kullanıcı bulunamadı!","FAILED_TO_FETCH":"Alınamadı!","USERINFO_CMD_DESC":"Belirli bir kullanıcı hakkında bazı bilgiler verir.","NO_MUTUAL_GUILDS":"Ortak sunucu yok!","LOADING_MUTUAL_GUILDS":"Ortak sunucular yükleniyor!"}');
-				var translations_tr_namespaceObject = __webpack_require__.t(tr_namespaceObject, 2);
-				const fr_namespaceObject = JSON.parse('{"CONNECTIONS":"Connexions","NO_CONNECTIONS":"Pas de connexion!","LOADING_CONNECTIONS":"Chargement des connexions...","LOADING_LAST_MESSAGE":"Chargement du dernier message...","LOADING_JOINED_AT":"Chargement de la date d\'entrée...","MEMBER_WAS_NOT_FOUND":"Membre non trouvé","FAILED_TO_FETCH":"Échec de la récupération","USERINFO_CMD_DESC":"Informations sur un utilisateur spécifique","NO_MUTUAL_GUILDS":"Pas de serveur en commun","LOADING_MUTUAL_GUILDS":"Chargement des serveurs en communs..."}');
-				const vi_namespaceObject = JSON.parse('{"CONNECTIONS":"Kết nối","NO_CONNECTIONS":"Không có kết nối!","LOADING_CONNECTIONS":"Đang tải các kết nối...","LOADING_LAST_MESSAGE":"Đang tải tin nhắn cuối cùng...","LOADING_JOINED_AT":"Đang tải ngày tham gia...","MEMBER_WAS_NOT_FOUND":"Không tìm thấy thành viên!","FAILED_TO_FETCH":"Nạp dữ liệu thất bại!","USERINFO_CMD_DESC":"Hiển thị một số thông tin về một người dùng cụ thể.","NO_MUTUAL_GUILDS":"Không có server chung nào","LOADING_MUTUAL_GUILDS":"Đang tải server chung..."}');
-				const es_ES_namespaceObject = JSON.parse('{"CONNECTIONS":"Conexiones","NO_CONNECTIONS":"Sin conexiones","LOADING_CONNECTIONS":"Cargando conexiones...","LOADING_LAST_MESSAGE":"Cargando el último mensaje...","LOADING_JOINED_AT":"Cargando la fecha de ingreso...","MEMBER_WAS_NOT_FOUND":"¡El miembro no fue encontrado!","FAILED_TO_FETCH":"¡No se pudo obtener!","USERINFO_CMD_DESC":"Muestra información sobre un usuario en específico.","NO_MUTUAL_GUILDS":"Sin servidores en común","LOADING_MUTUAL_GUILDS":"Cargando los servidores en común..."}');
-				const sv_SE_namespaceObject = JSON.parse('{"CONNECTIONS":"anslutningar","NO_CONNECTIONS":"inga anslutningar","LOADING_CONNECTIONS":"laddar anslutningar","LOADING_LAST_MESSAGE":"läser in det senaste meddelandet","LOADING_JOINED_AT":"lastning gick med vid","MEMBER_WAS_NOT_FOUND":"medlem hittades inte","FAILED_TO_FETCH":"misslyckades med att hämta","USERINFO_CMD_DESC":"visar lite information om en specifik användare","NO_MUTUAL_GUILDS":"inga ömsesidiga servrar","LOADING_MUTUAL_GUILDS":"laddar ömsesidiga servrar"}');
-				const pt_BR_namespaceObject = JSON.parse('{"CONNECTIONS":"Conexões","NO_CONNECTIONS":"Sem conexões","LOADING_CONNECTIONS":"Carregando conexões","LOADING_LAST_MESSAGE":"Carregando última mensagem","LOADING_JOINED_AT":"Carregando entrou há","MEMBER_WAS_NOT_FOUND":"Membro não encontrado!","FAILED_TO_FETCH":"Falha na busca","USERINFO_CMD_DESC":"Mostra algumas informações de um usuário específico.","NO_MUTUAL_GUILDS":"Sem servidores em comum","LOADING_MUTUAL_GUILDS":"Carregando os servidores em comum"}');
-				const translations = {
-					"en-US": translations_en_US_namespaceObject,
-					"es-ES": es_ES_namespaceObject,
-					"sv-SE": sv_SE_namespaceObject,
-					"pt-BR": pt_BR_namespaceObject,
-					nl: translations_nl_namespaceObject,
-					de: translations_de_namespaceObject,
-					tr: translations_tr_namespaceObject,
-					fr: fr_namespaceObject,
-					vi: vi_namespaceObject
-				};
-				const loadedStrings = {};
-				stores_namespaceObject.SettingsStore.addChangeListener(injectStrings);
-				function injectStrings() {
-					Object.assign(i18n_default()._provider._context.messages, loadedStrings[i18n_default().getLocale()] ?? {});
-					if (loadedStrings["en-US"]) Object.assign(i18n_default()._provider._context.defaultMessages, loadedStrings["en-US"]);
-				}
-				function addStrings(locale, strings) {
-					if (!loadedStrings[locale]) loadedStrings[locale] = {};
-					Object.assign(loadedStrings[locale], strings);
-					injectStrings();
-				}
-				function removeStrings(locale, strings) {
-					if (!loadedStrings[locale]) return;
-					for (let str in strings) delete loadedStrings[locale][str];
-					injectStrings();
-				}
-				function addStringsObject(strings) {
-					for (let locale in strings) addStrings(locale, strings[locale]);
-				}
-				function removeStringsObject(strings) {
-					for (let locale in strings) removeStrings(locale, strings[locale]);
-				}
-				const LocaleManager = {
-					addStringsObject,
-					addStrings,
-					removeStringsObject,
-					removeStrings
-				};
-				const strings = LocaleManager;
 				function SuppressErrors(func, onError = (() => {})) {
 					const wrapped = function() {
 						try {
@@ -2171,7 +2058,6 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					return wrapped;
 				}
 				var mutualServers = __webpack_require__(416);
-				var mutualServers_React = __webpack_require__(832);
 				function mutualServers_extends() {
 					mutualServers_extends = Object.assign || function(target) {
 						for (var i = 1; i < arguments.length; i++) {
@@ -2193,63 +2079,66 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				}) {
 					const [isMouseOver, setMouseOver] = (0, external_BdApi_React_.useState)(false);
 					const isWindowFocused = (0, flux_namespaceObject.useStateFromStores)([WindowStore], (() => WindowStore.isFocused()));
-					return mutualServers_React.createElement(components_namespaceObject.TooltipContainer, {
+					return external_BdApi_React_default().createElement(components_namespaceObject.TooltipContainer, {
 						key: guild.id,
 						text: nick ? `${guild.name} (${nick})` : guild.name,
 						position: "top",
 						className: mutualServers.Z.mutualGuild
-					}, guild.icon ? mutualServers_React.createElement("img", {
+					}, guild.icon ? external_BdApi_React_default().createElement("img", {
 						onMouseOver: () => setMouseOver(true),
 						onMouseLeave: () => setMouseOver(false),
-						src: guild.getIconURL(isMouseOver && isWindowFocused),
+						src: guild.getIconURL(128, isMouseOver && isWindowFocused),
 						onClick: () => onClick(guild.id)
-					}) : mutualServers_React.createElement("div", {
+					}) : external_BdApi_React_default().createElement("div", {
 						className: mutualServers.Z.guildAcronym,
 						onClick: () => onClick(guild.id)
 					}, guild.acronym));
 				}
-				class MutualServers extends ApiModule {
-					get currentUserId() {
-						return stores_namespaceObject.Users.getCurrentUser().id;
-					}
-					transitionToGuild(guildId) {
-						actions_namespaceObject.GuildActions.transitionToGuildSync(guildId);
-					}
-					task(user) {
-						return () => {
-							if (!Settings.get("showMutualGuilds", true) || Settings.get("hideMutualGuildsCurrentUser", true) && user.id === this.currentUserId) return null;
-							const mutualGuilds = (0, flux_namespaceObject.useStateFromStores)([FriendsStore], (() => FriendsStore.getMutualGuilds(user.id)));
-							const [message, setMessage] = (0, external_BdApi_React_.useState)("");
-							(0, external_BdApi_React_.useEffect)((() => {
-								if (Array.isArray(mutualGuilds) || stores_namespaceObject.UserProfile.isFetching(user.id)) return;
-								actions_namespaceObject.ProfileActions.fetchProfile(user.id).catch((error => {
-									if (~error?.message?.indexOf("Already dispatching")) return;
-									external_PluginApi_namespaceObject.Logger.error(`Failed to fetch profile for ${user.id}:\n`, error);
-									setMessage(i18n_namespaceObject.Messages.FAILED_TO_FETCH);
-								}));
-							}), []);
-							return Array.isArray(mutualGuilds) ? Settings.get("showEmptyMutualGuilds", true) && !mutualGuilds.length ? null : mutualServers_React.createElement("div", {
-								className: mutualServers.Z.body
-							}, mutualServers_React.createElement(mutualServers_Header, {
-								size: mutualServers_Header.Sizes.SIZE_12,
-								className: mutualServers.Z.header,
-								uppercase: true,
-								muted: true
-							}, i18n_namespaceObject.Messages.MUTUAL_GUILDS), mutualServers_React.createElement("div", {
-								className: (0, utils_namespaceObject.joinClassNames)(mutualServers.Z.guilds, Settings.get("stackMutualServers", true) && mutualServers.Z.stack)
-							}, mutualGuilds.map((props => mutualServers_React.createElement(MutualServer, mutualServers_extends({}, props, {
-								onClick: this.transitionToGuild
-							})))))) : [mutualServers_React.createElement(mutualServers_Header, {
-								size: mutualServers_Header.Sizes.SIZE_12,
-								className: mutualServers.Z.header,
-								uppercase: true,
-								muted: true
-							}, message ? i18n_namespaceObject.Messages.NO_MUTUAL_GUILDS : i18n_namespaceObject.Messages.LOADING_MUTUAL_GUILDS), message ? mutualServers_React.createElement(components_namespaceObject.TooltipContainer, {
-								text: message,
-								position: "top"
-							}, mutualServers_React.createElement(error, null)) : null].filter((e => e));
-						};
-					}
+				function MutualServers({
+					user
+				}) {
+					if (!modules_Settings.get("showMutualGuilds", true) || modules_Settings.get("hideMutualGuildsCurrentUser", true) && user.id === stores_namespaceObject.Users.getCurrentUser().id) return null;
+					const mutualGuilds = (0, flux_namespaceObject.useStateFromStores)([FriendsStore], (() => FriendsStore.getMutualGuilds(user.id)));
+					const [message, setMessage] = (0, external_BdApi_React_.useState)("");
+					(0, external_BdApi_React_.useEffect)((() => {
+						if (Array.isArray(mutualGuilds) || stores_namespaceObject.UserProfile.isFetching(user.id)) return;
+						actions_namespaceObject.ProfileActions.fetchProfile(user.id).catch((error => {
+							if (~error?.message?.indexOf("Already dispatching")) return;
+							external_PluginApi_namespaceObject.Logger.error(`Failed to fetch profile for ${user.id}:\n`, error);
+							setMessage(Strings.get("FAILED_TO_FETCH"));
+						}));
+					}), []);
+					return Array.isArray(mutualGuilds) ? modules_Settings.get("showEmptyMutualGuilds", true) && !mutualGuilds.length ? null : external_BdApi_React_default().createElement("div", {
+						className: mutualServers.Z.body
+					}, external_BdApi_React_default().createElement(mutualServers_Header, {
+						size: mutualServers_Header.Sizes.SIZE_12,
+						className: mutualServers.Z.header,
+						uppercase: true,
+						muted: true
+					}, i18n_namespaceObject.Messages.MUTUAL_GUILDS), external_BdApi_React_default().createElement("div", {
+						className: (0, utils_namespaceObject.joinClassNames)(mutualServers.Z.guilds, modules_Settings.get("stackMutualServers", false) && mutualServers.Z.stack)
+					}, mutualGuilds.map((props => external_BdApi_React_default().createElement(MutualServer, mutualServers_extends({}, props, {
+						onClick: actions_namespaceObject.GuildActions.transitionToGuildSync
+					})))))) : external_BdApi_React_default().createElement(external_BdApi_React_default().Fragment, null, external_BdApi_React_default().createElement(mutualServers_Header, {
+						size: mutualServers_Header.Sizes.SIZE_12,
+						className: mutualServers.Z.header,
+						uppercase: true,
+						muted: true
+					}, Strings.get(message ? "NO_MUTUAL_GUILDS" : "LOADING_MUTUAL_GUILDS")), message && external_BdApi_React_default().createElement(components_namespaceObject.TooltipContainer, {
+						text: message,
+						position: "top"
+					}, external_BdApi_React_default().createElement(error, null)));
+				}
+				function UserDetails_extends() {
+					UserDetails_extends = Object.assign || function(target) {
+						for (var i = 1; i < arguments.length; i++) {
+							var source = arguments[i];
+							for (var key in source)
+								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
+						}
+						return target;
+					};
+					return UserDetails_extends.apply(this, arguments);
 				}
 				function UserDetails_defineProperty(obj, key, value) {
 					if (key in obj) Object.defineProperty(obj, key, {
@@ -2284,16 +2173,12 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					}
 					onStart() {
 						external_StyleLoader_default().inject();
-						strings.addStringsObject(translations);
-						this.createdApi = new CreatedAt(this);
-						this.joinedApi = new joinedDate_JoinedAt(this);
-						this.lastMessageApi = new LastMessageApi(this);
-						this.connectionsApi = new Userconnections(this);
-						this.mutualsApi = new MutualServers(this);
+						Strings.init();
 						this.patchUserPopout();
 						this.patchUserProfile();
 						this.patchMemberListItem();
 						this.patchUserActivityStatus();
+						this.patchAccountSection();
 						commands.registerCommand(this.getName(), {
 							id: "user-info",
 							name: "userinfo",
@@ -2369,22 +2254,22 @@ function buildPlugin([BasePlugin, PluginApi]) {
 							user
 						}], returnValue) => {
 							if (this.promises.cancelled) return;
-							const tree = Utilities.findInReactTree(returnValue, SuppressErrors((e => e.className.indexOf("headerText") > -1)));
+							const tree = Utilities.findInReactTree(returnValue, (e => e?.className?.indexOf("headerText") > -1));
 							if (!Array.isArray(tree?.children) || !user) return;
-							const WrappedJoinedAt = this.joinedApi.task(user.id);
-							const WrappedCreatedAt = this.createdApi.task(user.id);
-							const WrappedLastMessage = this.lastMessageApi.task(user);
 							tree.children.push(external_BdApi_React_default().createElement(ErrorBoundary, {
 								key: "UserPopoutHeader",
 								id: "UserPopoutHeader",
 								mini: true
 							}, external_BdApi_React_default().createElement("div", {
-								className: Utilities.joinClassNames(dates.Z.container, Settings.get("useIcons", true) ? dates.Z.icons : dates.Z.text)
-							}, Settings.get("created_show_up", true) && external_BdApi_React_default().createElement(WrappedCreatedAt, {
+								className: Utilities.joinClassNames(dates.Z.container, modules_Settings.get("useIcons", true) ? dates.Z.icons : dates.Z.text)
+							}, modules_Settings.get("created_show_up", true) && external_BdApi_React_default().createElement(CreatedAt, {
+								userId: user.id,
 								key: "created-date"
-							}), Settings.get("joined_show_up", true) && external_BdApi_React_default().createElement(WrappedJoinedAt, {
+							}), modules_Settings.get("joined_show_up", true) && external_BdApi_React_default().createElement(JoinedAtDate, {
+								userId: user.id,
 								key: "joined-date"
-							}), Settings.get("lastmessage_show_up", true) && external_BdApi_React_default().createElement(WrappedLastMessage, {
+							}), modules_Settings.get("lastmessage_show_up", true) && external_BdApi_React_default().createElement(LastMessageDate, {
+								user,
 								key: "lastmessage-date"
 							}))));
 						}));
@@ -2393,17 +2278,19 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						}], returnValue) => {
 							if (this.promises.cancelled) return;
 							if (!Array.isArray(returnValue?.props?.children) || returnValue.props.children.some((child => child?.type === ErrorBoundary))) return returnValue;
-							const Connections = this.connectionsApi.task(user);
-							const MutualServers = this.mutualsApi.task(user);
 							returnValue.props.children.unshift(external_BdApi_React_default().createElement(ErrorBoundary, {
 								id: "UserPopoutBody",
 								mini: true,
 								key: "connections"
-							}, external_BdApi_React_default().createElement(Connections, null)), external_BdApi_React_default().createElement(ErrorBoundary, {
+							}, external_BdApi_React_default().createElement(UserConnections, {
+								user
+							})), external_BdApi_React_default().createElement(ErrorBoundary, {
 								id: "UserPopoutBody",
 								mini: true,
 								key: "mutual_servers"
-							}, external_BdApi_React_default().createElement(MutualServers, null)));
+							}, external_BdApi_React_default().createElement(MutualServers, {
+								user
+							})));
 						}));
 					}
 					async patchUserProfile() {
@@ -2418,17 +2305,23 @@ function buildPlugin([BasePlugin, PluginApi]) {
 							tree.type = (...args) => {
 								const ret = original.apply(this, args);
 								try {
-									const WrappedJoinedAt = this.joinedApi.task(user.id);
-									const WrappedCreatedAt = this.createdApi.task(user.id);
-									const WrappedLastMessage = this.lastMessageApi.task(user);
 									return external_BdApi_React_default().createElement("div", {
 										className: dates.Z.wrapper
 									}, ret, external_BdApi_React_default().createElement(ErrorBoundary, {
 										id: "UserProfile",
 										mini: true
 									}, external_BdApi_React_default().createElement("div", {
-										className: Utilities.joinClassNames(dates.Z.container, dates.Z.userProfile, Settings.get("useIcons", true) ? dates.Z.icons : dates.Z.text)
-									}, Settings.get("created_show_profile", true) && external_BdApi_React_default().createElement(WrappedCreatedAt, null), Settings.get("joined_show_profile", true) && external_BdApi_React_default().createElement(WrappedJoinedAt, null), Settings.get("lastmessage_show_profile", true) && external_BdApi_React_default().createElement(WrappedLastMessage, null))));
+										className: Utilities.joinClassNames(dates.Z.container, dates.Z.userProfile, modules_Settings.get("useIcons", true) ? dates.Z.icons : dates.Z.text)
+									}, modules_Settings.get("created_show_profile", true) && external_BdApi_React_default().createElement(CreatedAt, {
+										userId: user.id,
+										key: "created-at"
+									}), modules_Settings.get("joined_show_profile", true) && external_BdApi_React_default().createElement(JoinedAtDate, {
+										userId: user.id,
+										key: "joined-at"
+									}), modules_Settings.get("lastmessage_show_profile", true) && external_BdApi_React_default().createElement(LastMessageDate, {
+										user,
+										key: "last-message"
+									}))));
 								} catch (error) {
 									Logger.error("Failed to inject into ProfileModal:", error);
 								}
@@ -2441,10 +2334,10 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					async patchMemberListItem() {
 						const MemberListItem = await external_PluginApi_namespaceObject.ReactComponents.getComponentByName("MemberListItem", getClass(["member", "activity"], ["member"], [], true));
 						const ActivityStatus = external_PluginApi_namespaceObject.WebpackModules.getModule((m => "ActivityStatus" === m.default.displayName));
-						const ConnectedActivity = (0, flux_namespaceObject.connectStores)([Settings], (e => e))(Activity);
+						const ConnectedActivity = (0, flux_namespaceObject.connectStores)([modules_Settings], (e => e))(Activity);
 						external_PluginApi_namespaceObject.Patcher.after(MemberListItem.component.prototype, "render", ((that, _, res) => {
 							if (this.promises.cancelled) return;
-							if (!Settings.get("activityIcon", true)) return;
+							if (!modules_Settings.get("activityIcon", true)) return;
 							res.props.children = external_BdApi_React_default().createElement(ConnectedActivity, {
 								user: that.props.user
 							});
@@ -2463,7 +2356,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					async patchUserActivityStatus() {
 						const RichActivity = external_PluginApi_namespaceObject.WebpackModules.getModule((m => "RichActivity" === m?.default?.displayName));
 						external_PluginApi_namespaceObject.Patcher.after(RichActivity, "default", ((_, [props]) => {
-							const shouldShow = (0, flux_namespaceObject.useStateFromStores)([Settings], (() => Settings.get("activityIconState", 0)));
+							const shouldShow = (0, flux_namespaceObject.useStateFromStores)([modules_Settings], (() => modules_Settings.get("activityIconState", 0)));
 							switch (shouldShow) {
 								case 1:
 									return;
@@ -2478,12 +2371,57 @@ function buildPlugin([BasePlugin, PluginApi]) {
 							}
 						}));
 					}
+					async patchAccountSection() {
+						const classes = external_PluginApi_namespaceObject.WebpackModules.getByProps("copySuccess", "container");
+						const AccountSection = await external_PluginApi_namespaceObject.ReactComponents.getComponentByName("Account", `.${classes.container}`);
+						const UserPopoutContainer = external_PluginApi_namespaceObject.WebpackModules.getModule((m => "UserPopoutContainer" === m.type.displayName));
+						const Popout = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("Popout");
+						external_PluginApi_namespaceObject.Patcher.after(AccountSection.component.prototype, "render", ((_this, _, res) => {
+							if (this.promises.cancelled) return;
+							if (!_this.state.hasOwnProperty("showUserPopout")) _this.state.showUserPopout = false;
+							res.props.onClick = res.props.onContextMenu = function(e) {
+								if (modules_Settings.get("panelPopoutType", "click") !== e.type) return;
+								e.preventDefault();
+								e.stopPropagation();
+								if (e.target?.classList?.contains(classes.container) || e.target?.parentElement?.classList?.contains(classes.nameTag)) this.setState({
+									showUserPopout: !_this.state.showUserPopout
+								});
+							}.bind(_this);
+							return external_BdApi_React_default().createElement(ErrorBoundary, {
+								id: "AccountSection"
+							}, external_BdApi_React_default().createElement(Popout, {
+								child: res,
+								shouldShow: _this.state.showUserPopout && modules_Settings.get("showPanelPopout", true),
+								animation: Popout.Animation.TRANSLATE,
+								onRequestClose: () => _this.setState({
+									showUserPopout: false
+								}),
+								position: Popout.Positions.TOP,
+								align: Popout.Align.CENTER,
+								renderPopout: props => external_BdApi_React_default().createElement(ErrorBoundary, {
+									id: "UserPopoutContainer"
+								}, external_BdApi_React_default().createElement(UserPopoutContainer, UserDetails_extends({}, props, {
+									channelId: stores_namespaceObject.SelectedChannels.getChannelId(),
+									guildId: stores_namespaceObject.SelectedGuilds.getGuildId(),
+									userId: stores_namespaceObject.Users.getCurrentUser().id,
+									position: "top"
+								})))
+							}, (() => res)));
+						}));
+						AccountSection.forceUpdateAll();
+					}
+					destroyStore(dispatchToken) {
+						modules_namespaceObject.Dispatcher._dependencyGraph.removeNode(dispatchToken);
+						modules_namespaceObject.Dispatcher._invalidateCaches();
+					}
 					onStop() {
-						strings.removeStringsObject(translations);
+						Strings.shutdown();
 						external_PluginApi_namespaceObject.Patcher.unpatchAll();
 						external_StyleLoader_default().remove();
 						this.promises.cancel();
 						commands.unregisterAllCommands(this.getName());
+						this.destroyStore(joinedAt.getDispatchToken());
+						this.destroyStore(stores_lastMessage.getDispatchToken());
 					}
 				}
 			},
@@ -2519,7 +2457,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					return list;
 				};
 			},
-			832: module => {
+			113: module => {
 				module.exports = BdApi.React;
 			}
 		};
@@ -2586,7 +2524,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				});
 			};
 		})();
-		var __webpack_exports__ = __webpack_require__(214);
+		var __webpack_exports__ = __webpack_require__(403);
 		module.exports.LibraryPluginHack = __webpack_exports__;
 	})();
 	const PluginExports = module.exports.LibraryPluginHack;
