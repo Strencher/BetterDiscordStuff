@@ -1,7 +1,7 @@
 {
     "info": {
         "name": "StatusEverywhere",
-        "version": "2.0.0",
+        "version": "2.1.0",
         "authors": [
             {
                 "name": "Strencher",
@@ -22,12 +22,13 @@
     },
     "changelog": [
         {
-            "title": "Big Update",
-            "type": "added",
+            "title": "fixes",
+            "type": "fixed",
             "items": [
-                "Made status everywhere work __everywhere__",
-                "Added customiation for basically anything",
-                "Chat avatars should now load instead of just showing the person as offline."
+                "Fixed avatar being blurry.",
+                "Fixed guild audit log throwing errors.",
+                "Fixed guild member list.",
+                "Fixed opening user popouts in chat."
             ]
         }
     ],

@@ -8,9 +8,48 @@ import React from "react";
 import SettingsPanel from "./components/settings";
 import _ from "lodash";
 import Settings from "./settings";
-import { joinClassNames } from "@discord/utils";
+import { joinClassNames, useForceUpdate } from "@discord/utils";
 import { ChannelTypes } from "@discord/constants";
 import { Channels, Users } from "@discord/stores";
+import {useStateFromStores} from "@discord/flux";
+import config from "./package.json";
+
+const VoiceState = WebpackModules.getByProps("isSoundSharing", "isSpeaking");
+
+// Basically "Patcher" but garbage collector friendly version.
+const lazyPatch = function (module: any, functionName: string, callback: (args: IArguments, returnValue: any) => any, id?: string) {
+    if (!module || !functionName || typeof(module[functionName]) !== "function") return;
+    const original = module[functionName];
+
+    const unpatch = function () {
+        module[functionName] = original;
+    };
+
+    module[functionName] = function () {
+        const returnValue: any = Reflect.apply(original, this, arguments);
+
+        try {
+            const tempReturn = Reflect.apply(callback, this, [
+                arguments,
+                returnValue
+            ]);
+
+            return typeof (tempReturn) === "undefined" ? returnValue : tempReturn;
+        } catch (error) {
+            Logger.error(`Lazy patch ${id} failed!`, error);
+        }
+
+        return returnValue;
+    };
+
+    Object.assign(module[functionName], {
+        _originalFunction: original,
+        patchedBy: config.info.name,
+        unpatch
+    });
+
+    return unpatch;
+};
 
 export default class StatusEverywhere extends BasePlugin {
     public get StatusAvatar() { return StatusAvatar; }
@@ -23,21 +62,29 @@ export default class StatusEverywhere extends BasePlugin {
         );
     }
 
-    public onStart(): void {
-        Utilities.suppressErrors(() => {this.patchChatAvatar();}, "StatusEverywhere.patchChatAvatar")();
-        Utilities.suppressErrors(() => {this.patchChannelMessage();}, "StatusEverywhere.patchChannelMessage")();
-        Utilities.suppressErrors(() => {this.patchVoiceUser();}, "StatusEverywhere.patchVoiceUser")();
-        Utilities.suppressErrors(() => {this.patchAuditlog();}, "StatusEverywhere.patchAuditlog")();
-        Utilities.suppressErrors(() => {this.patchGuildSettingsMembers();}, "StatusEverywhere.patchGuildSettingsMembers")();
-        Utilities.suppressErrors(() => {this.patchColorModule();}, "StatusEverywhere.patchColorModule")();
-        Utilities.suppressErrors(() => {this.patchMemberListItem();}, "StatusEverywhere.patchMemberListItem")();
-        Utilities.suppressErrors(() => {this.patchUserPopout();}, "StatusEverywhere.patchUserPopout")();
-        Utilities.suppressErrors(() => {this.patchUserProfile();}, "StatusEverywhere.patchUserProfile")();
-        Utilities.suppressErrors(() => {this.patchAvatar();}, "StatusEverywhere.patchAvatar")();
-        Utilities.suppressErrors(() => {this.patchHeaderPlaying();}, "StatusEverywhere.patchHeaderPlaying")();
-        Utilities.suppressErrors(() => {this.patchPrivateChannel();}, "StatusEverywhere.patchPrivateChannel")();
-        Utilities.suppressErrors(() => {this.patchPartyMembers();}, "StatusEverywhere.patchPartyMembers")();
-        Utilities.suppressErrors(() => {this.patchAccountSection();}, "StatusEverywhere.patchAccountSection")();
+    public createTimeLog(label: string): { end: () => void, start: number } {
+        const start: number = Date.now();
+
+        const end = function () {
+            const current: number = Date.now();
+
+            Logger.log(label.replace(/%s/g, (current - start).toFixed()));
+        };
+
+        return { start, end };
+    }
+
+    public async onStart(): Promise<void> {
+        const time = this.createTimeLog("Started StatusEverywhere in %sms.");
+        const methods = Object.keys(Object.getOwnPropertyDescriptors(this.constructor.prototype));
+
+        for (let i = 0; i < methods.length; i++) {
+            if (!methods[i].startsWith("patch") || typeof(this[methods[i]]) !== "function") continue;
+
+            Utilities.suppressErrors(this[methods[i]].bind(this), `${this.constructor.name}.${methods[i]}`)();
+        }
+
+        time.end();
 
         stylesheet.inject();
     }
@@ -63,16 +110,70 @@ export default class StatusEverywhere extends BasePlugin {
         });
     }
 
+    private async patchRTCConnectionUsers() {
+        return; // TODO: Fix this later.
+        const RTCConnectionVoiceUsers = WebpackModules.getModule(m => m?.default?.displayName === "RTCConnectionVoiceUsers");
+
+        function PatchedRTCUser(props) {
+            const ret = props.__originalType(props);
+            const isSpeaking = useStateFromStores([VoiceState], () => VoiceState.isSpeaking(props.user.id) || VoiceState.isSoundSharing(props.user.id))
+        
+            try {
+                const org = ret.props.children;
+                ret.props.children = e => {
+                    const ret = org(e);
+                    try {
+                        const org2 = ret.props.children;
+                        ret.props.children = tooltipProps => {
+                            const ret = org2(tooltipProps);
+                            
+                            // try {
+                            //     const overlay = 
+                            // } catch (error) {
+                                
+                            // }
+
+                            return ret;
+                        };
+                    } catch (error) {
+                        Logger.error("Error in PatchedRTCUser:", error);
+                    }
+
+                    return ret;
+                };
+            } catch (error) {
+                Logger.error("Error in PatchedRTCUser:", error);
+            }
+
+            return ret;
+        }
+
+        Patcher.after(RTCConnectionVoiceUsers, "default", (_, __, res) => {
+            const list = Utilities.findInReactTree(res, e => e?.role === "group" && Array.isArray(e.children));
+            if (!list) return;
+            const users = list.children[0];
+            if (!users?.length) return;
+
+            for (const user of users) {
+                if (typeof user?.type !== "function" || user.type === PatchedRTCUser) continue;
+                const original = user.type;
+
+                user.props.__originalType = original;
+                user.type = PatchedRTCUser;
+            }
+        });
+    }
+
     private async patchAccountSection() {
         const accountSelector = `.${WebpackModules.getByProps("container", "avatar", "redIcon").container}`;
         const userSettingsSelector = `.${WebpackModules.getByProps("contentColumnDefault").contentColumnDefault + " > div"}`;
 
         ReactComponents.getComponentByName("Account", accountSelector).then(Account => {
             Patcher.after(Account.component.prototype, "render", (_, __, res) => {
-                const tree = Utilities.findInReactTree(res, e => e?.renderPopout);
-                if (!tree) return;
+                const tree = Utilities.findInReactTree(res, e => e?.renderPopout && !e.child);
+                if (!tree) return res;
                 const old: Function = tree.children;
-    
+                
                 tree.children = (e: any) => {
                     const ret = old(e);
                     if (!ret) return ret;
@@ -84,9 +185,10 @@ export default class StatusEverywhere extends BasePlugin {
                             user={Users.getCurrentUser()}
                             shouldWatch={false}
                             radial={{ id: "accountSettingsRadialStatus", value: false }}
+                            size={StatusAvatar.Sizes.SIZE_32}
                         />
                     );
-    
+                    
                     return ret;
                 };
             });
@@ -158,7 +260,7 @@ export default class StatusEverywhere extends BasePlugin {
             const original = _this.props.renderUser;
 
             _this.props.renderUser = (props: any, ...args: any[]) => {
-                const user: UserObject | void = props.user ?? props;
+                const user: UserObject | void = props?.user ?? props;
                 const ret = original ? original.apply(null, [props].concat(args)) : null;
                 if (!user) return ret;
 
@@ -219,9 +321,9 @@ export default class StatusEverywhere extends BasePlugin {
                     shouldWatch={false}
                     channel_id={_this.props.channel.id}
                     type="direct-message"
-                    size={StatusAvatar.Sizes.SIZE_32}
                     showTyping={{ id: "showDirectMessagesTyping", value: true }}
                     radial={{ id: "directMessagesRadialStatus", value: false }}
+                    size={StatusAvatar.Sizes.SIZE_32}
                 />
             );
         });
@@ -252,7 +354,7 @@ export default class StatusEverywhere extends BasePlugin {
                         showTyping: {
                             id: "showFriendsPageTyping",
                             value: true
-                        },
+                        }
                     });
                     avatar.type = StatusAvatar;
                 } catch (error) {
@@ -290,7 +392,6 @@ export default class StatusEverywhere extends BasePlugin {
             if (!avatar) return;
 
             avatar.props = Object.assign({}, props, {
-                size: StatusAvatar.Sizes.SIZE_120,
                 className: classes.avatar,
                 animated: true,
                 shouldWatch: false,
@@ -302,6 +403,7 @@ export default class StatusEverywhere extends BasePlugin {
                     id: "showUserProfileTyping",
                     value: true
                 },
+                size: StatusAvatar.Sizes.SIZE_120
             });
             avatar.type = StatusAvatar;
         });
@@ -353,7 +455,7 @@ export default class StatusEverywhere extends BasePlugin {
     }
 
     private async patchChatAvatar(): Promise<void> {
-        const ChatMessage = WebpackModules.getModule(m => m?.default?.toString?.().indexOf("ANIMATE_CHAT_AVATAR") > -1)
+        const ChatMessage = WebpackModules.getModule(m => m?.default?.toString?.().indexOf("ANIMATE_CHAT_AVATAR") > -1);
 
         type PatchArgs = {
             user: UserObject,
@@ -365,19 +467,22 @@ export default class StatusEverywhere extends BasePlugin {
             const tree = Utilities.findInReactTree(res, e => e?.renderPopout);
             const user = props?.message?.author;
             const channel_id = props?.message?.channel_id;
-            if (!user || !tree?.children || tree.children.__patched || (user.bot && user.discriminator === "0000")) return;
-            
-            tree.children = () => (
-                <StatusAvatar
-                    {...props}
-                    type="chat"
-                    user={user}
-                    channel_id={channel_id}
-                    shouldShowUserPopout
-                    showTyping={{id: "showChatTyping", value: true}}
-                    radial={{id: "chatRadialStatus", value: false}}
-                />
-            );
+            if (!user || !tree?.children || tree.children?.__patched || (user.bot && user.discriminator === "0000")) return;
+            // var o = tree.children;
+            tree.children = (_props) => {
+                return (
+                    <StatusAvatar
+                        {...props}
+                        type="chat"
+                        user={user}
+                        channel_id={channel_id}
+                        shouldShowUserPopout
+                        showTyping={{ id: "showChatTyping", value: true }}
+                        radial={{ id: "chatRadialStatus", value: false }}
+                        size={StatusAvatar.Sizes.SIZE_40}
+                    />
+                );
+            };
 
             tree.children.__patched = true;
         });
@@ -437,38 +542,28 @@ export default class StatusEverywhere extends BasePlugin {
     }
 
     private async patchAuditlog(): Promise<void> {
-        const AuditLog = WebpackModules.getByDisplayName("AuditLog");
+        const AuditLog = WebpackModules.getByDisplayName("GuildSettingsAuditLogEntry");
         const classes = WebpackModules.getByProps("desaturate", "auditLog", "avatar");
-
+        
         Patcher.after(AuditLog.prototype, "render", (_this, _, res) => {
             const originalChildren: Function | void = res?.props?.children;
             if (typeof originalChildren !== "function") return;
             if (!_this.props.log?.user) return;
 
-            res.props.children = function () {
-                const returnValue = originalChildren.apply(this, arguments);
-
-                try {
-                    const avatar = Utilities.findInReactTree(returnValue, e => e?.props?.className === classes.avatar);
-                    if (!avatar || !avatar.type) return returnValue;
-
-                    Object.assign(avatar.props, {
-                        user: _this.props.log.user
-                    });
-
-                    avatar.type = (props: JSX.IntrinsicAttributes) => (
-                        <StatusAvatar
-                            {...props}
-                            showTyping={{id: "showGuildSettingsShowTyping", value: true}}
-                            radial={{id: "guildSettingsRadialStatus", value: false}}
-                        />
-                    );
-                } catch (error) {
-                    Logger.error("Failed to inject AuditLog item:\n", error);
-                }
-
-                return returnValue;
-            }
+            lazyPatch(res?.props, "children", (_, ret) => {
+                const popout = Utilities.findInReactTree(ret, e => e?.renderPopout);
+                if (!popout) return;
+                
+                lazyPatch(popout, "children", props => (
+                    <StatusAvatar
+                        {...props[0]}
+                        user={_this.props.log.user}
+                        showTyping={{id: "showGuildSettingsShowTyping", value: true}}
+                        radial={{id: "guildSettingsRadialStatus", value: false}}
+                        className={classes.avatar}
+                    />
+                ));
+            });
         });
     }
 
@@ -483,14 +578,14 @@ export default class StatusEverywhere extends BasePlugin {
             Object.assign(avatar.props, {
                 user: _this.props.user
             });
-
-            avatar.type = (props: JSX.IntrinsicAttributes) => (
+            
+            lazyPatch(avatar, "type", props => (
                 <StatusAvatar
-                    {...props}
+                    {...props[0]}
                     showTyping={{id: "showGuildSettingsShowTyping", value: true}}
                     radial={{id: "guildSettingsRadialStatus", value: false}}
                 />
-            );
+            ));
         });
 
         Member.forceUpdateAll();

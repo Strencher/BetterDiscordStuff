@@ -3,13 +3,15 @@ import React, { useEffect, useState } from "react";
 import { Logger, Popouts } from "@zlibrary";
 import { TypingUsers, Status, SelectedChannels, SelectedGuilds } from "@discord/stores";
 import { WebpackModules } from "@zlibrary";
-import { ComponentActions } from "@discord/constants";
+import { ComponentActions, AVATAR_SIZE, MEDIA_PROXY_SIZES } from "@discord/constants";
 import { joinClassNames } from "@discord/utils";
+import { WarningCircle } from "@discord/icons";
 import styles from "./avatar.scss";
 import Settings from "../settings";
 import _ from "lodash";
 // @ts-ignore
 import ErrorBoundary from "common/components/errorboundary";
+import { TooltipContainer } from "@discord/components";
 
 type ComponentDispatcher = {
     subscribe(event: string, listener: (...args: any[]) => any): void;
@@ -22,6 +24,8 @@ const { useContextMenuUser } = WebpackModules.getByProps("useContextMenuUser") ?
 const StatusModule = WebpackModules.getByProps("getStatusColor");
 const Members = WebpackModules.getByProps("subscribeMembers");
 const ActivityUtils = WebpackModules.getByProps("isStreaming");
+const Popout = WebpackModules.getByDisplayName("Popout");
+const UserPopoutContainer = WebpackModules.getModule(m => m.type?.displayName === "UserPopoutContainer");
 const ActivityStore = WebpackModules.getByProps("getActivities");
 
 function isStreaming(userId: string) {
@@ -51,10 +55,12 @@ function reloadSubscriptions(guildId: string, userId: string, type = "add") {
     });
 }
 
-function useSubscribeGuildMembers(guildId: string, userId: string) {
+function useSubscribeGuildMembers(guildId: string, userId: string, shouldWatch: boolean) {
     if (!guilds[guildId]) guilds[guildId] = new Set();
     
     useEffect(() => {
+        if (!shouldWatch) return;
+
         reloadSubscriptions(guildId, userId, "add");
 
         const remove = function () {
@@ -62,7 +68,7 @@ function useSubscribeGuildMembers(guildId: string, userId: string) {
         };
 
         return remove;
-    }, [guildId, userId]);
+    }, [guildId, userId, shouldWatch]);
 }
 
 const classes = {
@@ -74,7 +80,10 @@ type StatusAvatarProps = {
     animated: boolean,
     user: UserObject,
     channel_id: string,
-    size: any;
+    size: string | {
+        value: string;
+        id: string;
+    };
     showTyping: {
         value: boolean;
         id: string;
@@ -82,11 +91,12 @@ type StatusAvatarProps = {
     radial: {
         value: boolean;
         id: string;
-    },
+    }
     shouldWatch: boolean;
     AvatarComponent: any;
     onMouseEnter: () => void;
     onMouseLeave: () => void;
+    shouldShowUserPopout?: boolean;
 };
 
 function StatusAvatar(props) {
@@ -101,13 +111,15 @@ function StatusAvatar(props) {
         shouldWatch = true,
         AvatarComponent = AnimatedAvatar,
         onMouseEnter,
-        onMouseLeave
+        onMouseLeave,
+        shouldShowUserPopout
     }: StatusAvatarProps = props;
     if (!user) {
         Logger.warn("No user provided");
         return null;
     }
     const [shouldAnimate, setAnimate] = useState(animated);
+    const [hasUserPopout, setUserPopout] = useState(false);
     const streaming = isStreaming(user.id);
     const [status, isMobile, isTyping, statusColor, radial, forceLoadStatus] = useStateFromStoresArray([TypingUsers, Status, Settings], () => [
         streaming ? "streaming" : Status.getStatus(user.id),
@@ -115,24 +127,37 @@ function StatusAvatar(props) {
         TypingUsers.isTyping(channel_id, user.id) && Settings.get(showTyping?.id, showTyping?.value ?? false) && showTyping,
         StatusModule.getStatusColor(streaming ? "streaming" : Status.getStatus(user.id)),
         Settings.get(radialConfig?.id, radialConfig?.value),
-        Settings.get("forceLoadStatus", true)
+        Settings.get("forceLoadStatus", true),
     ]);
-    if (SelectedGuilds.getGuildId() && shouldWatch && forceLoadStatus) {
-        useSubscribeGuildMembers(SelectedGuilds.getGuildId(), user.id);
-    }
 
+    try {
+        useSubscribeGuildMembers(SelectedGuilds.getGuildId(), user.id, SelectedGuilds.getGuildId() != null && shouldWatch && forceLoadStatus);
+    } catch (error) {
+        Logger.error("Error while subscribing to guild member events:\n", error);
+    }
+    
     useEffect(() => {
         if (shouldAnimate === animated) return;
 
-        setAnimate(animated);
+        try {
+            setAnimate(animated);
+        } catch (error) {
+            Logger.error("Error while setting 'animated' state:\n", error);
+        }
     }, [animated]);
 
     useEffect(() => {
         if (props.type !== "chat") return;
-        const id = ComponentActions.ANIMATE_CHAT_AVATAR(`${props.subscribeToGroupId}:${user.id}`);
-        ComponentDispatch.subscribe(id, setAnimate);
-        return () => void ComponentDispatch.unsubscribe(id, setAnimate);
+        try {
+            const id = ComponentActions.ANIMATE_CHAT_AVATAR(`${props.subscribeToGroupId}:${user.id}`);
+            ComponentDispatch.subscribe(id, setAnimate);
+            return () => void ComponentDispatch.unsubscribe(id, setAnimate);
+        } catch (error) {
+            Logger.error("Error while subscribing to ChatAvatarAnimate:\n", error);
+        }
     }, [user, props.subscribeToGroupId]);
+
+    const onContextMenu = useContextMenuUser(user.id, channel_id);
     
     return (
         // @ts-ignore
@@ -140,31 +165,48 @@ function StatusAvatar(props) {
             // @ts-ignore
             "--status-color": statusColor
         }}>
-            <AvatarComponent
-                statusTooltip
-                statusColor={statusColor}
-                className={joinClassNames(styles.chatAvatar, type === "chat" ? [classes.avatar, classes.clickable] : null, props.className, {
-                    [styles.speaking]: props.isSpeaking,
-                })}
-                status={status}
-                isTyping={isTyping}
-                isMobile={isMobile}
-                size={size}
-                src={user.getAvatarURL(props.guildId, shouldAnimate)}
-                onClick={event => {
-                    if (!props.shouldShowUserPopout) return;
-                    try {
-                        Popouts.showUserPopout(event.target, user);
-                    } catch (error) {
-                        Logger.error("Failed to open UserPopout:", error);
-                    }
-                }}
-                onContextMenu={useContextMenuUser(user.id, channel_id)}
-            />
+            <Popout
+                renderPopout={props => (
+                    <UserPopoutContainer
+                        {...props}
+                        userId={user.id}
+                        channelId={channel_id}
+                        guildId={SelectedGuilds.getGuildId()}
+                    />
+                )}
+                animation={Popout.Animation.TRANSLATE}
+                position={Popout.Positions.RIGHT}
+                shouldShow={hasUserPopout && shouldShowUserPopout}
+                onRequestOpen={() => setUserPopout(true)}
+                onRequestClose={() => setUserPopout(false)}
+            >
+                {popoutProps => (
+                    <AvatarComponent
+                        {...popoutProps}
+                        onClick={setUserPopout.bind(null, !hasUserPopout)}
+                        statusTooltip
+                        statusColor={statusColor}
+                        className={joinClassNames(styles.chatAvatar, type === "chat" ? [classes.avatar, classes.clickable] : null, props.className, {
+                            [styles.speaking]: props.isSpeaking,
+                        })}
+                        status={status}
+                        isTyping={isTyping}
+                        isMobile={isMobile}
+                        size={size}
+                        src={user.getAvatarURL(props.guildId, parseInt(size.replace("SIZE_", "")), shouldAnimate)}
+                        onContextMenu={onContextMenu}
+                    />
+                )}
+            
+            </Popout>
         </div>
     );
 };
 
 StatusAvatar.Sizes = AvatarSizes;
 
-export default ErrorBoundary.from(StatusAvatar, "StatusEverywhere");
+export default ErrorBoundary.from(StatusAvatar, "StatusEverywhere", () => (
+    <TooltipContainer text="Component Error">
+        <WarningCircle color="#f04747" />
+    </TooltipContainer>
+));
