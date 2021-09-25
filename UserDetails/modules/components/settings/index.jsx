@@ -120,7 +120,6 @@ const renderSetting = setting => {
             const {name, note} = setting;
             delete setting.name;
             delete setting.note; 
-            console.log(name, note, )
             return (
                 <FormItem title={name}>
                     {note && <FormText type="description" className={styles.marginBottom8}>{note}</FormText>}
