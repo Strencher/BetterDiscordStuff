@@ -1,6 +1,6 @@
 /**
  * @name StatusEverywhere
- * @version 2.0.0
+ * @version 2.1.0
  * @author Strencher, Zerebos
  * @description Adds user status everywhere Discord doesn't.
  * @source https://github.com/Strencher/BetterDiscordStuff/tree/master/StatusEverywhere
@@ -32,7 +32,7 @@
 const config = {
 	"info": {
 		"name": "StatusEverywhere",
-		"version": "2.0.0",
+		"version": "2.1.0",
 		"authors": [{
 				"name": "Strencher",
 				"discord_id": "415849376598982656",
@@ -51,12 +51,13 @@ const config = {
 		"github_raw": "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/StatusEverywhere/StatusEverywhere.plugin.js"
 	},
 	"changelog": [{
-		"title": "Big Update",
-		"type": "added",
+		"title": "fixes",
+		"type": "fixed",
 		"items": [
-			"Made status everywhere work __everywhere__",
-			"Added customiation for basically anything",
-			"Chat avatars should now load instead of just showing the person as offline."
+			"Fixed avatar being blurry.",
+			"Fixed guild audit log throwing errors.",
+			"Fixed guild member list.",
+			"Fixed opening user popouts in chat."
 		]
 	}],
 	"build": {
@@ -382,7 +383,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
 				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
 			},
-			616: (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+			366: (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 				__webpack_require__.r(__webpack_exports__);
 				__webpack_require__.d(__webpack_exports__, {
 					default: () => StatusEverywhere
@@ -391,11 +392,12 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				const external_BasePlugin_namespaceObject = BasePlugin;
 				var external_BasePlugin_default = __webpack_require__.n(external_BasePlugin_namespaceObject);
 				const flux_namespaceObject = Modules["@discord/flux"];
-				var external_BdApi_React_ = __webpack_require__(832);
+				var external_BdApi_React_ = __webpack_require__(113);
 				var external_BdApi_React_default = __webpack_require__.n(external_BdApi_React_);
 				const stores_namespaceObject = Modules["@discord/stores"];
 				const constants_namespaceObject = Modules["@discord/constants"];
 				const utils_namespaceObject = Modules["@discord/utils"];
+				const icons_namespaceObject = Modules["@discord/icons"];
 				var avatar = __webpack_require__(672);
 				const package_namespaceObject = JSON.parse('{"um":{"u2":"StatusEverywhere"}}');
 				const modules_namespaceObject = Modules["@discord/modules"];
@@ -480,6 +482,18 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						return Element;
 					}
 				}
+				const components_namespaceObject = Modules["@discord/components"];
+				function _extends() {
+					_extends = Object.assign || function(target) {
+						for (var i = 1; i < arguments.length; i++) {
+							var source = arguments[i];
+							for (var key in source)
+								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
+						}
+						return target;
+					};
+					return _extends.apply(this, arguments);
+				}
 				const {
 					ComponentDispatch
 				} = external_PluginApi_namespaceObject.WebpackModules.getByProps("ComponentDispatch");
@@ -495,6 +509,8 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				const StatusModule = external_PluginApi_namespaceObject.WebpackModules.getByProps("getStatusColor");
 				const Members = external_PluginApi_namespaceObject.WebpackModules.getByProps("subscribeMembers");
 				const ActivityUtils = external_PluginApi_namespaceObject.WebpackModules.getByProps("isStreaming");
+				const Popout = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("Popout");
+				const UserPopoutContainer = external_PluginApi_namespaceObject.WebpackModules.getModule((m => "UserPopoutContainer" === m.type?.displayName));
 				const ActivityStore = external_PluginApi_namespaceObject.WebpackModules.getByProps("getActivities");
 				function isStreaming(userId) {
 					const activities = ActivityStore.getActivities(userId);
@@ -514,14 +530,15 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						Members.subscribeMembers(guildId, Array.from(users));
 					}));
 				}
-				function useSubscribeGuildMembers(guildId, userId) {
+				function useSubscribeGuildMembers(guildId, userId, shouldWatch) {
 					if (!guilds[guildId]) guilds[guildId] = new Set;
 					(0, external_BdApi_React_.useEffect)((() => {
+						if (!shouldWatch) return;
 						reloadSubscriptions(guildId, userId, "add");
 						return function() {
 							reloadSubscriptions(guildId, userId, "remove");
 						};
-					}), [guildId, userId]);
+					}), [guildId, userId, shouldWatch]);
 				}
 				const classes = {
 					...external_PluginApi_namespaceObject.WebpackModules.getByProps("sizeEmoji", "avatar")
@@ -538,26 +555,41 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						shouldWatch = true,
 						AvatarComponent = AnimatedAvatar,
 						onMouseEnter,
-						onMouseLeave
+						onMouseLeave,
+						shouldShowUserPopout
 					} = props;
 					if (!user) {
 						external_PluginApi_namespaceObject.Logger.warn("No user provided");
 						return null;
 					}
 					const [shouldAnimate, setAnimate] = (0, external_BdApi_React_.useState)(animated);
+					const [hasUserPopout, setUserPopout] = (0, external_BdApi_React_.useState)(false);
 					const streaming = isStreaming(user.id);
 					const [status, isMobile, isTyping, statusColor, radial, forceLoadStatus] = (0, flux_namespaceObject.useStateFromStoresArray)([stores_namespaceObject.TypingUsers, stores_namespaceObject.Status, settings], (() => [streaming ? "streaming" : stores_namespaceObject.Status.getStatus(user.id), stores_namespaceObject.Status.isMobileOnline(user.id), stores_namespaceObject.TypingUsers.isTyping(channel_id, user.id) && settings.get(showTyping?.id, showTyping?.value ?? false) && showTyping, StatusModule.getStatusColor(streaming ? "streaming" : stores_namespaceObject.Status.getStatus(user.id)), settings.get(radialConfig?.id, radialConfig?.value), settings.get("forceLoadStatus", true)]));
-					if (stores_namespaceObject.SelectedGuilds.getGuildId() && shouldWatch && forceLoadStatus) useSubscribeGuildMembers(stores_namespaceObject.SelectedGuilds.getGuildId(), user.id);
+					try {
+						useSubscribeGuildMembers(stores_namespaceObject.SelectedGuilds.getGuildId(), user.id, null != stores_namespaceObject.SelectedGuilds.getGuildId() && shouldWatch && forceLoadStatus);
+					} catch (error) {
+						external_PluginApi_namespaceObject.Logger.error("Error while subscribing to guild member events:\n", error);
+					}
 					(0, external_BdApi_React_.useEffect)((() => {
 						if (shouldAnimate === animated) return;
-						setAnimate(animated);
+						try {
+							setAnimate(animated);
+						} catch (error) {
+							external_PluginApi_namespaceObject.Logger.error("Error while setting 'animated' state:\n", error);
+						}
 					}), [animated]);
 					(0, external_BdApi_React_.useEffect)((() => {
 						if ("chat" !== props.type) return;
-						const id = constants_namespaceObject.ComponentActions.ANIMATE_CHAT_AVATAR(`${props.subscribeToGroupId}:${user.id}`);
-						ComponentDispatch.subscribe(id, setAnimate);
-						return () => void ComponentDispatch.unsubscribe(id, setAnimate);
+						try {
+							const id = constants_namespaceObject.ComponentActions.ANIMATE_CHAT_AVATAR(`${props.subscribeToGroupId}:${user.id}`);
+							ComponentDispatch.subscribe(id, setAnimate);
+							return () => void ComponentDispatch.unsubscribe(id, setAnimate);
+						} catch (error) {
+							external_PluginApi_namespaceObject.Logger.error("Error while subscribing to ChatAvatarAnimate:\n", error);
+						}
 					}), [user, props.subscribeToGroupId]);
+					const onContextMenu = useContextMenuUser(user.id, channel_id);
 					return external_BdApi_React_default().createElement("div", {
 						onMouseEnter,
 						onMouseLeave,
@@ -572,7 +604,19 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						style: {
 							"--status-color": statusColor
 						}
-					}, external_BdApi_React_default().createElement(AvatarComponent, {
+					}, external_BdApi_React_default().createElement(Popout, {
+						renderPopout: props => external_BdApi_React_default().createElement(UserPopoutContainer, _extends({}, props, {
+							userId: user.id,
+							channelId: channel_id,
+							guildId: stores_namespaceObject.SelectedGuilds.getGuildId()
+						})),
+						animation: Popout.Animation.TRANSLATE,
+						position: Popout.Positions.RIGHT,
+						shouldShow: hasUserPopout && shouldShowUserPopout,
+						onRequestOpen: () => setUserPopout(true),
+						onRequestClose: () => setUserPopout(false)
+					}, (popoutProps => external_BdApi_React_default().createElement(AvatarComponent, _extends({}, popoutProps, {
+						onClick: setUserPopout.bind(null, !hasUserPopout),
 						statusTooltip: true,
 						statusColor,
 						className: (0, utils_namespaceObject.joinClassNames)(avatar.Z.chatAvatar, "chat" === type ? [classes.avatar, classes.clickable] : null, props.className, {
@@ -582,25 +626,21 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						isTyping,
 						isMobile,
 						size,
-						src: user.getAvatarURL(props.guildId, shouldAnimate),
-						onClick: event => {
-							if (!props.shouldShowUserPopout) return;
-							try {
-								external_PluginApi_namespaceObject.Popouts.showUserPopout(event.target, user);
-							} catch (error) {
-								external_PluginApi_namespaceObject.Logger.error("Failed to open UserPopout:", error);
-							}
-						},
-						onContextMenu: useContextMenuUser(user.id, channel_id)
-					}));
+						src: user.getAvatarURL(props.guildId, parseInt(size.replace("SIZE_", "")), shouldAnimate),
+						onContextMenu
+					})))));
 				}
 				StatusAvatar.Sizes = AvatarSizes;
-				const components_avatar = ErrorBoundary.from(StatusAvatar, "StatusEverywhere");
+				const components_avatar = ErrorBoundary.from(StatusAvatar, "StatusEverywhere", (() => external_BdApi_React_default().createElement(components_namespaceObject.TooltipContainer, {
+					text: "Component Error"
+				}, external_BdApi_React_default().createElement(icons_namespaceObject.WarningCircle, {
+					color: "#f04747"
+				}))));
 				const external_StyleLoader_namespaceObject = StyleLoader;
 				var external_StyleLoader_default = __webpack_require__.n(external_StyleLoader_namespaceObject);
-				var createUpdateWrapper_React = __webpack_require__(832);
-				function _extends() {
-					_extends = Object.assign || function(target) {
+				var createUpdateWrapper_React = __webpack_require__(113);
+				function createUpdateWrapper_extends() {
+					createUpdateWrapper_extends = Object.assign || function(target) {
 						for (var i = 1; i < arguments.length; i++) {
 							var source = arguments[i];
 							for (var key in source)
@@ -608,11 +648,11 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						}
 						return target;
 					};
-					return _extends.apply(this, arguments);
+					return createUpdateWrapper_extends.apply(this, arguments);
 				}
 				const createUpdateWrapper = (Component, valueProp = "value", changeProp = "onChange", valueIndex = 0) => props => {
 					const [value, setValue] = createUpdateWrapper_React.useState(props[valueProp]);
-					return createUpdateWrapper_React.createElement(Component, _extends({}, props, {
+					return createUpdateWrapper_React.createElement(Component, createUpdateWrapper_extends({}, props, {
 						[valueProp]: value,
 						[changeProp]: (...args) => {
 							const value = args[valueIndex];
@@ -622,7 +662,6 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					}));
 				};
 				const hooks_createUpdateWrapper = createUpdateWrapper;
-				const icons_namespaceObject = Modules["@discord/icons"];
 				var category = __webpack_require__(911);
 				function Category({
 					label,
@@ -654,9 +693,8 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				}
 				Category.Looks = {
 					COMPACT: category.Z.compact,
-					DEFAULT: category.Z.default
+					DEFAULT: category.Z["default"]
 				};
-				const components_namespaceObject = Modules["@discord/components"];
 				var colorPicker = __webpack_require__(89);
 				function colorPicker_extends() {
 					colorPicker_extends = Object.assign || function(target) {
@@ -805,7 +843,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				}
 				const forms_namespaceObject = Modules["@discord/forms"];
 				var components_settings = __webpack_require__(530);
-				const components_settings_namespaceObject = JSON.parse('{"performance":{"forceLoadStatus":{"name":"Force Load Status","note":"This setting force-loads the statuses of users from the WebSocket. Be aware, this can cause high usage of resources because of the amount of users in the cache. I can try to work on something that improves this but for now, if you don\'t want it, simply disable it.","value":true,"type":"switch"}},"colors":{"dndColor":{"name":"Do Not Disturb Color","note":"Color for \\"Do Not Disturb\\" status indicator.","value":"#ED4245","type":"color"},"idleColor":{"name":"Idle Color","note":"Color for \\"Idle\\" status indicator.","value":"#FAA81A","type":"color"},"onlineColor":{"name":"Online Color","note":"Color for \\"Online\\" status indicator.","value":"#3BA55D","type":"color"},"streamingColor":{"name":"Streaming Color","note":"Color for \\"Streaming\\" status indicator.","value":"#593695","type":"color"},"offlineColor":{"name":"Offline Color","note":"Color for \\"Offline\\" status indicator.","value":"#747F8D","type":"color"}},"chat":{"showChatTyping":{"name":"Typing","note":"Show typing state in the chat.","value":true,"type":"switch"},"chatRadialStatus":{"name":"Radial Status","note":"Shows the status as a border instead of a pointer.","value":false,"type":"switch"}},"member_list":{"showMemberlistTyping":{"name":"Typing","note":"Show typing state in the member list.","value":true,"type":"switch"},"memberlistRadialStatus":{"name":"Radial Status","note":"Shows the status as a border instead of a pointer.","value":false,"type":"switch"}},"friends_page":{"showFriendsPageTyping":{"name":"Typing","note":"Show typing state in the friends page.","value":true,"type":"switch"},"friendsPageRadialStatus":{"name":"Radial Status","note":"Shows the status as a border instead of a pointer.","value":false,"type":"switch"}},"user_popout":{"showUserPopoutTyping":{"name":"Typing","note":"Show typing state in the user popout.","value":true,"type":"switch"},"userPopoutRadialStatus":{"name":"Radial Status","note":"Shows the status as a border instead of a pointer.","value":false,"type":"switch"}},"direct_messages":{"showDirectMessagesTyping":{"name":"Typing","note":"Show typing state in direct messages.","value":true,"type":"switch"},"directMessagesRadialStatus":{"name":"Radial Status","note":"Shows the status as a border instead of a pointer.","value":false,"type":"switch"}},"user_profile":{"showUserProfileTyping":{"name":"Typing","note":"Show typing state in the user profile modal.","value":true,"type":"switch"},"userProfileRadialStatus":{"name":"Radial Status","note":"Shows the status as a border instead of a pointer.","value":false,"type":"switch"}},"guild_settings":{"showGuildSettingsTyping":{"name":"Typing","note":"Show typing state in the guild settings","value":true,"type":"switch"},"guildSettingsRadialStatus":{"name":"Radial Status","note":"Shows the status as a border instead of a pointer.","value":false,"type":"switch"}},"voice_chat":{"showVoiceChatTyping":{"name":"Typing","note":"Show typing state in voice chats.","value":true,"type":"switch"}},"accounts_section":{"accountSettingsRadialStatus":{"name":"Radial Status","note":"Shows the status as a border instead of a pointer.","value":false,"type":"switch"}}}');
+				const components_settings_namespaceObject = JSON.parse('{"performance":{"forceLoadStatus":{"name":"Force Load Status","note":"This setting force-loads the status\'s of users from the WebSocket. Be aware, this can cause high usage of resources because of the amount of users in the cache. I can try to work on something that improves this but for now, if you don\'t want it, simply disable.","value":true,"type":"switch"}},"colors":{"dndColor":{"name":"Do Not Disturb Color","note":"Color for \\"Do Not Disturb\\" status indicator.","value":"#ED4245","type":"color"},"idleColor":{"name":"Idle Color","note":"Color for \\"Idle\\" status indicator.","value":"#FAA81A","type":"color"},"onlineColor":{"name":"Online Color","note":"Color for \\"Online\\" status indicator.","value":"#3BA55D","type":"color"},"streamingColor":{"name":"Streaming Color","note":"Color for \\"Streaming\\" status indicator.","value":"#593695","type":"color"},"offlineColor":{"name":"Offline Color","note":"Color for \\"Offline\\" status indicator.","value":"#747F8D","type":"color"}},"chat":{"showChatTyping":{"name":"Typing","note":"Show typing state in the chat.","value":true,"type":"switch"},"chatRadialStatus":{"name":"Radial Status","note":"Shows the status as border instead of pointer.","value":false,"type":"switch"}},"member_list":{"showMemberlistTyping":{"name":"Typing","note":"Show typing state in the member list.","value":true,"type":"switch"},"memberlistRadialStatus":{"name":"Radial Status","note":"Shows the status as border instead of pointer.","value":false,"type":"switch"}},"friends_page":{"showFriendsPageTyping":{"name":"Typing","note":"Show typing state in the friends page.","value":true,"type":"switch"},"friendsPageRadialStatus":{"name":"Radial Status","note":"Shows the status as border instead of pointer.","value":false,"type":"switch"}},"user_popout":{"showUserPopoutTyping":{"name":"Typing","note":"Show typing state in user popout.","value":true,"type":"switch"},"userPopoutRadialStatus":{"name":"Radial Status","note":"Shows the status as border instead of pointer.","value":false,"type":"switch"}},"direct_messages":{"showDirectMessagesTyping":{"name":"Typing","note":"Show typing state in direct messages.","value":true,"type":"switch"},"directMessagesRadialStatus":{"name":"Radial Status","note":"Shows the status as border instead of pointer.","value":false,"type":"switch"}},"user_profile":{"showUserProfileTyping":{"name":"Typing","note":"Show typing state in user profile modal.","value":true,"type":"switch"},"userProfileRadialStatus":{"name":"Radial Status","note":"Shows the status as border instead of pointer.","value":false,"type":"switch"}},"guild_settings":{"showGuildSettingsTyping":{"name":"Typing","note":"Show typing state in the guild settings","value":true,"type":"switch"},"guildSettingsRadialStatus":{"name":"Radial Status","note":"Shows the status as border instead of pointer.","value":false,"type":"switch"}},"voice_chat":{"showVoiceChatTyping":{"name":"Typing","note":"Show typing state in the voice chat.","value":true,"type":"switch"}},"accounts_section":{"accountSettingsRadialStatus":{"name":"Radial Status","note":"Shows the status as border instead of pointer.","value":false,"type":"switch"}}}');
 				function settings_extends() {
 					settings_extends = Object.assign || function(target) {
 						for (var i = 1; i < arguments.length; i++) {
@@ -818,6 +856,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					return settings_extends.apply(this, arguments);
 				}
 				const SwitchItem = hooks_createUpdateWrapper(external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("SwitchItem"));
+				const Slider = hooks_createUpdateWrapper(external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("Slider"), "initialValue", "onValueChange");
 				function SwitchSetting({
 					name,
 					value,
@@ -853,6 +892,33 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						className: components_settings.Z.colorPickerItem
 					}));
 				}
+				function SliderSetting({
+					name,
+					value,
+					id,
+					note,
+					markers,
+					sticky,
+					valueMap,
+					valueString,
+					...props
+				}) {
+					const currentValue = settings.get(id, value).toString();
+					return external_BdApi_React_default().createElement("div", {
+						className: components_settings.Z.settingContainer
+					}, external_BdApi_React_default().createElement(forms_namespaceObject.FormTitle, {
+						tag: "h3"
+					}, name), external_BdApi_React_default().createElement(Slider, settings_extends({
+						onValueChange: value => settings.set(id, valueMap ? valueMap.replace(/%s/g, value) : value),
+						defaultValue: value,
+						initialValue: parseInt(currentValue.startsWith("SIZE_") ? currentValue.slice("SIZE_".length) : currentValue),
+						stickToMarkers: sticky ?? false,
+						handleSize: 10,
+						markers
+					}, props)), external_BdApi_React_default().createElement(forms_namespaceObject.FormText, {
+						type: "description"
+					}, note));
+				}
 				function SettingsPanel() {
 					return Object.entries(components_settings_namespaceObject).map((([key, items]) => external_BdApi_React_default().createElement(Category, {
 						look: Category.Looks.COMPACT,
@@ -870,6 +936,11 @@ function buildPlugin([BasePlugin, PluginApi]) {
 									id,
 									key: id
 								}));
+							case "slider":
+								return external_BdApi_React_default().createElement(SliderSetting, settings_extends({}, props, {
+									id,
+									key: id
+								}));
 						}
 					})))));
 				}
@@ -884,6 +955,30 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					};
 					return StatusEverywhere_extends.apply(this, arguments);
 				}
+				const VoiceState = external_PluginApi_namespaceObject.WebpackModules.getByProps("isSoundSharing", "isSpeaking");
+				const lazyPatch = function(module, functionName, callback, id) {
+					if (!module || !functionName || "function" !== typeof module[functionName]) return;
+					const original = module[functionName];
+					const unpatch = function() {
+						module[functionName] = original;
+					};
+					module[functionName] = function() {
+						const returnValue = Reflect.apply(original, this, arguments);
+						try {
+							const tempReturn = Reflect.apply(callback, this, [arguments, returnValue]);
+							return "undefined" === typeof tempReturn ? returnValue : tempReturn;
+						} catch (error) {
+							external_PluginApi_namespaceObject.Logger.error(`Lazy patch ${id} failed!`, error);
+						}
+						return returnValue;
+					};
+					Object.assign(module[functionName], {
+						_originalFunction: original,
+						patchedBy: package_namespaceObject.um.u2,
+						unpatch
+					});
+					return unpatch;
+				};
 				class StatusEverywhere extends(external_BasePlugin_default()) {
 					get StatusAvatar() {
 						return components_avatar;
@@ -891,49 +986,24 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					getSettingsPanel() {
 						return external_BdApi_React_default().createElement(SettingsPanel, null);
 					}
-					onStart() {
-						external_PluginApi_namespaceObject.Utilities.suppressErrors((() => {
-							this.patchChatAvatar();
-						}), "StatusEverywhere.patchChatAvatar")();
-						external_PluginApi_namespaceObject.Utilities.suppressErrors((() => {
-							this.patchChannelMessage();
-						}), "StatusEverywhere.patchChannelMessage")();
-						external_PluginApi_namespaceObject.Utilities.suppressErrors((() => {
-							this.patchVoiceUser();
-						}), "StatusEverywhere.patchVoiceUser")();
-						external_PluginApi_namespaceObject.Utilities.suppressErrors((() => {
-							this.patchAuditlog();
-						}), "StatusEverywhere.patchAuditlog")();
-						external_PluginApi_namespaceObject.Utilities.suppressErrors((() => {
-							this.patchGuildSettingsMembers();
-						}), "StatusEverywhere.patchGuildSettingsMembers")();
-						external_PluginApi_namespaceObject.Utilities.suppressErrors((() => {
-							this.patchColorModule();
-						}), "StatusEverywhere.patchColorModule")();
-						external_PluginApi_namespaceObject.Utilities.suppressErrors((() => {
-							this.patchMemberListItem();
-						}), "StatusEverywhere.patchMemberListItem")();
-						external_PluginApi_namespaceObject.Utilities.suppressErrors((() => {
-							this.patchUserPopout();
-						}), "StatusEverywhere.patchUserPopout")();
-						external_PluginApi_namespaceObject.Utilities.suppressErrors((() => {
-							this.patchUserProfile();
-						}), "StatusEverywhere.patchUserProfile")();
-						external_PluginApi_namespaceObject.Utilities.suppressErrors((() => {
-							this.patchAvatar();
-						}), "StatusEverywhere.patchAvatar")();
-						external_PluginApi_namespaceObject.Utilities.suppressErrors((() => {
-							this.patchHeaderPlaying();
-						}), "StatusEverywhere.patchHeaderPlaying")();
-						external_PluginApi_namespaceObject.Utilities.suppressErrors((() => {
-							this.patchPrivateChannel();
-						}), "StatusEverywhere.patchPrivateChannel")();
-						external_PluginApi_namespaceObject.Utilities.suppressErrors((() => {
-							this.patchPartyMembers();
-						}), "StatusEverywhere.patchPartyMembers")();
-						external_PluginApi_namespaceObject.Utilities.suppressErrors((() => {
-							this.patchAccountSection();
-						}), "StatusEverywhere.patchAccountSection")();
+					createTimeLog(label) {
+						const start = Date.now();
+						return {
+							start,
+							end: function() {
+								const current = Date.now();
+								external_PluginApi_namespaceObject.Logger.log(label.replace(/%s/g, (current - start).toFixed()));
+							}
+						};
+					}
+					async onStart() {
+						const time = this.createTimeLog("Started StatusEverywhere in %sms.");
+						const methods = Object.keys(Object.getOwnPropertyDescriptors(this.constructor.prototype));
+						for (let i = 0; i < methods.length; i++) {
+							if (!methods[i].startsWith("patch") || "function" !== typeof this[methods[i]]) continue;
+							external_PluginApi_namespaceObject.Utilities.suppressErrors(this[methods[i]].bind(this), `${this.constructor.name}.${methods[i]}`)();
+						}
+						time.end();
 						external_StyleLoader_default().inject();
 					}
 					async patchColorModule() {
@@ -955,13 +1025,38 @@ function buildPlugin([BasePlugin, PluginApi]) {
 							}
 						}));
 					}
+					async patchRTCConnectionUsers() {
+						function PatchedRTCUser(props) {
+							const ret = props.__originalType(props);
+							(0, flux_namespaceObject.useStateFromStores)([VoiceState], (() => VoiceState.isSpeaking(props.user.id) || VoiceState.isSoundSharing(props.user.id)));
+							try {
+								const org = ret.props.children;
+								ret.props.children = e => {
+									const ret = org(e);
+									try {
+										const org2 = ret.props.children;
+										ret.props.children = tooltipProps => {
+											const ret = org2(tooltipProps);
+											return ret;
+										};
+									} catch (error) {
+										external_PluginApi_namespaceObject.Logger.error("Error in PatchedRTCUser:", error);
+									}
+									return ret;
+								};
+							} catch (error) {
+								external_PluginApi_namespaceObject.Logger.error("Error in PatchedRTCUser:", error);
+							}
+							return ret;
+						}
+					}
 					async patchAccountSection() {
 						const accountSelector = `.${external_PluginApi_namespaceObject.WebpackModules.getByProps("container", "avatar", "redIcon").container}`;
 						const userSettingsSelector = `.${external_PluginApi_namespaceObject.WebpackModules.getByProps("contentColumnDefault").contentColumnDefault + " > div"}`;
 						external_PluginApi_namespaceObject.ReactComponents.getComponentByName("Account", accountSelector).then((Account => {
 							external_PluginApi_namespaceObject.Patcher.after(Account.component.prototype, "render", ((_, __, res) => {
-								const tree = external_PluginApi_namespaceObject.Utilities.findInReactTree(res, (e => e?.renderPopout));
-								if (!tree) return;
+								const tree = external_PluginApi_namespaceObject.Utilities.findInReactTree(res, (e => e?.renderPopout && !e.child));
+								if (!tree) return res;
 								const old = tree.children;
 								tree.children = e => {
 									const ret = old(e);
@@ -973,7 +1068,8 @@ function buildPlugin([BasePlugin, PluginApi]) {
 										radial: {
 											id: "accountSettingsRadialStatus",
 											value: false
-										}
+										},
+										size: components_avatar.Sizes.SIZE_32
 									}));
 									return ret;
 								};
@@ -1034,7 +1130,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 							_this.props.__patched = true;
 							const original = _this.props.renderUser;
 							_this.props.renderUser = (props, ...args) => {
-								const user = props.user ?? props;
+								const user = props?.user ?? props;
 								const ret = original ? original.apply(null, [props].concat(args)) : null;
 								if (!user) return ret;
 								return external_BdApi_React_default().createElement(components_avatar, StatusEverywhere_extends({}, props, {
@@ -1095,7 +1191,6 @@ function buildPlugin([BasePlugin, PluginApi]) {
 								shouldWatch: false,
 								channel_id: _this.props.channel.id,
 								type: "direct-message",
-								size: components_avatar.Sizes.SIZE_32,
 								showTyping: {
 									id: "showDirectMessagesTyping",
 									value: true
@@ -1103,7 +1198,8 @@ function buildPlugin([BasePlugin, PluginApi]) {
 								radial: {
 									id: "directMessagesRadialStatus",
 									value: false
-								}
+								},
+								size: components_avatar.Sizes.SIZE_32
 							});
 						}));
 					}
@@ -1165,7 +1261,6 @@ function buildPlugin([BasePlugin, PluginApi]) {
 							const avatar = external_PluginApi_namespaceObject.Utilities.findInReactTree(res, (e => e?.props?.statusTooltip));
 							if (!avatar) return;
 							avatar.props = Object.assign({}, props, {
-								size: components_avatar.Sizes.SIZE_120,
 								className: classes.avatar,
 								animated: true,
 								shouldWatch: false,
@@ -1176,7 +1271,8 @@ function buildPlugin([BasePlugin, PluginApi]) {
 								showTyping: {
 									id: "showUserProfileTyping",
 									value: true
-								}
+								},
+								size: components_avatar.Sizes.SIZE_120
 							});
 							avatar.type = components_avatar;
 						}));
@@ -1233,7 +1329,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 							const tree = external_PluginApi_namespaceObject.Utilities.findInReactTree(res, (e => e?.renderPopout));
 							const user = props?.message?.author;
 							const channel_id = props?.message?.channel_id;
-							if (!user || !tree?.children || tree.children.__patched || user.bot && "0000" === user.discriminator) return;
+							if (!user || !tree?.children || tree.children?.__patched || user.bot && "0000" === user.discriminator) return;
 							tree.children = () => external_BdApi_React_default().createElement(components_avatar, StatusEverywhere_extends({}, props, {
 								type: "chat",
 								user,
@@ -1246,7 +1342,8 @@ function buildPlugin([BasePlugin, PluginApi]) {
 								radial: {
 									id: "chatRadialStatus",
 									value: false
-								}
+								},
+								size: components_avatar.Sizes.SIZE_40
 							}));
 							tree.children.__patched = true;
 						}));
@@ -1294,35 +1391,28 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						}))));
 					}
 					async patchAuditlog() {
-						const AuditLog = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("AuditLog");
+						const AuditLog = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("GuildSettingsAuditLogEntry");
 						const classes = external_PluginApi_namespaceObject.WebpackModules.getByProps("desaturate", "auditLog", "avatar");
 						external_PluginApi_namespaceObject.Patcher.after(AuditLog.prototype, "render", ((_this, _, res) => {
 							const originalChildren = res?.props?.children;
 							if ("function" !== typeof originalChildren) return;
 							if (!_this.props.log?.user) return;
-							res.props.children = function() {
-								const returnValue = originalChildren.apply(this, arguments);
-								try {
-									const avatar = external_PluginApi_namespaceObject.Utilities.findInReactTree(returnValue, (e => e?.props?.className === classes.avatar));
-									if (!avatar || !avatar.type) return returnValue;
-									Object.assign(avatar.props, {
-										user: _this.props.log.user
-									});
-									avatar.type = props => external_BdApi_React_default().createElement(components_avatar, StatusEverywhere_extends({}, props, {
-										showTyping: {
-											id: "showGuildSettingsShowTyping",
-											value: true
-										},
-										radial: {
-											id: "guildSettingsRadialStatus",
-											value: false
-										}
-									}));
-								} catch (error) {
-									external_PluginApi_namespaceObject.Logger.error("Failed to inject AuditLog item:\n", error);
-								}
-								return returnValue;
-							};
+							lazyPatch(res?.props, "children", ((_, ret) => {
+								const popout = external_PluginApi_namespaceObject.Utilities.findInReactTree(ret, (e => e?.renderPopout));
+								if (!popout) return;
+								lazyPatch(popout, "children", (props => external_BdApi_React_default().createElement(components_avatar, StatusEverywhere_extends({}, props[0], {
+									user: _this.props.log.user,
+									showTyping: {
+										id: "showGuildSettingsShowTyping",
+										value: true
+									},
+									radial: {
+										id: "guildSettingsRadialStatus",
+										value: false
+									},
+									className: classes.avatar
+								}))));
+							}));
 						}));
 					}
 					async patchGuildSettingsMembers() {
@@ -1334,7 +1424,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 							Object.assign(avatar.props, {
 								user: _this.props.user
 							});
-							avatar.type = props => external_BdApi_React_default().createElement(components_avatar, StatusEverywhere_extends({}, props, {
+							lazyPatch(avatar, "type", (props => external_BdApi_React_default().createElement(components_avatar, StatusEverywhere_extends({}, props[0], {
 								showTyping: {
 									id: "showGuildSettingsShowTyping",
 									value: true
@@ -1343,7 +1433,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 									id: "guildSettingsRadialStatus",
 									value: false
 								}
-							}));
+							}))));
 						}));
 						Member.forceUpdateAll();
 					}
@@ -1385,7 +1475,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					return list;
 				};
 			},
-			832: module => {
+			113: module => {
 				module.exports = BdApi.React;
 			}
 		};
@@ -1431,7 +1521,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				});
 			};
 		})();
-		var __webpack_exports__ = __webpack_require__(616);
+		var __webpack_exports__ = __webpack_require__(366);
 		module.exports.LibraryPluginHack = __webpack_exports__;
 	})();
 	const PluginExports = module.exports.LibraryPluginHack;
