@@ -19,3 +19,16 @@ export default {
     fr,
     vi
 };
+
+export type Keys = {
+    CONNECTIONS: string;
+    NO_CONNECTIONS: string;
+    LOADING_CONNECTIONS: string;
+    LOADING_LAST_MESSAGE: string;
+    LOADING_JOINED_AT: string;
+    MEMBER_WAS_NOT_FOUND: string;
+    FAILED_TO_FETCH: string;
+    USERINFO_CMD_DESC: string;
+    NO_MUTUAL_GUILDS: string;
+    LOADING_MUTUAL_GUILDS: string;
+};

@@ -1,12 +1,11 @@
 /// <reference path="../../../bdbuilder/typings/main.d.ts" />
 
 import { Endpoints } from "@discord/constants";
-import {Store} from "@discord/flux";
-import { Messages } from "@discord/i18n";
-import {Dispatcher} from "@discord/modules";
-import {stringify} from "@discord/sanitize";
+import { Store } from "@discord/flux";
+import { Dispatcher } from "@discord/modules";
+import { stringify } from "@discord/sanitize";
 import { Logger } from "@discord/utils";
-import {APIModule} from "@zlibrary/discord";
+import { APIModule } from "@zlibrary/discord";
 
 export type LastMessageResponse = {
     fetch: number,
@@ -46,8 +45,6 @@ function handleMessageCreate({message, channelId}: {message: SearchResult, chann
         fetch: Date.now(),
         status: "success"
     });
-
-    LastMessage.emitChange();
 }
 
 function handleMessageDelete({messageId, channelId}) {
@@ -55,33 +52,32 @@ function handleMessageDelete({messageId, channelId}) {
         if (result.messageId !== messageId || result.channelId !== channelId) continue;
 
         lastMessages.delete(resolveId(userId, channelId));
-        LastMessage.emitChange();
     }
 }
 
 class LastMessageStore extends Store {
     public paused = false;
-    get _users() { return lastMessages; }
-    get fetching() { return fetchingQueue; }
-    isFetching(userId: string, channelId: string) { return fetchingQueue.has(resolveId(userId, channelId)); }
-    logger = new Logger("LastMessageStore");
+    public get _users() { return lastMessages; }
+    public get fetching() { return fetchingQueue; }
+    public isFetching(userId: string, channelId: string) { return fetchingQueue.has(resolveId(userId, channelId)); }
+    private readonly logger = new Logger("LastMessageStore");
     MAX_RETRIES = 5;
 
-    get(userId: string, channelId: string): LastMessageResponse {
+    public get(userId: string, channelId: string): LastMessageResponse {
         const cached = lastMessages.get(resolveId(userId, channelId));
         if (!cached || Date.now() - cached.fetch > 600000) return null;
 
         return cached;
     }
 
-    has(userId: string, channelId: string): boolean {
-        return this.get(userId, channelId) !== null && lastMessages.has(resolveId(userId, channelId));
+    public has(userId: string, channelId: string): boolean {
+        return this.get(userId, channelId) != null && lastMessages.has(resolveId(userId, channelId));
     }
 
-    fetch(userId: string, roomId: string, isGuild = false, attemp = 1): Promise<void> {
+    public fetch(userId: string, roomId: string, isGuild = false, attempt = 1): Promise<void> {
         const id = resolveId(userId, roomId);
         if (fetchingQueue.has(id) || this.paused) return Promise.resolve();
-        if (attemp > this.MAX_RETRIES) {
+        if (attempt > this.MAX_RETRIES) {
             fetchingQueue.delete(id);
             lastMessages.set(id, {
                 channelId: roomId,
@@ -91,6 +87,7 @@ class LastMessageStore extends Store {
                 status: "failure"
             });
             this.logger.error(`Request failed after ${this.MAX_RETRIES} attempts.`);
+            this.emitChange();
             return Promise.resolve();
         }
         fetchingQueue.add(id);
@@ -135,7 +132,7 @@ class LastMessageStore extends Store {
                     this.paused = true;
                     setTimeout(() => {
                         this.paused = false;
-                        this.fetch(userId, roomId, isGuild, attemp).then(resolve).catch(reject);
+                        this.fetch(userId, roomId, isGuild, attempt).then(resolve).catch(reject);
                     }, error.body.retry_after + 1000);
                 } else {
                     reject(error);

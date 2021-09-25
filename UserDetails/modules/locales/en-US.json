@@ -6,5 +6,7 @@
     "LOADING_JOINED_AT": "Loading Joined At",
     "MEMBER_WAS_NOT_FOUND": "Member Was Not Found!",
     "FAILED_TO_FETCH": "Failed To Fetch",
-    "USERINFO_CMD_DESC": "User Information"
+    "USERINFO_CMD_DESC": "User Information",
+    "NO_MUTUAL_GUILDS": "No mutual guilds.",
+    "LOADING_MUTUAL_GUILDS": "Loading mutual guilds..."
 }

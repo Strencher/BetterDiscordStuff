@@ -20,14 +20,14 @@ import {connectStores, useStateFromStores} from "@discord/flux";
 import Headphones from "./modules/components/icons/headphones";
 import Commands from "common/apis/commands";
 import Clyde from "common/apis/clyde";
-import {Members, Users, Activities} from "@discord/stores";
-import Strings from "./modules/data/translations/index.js";
-import LocaleManager from "common/apis/strings";
+import {Members, Users, Activities, SelectedChannels, SelectedGuilds} from "@discord/stores";
 import SuppressError from "common/util/noerror";
 import {Messages} from "@discord/i18n";
 import Logger from "./modules/logger";
 import MutualServers from "./modules/apis/mutualServers";
 import * as Stores from "./modules/stores";
+import Strings from "./modules/strings";
+import {Dispatcher} from "@discord/modules";
 
 const getClass = (props = [], items = props, exclude = [], selector = false) => {
     const module = WebpackModules.find(m => m && props.every(prop => m[prop] !== undefined) && exclude.every(e => m[e] == undefined));
@@ -52,20 +52,14 @@ export default class Plugin extends BasePlugin {
         stylesheet.inject();
 
         // Load Strings
-        LocaleManager.addStringsObject(Strings);
-
-        // Api's
-        this.createdApi = new CreatedAt(this);
-        this.joinedApi = new JoinedAt(this);
-        this.lastMessageApi = new LastMessage(this);
-        this.connectionsApi = new UserConnections(this);
-        this.mutualsApi = new MutualServers(this);
+        Strings.init();
 
         // Patches
         this.patchUserPopout();
         this.patchUserProfile();
         this.patchMemberListItem();
         this.patchUserActivityStatus();
+        this.patchAccountSection();
 
         // Commands
         Commands.registerCommand(this.getName(), {
@@ -143,17 +137,14 @@ export default class Plugin extends BasePlugin {
 
         Patcher.after(UserPopoutInfo, "UserPopoutInfo", (_, [{user}], returnValue) => {
             if (this.promises.cancelled) return;
-            const tree = Utilities.findInReactTree(returnValue, SuppressError(e => e.className.indexOf("headerText") > -1));
+            const tree = Utilities.findInReactTree(returnValue, e => e?.className?.indexOf("headerText") > -1);
             if (!Array.isArray(tree?.children) || !user) return;
-            const WrappedJoinedAt = this.joinedApi.task(user.id);
-            const WrappedCreatedAt = this.createdApi.task(user.id);
-            const WrappedLastMessage = this.lastMessageApi.task(user);
 
             tree.children.push(<ErrorBoundary key="UserPopoutHeader" id="UserPopoutHeader" mini>
                 <div className={Utilities.joinClassNames(dateStyles.container, Settings.get("useIcons", true) ? dateStyles.icons : dateStyles.text)}>
-                    {Settings.get("created_show_up", true) && <WrappedCreatedAt key="created-date" />}
-                    {Settings.get("joined_show_up", true) && <WrappedJoinedAt key="joined-date" />}
-                    {Settings.get("lastmessage_show_up", true) && <WrappedLastMessage key="lastmessage-date" />}
+                    {Settings.get("created_show_up", true) && <CreatedAt userId={user.id} key="created-date" />}
+                    {Settings.get("joined_show_up", true) && <JoinedAt userId={user.id} key="joined-date" />}
+                    {Settings.get("lastmessage_show_up", true) && <LastMessage user={user} key="lastmessage-date" />}
                 </div>
             </ErrorBoundary>);
         });
@@ -162,15 +153,12 @@ export default class Plugin extends BasePlugin {
             if (this.promises.cancelled) return;
             if (!Array.isArray(returnValue?.props?.children) || returnValue.props.children.some(child => child?.type === ErrorBoundary)) return returnValue;
 
-            const Connections = this.connectionsApi.task(user);
-            const MutualServers = this.mutualsApi.task(user);
-
             returnValue.props.children.unshift(
                 <ErrorBoundary id="UserPopoutBody" mini key="connections">
-                    <Connections />
+                    <UserConnections user={user} />
                 </ErrorBoundary>,
                 <ErrorBoundary id="UserPopoutBody" mini key="mutual_servers">
-                    <MutualServers />
+                    <MutualServers user={user} />
                 </ErrorBoundary>
             );
         });
@@ -190,18 +178,15 @@ export default class Plugin extends BasePlugin {
                 const ret = original.apply(this, args);
                 
                 try {
-                    const WrappedJoinedAt = this.joinedApi.task(user.id);
-                    const WrappedCreatedAt = this.createdApi.task(user.id);
-                    const WrappedLastMessage = this.lastMessageApi.task(user);
 
                     return (
                         <div className={dateStyles.wrapper}>
                             {ret}
                             <ErrorBoundary id="UserProfile" mini>
                                 <div className={Utilities.joinClassNames(dateStyles.container, dateStyles.userProfile, Settings.get("useIcons", true) ? dateStyles.icons : dateStyles.text)}>
-                                    {Settings.get("created_show_profile", true) && <WrappedCreatedAt />}
-                                    {Settings.get("joined_show_profile", true) && <WrappedJoinedAt />}
-                                    {Settings.get("lastmessage_show_profile", true) && <WrappedLastMessage />}
+                                    {Settings.get("created_show_profile", true) && <CreatedAt userId={user.id} key="created-at" />}
+                                    {Settings.get("joined_show_profile", true) && <JoinedAt userId={user.id} key="joined-at" />}
+                                    {Settings.get("lastmessage_show_profile", true) && <LastMessage user={user} key="last-message" />}
                                 </div>
                             </ErrorBoundary>
                         </div>
@@ -262,9 +247,65 @@ export default class Plugin extends BasePlugin {
         });
     }
 
+    async patchAccountSection() {
+        const classes = WebpackModules.getByProps("copySuccess", "container");
+        const AccountSection = await ReactComponents.getComponentByName("Account", `.${classes.container}`);
+        const UserPopoutContainer = WebpackModules.getModule(m => m.type.displayName === "UserPopoutContainer");
+        const Popout = WebpackModules.getByDisplayName("Popout");
+
+        Patcher.after(AccountSection.component.prototype, "render", (_this, _, res) => {
+            if (this.promises.cancelled) return;
+            if (!_this.state.hasOwnProperty("showUserPopout")) _this.state.showUserPopout = false;
+
+            res.props.onClick = res.props.onContextMenu = function (e) {
+                if (Settings.get("panelPopoutType", "click") !== e.type) return;
+
+                e.preventDefault();
+                e.stopPropagation();
+
+                if (e.target?.classList?.contains(classes.container) || e.target?.parentElement?.classList?.contains(classes.nameTag)) {
+                    this.setState({
+                        showUserPopout: !_this.state.showUserPopout
+                    });
+                }
+            }.bind(_this);
+
+            return (
+                <ErrorBoundary id="AccountSection">
+                    <Popout
+                        child={res} // Keep this for other plugins so they can inject into it too.
+                        shouldShow={_this.state.showUserPopout && Settings.get("showPanelPopout", true)}
+                        animation={Popout.Animation.TRANSLATE}
+                        onRequestClose={() => _this.setState({showUserPopout: false})}
+                        position={Popout.Positions.TOP}
+                        align={Popout.Align.CENTER}
+                        renderPopout={props => (
+                            <ErrorBoundary id="UserPopoutContainer">
+                                <UserPopoutContainer
+                                    {...props}
+                                    channelId={SelectedChannels.getChannelId()}
+                                    guildId={SelectedGuilds.getGuildId()}
+                                    userId={Users.getCurrentUser().id}
+                                    position="top"
+                                />
+                            </ErrorBoundary>
+                        )}
+                    >{() => res}</Popout>
+                </ErrorBoundary>
+            );
+        });
+
+        AccountSection.forceUpdateAll();
+    }
+
+    destroyStore(dispatchToken) {
+        Dispatcher._dependencyGraph.removeNode(dispatchToken);
+        Dispatcher._invalidateCaches();
+    }
+
     onStop() {
         // Remove strings
-        LocaleManager.removeStringsObject(Strings);
+        Strings.shutdown();
 
         // Unpatch
         Patcher.unpatchAll();
@@ -277,5 +318,9 @@ export default class Plugin extends BasePlugin {
 
         // Unregister commands
         Commands.unregisterAllCommands(this.getName());
+
+        // Destroy stores
+        this.destroyStore(Stores.JoinedAt.getDispatchToken());
+        this.destroyStore(Stores.LastMessage.getDispatchToken());
     }
 }

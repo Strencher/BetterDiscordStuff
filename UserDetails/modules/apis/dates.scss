@@ -1,10 +1,18 @@
+:global(.customStatus-oN4ZZY):not(:empty) {
+    padding-top: 10px;
+    border-top: thin solid var(--background-modifier-accent);
+}
+
 .container {
     display: flex;
     max-width: -webkit-fill-available;
-
+    margin-bottom: -5px;
+    
     &.text {
         flex-direction: column;
         margin-top: 10px;
+        border-top: thin solid var(--background-modifier-accent);
+        padding-top: 10px;
     }
 
     &.icons {

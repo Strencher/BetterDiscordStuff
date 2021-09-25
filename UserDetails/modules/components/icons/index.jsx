@@ -14,6 +14,7 @@ import GoogleChrome from "./googleChrome";
 import Headphones from "./headphones";
 import Language from "./language";
 import Mutual from "./mutual";
+import User from "./user";
 
 export const Icons = {
     Cake,
@@ -31,7 +32,8 @@ export const Icons = {
     GoogleChrome,
     Headphones,
     Language,
-    Mutual
+    Mutual,
+    User
 };
 
 export function noop() {return null;}

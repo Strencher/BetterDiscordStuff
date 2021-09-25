@@ -1,7 +1,7 @@
 {
     "info": {
         "name": "UserDetails",
-        "version": "1.5.0",
+        "version": "2.5.0",
         "authors": [
             {
                 "name": "Strencher",
@@ -11,25 +11,26 @@
             }
         ],
         "description": "Shows you a lot information about users in popouts.",
-        "github": "https://github.com/Strencher/BetterDiscordStuff/UserDetails",
-        "github_raw": "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/UserDetails/UserDetails.plugin.js"
+        "github": "https://github.com/Strencher/BetterDiscordStuff/tree/development/UserDetails",
+        "github_raw": "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/UserDetails/UserDetails.plugin.js",
+        "invite": "gvA2ree"
     },
     "changelog": [
         {
-            "title": "Fixed",
-            "type": "fixed",
-            "items": [	
-                "Fixed dates cache not refreshing.",
-                "Fixed some other weird bugs."
+            "title": "Improvements",
+            "type": "improved",
+            "items": [
+                "Improved the code behavior by minimal tweaks.",
+                "Rewrote the translation strings module to __not__ use the one by discord."
             ]
         },
         {
             "title": "Added",
             "type": "added",
             "items": [
-                "**MutualServers** section in the user popout.",
-                "**ActivityIcons** setting to disable for bots.",
-                "**Translations** credits for the translators."
+                "Finally added a context menu on connection badges.",
+                "Added the 'type' of the connection in the tooltip. eg: 'Twitch: Strencher_'",
+                "Integrated PanelPopout by Qb."
             ]
         }
     ],

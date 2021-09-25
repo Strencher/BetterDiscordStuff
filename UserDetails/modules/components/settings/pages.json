@@ -101,6 +101,34 @@
         ]
     },
     {
+        "name": "Panel Popout",
+        "icon": "User",
+        "items": [
+            {
+                "type": "switch",
+                "name": "Enable",
+                "id": "showPanelPopout",
+                "value": true
+            },
+            {
+                "type": "radio",
+                "name": "Open on",
+                "id": "panelPopoutType",
+                "value": "click",
+                "options": [
+                    {
+                        "name": "Right Click",
+                        "value": "contextmenu"
+                    },
+                    {
+                        "name": "Left Click",
+                        "value": "click"
+                    }
+                ]
+            }
+        ]
+    },
+    {
         "name": "Created At",
         "icon": "Cake",
         "items": [

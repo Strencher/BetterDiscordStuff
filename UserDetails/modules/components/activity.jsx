@@ -1,4 +1,4 @@
-import {useStateFromStores} from "@discord/flux";
+import {useStateFromStoresObject} from "@discord/flux";
 import {Activities, Games} from "@discord/stores";
 import Spotify from "./icons/spotify";
 import Twitch from "./icons/twitch";
@@ -19,10 +19,10 @@ export const byName = [
 ];
 
 export function ActivityIcon({activity}) {
-    const {game, showGamepad} = useStateFromStores([Games, Settings], () => ({
+    const {game, showGamepad} = useStateFromStoresObject([Games, Settings], () => ({
         showGamepad: Settings.get("showGamepad", true), 
         game: Games.getGame(activity.application_id)
-    }), null, _.isEqual);
+    }), [activity]);
     const icon = useMemo(() => byName.find(([regex]) => regex.test(activity.name || activity.id)), [game]);
 
     if (icon) {
@@ -54,11 +54,11 @@ export function ActivitiesFilter(activity, index, target) {
 };
 
 export default function Activity({user}) {
-    const {activity, showActivityIcons, disabled} = useStateFromStores([Activities, Settings], () => ({
+    const {activity, showActivityIcons, disabled} = useStateFromStoresObject([Activities, Settings], () => ({
         activity: Activities.getActivities(user.id).filter(ActivitiesFilter)[0],
         showActivityIcons: Settings.get("activityIcons", true),
         disabled: (user?.bot && Settings.get("disableIconsForBots", true))
-    }), null, _.isEqual);
+    }), [user]);
     
     if (!showActivityIcons || !activity || disabled) return null;
 
