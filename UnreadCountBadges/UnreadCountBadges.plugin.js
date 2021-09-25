@@ -1,6 +1,6 @@
 /**
  * @name UnreadCountBadges
- * @version 1.0.2
+ * @version 1.1.0
  * @author Strencher, Metalloriff
  * @description Adds unread badges to guilds, channels & more.
  * @source https://github.com/Strencher/BetterDiscordStuff/tree/master/UnreadCountBadges
@@ -32,7 +32,7 @@
 const config = {
 	"info": {
 		"name": "UnreadCountBadges",
-		"version": "1.0.2",
+		"version": "1.1.0",
 		"authors": [{
 				"name": "Strencher",
 				"discord_id": "415849376598982656",
@@ -54,7 +54,7 @@ const config = {
 		"type": "fixed",
 		"title": "Fixes",
 		"items": [
-			"Fixed excluding muted categories."
+			"Fixed unread count showing up on guilds. Prepare for discord breaking it several times in future."
 		]
 	}],
 	"build": {
@@ -358,7 +358,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
 				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
 			},
-			842: (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+			402: (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 				__webpack_require__.r(__webpack_exports__);
 				__webpack_require__.d(__webpack_exports__, {
 					default: () => UnreadCountBadges
@@ -366,7 +366,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				const external_PluginApi_namespaceObject = PluginApi;
 				const external_BasePlugin_namespaceObject = BasePlugin;
 				var external_BasePlugin_default = __webpack_require__.n(external_BasePlugin_namespaceObject);
-				var external_BdApi_React_ = __webpack_require__(832);
+				var external_BdApi_React_ = __webpack_require__(113);
 				var external_BdApi_React_default = __webpack_require__.n(external_BdApi_React_);
 				const external_Modules_react_spring_namespaceObject = Modules["react-spring"];
 				var badge = __webpack_require__(185);
@@ -404,7 +404,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				const Settings = new SettingsManager(package_namespaceObject.um.u2);
 				const settings = Settings;
 				const constants_namespaceObject = Modules["@discord/constants"];
-				var React = __webpack_require__(832);
+				var React = __webpack_require__(113);
 				function _extends() {
 					_extends = Object.assign || function(target) {
 						for (var i = 1; i < arguments.length; i++) {
@@ -636,9 +636,9 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				}
 				Category.Looks = {
 					COMPACT: category.Z.compact,
-					DEFAULT: category.Z.default
+					DEFAULT: category.Z["default"]
 				};
-				var createUpdateWrapper_React = __webpack_require__(832);
+				var createUpdateWrapper_React = __webpack_require__(113);
 				function createUpdateWrapper_extends() {
 					createUpdateWrapper_extends = Object.assign || function(target) {
 						for (var i = 1; i < arguments.length; i++) {
@@ -890,23 +890,29 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					return external_BdApi_React_default().createElement(maskType, props);
 				}
 				class UnreadCountBadges extends(external_BasePlugin_default()) {
-					constructor(...args) {
-						super(...args);
-						UnreadCountBadges_defineProperty(this, "updateGuilds", void 0);
+					constructor() {
+						super();
+						UnreadCountBadges_defineProperty(this, "guildsClasses", void 0);
 						UnreadCountBadges_defineProperty(this, "updateHomeIcon", void 0);
 						UnreadCountBadges_defineProperty(this, "id", Math.random().toString().slice(2, 10));
 						UnreadCountBadges_defineProperty(this, "settings", settings);
+						UnreadCountBadges_defineProperty(this, "patchAll", (unsubscribe => {
+							this.patchBlobMask();
+							this.patchGuild();
+							this.patchChannelItem();
+							this.patchFolder();
+							this.patchHomeIcon();
+							if (false !== unsubscribe) modules_namespaceObject.Dispatcher.unsubscribe(constants_namespaceObject.ActionTypes.CONNECTION_OPEN, this.patchAll);
+						}));
+						this.guildsClasses = external_PluginApi_namespaceObject.WebpackModules.getByProps("downloadProgressCircle", "guilds");
 					}
 					getSettingsPanel() {
 						return external_BdApi_React_default().createElement(SettingsPanel, null);
 					}
 					onStart() {
 						external_StyleLoader_default().inject();
-						this.patchBlobMask();
-						this.patchGuild();
-						this.patchChannelItem();
-						this.patchFolder();
-						this.patchHomeIcon();
+						if (!stores_namespaceObject.Users.getCurrentUser()) modules_namespaceObject.Dispatcher.subscribe(constants_namespaceObject.ActionTypes.CONNECTION_OPEN, this.patchAll);
+						else this.patchAll(false);
 					}
 					async patchChannelItem() {
 						const ChannelItem = external_PluginApi_namespaceObject.WebpackModules.getModule((m => "ChannelItem" === m?.default?.displayName));
@@ -1055,29 +1061,49 @@ function buildPlugin([BasePlugin, PluginApi]) {
 							return count += UnreadCountBadges_UnreadStore.getUnreadCount(channel.id);
 						}), 0);
 					}
+					updateGuilds() {
+						const [guilds] = document.getElementsByClassName(this.guildsClasses.guilds);
+						if (!guilds) return;
+						const instance = external_PluginApi_namespaceObject.ReactTools.getOwnerInstance(guilds);
+						if (!instance || !instance.forceUpdate) return;
+						instance.forceUpdate();
+					}
 					async patchGuild() {
-						const selector = `.${external_PluginApi_namespaceObject.WebpackModules.getByProps("listItemWidth", "navigationIcon")?.listItem}`;
-						const Guild = await external_PluginApi_namespaceObject.ReactComponents.getComponentByName("Guild", selector);
-						external_PluginApi_namespaceObject.Patcher.after(Guild.component.prototype, "render", ((_this, __, res) => {
-							const mask = external_PluginApi_namespaceObject.Utilities.findInReactTree(res, (m => m?.props?.hasOwnProperty("lowerBadgeWidth")));
-							if (!mask || mask.type === BlobMaskWrapper) return;
-							Object.assign(mask.props, {
-								maskType: mask.type,
-								shouldShow: unread => unread > 0,
-								collector: ({
-									guildId
-								}) => {
-									if (!settings.get("showOnGuilds", true)) return 0;
-									if (!settings.get("showMutedGuildUnread", false) && UnreadCountBadges_MutedStore.isMuted(guildId)) return 0;
-									return this.checkCount(this.getUnreadCountForGuild(guildId, settings.get("includeMutedInGuild", false)));
-								},
-								color: "guildColor",
-								guildId: _this.props.guild.id
-							});
-							mask.type = BlobMaskWrapper;
+						const GuildComponents = external_PluginApi_namespaceObject.WebpackModules.getByProps("HubGuild");
+						const PatchedGuild = ({
+							__originalType,
+							...props
+						}) => {
+							const res = Reflect.apply(__originalType, this, [props]);
+							try {
+								const mask = external_PluginApi_namespaceObject.Utilities.findInReactTree(res, (m => m?.props?.hasOwnProperty("lowerBadgeWidth")));
+								if (!mask || mask.type === BlobMaskWrapper) return res;
+								Object.assign(mask.props, {
+									maskType: mask.type,
+									shouldShow: unread => unread > 0,
+									collector: ({
+										guildId
+									}) => {
+										if (!settings.get("showOnGuilds", true)) return 0;
+										if (!settings.get("showMutedGuildUnread", false) && UnreadCountBadges_MutedStore.isMuted(guildId)) return 0;
+										return this.checkCount(this.getUnreadCountForGuild(guildId, settings.get("includeMutedInGuild", false)));
+									},
+									color: "guildColor",
+									guildId: props.guild.id
+								});
+								mask.type = BlobMaskWrapper;
+							} catch (error) {
+								external_PluginApi_namespaceObject.Logger.error(error);
+							}
+							return res;
+						};
+						external_PluginApi_namespaceObject.Patcher.after(GuildComponents, "default", ((_this, __, res) => {
+							if (!res || !res.props) return;
+							const original = res.type;
+							res.props.__originalType = original;
+							res.type = PatchedGuild;
 						}));
-						Guild.forceUpdateAll();
-						this.updateGuilds = () => Guild.forceUpdateAll();
+						this.updateGuilds();
 					}
 					async patchHomeIcon() {
 						const selector = `.${external_PluginApi_namespaceObject.WebpackModules.getByProps("wrapper", "childWrapper")?.childWrapper}`;
@@ -1173,7 +1199,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					return list;
 				};
 			},
-			832: module => {
+			113: module => {
 				module.exports = BdApi.React;
 			}
 		};
@@ -1219,7 +1245,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				});
 			};
 		})();
-		var __webpack_exports__ = __webpack_require__(842);
+		var __webpack_exports__ = __webpack_require__(402);
 		module.exports.LibraryPluginHack = __webpack_exports__;
 	})();
 	const PluginExports = module.exports.LibraryPluginHack;
