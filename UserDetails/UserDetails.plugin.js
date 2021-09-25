@@ -1847,7 +1847,6 @@ function buildPlugin([BasePlugin, PluginApi]) {
 							} = setting;
 							delete setting.name;
 							delete setting.note;
-							console.log(name, note);
 							return external_BdApi_React_default().createElement(forms_namespaceObject.FormItem, {
 								title: name
 							}, note && external_BdApi_React_default().createElement(forms_namespaceObject.FormText, {
