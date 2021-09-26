@@ -1,6 +1,6 @@
 /**
  * @name UnreadCountBadges
- * @version 1.1.0
+ * @version 1.1.1
  * @author Strencher, Metalloriff
  * @description Adds unread badges to guilds, channels & more.
  * @source https://github.com/Strencher/BetterDiscordStuff/tree/master/UnreadCountBadges
@@ -32,7 +32,7 @@
 const config = {
 	"info": {
 		"name": "UnreadCountBadges",
-		"version": "1.1.0",
+		"version": "1.1.1",
 		"authors": [{
 				"name": "Strencher",
 				"discord_id": "415849376598982656",
@@ -54,7 +54,7 @@ const config = {
 		"type": "fixed",
 		"title": "Fixes",
 		"items": [
-			"Fixed unread count showing up on guilds. Prepare for discord breaking it several times in future."
+			"Called it, one day after another breaking change. Fixed of course."
 		]
 	}],
 	"build": {
@@ -418,7 +418,10 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				}
 				const Badges = external_PluginApi_namespaceObject.WebpackModules.getByProps("NumberBadge");
 				const UnreadStore = external_PluginApi_namespaceObject.WebpackModules.getByProps("getUnreadCount");
-				const MutedStore = external_PluginApi_namespaceObject.WebpackModules.getByProps("isMuted");
+				const MutedStore = external_PluginApi_namespaceObject.WebpackModules.getByProps("getMutedChannels");
+				const isChannelMuted = function(guildId, channelId) {
+					return MutedStore.getMutedChannels(guildId).has(channelId);
+				};
 				function ConnectedUnreadBadge(props) {
 					const color = (0, flux_namespaceObject.useStateFromStores)([settings], (() => settings.get(props.color, "#5865F2")));
 					return React.createElement(Badges.NumberBadge, _extends({}, props, {
@@ -432,7 +435,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				}) {
 					const unreadCount = (0, flux_namespaceObject.useStateFromStores)([UnreadStore, settings], (() => {
 						if (!settings.get("showOnChannels", true)) return 0;
-						if (!settings.get("showMutedChannelUnread", false) && MutedStore.isChannelMuted(guildId, channelId) && settings.get("showMutedChannelWhenSelected", true) ? !selected : false) return 0;
+						if (!settings.get("showMutedChannelUnread", false) && isChannelMuted(guildId, channelId) && settings.get("showMutedChannelWhenSelected", true) ? !selected : false) return 0;
 						return UnreadStore.getUnreadCount(channelId);
 					}));
 					if (0 === unreadCount) return null;
@@ -867,7 +870,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					else obj[key] = value;
 					return obj;
 				}
-				const UnreadCountBadges_MutedStore = external_PluginApi_namespaceObject.WebpackModules.getByProps("isMuted");
+				const UnreadCountBadges_MutedStore = external_PluginApi_namespaceObject.WebpackModules.getByProps("getMutedChannels");
 				const UnreadCountBadges_UnreadStore = external_PluginApi_namespaceObject.WebpackModules.getByProps("getUnreadCount");
 				const ChannelsStore = external_PluginApi_namespaceObject.WebpackModules.getByProps("getChannels");
 				const UnreadCountBadges_Badges = external_PluginApi_namespaceObject.WebpackModules.getByProps("NumberBadge");
@@ -1056,8 +1059,8 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						return channels.SELECTABLE.reduce(((count, {
 							channel
 						}) => {
-							if (!includeMutedChannels && UnreadCountBadges_MutedStore.isChannelMuted(channel.guild_id, channel.id)) return count;
-							if (!includeMutedChannels && channel.parent_id && UnreadCountBadges_MutedStore.isChannelMuted(guildId, channel.parent_id)) return count;
+							if (!includeMutedChannels && isChannelMuted(channel.guild_id, channel.id)) return count;
+							if (!includeMutedChannels && channel.parent_id && isChannelMuted(guildId, channel.parent_id)) return count;
 							return count += UnreadCountBadges_UnreadStore.getUnreadCount(channel.id);
 						}), 0);
 					}
@@ -1120,8 +1123,8 @@ function buildPlugin([BasePlugin, PluginApi]) {
 										return count += this.getUnreadCountForGuild(guild.id, settings.get("includeMutedChannelsInTotal", false));
 									}), 0);
 									const dms = Object.values(GuildChannelsStore.getMutablePrivateChannels()).reduce(((count, channel) => {
-										if (settings.get("includeDmsInTotal", true) && channel.type === constants_namespaceObject.ChannelTypes.DM && (settings.get("includeMutedDms", false) ? !UnreadCountBadges_MutedStore.isChannelMuted(channel.guild_id, channel.id) : true)) count += UnreadCountBadges_UnreadStore.getUnreadCount(channel.id);
-										if (!settings.get("includeGroupsInTotal", true) && channel.type === constants_namespaceObject.ChannelTypes.GROUP_DM && (settings.get("includeMutedGroups", false) ? !UnreadCountBadges_MutedStore.isChannelMuted(channel.guild_id, channel.id) : true)) count += UnreadCountBadges_UnreadStore.getUnreadCount(channel.id);
+										if (settings.get("includeDmsInTotal", true) && channel.type === constants_namespaceObject.ChannelTypes.DM && (settings.get("includeMutedDms", false) ? !isChannelMuted(channel.guild_id, channel.id) : true)) count += UnreadCountBadges_UnreadStore.getUnreadCount(channel.id);
+										if (!settings.get("includeGroupsInTotal", true) && channel.type === constants_namespaceObject.ChannelTypes.GROUP_DM && (settings.get("includeMutedGroups", false) ? !isChannelMuted(channel.guild_id, channel.id) : true)) count += UnreadCountBadges_UnreadStore.getUnreadCount(channel.id);
 										return count;
 									}), 0);
 									return this.checkCount(guilds + dms);
