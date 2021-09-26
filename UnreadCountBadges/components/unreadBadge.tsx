@@ -6,7 +6,9 @@ import styles from "../badge.scss";
 
 const Badges = WebpackModules.getByProps("NumberBadge");
 const UnreadStore = WebpackModules.getByProps("getUnreadCount");
-const MutedStore = WebpackModules.getByProps("isMuted");
+const MutedStore = WebpackModules.getByProps("getMutedChannels");
+
+export const isChannelMuted = function (guildId: string, channelId: string) {return MutedStore.getMutedChannels(guildId).has(channelId);}
 
 export function ConnectedUnreadBadge(props) {
     const color = useStateFromStores([Settings], () => Settings.get(props.color, "#5865F2"));
@@ -19,7 +21,7 @@ export function ConnectedUnreadBadge(props) {
 export default function ChannelUnreadBadge({channelId, guildId, selected}) {
     const unreadCount = useStateFromStores([UnreadStore, Settings], () => {
         if (!Settings.get("showOnChannels", true)) return 0;
-        if ((!Settings.get("showMutedChannelUnread", false) && MutedStore.isChannelMuted(guildId, channelId)) && Settings.get("showMutedChannelWhenSelected", true) ? !selected : false) return 0;
+        if ((!Settings.get("showMutedChannelUnread", false) && isChannelMuted(guildId, channelId)) && Settings.get("showMutedChannelWhenSelected", true) ? !selected : false) return 0;
         
         return UnreadStore.getUnreadCount(channelId);
     });

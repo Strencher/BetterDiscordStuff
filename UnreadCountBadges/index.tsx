@@ -9,14 +9,14 @@ import stylesheet from "styles";
 import Settings from "./settings";
 import { ChannelTypes } from "@discord/constants";
 import { useStateFromStores } from "@discord/flux";
-import ChannelUnreadBadge, {ConnectedUnreadBadge} from "./components/unreadBadge";
+import ChannelUnreadBadge, {ConnectedUnreadBadge, isChannelMuted} from "./components/unreadBadge";
 import BlobContainer from "./components/blobContainer";
 import SettingsPanel from "./components/Settings";
 import { Guilds, Users } from "@discord/stores";
 import {Dispatcher} from "@discord/modules";
 import { ActionTypes } from "@discord/constants";
 
-const MutedStore = WebpackModules.getByProps("isMuted");
+const MutedStore = WebpackModules.getByProps("getMutedChannels");
 const UnreadStore = WebpackModules.getByProps("getUnreadCount");
 const ChannelsStore = WebpackModules.getByProps("getChannels");
 const Badges = WebpackModules.getByProps("NumberBadge");
@@ -233,8 +233,8 @@ export default class UnreadCountBadges extends BasePlugin {
         if (!Array.isArray(channels.SELECTABLE)) return 0;
 
         return channels.SELECTABLE.reduce<number>((count, {channel}) => {
-            if (!includeMutedChannels && MutedStore.isChannelMuted(channel.guild_id, channel.id)) return count;
-            if (!includeMutedChannels && (channel.parent_id && MutedStore.isChannelMuted(guildId, channel.parent_id))) return count;
+            if (!includeMutedChannels && isChannelMuted(channel.guild_id, channel.id)) return count;
+            if (!includeMutedChannels && (channel.parent_id && isChannelMuted(guildId, channel.parent_id))) return count;
 
             return count += UnreadStore.getUnreadCount(channel.id);
         }, 0);
@@ -314,10 +314,10 @@ export default class UnreadCountBadges extends BasePlugin {
                     }, 0);
     
                     const dms = Object.values(GuildChannelsStore.getMutablePrivateChannels()).reduce((count, channel: any) => {
-                        if (Settings.get("includeDmsInTotal", true) && channel.type === ChannelTypes.DM && (Settings.get("includeMutedDms", false) ? !MutedStore.isChannelMuted(channel.guild_id, channel.id) : true)) {
+                        if (Settings.get("includeDmsInTotal", true) && channel.type === ChannelTypes.DM && (Settings.get("includeMutedDms", false) ? !isChannelMuted(channel.guild_id, channel.id) : true)) {
                             count += UnreadStore.getUnreadCount(channel.id);
                         }
-                        if (!Settings.get("includeGroupsInTotal", true) && channel.type === ChannelTypes.GROUP_DM && (Settings.get("includeMutedGroups", false) ? !MutedStore.isChannelMuted(channel.guild_id, channel.id) : true)) {
+                        if (!Settings.get("includeGroupsInTotal", true) && channel.type === ChannelTypes.GROUP_DM && (Settings.get("includeMutedGroups", false) ? !isChannelMuted(channel.guild_id, channel.id) : true)) {
                             count += UnreadStore.getUnreadCount(channel.id);
                         }
                         
