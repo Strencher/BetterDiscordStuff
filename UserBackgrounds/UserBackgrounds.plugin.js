@@ -1,6 +1,6 @@
 /**
  * @name UserBackgrounds
- * @version 1.2.0
+ * @version 1.3.0
  * @description A database of custom user requested backgrounds designed for BetterDiscord and Powercord.
  * @author Strencher, Tropical
  * @source https://github.com/Strencher/BetterDiscordStuff/tree/development/UserBackgrounds
@@ -33,7 +33,7 @@
 const config = {
 	"info": {
 		"name": "UserBackgrounds",
-		"version": "1.2.0",
+		"version": "1.3.0",
 		"description": "A database of custom user requested backgrounds designed for BetterDiscord and Powercord.",
 		"authors": [{
 				"name": "Strencher",
@@ -52,10 +52,10 @@ const config = {
 		"invite": "gvA2ree"
 	},
 	"changelog": [{
-		"type": "improved",
-		"title": "Improvements",
+		"type": "fixed",
+		"title": "fixed",
 		"items": [
-			"Started using the newest api."
+			"Fixed loading native banners."
 		]
 	}],
 	"build": {
@@ -613,7 +613,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 							const banner = (0, flux_namespaceObject.useStateFromStores)([bannerStore], (() => bannerStore.getBanner(user.id)), null, external_window_default().isEqual);
 							const [selection, setSelection] = (0, external_BdApi_React_namespaceObject.useState)(null == banner ? 1 : 0);
 							const ref = (0, external_BdApi_React_namespaceObject.useRef)(null);
-							const currentBanner = (0, external_BdApi_React_namespaceObject.useMemo)((() => 1 === selection || null == banner ? user.bannerURL : banner?.background), [banner, user, selection]);
+							const currentBanner = (0, external_BdApi_React_namespaceObject.useMemo)((() => 1 === selection || null == banner ? user.getBannerURL(void 0, true) : banner?.background), [banner, user, selection]);
 							const currentOrientation = (0, external_BdApi_React_namespaceObject.useMemo)((() => null != banner && 0 === selection ? banner.orientation : void 0), [banner, selection]);
 							if (!user.banner && !banner) return children;
 							children.props["data-user-id"] = user.id;
