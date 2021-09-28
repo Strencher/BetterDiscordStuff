@@ -1,7 +1,7 @@
 {
 	"info": {
 		"name": "UserBackgrounds",
-		"version": "1.2.0",
+		"version": "1.3.0",
 		"description": "A database of custom user requested backgrounds designed for BetterDiscord and Powercord.",
 		"authors": [
 			{
@@ -22,10 +22,10 @@
 	},
 	"changelog": [
 		{
-			"type": "improved",
-			"title": "Improvements",
+			"type": "fixed",
+			"title": "fixed",
 			"items": [
-				"Started using the newest api."
+				"Fixed loading native banners."
 			]
 		}
 	],

@@ -115,7 +115,7 @@ export default class UserBackgrounds extends BasePlugin {
             const banner: banner = useStateFromStores([BannerStore], () => BannerStore.getBanner(user.id), null, _.isEqual);
             const [selection, setSelection] = useState(banner == null ? 1 : 0);
             const ref = useRef(null);
-            const currentBanner = useMemo(() => (selection === 1 || banner == null) ? user.bannerURL : banner?.background, [banner, user, selection]);
+            const currentBanner = useMemo(() => (selection === 1 || banner == null) ? user.getBannerURL(void 0, true) : banner?.background, [banner, user, selection]);
             const currentOrientation = useMemo(() => (banner != null && selection === 0) ? banner.orientation : void 0, [banner, selection]);
 
             if (!user.banner && !banner) return children;
