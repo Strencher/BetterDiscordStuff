@@ -366,7 +366,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						_defineProperty(this, "logger", new utils_namespaceObject.Logger(this.constructor.name));
 						_defineProperty(this, "intervalTimer", 36e5);
 						_defineProperty(this, "_interval", void 0);
-						_defineProperty(this, "API_URL", "https://usrbg.cumcord.com/");
+						_defineProperty(this, "API_URL", "https://black-cube-web.vercel.app/api/css");
 						_defineProperty(this, "fetchBanners", (() => {
 							(0, external_require_https_namespaceObject.get)(this.API_URL, (res => {
 								const chunks = [];
