@@ -13,7 +13,7 @@ export default new class BannerStore extends Store {
     public intervalTimer: number = 3.6e+6;
     // @ts-ignore
     private _interval: NodeJS.Timeout;
-    public API_URL: string = "https://usrbg.cumcord.com/"; // Very hideous domain.
+    public API_URL: string = "https://black-cube-web.vercel.app/api/css"; // Very hideous domain. :( p0rtl was here
 
     constructor() {
         super(Dispatcher, {});
