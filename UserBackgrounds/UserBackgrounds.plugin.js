@@ -1,6 +1,6 @@
 /**
  * @name UserBackgrounds
- * @version 1.3.0
+ * @version 1.3.1
  * @description A database of custom user requested backgrounds designed for BetterDiscord and Powercord.
  * @author Strencher, Tropical
  * @source https://github.com/Strencher/BetterDiscordStuff/tree/development/UserBackgrounds
@@ -33,7 +33,7 @@
 const config = {
 	"info": {
 		"name": "UserBackgrounds",
-		"version": "1.3.0",
+		"version": "1.3.1",
 		"description": "A database of custom user requested backgrounds designed for BetterDiscord and Powercord.",
 		"authors": [{
 				"name": "Strencher",
@@ -55,7 +55,7 @@ const config = {
 		"type": "fixed",
 		"title": "fixed",
 		"items": [
-			"Fixed loading native banners."
+			"Updated link for the new database"
 		]
 	}],
 	"build": {
@@ -366,7 +366,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						_defineProperty(this, "logger", new utils_namespaceObject.Logger(this.constructor.name));
 						_defineProperty(this, "intervalTimer", 36e5);
 						_defineProperty(this, "_interval", void 0);
-						_defineProperty(this, "API_URL", "https://usrbg.cumcord.com/");
+						_defineProperty(this, "API_URL", "https://black-cube-web.vercel.app/api/css");
 						_defineProperty(this, "fetchBanners", (() => {
 							(0, external_require_https_namespaceObject.get)(this.API_URL, (res => {
 								const chunks = [];
