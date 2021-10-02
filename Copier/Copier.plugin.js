@@ -40,7 +40,7 @@ const config = {
                 twitter_username: "Strencher3"
             }
         ],
-        version: "1.1.1",
+        version: "1.2.0",
         description: "Allows you to copy certain stuff with custom options.",
         github: "https://github.com/Strencher/BetterDiscordStuff/blob/master/Copier/Copier.plugin.js",
         github_raw: "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/Copier/Copier.plugin.js"
@@ -50,8 +50,14 @@ const config = {
             type: "added",
             title: "Added",
             items: [
-                "Added copy button for About Me.",
-                "Added context menu entry to copy dm channel id."
+                "Added support for threads."
+            ]
+        },
+        {
+            type: "fixed",
+            title: "Fixed",
+            items: [
+                "Fixed weird reactions menu disappearing."
             ]
         }
     ]
@@ -707,6 +713,20 @@ const buildPlugin = ([Plugin, Api]) => {
         }
 
         patchMessageToolbar() {
+            function PatchedMenuTools({originalType, buttonProps, ...props}) {
+                const returnValue = Reflect.apply(originalType, this, [props]);
+
+                try {
+                    returnValue.props.children.unshift(
+                        React.createElement(CopyButton, buttonProps)
+                    );
+                } catch (error) {
+                    Logger.error("Error in MiniPopover patch:", error);
+                }
+
+                return returnValue;
+            }
+
             Patcher.after(MiniPopover, "default", (_, [args], ret) => {
                 if (!Settings.getSetting("showButton")) return;
                 const props = Utilities.findInTree(args, e => e && e.message);
@@ -717,23 +737,14 @@ const buildPlugin = ([Plugin, Api]) => {
                 const lastChild = children[children.length - 1];
                 if (!lastChild || lastChild.type.__patched) return;
                 const originalType = lastChild.type;
-
-                lastChild.type = function () {
-                    const ret = originalType.apply(this, arguments);
-
-                    try {
-                        ret.props.children.unshift(
-                            React.createElement(
-                                CopyButton,
-                                props
-                            )
-                        );
-                    } catch (error) {
-                        Logger.error("Could not inject CopyButton:", error);
+                
+                window._.merge(lastChild, {
+                    type: PatchedMenuTools,
+                    props: {
+                        buttonProps: props,
+                        originalType
                     }
-
-                    return ret;
-                }
+                });
 
                 lastChild.type.__patched = true;
                 lastChild._originalFunction = originalType;
@@ -743,6 +754,7 @@ const buildPlugin = ([Plugin, Api]) => {
         patchChannelContextMenu() {
             const [ChannelListTextChannelContextMenu, , CategoryContextMenu] = WebpackModules.findAll(m => m.default && m.default.displayName === "ChannelListTextChannelContextMenu");
             const ChannelListVoiceChannelContextMenu = findWithDefault(m => m.displayName === "ChannelListVoiceChannelContextMenu");
+            const ChannelListThreadContextMenu = findWithDefault(m => m.displayName === "ChannelListThreadContextMenu");
 
             Patcher.after(CategoryContextMenu, "default", (_, [props], ret) => {
                 const children = Utilities.getNestedProp(ret, "props.children");
@@ -799,7 +811,7 @@ const buildPlugin = ([Plugin, Api]) => {
                 );
             });
 
-            Patcher.after(ChannelListTextChannelContextMenu, "default", (_, [props], ret) => {
+            for (const Menu of [ChannelListTextChannelContextMenu, ChannelListThreadContextMenu]) Patcher.after(Menu, "default", (_, [props], ret) => {
                 const children = Utilities.getNestedProp(ret, "props.children");
                 if (!Array.isArray(children)) return;
 
