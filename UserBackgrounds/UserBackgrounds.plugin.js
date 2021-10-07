@@ -1,6 +1,6 @@
 /**
  * @name UserBackgrounds
- * @version 1.3.1
+ * @version 1.4.0
  * @description A database of custom user requested backgrounds designed for BetterDiscord and Powercord.
  * @author Strencher, Tropical
  * @source https://github.com/Strencher/BetterDiscordStuff/tree/development/UserBackgrounds
@@ -33,7 +33,7 @@
 const config = {
 	"info": {
 		"name": "UserBackgrounds",
-		"version": "1.3.1",
+		"version": "1.4.0",
 		"description": "A database of custom user requested backgrounds designed for BetterDiscord and Powercord.",
 		"authors": [{
 				"name": "Strencher",
@@ -55,7 +55,10 @@ const config = {
 		"type": "fixed",
 		"title": "fixed",
 		"items": [
-			"Updated link for the new database"
+			"Updated link for the new database (again)",
+			"Started using json (replacing css)",
+			"Rewrote parser for json",
+			"Removed css decompiler"
 		]
 	}],
 	"build": {
@@ -306,7 +309,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
 				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
 			},
-			699: (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+			515: (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 				__webpack_require__.r(__webpack_exports__);
 				__webpack_require__.d(__webpack_exports__, {
 					default: () => UserBackgrounds
@@ -318,37 +321,6 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				const modules_namespaceObject = Modules["@discord/modules"];
 				const external_require_https_namespaceObject = require("https");
 				const utils_namespaceObject = Modules["@discord/utils"];
-				const extractRegex = /data-user-id="(.+)"/g;
-				class Converter {
-					static extractUserIds(selector) {
-						const map = selector.split(",").map((attr => {
-							const result = extractRegex.exec(attr);
-							if (!result?.[1]) return null;
-							return result[1];
-						})).filter((e => e));
-						return [...new Set(map)];
-					}
-					static async convert(css) {
-						const start = Date.now();
-						let output = new Map;
-						const sheet = new CSSStyleSheet({
-							media: "print"
-						});
-						const style = await sheet.replace(css);
-						for (const cssRule of [...style.cssRules]) {
-							const userIds = this.extractUserIds(cssRule.selectorText);
-							for (const id of userIds) {
-								const bgData = {
-									background: cssRule.style.getPropertyValue("--user-background").slice(5, -2)
-								};
-								if (cssRule.style.getPropertyValue("--")) bgData.orientation = cssRule.style.getPropertyValue("--user-popout-position");
-								output.set(id, bgData);
-							}
-						}
-						external_PluginApi_namespaceObject.Logger.log(`Compiled database (css -> json) in ${(Date.now() - start).toFixed(0)}ms.`);
-						return output;
-					}
-				}
 				function _defineProperty(obj, key, value) {
 					if (key in obj) Object.defineProperty(obj, key, {
 						value,
@@ -359,21 +331,24 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					else obj[key] = value;
 					return obj;
 				}
-				let banners = new Map;
+				let banners;
 				const bannerStore = new class extends flux_namespaceObject.Store {
 					constructor() {
 						super(modules_namespaceObject.Dispatcher, {});
 						_defineProperty(this, "logger", new utils_namespaceObject.Logger(this.constructor.name));
 						_defineProperty(this, "intervalTimer", 36e5);
 						_defineProperty(this, "_interval", void 0);
-						_defineProperty(this, "API_URL", "https://black-cube-web.vercel.app/api/css");
+						_defineProperty(this, "API_URL", "https://discord-custom-covers.github.io/usrbg/dist/usrbg.json");
 						_defineProperty(this, "fetchBanners", (() => {
 							(0, external_require_https_namespaceObject.get)(this.API_URL, (res => {
 								const chunks = [];
 								res.on("data", (chunk => chunks.push(chunk)));
 								res.on("end", (async () => {
 									try {
-										banners = await Converter.convert(chunks.join(""));
+										banners = new Map(JSON.parse(chunks.join("")).map((key => [key.uid, {
+											background: key.img,
+											orientation: key.orientation
+										}])));
 										this.emitChange();
 									} catch (error) {
 										this.logger.error(error);
@@ -758,7 +733,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				});
 			};
 		})();
-		var __webpack_exports__ = __webpack_require__(699);
+		var __webpack_exports__ = __webpack_require__(515);
 		module.exports.LibraryPluginHack = __webpack_exports__;
 	})();
 	const PluginExports = module.exports.LibraryPluginHack;
