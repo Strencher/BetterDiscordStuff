@@ -3,17 +3,16 @@ import {Dispatcher} from "@discord/modules";
 // @ts-ignore
 import {get as fetch} from "https";
 import {Logger} from "@discord/utils";
-import Converter from "./converter";
 import {UserBanner} from "./types";
 
-let banners = new Map<string, UserBanner>();
+let banners: Map<string, UserBanner>
 
 export default new class BannerStore extends Store {
     public logger: Logger = new Logger(this.constructor.name);
     public intervalTimer: number = 3.6e+6;
     // @ts-ignore
     private _interval: NodeJS.Timeout;
-    public API_URL: string = "https://black-cube-web.vercel.app/api/css"; // Very hideous domain. // Not anymore - p0rtL
+    public API_URL: string = "https://discord-custom-covers.github.io/usrbg/dist/usrbg.json"; // Very hideous domain. // Not anymore - p0rtL
 
     constructor() {
         super(Dispatcher, {});
@@ -43,7 +42,7 @@ export default new class BannerStore extends Store {
 
             res.on("end", async () => {
                 try {
-                    banners = await Converter.convert(chunks.join(""));
+                    banners = new Map<string, UserBanner>(JSON.parse(chunks.join("")).map((key: { uid: string; img: string; orientation: string; }) => [key.uid, {background: key.img, orientation: key.orientation}]))
 
                     this.emitChange();
                 } catch (error) {
