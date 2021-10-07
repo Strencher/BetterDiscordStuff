@@ -12,7 +12,7 @@ export default new class BannerStore extends Store {
     public intervalTimer: number = 3.6e+6;
     // @ts-ignore
     private _interval: NodeJS.Timeout;
-    public API_URL: string = "https://discord-custom-covers.github.io/usrbg/dist/usrbg.json"; // Very hideous domain. // Not anymore - p0rtL
+    public API_URL: string = "https://discord-custom-covers.github.io/usrbg/dist/usrbg.json";
 
     constructor() {
         super(Dispatcher, {});
