@@ -1,6 +1,6 @@
 /**
  * @name UserDetails
- * @version 2.5.0
+ * @version 2.5.1
  * @author Strencher
  * @description Shows you a lot information about users in popouts.
  * @source https://github.com/Strencher/BetterDiscordStuff/tree/development/UserDetails
@@ -33,7 +33,7 @@
 const config = {
 	"info": {
 		"name": "UserDetails",
-		"version": "2.5.0",
+		"version": "2.5.1",
 		"authors": [{
 			"name": "Strencher",
 			"discord_id": "415849376598982656",
@@ -46,20 +46,18 @@ const config = {
 		"invite": "gvA2ree"
 	},
 	"changelog": [{
-			"title": "Improvements",
-			"type": "improved",
+			"title": "Fixed",
+			"type": "fixed",
 			"items": [
-				"Improved the code behavior by minimal tweaks.",
-				"Rewrote the translation strings module to __not__ use the one by discord."
+				"Fixed icons not showing after discord update.",
+				"Fixed PanelPopout feature not working properly."
 			]
 		},
 		{
 			"title": "Added",
 			"type": "added",
 			"items": [
-				"Finally added a context menu on connection badges.",
-				"Added the 'type' of the connection in the tooltip. eg: 'Twitch: Strencher_'",
-				"Integrated PanelPopout by Qb."
+				"Added setting to make icons colored/white."
 			]
 		}
 	],
@@ -543,6 +541,70 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				const native_namespaceObject = Modules["@discord/native"];
 				const external_window_namespaceObject = window._;
 				var external_window_default = __webpack_require__.n(external_window_namespaceObject);
+				function Utilities_extends() {
+					Utilities_extends = Object.assign || function(target) {
+						for (var i = 1; i < arguments.length; i++) {
+							var source = arguments[i];
+							for (var key in source)
+								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
+						}
+						return target;
+					};
+					return Utilities_extends.apply(this, arguments);
+				}
+				const FormItem = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("FormItem");
+				const FormText = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("FormText");
+				const FormDivider = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("FormDivider");
+				const Flex = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("Flex");
+				const {
+					marginBottom8
+				} = external_PluginApi_namespaceObject.WebpackModules.getByProps("marginBottom8");
+				class Utilities extends external_PluginApi_namespaceObject.Utilities {
+					static getIconURL(type, colored = modules_Settings.get("coloredConnectionsIcons", true)) {
+						switch (type) {
+							case "steam":
+								return colored ? "lightPNG" : "darkPNG";
+							case "xbox":
+								return colored ? "customPNG" : "whitePNG";
+							default:
+								return colored ? "darkPNG" : "whitePNG";
+						}
+					}
+					static joinClassNames(...classNames) {
+						return classNames.filter((e => e)).join(" ");
+					}
+					static get useForceUpdate() {
+						return () => (0, external_BdApi_React_.useReducer)((n => n + 1), 0)[1];
+					}
+					static createUpdateWrapper(Component, form = true, valueProp = "value") {
+						return props => {
+							const [state, setState] = (0, external_BdApi_React_.useState)(props[valueProp]);
+							props[valueProp] = state;
+							if (form) return external_BdApi_React_default().createElement(Flex, {
+								className: marginBottom8,
+								direction: Flex.Direction.VERTICAL
+							}, external_BdApi_React_default().createElement(FormItem, {
+								title: props.name
+							}, external_BdApi_React_default().createElement(Component, Utilities_extends({}, props, {
+								onChange: value => {
+									value = value.value ?? value;
+									setState(value);
+									props.onChange(value);
+								}
+							})), external_BdApi_React_default().createElement(FormText, {
+								type: "description",
+								disabled: Boolean(props.note)
+							}, props.note)), external_BdApi_React_default().createElement(FormDivider, null));
+							else return external_BdApi_React_default().createElement(Component, Utilities_extends({}, props, {
+								onChange: value => {
+									value = value.value ?? value;
+									setState(value);
+									props.onChange(value);
+								}
+							}));
+						};
+					}
+				}
 				function badge_extends() {
 					badge_extends = Object.assign || function(target) {
 						for (var i = 1; i < arguments.length; i++) {
@@ -583,7 +645,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					}), external_BdApi_React_default().createElement("img", {
 						onContextMenu,
 						onClick,
-						src: connection.icon.color
+						src: connection.icon[Utilities.getIconURL(item.type)]
 					}), shouldVerified && external_BdApi_React_default().createElement(icons_flowerstar, {
 						className: badge.Z.verifiedBadge
 					}))));
@@ -760,60 +822,6 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				}))));
 				const external_BdApi_ReactDOM_namespaceObject = BdApi.ReactDOM;
 				var external_BdApi_ReactDOM_default = __webpack_require__.n(external_BdApi_ReactDOM_namespaceObject);
-				function Utilities_extends() {
-					Utilities_extends = Object.assign || function(target) {
-						for (var i = 1; i < arguments.length; i++) {
-							var source = arguments[i];
-							for (var key in source)
-								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-						}
-						return target;
-					};
-					return Utilities_extends.apply(this, arguments);
-				}
-				const FormItem = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("FormItem");
-				const FormText = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("FormText");
-				const FormDivider = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("FormDivider");
-				const Flex = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("Flex");
-				const {
-					marginBottom8
-				} = external_PluginApi_namespaceObject.WebpackModules.getByProps("marginBottom8");
-				class Utilities extends external_PluginApi_namespaceObject.Utilities {
-					static joinClassNames(...classNames) {
-						return classNames.filter((e => e)).join(" ");
-					}
-					static get useForceUpdate() {
-						return () => (0, external_BdApi_React_.useReducer)((n => n + 1), 0)[1];
-					}
-					static createUpdateWrapper(Component, form = true, valueProp = "value") {
-						return props => {
-							const [state, setState] = (0, external_BdApi_React_.useState)(props[valueProp]);
-							props[valueProp] = state;
-							if (form) return external_BdApi_React_default().createElement(Flex, {
-								className: marginBottom8,
-								direction: Flex.Direction.VERTICAL
-							}, external_BdApi_React_default().createElement(FormItem, {
-								title: props.name
-							}, external_BdApi_React_default().createElement(Component, Utilities_extends({}, props, {
-								onChange: value => {
-									value = value.value ?? value;
-									setState(value);
-									props.onChange(value);
-								}
-							})), external_BdApi_React_default().createElement(FormText, {
-								type: "description",
-								disabled: Boolean(props.note)
-							}, props.note)), external_BdApi_React_default().createElement(FormDivider, null));
-							else return external_BdApi_React_default().createElement(Component, Utilities_extends({}, props, {
-								onChange: value => {
-									value = value.value ?? value;
-									setState(value);
-									props.onChange(value);
-								}
-							}));
-						};
-					}
-				}
 				var dates = __webpack_require__(242);
 				function textscroller_defineProperty(obj, key, value) {
 					if (key in obj) Object.defineProperty(obj, key, {
@@ -1328,7 +1336,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						className: dates.Z.loading
 					}) : external_BdApi_React_default().createElement(LoadingText, null));
 				}
-				const pages_namespaceObject = JSON.parse('[{"name":"General","icon":"Wrench","items":[{"type":"switch","name":"Use Icons","note":"Defines if icons should be used to show any date.","id":"useIcons","value":true},{"type":"radio","name":"Time Format","value":1,"id":"12hour","options":[{"value":1,"name":"24 hour"},{"value":0,"name":"12 hour"}]},{"type":"divider"},{"type":"category","name":"Variables","items":[{"type":"replacement","prefix":"$timelabel","description":"Replaces the current time label. eg AM or PM."},{"type":"replacement","prefix":"$day","description":"Replaces the current day."},{"type":"replacement","prefix":"$daysago","description":"Replaces with a number of how many days it\'s ago."},{"type":"replacement","prefix":"$dayname","description":"Replaces the shorted dayname."},{"type":"replacement","prefix":"$weeksago","description":"Replaces with a number of how many weeks it\'s ago."},{"type":"replacement","prefix":"$month","description":"Replaces the month."},{"type":"replacement","prefix":"$monthname","description":"Replaces the shorted monthname."},{"type":"replacement","prefix":"$monthsago","description":"Replaces with a number of how many months it\'s ago."},{"type":"replacement","prefix":"$year","description":"Replaces the year."},{"type":"replacement","prefix":"$yearsago","description":"Replaces with a number of how many years it\'s ago."},{"type":"replacement","prefix":"$hour","description":"Replaces the hour(s)"},{"type":"replacement","prefix":"$minute","description":"Replaces the minute(s)"},{"type":"replacement","prefix":"$second","description":"Replaces the second(s)"}]}]},{"name":"Panel Popout","icon":"User","items":[{"type":"switch","name":"Enable","id":"showPanelPopout","value":true},{"type":"radio","name":"Open on","id":"panelPopoutType","value":"click","options":[{"name":"Right Click","value":"contextmenu"},{"name":"Left Click","value":"click"}]}]},{"name":"Created At","icon":"Cake","items":[{"type":"switch","name":"Show in UserPopout","id":"created_show_up","note":"Defines if the creation date should be shown in the UserPopout.","value":true},{"type":"switch","name":"Show in UserProfile","id":"created_show_profile","note":"Defines if the creation date should be shown in the UserProfile.","value":true},{"type":"text","name":"Created At","note":"Format of the Created at date. Read the variables section in the general settings to understand how it works.","id":"created_format","value":"Created At: $hour:$minute:$second, $day.$month.$year $daysago days"}]},{"name":"Joined At","icon":"Calendar","items":[{"type":"switch","name":"Show in UserPopout","id":"joined_show_up","note":"Defines if the joined date should be shown in the UserPopout.","value":true},{"type":"switch","name":"Show in UserProfile","id":"joined_show_profile","note":"Defines if the joined date should be shown in the UserProfile.","value":true},{"type":"text","name":"Joined At","note":"Format of the joined at date. Read the variables section in the general settings to understand how it works.","id":"joined_format","value":"Joined At: $hour:$minute:$second, $day.$month.$year $daysago days"}]},{"name":"Last Message At","icon":"TextBubble","items":[{"type":"switch","name":"Show in UserPopout","id":"lastmessage_show_up","note":"Defines if the last message date should be shown in the UserPopout.","value":true},{"type":"switch","name":"Show in UserProfile","id":"lastmessage_show_profile","note":"Defines if the last message date should be shown in the UserProfile.","value":true},{"type":"text","name":"Last Message","note":"Format of the LastMessage at date. Read the variables section in the general settings to understand how it works.","id":"lastmessage_format","value":"Last Message At: $hour:$minute:$second, $day.$month.$year $daysago days"}]},{"name":"Connections","icon":"Chain","items":[{"type":"switch","name":"Enable Section","note":"Enables this section in the user popout.","id":"showConnectionsSection","value":true},{"type":"switch","name":"Show Empty","note":"Show a \\"NO CONNECTIONS\\" placeholder if the user has no connections.","id":"showEmptyConnections","value":true},{"type":"switch","name":"Show Verified","note":"Shows a little verified badge below the icon if the connection is verified.","id":"showVerifiedConnections","value":true},{"type":"icons"}]},{"name":"Activity Icons","icon":"GamePad","items":[{"type":"switch","name":"Enable Activity Icons","note":null,"id":"activityIcons","value":true},{"type":"switch","name":"Disable Bots","note":"Disables the icon for bots, since the most always have something with \'Playing: {...}\' in their statuses.","id":"disableIconsForBots","value":true},{"type":"radio","name":"Activity Icon State","note":"Replaces the activity icon in the activity text of the member list.","id":"activityIconState","value":0,"disabled":false,"options":[{"name":"Replace with associated icon","value":0},{"name":"Don\'t do anything","value":1},{"name":"Hide it","value":2}]},{"type":"switch","name":"Show Gamepad","note":"This shows a gamepad icon if an icon for the activity isn\'t available.","id":"showGamepad","value":true}]},{"name":"Mutual Servers","icon":"Mutual","items":[{"type":"switch","name":"Enable Mutual Servers","note":"This enables/disables the mutual servers section in the user popout","id":"showMutualGuilds","value":true},{"type":"switch","name":"Disable for yourself","note":"Disables the mutual servers section for you. (it will just show all your guilds)","id":"hideMutualGuildsCurrentUser","value":true},{"type":"switch","name":"Show empty message","note":"This defines if an empty message \'no mutual servers\' should be shown if the user has no mutual servers with you","id":"showEmptyMutualGuilds","value":true},{"type":"switch","name":"Stack Icons","note":"Stacks the icons so it takes less space.","id":"stackMutualServers","value":false}]},{"name":"Translation Credits","icon":"Language","items":[{"type":"translation","name":"Turkish","id":"tr","note":"@IMaWeebツ#6931"},{"type":"translation","name":"English","id":"en-US","note":"@It\'s Rad, Not Red#0001"},{"type":"translation","name":"German","id":"de","note":"@l0c4lh057#9748, @SteffoSpieler#1868"},{"type":"translation","name":"Dutch","id":"nl","note":"@th0masterharambe#0001"},{"type":"translation","name":"Vietnamese","id":"vi","note":"@MH#5893"},{"type":"translation","name":"Spanish","id":"es-ES","note":"@DrPuc##2048"},{"type":"translation","name":"Swedish","id":"sv-SE","note":"@toatl#7460"},{"type":"translation","name":"Portuguese (Brazil)","id":"pt-BR","note":"@Dominic#1111"},{"type":"translation","name":"French","id":"fr","note":"@LemCent321#1663"}]}]');
+				const pages_namespaceObject = JSON.parse('[{"name":"General","icon":"Wrench","items":[{"type":"switch","name":"Use Icons","note":"Defines if icons should be used to show any date.","id":"useIcons","value":true},{"type":"radio","name":"Time Format","value":1,"id":"12hour","options":[{"value":1,"name":"24 hour"},{"value":0,"name":"12 hour"}]},{"type":"divider"},{"type":"category","name":"Variables","items":[{"type":"replacement","prefix":"$timelabel","description":"Replaces the current time label. eg AM or PM."},{"type":"replacement","prefix":"$day","description":"Replaces the current day."},{"type":"replacement","prefix":"$daysago","description":"Replaces with a number of how many days it\'s ago."},{"type":"replacement","prefix":"$dayname","description":"Replaces the shorted dayname."},{"type":"replacement","prefix":"$weeksago","description":"Replaces with a number of how many weeks it\'s ago."},{"type":"replacement","prefix":"$month","description":"Replaces the month."},{"type":"replacement","prefix":"$monthname","description":"Replaces the shorted monthname."},{"type":"replacement","prefix":"$monthsago","description":"Replaces with a number of how many months it\'s ago."},{"type":"replacement","prefix":"$year","description":"Replaces the year."},{"type":"replacement","prefix":"$yearsago","description":"Replaces with a number of how many years it\'s ago."},{"type":"replacement","prefix":"$hour","description":"Replaces the hour(s)"},{"type":"replacement","prefix":"$minute","description":"Replaces the minute(s)"},{"type":"replacement","prefix":"$second","description":"Replaces the second(s)"}]}]},{"name":"Panel Popout","icon":"User","items":[{"type":"switch","name":"Enable","id":"showPanelPopout","value":true},{"type":"radio","name":"Open on","id":"panelPopoutType","value":"click","options":[{"name":"Right Click","value":"contextmenu"},{"name":"Left Click","value":"click"}]}]},{"name":"Created At","icon":"Cake","items":[{"type":"switch","name":"Show in UserPopout","id":"created_show_up","note":"Defines if the creation date should be shown in the UserPopout.","value":true},{"type":"switch","name":"Show in UserProfile","id":"created_show_profile","note":"Defines if the creation date should be shown in the UserProfile.","value":true},{"type":"text","name":"Created At","note":"Format of the Created at date. Read the variables section in the general settings to understand how it works.","id":"created_format","value":"Created At: $hour:$minute:$second, $day.$month.$year $daysago days"}]},{"name":"Joined At","icon":"Calendar","items":[{"type":"switch","name":"Show in UserPopout","id":"joined_show_up","note":"Defines if the joined date should be shown in the UserPopout.","value":true},{"type":"switch","name":"Show in UserProfile","id":"joined_show_profile","note":"Defines if the joined date should be shown in the UserProfile.","value":true},{"type":"text","name":"Joined At","note":"Format of the joined at date. Read the variables section in the general settings to understand how it works.","id":"joined_format","value":"Joined At: $hour:$minute:$second, $day.$month.$year $daysago days"}]},{"name":"Last Message At","icon":"TextBubble","items":[{"type":"switch","name":"Show in UserPopout","id":"lastmessage_show_up","note":"Defines if the last message date should be shown in the UserPopout.","value":true},{"type":"switch","name":"Show in UserProfile","id":"lastmessage_show_profile","note":"Defines if the last message date should be shown in the UserProfile.","value":true},{"type":"text","name":"Last Message","note":"Format of the LastMessage at date. Read the variables section in the general settings to understand how it works.","id":"lastmessage_format","value":"Last Message At: $hour:$minute:$second, $day.$month.$year $daysago days"}]},{"name":"Connections","icon":"Chain","items":[{"type":"switch","name":"Enable Section","note":"Enables this section in the user popout.","id":"showConnectionsSection","value":true},{"type":"switch","name":"Colored Icons","note":"Colored/White icons for the connections.","id":"coloredConnectionsIcons","value":true},{"type":"switch","name":"Show Empty","note":"Show a \\"NO CONNECTIONS\\" placeholder if the user has no connections.","id":"showEmptyConnections","value":true},{"type":"switch","name":"Show Verified","note":"Shows a little verified badge below the icon if the connection is verified.","id":"showVerifiedConnections","value":true},{"type":"icons"}]},{"name":"Activity Icons","icon":"GamePad","items":[{"type":"switch","name":"Enable Activity Icons","note":null,"id":"activityIcons","value":true},{"type":"switch","name":"Disable Bots","note":"Disables the icon for bots, since the most always have something with \'Playing: {...}\' in their statuses.","id":"disableIconsForBots","value":true},{"type":"radio","name":"Activity Icon State","note":"Replaces the activity icon in the activity text of the member list.","id":"activityIconState","value":0,"disabled":false,"options":[{"name":"Replace with associated icon","value":0},{"name":"Don\'t do anything","value":1},{"name":"Hide it","value":2}]},{"type":"switch","name":"Show Gamepad","note":"This shows a gamepad icon if an icon for the activity isn\'t available.","id":"showGamepad","value":true}]},{"name":"Mutual Servers","icon":"Mutual","items":[{"type":"switch","name":"Enable Mutual Servers","note":"This enables/disables the mutual servers section in the user popout","id":"showMutualGuilds","value":true},{"type":"switch","name":"Disable for yourself","note":"Disables the mutual servers section for you. (it will just show all your guilds)","id":"hideMutualGuildsCurrentUser","value":true},{"type":"switch","name":"Show empty message","note":"This defines if an empty message \'no mutual servers\' should be shown if the user has no mutual servers with you","id":"showEmptyMutualGuilds","value":true},{"type":"switch","name":"Stack Icons","note":"Stacks the icons so it takes less space.","id":"stackMutualServers","value":false}]},{"name":"Translation Credits","icon":"Language","items":[{"type":"translation","name":"Turkish","id":"tr","note":"@IMaWeebツ#6931"},{"type":"translation","name":"English","id":"en-US","note":"@It\'s Rad, Not Red#0001"},{"type":"translation","name":"German","id":"de","note":"@l0c4lh057#9748, @SteffoSpieler#1868"},{"type":"translation","name":"Dutch","id":"nl","note":"@th0masterharambe#0001"},{"type":"translation","name":"Vietnamese","id":"vi","note":"@MH#5893"},{"type":"translation","name":"Spanish","id":"es-ES","note":"@DrPuc##2048"},{"type":"translation","name":"Swedish","id":"sv-SE","note":"@toatl#7460"},{"type":"translation","name":"Portuguese (Brazil)","id":"pt-BR","note":"@Dominic#1111"},{"type":"translation","name":"French","id":"fr","note":"@LemCent321#1663"}]}]');
 				var settings = __webpack_require__(128);
 				class Logger {
 					static error(...message) {
@@ -1766,8 +1774,9 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					disabled: false
 				}, note)), external_BdApi_React_default().createElement(forms_namespaceObject.FormDivider, null));
 				const IconSetting = () => {
+					const colored = (0, flux_namespaceObject.useStateFromStores)([modules_Settings], (() => modules_Settings.get("coloredConnectionsIcons", true)));
 					const forceUpdate = Utilities.useForceUpdate();
-					const shownIcons = modules_Settings.get("shownConnections", Object.fromEntries(connections_default().map((e => [e.type, true]))));
+					const shownIcons = (0, flux_namespaceObject.useStateFromStores)([modules_Settings], (() => modules_Settings.get("shownConnections", Object.fromEntries(connections_default().map((e => [e.type, true]))))));
 					return external_BdApi_React_default().createElement(components_namespaceObject.Flex, {
 						className: settings.Z.icons
 					}, connections_default().filter((e => e.enabled)).map((k => external_BdApi_React_default().createElement(components_namespaceObject.TooltipContainer, {
@@ -1775,7 +1784,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						text: shownIcons[k.type] ? "Enabled" : "Disabled",
 						hideOnClick: false
 					}, external_BdApi_React_default().createElement("img", {
-						src: k.icon.color,
+						src: k.icon[Utilities.getIconURL(k.type, colored)],
 						className: Utilities.joinClassNames(settings.Z.settingsBadgeIcon, shownIcons[k.type] ? "enabled" : settings.Z.disabled),
 						onClick: () => {
 							modules_Settings.set("shownConnections", (shownIcons[k.type] = !shownIcons[k.type],
@@ -1926,7 +1935,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				const byName = [
 					[/spotify/i, spotify],
 					[/youtube/i, () => activity_React.createElement("img", {
-						src: connections_default().get("youtube").icon.color,
+						src: connections_default().get("youtube").icon.darkSVG,
 						width: "20",
 						height: "20"
 					})],
@@ -2167,6 +2176,9 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					get Stores() {
 						return modules_stores_namespaceObject;
 					}
+					get Settings() {
+						return modules_Settings;
+					}
 					getSettingsPanel() {
 						return external_BdApi_React_default().createElement(SettingsPanel, null);
 					}
@@ -2232,7 +2244,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 							fields: [{
 								name: "Creation Date",
 								inline: true,
-								value: this.createdApi.extractDate(user.id).toGMTString()
+								value: extractDate(user.id).toGMTString()
 							}, member && {
 								name: "Joined Date",
 								inline: true,
@@ -2382,7 +2394,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 								if (modules_Settings.get("panelPopoutType", "click") !== e.type) return;
 								e.preventDefault();
 								e.stopPropagation();
-								if (e.target?.classList?.contains(classes.container) || e.target?.parentElement?.classList?.contains(classes.nameTag)) this.setState({
+								if (e.target?.classList?.contains(classes.container) || e.target?.parentElement?.classList?.contains(classes.nameTag) || e.target?.classList?.contains(classes.usernameContainer) || e.target?.parentElement?.classList?.contains(classes.usernameContainer)) this.setState({
 									showUserPopout: !_this.state.showUserPopout
 								});
 							}.bind(_this);
