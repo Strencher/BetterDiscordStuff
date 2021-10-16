@@ -212,11 +212,6 @@ module.exports = (() => {
                         margin-left: 2px;
                     }
 
-                    .header-23xsNx {
-                        display: flex !important;
-                        flex-direction: row !important;
-                    }
-
                     .PI-container {
                         display: flex;
                     }
