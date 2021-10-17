@@ -40,7 +40,7 @@ const config = {
                 twitter_username: "Strencher3"
             }
         ],
-        version: "1.2.0",
+        version: "1.2.1",
         description: "Allows you to copy certain stuff with custom options.",
         github: "https://github.com/Strencher/BetterDiscordStuff/blob/master/Copier/Copier.plugin.js",
         github_raw: "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/Copier/Copier.plugin.js"
@@ -713,41 +713,18 @@ const buildPlugin = ([Plugin, Api]) => {
         }
 
         patchMessageToolbar() {
-            function PatchedMenuTools({originalType, buttonProps, ...props}) {
-                const returnValue = Reflect.apply(originalType, this, [props]);
-
-                try {
-                    returnValue.props.children.unshift(
-                        React.createElement(CopyButton, buttonProps)
-                    );
-                } catch (error) {
-                    Logger.error("Error in MiniPopover patch:", error);
-                }
-
-                return returnValue;
-            }
-
             Patcher.after(MiniPopover, "default", (_, [args], ret) => {
                 if (!Settings.getSetting("showButton")) return;
                 const props = Utilities.findInTree(args, e => e && e.message);
                 if (!props) return;
                 const children = Utilities.getNestedProp(ret, "props.children");
                 if (!Array.isArray(children)) return;
-
-                const lastChild = children[children.length - 1];
-                if (!lastChild || lastChild.type.__patched) return;
-                const originalType = lastChild.type;
                 
-                window._.merge(lastChild, {
-                    type: PatchedMenuTools,
-                    props: {
-                        buttonProps: props,
-                        originalType
-                    }
-                });
-
-                lastChild.type.__patched = true;
-                lastChild._originalFunction = originalType;
+                children.unshift(
+                    React.createElement(CopyButton, Object.assign({}, props, {
+                        key: "copier-button"
+                    }))
+                );
             });
         }
 
