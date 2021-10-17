@@ -1,7 +1,7 @@
 /**
  * @name InvisibleTyping
  * @author Strencher
- * @version 1.0.3
+ * @version 1.1.0
  * @description Enhanced version of silent typing.
  * @source https://github.com/Strencher/BetterDiscordStuff/blob/master/InvisibleTyping/InvisibleTyping.plugin.js
  * @updateUrl https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/InvisibleTyping/InvisibleTyping.plugin.js
@@ -38,7 +38,7 @@ const config = {
 			"github_username": "Strencher",
 			"twitter_username": "Strencher3"
 		}],
-		"version": "1.0.3",
+		"version": "1.1.0",
 		"description": "Enhanced version of silent typing.",
 		"github": "https://github.com/Strencher/BetterDiscordStuff/blob/master/InvisibleTyping/InvisibleTyping.plugin.js",
 		"github_raw": "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/InvisibleTyping/InvisibleTyping.plugin.js"
@@ -54,10 +54,10 @@ const config = {
 		}
 	},
 	"changelog": [{
-		"type": "fixed",
-		"title": "Fixed",
+		"type": "improved",
+		"title": "Improved",
 		"items": [
-			"Fixed disabling button in global mode *again*."
+			"Don't show typing button in channels that you can't send messages in."
 		]
 	}]
 };
@@ -302,7 +302,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
 				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
 			},
-			953: (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+			954: (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 				__webpack_require__.r(__webpack_exports__);
 				__webpack_require__.d(__webpack_exports__, {
 					default: () => InvisibleTyping
@@ -312,7 +312,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				var external_BasePlugin_default = __webpack_require__.n(external_BasePlugin_namespaceObject);
 				const utils_namespaceObject = Modules["@discord/utils"];
 				const components_namespaceObject = Modules["@discord/components"];
-				var external_BdApi_React_ = __webpack_require__(832);
+				var external_BdApi_React_ = __webpack_require__(113);
 				var external_BdApi_React_default = __webpack_require__.n(external_BdApi_React_);
 				const flux_namespaceObject = Modules["@discord/flux"];
 				const modules_namespaceObject = Modules["@discord/modules"];
@@ -452,7 +452,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				};
 				const external_StyleLoader_namespaceObject = StyleLoader;
 				var external_StyleLoader_default = __webpack_require__.n(external_StyleLoader_namespaceObject);
-				var React = __webpack_require__(832);
+				var React = __webpack_require__(113);
 				function createUpdateWrapper_extends() {
 					createUpdateWrapper_extends = Object.assign || function(target) {
 						for (var i = 1; i < arguments.length; i++) {
@@ -499,7 +499,13 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						}
 					}, "Reset")));
 				}
-				var InvisibleTyping_React = __webpack_require__(832);
+				const constants_namespaceObject = Modules["@discord/constants"];
+				const stores_namespaceObject = Modules["@discord/stores"];
+				var InvisibleTyping_React = __webpack_require__(113);
+				const canViewChannel = function(channel) {
+					if (!channel) return false;
+					return modules_namespaceObject.PermissionUtils.can(constants_namespaceObject.Permissions.SEND_MESSAGES, channel, stores_namespaceObject.Users.getCurrentUser());
+				};
 				class InvisibleTyping extends(external_BasePlugin_default()) {
 					onStart() {
 						external_StyleLoader_default().inject();
@@ -520,7 +526,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 							textValue
 						}], returnValue) => {
 							const tree = external_PluginApi_namespaceObject.Utilities.findInReactTree(returnValue, (e => e?.className?.includes("buttons-")));
-							if (!Array.isArray(tree?.children) || tree.children.some((child => child?.type === InvisibleTyping))) return returnValue;
+							if (!Array.isArray(tree?.children) || tree.children.some((child => child?.type === InvisibleTyping)) || !canViewChannel(channel)) return returnValue;
 							tree.children.unshift(InvisibleTyping_React.createElement(InvisibleTypingButton, {
 								channel,
 								textValue
@@ -571,7 +577,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					return list;
 				};
 			},
-			832: module => {
+			113: module => {
 				module.exports = BdApi.React;
 			}
 		};
@@ -617,7 +623,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				});
 			};
 		})();
-		var __webpack_exports__ = __webpack_require__(953);
+		var __webpack_exports__ = __webpack_require__(954);
 		module.exports.LibraryPluginHack = __webpack_exports__;
 	})();
 	const PluginExports = module.exports.LibraryPluginHack;
