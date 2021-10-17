@@ -1,7 +1,7 @@
 /**
  * @name InvisibleTyping
  * @author Strencher
- * @version 1.1.0
+ * @version 1.1.1
  * @description Enhanced version of silent typing.
  * @source https://github.com/Strencher/BetterDiscordStuff/blob/master/InvisibleTyping/InvisibleTyping.plugin.js
  * @updateUrl https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/InvisibleTyping/InvisibleTyping.plugin.js
@@ -38,7 +38,7 @@ const config = {
 			"github_username": "Strencher",
 			"twitter_username": "Strencher3"
 		}],
-		"version": "1.1.0",
+		"version": "1.1.1",
 		"description": "Enhanced version of silent typing.",
 		"github": "https://github.com/Strencher/BetterDiscordStuff/blob/master/InvisibleTyping/InvisibleTyping.plugin.js",
 		"github_raw": "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/InvisibleTyping/InvisibleTyping.plugin.js"
@@ -57,7 +57,8 @@ const config = {
 		"type": "improved",
 		"title": "Improved",
 		"items": [
-			"Don't show typing button in channels that you can't send messages in."
+			"Don't show typing button in channels that you can't send messages in.",
+			"^ Actually works now."
 		]
 	}]
 };
@@ -502,8 +503,10 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				const constants_namespaceObject = Modules["@discord/constants"];
 				const stores_namespaceObject = Modules["@discord/stores"];
 				var InvisibleTyping_React = __webpack_require__(113);
+				const DMChannels = [constants_namespaceObject.ChannelTypes.DM, constants_namespaceObject.ChannelTypes.GROUP_DM];
 				const canViewChannel = function(channel) {
 					if (!channel) return false;
+					if (DMChannels.includes(channel.type)) return true;
 					return modules_namespaceObject.PermissionUtils.can(constants_namespaceObject.Permissions.SEND_MESSAGES, channel, stores_namespaceObject.Users.getCurrentUser());
 				};
 				class InvisibleTyping extends(external_BasePlugin_default()) {
