@@ -1,6 +1,6 @@
 /**
  * @name UserDetails
- * @version 2.7.0
+ * @version 2.7.1
  * @author Strencher
  * @description Shows you a lot information about users in popouts.
  * @source https://github.com/Strencher/BetterDiscordStuff/tree/development/UserDetails
@@ -33,7 +33,7 @@
 const config = {
 	"info": {
 		"name": "UserDetails",
-		"version": "2.7.0",
+		"version": "2.7.1",
 		"authors": [{
 			"name": "Strencher",
 			"discord_id": "415849376598982656",
@@ -46,20 +46,12 @@ const config = {
 		"invite": "gvA2ree"
 	},
 	"changelog": [{
-			"title": "Fixed",
-			"type": "fixed",
-			"items": [
-				"Fixes for the last canary update."
-			]
-		},
-		{
-			"title": "Added",
-			"type": "added",
-			"items": [
-				"More translations. View translations page in settings for more information about translated locales."
-			]
-		}
-	],
+		"title": "Fixed",
+		"type": "fixed",
+		"items": [
+			"More fixes for the last canary update."
+		]
+	}],
 	"build": {
 		"zlibrary": true,
 		"copy": true,
@@ -174,7 +166,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					return ___createMemoize___(this, 'EmojiUtils', () => BdApi.findModuleByProps('uploadEmoji'))
 				},
 				get 'PermissionUtils'() {
-					return ___createMemoize___(this, 'PermissionUtils', () => BdApi.findModuleByProps('computePermissions'))
+					return ___createMemoize___(this, 'PermissionUtils', () => BdApi.findModuleByProps('computePermissions', 'canManageUser'))
 				},
 				get 'DMUtils'() {
 					return ___createMemoize___(this, 'DMUtils', () => BdApi.findModuleByProps('openPrivateChannel'))
@@ -218,7 +210,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					return ___createMemoize___(this, 'Activities', () => BdApi.findModuleByProps('getActivities'))
 				},
 				get 'Games'() {
-					return ___createMemoize___(this, 'Games', () => BdApi.findModuleByProps('getGame'))
+					return ___createMemoize___(this, 'Games', () => BdApi.findModuleByProps('getGame', 'games'))
 				},
 				get 'Auth'() {
 					return ___createMemoize___(this, 'Auth', () => BdApi.findModuleByProps('getId', 'isGuest'))
@@ -1800,8 +1792,8 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						activity,
 						showActivityIcons,
 						disabled
-					} = (0, flux_namespaceObject.useStateFromStoresObject)([stores_namespaceObject.Activities, modules_Settings], (() => ({
-						activity: stores_namespaceObject.Activities.getActivities(user.id).filter(ActivitiesFilter)[0],
+					} = (0, flux_namespaceObject.useStateFromStoresObject)([stores_namespaceObject.Status, modules_Settings], (() => ({
+						activity: stores_namespaceObject.Status.getActivities(user.id).filter(ActivitiesFilter)[0],
 						showActivityIcons: modules_Settings.get("activityIcons", true),
 						disabled: user?.bot && modules_Settings.get("disableIconsForBots", true)
 					})), [user]);
