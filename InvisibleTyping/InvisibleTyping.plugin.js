@@ -1,7 +1,7 @@
 /**
  * @name InvisibleTyping
  * @author Strencher
- * @version 1.1.2
+ * @version 1.1.3
  * @description Enhanced version of silent typing.
  * @source https://github.com/Strencher/BetterDiscordStuff/blob/master/InvisibleTyping/InvisibleTyping.plugin.js
  * @updateUrl https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/InvisibleTyping/InvisibleTyping.plugin.js
@@ -38,7 +38,7 @@ const config = {
 			"github_username": "Strencher",
 			"twitter_username": "Strencher3"
 		}],
-		"version": "1.1.2",
+		"version": "1.1.3",
 		"description": "Enhanced version of silent typing.",
 		"github": "https://github.com/Strencher/BetterDiscordStuff/blob/master/InvisibleTyping/InvisibleTyping.plugin.js",
 		"github_raw": "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/InvisibleTyping/InvisibleTyping.plugin.js"
@@ -54,11 +54,10 @@ const config = {
 		}
 	},
 	"changelog": [{
-		"type": "improved",
-		"title": "Improved",
+		"type": "fixed",
+		"title": "Fixed",
 		"items": [
-			"Don't show typing button in channels that you can't send messages in.",
-			"^ Actually works now."
+			"Fixes for the latest stable update."
 		]
 	}]
 };
@@ -160,7 +159,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					return ___createMemoize___(this, 'EmojiUtils', () => BdApi.findModuleByProps('uploadEmoji'))
 				},
 				get 'PermissionUtils'() {
-					return ___createMemoize___(this, 'PermissionUtils', () => BdApi.findModuleByProps('computePermissions'))
+					return ___createMemoize___(this, 'PermissionUtils', () => BdApi.findModuleByProps('computePermissions', 'canManageUser'))
 				},
 				get 'DMUtils'() {
 					return ___createMemoize___(this, 'DMUtils', () => BdApi.findModuleByProps('openPrivateChannel'))
@@ -204,7 +203,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					return ___createMemoize___(this, 'Activities', () => BdApi.findModuleByProps('getActivities'))
 				},
 				get 'Games'() {
-					return ___createMemoize___(this, 'Games', () => BdApi.findModuleByProps('getGame'))
+					return ___createMemoize___(this, 'Games', () => BdApi.findModuleByProps('getGame', 'games'))
 				},
 				get 'Auth'() {
 					return ___createMemoize___(this, 'Auth', () => BdApi.findModuleByProps('getId', 'isGuest'))
@@ -513,7 +512,12 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				const canViewChannel = function(channel) {
 					if (!channel) return false;
 					if (DMChannels.includes(channel.type)) return true;
-					return modules_namespaceObject.PermissionUtils.can(constants_namespaceObject.Permissions.SEND_MESSAGES, channel, stores_namespaceObject.Users.getCurrentUser());
+					try {
+						return modules_namespaceObject.PermissionUtils.can(constants_namespaceObject.Permissions.SEND_MESSAGES, channel, stores_namespaceObject.Users.getCurrentUser());
+					} catch (error) {
+						external_PluginApi_namespaceObject.Logger.error("Failed to request permissions:", error);
+						return true;
+					}
 				};
 				class InvisibleTyping extends(external_BasePlugin_default()) {
 					onStart() {
