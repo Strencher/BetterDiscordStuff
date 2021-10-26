@@ -794,7 +794,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 										settings.set("sort", value);
 									}
 								})), Object.keys(Object(that.props.bans)).length ? BetterBannedUsers_React.createElement(SearchBar, {
-									onChange: value => {
+									onQueryChange: value => {
 										GuildSettings.setSearchQuery(value);
 									},
 									onClear: () => GuildSettings.setSearchQuery(""),
