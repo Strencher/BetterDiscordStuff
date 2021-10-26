@@ -1,0 +1,91 @@
+.settingsPanel {
+    .descriptionItem {
+        margin-top: 8px;
+    }
+
+    .translation {
+        width: 27px;
+        height: 18px;
+        margin-right: 8px;
+    }
+
+    .marginBottom8 {
+        margin-bottom: 8px;
+    }
+
+    .formItem {
+        margin-bottom: 10px;
+    }
+
+    .cardItem {
+        display: flex;
+        position: relative;
+
+        > div {flex-grow: 1;}
+
+        .textBadge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            display: inline-block;
+            text-transform: uppercase;
+            vertical-align: middle;
+        }
+    }
+
+    .icons {
+        flex-wrap: wrap;
+        .settingsBadgeContainer {
+            display: inline-flex;
+            cursor: pointer;
+
+            .settingsBadgeIcon {
+                width: 40px;
+                height: 40px;
+
+                &.disabled {
+                    opacity: 0.4;
+                }
+            }
+        }
+    }
+
+
+    .category {
+        color: #ddd;
+        
+        &.opened .categoryContent {
+            padding: 10px;
+            padding: 10px;
+
+            .replacementVariable {
+                user-select: text;
+                margin-bottom: 6px;
+                padding-bottom: 6px;
+                border-bottom: thin solid var(--background-modifier-accent);
+            }
+            
+            .replacementVariable b {margin-right: 3px;}
+        }
+
+        .categoryHeader {
+            cursor: pointer;
+            padding: 10px;
+            font-size: 15px;
+            background: var(--background-tertiary);
+            font-weight: 600;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+
+            .categoryCaret {
+                margin-left: auto;
+            }
+        }
+    }
+
+    .pageIcon {
+        color: var(--interactive-normal);
+        fill: var(--interactive-normal);
+    }
+}

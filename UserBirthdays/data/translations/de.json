@@ -1,0 +1,10 @@
+{
+    "CHOOSE_BIRTHDAY": "Wähle ein Datum",
+    "SELECT_DAY": "Wähle einen Tag",
+    "SELECT_MONTH": "Wähle einen Monat",
+    "SAVE": "Speicher",
+    "CANCEL": "Abbrechen",
+    "DELETE": "Löschen",
+    "ARE_YOU_SURE": "Bist du dir sicher?",
+    "DELETE_BIRTHDAY_CONFIRM": "Wenn du {{name}} von deiner Liste löscht, ist er für immer weg. Dies kann nicht mehr rückgängig gemacht werden."
+}

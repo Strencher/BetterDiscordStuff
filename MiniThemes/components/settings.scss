@@ -1,0 +1,62 @@
+.ContentPage {
+    color: #ddd;
+    display: block;
+}
+
+.ContentPage .Title {
+    margin-bottom: 20px;
+    font-weight: bold;
+    font-size: 25px;
+    font-family: var(--font-display);
+}
+
+.ContentPage .TabContent {
+    margin-top: 20px;
+}
+
+.ContentPage .HeaderBar {
+    display: flex;
+    border-bottom: 2px solid var(--background-modifier-active);
+
+    & > :first-child {
+        padding-left: 0 !important;
+        margin-left: 0 !important;
+
+        .Name {
+            padding-left: 8px;
+        }
+    }
+
+    .TabItem {
+        position: relative;
+        bottom: -2px;
+        padding: 10px 8px;
+        margin: 0 5px;
+        cursor: pointer;
+        transition: .3s;
+        border-bottom: 2px solid transparent;
+
+        .IconContainer {
+            margin-right: 5px;
+            width: 20px;
+            height: 20px;
+        }
+
+        .Name {
+            font-weight: 500;   
+        }
+
+        &.Selected {
+            color: var(--interactive-active);
+            border-bottom-color: var(--brand-experiment);
+        }
+    }
+
+    .SearchBar {
+        margin-left: auto;
+        height: 25px;
+        max-width: 200px;
+        bottom: -5px;
+        position: relative;
+    }
+}

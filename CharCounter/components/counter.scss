@@ -1,0 +1,20 @@
+.counter {
+    position: absolute;
+    bottom: -30px;
+    right: -10px;
+    font-size: 12px;
+    white-space: nowrap;
+}
+
+.selection {
+    color: var(--text-muted);
+    margin-left: 3px;
+}
+
+.oversize {
+    color: #Ed4245;
+}
+
+:global(.cooldownWrapper-3joyFc) {
+    margin-right: 70px;
+}

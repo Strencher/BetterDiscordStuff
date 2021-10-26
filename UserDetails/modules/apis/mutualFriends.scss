@@ -1,0 +1,28 @@
+.header {
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 12px;
+    margin-bottom: 8px;
+    color: var(--header-secondary);
+}
+
+.body {
+    display: block;
+    margin-bottom: 8px;
+}
+
+.friends {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.mutualFriend {
+    margin: 2px;
+    cursor: pointer;
+}
+
+.stack .mutualFriend {
+    margin: 0;
+    margin-right: -10px;
+    background: var(--background-floating);
+}

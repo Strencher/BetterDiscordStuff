@@ -1,0 +1,142 @@
+.CardItem {
+    color: #ddd;
+    display: flex;
+    flex-direction: column;
+    height: 320px;
+    border-radius: 8px;
+    position: relative;
+    overflow: hidden;
+    --background: var(--background-secondary-alt);
+    background: var(--background);
+    transition: box-shadow .2s ease-out,transform .2s ease-out,background .2s ease-out,opacity .2s ease-in,-webkit-box-shadow .2s ease-out,-webkit-transform .2s ease-out;
+
+    &:hover {
+        transform: translateY(-1px);
+        box-shadow: var(--elevation-high);
+        --background: var(--background-tertiary);
+
+        .NavigateButton {opacity: 1 !important;}
+    }
+
+    .Header {
+        position: relative;
+        height: 125px;
+        $avatarRadius: 8px;
+
+        .NavigateButton {
+            transition: opacity .4s;
+            opacity: 0;
+            position: absolute;
+            top: 0;
+        }
+
+        .NavigateButtonRight {right: 0}
+        .NavigateButtonLeft {left: 0}
+
+        .Banner {
+            cursor: pointer;
+            width: 100%;
+            height: 100px;
+            background-size: cover;
+            background-repeat: no-repeat;
+
+        }
+
+        .ToolsContainer {
+            position: absolute;
+            right: 10px;
+            bottom: -15px;
+        }
+
+        .AvatarContainer {
+            transition: box-shadow .2s ease-out,transform .2s ease-out,background .2s ease-out,opacity .2s ease-in,-webkit-box-shadow .2s ease-out,-webkit-transform .2s ease-out;
+            transform: translate(20px, -35px);
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--background);
+            padding: 5px;
+            border-radius: $avatarRadius;
+
+            .Avatar {
+                border-radius: $avatarRadius;
+                width: 42px;
+                height: 42px;
+            }
+        }
+    }
+
+    .Body {
+        padding: 0 10px;
+        display: block;
+
+        .Name {
+            font-weight: 700;
+        }
+
+        .Description {
+            font-size: 12px;
+            margin-top: 10px;
+            border-top: thin solid var(--background-modifier-accent);
+            padding-top: 10px;
+
+            .Bubble {
+                margin: 10px 0;
+            }
+        }
+    }
+
+    .Footer {
+        padding: 10px;
+        margin-top: auto;
+        display: block;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        .LinkButton {
+            color: #ddd;
+        }
+    }
+
+    &.Fetching {
+        content: "";
+    }
+
+    &:not(:first-child) {
+        margin-top: 10px;
+    }
+}
+
+.dateTooltip {
+    max-width: 250px;
+}
+
+.Bubble {
+    width: 100px;
+    height: 15px;
+    background: var(--background-primary);
+    border-radius: 10px;
+    animation: BubbleBubble ease-in-out 2s infinite;
+}
+
+.Loading {
+    color: var(--background-primary);
+    animation: BubbleBubble ease-in-out 2s infinite;
+}
+
+@keyframes BubbleBubble {
+    0% {
+        opacity: .6;
+    }
+
+    50% {
+        opacity: .3;
+    }
+
+    100% {
+        opacity: .6;
+    }
+}

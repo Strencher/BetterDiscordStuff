@@ -1,0 +1,30 @@
+.container {
+    background: var(--background-secondary);
+    border: 1px solid var(--background-tertiary);
+    border-radius: 4px;
+    
+    .option {
+        padding: 7px 10px;
+        color: #ddd;
+        text-align: center;
+        
+        &.selected {
+            background: var(--background-secondary-alt);
+            color: #fff;
+        }
+        
+        &:not(.selected):hover {
+            color: #fff;
+            cursor: pointer;
+            background: var(--background-modifier-hover);
+        }
+    }
+}
+
+.selectedText {
+    margin: 0 5px;
+}
+
+.select {
+    cursor: pointer;
+}

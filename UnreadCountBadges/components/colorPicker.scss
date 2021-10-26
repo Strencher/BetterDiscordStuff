@@ -1,0 +1,62 @@
+$swatchSize: 23px;
+$dropperPadding: 5px;
+
+.inputContainer {
+    position: relative;
+    display: inline-table;
+
+    svg {
+        position: absolute;
+        top: $dropperPadding;
+        right: $dropperPadding;
+    }
+}
+
+.colorInput {
+    outline: none;
+    width: 70px;
+    border: none;
+    height: 54px;
+    margin-top: 1px;
+    border-radius: 4px;
+    cursor: pointer;
+    
+    &::-webkit-color-swatch {
+        border: none;
+    }
+}
+
+.controls {
+    padding-left: 1px;
+    padding-top: 2px;
+    display: flex;
+}
+
+.colorSwatch {
+    cursor: pointer;
+    border-radius: 4px;
+    width: $swatchSize;
+    height: $swatchSize;
+    margin: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.colorSwatches {
+    align-content: flex-start;
+    margin-left: 5px !important;
+    max-width: 340px;
+}
+
+.defaultColor {
+    cursor: pointer;
+    width: 72px;
+    height: 54px;
+    border-radius: 4px;
+    margin-right: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1px;
+}

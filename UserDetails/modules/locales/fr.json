@@ -1,0 +1,14 @@
+{
+    "CONNECTIONS": "Connexions",
+    "NO_CONNECTIONS": "Pas de connexion!",
+    "LOADING_CONNECTIONS": "Chargement des connexions...",
+    "LOADING_LAST_MESSAGE": "Chargement du dernier message...",
+    "LOADING_JOINED_AT": "Chargement de la date d'entrée...",
+    "MEMBER_WAS_NOT_FOUND": "Membre non trouvé",
+    "FAILED_TO_FETCH": "Échec de la récupération",
+    "USERINFO_CMD_DESC": "Informations sur un utilisateur spécifique",
+    "NO_MUTUAL_GUILDS": "Pas de serveur en commun",
+    "LOADING_MUTUAL_GUILDS": "Chargement des serveurs en communs...",
+    "LOADING_MUTUAL_FRIENDS": "Chargement des amis en communs...",
+    "NO_MUTUAL_FRIENDS": "Aucun ami en commun"
+}

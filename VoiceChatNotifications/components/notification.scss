@@ -1,0 +1,96 @@
+$padding: 20px;
+
+:global(#voicechatnotifications) {
+    position: absolute;
+    z-index: 999;
+
+    .container {
+        z-index: 999;
+    }
+}
+
+.container {
+    min-width: 220px;
+    margin-top: 20px;
+    position: relative;
+    align-items: center;
+    overflow: hidden;
+    display: flex;
+    pointer-events: all;
+    padding: 15px;
+    border-radius: 4px;
+}
+
+.topLeft {
+    left: $padding;
+}
+
+.topRight {
+    right: $padding;
+}
+
+.bottomLeft {
+    bottom: $padding;
+    left: $padding;
+}
+
+.bottomRight {
+    bottom: $padding;
+    right: $padding;
+}
+
+.closeButton {
+    color: #ddd;
+    position: absolute;
+    right: 3px;
+    top: 3px;
+    opacity: .7;
+}
+
+.progress {
+    bottom: 0;
+    height: 3px;
+    position: absolute;
+    width: 100%;
+    left: 0;
+}
+
+.progressBar {
+    height: 3px;
+    background: #0870f3;
+}
+
+.content {
+    color: #ddd;
+    display: flex;
+}
+
+.closeButton:hover {
+    opacity: 1;
+}
+
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    margin-left: 10px;
+
+    .header {
+        display: flex;
+        flex-direction: row;
+
+        .username {
+            color: #fff;
+            font-weight: 700;
+        }
+
+        .timestamp {
+            font-size: 0.75rem;
+            padding-top: 3px;
+            color: var(--channels-default);
+        }
+    }
+
+    .message {
+        line-height: 10px;
+    }
+}

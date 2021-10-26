@@ -1,0 +1,45 @@
+.authorTooltip {
+    box-shadow: var(--elevation-high); 
+    background-color: var(--background-floating); 
+    color: #dcddde; 
+    border-radius: 5px; 
+    font-size: 16px; 
+    line-height: 20px; 
+    padding: 4px 6px; 
+    overflow-wrap: break-word; 
+    display: flex; 
+    align-items: center;
+}
+
+.authorTooltipPointer {
+    width: 0;
+    height: 0; 
+    border: 5px solid transparent; 
+    border-top: 5px solid var(--background-floating); 
+    pointer-events: none; 
+    position: absolute; 
+    top: 100%; 
+    left: 50%; 
+    margin-left: -5px;
+}
+
+.container {
+    max-width: 350px; 
+    user-select: text;
+}
+
+.icon {
+    height: 25px; 
+    width: 25px;
+}
+
+.iconContainer {
+    display: inline-flex; 
+    padding: 5px; 
+    border-radius: 5px; 
+    cursor: pointer;
+}
+
+.iconContainer:hover {
+    background: var(--background-modifier-hover);
+}

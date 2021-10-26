@@ -1,6 +1,6 @@
 /**
  * @name UserDetails
- * @version 2.7.1
+ * @version 2.6.0
  * @author Strencher
  * @description Shows you a lot information about users in popouts.
  * @source https://github.com/Strencher/BetterDiscordStuff/tree/development/UserDetails
@@ -33,7 +33,7 @@
 const config = {
 	"info": {
 		"name": "UserDetails",
-		"version": "2.7.1",
+		"version": "2.6.0",
 		"authors": [{
 			"name": "Strencher",
 			"discord_id": "415849376598982656",
@@ -46,12 +46,23 @@ const config = {
 		"invite": "gvA2ree"
 	},
 	"changelog": [{
-		"title": "Fixed",
-		"type": "fixed",
-		"items": [
-			"More fixes for the last canary update."
-		]
-	}],
+			"title": "Fixed",
+			"type": "fixed",
+			"items": [
+				"Finally fixed the connections section not showing up (thanks to Salty Australian#8958 for help with debugging).",
+				"Using svg's for the icons now because the png ones are blurry. (except the xbox icon which is still png because the svg version doesn't look nice."
+			]
+		},
+		{
+			"title": "Added",
+			"type": "added",
+			"items": [
+				"Added Mutual Friends feature in the user popout.",
+				"Added roles list in the user profile modal.",
+				"Added (NEW) indicators to settings cards to find new settings."
+			]
+		}
+	],
 	"build": {
 		"zlibrary": true,
 		"copy": true,
@@ -108,7 +119,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			},
 			'@discord/utils': {
 				get 'joinClassNames'() {
-					return ___createMemoize___(this, 'joinClassNames', () => BdApi.findModule(e => e.toString().indexOf('return e.join(" ")') > 200))
+					return ___createMemoize___(this, 'joinClassNames', () => BdApi.findModule(m => typeof m?.default?.default === 'function')?.default)
 				},
 				get 'useForceUpdate'() {
 					return ___createMemoize___(this, 'useForceUpdate', () => BdApi.findModuleByProps('useForceUpdate')?.useForceUpdate)
@@ -117,7 +128,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					return ___createMemoize___(this, 'Logger', () => BdApi.findModuleByProps('setLogFn')?.default)
 				},
 				get 'Navigation'() {
-					return ___createMemoize___(this, 'Navigation', () => BdApi.findModuleByProps('replaceWith', 'currentRouteIsPeekView'))
+					return ___createMemoize___(this, 'Navigation', () => BdApi.findModuleByProps('replaceWith'))
 				}
 			},
 			'@discord/components': {
@@ -142,9 +153,6 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				get 'Button'() {
 					return ___createMemoize___(this, 'Button', () => BdApi.findModuleByProps('DropdownSizes'))
 				},
-				get 'Popout'() {
-					return ___createMemoize___(this, 'Popout', () => BdApi.findModuleByDisplayName('Popout'))
-				},
 				get 'Flex'() {
 					return ___createMemoize___(this, 'Flex', () => BdApi.findModuleByDisplayName('Flex'))
 				},
@@ -159,14 +167,11 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				get 'Dispatcher'() {
 					return ___createMemoize___(this, 'Dispatcher', () => BdApi.findModuleByProps('dirtyDispatch', 'subscribe'))
 				},
-				get 'ComponentDispatcher'() {
-					return ___createMemoize___(this, 'ComponentDispatcher', () => BdApi.findModuleByProps('ComponentDispatch')?.ComponentDispatch)
-				},
 				get 'EmojiUtils'() {
 					return ___createMemoize___(this, 'EmojiUtils', () => BdApi.findModuleByProps('uploadEmoji'))
 				},
 				get 'PermissionUtils'() {
-					return ___createMemoize___(this, 'PermissionUtils', () => BdApi.findModuleByProps('computePermissions', 'canManageUser'))
+					return ___createMemoize___(this, 'PermissionUtils', () => BdApi.findModuleByProps('computePermissions'))
 				},
 				get 'DMUtils'() {
 					return ___createMemoize___(this, 'DMUtils', () => BdApi.findModuleByProps('openPrivateChannel'))
@@ -177,7 +182,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					return ___createMemoize___(this, 'Messages', () => BdApi.findModuleByProps('getMessage', 'getMessages'))
 				},
 				get 'Channels'() {
-					return ___createMemoize___(this, 'Channels', () => BdApi.findModuleByProps('getChannel', 'getDMFromUserId'))
+					return ___createMemoize___(this, 'Channels', () => BdApi.findModuleByProps('getChannel'))
 				},
 				get 'Guilds'() {
 					return ___createMemoize___(this, 'Guilds', () => BdApi.findModuleByProps('getGuild'))
@@ -192,7 +197,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					return ___createMemoize___(this, 'Info', () => BdApi.findModuleByProps('getSessionId'))
 				},
 				get 'Status'() {
-					return ___createMemoize___(this, 'Status', () => BdApi.findModuleByProps('getStatus', 'getActivities', 'getState'))
+					return ___createMemoize___(this, 'Status', () => BdApi.findModuleByProps('getStatus'))
 				},
 				get 'Users'() {
 					return ___createMemoize___(this, 'Users', () => BdApi.findModuleByProps('getUser', 'getCurrentUser'))
@@ -210,7 +215,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					return ___createMemoize___(this, 'Activities', () => BdApi.findModuleByProps('getActivities'))
 				},
 				get 'Games'() {
-					return ___createMemoize___(this, 'Games', () => BdApi.findModuleByProps('getGame', 'games'))
+					return ___createMemoize___(this, 'Games', () => BdApi.findModuleByProps('getGame'))
 				},
 				get 'Auth'() {
 					return ___createMemoize___(this, 'Auth', () => BdApi.findModuleByProps('getId', 'isGuest'))
@@ -228,7 +233,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				}
 			},
 			get '@discord/i18n'() {
-				return ___createMemoize___(this, '@discord/i18n', () => BdApi.findModule(m => m.Messages?.CLOSE && typeof(m.getLocale) === 'function'))
+				return ___createMemoize___(this, '@discord/i18n', () => BdApi.findModuleByProps('getLocale'))
 			},
 			get '@discord/constants'() {
 				return ___createMemoize___(this, '@discord/constants', () => BdApi.findModuleByProps('API_HOST'))
@@ -253,7 +258,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				return ___createMemoize___(this, '@discord/flux', () => Object.assign({}, BdApi.findModuleByProps('useStateFromStores').default, BdApi.findModuleByProps('useStateFromStores')))
 			},
 			get '@discord/modal'() {
-				return ___createMemoize___(this, '@discord/modal', () => Object.assign({}, BdApi.findModuleByProps('ModalRoot'), BdApi.findModuleByProps('openModal', 'closeAllModals')))
+				return ___createMemoize___(this, '@discord/modal', () => Object.assign({}, BdApi.findModuleByProps('ModalRoot'), BdApi.findModuleByProps('openModal')))
 			},
 			get '@discord/connections'() {
 				return ___createMemoize___(this, '@discord/connections', () => BdApi.findModuleByProps('get', 'isSupported', 'map'))
@@ -280,197 +285,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			}
 		};
 		var __webpack_modules__ = {
-			597: (module, __webpack_exports__, __webpack_require__) => {
-				__webpack_require__.d(__webpack_exports__, {
-					Z: () => __WEBPACK_DEFAULT_EXPORT__
-				});
-				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(645);
-				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
-				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
-					return i[1];
-				}));
-				___CSS_LOADER_EXPORT___.push([module.id, ".UserDetails-connections-header{font-weight:700;text-transform:uppercase;font-size:12px;margin-bottom:8px;color:var(--header-secondary)}.UserDetails-connections-connectionsBody div:not(.UserDetails-connections-connections,.UserDetails-connections-container){display:inline-flex;margin:2px}.UserDetails-connections-connectionsBody .UserDetails-connections-loading{fill:var(--interactive-muted);animation:UserDetails-connections-blink infinite 2s;width:30px;height:30px;margin:5px;margin-top:0;margin-left:0}.UserDetails-connections-connectionsBody .UserDetails-connections-connections{display:flex;flex-wrap:wrap;margin-bottom:8px}.UserDetails-connections-connectionsBody .UserDetails-connections-connections img{width:30px;height:30px}.UserDetails-connections-connectionsBody .UserDetails-connections-errorIcon{width:35px;height:35px;margin-top:-5px}.UserDetails-connections-connectionsBody .UserDetails-connections-errorIcon{fill:#ed4245 !important}@keyframes UserDetails-connections-blink{0%{opacity:.6}50%{opacity:.3}100%{opacity:.6}}", ""]);
-				___CSS_LOADER_EXPORT___.locals = {
-					header: "UserDetails-connections-header",
-					connectionsBody: "UserDetails-connections-connectionsBody",
-					connections: "UserDetails-connections-connections",
-					container: "UserDetails-connections-container",
-					loading: "UserDetails-connections-loading",
-					blink: "UserDetails-connections-blink",
-					errorIcon: "UserDetails-connections-errorIcon"
-				};
-				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
-				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
-			},
-			242: (module, __webpack_exports__, __webpack_require__) => {
-				__webpack_require__.d(__webpack_exports__, {
-					Z: () => __WEBPACK_DEFAULT_EXPORT__
-				});
-				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(645);
-				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
-				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
-					return i[1];
-				}));
-				___CSS_LOADER_EXPORT___.push([module.id, ".customStatus-oN4ZZY:not(:empty){padding-top:10px;border-top:thin solid var(--background-modifier-accent)}.UserDetails-dates-container{display:flex;max-width:-webkit-fill-available;margin-bottom:-5px}.UserDetails-dates-container.UserDetails-dates-text{flex-direction:column;margin-top:10px;border-top:thin solid var(--background-modifier-accent);padding-top:10px}.UserDetails-dates-container.UserDetails-dates-icons{flex-direction:row}.UserDetails-dates-container.UserDetails-dates-icons.UserDetails-dates-userProfile{padding-left:13px}.UserDetails-dates-container.UserDetails-dates-icons .UserDetails-dates-loading{animation:UserDetails-dates-blink infinite 2s ease-in-out}.UserDetails-dates-container svg{fill:#ddd;margin:5px;width:20px;height:20px}.UserDetails-dates-container.UserDetails-dates-text .UserDetails-dates-scrollableText{color:var(--text-normal);white-space:nowrap;position:relative;font-size:14px;width:-webkit-fill-available;text-align:left;line-height:18px}.UserDetails-dates-container.UserDetails-dates-text.UserDetails-dates-userProfile{padding-left:18px}.UserDetails-dates-container.UserDetails-dates-text.UserDetails-dates-userProfile .UserDetails-dates-scrollableText{text-align:left !important}.UserDetails-dates-container .UserDetails-dates-errorIcon{fill:#ed4245 !important}.UserDetails-dates-wrapper{display:block}@keyframes UserDetails-dates-blink{0%{opacity:.6}50%{opacity:.3}100%{opacity:.6}}", ""]);
-				___CSS_LOADER_EXPORT___.locals = {
-					container: "UserDetails-dates-container",
-					text: "UserDetails-dates-text",
-					icons: "UserDetails-dates-icons",
-					userProfile: "UserDetails-dates-userProfile",
-					loading: "UserDetails-dates-loading",
-					blink: "UserDetails-dates-blink",
-					scrollableText: "UserDetails-dates-scrollableText",
-					errorIcon: "UserDetails-dates-errorIcon",
-					wrapper: "UserDetails-dates-wrapper"
-				};
-				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
-				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
-			},
-			675: (module, __webpack_exports__, __webpack_require__) => {
-				__webpack_require__.d(__webpack_exports__, {
-					Z: () => __WEBPACK_DEFAULT_EXPORT__
-				});
-				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(645);
-				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
-				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
-					return i[1];
-				}));
-				___CSS_LOADER_EXPORT___.push([module.id, ".UserDetails-mutualFriends-header{font-weight:700;text-transform:uppercase;font-size:12px;margin-bottom:8px;color:var(--header-secondary)}.UserDetails-mutualFriends-body{display:block;margin-bottom:8px}.UserDetails-mutualFriends-friends{display:flex;flex-wrap:wrap}.UserDetails-mutualFriends-mutualFriend{margin:2px;cursor:pointer}.UserDetails-mutualFriends-stack .UserDetails-mutualFriends-mutualFriend{margin:0;margin-right:-10px;background:var(--background-floating)}", ""]);
-				___CSS_LOADER_EXPORT___.locals = {
-					header: "UserDetails-mutualFriends-header",
-					body: "UserDetails-mutualFriends-body",
-					friends: "UserDetails-mutualFriends-friends",
-					mutualFriend: "UserDetails-mutualFriends-mutualFriend",
-					stack: "UserDetails-mutualFriends-stack"
-				};
-				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
-				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
-			},
-			416: (module, __webpack_exports__, __webpack_require__) => {
-				__webpack_require__.d(__webpack_exports__, {
-					Z: () => __WEBPACK_DEFAULT_EXPORT__
-				});
-				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(645);
-				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
-				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
-					return i[1];
-				}));
-				___CSS_LOADER_EXPORT___.push([module.id, ".UserDetails-mutualServers-header{font-weight:700;text-transform:uppercase;font-size:12px;margin-bottom:8px;color:var(--header-secondary)}.UserDetails-mutualServers-body{display:block;margin-bottom:8px}.UserDetails-mutualServers-guilds{display:flex;flex-wrap:wrap}.UserDetails-mutualServers-mutualGuild{margin:2px}.UserDetails-mutualServers-mutualGuild,.UserDetails-mutualServers-guildAcronym{width:30px;height:30px;border-radius:50%;overflow:hidden;transition:border-radius .3s}.UserDetails-mutualServers-mutualGuild:hover,.UserDetails-mutualServers-guildAcronym:hover{border-radius:20%}.UserDetails-mutualServers-mutualGuild img{width:30px;height:30px}.UserDetails-mutualServers-guildAcronym{display:flex;background:var(--background-floating);align-items:center;justify-content:center;white-space:nowrap;font-size:12px}.UserDetails-mutualServers-stack .UserDetails-mutualServers-mutualGuild{margin:0;margin-right:-10px;background:var(--background-floating)}", ""]);
-				___CSS_LOADER_EXPORT___.locals = {
-					header: "UserDetails-mutualServers-header",
-					body: "UserDetails-mutualServers-body",
-					guilds: "UserDetails-mutualServers-guilds",
-					mutualGuild: "UserDetails-mutualServers-mutualGuild",
-					guildAcronym: "UserDetails-mutualServers-guildAcronym",
-					stack: "UserDetails-mutualServers-stack"
-				};
-				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
-				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
-			},
-			755: (module, __webpack_exports__, __webpack_require__) => {
-				__webpack_require__.d(__webpack_exports__, {
-					Z: () => __WEBPACK_DEFAULT_EXPORT__
-				});
-				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(645);
-				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
-				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
-					return i[1];
-				}));
-				___CSS_LOADER_EXPORT___.push([module.id, ".UserDetails-activity-icon{display:flex;float:right}.UserDetails-activity-container{display:flex}", ""]);
-				___CSS_LOADER_EXPORT___.locals = {
-					icon: "UserDetails-activity-icon",
-					container: "UserDetails-activity-container"
-				};
-				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
-				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
-			},
-			173: (module, __webpack_exports__, __webpack_require__) => {
-				__webpack_require__.d(__webpack_exports__, {
-					Z: () => __WEBPACK_DEFAULT_EXPORT__
-				});
-				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(645);
-				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
-				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
-					return i[1];
-				}));
-				___CSS_LOADER_EXPORT___.push([module.id, ".UserDetails-badge-connection{width:30px;height:30px;position:relative}.UserDetails-badge-connection.UserDetails-badge-verified .UserDetails-badge-verifiedBadge{width:12px;height:12px;position:absolute;bottom:-3px;right:-3px;background:var(--background-floating);border-radius:50%;overflow:hidden;padding:2px}", ""]);
-				___CSS_LOADER_EXPORT___.locals = {
-					connection: "UserDetails-badge-connection",
-					verified: "UserDetails-badge-verified",
-					verifiedBadge: "UserDetails-badge-verifiedBadge"
-				};
-				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
-				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
-			},
-			564: (module, __webpack_exports__, __webpack_require__) => {
-				__webpack_require__.d(__webpack_exports__, {
-					Z: () => __WEBPACK_DEFAULT_EXPORT__
-				});
-				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(645);
-				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
-				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
-					return i[1];
-				}));
-				___CSS_LOADER_EXPORT___.push([module.id, ".UserDetails-flowerstar-wrapper{position:relative;display:flex;align-items:center;justify-content:center}.UserDetails-flowerstar-wrapper .UserDetails-flowerstar-container{display:block}.UserDetails-flowerstar-wrapper .UserDetails-flowerstar-tick{position:absolute;top:50%;left:50%;transform:translate(-50%, -50%)}", ""]);
-				___CSS_LOADER_EXPORT___.locals = {
-					wrapper: "UserDetails-flowerstar-wrapper",
-					container: "UserDetails-flowerstar-container",
-					tick: "UserDetails-flowerstar-tick"
-				};
-				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
-				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
-			},
-			128: (module, __webpack_exports__, __webpack_require__) => {
-				__webpack_require__.d(__webpack_exports__, {
-					Z: () => __WEBPACK_DEFAULT_EXPORT__
-				});
-				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(645);
-				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
-				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
-					return i[1];
-				}));
-				___CSS_LOADER_EXPORT___.push([module.id, ".UserDetails-settings-settingsPanel .UserDetails-settings-descriptionItem{margin-top:8px}.UserDetails-settings-settingsPanel .UserDetails-settings-translation{width:27px;height:18px;margin-right:8px}.UserDetails-settings-settingsPanel .UserDetails-settings-marginBottom8{margin-bottom:8px}.UserDetails-settings-settingsPanel .UserDetails-settings-formItem{margin-bottom:10px}.UserDetails-settings-settingsPanel .UserDetails-settings-cardItem{display:flex;position:relative}.UserDetails-settings-settingsPanel .UserDetails-settings-cardItem>div{flex-grow:1}.UserDetails-settings-settingsPanel .UserDetails-settings-cardItem .UserDetails-settings-textBadge{position:absolute;top:-5px;right:-5px;display:inline-block;text-transform:uppercase;vertical-align:middle}.UserDetails-settings-settingsPanel .UserDetails-settings-icons{flex-wrap:wrap}.UserDetails-settings-settingsPanel .UserDetails-settings-icons .UserDetails-settings-settingsBadgeContainer{display:inline-flex;cursor:pointer}.UserDetails-settings-settingsPanel .UserDetails-settings-icons .UserDetails-settings-settingsBadgeContainer .UserDetails-settings-settingsBadgeIcon{width:40px;height:40px}.UserDetails-settings-settingsPanel .UserDetails-settings-icons .UserDetails-settings-settingsBadgeContainer .UserDetails-settings-settingsBadgeIcon.UserDetails-settings-disabled{opacity:.4}.UserDetails-settings-settingsPanel .UserDetails-settings-category{color:#ddd}.UserDetails-settings-settingsPanel .UserDetails-settings-category.UserDetails-settings-opened .UserDetails-settings-categoryContent{padding:10px;padding:10px}.UserDetails-settings-settingsPanel .UserDetails-settings-category.UserDetails-settings-opened .UserDetails-settings-categoryContent .UserDetails-settings-replacementVariable{user-select:text;margin-bottom:6px;padding-bottom:6px;border-bottom:thin solid var(--background-modifier-accent)}.UserDetails-settings-settingsPanel .UserDetails-settings-category.UserDetails-settings-opened .UserDetails-settings-categoryContent .UserDetails-settings-replacementVariable b{margin-right:3px}.UserDetails-settings-settingsPanel .UserDetails-settings-category .UserDetails-settings-categoryHeader{cursor:pointer;padding:10px;font-size:15px;background:var(--background-tertiary);font-weight:600;text-transform:uppercase;display:flex;align-items:center}.UserDetails-settings-settingsPanel .UserDetails-settings-category .UserDetails-settings-categoryHeader .UserDetails-settings-categoryCaret{margin-left:auto}.UserDetails-settings-settingsPanel .UserDetails-settings-pageIcon{color:var(--interactive-normal);fill:var(--interactive-normal)}", ""]);
-				___CSS_LOADER_EXPORT___.locals = {
-					settingsPanel: "UserDetails-settings-settingsPanel",
-					descriptionItem: "UserDetails-settings-descriptionItem",
-					translation: "UserDetails-settings-translation",
-					marginBottom8: "UserDetails-settings-marginBottom8",
-					formItem: "UserDetails-settings-formItem",
-					cardItem: "UserDetails-settings-cardItem",
-					textBadge: "UserDetails-settings-textBadge",
-					icons: "UserDetails-settings-icons",
-					settingsBadgeContainer: "UserDetails-settings-settingsBadgeContainer",
-					settingsBadgeIcon: "UserDetails-settings-settingsBadgeIcon",
-					disabled: "UserDetails-settings-disabled",
-					category: "UserDetails-settings-category",
-					opened: "UserDetails-settings-opened",
-					categoryContent: "UserDetails-settings-categoryContent",
-					replacementVariable: "UserDetails-settings-replacementVariable",
-					categoryHeader: "UserDetails-settings-categoryHeader",
-					categoryCaret: "UserDetails-settings-categoryCaret",
-					pageIcon: "UserDetails-settings-pageIcon"
-				};
-				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
-				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
-			},
-			562: (module, __webpack_exports__, __webpack_require__) => {
-				__webpack_require__.d(__webpack_exports__, {
-					Z: () => __WEBPACK_DEFAULT_EXPORT__
-				});
-				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(645);
-				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
-				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
-					return i[1];
-				}));
-				___CSS_LOADER_EXPORT___.push([module.id, ".UserDetails-style-loadingText{color:var(--text-normal);text-align:center}.UserDetails-style-scrollableText{color:var(--text-normal);white-space:nowrap;position:relative;font-size:14px;width:-webkit-fill-available;text-align:center;line-height:18px}", ""]);
-				___CSS_LOADER_EXPORT___.locals = {
-					loadingText: "UserDetails-style-loadingText",
-					scrollableText: "UserDetails-style-scrollableText"
-				};
-				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
-				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
-			},
-			902: (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+			532: (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 				__webpack_require__.r(__webpack_exports__);
 				__webpack_require__.d(__webpack_exports__, {
 					default: () => Plugin
@@ -481,97 +296,19 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					JoinedAt: () => joinedAt,
 					LastMessage: () => stores_lastMessage
 				});
-				const constants_namespaceObject = Modules["@discord/constants"];
-				const flux_namespaceObject = Modules["@discord/flux"];
-				const i18n_namespaceObject = Modules["@discord/i18n"];
-				var i18n_default = __webpack_require__.n(i18n_namespaceObject);
-				const modules_namespaceObject = Modules["@discord/modules"];
-				const stores_namespaceObject = Modules["@discord/stores"];
-				const external_PluginApi_namespaceObject = PluginApi;
-				const external_BasePlugin_namespaceObject = BasePlugin;
-				var external_BasePlugin_default = __webpack_require__.n(external_BasePlugin_namespaceObject);
-				const DefaultMessage = {
-					state: "SENT",
-					author: {
-						avatar: "betterdiscord",
-						id: "81388395867156480",
-						bot: true,
-						discriminator: "5000",
-						username: "BetterDiscord"
-					},
-					content: "Hello <:zere_zoom:477825238172958730>"
-				};
-				const MessageCreators = BdApi.findModuleByProps("createBotMessage");
-				const MessageActions = BdApi.findModuleByProps("receiveMessage");
-				const AvatarDefaults = BdApi.findModuleByProps("BOT_AVATARS");
-				if (AvatarDefaults?.BOT_AVATARS && !AvatarDefaults.BOT_AVATARS.betterdiscord) AvatarDefaults.BOT_AVATARS.betterdiscord = "https://github.com/BetterDiscord.png";
-				function sendMessage(channelId, message) {
-					MessageActions.receiveMessage(channelId, Object.assign({}, MessageCreators.createBotMessage(channelId, message?.content), DefaultMessage, message));
-				}
-				const Clyde = {
-					sendMessage,
-					DefaultMessage
-				};
-				const clyde = Clyde;
-				const DiscordCommands = BdApi.findModuleByProps("BUILT_IN_COMMANDS");
-				const DiscordCommandTypes = BdApi.findModuleByProps("ApplicationCommandType");
-				const Types = DiscordCommandTypes.ApplicationCommandType;
-				const OptionTypes = DiscordCommandTypes.ApplicationCommandOptionType;
-				const PermissionTypes = DiscordCommandTypes.ApplicationCommandPermissionType;
-				if (!DiscordCommands.BUILT_IN_SECTIONS["betterdiscord"]) DiscordCommands.BUILT_IN_SECTIONS["betterdiscord"] = {
-					icon: "https://github.com/BetterDiscord.png",
-					id: "betterdiscord",
-					name: "BetterDiscord",
-					type: 0
-				};
-				function registerCommand(caller, options) {
-					const cmd = Object.assign({}, options, {
-						__registerId: caller,
-						applicationId: "betterdiscord",
-						type: Types.BOT,
-						target: 1
-					});
-					DiscordCommands.BUILT_IN_COMMANDS.push(cmd);
-					return () => {
-						const index = DiscordCommands.BUILT_IN_COMMANDS.indexOf(cmd);
-						if (index < 0) return false;
-						DiscordCommands.BUILT_IN_COMMANDS.splice(index, 1);
-					};
-				}
-				function unregisterAllCommands(caller) {
-					let index = DiscordCommands.BUILT_IN_COMMANDS.findIndex((cmd => cmd.__registerId === caller));
-					while (index > -1) {
-						DiscordCommands.BUILT_IN_COMMANDS.splice(index, 1);
-						index = DiscordCommands.BUILT_IN_COMMANDS.findIndex((cmd => cmd.__registerId === caller));
-					}
-				}
-				const Commands = {
-					registerCommand,
-					unregisterAllCommands
-				};
-				const commands = Commands;
-				function SuppressErrors(func, onError = (() => {})) {
-					const wrapped = function() {
-						try {
-							return func.apply(this, arguments);
-						} catch (error) {
-							onError(error);
-						}
-					};
-					Object.assign(wrapped, func);
-					wrapped.toString = () => func.toString();
-					return wrapped;
-				}
-				var external_BdApi_React_ = __webpack_require__(113);
-				var external_BdApi_React_default = __webpack_require__.n(external_BdApi_React_);
 				const external_StyleLoader_namespaceObject = StyleLoader;
 				var external_StyleLoader_default = __webpack_require__.n(external_StyleLoader_namespaceObject);
+				var external_BdApi_React_ = __webpack_require__(832);
+				var external_BdApi_React_default = __webpack_require__.n(external_BdApi_React_);
 				const components_namespaceObject = Modules["@discord/components"];
 				const connections_namespaceObject = Modules["@discord/connections"];
 				var connections_default = __webpack_require__.n(connections_namespaceObject);
-				var badge = __webpack_require__(173);
+				var badge = __webpack_require__(541);
 				const utils_namespaceObject = Modules["@discord/utils"];
 				const package_namespaceObject = JSON.parse('{"um":{"u2":"UserDetails"}}');
+				const external_PluginApi_namespaceObject = PluginApi;
+				const flux_namespaceObject = Modules["@discord/flux"];
+				const modules_namespaceObject = Modules["@discord/modules"];
 				function _defineProperty(obj, key, value) {
 					if (key in obj) Object.defineProperty(obj, key, {
 						value,
@@ -583,7 +320,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					return obj;
 				}
 				class SettingsManager extends flux_namespaceObject.Store {
-					constructor(pluginName, defaultSettings = {}) {
+					constructor(pluginName) {
 						super(modules_namespaceObject.Dispatcher, {});
 						_defineProperty(this, "settings", void 0);
 						_defineProperty(this, "pluginName", void 0);
@@ -595,12 +332,12 @@ function buildPlugin([BasePlugin, PluginApi]) {
 							return value;
 						}));
 						this.pluginName = pluginName;
-						this.settings = external_PluginApi_namespaceObject.PluginUtilities.loadSettings(pluginName, defaultSettings);
+						this.settings = external_PluginApi_namespaceObject.PluginUtilities.loadSettings(pluginName, {});
 					}
 				}
 				const Settings = new SettingsManager(package_namespaceObject.um.u2);
 				const modules_Settings = Settings;
-				var flowerstar = __webpack_require__(564);
+				var flowerstar = __webpack_require__(834);
 				function _extends() {
 					_extends = Object.assign || function(target) {
 						for (var i = 1; i < arguments.length; i++) {
@@ -633,6 +370,8 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					fill: "#ffffff"
 				})));
 				const contextmenu_namespaceObject = Modules["@discord/contextmenu"];
+				const i18n_namespaceObject = Modules["@discord/i18n"];
+				var i18n_default = __webpack_require__.n(i18n_namespaceObject);
 				const native_namespaceObject = Modules["@discord/native"];
 				const external_window_namespaceObject = window._;
 				var external_window_default = __webpack_require__.n(external_window_namespaceObject);
@@ -789,9 +528,11 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				}), external_BdApi_React_default().createElement("path", {
 					d: "M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"
 				}));
-				var apis_connections = __webpack_require__(597);
+				var apis_connections = __webpack_require__(448);
+				const stores_namespaceObject = Modules["@discord/stores"];
 				const actions_namespaceObject = Modules["@discord/actions"];
-				const nl_namespaceObject = JSON.parse('{"CONNECTIONS":"Verbindingen","NO_CONNECTIONS":"Geen verbindingen!","LOADING_CONNECTIONS":"Verbindingen aan het laden...","LOADING_LAST_MESSAGE":"Laatste bericht aan het laden...","LOADING_JOINED_AT":"Lid geworden op aan het laden...","MEMBER_WAS_NOT_FOUND":"Lid kon niet worden gevonden!","FAILED_TO_FETCH":"Gefaald om op te halen!","USERINFO_CMD_DESC":"Laat bepaalde informatie zien over een bepaald lid.","NO_MUTUAL_GUILDS":"Geen gemeenschappelijke servers","LOADING_MUTUAL_GUILDS":"Gemeenschappelijke servers aan het laden...","LOADING_MUTUAL_FRIENDS":"Gemeenschappelijke vrienden aan het laden...","NO_MUTUAL_FRIENDS":"Geen gemeenschappelijke vrienden"}');
+				const constants_namespaceObject = Modules["@discord/constants"];
+				const nl_namespaceObject = JSON.parse('{"CONNECTIONS":"Verbindingen","NO_CONNECTIONS":"Geen verbindingen!","LOADING_CONNECTIONS":"Verbindingen aan het laden...","LOADING_LAST_MESSAGE":"Laatste bericht aan het laden...","LOADING_JOINED_AT":"Lid geworden op aan het laden...","MEMBER_WAS_NOT_FOUND":"Lid kon niet worden gevonden!","FAILED_TO_FETCH":"Gefaald om op te halen!","USERINFO_CMD_DESC":"Laat bepaalde informatie zien over een bepaald lid.","NO_MUTUAL_GUILDS":"Geen gemeenschappelijke servers","LOADING_MUTUAL_GUILDS":"Gemeenschappelijke servers aan het laden..."}');
 				var locales_nl_namespaceObject = __webpack_require__.t(nl_namespaceObject, 2);
 				const de_namespaceObject = JSON.parse('{"CONNECTIONS":"Verknüpfungen","NO_CONNECTIONS":"Keine Verknüpfungen","LOADING_CONNECTIONS":"Lade Verknüpfungen...","LOADING_LAST_MESSAGE":"Lade letzte Nachricht...","LOADING_JOINED_AT":"Lade Beitrittsdatum...","MEMBER_WAS_NOT_FOUND":"Mitglied konnte nicht gefunden werden.","FAILED_TO_FETCH":"Fehler beim Laden","USERINFO_CMD_DESC":"Zeigt einige Informationen über einen bestimmten Nutzer.","NO_MUTUAL_GUILDS":"Keine gemeinsamen Server","LOADING_MUTUAL_GUILDS":"Gemeinsame Server werden geladen.","LOADING_MUTUAL_FRIENDS":"Gemeinsame Freunde werden geladen...","NO_MUTUAL_FRIENDS":"Keine gemeinsamen Freunde"}');
 				var locales_de_namespaceObject = __webpack_require__.t(de_namespaceObject, 2);
@@ -803,7 +544,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				const vi_namespaceObject = JSON.parse('{"CONNECTIONS":"Kết nối","NO_CONNECTIONS":"Không có kết nối!","LOADING_CONNECTIONS":"Đang tải các kết nối...","LOADING_LAST_MESSAGE":"Đang tải tin nhắn cuối cùng...","LOADING_JOINED_AT":"Đang tải ngày tham gia...","MEMBER_WAS_NOT_FOUND":"Không tìm thấy thành viên!","FAILED_TO_FETCH":"Nạp dữ liệu thất bại!","USERINFO_CMD_DESC":"Hiển thị một số thông tin về một người dùng cụ thể.","NO_MUTUAL_GUILDS":"Không có server chung nào","LOADING_MUTUAL_GUILDS":"Đang tải server chung...","LOADING_MUTUAL_FRIENDS":"Đang tải bạn chung...","NO_MUTUAL_FRIENDS":"Không có bạn chung nào"}');
 				const es_ES_namespaceObject = JSON.parse('{"CONNECTIONS":"Conexiones","NO_CONNECTIONS":"Sin conexiones","LOADING_CONNECTIONS":"Cargando conexiones...","LOADING_LAST_MESSAGE":"Cargando el último mensaje...","LOADING_JOINED_AT":"Cargando la fecha de ingreso...","MEMBER_WAS_NOT_FOUND":"¡El miembro no fue encontrado!","FAILED_TO_FETCH":"¡No se pudo obtener!","USERINFO_CMD_DESC":"Muestra información sobre un usuario en específico.","NO_MUTUAL_GUILDS":"Sin servidores en común","LOADING_MUTUAL_GUILDS":"Cargando los servidores en común...","LOADING_MUTUAL_FRIENDS":"Cargando amigos mútuos...","NO_MUTUAL_FRIENDS":"Sin amigos mútuos"}');
 				const sv_SE_namespaceObject = JSON.parse('{"CONNECTIONS":"anslutningar","NO_CONNECTIONS":"inga anslutningar","LOADING_CONNECTIONS":"laddar anslutningar","LOADING_LAST_MESSAGE":"läser in det senaste meddelandet","LOADING_JOINED_AT":"lastning gick med vid","MEMBER_WAS_NOT_FOUND":"medlem hittades inte","FAILED_TO_FETCH":"misslyckades med att hämta","USERINFO_CMD_DESC":"visar lite information om en specifik användare","NO_MUTUAL_GUILDS":"inga ömsesidiga servrar","LOADING_MUTUAL_GUILDS":"laddar ömsesidiga servrar"}');
-				const pt_BR_namespaceObject = JSON.parse('{"CONNECTIONS":"Conexões","NO_CONNECTIONS":"Sem conexões","LOADING_CONNECTIONS":"Carregando conexões","LOADING_LAST_MESSAGE":"Carregando última mensagem","LOADING_JOINED_AT":"Carregando entrou há","MEMBER_WAS_NOT_FOUND":"Membro não encontrado!","FAILED_TO_FETCH":"Falha na busca","USERINFO_CMD_DESC":"Mostra algumas informações de um usuário específico.","NO_MUTUAL_GUILDS":"Sem servidores em comum","LOADING_MUTUAL_GUILDS":"Carregando os servidores em comum","LOADING_MUTUAL_FRIENDS":"Carregando amigos em comum...","NO_MUTUAL_FRIENDS":"Sem amigos em comum."}');
+				const pt_BR_namespaceObject = JSON.parse('{"CONNECTIONS":"Conexões","NO_CONNECTIONS":"Sem conexões","LOADING_CONNECTIONS":"Carregando conexões","LOADING_LAST_MESSAGE":"Carregando última mensagem","LOADING_JOINED_AT":"Carregando entrou há","MEMBER_WAS_NOT_FOUND":"Membro não encontrado!","FAILED_TO_FETCH":"Falha na busca","USERINFO_CMD_DESC":"Mostra algumas informações de um usuário específico.","NO_MUTUAL_GUILDS":"Sem servidores em comum","LOADING_MUTUAL_GUILDS":"Carregando os servidores em comum"}');
 				const locales = {
 					"en-US": locales_en_US_namespaceObject,
 					"es-ES": es_ES_namespaceObject,
@@ -847,7 +588,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				strings_defineProperty(Strings, "handleLocaleChange", (() => {
 					Strings.setLanguage(i18n_default().getLocale());
 				}));
-				const Header = external_PluginApi_namespaceObject.WebpackModules.getModule((m => "Header" === m.displayName && m.Sizes));
+				const Header = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("Header");
 				const defaultConnections = Object.fromEntries(connections_default().map((item => [item.type, true])));
 				function UserConnections({
 					user
@@ -920,7 +661,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				}))));
 				const external_BdApi_ReactDOM_namespaceObject = BdApi.ReactDOM;
 				var external_BdApi_ReactDOM_default = __webpack_require__.n(external_BdApi_ReactDOM_namespaceObject);
-				var dates = __webpack_require__(242);
+				var dates = __webpack_require__(227);
 				function textscroller_defineProperty(obj, key, value) {
 					if (key in obj) Object.defineProperty(obj, key, {
 						value,
@@ -1095,7 +836,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				}), external_BdApi_React_default().createElement("path", {
 					d: "M36 32c0 2.209-1.791 4-4 4H4c-2.209 0-4-1.791-4-4V4c0-2.209 1.791-4 4-4h28c2.209 0 4 1.791 4 4v28z"
 				}));
-				var style = __webpack_require__(562);
+				var style = __webpack_require__(430);
 				function reducer(state) {
 					if (state >= 3) return 1;
 					else return state + 1;
@@ -1437,376 +1178,8 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						className: dates.Z.loading
 					}) : external_BdApi_React_default().createElement(LoadingText, null));
 				}
-				var apis_mutualFriends = __webpack_require__(675);
-				const mutualFriends_Header = external_PluginApi_namespaceObject.WebpackModules.getModule((m => "Header" === m.displayName && m.Sizes));
-				const WindowStore = external_PluginApi_namespaceObject.WebpackModules.getByProps("isFocused");
-				const {
-					AnimatedAvatar,
-					Sizes
-				} = external_PluginApi_namespaceObject.WebpackModules.getByProps("AnimatedAvatar");
-				const UserProfileModal = external_PluginApi_namespaceObject.WebpackModules.getByProps("openUserProfileModal");
-				const {
-					ComponentDispatch
-				} = external_PluginApi_namespaceObject.WebpackModules.getByProps("ComponentDispatch") ?? {};
-				function MutualFriend({
-					user
-				}) {
-					const [isMouseOver, setMouseOver] = (0, external_BdApi_React_.useState)(false);
-					const isWindowFocused = (0, flux_namespaceObject.useStateFromStores)([WindowStore], (() => WindowStore.isFocused()));
-					return external_BdApi_React_default().createElement(components_namespaceObject.Tooltip, {
-						text: user.tag,
-						position: "top"
-					}, (props => external_BdApi_React_default().createElement("div", {
-						className: apis_mutualFriends.Z.mutualFriend,
-						onMouseOver: () => (setMouseOver(true), props.onMouseEnter()),
-						onMouseLeave: () => (setMouseOver(false), props.onMouseLeave()),
-						onClick: () => {
-							UserProfileModal.openUserProfileModal({
-								userId: user.id,
-								guildId: stores_namespaceObject.SelectedGuilds.getGuildId()
-							});
-							ComponentDispatch.dispatchToLastSubscribed("POPOUT_CLOSE");
-						}
-					}, external_BdApi_React_default().createElement(AnimatedAvatar, {
-						status: stores_namespaceObject.Status.getStatus(user.id),
-						size: Sizes.SIZE_32,
-						src: user.getAvatarURL(stores_namespaceObject.SelectedGuilds.getGuildId(), 32, isMouseOver && isWindowFocused)
-					}))));
-				}
-				function MutualFriends({
-					user
-				}) {
-					const settings = useSettings({
-						showMutualFriends: true,
-						hideMutualFriendsCurrentUser: true,
-						showEmptyMutualFriends: true,
-						stackMutualFriends: false
-					});
-					if (!settings.showMutualFriends || settings.hideMutualFriendsCurrentUser && user.id === stores_namespaceObject.Users.getCurrentUser().id) return null;
-					const mutualFriends = (0, flux_namespaceObject.useStateFromStores)([stores_namespaceObject.UserProfile], (() => stores_namespaceObject.UserProfile.getMutualFriends(user.id)));
-					(0, external_BdApi_React_.useEffect)((() => {
-						if (Array.isArray(mutualFriends)) return;
-						modules_namespaceObject.Dispatcher.wait((() => actions_namespaceObject.ProfileActions.fetchMutualFriends(user.id)));
-					}), []);
-					return Array.isArray(mutualFriends) ? mutualFriends.length ? external_BdApi_React_default().createElement("div", {
-						className: apis_mutualFriends.Z.body
-					}, external_BdApi_React_default().createElement(mutualFriends_Header, {
-						size: mutualFriends_Header.Sizes.SIZE_12,
-						className: apis_mutualFriends.Z.header,
-						uppercase: true,
-						muted: true
-					}, i18n_namespaceObject.Messages.MUTUAL_FRIENDS), external_BdApi_React_default().createElement("div", {
-						className: (0, utils_namespaceObject.joinClassNames)(apis_mutualFriends.Z.friends, settings.stackMutualFriends && apis_mutualFriends.Z.stack)
-					}, mutualFriends.map((props => external_BdApi_React_default().createElement(MutualFriend, props))))) : settings.showEmptyMutualFriends && external_BdApi_React_default().createElement(mutualFriends_Header, {
-						size: mutualFriends_Header.Sizes.SIZE_12,
-						className: apis_mutualFriends.Z.header,
-						uppercase: true,
-						muted: true
-					}, Strings.get("NO_MUTUAL_FRIENDS")) : external_BdApi_React_default().createElement(mutualFriends_Header, {
-						size: mutualFriends_Header.Sizes.SIZE_12,
-						className: apis_mutualFriends.Z.header,
-						uppercase: true,
-						muted: true
-					}, Strings.get("LOADING_MUTUAL_FRIENDS"));
-				}
-				var mutualServers = __webpack_require__(416);
-				function mutualServers_extends() {
-					mutualServers_extends = Object.assign || function(target) {
-						for (var i = 1; i < arguments.length; i++) {
-							var source = arguments[i];
-							for (var key in source)
-								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-						}
-						return target;
-					};
-					return mutualServers_extends.apply(this, arguments);
-				}
-				const FriendsStore = external_PluginApi_namespaceObject.WebpackModules.getByProps("getMutualGuilds");
-				const mutualServers_Header = external_PluginApi_namespaceObject.WebpackModules.getModule((m => "Header" === m.displayName && m.Sizes));
-				const mutualServers_WindowStore = external_PluginApi_namespaceObject.WebpackModules.getByProps("isFocused");
-				function MutualServer({
-					guild,
-					nick,
-					onClick
-				}) {
-					const [isMouseOver, setMouseOver] = (0, external_BdApi_React_.useState)(false);
-					const isWindowFocused = (0, flux_namespaceObject.useStateFromStores)([mutualServers_WindowStore], (() => mutualServers_WindowStore.isFocused()));
-					return external_BdApi_React_default().createElement(components_namespaceObject.TooltipContainer, {
-						key: guild.id,
-						text: nick ? `${guild.name} (${nick})` : guild.name,
-						position: "top",
-						className: mutualServers.Z.mutualGuild
-					}, guild.icon ? external_BdApi_React_default().createElement("img", {
-						onMouseOver: () => setMouseOver(true),
-						onMouseLeave: () => setMouseOver(false),
-						src: guild.getIconURL(128, isMouseOver && isWindowFocused),
-						onClick: () => onClick(guild.id)
-					}) : external_BdApi_React_default().createElement("div", {
-						className: mutualServers.Z.guildAcronym,
-						onClick: () => onClick(guild.id)
-					}, guild.acronym));
-				}
-				function MutualServers({
-					user
-				}) {
-					const settings = useSettings({
-						showMutualGuilds: true,
-						hideMutualGuildsCurrentUser: true,
-						stackMutualServers: false,
-						showEmptyMutualGuilds: true
-					});
-					if (!settings.showMutualGuilds || settings.hideMutualGuildsCurrentUser && user.id === stores_namespaceObject.Users.getCurrentUser().id) return null;
-					const mutualGuilds = (0, flux_namespaceObject.useStateFromStores)([FriendsStore], (() => FriendsStore.getMutualGuilds(user.id)));
-					const [message, setMessage] = (0, external_BdApi_React_.useState)("");
-					(0, external_BdApi_React_.useEffect)((() => {
-						if (Array.isArray(mutualGuilds) || stores_namespaceObject.UserProfile.isFetching(user.id)) return;
-						modules_namespaceObject.Dispatcher.wait((() => {
-							actions_namespaceObject.ProfileActions.fetchProfile(user.id).catch((error => {
-								if (~error?.message?.indexOf("Already dispatching")) return;
-								external_PluginApi_namespaceObject.Logger.error(`Failed to fetch profile for ${user.id}:\n`, error);
-								setMessage(Strings.get("FAILED_TO_FETCH"));
-							}));
-						}));
-					}), []);
-					return Array.isArray(mutualGuilds) ? mutualGuilds.length ? external_BdApi_React_default().createElement("div", {
-						className: mutualServers.Z.body
-					}, external_BdApi_React_default().createElement(mutualServers_Header, {
-						size: mutualServers_Header.Sizes.SIZE_12,
-						className: mutualServers.Z.header,
-						uppercase: true,
-						muted: true
-					}, i18n_namespaceObject.Messages.MUTUAL_GUILDS), external_BdApi_React_default().createElement("div", {
-						className: (0, utils_namespaceObject.joinClassNames)(mutualServers.Z.guilds, settings.stackMutualServers && mutualServers.Z.stack)
-					}, mutualGuilds.map((props => external_BdApi_React_default().createElement(MutualServer, mutualServers_extends({}, props, {
-						onClick: actions_namespaceObject.GuildActions.transitionToGuildSync
-					})))))) : settings.showEmptyMutualGuilds && external_BdApi_React_default().createElement(mutualServers_Header, {
-						size: mutualServers_Header.Sizes.SIZE_12,
-						className: mutualServers.Z.header,
-						uppercase: true,
-						muted: true
-					}, Strings.get("NO_MUTUAL_GUILDS")) : external_BdApi_React_default().createElement(external_BdApi_React_default().Fragment, null, external_BdApi_React_default().createElement(mutualServers_Header, {
-						size: mutualServers_Header.Sizes.SIZE_12,
-						className: mutualServers.Z.header,
-						uppercase: true,
-						muted: true
-					}, Strings.get(message ? "NO_MUTUAL_GUILDS" : "LOADING_MUTUAL_GUILDS")), message && external_BdApi_React_default().createElement(components_namespaceObject.TooltipContainer, {
-						text: message,
-						position: "top"
-					}, external_BdApi_React_default().createElement(error, null)));
-				}
-				var React = __webpack_require__(113);
-				function spotify_extends() {
-					spotify_extends = Object.assign || function(target) {
-						for (var i = 1; i < arguments.length; i++) {
-							var source = arguments[i];
-							for (var key in source)
-								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-						}
-						return target;
-					};
-					return spotify_extends.apply(this, arguments);
-				}
-				const spotify = props => React.createElement("svg", spotify_extends({}, props, {
-					width: "20",
-					height: "20",
-					viewBox: "0 0 65 65"
-				}), React.createElement("path", {
-					fill: "#1ED760",
-					d: "M32.5,0.5 C14.826888,0.5 0.5,14.826888 0.5,32.5 C0.5,50.173112 14.826888,64.5 32.5,64.5 C50.173112,64.5 64.5,50.173112 64.5,32.5 C64.5,14.826888 50.173112,0.5 32.5,0.5 Z M47.18,46.66 C46.6031412,47.595466 45.3795381,47.8902025 44.44,47.32 C36.93,42.73 27.44,41.69 16.33,44.23 C15.6145818,44.4464575 14.8381683,44.245926 14.3170501,43.7100969 C13.7959319,43.1742677 13.6170868,42.3925738 13.8533716,41.6834571 C14.0896564,40.9743403 14.7016337,40.4561564 15.44,40.34 C27.63,37.55 38.09,38.75 46.52,43.91 C47.4615306,44.487221 47.7569974,45.7183323 47.18,46.66 Z M51.1,37.95 C50.3770773,39.1205793 48.8441907,39.487042 47.67,38.77 C39.07,33.48 25.96,31.95 15.78,35.04 C14.9279216,35.2990176 14.0023844,35.0837812 13.3520294,34.4753684 C12.7016744,33.8669556 12.425306,32.9577988 12.6270294,32.0903684 C12.8287528,31.2229381 13.4779216,30.5290176 14.33,30.27 C25.95,26.74 40.4,28.45 50.28,34.52 C51.445766,35.2424019 51.8079122,36.7714637 51.09,37.94 L51.1,37.95 Z M51.44,28.88 C41.13,22.75 24.11,22.19 14.26,25.18 C13.2140022,25.5702637 12.0378133,25.3474036 11.207084,24.6015444 C10.3763547,23.8556852 10.0285164,22.7102178 10.3042349,21.6283692 C10.5799535,20.5465206 11.4336155,19.707266 12.52,19.45 C23.82,16.02 42.61,16.68 54.52,23.73 C55.8401426,24.6185116 56.2368626,26.3831995 55.4240137,27.7512295 C54.6111649,29.1192595 52.8715856,29.6146124 51.46,28.88 L51.44,28.88 Z"
-				}));
-				var twitch_React = __webpack_require__(113);
-				function twitch_extends() {
-					twitch_extends = Object.assign || function(target) {
-						for (var i = 1; i < arguments.length; i++) {
-							var source = arguments[i];
-							for (var key in source)
-								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-						}
-						return target;
-					};
-					return twitch_extends.apply(this, arguments);
-				}
-				const twitch = props => twitch_React.createElement("svg", twitch_extends({
-					width: "20",
-					height: "20",
-					viewBox: "0 0 128 128"
-				}, props), twitch_React.createElement("defs", null, twitch_React.createElement("path", {
-					id: "color-a",
-					d: "M8.5542826,0 L0,22 L0,111.8 L30.7954173,111.8 L30.7954173,128 L48.1052598,128 L64.408716,111.8 L89.3670935,111.8 L122.980392,78.4 L122.980392,0 L8.5542826,0 Z M111.406951,72.6 L92.0843362,91.8 L61.2889188,91.8 L44.9854626,108 L44.9854626,91.8 L19.020699,91.8 L19.020699,11.4 L111.406951,11.4 L111.406951,72.6 Z M92.2856134,33.4 L92.2856134,66.8 L80.8128109,66.8 L80.8128109,33.4 L92.2856134,33.4 Z M61.4901961,33.4 L61.4901961,66.8 L50.0173935,66.8 L50.0173935,33.4 L61.4901961,33.4 Z"
-				})), twitch_React.createElement("g", {
-					fill: "none",
-					"fill-rule": "evenodd",
-					transform: "translate(3)"
-				}, twitch_React.createElement("polygon", {
-					fill: "#FFF",
-					"fill-rule": "nonzero",
-					points: "110.431 72.512 91.272 91.717 60.736 91.717 44.57 107.922 44.57 91.717 18.824 91.717 18.824 11.294 110.431 11.294"
-				}), twitch_React.createElement("mask", {
-					id: "color-b",
-					fill: "#fff"
-				}, twitch_React.createElement("use", {
-					xlinkHref: "#color-a"
-				})), twitch_React.createElement("use", {
-					fill: "#563194",
-					"fill-rule": "nonzero",
-					xlinkHref: "#color-a"
-				})));
-				var youtube_React = __webpack_require__(113);
-				function youtube_extends() {
-					youtube_extends = Object.assign || function(target) {
-						for (var i = 1; i < arguments.length; i++) {
-							var source = arguments[i];
-							for (var key in source)
-								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-						}
-						return target;
-					};
-					return youtube_extends.apply(this, arguments);
-				}
-				const youtube = props => youtube_React.createElement("svg", youtube_extends({
-					height: "20",
-					width: "20",
-					viewBox: "0 0 576 512"
-				}, props), youtube_React.createElement("path", {
-					fill: "#FF1A1A",
-					d: "M549.655 124.083c-6.281-23.65-24.787-42.276-48.284-48.597C458.781 64 288 64 288 64S117.22 64 74.629 75.486c-23.497 6.322-42.003 24.947-48.284 48.597-11.412 42.867-11.412 132.305-11.412 132.305s0 89.438 11.412 132.305c6.281 23.65 24.787 41.5 48.284 47.821C117.22 448 288 448 288 448s170.78 0 213.371-11.486c23.497-6.321 42.003-24.171 48.284-47.821 11.412-42.867 11.412-132.305 11.412-132.305s0-89.438-11.412-132.305zm-317.51 213.508V175.185l142.739 81.205-142.739 81.201z"
-				}));
-				var gamepad_React = __webpack_require__(113);
-				function gamepad_extends() {
-					gamepad_extends = Object.assign || function(target) {
-						for (var i = 1; i < arguments.length; i++) {
-							var source = arguments[i];
-							for (var key in source)
-								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-						}
-						return target;
-					};
-					return gamepad_extends.apply(this, arguments);
-				}
-				const gamepad = props => gamepad_React.createElement("svg", gamepad_extends({
-					width: "20",
-					height: "20",
-					viewBox: "0 0 24 24"
-				}, props), gamepad_React.createElement("g", {
-					fill: "none",
-					"fill-rule": "evenodd"
-				}, gamepad_React.createElement("path", {
-					fill: "currentColor",
-					d: "M5.79335761,5 L18.2066424,5 C19.7805584,5 21.0868816,6.21634264 21.1990185,7.78625885 L21.8575059,17.0050826 C21.9307825,18.0309548 21.1585512,18.9219909 20.132679,18.9952675 C20.088523,18.9984215 20.0442685,19 20,19 C18.8245863,19 17.8000084,18.2000338 17.5149287,17.059715 L17,15 L7,15 L6.48507125,17.059715 C6.19999155,18.2000338 5.1754137,19 4,19 C2.97151413,19 2.13776159,18.1662475 2.13776159,17.1377616 C2.13776159,17.0934931 2.1393401,17.0492386 2.1424941,17.0050826 L2.80098151,7.78625885 C2.91311838,6.21634264 4.21944161,5 5.79335761,5 Z M14.5,10 C15.3284271,10 16,9.32842712 16,8.5 C16,7.67157288 15.3284271,7 14.5,7 C13.6715729,7 13,7.67157288 13,8.5 C13,9.32842712 13.6715729,10 14.5,10 Z M18.5,13 C19.3284271,13 20,12.3284271 20,11.5 C20,10.6715729 19.3284271,10 18.5,10 C17.6715729,10 17,10.6715729 17,11.5 C17,12.3284271 17.6715729,13 18.5,13 Z M6,9 L4,9 L4,11 L6,11 L6,13 L8,13 L8,11 L10,11 L10,9 L8,9 L8,7 L6,7 L6,9 Z"
-				}), gamepad_React.createElement("rect", {
-					width: "24",
-					height: "24"
-				})));
-				var components_activity = __webpack_require__(755);
-				var googleChrome_React = __webpack_require__(113);
-				function googleChrome_extends() {
-					googleChrome_extends = Object.assign || function(target) {
-						for (var i = 1; i < arguments.length; i++) {
-							var source = arguments[i];
-							for (var key in source)
-								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-						}
-						return target;
-					};
-					return googleChrome_extends.apply(this, arguments);
-				}
-				const googleChrome = props => googleChrome_React.createElement("svg", googleChrome_extends({
-					width: "20",
-					height: "20",
-					viewBox: "0 0 48 48"
-				}, props), googleChrome_React.createElement("path", {
-					fill: "#4caf50",
-					d: "M44,24c0,11.044-8.956,20-20,20S4,35.044,4,24S12.956,4,24,4S44,12.956,44,24z"
-				}), googleChrome_React.createElement("path", {
-					fill: "#ffc107",
-					d: "M24,4v20l8,4l-8.843,16c0.317,0,0.526,0,0.843,0c11.053,0,20-8.947,20-20S35.053,4,24,4z"
-				}), googleChrome_React.createElement("path", {
-					fill: "#4caf50",
-					d: "M44,24c0,11.044-8.956,20-20,20S4,35.044,4,24S12.956,4,24,4S44,12.956,44,24z"
-				}), googleChrome_React.createElement("path", {
-					fill: "#ffc107",
-					d: "M24,4v20l8,4l-8.843,16c0.317,0,0.526,0,0.843,0c11.053,0,20-8.947,20-20S35.053,4,24,4z"
-				}), googleChrome_React.createElement("path", {
-					fill: "#f44336",
-					d: "M41.84,15H24v13l-3-1L7.16,13.26H7.14C10.68,7.69,16.91,4,24,4C31.8,4,38.55,8.48,41.84,15z"
-				}), googleChrome_React.createElement("path", {
-					fill: "#dd2c00",
-					d: "M7.158,13.264l8.843,14.862L21,27L7.158,13.264z"
-				}), googleChrome_React.createElement("path", {
-					fill: "#558b2f",
-					d: "M23.157,44l8.934-16.059L28,25L23.157,44z"
-				}), googleChrome_React.createElement("path", {
-					fill: "#f9a825",
-					d: "M41.865,15H24l-1.579,4.58L41.865,15z"
-				}), googleChrome_React.createElement("path", {
-					fill: "#fff",
-					d: "M33,24c0,4.969-4.031,9-9,9s-9-4.031-9-9s4.031-9,9-9S33,19.031,33,24z"
-				}), googleChrome_React.createElement("path", {
-					fill: "#2196f3",
-					d: "M31,24c0,3.867-3.133,7-7,7s-7-3.133-7-7s3.133-7,7-7S31,20.133,31,24z"
-				}));
-				var activity_React = __webpack_require__(113);
-				const byName = [
-					[/spotify/i, spotify],
-					[/youtube/i, () => activity_React.createElement("img", {
-						src: connections_default().get("youtube").icon.darkSVG,
-						width: "20",
-						height: "20"
-					})],
-					[/twitch/i, twitch],
-					[/google\schrome/i, googleChrome]
-				];
-				function ActivityIcon({
-					activity
-				}) {
-					const {
-						game,
-						showGamepad
-					} = (0, flux_namespaceObject.useStateFromStoresObject)([stores_namespaceObject.Games, modules_Settings], (() => ({
-						showGamepad: modules_Settings.get("showGamepad", true),
-						game: stores_namespaceObject.Games.getGame(activity.application_id)
-					})), [activity]);
-					const icon = (0, external_BdApi_React_.useMemo)((() => byName.find((([regex]) => regex.test(activity.name || activity.id)))), [game]);
-					if (icon) {
-						const Icon = icon[1];
-						return activity_React.createElement(Icon, null);
-					}
-					if (game && game.getIconURL()) return activity_React.createElement("img", {
-						src: game.getIconURL(),
-						width: "20",
-						height: "20"
-					});
-					return showGamepad ? activity_React.createElement(gamepad, null) : null;
-				}
-				function noopNull() {
-					return null;
-				}
-				function ActivitiesFilter(activity, index, target) {
-					if (4 === activity?.type) return false;
-					return target.indexOf(activity) === index;
-				}
-				function Activity({
-					user
-				}) {
-					const {
-						activity,
-						showActivityIcons,
-						disabled
-					} = (0, flux_namespaceObject.useStateFromStoresObject)([stores_namespaceObject.Status, modules_Settings], (() => ({
-						activity: stores_namespaceObject.Status.getActivities(user.id).filter(ActivitiesFilter)[0],
-						showActivityIcons: modules_Settings.get("activityIcons", true),
-						disabled: user?.bot && modules_Settings.get("disableIconsForBots", true)
-					})), [user]);
-					if (!showActivityIcons || !activity || disabled) return null;
-					return activity_React.createElement(components_namespaceObject.TooltipContainer, {
-						text: activity.name,
-						className: components_activity.Z.container,
-						position: "left"
-					}, activity_React.createElement(ActivityIcon, {
-						className: components_activity.Z.icon,
-						activity
-					}));
-				}
+				const pages_namespaceObject = JSON.parse('[{"name":"General","icon":"Wrench","items":[{"type":"switch","name":"Use Icons","note":"Defines if icons should be used to show any date.","id":"useIcons","value":true},{"type":"radio","name":"Time Format","value":1,"id":"12hour","options":[{"value":1,"name":"24 hour"},{"value":0,"name":"12 hour"}]},{"type":"divider"},{"type":"category","name":"Variables","items":[{"type":"replacement","prefix":"$timelabel","description":"Replaces the current time label. eg AM or PM."},{"type":"replacement","prefix":"$day","description":"Replaces the current day."},{"type":"replacement","prefix":"$daysago","description":"Replaces with a number of how many days it\'s ago."},{"type":"replacement","prefix":"$dayname","description":"Replaces the shorted dayname."},{"type":"replacement","prefix":"$weeksago","description":"Replaces with a number of how many weeks it\'s ago."},{"type":"replacement","prefix":"$month","description":"Replaces the month."},{"type":"replacement","prefix":"$monthname","description":"Replaces the shorted monthname."},{"type":"replacement","prefix":"$monthsago","description":"Replaces with a number of how many months it\'s ago."},{"type":"replacement","prefix":"$year","description":"Replaces the year."},{"type":"replacement","prefix":"$yearsago","description":"Replaces with a number of how many years it\'s ago."},{"type":"replacement","prefix":"$hour","description":"Replaces the hour(s)"},{"type":"replacement","prefix":"$minute","description":"Replaces the minute(s)"},{"type":"replacement","prefix":"$second","description":"Replaces the second(s)"}]}]},{"name":"Panel Popout","icon":"User","added":"2021-10-14T22:00:00.000Z","items":[{"type":"switch","name":"Enable","id":"showPanelPopout","value":true},{"type":"radio","name":"Open on","id":"panelPopoutType","value":"click","options":[{"name":"Right Click","value":"contextmenu"},{"name":"Left Click","value":"click"}]}]},{"name":"Created At","icon":"Cake","items":[{"type":"switch","name":"Show in UserPopout","id":"created_show_up","note":"Defines if the creation date should be shown in the UserPopout.","value":true},{"type":"switch","name":"Show in UserProfile","id":"created_show_profile","note":"Defines if the creation date should be shown in the UserProfile.","value":true},{"type":"text","name":"Created At","note":"Format of the Created at date. Read the variables section in the general settings to understand how it works.","id":"created_format","value":"Created At: $hour:$minute:$second, $day.$month.$year $daysago days"}]},{"name":"Joined At","icon":"Calendar","items":[{"type":"switch","name":"Show in UserPopout","id":"joined_show_up","note":"Defines if the joined date should be shown in the UserPopout.","value":true},{"type":"switch","name":"Show in UserProfile","id":"joined_show_profile","note":"Defines if the joined date should be shown in the UserProfile.","value":true},{"type":"text","name":"Joined At","note":"Format of the joined at date. Read the variables section in the general settings to understand how it works.","id":"joined_format","value":"Joined At: $hour:$minute:$second, $day.$month.$year $daysago days"}]},{"name":"Last Message At","icon":"TextBubble","items":[{"type":"switch","name":"Show in UserPopout","id":"lastmessage_show_up","note":"Defines if the last message date should be shown in the UserPopout.","value":true},{"type":"switch","name":"Show in UserProfile","id":"lastmessage_show_profile","note":"Defines if the last message date should be shown in the UserProfile.","value":true},{"type":"text","name":"Last Message","note":"Format of the LastMessage at date. Read the variables section in the general settings to understand how it works.","id":"lastmessage_format","value":"Last Message At: $hour:$minute:$second, $day.$month.$year $daysago days"}]},{"name":"Connections","icon":"Chain","items":[{"type":"switch","name":"Enable Section","note":"Enables this section in the user popout.","id":"showConnectionsSection","value":true},{"type":"switch","name":"Colored Icons","note":"Colored/White icons for the connections.","id":"coloredConnectionsIcons","value":true},{"type":"switch","name":"Show Empty","note":"Show a \\"NO CONNECTIONS\\" placeholder if the user has no connections.","id":"showEmptyConnections","value":true},{"type":"switch","name":"Show Verified","note":"Shows a little verified badge below the icon if the connection is verified.","id":"showVerifiedConnections","value":true},{"type":"icons"}]},{"name":"Activity Icons","icon":"GamePad","items":[{"type":"switch","name":"Enable Activity Icons","note":null,"id":"activityIcons","value":true},{"type":"switch","name":"Disable Bots","note":"Disables the icon for bots, since the most always have something with \'Playing: {...}\' in their statuses.","id":"disableIconsForBots","value":true},{"type":"radio","name":"Activity Icon State","note":"Replaces the activity icon in the activity text of the member list.","id":"activityIconState","value":0,"disabled":false,"options":[{"name":"Replace with associated icon","value":0},{"name":"Don\'t do anything","value":1},{"name":"Hide it","value":2}]},{"type":"switch","name":"Show Gamepad","note":"This shows a gamepad icon if an icon for the activity isn\'t available.","id":"showGamepad","value":true}]},{"name":"Profile Roles","icon":"Profile","added":"2021-10-05T22:00:00.000Z","items":[{"type":"switch","name":"Enable","note":"Adds the roles section (if available) to the profile modal.","id":"profileRoles","value":true}]},{"name":"Mutual Friends","icon":"Friends","added":"2021-10-15T18:59:12.897Z","items":[{"type":"switch","name":"Enable","note":"Adds the mutuals friends section to the user popout.","id":"showMutualFriends","value":true},{"type":"switch","name":"Disable for yourself","note":"Disables the mutual friends section for you.","id":"hideMutualFriendsCurrentUser","value":true},{"type":"switch","name":"Show empty message","note":"This defines if an empty message \'no mutual friends\' should be shown if the user has no mutual friends with you","id":"showEmptyMutualFriends","value":true},{"type":"switch","name":"Stack Icons","note":"Stacks the icons so it takes less space.","id":"stackMutualFriends","value":false}]},{"name":"Mutual Servers","icon":"Mutual","items":[{"type":"switch","name":"Enable Mutual Servers","note":"This enables/disables the mutual servers section in the user popout","id":"showMutualGuilds","value":true},{"type":"switch","name":"Disable for yourself","note":"Disables the mutual servers section for you. (it will just show all your guilds)","id":"hideMutualGuildsCurrentUser","value":true},{"type":"switch","name":"Show empty message","note":"This defines if an empty message \'no mutual servers\' should be shown if the user has no mutual servers with you","id":"showEmptyMutualGuilds","value":true},{"type":"switch","name":"Stack Icons","note":"Stacks the icons so it takes less space.","id":"stackMutualServers","value":false}]},{"name":"Translation Credits","icon":"Language","items":[{"type":"translation","name":"Turkish","id":"tr","note":"@IMaWeebツ#6931"},{"type":"translation","name":"English","id":"en-US","note":"@It\'s Rad, Not Red#0001"},{"type":"translation","name":"German","id":"de","note":"@l0c4lh057#9748, @SteffoSpieler#1868"},{"type":"translation","name":"Dutch","id":"nl","note":"@th0masterharambe#0001"},{"type":"translation","name":"Vietnamese","id":"vi","note":"@MH#5893"},{"type":"translation","name":"Spanish","id":"es-ES","note":"@DrPuc##2048"},{"type":"translation","name":"Swedish","id":"sv-SE","note":"@toatl#7460"},{"type":"translation","name":"Portuguese (Brazil)","id":"pt-BR","note":"@Dominic#1111"},{"type":"translation","name":"French","id":"fr","note":"@LemCent321#1663"}]}]');
+				var settings = __webpack_require__(279);
 				class Logger {
 					static error(...message) {
 						this._log("error", ...message);
@@ -1858,62 +1231,6 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						else return this.props.children;
 					}
 				}
-				var headphones_React = __webpack_require__(113);
-				function headphones_extends() {
-					headphones_extends = Object.assign || function(target) {
-						for (var i = 1; i < arguments.length; i++) {
-							var source = arguments[i];
-							for (var key in source)
-								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-						}
-						return target;
-					};
-					return headphones_extends.apply(this, arguments);
-				}
-				const headphones = props => headphones_React.createElement("svg", headphones_extends({
-					width: "20",
-					height: "20",
-					viewBox: "0 0 24 24"
-				}, props), headphones_React.createElement("svg", {
-					width: "24",
-					height: "24",
-					viewBox: "0 0 24 24"
-				}, headphones_React.createElement("path", {
-					d: "M12 2.00305C6.486 2.00305 2 6.48805 2 12.0031V20.0031C2 21.1071 2.895 22.0031 4 22.0031H6C7.104 22.0031 8 21.1071 8 20.0031V17.0031C8 15.8991 7.104 15.0031 6 15.0031H4V12.0031C4 7.59105 7.589 4.00305 12 4.00305C16.411 4.00305 20 7.59105 20 12.0031V15.0031H18C16.896 15.0031 16 15.8991 16 17.0031V20.0031C16 21.1071 16.896 22.0031 18 22.0031H20C21.104 22.0031 22 21.1071 22 20.0031V12.0031C22 6.48805 17.514 2.00305 12 2.00305Z",
-					fill: "currentColor"
-				})));
-				var memberroles_React = __webpack_require__(113);
-				const {
-					default: MemberRolesList
-				} = external_PluginApi_namespaceObject.WebpackModules.getByProps("MemberRole") ?? {};
-				const classes = external_PluginApi_namespaceObject.WebpackModules.getByProps("userInfoSectionHeader");
-				const memberroles_Header = external_PluginApi_namespaceObject.WebpackModules.getModule((m => "Header" === m.displayName && m.Sizes));
-				function MemberRolesSection({
-					userId,
-					guildId = stores_namespaceObject.SelectedGuilds.getGuildId()
-				}) {
-					const roles = (0, flux_namespaceObject.useStateFromStoresArray)([stores_namespaceObject.Members], (() => stores_namespaceObject.Members.getMember(guildId, userId)?.roles));
-					const guild = (0, flux_namespaceObject.useStateFromStores)([stores_namespaceObject.Guilds], (() => stores_namespaceObject.Guilds.getGuild(guildId)));
-					const user = (0, flux_namespaceObject.useStateFromStores)([stores_namespaceObject.Users], (() => stores_namespaceObject.Users.getUser(userId)));
-					if (!roles || !guild || !user) return null;
-					return memberroles_React.createElement(ErrorBoundary, {
-						id: "MemberRolesSection"
-					}, memberroles_React.createElement("div", {
-						className: (0, utils_namespaceObject.joinClassNames)(classes.userInfoSection, components_namespaceObject.Text.Colors.STANDARD)
-					}, memberroles_React.createElement(memberroles_Header, {
-						uppercase: true,
-						size: components_namespaceObject.Text.Sizes.SIZE_12,
-						className: classes.userInfoSectionHeader
-					}, i18n_namespaceObject.Messages.ROLES_LIST.format({
-						numRoles: roles.length
-					})), memberroles_React.createElement(MemberRolesList, {
-						guild,
-						user,
-						userRoles: roles
-					})));
-				}
-				const pages_namespaceObject = JSON.parse('[{"name":"General","icon":"Wrench","items":[{"type":"switch","name":"Use Icons","note":"Defines if icons should be used to show any date.","id":"useIcons","value":true},{"type":"radio","name":"Time Format","value":1,"id":"12hour","options":[{"value":1,"name":"24 hour"},{"value":0,"name":"12 hour"}]},{"type":"divider"},{"type":"category","name":"Variables","items":[{"type":"replacement","prefix":"$timelabel","description":"Replaces the current time label. eg AM or PM."},{"type":"replacement","prefix":"$day","description":"Replaces the current day."},{"type":"replacement","prefix":"$daysago","description":"Replaces with a number of how many days it\'s ago."},{"type":"replacement","prefix":"$dayname","description":"Replaces the shorted dayname."},{"type":"replacement","prefix":"$weeksago","description":"Replaces with a number of how many weeks it\'s ago."},{"type":"replacement","prefix":"$month","description":"Replaces the month."},{"type":"replacement","prefix":"$monthname","description":"Replaces the shorted monthname."},{"type":"replacement","prefix":"$monthsago","description":"Replaces with a number of how many months it\'s ago."},{"type":"replacement","prefix":"$year","description":"Replaces the year."},{"type":"replacement","prefix":"$yearsago","description":"Replaces with a number of how many years it\'s ago."},{"type":"replacement","prefix":"$hour","description":"Replaces the hour(s)"},{"type":"replacement","prefix":"$minute","description":"Replaces the minute(s)"},{"type":"replacement","prefix":"$second","description":"Replaces the second(s)"}]}]},{"name":"Panel Popout","icon":"User","added":"2021-10-14T22:00:00.000Z","items":[{"type":"switch","name":"Enable","id":"showPanelPopout","value":true},{"type":"radio","name":"Open on","id":"panelPopoutType","value":"click","options":[{"name":"Right Click","value":"contextmenu"},{"name":"Left Click","value":"click"}]}]},{"name":"Created At","icon":"Cake","items":[{"type":"switch","name":"Show in UserPopout","id":"created_show_up","note":"Defines if the creation date should be shown in the UserPopout.","value":true},{"type":"switch","name":"Show in UserProfile","id":"created_show_profile","note":"Defines if the creation date should be shown in the UserProfile.","value":true},{"type":"text","name":"Created At","note":"Format of the Created at date. Read the variables section in the general settings to understand how it works.","id":"created_format","value":"Created At: $hour:$minute:$second, $day.$month.$year $daysago days"}]},{"name":"Joined At","icon":"Calendar","items":[{"type":"switch","name":"Show in UserPopout","id":"joined_show_up","note":"Defines if the joined date should be shown in the UserPopout.","value":true},{"type":"switch","name":"Show in UserProfile","id":"joined_show_profile","note":"Defines if the joined date should be shown in the UserProfile.","value":true},{"type":"text","name":"Joined At","note":"Format of the joined at date. Read the variables section in the general settings to understand how it works.","id":"joined_format","value":"Joined At: $hour:$minute:$second, $day.$month.$year $daysago days"}]},{"name":"Last Message At","icon":"TextBubble","items":[{"type":"switch","name":"Show in UserPopout","id":"lastmessage_show_up","note":"Defines if the last message date should be shown in the UserPopout.","value":true},{"type":"switch","name":"Show in UserProfile","id":"lastmessage_show_profile","note":"Defines if the last message date should be shown in the UserProfile.","value":true},{"type":"text","name":"Last Message","note":"Format of the LastMessage at date. Read the variables section in the general settings to understand how it works.","id":"lastmessage_format","value":"Last Message At: $hour:$minute:$second, $day.$month.$year $daysago days"}]},{"name":"Connections","icon":"Chain","items":[{"type":"switch","name":"Enable Section","note":"Enables this section in the user popout.","id":"showConnectionsSection","value":true},{"type":"switch","name":"Colored Icons","note":"Colored/White icons for the connections.","id":"coloredConnectionsIcons","value":true},{"type":"switch","name":"Show Empty","note":"Show a \\"NO CONNECTIONS\\" placeholder if the user has no connections.","id":"showEmptyConnections","value":true},{"type":"switch","name":"Show Verified","note":"Shows a little verified badge below the icon if the connection is verified.","id":"showVerifiedConnections","value":true},{"type":"icons"}]},{"name":"Activity Icons","icon":"GamePad","items":[{"type":"switch","name":"Enable Activity Icons","note":null,"id":"activityIcons","value":true},{"type":"switch","name":"Disable Bots","note":"Disables the icon for bots, since the most always have something with \'Playing: {...}\' in their statuses.","id":"disableIconsForBots","value":true},{"type":"radio","name":"Activity Icon State","note":"Replaces the activity icon in the activity text of the member list.","id":"activityIconState","value":0,"disabled":false,"options":[{"name":"Replace with associated icon","value":0},{"name":"Don\'t do anything","value":1},{"name":"Hide it","value":2}]},{"type":"switch","name":"Show Gamepad","note":"This shows a gamepad icon if an icon for the activity isn\'t available.","id":"showGamepad","value":true}]},{"name":"Profile Roles","icon":"Profile","added":"2021-10-05T22:00:00.000Z","items":[{"type":"switch","name":"Enable","note":"Adds the roles section (if available) to the profile modal.","id":"profileRoles","value":true}]},{"name":"Mutual Friends","icon":"Friends","added":"2021-10-15T18:59:12.897Z","items":[{"type":"switch","name":"Enable","note":"Adds the mutuals friends section to the user popout.","id":"showMutualFriends","value":true},{"type":"switch","name":"Disable for yourself","note":"Disables the mutual friends section for you.","id":"hideMutualFriendsCurrentUser","value":true},{"type":"switch","name":"Show empty message","note":"This defines if an empty message \'no mutual friends\' should be shown if the user has no mutual friends with you","id":"showEmptyMutualFriends","value":true},{"type":"switch","name":"Stack Icons","note":"Stacks the icons so it takes less space.","id":"stackMutualFriends","value":false}]},{"name":"Mutual Servers","icon":"Mutual","items":[{"type":"switch","name":"Enable Mutual Servers","note":"This enables/disables the mutual servers section in the user popout","id":"showMutualGuilds","value":true},{"type":"switch","name":"Disable for yourself","note":"Disables the mutual servers section for you. (it will just show all your guilds)","id":"hideMutualGuildsCurrentUser","value":true},{"type":"switch","name":"Show empty message","note":"This defines if an empty message \'no mutual servers\' should be shown if the user has no mutual servers with you","id":"showEmptyMutualGuilds","value":true},{"type":"switch","name":"Stack Icons","note":"Stacks the icons so it takes less space.","id":"stackMutualServers","value":false}]},{"name":"Translation Credits","icon":"Language","items":[{"type":"translation","name":"Turkish","id":"tr","note":"@IMaWeebツ#6931"},{"type":"translation","name":"English","id":"en-US","note":"@It\'s Rad, Not Red#0001"},{"type":"translation","name":"German","id":"de","note":"@l0c4lh057#9748, @SteffoSpieler#1868"},{"type":"translation","name":"Dutch","id":"nl","note":"@th0masterharambe#0001"},{"type":"translation","name":"Vietnamese","id":"vi","note":"@MH#5893"},{"type":"translation","name":"Spanish","id":"es-ES","note":"@DrPuc##2048"},{"type":"translation","name":"Swedish","id":"sv-SE","note":"@toatl#7460"},{"type":"translation","name":"Portuguese (Brazil)","id":"pt-BR","note":"@Dominic#1111"},{"type":"translation","name":"French","id":"fr","note":"@LemCent321#1663"}]}]');
-				var settings = __webpack_require__(128);
 				const forms_namespaceObject = Modules["@discord/forms"];
 				function chain_extends() {
 					chain_extends = Object.assign || function(target) {
@@ -1951,7 +1268,64 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				}), external_BdApi_React_default().createElement("path", {
 					d: "M501.1 395.7L384 278.6c-23.1-23.1-57.6-27.6-85.4-13.9L192 158.1V96L64 0 0 64l96 128h62.1l106.6 106.6c-13.6 27.8-9.2 62.3 13.9 85.4l117.1 117.1c14.6 14.6 38.2 14.6 52.7 0l52.7-52.7c14.5-14.6 14.5-38.2 0-52.7zM331.7 225c28.3 0 54.9 11 74.9 31l19.4 19.4c15.8-6.9 30.8-16.5 43.8-29.5 37.1-37.1 49.7-89.3 37.9-136.7-2.2-9-13.5-12.1-20.1-5.5l-74.4 74.4-67.9-11.3L334 98.9l74.4-74.4c6.6-6.6 3.4-17.9-5.7-20.2-47.4-11.7-99.6.9-136.6 37.9-28.5 28.5-41.9 66.1-41.2 103.6l82.1 82.1c8.1-1.9 16.5-2.9 24.7-2.9zm-103.9 82l-56.7-56.7L18.7 402.8c-25 25-25 65.5 0 90.5s65.5 25 90.5 0l123.6-123.6c-7.6-19.9-9.9-41.6-5-62.7zM64 472c-13.2 0-24-10.8-24-24 0-13.3 10.7-24 24-24s24 10.7 24 24c0 13.2-10.7 24-24 24z"
 				}));
-				var valorant_React = __webpack_require__(113);
+				var React = __webpack_require__(832);
+				function spotify_extends() {
+					spotify_extends = Object.assign || function(target) {
+						for (var i = 1; i < arguments.length; i++) {
+							var source = arguments[i];
+							for (var key in source)
+								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
+						}
+						return target;
+					};
+					return spotify_extends.apply(this, arguments);
+				}
+				const spotify = props => React.createElement("svg", spotify_extends({}, props, {
+					width: "20",
+					height: "20",
+					viewBox: "0 0 65 65"
+				}), React.createElement("path", {
+					fill: "#1ED760",
+					d: "M32.5,0.5 C14.826888,0.5 0.5,14.826888 0.5,32.5 C0.5,50.173112 14.826888,64.5 32.5,64.5 C50.173112,64.5 64.5,50.173112 64.5,32.5 C64.5,14.826888 50.173112,0.5 32.5,0.5 Z M47.18,46.66 C46.6031412,47.595466 45.3795381,47.8902025 44.44,47.32 C36.93,42.73 27.44,41.69 16.33,44.23 C15.6145818,44.4464575 14.8381683,44.245926 14.3170501,43.7100969 C13.7959319,43.1742677 13.6170868,42.3925738 13.8533716,41.6834571 C14.0896564,40.9743403 14.7016337,40.4561564 15.44,40.34 C27.63,37.55 38.09,38.75 46.52,43.91 C47.4615306,44.487221 47.7569974,45.7183323 47.18,46.66 Z M51.1,37.95 C50.3770773,39.1205793 48.8441907,39.487042 47.67,38.77 C39.07,33.48 25.96,31.95 15.78,35.04 C14.9279216,35.2990176 14.0023844,35.0837812 13.3520294,34.4753684 C12.7016744,33.8669556 12.425306,32.9577988 12.6270294,32.0903684 C12.8287528,31.2229381 13.4779216,30.5290176 14.33,30.27 C25.95,26.74 40.4,28.45 50.28,34.52 C51.445766,35.2424019 51.8079122,36.7714637 51.09,37.94 L51.1,37.95 Z M51.44,28.88 C41.13,22.75 24.11,22.19 14.26,25.18 C13.2140022,25.5702637 12.0378133,25.3474036 11.207084,24.6015444 C10.3763547,23.8556852 10.0285164,22.7102178 10.3042349,21.6283692 C10.5799535,20.5465206 11.4336155,19.707266 12.52,19.45 C23.82,16.02 42.61,16.68 54.52,23.73 C55.8401426,24.6185116 56.2368626,26.3831995 55.4240137,27.7512295 C54.6111649,29.1192595 52.8715856,29.6146124 51.46,28.88 L51.44,28.88 Z"
+				}));
+				var twitch_React = __webpack_require__(832);
+				function twitch_extends() {
+					twitch_extends = Object.assign || function(target) {
+						for (var i = 1; i < arguments.length; i++) {
+							var source = arguments[i];
+							for (var key in source)
+								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
+						}
+						return target;
+					};
+					return twitch_extends.apply(this, arguments);
+				}
+				const twitch = props => twitch_React.createElement("svg", twitch_extends({
+					width: "20",
+					height: "20",
+					viewBox: "0 0 128 128"
+				}, props), twitch_React.createElement("defs", null, twitch_React.createElement("path", {
+					id: "color-a",
+					d: "M8.5542826,0 L0,22 L0,111.8 L30.7954173,111.8 L30.7954173,128 L48.1052598,128 L64.408716,111.8 L89.3670935,111.8 L122.980392,78.4 L122.980392,0 L8.5542826,0 Z M111.406951,72.6 L92.0843362,91.8 L61.2889188,91.8 L44.9854626,108 L44.9854626,91.8 L19.020699,91.8 L19.020699,11.4 L111.406951,11.4 L111.406951,72.6 Z M92.2856134,33.4 L92.2856134,66.8 L80.8128109,66.8 L80.8128109,33.4 L92.2856134,33.4 Z M61.4901961,33.4 L61.4901961,66.8 L50.0173935,66.8 L50.0173935,33.4 L61.4901961,33.4 Z"
+				})), twitch_React.createElement("g", {
+					fill: "none",
+					"fill-rule": "evenodd",
+					transform: "translate(3)"
+				}, twitch_React.createElement("polygon", {
+					fill: "#FFF",
+					"fill-rule": "nonzero",
+					points: "110.431 72.512 91.272 91.717 60.736 91.717 44.57 107.922 44.57 91.717 18.824 91.717 18.824 11.294 110.431 11.294"
+				}), twitch_React.createElement("mask", {
+					id: "color-b",
+					fill: "#fff"
+				}, twitch_React.createElement("use", {
+					xlinkHref: "#color-a"
+				})), twitch_React.createElement("use", {
+					fill: "#563194",
+					"fill-rule": "nonzero",
+					xlinkHref: "#color-a"
+				})));
+				var valorant_React = __webpack_require__(832);
 				function valorant_extends() {
 					valorant_extends = Object.assign || function(target) {
 						for (var i = 1; i < arguments.length; i++) {
@@ -1974,7 +1348,124 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				}, valorant_React.createElement("path", {
 					d: "M0 1080 l0 -1080 1080 0 1080 0 0 1080 0 1080 -1080 0 -1080 0 0-1080z"
 				})));
-				var language_React = __webpack_require__(113);
+				var youtube_React = __webpack_require__(832);
+				function youtube_extends() {
+					youtube_extends = Object.assign || function(target) {
+						for (var i = 1; i < arguments.length; i++) {
+							var source = arguments[i];
+							for (var key in source)
+								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
+						}
+						return target;
+					};
+					return youtube_extends.apply(this, arguments);
+				}
+				const youtube = props => youtube_React.createElement("svg", youtube_extends({
+					height: "20",
+					width: "20",
+					viewBox: "0 0 576 512"
+				}, props), youtube_React.createElement("path", {
+					fill: "#FF1A1A",
+					d: "M549.655 124.083c-6.281-23.65-24.787-42.276-48.284-48.597C458.781 64 288 64 288 64S117.22 64 74.629 75.486c-23.497 6.322-42.003 24.947-48.284 48.597-11.412 42.867-11.412 132.305-11.412 132.305s0 89.438 11.412 132.305c6.281 23.65 24.787 41.5 48.284 47.821C117.22 448 288 448 288 448s170.78 0 213.371-11.486c23.497-6.321 42.003-24.171 48.284-47.821 11.412-42.867 11.412-132.305 11.412-132.305s0-89.438-11.412-132.305zm-317.51 213.508V175.185l142.739 81.205-142.739 81.201z"
+				}));
+				var gamepad_React = __webpack_require__(832);
+				function gamepad_extends() {
+					gamepad_extends = Object.assign || function(target) {
+						for (var i = 1; i < arguments.length; i++) {
+							var source = arguments[i];
+							for (var key in source)
+								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
+						}
+						return target;
+					};
+					return gamepad_extends.apply(this, arguments);
+				}
+				const gamepad = props => gamepad_React.createElement("svg", gamepad_extends({
+					width: "20",
+					height: "20",
+					viewBox: "0 0 24 24"
+				}, props), gamepad_React.createElement("g", {
+					fill: "none",
+					"fill-rule": "evenodd"
+				}, gamepad_React.createElement("path", {
+					fill: "currentColor",
+					d: "M5.79335761,5 L18.2066424,5 C19.7805584,5 21.0868816,6.21634264 21.1990185,7.78625885 L21.8575059,17.0050826 C21.9307825,18.0309548 21.1585512,18.9219909 20.132679,18.9952675 C20.088523,18.9984215 20.0442685,19 20,19 C18.8245863,19 17.8000084,18.2000338 17.5149287,17.059715 L17,15 L7,15 L6.48507125,17.059715 C6.19999155,18.2000338 5.1754137,19 4,19 C2.97151413,19 2.13776159,18.1662475 2.13776159,17.1377616 C2.13776159,17.0934931 2.1393401,17.0492386 2.1424941,17.0050826 L2.80098151,7.78625885 C2.91311838,6.21634264 4.21944161,5 5.79335761,5 Z M14.5,10 C15.3284271,10 16,9.32842712 16,8.5 C16,7.67157288 15.3284271,7 14.5,7 C13.6715729,7 13,7.67157288 13,8.5 C13,9.32842712 13.6715729,10 14.5,10 Z M18.5,13 C19.3284271,13 20,12.3284271 20,11.5 C20,10.6715729 19.3284271,10 18.5,10 C17.6715729,10 17,10.6715729 17,11.5 C17,12.3284271 17.6715729,13 18.5,13 Z M6,9 L4,9 L4,11 L6,11 L6,13 L8,13 L8,11 L10,11 L10,9 L8,9 L8,7 L6,7 L6,9 Z"
+				}), gamepad_React.createElement("rect", {
+					width: "24",
+					height: "24"
+				})));
+				var googleChrome_React = __webpack_require__(832);
+				function googleChrome_extends() {
+					googleChrome_extends = Object.assign || function(target) {
+						for (var i = 1; i < arguments.length; i++) {
+							var source = arguments[i];
+							for (var key in source)
+								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
+						}
+						return target;
+					};
+					return googleChrome_extends.apply(this, arguments);
+				}
+				const googleChrome = props => googleChrome_React.createElement("svg", googleChrome_extends({
+					width: "20",
+					height: "20",
+					viewBox: "0 0 48 48"
+				}, props), googleChrome_React.createElement("path", {
+					fill: "#4caf50",
+					d: "M44,24c0,11.044-8.956,20-20,20S4,35.044,4,24S12.956,4,24,4S44,12.956,44,24z"
+				}), googleChrome_React.createElement("path", {
+					fill: "#ffc107",
+					d: "M24,4v20l8,4l-8.843,16c0.317,0,0.526,0,0.843,0c11.053,0,20-8.947,20-20S35.053,4,24,4z"
+				}), googleChrome_React.createElement("path", {
+					fill: "#4caf50",
+					d: "M44,24c0,11.044-8.956,20-20,20S4,35.044,4,24S12.956,4,24,4S44,12.956,44,24z"
+				}), googleChrome_React.createElement("path", {
+					fill: "#ffc107",
+					d: "M24,4v20l8,4l-8.843,16c0.317,0,0.526,0,0.843,0c11.053,0,20-8.947,20-20S35.053,4,24,4z"
+				}), googleChrome_React.createElement("path", {
+					fill: "#f44336",
+					d: "M41.84,15H24v13l-3-1L7.16,13.26H7.14C10.68,7.69,16.91,4,24,4C31.8,4,38.55,8.48,41.84,15z"
+				}), googleChrome_React.createElement("path", {
+					fill: "#dd2c00",
+					d: "M7.158,13.264l8.843,14.862L21,27L7.158,13.264z"
+				}), googleChrome_React.createElement("path", {
+					fill: "#558b2f",
+					d: "M23.157,44l8.934-16.059L28,25L23.157,44z"
+				}), googleChrome_React.createElement("path", {
+					fill: "#f9a825",
+					d: "M41.865,15H24l-1.579,4.58L41.865,15z"
+				}), googleChrome_React.createElement("path", {
+					fill: "#fff",
+					d: "M33,24c0,4.969-4.031,9-9,9s-9-4.031-9-9s4.031-9,9-9S33,19.031,33,24z"
+				}), googleChrome_React.createElement("path", {
+					fill: "#2196f3",
+					d: "M31,24c0,3.867-3.133,7-7,7s-7-3.133-7-7s3.133-7,7-7S31,20.133,31,24z"
+				}));
+				var headphones_React = __webpack_require__(832);
+				function headphones_extends() {
+					headphones_extends = Object.assign || function(target) {
+						for (var i = 1; i < arguments.length; i++) {
+							var source = arguments[i];
+							for (var key in source)
+								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
+						}
+						return target;
+					};
+					return headphones_extends.apply(this, arguments);
+				}
+				const headphones = props => headphones_React.createElement("svg", headphones_extends({
+					width: "20",
+					height: "20",
+					viewBox: "0 0 24 24"
+				}, props), headphones_React.createElement("svg", {
+					width: "24",
+					height: "24",
+					viewBox: "0 0 24 24"
+				}, headphones_React.createElement("path", {
+					d: "M12 2.00305C6.486 2.00305 2 6.48805 2 12.0031V20.0031C2 21.1071 2.895 22.0031 4 22.0031H6C7.104 22.0031 8 21.1071 8 20.0031V17.0031C8 15.8991 7.104 15.0031 6 15.0031H4V12.0031C4 7.59105 7.589 4.00305 12 4.00305C16.411 4.00305 20 7.59105 20 12.0031V15.0031H18C16.896 15.0031 16 15.8991 16 17.0031V20.0031C16 21.1071 16.896 22.0031 18 22.0031H20C21.104 22.0031 22 21.1071 22 20.0031V12.0031C22 6.48805 17.514 2.00305 12 2.00305Z",
+					fill: "currentColor"
+				})));
+				var language_React = __webpack_require__(832);
 				function language_extends() {
 					language_extends = Object.assign || function(target) {
 						for (var i = 1; i < arguments.length; i++) {
@@ -1998,7 +1489,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					d: "M0 0h24v24H0zm0 0h24v24H0z",
 					fill: "none"
 				}));
-				var mutual_React = __webpack_require__(113);
+				var mutual_React = __webpack_require__(832);
 				function mutual_extends() {
 					mutual_extends = Object.assign || function(target) {
 						for (var i = 1; i < arguments.length; i++) {
@@ -2024,7 +1515,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				})), mutual_React.createElement("g", null, mutual_React.createElement("g", null, mutual_React.createElement("g", null, mutual_React.createElement("path", {
 					d: "M9.01,14H2v2h7.01v3L13,15l-3.99-4V14z M14.99,13v-3H22V8h-7.01V5L11,9L14.99,13z"
 				})))));
-				var user_React = __webpack_require__(113);
+				var user_React = __webpack_require__(832);
 				function user_extends() {
 					user_extends = Object.assign || function(target) {
 						for (var i = 1; i < arguments.length; i++) {
@@ -2046,7 +1537,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					fill: "currentColor",
 					d: "M224 256c70.7 0 128-57.3 128-128S294.7 0 224 0 96 57.3 96 128s57.3 128 128 128zm89.6 32h-16.7c-22.2 10.2-46.9 16-72.9 16s-50.6-5.8-72.9-16h-16.7C60.2 288 0 348.2 0 422.4V464c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48v-41.6c0-74.2-60.2-134.4-134.4-134.4z"
 				}));
-				var friends_React = __webpack_require__(113);
+				var friends_React = __webpack_require__(832);
 				function friends_extends() {
 					friends_extends = Object.assign || function(target) {
 						for (var i = 1; i < arguments.length; i++) {
@@ -2069,7 +1560,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					fill: "currentColor",
 					d: "M192 256A112 112 0 1 0 80 144a111.94 111.94 0 0 0 112 112zm76.8 32h-8.3a157.53 157.53 0 0 1-68.5 16c-24.6 0-47.6-6-68.5-16h-8.3A115.23 115.23 0 0 0 0 403.2V432a48 48 0 0 0 48 48h288a48 48 0 0 0 48-48v-28.8A115.23 115.23 0 0 0 268.8 288z"
 				})));
-				var profile_React = __webpack_require__(113);
+				var profile_React = __webpack_require__(832);
 				function profile_extends() {
 					profile_extends = Object.assign || function(target) {
 						for (var i = 1; i < arguments.length; i++) {
@@ -2089,7 +1580,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					fill: "currentColor",
 					d: "M224 136V0H24C10.7 0 0 10.7 0 24v464c0 13.3 10.7 24 24 24h336c13.3 0 24-10.7 24-24V160H248c-13.2 0-24-10.8-24-24zm80 273.6v19.2c0 10.61-10.03 19.2-22.4 19.2H102.4c-12.37 0-22.4-8.6-22.4-19.2v-19.2c0-31.81 30.09-57.6 67.2-57.6h4.95c12.29 5.12 25.73 8 39.85 8s27.56-2.88 39.85-8h4.95c37.11 0 67.2 25.79 67.2 57.6zM192 320c-35.35 0-64-28.65-64-64s28.65-64 64-64 64 28.65 64 64-28.65 64-64 64zm185-215L279.1 7c-4.5-4.5-10.6-7-17-7H256v128h128v-6.1c0-6.3-2.5-12.4-7-16.9z"
 				}));
-				var icons_React = __webpack_require__(113);
+				var icons_React = __webpack_require__(832);
 				const Icons = {
 					Cake: cake,
 					Calendar: calendar,
@@ -2328,6 +1819,388 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						color: constants_namespaceObject.Colors.STATUS_RED_500,
 						className: settings.Z.textBadge
 					})))) : pages_namespaceObject[activeItem].items.map(renderSetting)));
+				}
+				const external_BasePlugin_namespaceObject = BasePlugin;
+				var external_BasePlugin_default = __webpack_require__.n(external_BasePlugin_namespaceObject);
+				var components_activity = __webpack_require__(925);
+				var activity_React = __webpack_require__(832);
+				const byName = [
+					[/spotify/i, spotify],
+					[/youtube/i, () => activity_React.createElement("img", {
+						src: connections_default().get("youtube").icon.darkSVG,
+						width: "20",
+						height: "20"
+					})],
+					[/twitch/i, twitch],
+					[/google\schrome/i, googleChrome]
+				];
+				function ActivityIcon({
+					activity
+				}) {
+					const {
+						game,
+						showGamepad
+					} = (0, flux_namespaceObject.useStateFromStoresObject)([stores_namespaceObject.Games, modules_Settings], (() => ({
+						showGamepad: modules_Settings.get("showGamepad", true),
+						game: stores_namespaceObject.Games.getGame(activity.application_id)
+					})), [activity]);
+					const icon = (0, external_BdApi_React_.useMemo)((() => byName.find((([regex]) => regex.test(activity.name || activity.id)))), [game]);
+					if (icon) {
+						const Icon = icon[1];
+						return activity_React.createElement(Icon, null);
+					}
+					if (game && game.getIconURL()) return activity_React.createElement("img", {
+						src: game.getIconURL(),
+						width: "20",
+						height: "20"
+					});
+					return showGamepad ? activity_React.createElement(gamepad, null) : null;
+				}
+				function noopNull() {
+					return null;
+				}
+				function ActivitiesFilter(activity, index, target) {
+					if (4 === activity?.type) return false;
+					return target.indexOf(activity) === index;
+				}
+				function Activity({
+					user
+				}) {
+					const {
+						activity,
+						showActivityIcons,
+						disabled
+					} = (0, flux_namespaceObject.useStateFromStoresObject)([stores_namespaceObject.Activities, modules_Settings], (() => ({
+						activity: stores_namespaceObject.Activities.getActivities(user.id).filter(ActivitiesFilter)[0],
+						showActivityIcons: modules_Settings.get("activityIcons", true),
+						disabled: user?.bot && modules_Settings.get("disableIconsForBots", true)
+					})), [user]);
+					if (!showActivityIcons || !activity || disabled) return null;
+					return activity_React.createElement(components_namespaceObject.TooltipContainer, {
+						text: activity.name,
+						className: components_activity.Z.container,
+						position: "left"
+					}, activity_React.createElement(ActivityIcon, {
+						className: components_activity.Z.icon,
+						activity
+					}));
+				}
+				const DiscordCommands = BdApi.findModuleByProps("BUILT_IN_COMMANDS");
+				if (!window._BDBuilder) window._BDBuilder = {
+					commands: {},
+					clyde: {}
+				};
+				if (!window._BDBuilder.commands) window._BDBuilder.commands = {};
+				const logError = console.error.bind(null, `%c[BDBuilder]%c`, "color: #E91E63; font-weight: 700;", "");
+				const betterdiscord = window._BDBuilder.commands.section = {
+					icon: "https://github.com/BetterDiscord.png",
+					id: "betterdiscord",
+					name: "BetterDiscord",
+					type: 1
+				};
+				const DiscordCommandTypes = BdApi.findModuleByProps("ApplicationCommandType");
+				const Types = DiscordCommandTypes.ApplicationCommandType;
+				const OptionTypes = DiscordCommandTypes.ApplicationCommandOptionType;
+				const PermissionTypes = DiscordCommandTypes.ApplicationCommandPermissionType;
+				if (!DiscordCommands.BUILT_IN_SECTIONS?.["betterdiscord"]) try {
+					DiscordCommands.BUILT_IN_SECTIONS["betterdiscord"] = betterdiscord;
+				} catch (error) {
+					logError("Failed to inject commands section:", error);
+				}
+				if (0 === BdApi.Patcher.getPatchesByCaller("BDBuilder").length) try {
+					const AssetUtils = BdApi.findModuleByProps("getApplicationIconURL");
+					const CommandsHook = BdApi.findModuleByProps("useApplicationCommandsDiscoveryState");
+					const CommandsIcon = BdApi.findModule((m => "ApplicationCommandDiscoverySectionIcon" === m?.default?.displayName));
+					BdApi.Patcher.after("BDBuilder", CommandsIcon, "default", ((_, [props], res) => {
+						if (!res || props?.section?.id !== betterdiscord.id || null != res?.props?.children) return;
+						res.props.children = BdApi.React.createElement("img", {
+							src: props.section.icon,
+							style: {
+								width: props.width ?? 32,
+								height: props.height ?? 32,
+								borderRadius: "50%"
+							}
+						});
+					}));
+					BdApi.Patcher.after("BDBuilder", AssetUtils, "getApplicationIconURL", ((_, [props]) => {
+						if ("betterdiscord" !== props?.id) return;
+						return props.icon;
+					}));
+					BdApi.Patcher.after("BDBuilder", CommandsHook, "useApplicationCommandsDiscoveryState", ((_, __, res) => {
+						if (!Array.isArray(res?.discoverySections) || !Array.isArray(res?.applicationCommandSections)) return res;
+						res.discoverySections.unshift({
+							data: DiscordCommands.BUILT_IN_COMMANDS.filter((cmd => cmd?.applicationId === betterdiscord.id)),
+							section: betterdiscord
+						});
+						res.applicationCommandSections.unshift(betterdiscord);
+					}));
+				} catch (error) {
+					logError("Error while patching command row:", error);
+					BdApi.Patcher.unpatchAll("BDBuilder");
+				}
+				function registerCommand(caller, options) {
+					const cmd = Object.assign({}, options, {
+						__registerId: caller,
+						applicationId: "betterdiscord",
+						type: Types.BOT,
+						target: 1
+					});
+					DiscordCommands.BUILT_IN_COMMANDS.push(cmd);
+					return () => {
+						const index = DiscordCommands.BUILT_IN_COMMANDS.indexOf(cmd);
+						if (index < 0) return false;
+						DiscordCommands.BUILT_IN_COMMANDS.splice(index, 1);
+					};
+				}
+				function unregisterAllCommands(caller) {
+					let index = DiscordCommands.BUILT_IN_COMMANDS.findIndex((cmd => cmd.__registerId === caller));
+					while (index > -1) {
+						DiscordCommands.BUILT_IN_COMMANDS.splice(index, 1);
+						index = DiscordCommands.BUILT_IN_COMMANDS.findIndex((cmd => cmd.__registerId === caller));
+					}
+				}
+				const Commands = {
+					registerCommand,
+					unregisterAllCommands
+				};
+				try {
+					Object.assign(window._BDBuilder.commands, Commands);
+				} catch (error) {
+					logError("Error while assigning functions to global namespace.", error);
+				}
+				const commands = Commands;
+				const clyde_logError = console.error.bind(null, `%c[BDBuilder]%c`, "color: #E91E63; font-weight: 700;", "");
+				const DefaultMessage = {
+					state: "SENT",
+					author: {
+						avatar: "betterdiscord",
+						id: "81388395867156480",
+						bot: true,
+						discriminator: "5000",
+						username: "BetterDiscord"
+					},
+					content: "Hello <:zere_zoom:477825238172958730>"
+				};
+				const MessageCreators = BdApi.findModuleByProps("createBotMessage");
+				const MessageActions = BdApi.findModuleByProps("receiveMessage");
+				const AvatarDefaults = BdApi.findModuleByProps("BOT_AVATARS");
+				if (AvatarDefaults?.BOT_AVATARS && !AvatarDefaults.BOT_AVATARS.betterdiscord) AvatarDefaults.BOT_AVATARS.betterdiscord = "https://github.com/BetterDiscord.png";
+				function sendMessage(channelId, message) {
+					MessageActions.receiveMessage(channelId, Object.assign({}, MessageCreators.createBotMessage(channelId, message?.content), DefaultMessage, message));
+				}
+				const Clyde = {
+					sendMessage,
+					DefaultMessage
+				};
+				if (!window._BDBuilder) window._BDBuilder = {
+					commands: {},
+					cylde: {}
+				};
+				try {
+					if (!window._BDBuilder.clyde) window._BDBuilder.clyde = {};
+					Object.assign(window._BDBuilder.clyde, Clyde);
+				} catch (error) {
+					clyde_logError("Error while assigning Clyde to global namespace.", error);
+				}
+				const clyde = Clyde;
+				function SuppressErrors(func, onError = (() => {})) {
+					const wrapped = function() {
+						try {
+							return func.apply(this, arguments);
+						} catch (error) {
+							onError(error);
+						}
+					};
+					Object.assign(wrapped, func);
+					wrapped.toString = () => func.toString();
+					return wrapped;
+				}
+				var mutualServers = __webpack_require__(828);
+				function mutualServers_extends() {
+					mutualServers_extends = Object.assign || function(target) {
+						for (var i = 1; i < arguments.length; i++) {
+							var source = arguments[i];
+							for (var key in source)
+								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
+						}
+						return target;
+					};
+					return mutualServers_extends.apply(this, arguments);
+				}
+				const FriendsStore = external_PluginApi_namespaceObject.WebpackModules.getByProps("getMutualGuilds");
+				const mutualServers_Header = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("Header");
+				const WindowStore = external_PluginApi_namespaceObject.WebpackModules.getByProps("isFocused");
+				function MutualServer({
+					guild,
+					nick,
+					onClick
+				}) {
+					const [isMouseOver, setMouseOver] = (0, external_BdApi_React_.useState)(false);
+					const isWindowFocused = (0, flux_namespaceObject.useStateFromStores)([WindowStore], (() => WindowStore.isFocused()));
+					return external_BdApi_React_default().createElement(components_namespaceObject.TooltipContainer, {
+						key: guild.id,
+						text: nick ? `${guild.name} (${nick})` : guild.name,
+						position: "top",
+						className: mutualServers.Z.mutualGuild
+					}, guild.icon ? external_BdApi_React_default().createElement("img", {
+						onMouseOver: () => setMouseOver(true),
+						onMouseLeave: () => setMouseOver(false),
+						src: guild.getIconURL(128, isMouseOver && isWindowFocused),
+						onClick: () => onClick(guild.id)
+					}) : external_BdApi_React_default().createElement("div", {
+						className: mutualServers.Z.guildAcronym,
+						onClick: () => onClick(guild.id)
+					}, guild.acronym));
+				}
+				function MutualServers({
+					user
+				}) {
+					const settings = useSettings({
+						showMutualGuilds: true,
+						hideMutualGuildsCurrentUser: true,
+						stackMutualServers: false,
+						showEmptyMutualGuilds: true
+					});
+					if (!settings.showMutualGuilds || settings.hideMutualGuildsCurrentUser && user.id === stores_namespaceObject.Users.getCurrentUser().id) return null;
+					const mutualGuilds = (0, flux_namespaceObject.useStateFromStores)([FriendsStore], (() => FriendsStore.getMutualGuilds(user.id)));
+					const [message, setMessage] = (0, external_BdApi_React_.useState)("");
+					(0, external_BdApi_React_.useEffect)((() => {
+						if (Array.isArray(mutualGuilds) || stores_namespaceObject.UserProfile.isFetching(user.id)) return;
+						modules_namespaceObject.Dispatcher.wait((() => {
+							actions_namespaceObject.ProfileActions.fetchProfile(user.id).catch((error => {
+								if (~error?.message?.indexOf("Already dispatching")) return;
+								external_PluginApi_namespaceObject.Logger.error(`Failed to fetch profile for ${user.id}:\n`, error);
+								setMessage(Strings.get("FAILED_TO_FETCH"));
+							}));
+						}));
+					}), []);
+					return Array.isArray(mutualGuilds) ? mutualGuilds.length ? external_BdApi_React_default().createElement("div", {
+						className: mutualServers.Z.body
+					}, external_BdApi_React_default().createElement(mutualServers_Header, {
+						size: mutualServers_Header.Sizes.SIZE_12,
+						className: mutualServers.Z.header,
+						uppercase: true,
+						muted: true
+					}, i18n_namespaceObject.Messages.MUTUAL_GUILDS), external_BdApi_React_default().createElement("div", {
+						className: (0, utils_namespaceObject.joinClassNames)(mutualServers.Z.guilds, settings.stackMutualServers && mutualServers.Z.stack)
+					}, mutualGuilds.map((props => external_BdApi_React_default().createElement(MutualServer, mutualServers_extends({}, props, {
+						onClick: actions_namespaceObject.GuildActions.transitionToGuildSync
+					})))))) : settings.showEmptyMutualGuilds && external_BdApi_React_default().createElement(mutualServers_Header, {
+						size: mutualServers_Header.Sizes.SIZE_12,
+						className: mutualServers.Z.header,
+						uppercase: true,
+						muted: true
+					}, Strings.get("NO_MUTUAL_GUILDS")) : external_BdApi_React_default().createElement(external_BdApi_React_default().Fragment, null, external_BdApi_React_default().createElement(mutualServers_Header, {
+						size: mutualServers_Header.Sizes.SIZE_12,
+						className: mutualServers.Z.header,
+						uppercase: true,
+						muted: true
+					}, Strings.get(message ? "NO_MUTUAL_GUILDS" : "LOADING_MUTUAL_GUILDS")), message && external_BdApi_React_default().createElement(components_namespaceObject.TooltipContainer, {
+						text: message,
+						position: "top"
+					}, external_BdApi_React_default().createElement(error, null)));
+				}
+				var apis_mutualFriends = __webpack_require__(253);
+				const mutualFriends_Header = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("Header");
+				const mutualFriends_WindowStore = external_PluginApi_namespaceObject.WebpackModules.getByProps("isFocused");
+				const {
+					AnimatedAvatar,
+					Sizes
+				} = external_PluginApi_namespaceObject.WebpackModules.getByProps("AnimatedAvatar");
+				const UserProfileModal = external_PluginApi_namespaceObject.WebpackModules.getByProps("openUserProfileModal");
+				const {
+					ComponentDispatch
+				} = external_PluginApi_namespaceObject.WebpackModules.getByProps("ComponentDispatch") ?? {};
+				function MutualFriend({
+					user
+				}) {
+					const [isMouseOver, setMouseOver] = (0, external_BdApi_React_.useState)(false);
+					const isWindowFocused = (0, flux_namespaceObject.useStateFromStores)([mutualFriends_WindowStore], (() => mutualFriends_WindowStore.isFocused()));
+					return external_BdApi_React_default().createElement(components_namespaceObject.Tooltip, {
+						text: user.tag,
+						position: "top"
+					}, (props => external_BdApi_React_default().createElement("div", {
+						className: apis_mutualFriends.Z.mutualFriend,
+						onMouseOver: () => (setMouseOver(true), props.onMouseEnter()),
+						onMouseLeave: () => (setMouseOver(false), props.onMouseLeave()),
+						onClick: () => {
+							UserProfileModal.openUserProfileModal({
+								userId: user.id,
+								guildId: stores_namespaceObject.SelectedGuilds.getGuildId()
+							});
+							ComponentDispatch.dispatchToLastSubscribed("POPOUT_CLOSE");
+						}
+					}, external_BdApi_React_default().createElement(AnimatedAvatar, {
+						status: stores_namespaceObject.Status.getStatus(user.id),
+						size: Sizes.SIZE_32,
+						src: user.getAvatarURL(stores_namespaceObject.SelectedGuilds.getGuildId(), 32, isMouseOver && isWindowFocused)
+					}))));
+				}
+				function MutualFriends({
+					user
+				}) {
+					const settings = useSettings({
+						showMutualFriends: true,
+						hideMutualFriendsCurrentUser: true,
+						showEmptyMutualFriends: true,
+						stackMutualFriends: false
+					});
+					if (!settings.showMutualFriends || settings.hideMutualFriendsCurrentUser && user.id === stores_namespaceObject.Users.getCurrentUser().id) return null;
+					const mutualFriends = (0, flux_namespaceObject.useStateFromStores)([stores_namespaceObject.UserProfile], (() => stores_namespaceObject.UserProfile.getMutualFriends(user.id)));
+					(0, external_BdApi_React_.useEffect)((() => {
+						if (Array.isArray(mutualFriends)) return;
+						modules_namespaceObject.Dispatcher.wait((() => actions_namespaceObject.ProfileActions.fetchMutualFriends(user.id)));
+					}), []);
+					return Array.isArray(mutualFriends) ? mutualFriends.length ? external_BdApi_React_default().createElement("div", {
+						className: apis_mutualFriends.Z.body
+					}, external_BdApi_React_default().createElement(mutualFriends_Header, {
+						size: mutualFriends_Header.Sizes.SIZE_12,
+						className: apis_mutualFriends.Z.header,
+						uppercase: true,
+						muted: true
+					}, i18n_namespaceObject.Messages.MUTUAL_FRIENDS), external_BdApi_React_default().createElement("div", {
+						className: (0, utils_namespaceObject.joinClassNames)(apis_mutualFriends.Z.friends, settings.stackMutualFriends && apis_mutualFriends.Z.stack)
+					}, mutualFriends.map((props => external_BdApi_React_default().createElement(MutualFriend, props))))) : settings.showEmptyMutualFriends && external_BdApi_React_default().createElement(mutualFriends_Header, {
+						size: mutualFriends_Header.Sizes.SIZE_12,
+						className: apis_mutualFriends.Z.header,
+						uppercase: true,
+						muted: true
+					}, Strings.get("NO_MUTUAL_FRIENDS")) : external_BdApi_React_default().createElement(mutualFriends_Header, {
+						size: mutualFriends_Header.Sizes.SIZE_12,
+						className: apis_mutualFriends.Z.header,
+						uppercase: true,
+						muted: true
+					}, Strings.get("LOADING_MUTUAL_FRIENDS"));
+				}
+				var memberroles_React = __webpack_require__(832);
+				const {
+					default: MemberRolesList
+				} = external_PluginApi_namespaceObject.WebpackModules.getByProps("MemberRole") ?? {};
+				const classes = external_PluginApi_namespaceObject.WebpackModules.getByProps("userInfoSectionHeader");
+				const memberroles_Header = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("Header");
+				function MemberRolesSection({
+					userId,
+					guildId = stores_namespaceObject.SelectedGuilds.getGuildId()
+				}) {
+					const roles = (0, flux_namespaceObject.useStateFromStoresArray)([stores_namespaceObject.Members], (() => stores_namespaceObject.Members.getMember(guildId, userId)?.roles));
+					const guild = (0, flux_namespaceObject.useStateFromStores)([stores_namespaceObject.Guilds], (() => stores_namespaceObject.Guilds.getGuild(guildId)));
+					const user = (0, flux_namespaceObject.useStateFromStores)([stores_namespaceObject.Users], (() => stores_namespaceObject.Users.getUser(userId)));
+					if (!roles || !guild || !user) return null;
+					return memberroles_React.createElement(ErrorBoundary, {
+						id: "MemberRolesSection"
+					}, memberroles_React.createElement("div", {
+						className: (0, utils_namespaceObject.joinClassNames)(classes.userInfoSection, components_namespaceObject.Text.Colors.STANDARD)
+					}, memberroles_React.createElement(memberroles_Header, {
+						uppercase: true,
+						size: components_namespaceObject.Text.Sizes.SIZE_12,
+						className: classes.userInfoSectionHeader
+					}, i18n_namespaceObject.Messages.ROLES_LIST.format({
+						numRoles: roles.length
+					})), memberroles_React.createElement(MemberRolesList, {
+						guild,
+						user,
+						userRoles: roles
+					})));
 				}
 				function UserDetails_extends() {
 					UserDetails_extends = Object.assign || function(target) {
@@ -2642,10 +2515,10 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					}
 				}
 			},
-			645: module => {
+			246: module => {
 				module.exports = function(cssWithMappingToString) {
 					var list = [];
-					list.toString = function toString() {
+					list.toString = function() {
 						return this.map((function(item) {
 							var content = cssWithMappingToString(item);
 							if (item[2]) return "@media ".concat(item[2], " {").concat(content, "}");
@@ -2674,7 +2547,197 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					return list;
 				};
 			},
-			113: module => {
+			448: (module, __webpack_exports__, __webpack_require__) => {
+				__webpack_require__.d(__webpack_exports__, {
+					Z: () => __WEBPACK_DEFAULT_EXPORT__
+				});
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(246);
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
+				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
+					return i[1];
+				}));
+				___CSS_LOADER_EXPORT___.push([module.id, ".UserDetails-connections-header{font-weight:700;text-transform:uppercase;font-size:12px;margin-bottom:8px;color:var(--header-secondary)}.UserDetails-connections-connectionsBody div:not(.UserDetails-connections-connections,.UserDetails-connections-container){display:inline-flex;margin:2px}.UserDetails-connections-connectionsBody .UserDetails-connections-loading{fill:var(--interactive-muted);animation:UserDetails-connections-blink infinite 2s;width:30px;height:30px;margin:5px;margin-top:0;margin-left:0}.UserDetails-connections-connectionsBody .UserDetails-connections-connections{display:flex;flex-wrap:wrap;margin-bottom:8px}.UserDetails-connections-connectionsBody .UserDetails-connections-connections img{width:30px;height:30px}.UserDetails-connections-connectionsBody .UserDetails-connections-errorIcon{width:35px;height:35px;margin-top:-5px}.UserDetails-connections-connectionsBody .UserDetails-connections-errorIcon{fill:#ed4245 !important}@keyframes UserDetails-connections-blink{0%{opacity:.6}50%{opacity:.3}100%{opacity:.6}}", ""]);
+				___CSS_LOADER_EXPORT___.locals = {
+					header: "UserDetails-connections-header",
+					connectionsBody: "UserDetails-connections-connectionsBody",
+					connections: "UserDetails-connections-connections",
+					container: "UserDetails-connections-container",
+					loading: "UserDetails-connections-loading",
+					blink: "UserDetails-connections-blink",
+					errorIcon: "UserDetails-connections-errorIcon"
+				};
+				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
+				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
+			},
+			227: (module, __webpack_exports__, __webpack_require__) => {
+				__webpack_require__.d(__webpack_exports__, {
+					Z: () => __WEBPACK_DEFAULT_EXPORT__
+				});
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(246);
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
+				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
+					return i[1];
+				}));
+				___CSS_LOADER_EXPORT___.push([module.id, ".customStatus-oN4ZZY:not(:empty){padding-top:10px;border-top:thin solid var(--background-modifier-accent)}.UserDetails-dates-container{display:flex;max-width:-webkit-fill-available;margin-bottom:-5px}.UserDetails-dates-container.UserDetails-dates-text{flex-direction:column;margin-top:10px;border-top:thin solid var(--background-modifier-accent);padding-top:10px}.UserDetails-dates-container.UserDetails-dates-icons{flex-direction:row}.UserDetails-dates-container.UserDetails-dates-icons.UserDetails-dates-userProfile{padding-left:13px}.UserDetails-dates-container.UserDetails-dates-icons .UserDetails-dates-loading{animation:UserDetails-dates-blink infinite 2s ease-in-out}.UserDetails-dates-container svg{fill:#ddd;margin:5px;width:20px;height:20px}.UserDetails-dates-container.UserDetails-dates-text .UserDetails-dates-scrollableText{color:var(--text-normal);white-space:nowrap;position:relative;font-size:14px;width:-webkit-fill-available;text-align:left;line-height:18px}.UserDetails-dates-container.UserDetails-dates-text.UserDetails-dates-userProfile{padding-left:18px}.UserDetails-dates-container.UserDetails-dates-text.UserDetails-dates-userProfile .UserDetails-dates-scrollableText{text-align:left !important}.UserDetails-dates-container .UserDetails-dates-errorIcon{fill:#ed4245 !important}.UserDetails-dates-wrapper{display:block}@keyframes UserDetails-dates-blink{0%{opacity:.6}50%{opacity:.3}100%{opacity:.6}}", ""]);
+				___CSS_LOADER_EXPORT___.locals = {
+					container: "UserDetails-dates-container",
+					text: "UserDetails-dates-text",
+					icons: "UserDetails-dates-icons",
+					userProfile: "UserDetails-dates-userProfile",
+					loading: "UserDetails-dates-loading",
+					blink: "UserDetails-dates-blink",
+					scrollableText: "UserDetails-dates-scrollableText",
+					errorIcon: "UserDetails-dates-errorIcon",
+					wrapper: "UserDetails-dates-wrapper"
+				};
+				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
+				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
+			},
+			253: (module, __webpack_exports__, __webpack_require__) => {
+				__webpack_require__.d(__webpack_exports__, {
+					Z: () => __WEBPACK_DEFAULT_EXPORT__
+				});
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(246);
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
+				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
+					return i[1];
+				}));
+				___CSS_LOADER_EXPORT___.push([module.id, ".UserDetails-mutualFriends-header{font-weight:700;text-transform:uppercase;font-size:12px;margin-bottom:8px;color:var(--header-secondary)}.UserDetails-mutualFriends-body{display:block;margin-bottom:8px}.UserDetails-mutualFriends-friends{display:flex;flex-wrap:wrap}.UserDetails-mutualFriends-mutualFriend{margin:2px;cursor:pointer}.UserDetails-mutualFriends-stack .UserDetails-mutualFriends-mutualFriend{margin:0;margin-right:-10px;background:var(--background-floating)}", ""]);
+				___CSS_LOADER_EXPORT___.locals = {
+					header: "UserDetails-mutualFriends-header",
+					body: "UserDetails-mutualFriends-body",
+					friends: "UserDetails-mutualFriends-friends",
+					mutualFriend: "UserDetails-mutualFriends-mutualFriend",
+					stack: "UserDetails-mutualFriends-stack"
+				};
+				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
+				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
+			},
+			828: (module, __webpack_exports__, __webpack_require__) => {
+				__webpack_require__.d(__webpack_exports__, {
+					Z: () => __WEBPACK_DEFAULT_EXPORT__
+				});
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(246);
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
+				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
+					return i[1];
+				}));
+				___CSS_LOADER_EXPORT___.push([module.id, ".UserDetails-mutualServers-header{font-weight:700;text-transform:uppercase;font-size:12px;margin-bottom:8px;color:var(--header-secondary)}.UserDetails-mutualServers-body{display:block;margin-bottom:8px}.UserDetails-mutualServers-guilds{display:flex;flex-wrap:wrap}.UserDetails-mutualServers-mutualGuild{margin:2px}.UserDetails-mutualServers-mutualGuild,.UserDetails-mutualServers-guildAcronym{width:30px;height:30px;border-radius:50%;overflow:hidden;transition:border-radius .3s}.UserDetails-mutualServers-mutualGuild:hover,.UserDetails-mutualServers-guildAcronym:hover{border-radius:20%}.UserDetails-mutualServers-mutualGuild img{width:30px;height:30px}.UserDetails-mutualServers-guildAcronym{display:flex;background:var(--background-floating);align-items:center;justify-content:center;white-space:nowrap;font-size:12px}.UserDetails-mutualServers-stack .UserDetails-mutualServers-mutualGuild{margin:0;margin-right:-10px;background:var(--background-floating)}", ""]);
+				___CSS_LOADER_EXPORT___.locals = {
+					header: "UserDetails-mutualServers-header",
+					body: "UserDetails-mutualServers-body",
+					guilds: "UserDetails-mutualServers-guilds",
+					mutualGuild: "UserDetails-mutualServers-mutualGuild",
+					guildAcronym: "UserDetails-mutualServers-guildAcronym",
+					stack: "UserDetails-mutualServers-stack"
+				};
+				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
+				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
+			},
+			925: (module, __webpack_exports__, __webpack_require__) => {
+				__webpack_require__.d(__webpack_exports__, {
+					Z: () => __WEBPACK_DEFAULT_EXPORT__
+				});
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(246);
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
+				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
+					return i[1];
+				}));
+				___CSS_LOADER_EXPORT___.push([module.id, ".UserDetails-activity-icon{display:flex;float:right}.UserDetails-activity-container{display:flex}", ""]);
+				___CSS_LOADER_EXPORT___.locals = {
+					icon: "UserDetails-activity-icon",
+					container: "UserDetails-activity-container"
+				};
+				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
+				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
+			},
+			541: (module, __webpack_exports__, __webpack_require__) => {
+				__webpack_require__.d(__webpack_exports__, {
+					Z: () => __WEBPACK_DEFAULT_EXPORT__
+				});
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(246);
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
+				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
+					return i[1];
+				}));
+				___CSS_LOADER_EXPORT___.push([module.id, ".UserDetails-badge-connection{width:30px;height:30px;position:relative}.UserDetails-badge-connection.UserDetails-badge-verified{border-radius:50%;overflow:hidden}.UserDetails-badge-connection.UserDetails-badge-verified .UserDetails-badge-verifiedBadge{width:12px;height:12px;position:absolute;bottom:-1px;right:-1px;background:var(--background-floating);border-radius:50%;overflow:hidden;padding:2px}", ""]);
+				___CSS_LOADER_EXPORT___.locals = {
+					connection: "UserDetails-badge-connection",
+					verified: "UserDetails-badge-verified",
+					verifiedBadge: "UserDetails-badge-verifiedBadge"
+				};
+				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
+				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
+			},
+			834: (module, __webpack_exports__, __webpack_require__) => {
+				__webpack_require__.d(__webpack_exports__, {
+					Z: () => __WEBPACK_DEFAULT_EXPORT__
+				});
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(246);
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
+				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
+					return i[1];
+				}));
+				___CSS_LOADER_EXPORT___.push([module.id, ".UserDetails-flowerstar-wrapper{position:relative;display:flex;align-items:center;justify-content:center}.UserDetails-flowerstar-wrapper .UserDetails-flowerstar-container{display:block}.UserDetails-flowerstar-wrapper .UserDetails-flowerstar-tick{position:absolute;top:50%;left:50%;transform:translate(-50%, -50%)}", ""]);
+				___CSS_LOADER_EXPORT___.locals = {
+					wrapper: "UserDetails-flowerstar-wrapper",
+					container: "UserDetails-flowerstar-container",
+					tick: "UserDetails-flowerstar-tick"
+				};
+				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
+				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
+			},
+			279: (module, __webpack_exports__, __webpack_require__) => {
+				__webpack_require__.d(__webpack_exports__, {
+					Z: () => __WEBPACK_DEFAULT_EXPORT__
+				});
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(246);
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
+				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
+					return i[1];
+				}));
+				___CSS_LOADER_EXPORT___.push([module.id, ".UserDetails-settings-settingsPanel .UserDetails-settings-descriptionItem{margin-top:8px}.UserDetails-settings-settingsPanel .UserDetails-settings-translation{width:27px;height:18px;margin-right:8px}.UserDetails-settings-settingsPanel .UserDetails-settings-marginBottom8{margin-bottom:8px}.UserDetails-settings-settingsPanel .UserDetails-settings-formItem{margin-bottom:10px}.UserDetails-settings-settingsPanel .UserDetails-settings-cardItem{display:flex;position:relative}.UserDetails-settings-settingsPanel .UserDetails-settings-cardItem>div{flex-grow:1}.UserDetails-settings-settingsPanel .UserDetails-settings-cardItem .UserDetails-settings-textBadge{position:absolute;top:-5px;right:-5px;display:inline-block;text-transform:uppercase;vertical-align:middle}.UserDetails-settings-settingsPanel .UserDetails-settings-icons{flex-wrap:wrap}.UserDetails-settings-settingsPanel .UserDetails-settings-icons .UserDetails-settings-settingsBadgeContainer{display:inline-flex;cursor:pointer}.UserDetails-settings-settingsPanel .UserDetails-settings-icons .UserDetails-settings-settingsBadgeContainer .UserDetails-settings-settingsBadgeIcon{width:40px;height:40px}.UserDetails-settings-settingsPanel .UserDetails-settings-icons .UserDetails-settings-settingsBadgeContainer .UserDetails-settings-settingsBadgeIcon.UserDetails-settings-disabled{opacity:.4}.UserDetails-settings-settingsPanel .UserDetails-settings-category{color:#ddd}.UserDetails-settings-settingsPanel .UserDetails-settings-category.UserDetails-settings-opened .UserDetails-settings-categoryContent{padding:10px;padding:10px}.UserDetails-settings-settingsPanel .UserDetails-settings-category.UserDetails-settings-opened .UserDetails-settings-categoryContent .UserDetails-settings-replacementVariable{user-select:text;margin-bottom:6px;padding-bottom:6px;border-bottom:thin solid var(--background-modifier-accent)}.UserDetails-settings-settingsPanel .UserDetails-settings-category.UserDetails-settings-opened .UserDetails-settings-categoryContent .UserDetails-settings-replacementVariable b{margin-right:3px}.UserDetails-settings-settingsPanel .UserDetails-settings-category .UserDetails-settings-categoryHeader{cursor:pointer;padding:10px;font-size:15px;background:var(--background-tertiary);font-weight:600;text-transform:uppercase;display:flex;align-items:center}.UserDetails-settings-settingsPanel .UserDetails-settings-category .UserDetails-settings-categoryHeader .UserDetails-settings-categoryCaret{margin-left:auto}.UserDetails-settings-settingsPanel .UserDetails-settings-pageIcon{color:var(--interactive-normal);fill:var(--interactive-normal)}", ""]);
+				___CSS_LOADER_EXPORT___.locals = {
+					settingsPanel: "UserDetails-settings-settingsPanel",
+					descriptionItem: "UserDetails-settings-descriptionItem",
+					translation: "UserDetails-settings-translation",
+					marginBottom8: "UserDetails-settings-marginBottom8",
+					formItem: "UserDetails-settings-formItem",
+					cardItem: "UserDetails-settings-cardItem",
+					textBadge: "UserDetails-settings-textBadge",
+					icons: "UserDetails-settings-icons",
+					settingsBadgeContainer: "UserDetails-settings-settingsBadgeContainer",
+					settingsBadgeIcon: "UserDetails-settings-settingsBadgeIcon",
+					disabled: "UserDetails-settings-disabled",
+					category: "UserDetails-settings-category",
+					opened: "UserDetails-settings-opened",
+					categoryContent: "UserDetails-settings-categoryContent",
+					replacementVariable: "UserDetails-settings-replacementVariable",
+					categoryHeader: "UserDetails-settings-categoryHeader",
+					categoryCaret: "UserDetails-settings-categoryCaret",
+					pageIcon: "UserDetails-settings-pageIcon"
+				};
+				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
+				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
+			},
+			430: (module, __webpack_exports__, __webpack_require__) => {
+				__webpack_require__.d(__webpack_exports__, {
+					Z: () => __WEBPACK_DEFAULT_EXPORT__
+				});
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(246);
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
+				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
+					return i[1];
+				}));
+				___CSS_LOADER_EXPORT___.push([module.id, ".UserDetails-style-loadingText{color:var(--text-normal);text-align:center}.UserDetails-style-scrollableText{color:var(--text-normal);white-space:nowrap;position:relative;font-size:14px;width:-webkit-fill-available;text-align:center;line-height:18px}", ""]);
+				___CSS_LOADER_EXPORT___.locals = {
+					loadingText: "UserDetails-style-loadingText",
+					scrollableText: "UserDetails-style-scrollableText"
+				};
+				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
+				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
+			},
+			832: module => {
 				module.exports = BdApi.React;
 			}
 		};
@@ -2741,7 +2804,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				});
 			};
 		})();
-		var __webpack_exports__ = __webpack_require__(902);
+		var __webpack_exports__ = __webpack_require__(532);
 		module.exports.LibraryPluginHack = __webpack_exports__;
 	})();
 	const PluginExports = module.exports.LibraryPluginHack;

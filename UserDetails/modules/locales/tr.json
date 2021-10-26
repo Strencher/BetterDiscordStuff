@@ -1,0 +1,14 @@
+{
+    "CONNECTIONS": "Bağlantılar",
+    "NO_CONNECTIONS": "Bağlantı yok!",
+    "LOADING_CONNECTIONS": "Bağlantılar yükleniyor..",
+    "LOADING_LAST_MESSAGE": "Son mesaj yükleniyor..",
+    "LOADING_JOINED_AT": "Giriş tarihi yükleniyor..",
+    "MEMBER_WAS_NOT_FOUND": "Kullanıcı bulunamadı!",
+    "FAILED_TO_FETCH": "Alınamadı!",
+    "USERINFO_CMD_DESC": "Belirli bir kullanıcı hakkında bazı bilgiler verir.",
+    "NO_MUTUAL_GUILDS": "Ortak sunucu yok!",
+    "LOADING_MUTUAL_GUILDS": "Ortak sunucular yükleniyor!",
+    "LOADING_MUTUAL_FRIENDS": "Ortak arkadaşları yüklüyorum...",
+    "NO_MUTUAL_FRIENDS": "Ortak arkadaş yok"
+}

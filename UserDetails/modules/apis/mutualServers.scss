@@ -1,0 +1,56 @@
+$width: 30px;
+$height: 30px;
+
+.header {
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 12px;
+    margin-bottom: 8px;
+    color: var(--header-secondary);
+}
+
+.body {
+    display: block;
+    margin-bottom: 8px;
+}
+
+.guilds {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.mutualGuild {
+    margin: 2px;
+}
+
+.mutualGuild, .guildAcronym {
+    width: $width;
+    height: $height;
+    border-radius: 50%;
+    overflow: hidden;
+    transition: border-radius .3s;
+
+    &:hover {
+        border-radius: 20%;
+    }
+}
+
+.mutualGuild img {
+    width: $width;
+    height: $height;
+}
+
+.guildAcronym {
+    display: flex;
+    background: var(--background-floating);
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
+    font-size: 12px;
+}
+
+.stack .mutualGuild {
+    margin: 0;
+    margin-right: -10px;
+    background: var(--background-floating);
+}

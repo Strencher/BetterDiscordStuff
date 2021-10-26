@@ -1,0 +1,27 @@
+{
+	"info": {
+		"name": "ChannelDetails",
+		"authors": [
+			{
+				"name": "Strencher",
+				"discord_id": "415849376598982656",
+				"github_username": "Strencher",
+				"twitter_username": "Strencher3"
+			}
+		],
+		"version": "1.0.0",
+		"description": "Shows you a lot information about channels, like: channel tooltip, channel accessibility etc.",
+		"github": "https://github.com/Strencher/BetterDiscordStuff/blob/master/ChannelDetails/ChannelDetails.plugin.js",
+		"github_raw": "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/ChannelDetails/ChannelDetails.plugin.js"
+	},
+	"build": {
+        "zlibrary": true,
+		"copy": true,
+		"production": true,
+		"release": {
+			"source": true,
+			"readme": true,
+			"public": true
+		}
+	}
+}

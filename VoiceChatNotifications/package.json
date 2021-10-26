@@ -1,0 +1,39 @@
+{
+	"info": {
+		"name": "VoiceChatNotifications",
+		"version": "1.1.0",
+		"description": "Shows you certain events from voicechats in a logs panel or as desktop notification.",
+		"authors": [
+			{
+				"name": "Strencher",
+				"discord_id": "415849376598982656",
+				"github_username": "Strencher"
+			}
+		],
+		"github": "https://github.com/Strencher/BetterDiscordStuff/tree/master/VoiceChatNotifications",
+		"github_raw": "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/VoiceChatNotifications/VoiceChatNotifications.plugin.js"
+	},
+	"changelog": [
+		{
+			"type": "fixed",
+			"title": "Fixes",
+			"items": [
+				"Discord update broke it entirely, i fixed it.",
+				"Also finally fixed the button padding."
+			]
+		}
+	],
+	"build": {
+		"zlibrary": true,
+		"copy": true,
+		"production": false,
+		"alias": {
+			"components": "components/index.js"
+		},
+		"release": {
+			"public": true,
+			"source": true,
+			"readme": true
+		}
+	}
+}
