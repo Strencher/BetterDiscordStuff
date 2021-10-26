@@ -40,24 +40,17 @@ const config = {
                 twitter_username: "Strencher3"
             }
         ],
-        version: "1.2.1",
+        version: "1.2.2",
         description: "Allows you to copy certain stuff with custom options.",
         github: "https://github.com/Strencher/BetterDiscordStuff/blob/master/Copier/Copier.plugin.js",
         github_raw: "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/Copier/Copier.plugin.js"
     },
     changelog: [
         {
-            type: "added",
-            title: "Added",
-            items: [
-                "Added support for threads."
-            ]
-        },
-        {
             type: "fixed",
             title: "Fixed",
             items: [
-                "Fixed weird reactions menu disappearing."
+                "Fixes for the latest discord update."
             ]
         }
     ]
@@ -713,6 +706,18 @@ const buildPlugin = ([Plugin, Api]) => {
         }
 
         patchMessageToolbar() {
+            function PatchedMenuTools({originalType, buttonProps, ...props}) {
+                const returnValue = Reflect.apply(originalType, this, [props]);
+
+                try {
+                    
+                } catch (error) {
+                    Logger.error("Error in MiniPopover patch:", error);
+                }
+
+                return returnValue;
+            }
+
             Patcher.after(MiniPopover, "default", (_, [args], ret) => {
                 if (!Settings.getSetting("showButton")) return;
                 const props = Utilities.findInTree(args, e => e && e.message);
@@ -729,9 +734,9 @@ const buildPlugin = ([Plugin, Api]) => {
         }
 
         patchChannelContextMenu() {
-            const [ChannelListTextChannelContextMenu, , CategoryContextMenu] = WebpackModules.findAll(m => m.default && m.default.displayName === "ChannelListTextChannelContextMenu");
-            const ChannelListVoiceChannelContextMenu = findWithDefault(m => m.displayName === "ChannelListVoiceChannelContextMenu");
-            const ChannelListThreadContextMenu = findWithDefault(m => m.displayName === "ChannelListThreadContextMenu");
+            const [, ChannelListTextChannelContextMenu, CategoryContextMenu] = WebpackModules.findAll(m => m.default?.displayName === "ChannelListTextChannelContextMenu");
+            const [, ChannelListThreadContextMenu] = WebpackModules.findAll(m => m.default?.displayName === "ChannelListVoiceChannelContextMenu");
+            const ChannelListVoiceChannelContextMenu = findWithDefault(m => m.displayName === "ChannelListThreadContextMenu");
 
             Patcher.after(CategoryContextMenu, "default", (_, [props], ret) => {
                 const children = Utilities.getNestedProp(ret, "props.children");
