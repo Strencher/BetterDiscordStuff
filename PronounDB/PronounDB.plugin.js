@@ -4828,7 +4828,9 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					if (!pronoun) return null;
 					return pronouns_React.createElement("span", {
 						className: pronouns.Z.text
-					}, " • ", pronoun);
+					}, " ", pronouns_React.createElement("span", {
+						className: "pronoun-db-dot"
+					}, "•"), " ", pronoun);
 				})));
 				const external_StyleLoader_namespaceObject = StyleLoader;
 				var external_StyleLoader_default = __webpack_require__.n(external_StyleLoader_namespaceObject);
