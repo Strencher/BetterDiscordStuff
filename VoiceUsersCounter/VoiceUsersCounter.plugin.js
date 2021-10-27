@@ -98,8 +98,8 @@ module.exports = (() => {
 
             const {DiscordModules: {React, DiscordConstants}, Utilities, WebpackModules, PluginUtilities, DiscordModules, Patcher, DiscordSelectors, ReactTools} = Api;
             const Tooltip = WebpackModules.getByDisplayName("Tooltip");
-            const {getVoiceChannelId} = WebpackModules.getByProps('getVoiceChannelId');
-            const VoiceChannelStore = WebpackModules.getByProps("getVoiceStates");
+            const {getVoiceChannelId} = WebpackModules.getByProps("getVoiceChannelId");
+            const VoiceChannelStore = WebpackModules.getByProps("getVoiceStatesForChannel");
             const classes = Object(WebpackModules.getByProps("iconItem"))
             class VoiceCount extends React.Component {
                 render() {
