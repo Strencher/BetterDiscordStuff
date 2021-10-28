@@ -43,7 +43,6 @@ function actuallyDoSomething() {
 
   // Needed while bdbuilder is a submodule; obsolete after npm release
   _cp.execSync("npm i", {
-    cwd: "bdbuilder",
     stdio: ["ignore", "inherit", "inherit"]
   });
 
@@ -62,7 +61,7 @@ function buildPlugin(pluginName) {
     stdio: ["ignore", "inherit", "inherit"]
   });
 
-  _cp.execSync(`node ./bdbuilder --plugin="${pluginName}" --build --config=bdbuilder.prod.config.json`, {
+  _cp.execSync(`npx bdbuilder --plugin="${pluginName}" --build --config=bdbuilder.prod.config.json`, {
     cwd: ".",
     stdio: ["ignore", "inherit", "inherit"]
   });
