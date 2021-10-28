@@ -1,0 +1,37 @@
+{
+    "info": {
+        "name": "TypingUsersPlus",
+        "version": "1.0.0",
+        "authors": [
+            {
+                "name": "Strencher",
+                "discord_id": "415849376598982656",
+                "github_username": "Strencher",
+                "twitter_username": "Strencher3"
+            }
+        ],
+        "description": "Enhances the typing users bar in discord. Adds avatar + status, colorized username, role icons and clickable name.",
+        "github": "https://github.com/Strencher/BetterDiscordStuff/tree/master/TypingUsersPlus",
+        "github_raw": "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/TypingUsersPlus/TypingUsersPlus.plugin.js"
+    },
+    "changelog": [
+        {
+            "title": "added",
+            "type": "added",
+            "items": [
+                "This thing does now exist."
+            ]
+        }
+    ],
+    "build": {
+        "zlibrary": true,
+        "copy": true,
+        "production": false,
+        "alias": {},
+        "release": {
+            "public": true,
+            "source": true,
+            "readme": true
+        }
+    }
+}

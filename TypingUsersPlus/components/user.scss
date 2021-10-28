@@ -1,0 +1,14 @@
+.user {
+   cursor: pointer;
+   align-items: center;
+   display: inline-flex;
+   vertical-align: bottom;
+
+   .avatar {
+      padding-right: 3px;
+   }
+
+   .roleIcon {
+      padding-left: 3px;
+   }
+}
