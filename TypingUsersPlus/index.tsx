@@ -10,7 +10,6 @@ const FriendsStore = WebpackModules.getByProps("isBlocked", "_dispatchToken");
 export default class TypingUsersPlus extends BasePlugin {
     onStart() {
         styles.inject();
-
         this.patchTypingUsers();
     }
 
