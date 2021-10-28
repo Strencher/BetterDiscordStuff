@@ -52,7 +52,6 @@ export default class TypingUsersPlus extends BasePlugin {
 
     onStop() {
         styles.remove();
-
         Patcher.unpatchAll();
     }
 }
