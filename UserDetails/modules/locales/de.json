@@ -1,0 +1,14 @@
+{
+    "CONNECTIONS": "Verknüpfungen",
+    "NO_CONNECTIONS": "Keine Verknüpfungen",
+    "LOADING_CONNECTIONS": "Lade Verknüpfungen...",
+    "LOADING_LAST_MESSAGE": "Lade letzte Nachricht...",
+    "LOADING_JOINED_AT": "Lade Beitrittsdatum...",
+    "MEMBER_WAS_NOT_FOUND": "Mitglied konnte nicht gefunden werden.",
+    "FAILED_TO_FETCH": "Fehler beim Laden",
+    "USERINFO_CMD_DESC": "Zeigt einige Informationen über einen bestimmten Nutzer.",
+    "NO_MUTUAL_GUILDS": "Keine gemeinsamen Server",
+    "LOADING_MUTUAL_GUILDS": "Gemeinsame Server werden geladen.",
+    "LOADING_MUTUAL_FRIENDS": "Gemeinsame Freunde werden geladen...",
+    "NO_MUTUAL_FRIENDS": "Keine gemeinsamen Freunde"
+}

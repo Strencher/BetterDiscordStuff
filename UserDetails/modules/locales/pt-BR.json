@@ -1,0 +1,14 @@
+{
+    "CONNECTIONS": "Conexões",
+    "NO_CONNECTIONS": "Sem conexões",
+    "LOADING_CONNECTIONS": "Carregando conexões",
+    "LOADING_LAST_MESSAGE": "Carregando última mensagem",
+    "LOADING_JOINED_AT": "Carregando entrou há",
+    "MEMBER_WAS_NOT_FOUND": "Membro não encontrado!",
+    "FAILED_TO_FETCH": "Falha na busca",
+    "USERINFO_CMD_DESC": "Mostra algumas informações de um usuário específico.",
+    "NO_MUTUAL_GUILDS": "Sem servidores em comum",
+    "LOADING_MUTUAL_GUILDS": "Carregando os servidores em comum",
+    "LOADING_MUTUAL_FRIENDS": "Carregando amigos em comum...",
+    "NO_MUTUAL_FRIENDS": "Sem amigos em comum."
+}

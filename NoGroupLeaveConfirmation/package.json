@@ -1,0 +1,32 @@
+{
+    "info": {
+        "name": "NoGroupLeaveConfirmation",
+        "version": "1.0.0",
+        "authors": [
+            {
+                "name": "Strencher",
+                "discord_id": "415849376598982656",
+                "github_username": "Strencher",
+                "twitter_username": "Strencher3"
+            }
+        ],
+        "description": "",
+        "github": "https://github.com/Strencher/BetterDiscordStuff/tree/development/NoGroupLeaveConfirmation",
+        "github_raw": "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/NoGroupLeaveConfirmation/NoGroupLeaveConfirmation.plugin.js",
+        "invite": "gvA2ree"
+    },
+    "build": {
+        "zlibrary": true,
+        "copy": true,
+        "production": false,
+        "scssHash": false,
+        "alias": {
+            "icons": "components/icons"
+        },
+        "release": {
+            "public": true,
+            "source": true,
+            "readme": true
+        }
+    }
+}

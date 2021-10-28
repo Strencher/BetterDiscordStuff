@@ -1,0 +1,65 @@
+{
+    "info": {
+        "name": "StatusEverywhere",
+        "version": "2.1.1",
+        "authors": [
+            {
+                "name": "Strencher",
+                "discord_id": "415849376598982656",
+                "github_username": "Strencher",
+                "twitter_username": "Strencher3"
+            },
+            {
+                "name": "Zerebos",
+                "discord_id": "249746236008169473",
+                "github_username": "rauenzi",
+                "twitter_username": "ZackRauen"
+            }
+        ],
+        "description": "Adds user status everywhere Discord doesn't.",
+        "github": "https://github.com/Strencher/BetterDiscordStuff/tree/master/StatusEverywhere",
+        "github_raw": "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/StatusEverywhere/StatusEverywhere.plugin.js"
+    },
+    "changelog": [
+        {
+            "title": "fixes",
+            "type": "fixed",
+            "items": [
+                "Fixes for the latest stable update."
+            ]
+        }
+    ],
+    "build": {
+        "zlibrary": true,
+        "copy": true,
+        "production": false,
+        "scssHash": false,
+        "alias": {
+            "icons": "components/icons",
+            "stores": "./modules/stores"
+        },
+        "release": {
+            "public": true,
+            "source": true,
+            "readme": true,
+            "previews": [
+                {
+                    "name": "Chat",
+                    "src": "assets/chat.png"
+                },
+                {
+                    "name": "MemberList",
+                    "src": "assets/memberlist.png"
+                },
+                {
+                    "name": "Account",
+                    "src": "assets/account.png"
+                },
+                {
+                    "name": "Customization",
+                    "src": "assets/settings.png"
+                }
+            ]
+        }
+    }
+}

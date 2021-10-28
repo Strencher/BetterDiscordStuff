@@ -1,0 +1,178 @@
+.content {
+    position: relative;
+}
+
+.header {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+
+    .title {
+        text-transform: uppercase;
+        color: #fff;
+        font-weight: 600;
+        font-size: 20px;
+    }
+
+    .channelName {
+        margin-top: 5px;
+        color: var(--channels-default);
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: uppercase;
+
+        &::before {
+            content: "#";
+        }
+    }
+
+    .closeButton {
+        position: absolute;
+        right: 10px;
+        top: 10px;
+    }
+}
+
+.copy {
+    position: relative;
+    top: 2px;
+    margin-left: 5px;
+    display: inline-flex;
+
+    svg {
+        width: 14px;
+        height: 14px;
+    }
+}
+
+.item {
+    margin-bottom: 15px;
+    border-bottom: thin solid var(--background-modifier-accent);
+    padding-bottom: 15px;
+
+    > div {
+        padding-left: 5px;
+        user-select: text;
+        cursor: text;
+    }
+}
+
+.tooltip {
+    display: inline-flex;
+}
+
+.scroller {
+    max-height: 375px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    color: #ddd;
+
+    p {
+        text-align: center;
+    }
+}
+
+.permissionItem {
+    $circlePadding: 15px;
+
+    height: 20px;
+    padding: 15px 10px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    position: relative;
+
+    .iconContainer {
+        position: relative;
+        overflow: hidden;
+        border-radius: 50%;
+        margin-right: $circlePadding;
+        width: 35px;
+        height: 35px;
+    }
+
+    .tooltip {
+        position: absolute;
+        right: 10px;
+    }
+
+    .colorCopy {
+        color: #fff;
+    }
+    
+    &.self {
+        .iconContainer::before {
+            content: "";
+            width: 100%;
+            height: 100%;
+            background: #000;
+            opacity: .6;
+            display: block;
+            position: absolute;
+        }
+
+        .iconContainer svg {
+            *, & {
+                position: absolute;
+            } 
+
+            color: #fff;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+    }
+
+    &:hover {
+        background: var(--background-modifier-hover);
+    }
+
+    .avatar {
+        overflow: hidden;
+        border-radius: 50%;
+        width: 100%;
+        height: 100%;
+    }
+
+    .roleCircle {
+        overflow: hidden;
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        background: var(--color, #ddd);
+    }
+
+    .name {
+        color: var(--color, #ddd);
+        font-weight: 500;
+        font-size: 15px;
+    }
+}
+
+.tabItems {
+    display: flex;
+    margin-top: 10px;
+    // justify-content: center;
+    width: 100%;
+
+    .tabItem {
+        color: #ddd;
+        font-size: 16px;
+        padding: 6px 15px;
+        border-radius: 4px;
+        cursor: pointer;
+        box-sizing: border-box;
+        margin-right: 10px;
+        
+        &:not(.selected):hover {
+            background: var(--background-modifier-hover);
+        }
+        
+        &.selected {
+            font-weight: 600;
+            cursor: default;
+            background: var(--interactive-muted);
+            color: #fff;
+        }
+    }
+}

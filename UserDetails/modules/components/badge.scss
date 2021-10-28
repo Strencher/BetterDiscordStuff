@@ -1,0 +1,19 @@
+.connection {
+    width: 30px;
+    height: 30px;
+    position: relative;
+
+    &.verified {
+        .verifiedBadge {
+            width: 12px;
+            height: 12px;
+            position: absolute;
+            bottom: -3px;
+            right: -3px;
+            background: var(--background-floating);
+            border-radius: 50%;
+            overflow: hidden;
+            padding: 2px;
+        }
+    }
+}

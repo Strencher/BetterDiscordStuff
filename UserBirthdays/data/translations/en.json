@@ -1,0 +1,10 @@
+{
+    "CHOOSE_BIRTHDAY": "Choose a birthdate",
+    "SELECT_DAY": "Select the day",
+    "SELECT_MONTH": "Select the month",
+    "SAVE": "Save",
+    "CANCEL": "Cancel",
+    "DELETE": "Delete",
+    "ARE_YOU_SURE": "Are you sure?",
+    "DELETE_BIRTHDAY_CONFIRM": "Delete {{name}} from your list permanently, this action cannot be undone."
+}
