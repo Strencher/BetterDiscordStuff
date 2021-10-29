@@ -1,0 +1,54 @@
+{
+	"info": {
+		"name": "UserBackgrounds",
+		"version": "1.4.1",
+		"description": "A database of custom user requested backgrounds designed for BetterDiscord and Powercord.",
+		"authors": [
+			{
+                "name": "Strencher",
+                "discord_id": "415849376598982656",
+                "github_username": "Strencher",
+                "twitter_username": "Strencher3"
+            },
+            {
+                "name": "Tropical",
+                "discord_id": "254362351170617345",
+                "github_username": "Tropix126"
+            }
+		],
+		"github": "https://github.com/Strencher/BetterDiscordStuff/tree/development/UserBackgrounds",
+		"github_raw": "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/UserBackgrounds/UserBackgrounds.plugin.js",
+        "invite": "gvA2ree"
+	},
+	"changelog": [
+		{
+			"type": "fixed",
+			"title": "fixed",
+			"items": [
+				"Crashing issue."
+			]
+		}
+	],
+	"build": {
+		"zlibrary": true,
+		"copy": true,
+		"production": false,
+		"alias": {
+			"components": "components/index.js"
+		},
+		"release": {
+			"source": true,
+			"readme": true,
+			"contributors": [
+				{
+					"name": "Tropical",
+					"github": "https://github.com/Tropix126"
+				},
+				{
+					"name": "_david_",
+					"github": "https://github.com/dav1312"
+				}
+			]
+		}
+	}
+}
