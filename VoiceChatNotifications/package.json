@@ -1,7 +1,7 @@
 {
 	"info": {
 		"name": "VoiceChatNotifications",
-		"version": "1.1.0",
+		"version": "1.2.0",
 		"description": "Shows you certain events from voicechats in a logs panel or as desktop notification.",
 		"authors": [
 			{
@@ -18,8 +18,7 @@
 			"type": "fixed",
 			"title": "Fixes",
 			"items": [
-				"Discord update broke it entirely, i fixed it.",
-				"Also finally fixed the button padding."
+				"Discord update fixes"
 			]
 		}
 	],
