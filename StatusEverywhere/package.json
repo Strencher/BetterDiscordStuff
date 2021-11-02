@@ -1,7 +1,7 @@
 {
     "info": {
         "name": "StatusEverywhere",
-        "version": "2.1.1",
+        "version": "2.2.0",
         "authors": [
             {
                 "name": "Strencher",
@@ -25,7 +25,7 @@
             "title": "fixes",
             "type": "fixed",
             "items": [
-                "Fixes for the latest stable update."
+                "Fixed account section avatar."
             ]
         }
     ],

@@ -179,17 +179,42 @@ export default class StatusEverywhere extends BasePlugin {
                     const ret = old(e);
                     if (!ret) return ret;
                     const props = ret.props.children.props;
-    
-                    ret.props.children = (
-                        <StatusAvatar
-                            {...props}
-                            user={Users.getCurrentUser()}
-                            shouldWatch={false}
-                            radial={{ id: "accountSettingsRadialStatus", value: false }}
-                            resolution={{id: "accountSectionAvatarResolution", value: settings.accounts_section.accountSectionAvatarResolution.value}}
-                            size={StatusAvatar.Sizes.SIZE_32}
-                        />
-                    );
+                    if (ret.props.children.toString().indexOf("avatarWrapper") < 0) {
+                        try {
+                            const tree = Utilities.findInReactTree(ret, e => typeof (e?.children) === "function" && "renderPopout" in e);
+                            const original: Function = tree.children;
+                            
+                            tree.children = (props: any) => {
+                                const ret = original(props);
+                                
+                                ret.props.children = (
+                                    <StatusAvatar
+                                        {...props}
+                                        user={Users.getCurrentUser()}
+                                        shouldWatch={false}
+                                        radial={{id: "accountSettingsRadialStatus", value: false}}
+                                        resolution={{id: "accountSectionAvatarResolution", value: settings.accounts_section.accountSectionAvatarResolution.value}}
+                                        size={StatusAvatar.Sizes.SIZE_32}
+                                    />
+                                );
+
+                                return ret;
+                            }
+                        } catch (error) {
+                            Logger.error("Error in AccountSection patch:", error);
+                        }
+                    } else {
+                        ret.props.children = (
+                            <StatusAvatar
+                                {...props}
+                                user={Users.getCurrentUser()}
+                                shouldWatch={false}
+                                radial={{id: "accountSettingsRadialStatus", value: false}}
+                                resolution={{id: "accountSectionAvatarResolution", value: settings.accounts_section.accountSectionAvatarResolution.value}}
+                                size={StatusAvatar.Sizes.SIZE_32}
+                            />
+                        );
+                    }
                     
                     return ret;
                 };
