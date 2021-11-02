@@ -1,6 +1,6 @@
 /**
  * @name StatusEverywhere
- * @version 2.1.1
+ * @version 2.2.0
  * @author Strencher, Zerebos
  * @description Adds user status everywhere Discord doesn't.
  * @source https://github.com/Strencher/BetterDiscordStuff/tree/master/StatusEverywhere
@@ -32,7 +32,7 @@
 const config = {
 	"info": {
 		"name": "StatusEverywhere",
-		"version": "2.1.1",
+		"version": "2.2.0",
 		"authors": [{
 				"name": "Strencher",
 				"discord_id": "415849376598982656",
@@ -54,7 +54,7 @@ const config = {
 		"title": "fixes",
 		"type": "fixed",
 		"items": [
-			"Fixes for the latest stable update."
+			"Fixed account section avatar."
 		]
 	}],
 	"build": {
@@ -559,7 +559,8 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						AvatarComponent = AnimatedAvatar,
 						onMouseEnter,
 						onMouseLeave,
-						shouldShowUserPopout
+						shouldShowUserPopout,
+						resolution
 					} = props;
 					if (!user) {
 						external_PluginApi_namespaceObject.Logger.warn("No user provided");
@@ -568,7 +569,8 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					const [shouldAnimate, setAnimate] = (0, external_BdApi_React_.useState)(animated);
 					const [hasUserPopout, setUserPopout] = (0, external_BdApi_React_.useState)(false);
 					const streaming = isStreaming(user.id);
-					const [status, isMobile, isTyping, statusColor, radial, forceLoadStatus] = (0, flux_namespaceObject.useStateFromStoresArray)([stores_namespaceObject.TypingUsers, stores_namespaceObject.Status, settings], (() => [streaming ? "streaming" : stores_namespaceObject.Status.getStatus(user.id), stores_namespaceObject.Status.isMobileOnline(user.id), stores_namespaceObject.TypingUsers.isTyping(channel_id, user.id) && settings.get(showTyping?.id, showTyping?.value ?? false) && showTyping, StatusModule.getStatusColor(streaming ? "streaming" : stores_namespaceObject.Status.getStatus(user.id)), settings.get(radialConfig?.id, radialConfig?.value), settings.get("forceLoadStatus", true)]));
+					const [status, isMobile, isTyping, statusColor, radial, forceLoadStatus, res] = (0,
+						flux_namespaceObject.useStateFromStoresArray)([stores_namespaceObject.TypingUsers, stores_namespaceObject.Status, settings], (() => [streaming ? "streaming" : stores_namespaceObject.Status.getStatus(user.id), stores_namespaceObject.Status.isMobileOnline(user.id), stores_namespaceObject.TypingUsers.isTyping(channel_id, user.id) && settings.get(showTyping?.id, showTyping?.value ?? false) && showTyping, StatusModule.getStatusColor(streaming ? "streaming" : stores_namespaceObject.Status.getStatus(user.id)), settings.get(radialConfig?.id, radialConfig?.value), settings.get("forceLoadStatus", true), settings.get(resolution?.id, resolution?.value) ?? 56]));
 					try {
 						useSubscribeGuildMembers(stores_namespaceObject.SelectedGuilds.getGuildId(), user.id, null != stores_namespaceObject.SelectedGuilds.getGuildId() && shouldWatch && forceLoadStatus);
 					} catch (error) {
@@ -629,7 +631,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						isTyping,
 						isMobile,
 						size,
-						src: user.getAvatarURL(props.guildId, parseInt(size.replace("SIZE_", "")), shouldAnimate),
+						src: user.getAvatarURL(props.guildId, res, shouldAnimate),
 						onContextMenu
 					})))));
 				}
@@ -846,7 +848,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				}
 				const forms_namespaceObject = Modules["@discord/forms"];
 				var components_settings = __webpack_require__(530);
-				const components_settings_namespaceObject = JSON.parse('{"performance":{"forceLoadStatus":{"name":"Force Load Status","note":"This setting force-loads the status\'s of users from the WebSocket. Be aware, this can cause high usage of resources because of the amount of users in the cache. I can try to work on something that improves this but for now, if you don\'t want it, simply disable.","value":true,"type":"switch"}},"colors":{"dndColor":{"name":"Do Not Disturb Color","note":"Color for \\"Do Not Disturb\\" status indicator.","value":"#ED4245","type":"color"},"idleColor":{"name":"Idle Color","note":"Color for \\"Idle\\" status indicator.","value":"#FAA81A","type":"color"},"onlineColor":{"name":"Online Color","note":"Color for \\"Online\\" status indicator.","value":"#3BA55D","type":"color"},"streamingColor":{"name":"Streaming Color","note":"Color for \\"Streaming\\" status indicator.","value":"#593695","type":"color"},"offlineColor":{"name":"Offline Color","note":"Color for \\"Offline\\" status indicator.","value":"#747F8D","type":"color"}},"chat":{"showChatTyping":{"name":"Typing","note":"Show typing state in the chat.","value":true,"type":"switch"},"chatRadialStatus":{"name":"Radial Status","note":"Shows the status as border instead of pointer.","value":false,"type":"switch"}},"member_list":{"showMemberlistTyping":{"name":"Typing","note":"Show typing state in the member list.","value":true,"type":"switch"},"memberlistRadialStatus":{"name":"Radial Status","note":"Shows the status as border instead of pointer.","value":false,"type":"switch"}},"friends_page":{"showFriendsPageTyping":{"name":"Typing","note":"Show typing state in the friends page.","value":true,"type":"switch"},"friendsPageRadialStatus":{"name":"Radial Status","note":"Shows the status as border instead of pointer.","value":false,"type":"switch"}},"user_popout":{"showUserPopoutTyping":{"name":"Typing","note":"Show typing state in user popout.","value":true,"type":"switch"},"userPopoutRadialStatus":{"name":"Radial Status","note":"Shows the status as border instead of pointer.","value":false,"type":"switch"}},"direct_messages":{"showDirectMessagesTyping":{"name":"Typing","note":"Show typing state in direct messages.","value":true,"type":"switch"},"directMessagesRadialStatus":{"name":"Radial Status","note":"Shows the status as border instead of pointer.","value":false,"type":"switch"}},"user_profile":{"showUserProfileTyping":{"name":"Typing","note":"Show typing state in user profile modal.","value":true,"type":"switch"},"userProfileRadialStatus":{"name":"Radial Status","note":"Shows the status as border instead of pointer.","value":false,"type":"switch"}},"guild_settings":{"showGuildSettingsTyping":{"name":"Typing","note":"Show typing state in the guild settings","value":true,"type":"switch"},"guildSettingsRadialStatus":{"name":"Radial Status","note":"Shows the status as border instead of pointer.","value":false,"type":"switch"}},"voice_chat":{"showVoiceChatTyping":{"name":"Typing","note":"Show typing state in the voice chat.","value":true,"type":"switch"}},"accounts_section":{"accountSettingsRadialStatus":{"name":"Radial Status","note":"Shows the status as border instead of pointer.","value":false,"type":"switch"}}}');
+				const components_settings_namespaceObject = JSON.parse('{"performance":{"forceLoadStatus":{"name":"Force Load Status","note":"This setting force-loads the status\'s of users from the WebSocket. Be aware, this can cause high usage of resources because of the amount of users in the cache. I can try to work on something that improves this but for now, if you don\'t want it, simply disable.","value":true,"type":"switch"}},"colors":{"dndColor":{"name":"Do Not Disturb Color","note":"Color for \\"Do Not Disturb\\" status indicator.","value":"#ED4245","type":"color"},"idleColor":{"name":"Idle Color","note":"Color for \\"Idle\\" status indicator.","value":"#FAA81A","type":"color"},"onlineColor":{"name":"Online Color","note":"Color for \\"Online\\" status indicator.","value":"#3BA55D","type":"color"},"streamingColor":{"name":"Streaming Color","note":"Color for \\"Streaming\\" status indicator.","value":"#593695","type":"color"},"offlineColor":{"name":"Offline Color","note":"Color for \\"Offline\\" status indicator.","value":"#747F8D","type":"color"}},"chat":{"chatAvatarResolution":{"name":"Resolution","note":"The avatar url size will be eg, url?size=128","value":40,"type":"slider","sticky":true,"markers":[16,32,40,56,80,128,256]},"showChatTyping":{"name":"Typing","note":"Show typing state in the chat.","value":true,"type":"switch"},"chatRadialStatus":{"name":"Radial Status","note":"Shows the status as border instead of pointer.","value":false,"type":"switch"}},"member_list":{"memberListAvatarResolution":{"name":"Resolution","note":"The avatar url size will be eg, url?size=128","value":28,"type":"slider","sticky":true,"markers":[16,32,28,40,56,80,128,256]},"showMemberlistTyping":{"name":"Typing","note":"Show typing state in the member list.","value":true,"type":"switch"},"memberlistRadialStatus":{"name":"Radial Status","note":"Shows the status as border instead of pointer.","value":false,"type":"switch"}},"friends_page":{"friendsPageAvatarResolution":{"name":"Resolution","note":"The avatar url size will be eg, url?size=128","value":56,"type":"slider","sticky":true,"markers":[16,32,40,56,80,128,256]},"showFriendsPageTyping":{"name":"Typing","note":"Show typing state in the friends page.","value":true,"type":"switch"},"friendsPageRadialStatus":{"name":"Radial Status","note":"Shows the status as border instead of pointer.","value":false,"type":"switch"}},"user_popout":{"userPopoutAvatarResolution":{"name":"Resolution","note":"The avatar url size will be eg, url?size=128","value":40,"type":"slider","sticky":true,"markers":[16,32,40,56,80,128,256]},"showUserPopoutTyping":{"name":"Typing","note":"Show typing state in user popout.","value":true,"type":"switch"},"userPopoutRadialStatus":{"name":"Radial Status","note":"Shows the status as border instead of pointer.","value":false,"type":"switch"}},"direct_messages":{"dmAvatarResolution":{"name":"Resolution","note":"The avatar url size will be eg, url?size=128","value":28,"type":"slider","sticky":true,"markers":[16,28,32,40,56,80,128,256]},"showDirectMessagesTyping":{"name":"Typing","note":"Show typing state in direct messages.","value":true,"type":"switch"},"directMessagesRadialStatus":{"name":"Radial Status","note":"Shows the status as border instead of pointer.","value":false,"type":"switch"}},"user_profile":{"userProfileAvatarResolution":{"name":"Resolution","note":"The avatar url size will be eg, url?size=128","value":128,"type":"slider","sticky":true,"markers":[16,32,40,56,80,128,256]},"showUserProfileTyping":{"name":"Typing","note":"Show typing state in user profile modal.","value":true,"type":"switch"},"userProfileRadialStatus":{"name":"Radial Status","note":"Shows the status as border instead of pointer.","value":false,"type":"switch"}},"guild_settings":{"guildSettingsAvatarResolution":{"name":"Resolution","note":"The avatar url size will be eg, url?size=128","value":32,"type":"slider","sticky":true,"markers":[16,32,40,56,80,128,256]},"showGuildSettingsTyping":{"name":"Typing","note":"Show typing state in the guild settings","value":true,"type":"switch"},"guildSettingsRadialStatus":{"name":"Radial Status","note":"Shows the status as border instead of pointer.","value":false,"type":"switch"}},"voice_chat":{"voiceChatAvatarResolution":{"name":"Resolution","note":"The avatar url size will be eg, url?size=128","value":24,"type":"slider","sticky":true,"markers":[16,24,32,40,56,80,128,256]},"showVoiceChatTyping":{"name":"Typing","note":"Show typing state in the voice chat.","value":true,"type":"switch"}},"accounts_section":{"accountSectionAvatarResolution":{"name":"Resolution","note":"The avatar url size will be eg, url?size=128","value":56,"type":"slider","sticky":true,"markers":[16,32,40,56,80,128,256]},"accountSettingsRadialStatus":{"name":"Radial Status","note":"Shows the status as border instead of pointer.","value":false,"type":"switch"}}}');
 				function settings_extends() {
 					settings_extends = Object.assign || function(target) {
 						for (var i = 1; i < arguments.length; i++) {
@@ -914,7 +916,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					}, name), external_BdApi_React_default().createElement(Slider, settings_extends({
 						onValueChange: value => settings.set(id, valueMap ? valueMap.replace(/%s/g, value) : value),
 						defaultValue: value,
-						initialValue: parseInt(currentValue.startsWith("SIZE_") ? currentValue.slice("SIZE_".length) : currentValue),
+						initialValue: Number(currentValue),
 						stickToMarkers: sticky ?? false,
 						handleSize: 10,
 						markers
@@ -1065,12 +1067,38 @@ function buildPlugin([BasePlugin, PluginApi]) {
 									const ret = old(e);
 									if (!ret) return ret;
 									const props = ret.props.children.props;
-									ret.props.children = external_BdApi_React_default().createElement(components_avatar, StatusEverywhere_extends({}, props, {
+									if (ret.props.children.toString().indexOf("avatarWrapper") < 0) try {
+										const tree = external_PluginApi_namespaceObject.Utilities.findInReactTree(ret, (e => "function" === typeof e?.children && "renderPopout" in e));
+										const original = tree.children;
+										tree.children = props => {
+											const ret = original(props);
+											ret.props.children = external_BdApi_React_default().createElement(components_avatar, StatusEverywhere_extends({}, props, {
+												user: stores_namespaceObject.Users.getCurrentUser(),
+												shouldWatch: false,
+												radial: {
+													id: "accountSettingsRadialStatus",
+													value: false
+												},
+												resolution: {
+													id: "accountSectionAvatarResolution",
+													value: components_settings_namespaceObject.accounts_section.accountSectionAvatarResolution.value
+												},
+												size: components_avatar.Sizes.SIZE_32
+											}));
+											return ret;
+										};
+									} catch (error) {
+										external_PluginApi_namespaceObject.Logger.error("Error in AccountSection patch:", error);
+									} else ret.props.children = external_BdApi_React_default().createElement(components_avatar, StatusEverywhere_extends({}, props, {
 										user: stores_namespaceObject.Users.getCurrentUser(),
 										shouldWatch: false,
 										radial: {
 											id: "accountSettingsRadialStatus",
 											value: false
+										},
+										resolution: {
+											id: "accountSectionAvatarResolution",
+											value: components_settings_namespaceObject.accounts_section.accountSectionAvatarResolution.value
 										},
 										size: components_avatar.Sizes.SIZE_32
 									}));
@@ -1097,6 +1125,10 @@ function buildPlugin([BasePlugin, PluginApi]) {
 									radial: {
 										id: "accountSettingsRadialStatus",
 										value: false
+									},
+									resolution: {
+										id: "accountSectionAvatarResolution",
+										value: components_settings_namespaceObject.accounts_section.accountSectionAvatarResolution.value
 									}
 								});
 								avatar.type = components_avatar;
@@ -1181,6 +1213,10 @@ function buildPlugin([BasePlugin, PluginApi]) {
 							showTyping: {
 								id: "showVoiceChatTyping",
 								value: true
+							},
+							resolution: {
+								id: "voiceChatAvatarResolution",
+								value: 56
 							}
 						})))));
 						PartyMember.forceUpdateAll();
@@ -1201,6 +1237,10 @@ function buildPlugin([BasePlugin, PluginApi]) {
 								radial: {
 									id: "directMessagesRadialStatus",
 									value: false
+								},
+								resolution: {
+									id: "dmAvatarResolution",
+									value: components_settings_namespaceObject.direct_messages.dmAvatarResolution.value
 								},
 								size: components_avatar.Sizes.SIZE_32
 							});
@@ -1231,6 +1271,10 @@ function buildPlugin([BasePlugin, PluginApi]) {
 										showTyping: {
 											id: "showFriendsPageTyping",
 											value: true
+										},
+										resolution: {
+											id: "friendsPageAvatarResolution",
+											value: components_settings_namespaceObject.friends_page.friendsPageAvatarResolution.value
 										}
 									});
 									avatar.type = components_avatar;
@@ -1254,6 +1298,10 @@ function buildPlugin([BasePlugin, PluginApi]) {
 							radial: {
 								id: "friendsPageRadialStatus",
 								value: false
+							},
+							resolution: {
+								id: "friendsPageAvatarResolution",
+								value: components_settings_namespaceObject.friends_page.friendsPageAvatarResolution.value
 							}
 						}))));
 					}
@@ -1274,6 +1322,10 @@ function buildPlugin([BasePlugin, PluginApi]) {
 								showTyping: {
 									id: "showUserProfileTyping",
 									value: true
+								},
+								resolution: {
+									id: "userProfileAvatarResolution",
+									value: components_settings_namespaceObject.user_profile.userProfileAvatarResolution.value
 								},
 								size: components_avatar.Sizes.SIZE_120
 							});
@@ -1305,6 +1357,10 @@ function buildPlugin([BasePlugin, PluginApi]) {
 								showTyping: {
 									id: "showUserPopoutTyping",
 									value: true
+								},
+								resolution: {
+									id: "userPopoutAvatarResolution",
+									value: components_settings_namespaceObject.user_popout.userPopoutAvatarResolution.value
 								}
 							}));
 						}));
@@ -1323,6 +1379,10 @@ function buildPlugin([BasePlugin, PluginApi]) {
 							radial: {
 								id: "memberlistRadialStatus",
 								value: false
+							},
+							resolution: {
+								id: "memberListAvatarResolution",
+								value: components_settings_namespaceObject.member_list.memberListAvatarResolution.value
 							}
 						}))));
 					}
@@ -1346,7 +1406,11 @@ function buildPlugin([BasePlugin, PluginApi]) {
 									id: "chatRadialStatus",
 									value: false
 								},
-								size: components_avatar.Sizes.SIZE_40
+								size: components_avatar.Sizes.SIZE_40,
+								resolution: {
+									id: "chatAvatarResolution",
+									value: components_settings_namespaceObject.chat.chatAvatarResolution.value
+								}
 							}));
 							tree.children.__patched = true;
 						}));
@@ -1371,6 +1435,10 @@ function buildPlugin([BasePlugin, PluginApi]) {
 									radial: {
 										id: "chatRadialStatus",
 										value: false
+									},
+									resolution: {
+										id: "chatAvatarResolution",
+										value: components_settings_namespaceObject.chat.chatAvatarResolution.value
 									}
 								}));
 							}));
@@ -1390,6 +1458,10 @@ function buildPlugin([BasePlugin, PluginApi]) {
 							showTyping: {
 								id: "showVoiceChatTyping",
 								value: true
+							},
+							resolution: {
+								id: "voiceChatAvatarResolution",
+								value: components_settings_namespaceObject.voice_chat.voiceChatAvatarResolution.value
 							}
 						}))));
 					}
@@ -1413,6 +1485,10 @@ function buildPlugin([BasePlugin, PluginApi]) {
 										id: "guildSettingsRadialStatus",
 										value: false
 									},
+									resolution: {
+										id: "guildSettingsAvatarResolution",
+										value: components_settings_namespaceObject.guild_settings.guildSettingsAvatarResolution.value
+									},
 									className: classes.avatar
 								}))));
 							}));
@@ -1435,6 +1511,10 @@ function buildPlugin([BasePlugin, PluginApi]) {
 								radial: {
 									id: "guildSettingsRadialStatus",
 									value: false
+								},
+								resolution: {
+									id: "guildSettingsAvatarResolution",
+									value: components_settings_namespaceObject.guild_settings.guildSettingsAvatarResolution.value
 								}
 							}))));
 						}));
