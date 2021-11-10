@@ -1,6 +1,6 @@
 /**
  * @name ChannelDms
- * @version 1.0.1
+ * @version 1.0.2
  * @author Strencher
  * @description TODO
  * @source https://github.com/Strencher/BetterDiscordStuff/tree/master/ChannelDms
@@ -32,7 +32,7 @@
 const config = {
 	"info": {
 		"name": "ChannelDms",
-		"version": "1.0.1",
+		"version": "1.0.2",
 		"authors": [{
 			"name": "Strencher",
 			"discord_id": "415849376598982656",
@@ -44,10 +44,10 @@ const config = {
 		"github_raw": "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/ChannelDms/ChannelDms.plugin.js"
 	},
 	"changelog": [{
-		"title": "added",
-		"type": "added",
+		"title": "fixed",
+		"type": "fixed",
 		"items": [
-			"This thing does now exist."
+			"It least 2 hours until discord broke it again."
 		]
 	}],
 	"build": {
@@ -681,7 +681,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 								id: 3
 							}, "DMs"));
 							if (3 !== activeTab) return;
-							ret.props.children[1] = external_BdApi_React_default().createElement(PrivateChannels, null);
+							ret.props.children[ret.props.children.length - 1] = external_BdApi_React_default().createElement(PrivateChannels, null);
 						}));
 					}
 					async patchPrivateChannel() {
