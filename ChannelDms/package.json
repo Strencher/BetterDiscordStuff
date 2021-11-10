@@ -1,0 +1,37 @@
+{
+    "info": {
+        "name": "ChannelDms",
+        "version": "1.0.1",
+        "authors": [
+            {
+                "name": "Strencher",
+                "discord_id": "415849376598982656",
+                "github_username": "Strencher",
+                "twitter_username": "Strencher3"
+            }
+        ],
+        "description": "TODO",
+        "github": "https://github.com/Strencher/BetterDiscordStuff/tree/master/ChannelDms",
+        "github_raw": "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/ChannelDms/ChannelDms.plugin.js"
+    },
+    "changelog": [
+        {
+            "title": "added",
+            "type": "added",
+            "items": [
+                "This thing does now exist."
+            ]
+        }
+    ],
+    "build": {
+        "zlibrary": true,
+        "copy": true,
+        "production": false,
+        "alias": {},
+        "release": {
+            "public": true,
+            "source": true,
+            "readme": true
+        }
+    }
+}

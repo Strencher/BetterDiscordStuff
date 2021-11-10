@@ -1,0 +1,83 @@
+.popout {
+    color: #ddd;
+    background: var(--background-primary);
+    width: 400px;
+    height: 600px;
+    position: relative;
+    box-shadow: var(--elevation-high);
+    
+    &.collapsed {
+        width: 100px;
+    }
+
+    .content {
+        overflow: hidden;
+        border-radius: 8px;
+
+        > main, section {
+            height: 561px;
+        }
+    }
+
+    .removeButton {
+        position: absolute;
+        top: -12px;
+        right: -12px;
+    }
+
+    .collapseButton {
+        position: absolute;
+        left: -20px;
+        top: 50px;
+        background: var(--background-secondary-alt);
+        border-radius: 100px;
+    }
+    
+    .header {
+        padding: 6px;
+        box-shadow: var(--elevation-low);
+        background: var(--background-secondary);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        .headerTag {
+            display: flex;
+
+            .channelIcon {
+                display: flex;
+                align-items: center;
+                margin: 0 5px;
+                color: var(--text-muted);
+            }
+
+            .headerName {
+                display: inline-flex;
+                align-items: center;
+                font-size: 20px;
+                font-weight: 600;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                overflow: hidden;
+                max-width: 270px;
+            }
+
+            .headerStatus {
+                display: flex;
+                align-items: center;
+                margin-left: 5px;
+            }
+        }
+
+        .buttons {
+            display: flex;
+            align-items: center;
+        }
+    }
+
+}
+
+.unread {
+    display: flex;
+    align-items: center;
+}
