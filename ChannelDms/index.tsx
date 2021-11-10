@@ -59,7 +59,7 @@ export default class ChannelDms extends BasePlugin {
 
             if (activeTab !== 3) return;
 
-            ret.props.children[1] = (
+            ret.props.children[ret.props.children.length - 1] = (
                 <PrivateChannels />
             );
         });
