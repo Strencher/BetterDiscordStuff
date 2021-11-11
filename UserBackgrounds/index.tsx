@@ -1,7 +1,7 @@
 /// <reference path="../bdbuilder/typings/main.d.ts" />
 
 import BasePlugin from "@zlibrary/plugin";
-import { Patcher, Utilities, WebpackModules, DiscordModules, ReactComponents } from "@zlibrary";
+import { Patcher, Utilities, WebpackModules, DiscordModules, ReactComponents, Logger } from "@zlibrary";
 import BannerStore from "./bannerStore";
 import Settings from "./settings";
 import { useStateFromStores } from "@discord/flux";
@@ -32,16 +32,17 @@ const Arrow: any = ErrorBoundary.from(WebpackModules.getByDisplayName("Arrow"), 
 const TextBadge: any = ErrorBoundary.from(WebpackModules.getByProps("TextBadge")?.TextBadge);
 const ImageModal: any = ErrorBoundary.from(WebpackModules.getByDisplayName("ImageModal"));
 const MaskedLink: any = ErrorBoundary.from(WebpackModules.getByDisplayName("MaskedLink"));
-const ModalClasses: { image, modal } = WebpackModules.find(e => typeof e === "object" && Object.keys(e).length === 2 && e.modal && e.image);
+const ModalClasses: {image, modal} = WebpackModules.find(e => typeof e === "object" && Object.keys(e).length === 2 && e.modal && e.image);
+const AssetUtils = WebpackModules.getByProps("getUserBannerURL");
 
 const showImageModal = async function (src: string, original = src, width: number, height: number, animated: boolean, children: any, placeholder: any) {
     const bounds = await new Promise(resolve => {
         Object.assign(new Image(), {
             src: src,
-            onload: ({ target }) => {
-                resolve({ width: target.naturalWidth, height: target.naturalHeight });
+            onload: ({target}) => {
+                resolve({width: target.naturalWidth, height: target.naturalHeight});
             },
-            onerror: () => resolve({ width, height })
+            onerror: () => resolve({width, height})
         });
     });
 
@@ -64,7 +65,20 @@ const showImageModal = async function (src: string, original = src, width: numbe
             />
         </ModalRoot>
     ));
-}
+};
+
+const getBannerURL = function (user: User, animated = false) {
+    try {
+        return AssetUtils.getUserBannerURL({
+            canAnimated: animated,
+            banner: user.banner,
+            size: 300
+        });
+    } catch (error) {
+        Logger.error("Could not get banner url of " + user.tag, error);
+        return "";
+    }
+};
 
 export default class UserBackgrounds extends BasePlugin {
     public Store = BannerStore;
@@ -75,14 +89,6 @@ export default class UserBackgrounds extends BasePlugin {
         Utilities.suppressErrors(this.patchBanners.bind(this), "UserBanner.default patch")();
         Utilities.suppressErrors(this.patchUserPopout.bind(this), "UserPopoutContainer.type patch")();
         Utilities.suppressErrors(this.patchMemberListItem.bind(this), "MemberListIte.render patch")();
-    }
-
-
-    public shouldShow(type: 1 | 2): boolean {
-        return switchCase(type, [
-            [0, Settings.get("showInPopout", true)],
-            [1, Settings.get("showInProfile", true)]
-        ], false);
     }
 
     public async patchUserPopout(): Promise<void> {
@@ -116,7 +122,7 @@ export default class UserBackgrounds extends BasePlugin {
             const banner: banner = useStateFromStores([BannerStore], () => BannerStore.getBanner(user.id), null, _.isEqual);
             const [selection, setSelection] = useState(banner == null ? 1 : 0);
             const ref = useRef(null);
-            const currentBanner = useMemo(() => (selection === 1 || banner == null) ? user.getBannerURL(void 0, true) : banner?.background, [banner, user, selection]);
+            const currentBanner = useMemo(() => (selection === 1 || banner == null) ? getBannerURL(user, true) : banner?.background, [banner, user, selection]);
             const currentOrientation = useMemo(() => (banner != null && selection === 0) ? banner.orientation : void 0, [banner, selection]);
 
             if (!user.banner && !banner) return children;
