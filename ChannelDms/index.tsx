@@ -33,8 +33,9 @@ export default class ChannelDms extends BasePlugin {
         const Experiment = WebpackModules.getByProps("ChannelBannersExperiment");
         if (!Experiment || !Experiment.ChannelBannersExperiment) return;
 
-        Patcher.instead(Experiment.ChannelBannersExperiment, "getCurrentConfig", () => ({
-            enableChannelBanners: true
+        Patcher.after(Experiment.ChannelBannersExperiment, "getCurrentConfig", (_, __, ret) => ({
+            ...ret,
+            channelBannersEnabled: true
         }));
     }
 
@@ -69,23 +70,21 @@ export default class ChannelDms extends BasePlugin {
         const classes = WebpackModules.getByProps("channel", "closeButton");
         const PrivateChannel = await ReactComponents.getComponentByName("PrivateChannel", "." + classes?.channel);
 
-        function PatchedChild({original, ...props}) {
-            const ret = Reflect.apply(original, this, [props]);
-
-            try {
-                Object.assign(ret.props, props);
-            } catch (error) {
-                Logger.error("Failed to assign props to nested element:", error);
-            }
-
-            return ret;
-        }
-
         Patcher.after(PrivateChannel.component.prototype, "render", (_this, _, ret) => {
             if (!ret?.props) return;
-            const original = ret.type;
-            ret.type = PatchedChild;
-            Object.assign(ret.props, {channel: _this.props.channel, original});
+            
+            const original = ret.props.children;
+            ret.props.children = (id: string) => {
+                const returnValue = Reflect.apply(original, null, [id]);
+
+                try {
+                    Object.assign(returnValue.props, {channel: _this.props.channel});
+                } catch (error) {
+                    Logger.error("Failed to assign props to nested element:", error);
+                }
+
+                return returnValue;
+            };
         });
 
         PrivateChannel.forceUpdateAll();
@@ -94,7 +93,7 @@ export default class ChannelDms extends BasePlugin {
     patchListItem(): void {
         const ListItem = WebpackModules.getModule(e => e?.render?.toString().indexOf("nameAndDecorators") > -1);
         const ListItemClasses = WebpackModules.getByProps("nameAndDecorators", "wrappedName", "selected");
- 
+
         function PatchedNestedRoute({__original, ...props}) {
             const ret = Reflect.apply(__original.render, this, [props]);
             
