@@ -1,6 +1,6 @@
 /**
  * @name ChannelDms
- * @version 1.0.2
+ * @version 1.0.3
  * @author Strencher
  * @description TODO
  * @source https://github.com/Strencher/BetterDiscordStuff/tree/master/ChannelDms
@@ -32,7 +32,7 @@
 const config = {
 	"info": {
 		"name": "ChannelDms",
-		"version": "1.0.2",
+		"version": "1.0.3",
 		"authors": [{
 			"name": "Strencher",
 			"discord_id": "415849376598982656",
@@ -47,7 +47,7 @@ const config = {
 		"title": "fixed",
 		"type": "fixed",
 		"items": [
-			"It least 2 hours until discord broke it again."
+			"It least 1 day hours until discord broke it again. #2"
 		]
 	}],
 	"build": {
@@ -661,8 +661,9 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					patchExperiment() {
 						const Experiment = external_PluginApi_namespaceObject.WebpackModules.getByProps("ChannelBannersExperiment");
 						if (!Experiment || !Experiment.ChannelBannersExperiment) return;
-						external_PluginApi_namespaceObject.Patcher.instead(Experiment.ChannelBannersExperiment, "getCurrentConfig", (() => ({
-							enableChannelBanners: true
+						external_PluginApi_namespaceObject.Patcher.after(Experiment.ChannelBannersExperiment, "getCurrentConfig", ((_, __, ret) => ({
+							...ret,
+							channelBannersEnabled: true
 						})));
 					}
 					patchChannelInfo() {
@@ -687,26 +688,20 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					async patchPrivateChannel() {
 						const classes = external_PluginApi_namespaceObject.WebpackModules.getByProps("channel", "closeButton");
 						const PrivateChannel = await external_PluginApi_namespaceObject.ReactComponents.getComponentByName("PrivateChannel", "." + classes?.channel);
-						function PatchedChild({
-							original,
-							...props
-						}) {
-							const ret = Reflect.apply(original, this, [props]);
-							try {
-								Object.assign(ret.props, props);
-							} catch (error) {
-								external_PluginApi_namespaceObject.Logger.error("Failed to assign props to nested element:", error);
-							}
-							return ret;
-						}
 						external_PluginApi_namespaceObject.Patcher.after(PrivateChannel.component.prototype, "render", ((_this, _, ret) => {
 							if (!ret?.props) return;
-							const original = ret.type;
-							ret.type = PatchedChild;
-							Object.assign(ret.props, {
-								channel: _this.props.channel,
-								original
-							});
+							const original = ret.props.children;
+							ret.props.children = id => {
+								const returnValue = Reflect.apply(original, null, [id]);
+								try {
+									Object.assign(returnValue.props, {
+										channel: _this.props.channel
+									});
+								} catch (error) {
+									external_PluginApi_namespaceObject.Logger.error("Failed to assign props to nested element:", error);
+								}
+								return returnValue;
+							};
 						}));
 						PrivateChannel.forceUpdateAll();
 					}
