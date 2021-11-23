@@ -35,7 +35,8 @@ export default class ChannelDms extends BasePlugin {
 
         Patcher.after(Experiment.ChannelBannersExperiment, "getCurrentConfig", (_, __, ret) => ({
             ...ret,
-            channelBannersEnabled: true
+            channelBannersEnabled: true,
+            channelInfoEnabled: true
         }));
     }
 

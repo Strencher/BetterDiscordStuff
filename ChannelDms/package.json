@@ -1,7 +1,7 @@
 {
     "info": {
         "name": "ChannelDms",
-        "version": "1.0.3",
+        "version": "1.0.4",
         "authors": [
             {
                 "name": "Strencher",
@@ -19,7 +19,7 @@
             "title": "fixed",
             "type": "fixed",
             "items": [
-                "It least 1 day hours until discord broke it again. #2"
+                "It least a week until discord broke it again. #3"
             ]
         }
     ],
