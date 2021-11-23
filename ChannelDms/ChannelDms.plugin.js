@@ -1,6 +1,6 @@
 /**
  * @name ChannelDms
- * @version 1.0.3
+ * @version 1.0.4
  * @author Strencher
  * @description TODO
  * @source https://github.com/Strencher/BetterDiscordStuff/tree/master/ChannelDms
@@ -32,7 +32,7 @@
 const config = {
 	"info": {
 		"name": "ChannelDms",
-		"version": "1.0.3",
+		"version": "1.0.4",
 		"authors": [{
 			"name": "Strencher",
 			"discord_id": "415849376598982656",
@@ -47,7 +47,7 @@ const config = {
 		"title": "fixed",
 		"type": "fixed",
 		"items": [
-			"It least 1 day hours until discord broke it again. #2"
+			"It least a week until discord broke it again. #3"
 		]
 	}],
 	"build": {
@@ -663,7 +663,8 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						if (!Experiment || !Experiment.ChannelBannersExperiment) return;
 						external_PluginApi_namespaceObject.Patcher.after(Experiment.ChannelBannersExperiment, "getCurrentConfig", ((_, __, ret) => ({
 							...ret,
-							channelBannersEnabled: true
+							channelBannersEnabled: true,
+							channelInfoEnabled: true
 						})));
 					}
 					patchChannelInfo() {
