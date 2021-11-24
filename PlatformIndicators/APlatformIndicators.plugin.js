@@ -3,7 +3,7 @@
 * @displayName PlatformIndicators
 * @authorId 415849376598982656
 * @invite gvA2ree
-* @version 0.0.6
+* @version 1.1.0
 */
 /*@cc_on
 @if (@_jscript)
@@ -40,20 +40,17 @@ module.exports = (() => {
                     twitter_username: "Strencher3"
                 }
             ],
-            version: "0.0.6",
+            version: "1.1.0",
             description: "Adds indicators for every platform that the user is using. Source code available on the repo in the 'src' folder.",
             github: "https://github.com/Strencher/BetterDiscordStuff/blob/master/PlatformIndicators/APlatformIndicators.plugin.js",
             github_raw: "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/PlatformIndicators/APlatformIndicators.plugin.js"
         },
         changelog: [
             {
-                title: "v0.0.6",
+                title: "v1.1.0",
                 type: "fixed",
                 items: [
-                    "Fixed showing icons in chat.",
-                    "Finally fixed plugin conflicts.",
-                    "Improved performance a bit.",
-                    "Fixed showing current user's status."
+                    "Fixed indicators showing in the dms list."
                 ]
             },
         ],
@@ -74,7 +71,7 @@ module.exports = (() => {
             },
             {
                 type: "switch",
-                name: "Show in Dmd List",
+                name: "Show in DMs List",
                 note: "Shows the platform indicators in the dm list.",
                 id: "showInDmsList",
                 value: true
@@ -151,7 +148,7 @@ module.exports = (() => {
         stop() { }
     } : (([Plugin, Api]) => {
         const plugin = (Plugin, Api) => {
-            const { Utilities, WebpackModules, PluginUtilities, ReactTools, Patcher, Logger, DiscordModules: { React, UserStatusStore, Dispatcher, DiscordConstants: { ActionTypes } } } = Api;
+            const { Utilities, WebpackModules, PluginUtilities, ReactTools, Patcher, Logger, DiscordModules: { React, UserStatusStore, UserStore, Dispatcher, DiscordConstants: { ActionTypes } } } = Api;
             const { TooltipContainer: Tooltip } = WebpackModules.getByProps("TooltipContainer");
             const StatusModule = WebpackModules.getByProps("Status", "getStatusMask");
             const Flux = Object.assign({}, WebpackModules.getByProps("Store", "connectStores"), WebpackModules.getByProps("useStateFromStores"));
@@ -211,14 +208,18 @@ module.exports = (() => {
             } : {};
             
             const StatusIndicators = function StatusIndicators(props) {
-                const shouldShow = Flux.useStateFromStores([Settings], () => Settings.get("showIn" + props.type, true) && (Settings.get("ignoreBots", true) ? !props.user?.bot : true));
+                const user = Flux.useStateFromStores([UserStore], () => {
+                    const userId = props.userId ?? props.user?.id;
+                    return UserStore.getUser(userId);
+                });
+                const shouldShow = Flux.useStateFromStores([Settings], () => Settings.get("showIn" + props.type, true) && (Settings.get("ignoreBots", true) ? !user?.bot : true));
                 const iconStates = Flux.useStateFromStoresObject([Settings], () => Settings.get("icons", {}));
                 const clients = Flux.useStateFromStoresObject([UserStatusStore], () => {
-                    if (props?.user?.id === AuthStore.getId()) return currentClientStatus;
+                    if (user?.id === AuthStore.getId()) return currentClientStatus;
 
-                    return UserStatusStore.getState().clientStatuses[props?.user?.id] ?? {};
+                    return UserStatusStore.getState().clientStatuses[user?.id] ?? {};
                 });
-                if (!_.size(clients) || !shouldShow) return null;
+                if (!_.size(clients) || !shouldShow || !user) return null;
 
                 return React.createElement("div", {
                     className: Utilities.className("PI-indicatorContainer", "PI-type_" + props.type),
@@ -250,7 +251,7 @@ module.exports = (() => {
                 }
 
                 ON_PRESENCE_UPDATE = ({ user, clientStatus }) => {
-                    if (user.id != AuthStore.getId()) return;
+                    if (user.id !== AuthStore.getId()) return;
                     currentClientStatus = clientStatus;
                     UserStatusStore.emitChange();
                 }
@@ -325,22 +326,23 @@ module.exports = (() => {
                 }
 
                 patchDmList() {
-                    const { default: PrivateChannel } = WebpackModules.getModule(m => m.default?.displayName === "PrivateChannel") ?? {};
+                    const ListItem = WebpackModules.getModule(m => m?.render?.toString().indexOf("nameAndDecorators") > -1);
 
-                    Patcher.after(PrivateChannel.prototype, "render", (_this, _, ret) => {
-                        const unpatch = Patcher.after(ret.type, "render", (_, __, ret) => {
-                            unpatch();
-                            const tree = Utils.findInReactTree(ret, m => m?.className?.indexOf("nameAndDecorators") > -1);
-                            if (!tree) return;
-                            if (!Array.isArray(tree?.children)) return;
-                            tree.children = [
-                                tree.children,
+                    Patcher.after(ListItem, "render", (_1, [props], ret) => {
+                        try {
+                            const tree = Utilities.findInReactTree(ret, e => e?.className?.indexOf("nameAndDecorators") > -1);
+                            if (!Array.isArray(tree?.children)) return ret;
+
+                            tree.children.push(
                                 React.createElement(StatusIndicators, {
-                                    user: _this.props.user,
-                                    type: "DmsList"
+                                    userId: props.channel.getRecipientId(),
+                                    type: "DmsList",
+                                    key: `status-indicators-${props.channel.getRecipientId()}`
                                 })
-                            ];
-                        });
+                            );
+                        } catch (error) {
+                            Logger.error("Failed to inject StatusIndicators in DMs:", error);
+                        }
                     });
 
                     this.forceUpdate(getClass(["privateChannels"], ["privateChannels"], [], true));
