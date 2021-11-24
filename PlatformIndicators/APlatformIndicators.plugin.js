@@ -3,7 +3,7 @@
 * @displayName PlatformIndicators
 * @authorId 415849376598982656
 * @invite gvA2ree
-* @version 1.1.2
+* @version 1.1.3
 */
 /*@cc_on
 @if (@_jscript)
@@ -40,14 +40,14 @@ module.exports = (() => {
                     twitter_username: "Strencher3"
                 }
             ],
-            version: "1.1.2",
+            version: "1.1.3",
             description: "Adds indicators for every platform that the user is using. Source code available on the repo in the 'src' folder.",
             github: "https://github.com/Strencher/BetterDiscordStuff/blob/master/PlatformIndicators/APlatformIndicators.plugin.js",
             github_raw: "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/PlatformIndicators/APlatformIndicators.plugin.js"
         },
         changelog: [
             {
-                title: "v1.1.2",
+                title: "v1.1.3",
                 type: "fixed",
                 items: [
                     "Fixed indicators showing in the dms list."
@@ -342,7 +342,7 @@ module.exports = (() => {
                     Patcher.after(ListItem, "render", (_1, [props], ret) => {
                         try {
                             const tree = Utilities.findInReactTree(ret, e => e?.className?.indexOf("nameAndDecorators") > -1);
-                            if (!Array.isArray(tree?.children) || !props.channel) return ret;
+                            if (!Array.isArray(tree?.children) || !props.channel || !props.channel.isDM()) return ret;
 
                             tree.children.push(
                                 React.createElement(StatusIndicators, {
