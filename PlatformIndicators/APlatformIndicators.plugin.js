@@ -3,7 +3,7 @@
 * @displayName PlatformIndicators
 * @authorId 415849376598982656
 * @invite gvA2ree
-* @version 1.1.1
+* @version 1.1.2
 */
 /*@cc_on
 @if (@_jscript)
@@ -40,14 +40,14 @@ module.exports = (() => {
                     twitter_username: "Strencher3"
                 }
             ],
-            version: "1.1.1",
+            version: "1.1.2",
             description: "Adds indicators for every platform that the user is using. Source code available on the repo in the 'src' folder.",
             github: "https://github.com/Strencher/BetterDiscordStuff/blob/master/PlatformIndicators/APlatformIndicators.plugin.js",
             github_raw: "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/PlatformIndicators/APlatformIndicators.plugin.js"
         },
         changelog: [
             {
-                title: "v1.1.1",
+                title: "v1.1.2",
                 type: "fixed",
                 items: [
                     "Fixed indicators showing in the dms list."
@@ -327,6 +327,17 @@ module.exports = (() => {
 
                 patchDmList() {
                     const ListItem = WebpackModules.getModule(m => m?.render?.toString().indexOf("nameAndDecorators") > -1);
+                    const {default: PrivateChannel} = WebpackModules.getByProps("DirectMessage");
+
+                    Patcher.after(PrivateChannel.prototype, "render", (_this, _, ret) => {
+                        const children = ret.props.children;
+
+                        ret.props.children = (props) => {
+                            const ret = children(props);
+                            Object.assign(ret.props, _this.props);
+                            return ret;
+                        };
+                    });
 
                     Patcher.after(ListItem, "render", (_1, [props], ret) => {
                         try {
