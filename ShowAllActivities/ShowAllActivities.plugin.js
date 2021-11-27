@@ -66,7 +66,11 @@ const config = {
 		"release": {
 			"public": true,
 			"source": true,
-			"readme": true
+			"readme": true,
+			"previews": [{
+				"name": "Activity Carosell",
+				"src": "assets/preview.png"
+			}]
 		}
 	}
 };
