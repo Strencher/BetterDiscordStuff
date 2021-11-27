@@ -1,0 +1,44 @@
+{
+    "info": {
+        "name": "ShowAllActivities",
+        "version": "1.0.0",
+        "authors": [
+            {
+                "name": "Strencher",
+                "discord_id": "415849376598982656",
+                "github_username": "Strencher",
+                "twitter_username": "Strencher3"
+            },
+            {
+                "name": "Juby210",
+                "discord_id": "324622488644616195",
+                "github_username": "Juby210"
+            }
+
+        ],
+        "description": "See every status a user has enabled. Original made by Juby210#0577.",
+        "github": "https://github.com/Strencher/BetterDiscordStuff/tree/master/ShowAllActivities",
+        "github_raw": "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/ShowAllActivities/ShowAllActivities.plugin.js",
+        "invite": "gvA2ree"
+    },
+    "changelog": [
+        {
+            "title": "Rewrite",
+            "type": "improved",
+            "items": [
+                "The plugin was rewritting and works fine again."
+            ]
+        }
+    ],
+    "build": {
+        "zlibrary": true,
+        "copy": true,
+        "production": false,
+        "alias": {},
+        "release": {
+            "public": true,
+            "source": true,
+            "readme": true
+        }
+    }
+}
