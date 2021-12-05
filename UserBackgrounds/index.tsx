@@ -70,7 +70,8 @@ const showImageModal = async function (src: string, original = src, width: numbe
 const getBannerURL = function (user: User, animated = false) {
     try {
         return AssetUtils.getUserBannerURL({
-            canAnimated: animated,
+            id: user.id,
+            canAnimate: animated,
             banner: user.banner,
             size: 300
         });
