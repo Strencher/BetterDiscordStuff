@@ -1,6 +1,6 @@
 /**
  * @name UserBackgrounds
- * @version 1.4.0
+ * @version 1.5.1
  * @description A database of custom user requested backgrounds designed for BetterDiscord and Powercord.
  * @author Strencher, Tropical
  * @source https://github.com/Strencher/BetterDiscordStuff/tree/development/UserBackgrounds
@@ -33,7 +33,7 @@
 const config = {
 	"info": {
 		"name": "UserBackgrounds",
-		"version": "1.4.0",
+		"version": "1.5.1",
 		"description": "A database of custom user requested backgrounds designed for BetterDiscord and Powercord.",
 		"authors": [{
 				"name": "Strencher",
@@ -55,10 +55,7 @@ const config = {
 		"type": "fixed",
 		"title": "fixed",
 		"items": [
-			"Updated link for the new database (again)",
-			"Started using json (replacing css)",
-			"Rewrote parser for json",
-			"Removed css decompiler"
+			"Invisible native banner."
 		]
 	}],
 	"build": {
@@ -123,7 +120,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			},
 			'@discord/utils': {
 				get 'joinClassNames'() {
-					return ___createMemoize___(this, 'joinClassNames', () => BdApi.findModule(m => typeof m?.default?.default === 'function')?.default)
+					return ___createMemoize___(this, 'joinClassNames', () => BdApi.findModule(e => e.toString().indexOf('return e.join(" ")') > 200))
 				},
 				get 'useForceUpdate'() {
 					return ___createMemoize___(this, 'useForceUpdate', () => BdApi.findModuleByProps('useForceUpdate')?.useForceUpdate)
@@ -132,7 +129,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					return ___createMemoize___(this, 'Logger', () => BdApi.findModuleByProps('setLogFn')?.default)
 				},
 				get 'Navigation'() {
-					return ___createMemoize___(this, 'Navigation', () => BdApi.findModuleByProps('replaceWith'))
+					return ___createMemoize___(this, 'Navigation', () => BdApi.findModuleByProps('replaceWith', 'currentRouteIsPeekView'))
 				}
 			},
 			'@discord/components': {
@@ -155,7 +152,10 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					return ___createMemoize___(this, 'TransitionGroup', () => BdApi.findModuleByDisplayName('TransitionGroup'))
 				},
 				get 'Button'() {
-					return ___createMemoize___(this, 'Button', () => BdApi.findModuleByProps('DropdownSizes'))
+					return ___createMemoize___(this, 'Button', () => BdApi.findModule(m => 'DropdownSizes' in m && typeof(m) === 'function'))
+				},
+				get 'Popout'() {
+					return ___createMemoize___(this, 'Popout', () => BdApi.findModuleByDisplayName('Popout'))
 				},
 				get 'Flex'() {
 					return ___createMemoize___(this, 'Flex', () => BdApi.findModuleByDisplayName('Flex'))
@@ -171,11 +171,14 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				get 'Dispatcher'() {
 					return ___createMemoize___(this, 'Dispatcher', () => BdApi.findModuleByProps('dirtyDispatch', 'subscribe'))
 				},
+				get 'ComponentDispatcher'() {
+					return ___createMemoize___(this, 'ComponentDispatcher', () => BdApi.findModuleByProps('ComponentDispatch')?.ComponentDispatch)
+				},
 				get 'EmojiUtils'() {
 					return ___createMemoize___(this, 'EmojiUtils', () => BdApi.findModuleByProps('uploadEmoji'))
 				},
 				get 'PermissionUtils'() {
-					return ___createMemoize___(this, 'PermissionUtils', () => BdApi.findModuleByProps('computePermissions'))
+					return ___createMemoize___(this, 'PermissionUtils', () => BdApi.findModuleByProps('computePermissions', 'canManageUser'))
 				},
 				get 'DMUtils'() {
 					return ___createMemoize___(this, 'DMUtils', () => BdApi.findModuleByProps('openPrivateChannel'))
@@ -186,7 +189,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					return ___createMemoize___(this, 'Messages', () => BdApi.findModuleByProps('getMessage', 'getMessages'))
 				},
 				get 'Channels'() {
-					return ___createMemoize___(this, 'Channels', () => BdApi.findModuleByProps('getChannel'))
+					return ___createMemoize___(this, 'Channels', () => BdApi.findModuleByProps('getChannel', 'getDMFromUserId'))
 				},
 				get 'Guilds'() {
 					return ___createMemoize___(this, 'Guilds', () => BdApi.findModuleByProps('getGuild'))
@@ -201,7 +204,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					return ___createMemoize___(this, 'Info', () => BdApi.findModuleByProps('getSessionId'))
 				},
 				get 'Status'() {
-					return ___createMemoize___(this, 'Status', () => BdApi.findModuleByProps('getStatus'))
+					return ___createMemoize___(this, 'Status', () => BdApi.findModuleByProps('getStatus', 'getActivities', 'getState'))
 				},
 				get 'Users'() {
 					return ___createMemoize___(this, 'Users', () => BdApi.findModuleByProps('getUser', 'getCurrentUser'))
@@ -219,7 +222,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					return ___createMemoize___(this, 'Activities', () => BdApi.findModuleByProps('getActivities'))
 				},
 				get 'Games'() {
-					return ___createMemoize___(this, 'Games', () => BdApi.findModuleByProps('getGame'))
+					return ___createMemoize___(this, 'Games', () => BdApi.findModuleByProps('getGame', 'games'))
 				},
 				get 'Auth'() {
 					return ___createMemoize___(this, 'Auth', () => BdApi.findModuleByProps('getId', 'isGuest'))
@@ -237,7 +240,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				}
 			},
 			get '@discord/i18n'() {
-				return ___createMemoize___(this, '@discord/i18n', () => BdApi.findModuleByProps('getLocale'))
+				return ___createMemoize___(this, '@discord/i18n', () => BdApi.findModule(m => m.Messages?.CLOSE && typeof(m.getLocale) === 'function'))
 			},
 			get '@discord/constants'() {
 				return ___createMemoize___(this, '@discord/constants', () => BdApi.findModuleByProps('API_HOST'))
@@ -262,7 +265,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				return ___createMemoize___(this, '@discord/flux', () => Object.assign({}, BdApi.findModuleByProps('useStateFromStores').default, BdApi.findModuleByProps('useStateFromStores')))
 			},
 			get '@discord/modal'() {
-				return ___createMemoize___(this, '@discord/modal', () => Object.assign({}, BdApi.findModuleByProps('ModalRoot'), BdApi.findModuleByProps('openModal')))
+				return ___createMemoize___(this, '@discord/modal', () => Object.assign({}, BdApi.findModuleByProps('ModalRoot'), BdApi.findModuleByProps('openModal', 'closeAllModals')))
 			},
 			get '@discord/connections'() {
 				return ___createMemoize___(this, '@discord/connections', () => BdApi.findModuleByProps('get', 'isSupported', 'map'))
@@ -308,355 +311,6 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				};
 				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
 				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
-			},
-			515: (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-				__webpack_require__.r(__webpack_exports__);
-				__webpack_require__.d(__webpack_exports__, {
-					default: () => UserBackgrounds
-				});
-				const external_BasePlugin_namespaceObject = BasePlugin;
-				var external_BasePlugin_default = __webpack_require__.n(external_BasePlugin_namespaceObject);
-				const external_PluginApi_namespaceObject = PluginApi;
-				const flux_namespaceObject = Modules["@discord/flux"];
-				const modules_namespaceObject = Modules["@discord/modules"];
-				const external_require_https_namespaceObject = require("https");
-				const utils_namespaceObject = Modules["@discord/utils"];
-				function _defineProperty(obj, key, value) {
-					if (key in obj) Object.defineProperty(obj, key, {
-						value,
-						enumerable: true,
-						configurable: true,
-						writable: true
-					});
-					else obj[key] = value;
-					return obj;
-				}
-				let banners;
-				const bannerStore = new class extends flux_namespaceObject.Store {
-					constructor() {
-						super(modules_namespaceObject.Dispatcher, {});
-						_defineProperty(this, "logger", new utils_namespaceObject.Logger(this.constructor.name));
-						_defineProperty(this, "intervalTimer", 36e5);
-						_defineProperty(this, "_interval", void 0);
-						_defineProperty(this, "API_URL", "https://discord-custom-covers.github.io/usrbg/dist/usrbg.json");
-						_defineProperty(this, "fetchBanners", (() => {
-							(0, external_require_https_namespaceObject.get)(this.API_URL, (res => {
-								const chunks = [];
-								res.on("data", (chunk => chunks.push(chunk)));
-								res.on("end", (async () => {
-									try {
-										banners = new Map(JSON.parse(chunks.join("")).map((key => [key.uid, {
-											background: key.img,
-											orientation: key.orientation
-										}])));
-										this.emitChange();
-									} catch (error) {
-										this.logger.error(error);
-									}
-								}));
-								res.on("error", (error => this.logger.error(error)));
-							}));
-						}));
-					}
-					destroy() {
-						if (!this._initialized) return;
-						clearInterval(this._interval);
-					}
-					getState() {
-						return banners;
-					}
-					initialize() {
-						this._initialized = true;
-						this._interval = setInterval(this.fetchBanners, this.intervalTimer);
-						this.fetchBanners();
-					}
-					getBannerURL(userId) {
-						return banners.get(userId)?.background;
-					}
-					getBanner(userId) {
-						return banners.get(userId);
-					}
-					hasBanner(userId) {
-						return banners.has(userId);
-					}
-				};
-				function settings_defineProperty(obj, key, value) {
-					if (key in obj) Object.defineProperty(obj, key, {
-						value,
-						enumerable: true,
-						configurable: true,
-						writable: true
-					});
-					else obj[key] = value;
-					return obj;
-				}
-				class SettingsManager extends flux_namespaceObject.Store {
-					constructor(pluginName, defaultSettings = {}) {
-						super(modules_namespaceObject.Dispatcher, {});
-						settings_defineProperty(this, "settings", void 0);
-						settings_defineProperty(this, "pluginName", void 0);
-						settings_defineProperty(this, "get", ((key, defaultValue) => this.settings[key] ?? defaultValue));
-						settings_defineProperty(this, "set", ((key, value) => {
-							this.settings[key] = value;
-							external_PluginApi_namespaceObject.PluginUtilities.saveSettings(this.pluginName, this.settings);
-							this.emitChange();
-							return value;
-						}));
-						this.pluginName = pluginName;
-						this.settings = external_PluginApi_namespaceObject.PluginUtilities.loadSettings(pluginName, defaultSettings);
-					}
-				}
-				const package_namespaceObject = JSON.parse('{"um":{"u2":"UserBackgrounds"}}');
-				const Settings = new SettingsManager(package_namespaceObject.um.u2);
-				const settings = Settings;
-				const external_window_namespaceObject = window._;
-				var external_window_default = __webpack_require__.n(external_window_namespaceObject);
-				function switchCase(caze, cases, defaultValue) {
-					for (const caseTest of cases)
-						if (Array.isArray(caseTest)) {
-							const [tester, value] = caseTest;
-							if ("function" === typeof tester) {
-								if (tester(caze)) {
-									if ("function" === typeof value) return value(caze);
-									return value;
-								}
-							} else if (Object.is(caze, tester)) {
-								if ("function" === typeof value) return value(caze);
-								return value;
-							}
-						} else if ("object" === typeof caseTest)
-						if ("function" === typeof caseTest.test) {
-							if (caseTest.test(caze)) return caseTest.value;
-						} else if (Object.is(caze, caseTest.test)) return caseTest.value;
-					return defaultValue;
-				}
-				const external_BdApi_React_namespaceObject = BdApi.React;
-				var external_BdApi_React_default = __webpack_require__.n(external_BdApi_React_namespaceObject);
-				function errorboundary_defineProperty(obj, key, value) {
-					if (key in obj) Object.defineProperty(obj, key, {
-						value,
-						enumerable: true,
-						configurable: true,
-						writable: true
-					});
-					else obj[key] = value;
-					return obj;
-				}
-				class ErrorBoundary extends external_BdApi_React_default().Component {
-					constructor(...args) {
-						super(...args);
-						errorboundary_defineProperty(this, "state", {
-							hasError: false,
-							error: null,
-							info: null,
-							didFallbackError: false
-						});
-					}
-					componentDidCatch(error, info) {
-						this.setState({
-							hasError: true,
-							didFallbackError: false,
-							info,
-							error
-						});
-						console.error(`[ErrorBoundary:${this.props.id}] HI OVER HERE!! SHOW THIS SCREENSHOT TO THE DEVELOPER.\n`, error);
-					}
-					render() {
-						const {
-							fallback: Fallback
-						} = this.props;
-						if (this.state.hasError && "function" === typeof this.props.fallback && !this.state.didFallbackError) return external_BdApi_React_default().createElement(Fallback, {
-							error: this.state.error,
-							info: this.state.info
-						});
-						else if ("function" !== typeof this.props.fallback && this.state.hasError) return external_BdApi_React_default().createElement("div", null, "Component Error");
-						else if (this.state.didFallbackError && this.state.hasError) return external_BdApi_React_default().createElement("div", null, "Double Crashed.");
-						return this.props.children;
-					}
-					static from(Component, name, fallback) {
-						const id = name ?? Component.displayName ?? Component.name;
-						const Element = external_BdApi_React_default().memo((props => external_BdApi_React_default().createElement(ErrorBoundary, {
-							id,
-							fallback
-						}, external_BdApi_React_default().createElement(Component, props))));
-						Object.assign(Element, Component);
-						return Element;
-					}
-				}
-				var UserBackgrounds_banner = __webpack_require__(440);
-				const external_StyleLoader_namespaceObject = StyleLoader;
-				var external_StyleLoader_default = __webpack_require__.n(external_StyleLoader_namespaceObject);
-				const components_namespaceObject = Modules["@discord/components"];
-				const constants_namespaceObject = Modules["@discord/constants"];
-				const contextmenu_namespaceObject = Modules["@discord/contextmenu"];
-				const modal_namespaceObject = Modules["@discord/modal"];
-				function UserBackgrounds_defineProperty(obj, key, value) {
-					if (key in obj) Object.defineProperty(obj, key, {
-						value,
-						enumerable: true,
-						configurable: true,
-						writable: true
-					});
-					else obj[key] = value;
-					return obj;
-				}
-				function _extends() {
-					_extends = Object.assign || function(target) {
-						for (var i = 1; i < arguments.length; i++) {
-							var source = arguments[i];
-							for (var key in source)
-								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-						}
-						return target;
-					};
-					return _extends.apply(this, arguments);
-				}
-				const Arrow = ErrorBoundary.from(external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("Arrow"), "Arrow");
-				const TextBadge = ErrorBoundary.from(external_PluginApi_namespaceObject.WebpackModules.getByProps("TextBadge")?.TextBadge);
-				const ImageModal = ErrorBoundary.from(external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("ImageModal"));
-				const MaskedLink = ErrorBoundary.from(external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("MaskedLink"));
-				const ModalClasses = external_PluginApi_namespaceObject.WebpackModules.find((e => "object" === typeof e && 2 === Object.keys(e).length && e.modal && e.image));
-				const showImageModal = async function(src, original = src, width, height, animated, children, placeholder) {
-					const bounds = await new Promise((resolve => {
-						Object.assign(new Image, {
-							src,
-							onload: ({
-								target
-							}) => {
-								resolve({
-									width: target.naturalWidth,
-									height: target.naturalHeight
-								});
-							},
-							onerror: () => resolve({
-								width,
-								height
-							})
-						});
-					}));
-					(0, modal_namespaceObject.openModal)((props => external_BdApi_React_default().createElement(modal_namespaceObject.ModalRoot, _extends({}, props, {
-						className: ModalClasses.modal,
-						size: modal_namespaceObject.ModalSize.DYNAMIC
-					}), external_BdApi_React_default().createElement(ImageModal, _extends({
-						src,
-						original
-					}, bounds, {
-						animated,
-						children,
-						renderLinkComponent: props => external_BdApi_React_default().createElement(MaskedLink, props),
-						placeholder,
-						className: ModalClasses.image,
-						shouldAnimate: external_PluginApi_namespaceObject.DiscordModules.WindowInfo.isFocused()
-					})))));
-				};
-				class UserBackgrounds extends(external_BasePlugin_default()) {
-					constructor(...args) {
-						super(...args);
-						UserBackgrounds_defineProperty(this, "Store", bannerStore);
-					}
-					onStart() {
-						external_StyleLoader_default().inject();
-						bannerStore.initialize();
-						external_PluginApi_namespaceObject.Utilities.suppressErrors(this.patchBanners.bind(this), "UserBanner.default patch")();
-						external_PluginApi_namespaceObject.Utilities.suppressErrors(this.patchUserPopout.bind(this), "UserPopoutContainer.type patch")();
-					}
-					shouldShow(type) {
-						return switchCase(type, [
-							[0, settings.get("showInPopout", true)],
-							[1, settings.get("showInProfile", true)]
-						], false);
-					}
-					async patchUserPopout() {
-						const UserPopout = external_PluginApi_namespaceObject.WebpackModules.getByProps("UserPopoutAvatar");
-						const classes = external_PluginApi_namespaceObject.WebpackModules.getByProps("avatarPositionNormal");
-						external_PluginApi_namespaceObject.Patcher.after(UserPopout, "UserPopoutAvatar", ((_, [{
-							user
-						}], res) => {
-							const props = res?.props?.children?.props;
-							if (!props || props.className?.indexOf?.(classes.avatarPositionPremium) > -1 || !bannerStore.hasBanner(user.id)) return;
-							props.className = props.className.replace(classes.avatarPositionNormal, classes.avatarPositionPremium);
-						}));
-					}
-					async patchBanners() {
-						const BannerClasses = external_PluginApi_namespaceObject.WebpackModules.getByProps("banner", "popoutBanner");
-						const UserBanner = external_PluginApi_namespaceObject.WebpackModules.getModule((m => "UserBanner" === m.default.displayName));
-						function BannerContainer({
-							user,
-							bannerType,
-							children
-						}) {
-							const banner = (0, flux_namespaceObject.useStateFromStores)([bannerStore], (() => bannerStore.getBanner(user.id)), null, external_window_default().isEqual);
-							const [selection, setSelection] = (0, external_BdApi_React_namespaceObject.useState)(null == banner ? 1 : 0);
-							const ref = (0, external_BdApi_React_namespaceObject.useRef)(null);
-							const currentBanner = (0, external_BdApi_React_namespaceObject.useMemo)((() => 1 === selection || null == banner ? user.getBannerURL(void 0, true) : banner?.background), [banner, user, selection]);
-							const currentOrientation = (0, external_BdApi_React_namespaceObject.useMemo)((() => null != banner && 0 === selection ? banner.orientation : void 0), [banner, selection]);
-							if (!user.banner && !banner) return children;
-							children.props["data-user-id"] = user.id;
-							children.props.className = switchCase(bannerType, [
-								[0, (0, utils_namespaceObject.joinClassNames)("user-background", BannerClasses.banner, BannerClasses.popoutBannerPremium)],
-								[1, (0,
-									utils_namespaceObject.joinClassNames)("user-background", BannerClasses.banner, BannerClasses.profileBannerPremium)]
-							]);
-							children.ref = ref;
-							children.key = selection;
-							children.props.style = {
-								backgroundImage: `url(${currentBanner})`,
-								backgroundPosition: currentOrientation
-							};
-							if (children.props.children[0]) children.props.children[0] = null;
-							return external_BdApi_React_default().createElement("div", {
-								className: UserBackgrounds_banner.Z.container,
-								onContextMenu: event => {
-									const width = ref.current?.offsetWidth;
-									const height = ref.current?.offsetHeight;
-									(0, contextmenu_namespaceObject.openContextMenu)(event, (() => external_BdApi_React_default().createElement(contextmenu_namespaceObject.Menu, {
-										navId: "banner-context",
-										onClose: contextmenu_namespaceObject.closeContextMenu
-									}, external_BdApi_React_default().createElement(contextmenu_namespaceObject.MenuItem, {
-										id: "view-banner",
-										label: "View Banner",
-										key: "view-banner",
-										action: () => {
-											showImageModal(currentBanner, currentBanner, width, height, currentBanner?.endsWith(".gif"), null, currentBanner);
-										}
-									}))));
-								}
-							}, external_BdApi_React_default().createElement(TextBadge, {
-								color: constants_namespaceObject.Colors.BRAND_NEW_500,
-								text: 0 === selection ? "USRBG" : "NATIVE",
-								className: UserBackgrounds_banner.Z.badge
-							}), null != banner && null != user.banner && external_BdApi_React_default().createElement(components_namespaceObject.Button, {
-								className: (0, utils_namespaceObject.joinClassNames)(UserBackgrounds_banner.Z.arrow, UserBackgrounds_banner.Z.left),
-								key: "left",
-								look: components_namespaceObject.Button.Looks.BLANK,
-								size: components_namespaceObject.Button.Sizes.TINY,
-								onClick: setSelection.bind(null, 0),
-								disabled: 0 === selection || null == user.banner
-							}, external_BdApi_React_default().createElement(Arrow, {
-								direction: Arrow.Directions.LEFT
-							})), children, null != banner && null != user.banner && external_BdApi_React_default().createElement(components_namespaceObject.Button, {
-								className: (0, utils_namespaceObject.joinClassNames)(UserBackgrounds_banner.Z.arrow, UserBackgrounds_banner.Z.right),
-								key: "right",
-								look: components_namespaceObject.Button.Looks.BLANK,
-								size: components_namespaceObject.Button.Sizes.TINY,
-								onClick: setSelection.bind(null, 1),
-								disabled: 1 === selection || null == banner
-							}, external_BdApi_React_default().createElement(Arrow, {
-								direction: Arrow.Directions.RIGHT,
-								key: "right"
-							})));
-						}
-						external_PluginApi_namespaceObject.Patcher.after(UserBanner, "default", ((__, [props], res) => external_BdApi_React_default().createElement(BannerContainer, _extends({}, props, {
-							children: res,
-							key: props.user.id
-						}))));
-					}
-					onStop() {
-						external_StyleLoader_default().remove();
-						external_PluginApi_namespaceObject.Patcher.unpatchAll();
-						bannerStore.destroy();
-					}
-				}
 			},
 			645: module => {
 				module.exports = function(cssWithMappingToString) {
@@ -733,7 +387,346 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				});
 			};
 		})();
-		var __webpack_exports__ = __webpack_require__(515);
+		var __webpack_exports__ = {};
+		(() => {
+			__webpack_require__.r(__webpack_exports__);
+			__webpack_require__.d(__webpack_exports__, {
+				default: () => UserBackgrounds
+			});
+			const external_BasePlugin_namespaceObject = BasePlugin;
+			var external_BasePlugin_default = __webpack_require__.n(external_BasePlugin_namespaceObject);
+			const external_PluginApi_namespaceObject = PluginApi;
+			const flux_namespaceObject = Modules["@discord/flux"];
+			const modules_namespaceObject = Modules["@discord/modules"];
+			const external_require_https_namespaceObject = require("https");
+			const utils_namespaceObject = Modules["@discord/utils"];
+			function _defineProperty(obj, key, value) {
+				if (key in obj) Object.defineProperty(obj, key, {
+					value,
+					enumerable: true,
+					configurable: true,
+					writable: true
+				});
+				else obj[key] = value;
+				return obj;
+			}
+			let banners;
+			const bannerStore = new class extends flux_namespaceObject.Store {
+				constructor() {
+					super(modules_namespaceObject.Dispatcher, {});
+					_defineProperty(this, "logger", new utils_namespaceObject.Logger(this.constructor.name));
+					_defineProperty(this, "intervalTimer", 36e5);
+					_defineProperty(this, "_interval", void 0);
+					_defineProperty(this, "API_URL", "https://discord-custom-covers.github.io/usrbg/dist/usrbg.json");
+					_defineProperty(this, "fetchBanners", (() => {
+						(0, external_require_https_namespaceObject.get)(this.API_URL, (res => {
+							const chunks = [];
+							res.on("data", (chunk => chunks.push(chunk)));
+							res.on("end", (async () => {
+								try {
+									banners = new Map(JSON.parse(chunks.join("")).map((key => [key.uid, {
+										background: key.img,
+										orientation: key.orientation
+									}])));
+									this.emitChange();
+								} catch (error) {
+									this.logger.error(error);
+								}
+							}));
+							res.on("error", (error => this.logger.error(error)));
+						}));
+					}));
+				}
+				destroy() {
+					if (!this._initialized) return;
+					clearInterval(this._interval);
+				}
+				getState() {
+					return banners;
+				}
+				initialize() {
+					this._initialized = true;
+					this._interval = setInterval(this.fetchBanners, this.intervalTimer);
+					this.fetchBanners();
+				}
+				getBannerURL(userId) {
+					return banners.get(userId)?.background;
+				}
+				getBanner(userId) {
+					return banners.get(userId);
+				}
+				hasBanner(userId) {
+					return banners.has(userId);
+				}
+			};
+			const external_window_namespaceObject = window._;
+			var external_window_default = __webpack_require__.n(external_window_namespaceObject);
+			function switchCase(caze, cases, defaultValue) {
+				for (const caseTest of cases)
+					if (Array.isArray(caseTest)) {
+						const [tester, value] = caseTest;
+						if ("function" === typeof tester) {
+							if (tester(caze)) {
+								if ("function" === typeof value) return value(caze);
+								return value;
+							}
+						} else if (Object.is(caze, tester)) {
+							if ("function" === typeof value) return value(caze);
+							return value;
+						}
+					} else if ("object" === typeof caseTest)
+					if ("function" === typeof caseTest.test) {
+						if (caseTest.test(caze)) return caseTest.value;
+					} else if (Object.is(caze, caseTest.test)) return caseTest.value;
+				return defaultValue;
+			}
+			const external_BdApi_React_namespaceObject = BdApi.React;
+			var external_BdApi_React_default = __webpack_require__.n(external_BdApi_React_namespaceObject);
+			function errorboundary_defineProperty(obj, key, value) {
+				if (key in obj) Object.defineProperty(obj, key, {
+					value,
+					enumerable: true,
+					configurable: true,
+					writable: true
+				});
+				else obj[key] = value;
+				return obj;
+			}
+			class ErrorBoundary extends external_BdApi_React_default().Component {
+				constructor(...args) {
+					super(...args);
+					errorboundary_defineProperty(this, "state", {
+						hasError: false,
+						error: null,
+						info: null,
+						didFallbackError: false
+					});
+				}
+				componentDidCatch(error, info) {
+					this.setState({
+						hasError: true,
+						didFallbackError: false,
+						info,
+						error
+					});
+					console.error(`[ErrorBoundary:${this.props.id}] HI OVER HERE!! SHOW THIS SCREENSHOT TO THE DEVELOPER.\n`, error);
+				}
+				render() {
+					const {
+						fallback: Fallback
+					} = this.props;
+					if (this.state.hasError && "function" === typeof this.props.fallback && !this.state.didFallbackError) return external_BdApi_React_default().createElement(Fallback, {
+						error: this.state.error,
+						info: this.state.info
+					});
+					else if ("function" !== typeof this.props.fallback && this.state.hasError) return external_BdApi_React_default().createElement("div", null, "Component Error");
+					else if (this.state.didFallbackError && this.state.hasError) return external_BdApi_React_default().createElement("div", null, "Double Crashed.");
+					return this.props.children;
+				}
+				static from(Component, name, fallback) {
+					const id = name ?? Component.displayName ?? Component.name;
+					const Element = external_BdApi_React_default().memo((props => external_BdApi_React_default().createElement(ErrorBoundary, {
+						id,
+						fallback
+					}, external_BdApi_React_default().createElement(Component, props))));
+					Object.assign(Element, Component);
+					return Element;
+				}
+			}
+			var UserBackgrounds_banner = __webpack_require__(440);
+			const external_StyleLoader_namespaceObject = StyleLoader;
+			var external_StyleLoader_default = __webpack_require__.n(external_StyleLoader_namespaceObject);
+			const components_namespaceObject = Modules["@discord/components"];
+			const constants_namespaceObject = Modules["@discord/constants"];
+			const contextmenu_namespaceObject = Modules["@discord/contextmenu"];
+			const modal_namespaceObject = Modules["@discord/modal"];
+			function UserBackgrounds_defineProperty(obj, key, value) {
+				if (key in obj) Object.defineProperty(obj, key, {
+					value,
+					enumerable: true,
+					configurable: true,
+					writable: true
+				});
+				else obj[key] = value;
+				return obj;
+			}
+			function _extends() {
+				_extends = Object.assign || function(target) {
+					for (var i = 1; i < arguments.length; i++) {
+						var source = arguments[i];
+						for (var key in source)
+							if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
+					}
+					return target;
+				};
+				return _extends.apply(this, arguments);
+			}
+			const Arrow = ErrorBoundary.from(external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("Arrow"), "Arrow");
+			const TextBadge = ErrorBoundary.from(external_PluginApi_namespaceObject.WebpackModules.getByProps("TextBadge")?.TextBadge);
+			const ImageModal = ErrorBoundary.from(external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("ImageModal"));
+			const MaskedLink = ErrorBoundary.from(external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("MaskedLink"));
+			const ModalClasses = external_PluginApi_namespaceObject.WebpackModules.find((e => "object" === typeof e && 2 === Object.keys(e).length && e.modal && e.image));
+			const AssetUtils = external_PluginApi_namespaceObject.WebpackModules.getByProps("getUserBannerURL");
+			const showImageModal = async function(src, original = src, width, height, animated, children, placeholder) {
+				const bounds = await new Promise((resolve => {
+					Object.assign(new Image, {
+						src,
+						onload: ({
+							target
+						}) => {
+							resolve({
+								width: target.naturalWidth,
+								height: target.naturalHeight
+							});
+						},
+						onerror: () => resolve({
+							width,
+							height
+						})
+					});
+				}));
+				(0, modal_namespaceObject.openModal)((props => external_BdApi_React_default().createElement(modal_namespaceObject.ModalRoot, _extends({}, props, {
+					className: ModalClasses.modal,
+					size: modal_namespaceObject.ModalSize.DYNAMIC
+				}), external_BdApi_React_default().createElement(ImageModal, _extends({
+					src,
+					original
+				}, bounds, {
+					animated,
+					children,
+					renderLinkComponent: props => external_BdApi_React_default().createElement(MaskedLink, props),
+					placeholder,
+					className: ModalClasses.image,
+					shouldAnimate: external_PluginApi_namespaceObject.DiscordModules.WindowInfo.isFocused()
+				})))));
+			};
+			const getBannerURL = function(user, animated = false) {
+				try {
+					return AssetUtils.getUserBannerURL({
+						id: user.id,
+						canAnimate: animated,
+						banner: user.banner,
+						size: 300
+					});
+				} catch (error) {
+					external_PluginApi_namespaceObject.Logger.error("Could not get banner url of " + user.tag, error);
+					return "";
+				}
+			};
+			class UserBackgrounds extends(external_BasePlugin_default()) {
+				constructor(...args) {
+					super(...args);
+					UserBackgrounds_defineProperty(this, "Store", bannerStore);
+				}
+				onStart() {
+					external_StyleLoader_default().inject();
+					bannerStore.initialize();
+					external_PluginApi_namespaceObject.Utilities.suppressErrors(this.patchBanners.bind(this), "UserBanner.default patch")();
+					external_PluginApi_namespaceObject.Utilities.suppressErrors(this.patchUserPopout.bind(this), "UserPopoutContainer.type patch")();
+					external_PluginApi_namespaceObject.Utilities.suppressErrors(this.patchMemberListItem.bind(this), "MemberListIte.render patch")();
+				}
+				async patchUserPopout() {
+					const UserPopout = external_PluginApi_namespaceObject.WebpackModules.getByProps("UserPopoutAvatar");
+					const classes = external_PluginApi_namespaceObject.WebpackModules.getByProps("avatarPositionNormal");
+					external_PluginApi_namespaceObject.Patcher.after(UserPopout, "UserPopoutAvatar", ((_, [{
+						user
+					}], res) => {
+						const props = res?.props?.children?.props;
+						if (!props || props.className?.indexOf?.(classes.avatarPositionPremium) > -1 || !bannerStore.hasBanner(user.id)) return;
+						props.className = props.className.replace(classes.avatarPositionNormal, classes.avatarPositionPremium);
+					}));
+				}
+				async patchBanners() {
+					const BannerClasses = external_PluginApi_namespaceObject.WebpackModules.getByProps("banner", "popoutBanner");
+					const UserBanner = external_PluginApi_namespaceObject.WebpackModules.getModule((m => "UserBanner" === m.default.displayName));
+					function BannerContainer({
+						user,
+						bannerType,
+						children
+					}) {
+						const banner = (0, flux_namespaceObject.useStateFromStores)([bannerStore], (() => bannerStore.getBanner(user.id)), null, external_window_default().isEqual);
+						const [selection, setSelection] = (0, external_BdApi_React_namespaceObject.useState)(null == banner ? 1 : 0);
+						const ref = (0, external_BdApi_React_namespaceObject.useRef)(null);
+						const currentBanner = (0, external_BdApi_React_namespaceObject.useMemo)((() => 1 === selection || null == banner ? getBannerURL(user, true) : banner?.background), [banner, user, selection]);
+						const currentOrientation = (0, external_BdApi_React_namespaceObject.useMemo)((() => null != banner && 0 === selection ? banner.orientation : void 0), [banner, selection]);
+						if (!user.banner && !banner) return children;
+						children.props["data-user-id"] = user.id;
+						children.props.className = switchCase(bannerType, [
+							[0, (0, utils_namespaceObject.joinClassNames)("user-background", BannerClasses.banner, BannerClasses.popoutBannerPremium)],
+							[1, (0,
+								utils_namespaceObject.joinClassNames)("user-background", BannerClasses.banner, BannerClasses.profileBannerPremium)]
+						]);
+						children.ref = ref;
+						children.key = selection;
+						children.props.style = {
+							backgroundImage: `url(${currentBanner})`,
+							backgroundPosition: currentOrientation
+						};
+						if (children.props.children[0]) children.props.children[0] = null;
+						return external_BdApi_React_default().createElement("div", {
+							className: UserBackgrounds_banner.Z.container,
+							onContextMenu: event => {
+								const width = ref.current?.offsetWidth;
+								const height = ref.current?.offsetHeight;
+								(0, contextmenu_namespaceObject.openContextMenu)(event, (() => external_BdApi_React_default().createElement(contextmenu_namespaceObject.Menu, {
+									navId: "banner-context",
+									onClose: contextmenu_namespaceObject.closeContextMenu
+								}, external_BdApi_React_default().createElement(contextmenu_namespaceObject.MenuItem, {
+									id: "view-banner",
+									label: "View Banner",
+									key: "view-banner",
+									action: () => {
+										showImageModal(currentBanner, currentBanner, width, height, currentBanner?.endsWith(".gif"), null, currentBanner);
+									}
+								}))));
+							}
+						}, external_BdApi_React_default().createElement(TextBadge, {
+							color: constants_namespaceObject.Colors.BRAND_NEW_500,
+							text: 0 === selection ? "USRBG" : "NATIVE",
+							className: UserBackgrounds_banner.Z.badge
+						}), null != banner && null != user.banner && external_BdApi_React_default().createElement(components_namespaceObject.Button, {
+							className: (0, utils_namespaceObject.joinClassNames)(UserBackgrounds_banner.Z.arrow, UserBackgrounds_banner.Z.left),
+							key: "left",
+							look: components_namespaceObject.Button.Looks.BLANK,
+							size: components_namespaceObject.Button.Sizes.TINY,
+							onClick: setSelection.bind(null, 0),
+							disabled: 0 === selection || null == user.banner
+						}, external_BdApi_React_default().createElement(Arrow, {
+							direction: Arrow.Directions.LEFT
+						})), children, null != banner && null != user.banner && external_BdApi_React_default().createElement(components_namespaceObject.Button, {
+							className: (0, utils_namespaceObject.joinClassNames)(UserBackgrounds_banner.Z.arrow, UserBackgrounds_banner.Z.right),
+							key: "right",
+							look: components_namespaceObject.Button.Looks.BLANK,
+							size: components_namespaceObject.Button.Sizes.TINY,
+							onClick: setSelection.bind(null, 1),
+							disabled: 1 === selection || null == banner
+						}, external_BdApi_React_default().createElement(Arrow, {
+							direction: Arrow.Directions.RIGHT,
+							key: "right"
+						})));
+					}
+					external_PluginApi_namespaceObject.Patcher.after(UserBanner, "default", ((__, [props], res) => external_BdApi_React_default().createElement(BannerContainer, _extends({}, props, {
+						children: res,
+						key: props.user.id
+					}))));
+				}
+				async patchMemberListItem() {
+					const MemberListItem = await external_PluginApi_namespaceObject.ReactComponents.getComponentByName("MemberListItem", "." + external_PluginApi_namespaceObject.WebpackModules.getByProps("activity", "member")?.member);
+					external_PluginApi_namespaceObject.Patcher.after(MemberListItem, "render", ((_this, _, ret) => {
+						console.log({
+							_this,
+							ret
+						});
+					}));
+					MemberListItem.forceUpdateAll();
+				}
+				onStop() {
+					external_StyleLoader_default().remove();
+					external_PluginApi_namespaceObject.Patcher.unpatchAll();
+					bannerStore.destroy();
+				}
+			}
+		})();
 		module.exports.LibraryPluginHack = __webpack_exports__;
 	})();
 	const PluginExports = module.exports.LibraryPluginHack;
