@@ -17,7 +17,7 @@ const ChannelChat = wrapPromise(
 );
 const ChannelContext = React.createContext(null);
 const StatusIcon = WebpackModules.getByDisplayName("FluxContainer(Status)");
-const CallButtons = WebpackModules.getByDisplayName("ConnectedPrivateChannelCallButtonSubscribed");
+const CallButtons = WebpackModules.getByDisplayName("ConnectedPrivateChannelCallButtonSubscribed") ?? WebpackModules.getByDisplayName("ConnectedPrivateChannelCallButton");
 const FormatPlaceholder = WebpackModules.getModule(m => m?.toString().indexOf("TEXTAREA_PLACEHOLDER") > -1);
 const RemoveButton = WebpackModules.getByDisplayName("RemoveButton");
 const ChannelNameUtils = WebpackModules.getByProps("computeChannelName");
