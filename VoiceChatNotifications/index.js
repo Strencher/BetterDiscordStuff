@@ -1,7 +1,7 @@
-/// <reference path="../../typings/discord.d.ts" />
+/// <reference path="../../types/main.d.ts" />
 import {Timestamp} from "@discord/classes";
 import {ModalRoot, openModal} from "@discord/modal";
-import {Channels, SettingsStore, Status, Users} from "@discord/stores";
+import {Channels, Status, Users} from "@discord/stores";
 import {Logger, Patcher, ReactComponents, Utilities, WebpackModules} from "@zlibrary";
 import BasePlugin from "@zlibrary/plugin";
 import VoiceNotificationsButton from "./components/button";
@@ -17,11 +17,12 @@ import * as Notifications from "./modules/notifications";
 import Commands from "common/apis/commands";
 import Clyde from "common/apis/clyde";
 
-const VoiceStateStore = WebpackModules.getByProps("getVoiceStates");
+const VoiceStateStore = WebpackModules.getByProps("getVoiceStatesForChannel");
 const SelectedVoiceChannelStore = WebpackModules.getByProps("getVoiceChannelId");
 const {AnimatedAvatar, Sizes: AvatarSizes} = WebpackModules.getByProps("AnimatedAvatar");
 const MessageTimestamp = WebpackModules.getByDisplayName("MessageTimestamp");
 const Members = WebpackModules.getByProps("getMember");
+const SettingsStore = WebpackModules.getByProps("getAllSettings");
 
 export default class VoiceChatNotifications extends BasePlugin {
 	logs = [];
@@ -96,7 +97,7 @@ export default class VoiceChatNotifications extends BasePlugin {
 	}
 
 	async patchHeaderBar() {
-		const HeaderBarContainer = await ReactComponents.getComponentByName("HeaderBarContainer", `.${WebpackModules.getByProps("chat", "threadSidebar", "uploadArea").title}`);
+		const HeaderBarContainer = await ReactComponents.getComponentByName("HeaderBarContainer", `.${WebpackModules.getByProps("chat", "title", "uploadArea").title}`);
 
 		Patcher.after(HeaderBarContainer.component.prototype, "render", _this => {
 			const tree = Utilities.getNestedProp(_this, "props.toolbar");
@@ -131,7 +132,7 @@ export default class VoiceChatNotifications extends BasePlugin {
 					<div className={style.wrapper}>
 						<div className={style.header}>
 							<div className={style.username}>{user.username}</div>
-							<MessageTimestamp timestamp={new Timestamp(timestamp)} className={style.timestamp} />
+							<MessageTimestamp timestamp={timestamp} className={style.timestamp} />
 						</div>
 						<div className={style.message}>{message}</div>
 					</div>
@@ -141,7 +142,7 @@ export default class VoiceChatNotifications extends BasePlugin {
 				}
 			);
 		} else {
-			const notification = new Notification(user.username + " - " + timestamp.toLocaleString(), {
+			const notification = new Notification(user.username + " - " + timestamp._d.toLocaleTimeString(), {
 				icon: user.getAvatarURL(),
 				body: message,
 				silent: true
@@ -159,7 +160,7 @@ export default class VoiceChatNotifications extends BasePlugin {
 		));
 	}
 
-	onVoiceStateChange = props => {
+	onVoiceStateChange = BdApi.suppressErrors(props => {
 		for (const update of props.voiceStates) {
 			let user = Users.getUser(update.userId) || {};
 			if (Settings.get("ignoreSelf", false) && user.id === Users.getCurrentUser().id) return;
@@ -205,7 +206,7 @@ export default class VoiceChatNotifications extends BasePlugin {
 				this.lastStates[update.userId] = update;
 			}
 		}
-	}
+	}, "VoiceChatNotifications.onVoiceStateChange");
 
 	onSelect = e => {
 		this.logs = [];

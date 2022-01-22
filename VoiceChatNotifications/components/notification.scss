@@ -3,6 +3,7 @@ $padding: 20px;
 :global(#voicechatnotifications) {
     position: absolute;
     z-index: 999;
+    margin: 10px 0 0 20px;
 
     .container {
         z-index: 999;

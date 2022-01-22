@@ -18,7 +18,7 @@ export default function LogsPanel() {
     const logs = useStore(s => s.logs);
 
     if (!logs.length) return (
-        <b className={styles.empty}>Dont't worry, the plugin isn't broken, nothing just happend.</b>
+        <b className={styles.empty}>Don't worry, the plugin isn't broken, nothing has happened yet.</b>
     );
 
     const formattedLogs = [];
