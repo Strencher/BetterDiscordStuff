@@ -1,6 +1,6 @@
 /**
  * @name UnreadCountBadges
- * @version 1.1.1
+ * @version 1.2.0
  * @author Strencher, Metalloriff
  * @description Adds unread badges to guilds, channels & more.
  * @source https://github.com/Strencher/BetterDiscordStuff/tree/master/UnreadCountBadges
@@ -32,7 +32,7 @@
 const config = {
 	"info": {
 		"name": "UnreadCountBadges",
-		"version": "1.1.1",
+		"version": "1.2.0",
 		"authors": [{
 				"name": "Strencher",
 				"discord_id": "415849376598982656",
@@ -54,7 +54,9 @@ const config = {
 		"type": "fixed",
 		"title": "Fixes",
 		"items": [
-			"Called it, one day after another breaking change. Fixed of course."
+			"Fixed unread count on guilds",
+			"Fixed settings crash",
+			"Fixed displaying wrong amount of unread messages"
 		]
 	}],
 	"build": {
@@ -113,7 +115,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			},
 			'@discord/utils': {
 				get 'joinClassNames'() {
-					return ___createMemoize___(this, 'joinClassNames', () => BdApi.findModule(m => typeof m?.default?.default === 'function')?.default)
+					return ___createMemoize___(this, 'joinClassNames', () => BdApi.findModule(e => e.toString().indexOf('return e.join(" ")') > 200))
 				},
 				get 'useForceUpdate'() {
 					return ___createMemoize___(this, 'useForceUpdate', () => BdApi.findModuleByProps('useForceUpdate')?.useForceUpdate)
@@ -122,7 +124,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					return ___createMemoize___(this, 'Logger', () => BdApi.findModuleByProps('setLogFn')?.default)
 				},
 				get 'Navigation'() {
-					return ___createMemoize___(this, 'Navigation', () => BdApi.findModuleByProps('replaceWith'))
+					return ___createMemoize___(this, 'Navigation', () => BdApi.findModuleByProps('replaceWith', 'currentRouteIsPeekView'))
 				}
 			},
 			'@discord/components': {
@@ -147,6 +149,9 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				get 'Button'() {
 					return ___createMemoize___(this, 'Button', () => BdApi.findModuleByProps('DropdownSizes'))
 				},
+				get 'Popout'() {
+					return ___createMemoize___(this, 'Popout', () => BdApi.findModuleByDisplayName('Popout'))
+				},
 				get 'Flex'() {
 					return ___createMemoize___(this, 'Flex', () => BdApi.findModuleByDisplayName('Flex'))
 				},
@@ -161,11 +166,14 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				get 'Dispatcher'() {
 					return ___createMemoize___(this, 'Dispatcher', () => BdApi.findModuleByProps('dirtyDispatch', 'subscribe'))
 				},
+				get 'ComponentDispatcher'() {
+					return ___createMemoize___(this, 'ComponentDispatcher', () => BdApi.findModuleByProps('ComponentDispatch')?.ComponentDispatch)
+				},
 				get 'EmojiUtils'() {
 					return ___createMemoize___(this, 'EmojiUtils', () => BdApi.findModuleByProps('uploadEmoji'))
 				},
 				get 'PermissionUtils'() {
-					return ___createMemoize___(this, 'PermissionUtils', () => BdApi.findModuleByProps('computePermissions'))
+					return ___createMemoize___(this, 'PermissionUtils', () => BdApi.findModuleByProps('computePermissions', 'canManageUser'))
 				},
 				get 'DMUtils'() {
 					return ___createMemoize___(this, 'DMUtils', () => BdApi.findModuleByProps('openPrivateChannel'))
@@ -176,7 +184,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					return ___createMemoize___(this, 'Messages', () => BdApi.findModuleByProps('getMessage', 'getMessages'))
 				},
 				get 'Channels'() {
-					return ___createMemoize___(this, 'Channels', () => BdApi.findModuleByProps('getChannel'))
+					return ___createMemoize___(this, 'Channels', () => BdApi.findModuleByProps('getChannel', 'getDMFromUserId'))
 				},
 				get 'Guilds'() {
 					return ___createMemoize___(this, 'Guilds', () => BdApi.findModuleByProps('getGuild'))
@@ -191,7 +199,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					return ___createMemoize___(this, 'Info', () => BdApi.findModuleByProps('getSessionId'))
 				},
 				get 'Status'() {
-					return ___createMemoize___(this, 'Status', () => BdApi.findModuleByProps('getStatus'))
+					return ___createMemoize___(this, 'Status', () => BdApi.findModuleByProps('getStatus', 'getActivities', 'getState'))
 				},
 				get 'Users'() {
 					return ___createMemoize___(this, 'Users', () => BdApi.findModuleByProps('getUser', 'getCurrentUser'))
@@ -209,7 +217,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					return ___createMemoize___(this, 'Activities', () => BdApi.findModuleByProps('getActivities'))
 				},
 				get 'Games'() {
-					return ___createMemoize___(this, 'Games', () => BdApi.findModuleByProps('getGame'))
+					return ___createMemoize___(this, 'Games', () => BdApi.findModuleByProps('getGame', 'games'))
 				},
 				get 'Auth'() {
 					return ___createMemoize___(this, 'Auth', () => BdApi.findModuleByProps('getId', 'isGuest'))
@@ -227,7 +235,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				}
 			},
 			get '@discord/i18n'() {
-				return ___createMemoize___(this, '@discord/i18n', () => BdApi.findModuleByProps('getLocale'))
+				return ___createMemoize___(this, '@discord/i18n', () => BdApi.findModule(m => m.Messages?.CLOSE && typeof(m.getLocale) === 'function'))
 			},
 			get '@discord/constants'() {
 				return ___createMemoize___(this, '@discord/constants', () => BdApi.findModuleByProps('API_HOST'))
@@ -252,7 +260,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				return ___createMemoize___(this, '@discord/flux', () => Object.assign({}, BdApi.findModuleByProps('useStateFromStores').default, BdApi.findModuleByProps('useStateFromStores')))
 			},
 			get '@discord/modal'() {
-				return ___createMemoize___(this, '@discord/modal', () => Object.assign({}, BdApi.findModuleByProps('ModalRoot'), BdApi.findModuleByProps('openModal')))
+				return ___createMemoize___(this, '@discord/modal', () => Object.assign({}, BdApi.findModuleByProps('ModalRoot'), BdApi.findModuleByProps('openModal', 'closeAllModals')))
 			},
 			get '@discord/connections'() {
 				return ___createMemoize___(this, '@discord/connections', () => BdApi.findModuleByProps('get', 'isSupported', 'map'))
@@ -283,12 +291,12 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				__webpack_require__.d(__webpack_exports__, {
 					Z: () => __WEBPACK_DEFAULT_EXPORT__
 				});
-				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(645);
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(246);
 				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
 				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
 					return i[1];
 				}));
-				___CSS_LOADER_EXPORT___.push([module.id, ".UnreadCountBadges-badge-channelUnread{margin-left:3px}.UnreadCountBadges-badge-unread{left:0;position:absolute;bottom:0}", ""]);
+				___CSS_LOADER_EXPORT___.push([module.id, ".UnreadCountBadges-badge-channelUnread{margin-left:3px}.UnreadCountBadges-badge-unread{left:0;position:absolute;bottom:0;pointer-events:none}", ""]);
 				___CSS_LOADER_EXPORT___.locals = {
 					channelUnread: "UnreadCountBadges-badge-channelUnread",
 					unread: "UnreadCountBadges-badge-unread"
@@ -300,7 +308,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				__webpack_require__.d(__webpack_exports__, {
 					Z: () => __WEBPACK_DEFAULT_EXPORT__
 				});
-				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(645);
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(246);
 				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
 				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
 					return i[1];
@@ -316,7 +324,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				__webpack_require__.d(__webpack_exports__, {
 					Z: () => __WEBPACK_DEFAULT_EXPORT__
 				});
-				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(645);
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(246);
 				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
 				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
 					return i[1];
@@ -337,7 +345,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				__webpack_require__.d(__webpack_exports__, {
 					Z: () => __WEBPACK_DEFAULT_EXPORT__
 				});
-				var _css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(645);
+				var _css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(246);
 				var _css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
 				var ___CSS_LOADER_EXPORT___ = _css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
 					return i[1];
@@ -358,7 +366,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
 				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
 			},
-			402: (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+			762: (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 				__webpack_require__.r(__webpack_exports__);
 				__webpack_require__.d(__webpack_exports__, {
 					default: () => UnreadCountBadges
@@ -366,7 +374,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				const external_PluginApi_namespaceObject = PluginApi;
 				const external_BasePlugin_namespaceObject = BasePlugin;
 				var external_BasePlugin_default = __webpack_require__.n(external_BasePlugin_namespaceObject);
-				var external_BdApi_React_ = __webpack_require__(113);
+				var external_BdApi_React_ = __webpack_require__(832);
 				var external_BdApi_React_default = __webpack_require__.n(external_BdApi_React_);
 				const external_Modules_react_spring_namespaceObject = Modules["react-spring"];
 				var badge = __webpack_require__(185);
@@ -404,7 +412,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				const Settings = new SettingsManager(package_namespaceObject.um.u2);
 				const settings = Settings;
 				const constants_namespaceObject = Modules["@discord/constants"];
-				var React = __webpack_require__(113);
+				var React = __webpack_require__(832);
 				function _extends() {
 					_extends = Object.assign || function(target) {
 						for (var i = 1; i < arguments.length; i++) {
@@ -434,6 +442,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					selected
 				}) {
 					const unreadCount = (0, flux_namespaceObject.useStateFromStores)([UnreadStore, settings], (() => {
+						if (!UnreadStore.hasUnread(channelId)) return 0;
 						if (!settings.get("showOnChannels", true)) return 0;
 						if (!settings.get("showMutedChannelUnread", false) && isChannelMuted(guildId, channelId) && settings.get("showMutedChannelWhenSelected", true) ? !selected : false) return 0;
 						return UnreadStore.getUnreadCount(channelId);
@@ -639,9 +648,9 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				}
 				Category.Looks = {
 					COMPACT: category.Z.compact,
-					DEFAULT: category.Z["default"]
+					DEFAULT: category.Z.default
 				};
-				var createUpdateWrapper_React = __webpack_require__(113);
+				var createUpdateWrapper_React = __webpack_require__(832);
 				function createUpdateWrapper_extends() {
 					createUpdateWrapper_extends = Object.assign || function(target) {
 						for (var i = 1; i < arguments.length; i++) {
@@ -919,7 +928,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					}
 					async patchChannelItem() {
 						const ChannelItem = external_PluginApi_namespaceObject.WebpackModules.getModule((m => "ChannelItem" === m?.default?.displayName));
-						external_PluginApi_namespaceObject.Patcher.after(ChannelItem, "default", ((_, [{
+						external_PluginApi_namespaceObject.Patcher.before(ChannelItem, "default", ((_, [{
 							channel,
 							children,
 							muted,
@@ -1059,6 +1068,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						return channels.SELECTABLE.reduce(((count, {
 							channel
 						}) => {
+							if (!UnreadCountBadges_UnreadStore.hasUnread(channel.id)) return count;
 							if (!includeMutedChannels && isChannelMuted(channel.guild_id, channel.id)) return count;
 							if (!includeMutedChannels && channel.parent_id && isChannelMuted(guildId, channel.parent_id)) return count;
 							return count += UnreadCountBadges_UnreadStore.getUnreadCount(channel.id);
@@ -1072,7 +1082,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						instance.forceUpdate();
 					}
 					async patchGuild() {
-						const GuildComponents = external_PluginApi_namespaceObject.WebpackModules.getByProps("HubGuild");
+						const GuildNode = external_PluginApi_namespaceObject.WebpackModules.find((m => m.default && "GuildNode" === m.default.displayName));
 						const PatchedGuild = ({
 							__originalType,
 							...props
@@ -1100,7 +1110,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 							}
 							return res;
 						};
-						external_PluginApi_namespaceObject.Patcher.after(GuildComponents, "default", ((_this, __, res) => {
+						external_PluginApi_namespaceObject.Patcher.after(GuildNode, "default", ((_this, __, res) => {
 							if (!res || !res.props) return;
 							const original = res.type;
 							res.props.__originalType = original;
@@ -1139,11 +1149,9 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						TutorialIndicator.forceUpdateAll();
 					}
 					async patchFolder() {
-						const FolderIcon = external_PluginApi_namespaceObject.WebpackModules.getModule((m => m?.type?.render?.toString().indexOf("folderColor") > -1)).type;
-						external_PluginApi_namespaceObject.Patcher.after(FolderIcon, "render", ((_, [props], res) => {
-							const mask = external_PluginApi_namespaceObject.Utilities.findInReactTree(res, (e => e?.props?.hasOwnProperty("lowerBadgeWidth")));
-							if (!mask || mask.type === BlobMaskWrapper) return;
-							Object.assign(mask.props, {
+						const FolderHeader = external_PluginApi_namespaceObject.WebpackModules.find((m => m.default && "FolderHeader" === m.default.displayName));
+						external_PluginApi_namespaceObject.Patcher.after(FolderHeader, "default", ((_, [props], res) => {
+							Object.assign(res.props, {
 								collector: ({
 									guildIds
 								}) => {
@@ -1154,12 +1162,12 @@ function buildPlugin([BasePlugin, PluginApi]) {
 									}), 0));
 								},
 								color: "folderColor",
-								maskType: mask.type,
-								guildIds: props.guildIds,
+								maskType: res.type,
+								guildIds: props.folderNode?.children?.map((e => e.id)) ?? [],
 								shouldShow: (unread, props) => unread > 0 && (props.isFolderExpanded ? settings.get("showOnExpandedFolders", true) : true),
 								isFolderExpanded: FolderStatesStore.isFolderExpanded(props.folderId)
 							});
-							mask.type = BlobMaskWrapper;
+							res.type = BlobMaskWrapper;
 						}));
 					}
 					onStop() {
@@ -1170,10 +1178,10 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					}
 				}
 			},
-			645: module => {
+			246: module => {
 				module.exports = function(cssWithMappingToString) {
 					var list = [];
-					list.toString = function toString() {
+					list.toString = function() {
 						return this.map((function(item) {
 							var content = cssWithMappingToString(item);
 							if (item[2]) return "@media ".concat(item[2], " {").concat(content, "}");
@@ -1202,7 +1210,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					return list;
 				};
 			},
-			113: module => {
+			832: module => {
 				module.exports = BdApi.React;
 			}
 		};
@@ -1248,7 +1256,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				});
 			};
 		})();
-		var __webpack_exports__ = __webpack_require__(402);
+		var __webpack_exports__ = __webpack_require__(762);
 		module.exports.LibraryPluginHack = __webpack_exports__;
 	})();
 	const PluginExports = module.exports.LibraryPluginHack;
