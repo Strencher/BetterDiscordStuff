@@ -1,6 +1,6 @@
 /**
  * @name UserBackgrounds
- * @version 1.5.1
+ * @version 1.6.1
  * @description A database of custom user requested backgrounds designed for BetterDiscord and Powercord.
  * @author Strencher, Tropical
  * @source https://github.com/Strencher/BetterDiscordStuff/tree/development/UserBackgrounds
@@ -33,7 +33,7 @@
 const config = {
 	"info": {
 		"name": "UserBackgrounds",
-		"version": "1.5.1",
+		"version": "1.6.1",
 		"description": "A database of custom user requested backgrounds designed for BetterDiscord and Powercord.",
 		"authors": [{
 				"name": "Strencher",
@@ -55,7 +55,7 @@ const config = {
 		"type": "fixed",
 		"title": "fixed",
 		"items": [
-			"Invisible native banner."
+			"Account settings banner."
 		]
 	}],
 	"build": {
@@ -152,7 +152,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					return ___createMemoize___(this, 'TransitionGroup', () => BdApi.findModuleByDisplayName('TransitionGroup'))
 				},
 				get 'Button'() {
-					return ___createMemoize___(this, 'Button', () => BdApi.findModule(m => 'DropdownSizes' in m && typeof(m) === 'function'))
+					return ___createMemoize___(this, 'Button', () => BdApi.findModuleByProps('DropdownSizes'))
 				},
 				get 'Popout'() {
 					return ___createMemoize___(this, 'Popout', () => BdApi.findModuleByDisplayName('Popout'))
@@ -296,12 +296,12 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				__webpack_require__.d(__webpack_exports__, {
 					Z: () => __WEBPACK_DEFAULT_EXPORT__
 				});
-				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(645);
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(246);
 				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
 				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
 					return i[1];
 				}));
-				___CSS_LOADER_EXPORT___.push([module.id, ".UserBackgrounds-banner-arrow{position:absolute;top:0;z-index:99;padding-top:20px;padding-bottom:20px}.UserBackgrounds-banner-arrow svg{color:var(--interactive-normal)}.UserBackgrounds-banner-arrow.UserBackgrounds-banner-left{left:0}.UserBackgrounds-banner-arrow.UserBackgrounds-banner-right{right:0}.UserBackgrounds-banner-container{display:flex;position:relative}.UserBackgrounds-banner-badge{position:absolute;bottom:10px;right:10px;z-index:99}.accountProfileCard-1XCH88>.UserBackgrounds-banner-container{height:100px}.accountProfileCard-1XCH88 .UserBackgrounds-banner-badge+div,.accountProfileCard-1XCH88 .UserBackgrounds-banner-left+div{width:100%;background:center/cover}", ""]);
+				___CSS_LOADER_EXPORT___.push([module.id, ".UserBackgrounds-banner-arrow{position:absolute;top:0;z-index:99;padding-top:20px;padding-bottom:20px}.UserBackgrounds-banner-arrow svg{color:var(--interactive-normal)}.UserBackgrounds-banner-arrow.UserBackgrounds-banner-left{left:0}.UserBackgrounds-banner-arrow.UserBackgrounds-banner-right{right:0}.UserBackgrounds-banner-container{display:flex;position:relative}.UserBackgrounds-banner-badge{position:absolute;bottom:10px;right:10px;z-index:99}.accountProfileCard-lbN7n->.UserBackgrounds-banner-container{height:100px}.accountProfileCard-lbN7n- .UserBackgrounds-banner-badge+div,.accountProfileCard-lbN7n- .UserBackgrounds-banner-left+div{width:100%;background:center/cover}", ""]);
 				___CSS_LOADER_EXPORT___.locals = {
 					arrow: "UserBackgrounds-banner-arrow",
 					left: "UserBackgrounds-banner-left",
@@ -312,10 +312,10 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
 				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
 			},
-			645: module => {
+			246: module => {
 				module.exports = function(cssWithMappingToString) {
 					var list = [];
-					list.toString = function toString() {
+					list.toString = function() {
 						return this.map((function(item) {
 							var content = cssWithMappingToString(item);
 							if (item[2]) return "@media ".concat(item[2], " {").concat(content, "}");
