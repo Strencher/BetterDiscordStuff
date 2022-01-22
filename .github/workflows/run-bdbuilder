@@ -4,6 +4,9 @@ const _path = require("path");
 const _cp = require("child_process");
 const _fs = require("fs");
 
+// Install pnpm
+_cp.execSync("npm i -g pnpm", {cwd: ".", stdio: ["ignore", "inherit", "inherit"]});
+
 const changedFilesIgnore = [
   "bdbuilder",
   "scripts",
@@ -42,7 +45,7 @@ function actuallyDoSomething() {
   if (!changedPlugins.length) throw new Error("Got nothing to build");
 
   // Needed while bdbuilder is a submodule; obsolete after npm release
-  _cp.execSync("npm i", {
+  _cp.execSync("pnpm i", {
     stdio: ["ignore", "inherit", "inherit"]
   });
 
@@ -56,12 +59,12 @@ function actuallyDoSomething() {
 function buildPlugin(pluginName) {
   console.log(`Building ${pluginName}...`);
 
-  _cp.execSync("npm i", {
+  _cp.execSync("pnpm i", {
     cwd: pluginName,
     stdio: ["ignore", "inherit", "inherit"]
   });
 
-  _cp.execSync(`npx bdbuilder --plugin="${pluginName}" --build --config=bdbuilder.prod.config.json`, {
+  _cp.execSync(`pnpx bdbuilder --plugin="${pluginName}" --build --config=bdbuilder.prod.config.json`, {
     cwd: ".",
     stdio: ["ignore", "inherit", "inherit"]
   });

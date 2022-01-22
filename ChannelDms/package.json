@@ -10,7 +10,7 @@
                 "twitter_username": "Strencher3"
             }
         ],
-        "description": "TODO",
+        "description": "Allows you to open popout chats of direct messages inside servers.",
         "github": "https://github.com/Strencher/BetterDiscordStuff/tree/master/ChannelDms",
         "github_raw": "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/ChannelDms/ChannelDms.plugin.js"
     },
