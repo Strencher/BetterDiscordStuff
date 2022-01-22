@@ -80,7 +80,7 @@ export default class UnreadCountBadges extends BasePlugin {
     async patchChannelItem() {
         const ChannelItem = WebpackModules.getModule(m => m?.default?.displayName === "ChannelItem");
 
-        Patcher.after(ChannelItem, "default", (_, [{channel, children, muted, selected}]) => {
+        Patcher.before(ChannelItem, "default", (_, [{channel, children, muted, selected}]) => {
             if (!Array.isArray(children) || channel.type == ChannelTypes.GUILD_VOICE) return;
             
             children.push(
@@ -233,6 +233,7 @@ export default class UnreadCountBadges extends BasePlugin {
         if (!Array.isArray(channels.SELECTABLE)) return 0;
 
         return channels.SELECTABLE.reduce<number>((count, {channel}) => {
+            if (!UnreadStore.hasUnread(channel.id)) return count;
             if (!includeMutedChannels && isChannelMuted(channel.guild_id, channel.id)) return count;
             if (!includeMutedChannels && (channel.parent_id && isChannelMuted(guildId, channel.parent_id))) return count;
 
@@ -250,7 +251,7 @@ export default class UnreadCountBadges extends BasePlugin {
     }
 
     async patchGuild() {
-        const GuildComponents = WebpackModules.getByProps("HubGuild");
+        const GuildNode = WebpackModules.find(m => m.default && m.default.displayName === "GuildNode");
 
         const PatchedGuild = ({__originalType, ...props}) => {
             const res = Reflect.apply(__originalType, this, [props]);
@@ -282,7 +283,7 @@ export default class UnreadCountBadges extends BasePlugin {
             return res;
         }
 
-        Patcher.after(GuildComponents, "default", (_this, __, res) => {
+        Patcher.after(GuildNode, "default", (_this, __, res) => {
             if (!res || !res.props) return;
 
             const original = res.type;
@@ -340,13 +341,10 @@ export default class UnreadCountBadges extends BasePlugin {
     }
 
     async patchFolder() {
-        const FolderIcon = WebpackModules.getModule(m => m?.type?.render?.toString().indexOf("folderColor") > -1).type;
+        const FolderHeader = WebpackModules.find(m => m.default && m.default.displayName === "FolderHeader");
 
-        Patcher.after(FolderIcon, "render", (_, [props], res) => {
-            const mask = Utilities.findInReactTree(res, e => e?.props?.hasOwnProperty("lowerBadgeWidth"));
-            if (!mask || mask.type === BlobMaskWrapper) return;
-            
-            Object.assign(mask.props, {
+        Patcher.after(FolderHeader, "default", (_, [props], res) => {
+            Object.assign(res.props, {
                 collector: ({ guildIds }) => {
                     if (!Settings.get("showOnFolders", true)) return 0;
 
@@ -359,13 +357,13 @@ export default class UnreadCountBadges extends BasePlugin {
                     );
                 },
                 color: "folderColor",
-                maskType: mask.type,
-                guildIds: props.guildIds,
+                maskType: res.type,
+                guildIds: props.folderNode?.children?.map(e => e.id) ?? [],
                 shouldShow: (unread: number, props: any) => unread > 0 && (props.isFolderExpanded ? Settings.get("showOnExpandedFolders", true) : true),
                 isFolderExpanded: FolderStatesStore.isFolderExpanded(props.folderId)
             });
 
-            mask.type = BlobMaskWrapper;
+            res.type = BlobMaskWrapper;
         });
     }
 

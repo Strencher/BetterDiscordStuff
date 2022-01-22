@@ -20,6 +20,7 @@ export function ConnectedUnreadBadge(props) {
 
 export default function ChannelUnreadBadge({channelId, guildId, selected}) {
     const unreadCount = useStateFromStores([UnreadStore, Settings], () => {
+        if (!UnreadStore.hasUnread(channelId)) return 0;
         if (!Settings.get("showOnChannels", true)) return 0;
         if ((!Settings.get("showMutedChannelUnread", false) && isChannelMuted(guildId, channelId)) && Settings.get("showMutedChannelWhenSelected", true) ? !selected : false) return 0;
         
