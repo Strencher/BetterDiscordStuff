@@ -45,7 +45,7 @@ function actuallyDoSomething() {
   //if (!changedPlugins.length) throw new Error("Got nothing to build");
 
   // Needed while bdbuilder is a submodule; obsolete after npm release
-  _cp.execSync("pnpm i", {
+  _cp.execSync("npm i", {
     stdio: ["ignore", "inherit", "inherit"]
   });
 
