@@ -8,7 +8,7 @@ import SettingsPanel from "./components/settings";
 const FriendsStore = WebpackModules.getByProps("isBlocked", "_dispatchToken");
 
 export default class TypingUsersPlus extends BasePlugin {
-    onStart() {
+    onStart(): void {
         styles.inject();
         this.patchTypingUsers();
     }
