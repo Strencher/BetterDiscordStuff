@@ -42,6 +42,7 @@ jobs:
         run: |
           echo "//npm.pkg.github.com/:_authToken=${{ secrets.GH_NPM_TOKEN }}" >> .npmrc
           echo '@betterdiscordbuilder:registry=https://npm.pkg.github.com' >> .npmrc
+          ls
 
       - name: install latest bdbuilder version
         run: |
