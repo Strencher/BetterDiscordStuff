@@ -34,18 +34,15 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: 16.x
-          always-auth: true
 
       - name: setup env
         run: |
-          echo '@betterdiscordbuilder:registry=https://npm.pkg.github.com' >> .npmrc
           echo "//npm.pkg.github.com/:_authToken=${{ secrets.GH_NPM_TOKEN }}" >> .npmrc
+          echo '@betterdiscordbuilder:registry=https://npm.pkg.github.com' >> .npmrc
 
       - name: install latest bdbuilder version
         run: |
-          npm i -D @betterdiscordbuilder/bdbuilder@latest --registry https://npm.pkg.github.com/
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.GH_NPM_TOKEN }}
+          npm i -D @betterdiscordbuilder/bdbuilder@latest
 
       - name: detect changed files
         id: files
