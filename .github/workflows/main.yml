@@ -35,7 +35,6 @@ jobs:
         with:
           node-version: 16.x
           always-auth: true
-          registry-url: 'https://npm.pkg.github.com'
 
       - name: install latest bdbuilder version
         run: |
