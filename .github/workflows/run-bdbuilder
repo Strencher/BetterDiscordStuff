@@ -42,7 +42,7 @@ console.log("Will build the following plugins:", changedPlugins.join(", "));
 actuallyDoSomething();
 
 function actuallyDoSomething() {
-  if (!changedPlugins.length) throw new Error("Got nothing to build");
+  //if (!changedPlugins.length) throw new Error("Got nothing to build");
 
   // Needed while bdbuilder is a submodule; obsolete after npm release
   _cp.execSync("pnpm i", {
