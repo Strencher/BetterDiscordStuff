@@ -34,19 +34,18 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: 16.x
-      - name: install pnpm
-        run: |
-          npm i -g pnpm
+      #- name: install pnpm
+      #  run: |
+      #  npm i -g pnpm
 
       - name: setup env
         run: |
           echo "//npm.pkg.github.com/:_authToken=${{ secrets.GH_NPM_TOKEN }}" >> .npmrc
           echo '@betterdiscordbuilder:registry=https://npm.pkg.github.com' >> .npmrc
-          ls
 
       - name: install latest bdbuilder version
         run: |
-          pnpm i -D @betterdiscordbuilder/bdbuilder@latest
+          npm i -D @betterdiscordbuilder/bdbuilder@latest
 
       - name: detect changed files
         id: files
