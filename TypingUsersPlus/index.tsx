@@ -19,7 +19,7 @@ export default class TypingUsersPlus extends BasePlugin {
         );
     }
 
-    async patchTypingUsers() {
+    async patchTypingUsers(): Promise<void> {
         const classes = WebpackModules.getByProps("typing");
         const TypingUsers = await ReactComponents.getComponentByName("TypingUsers", `.${classes.typing.split(" ").join(".")}`);
 
