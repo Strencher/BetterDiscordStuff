@@ -35,9 +35,9 @@ export default class InvisibleTyping extends BasePlugin {
     async patchTextAreaButtons() {
         const ChannelTextAreaContainer = WebpackModules.find(m => m?.type?.render?.displayName === "ChannelTextAreaContainer")?.type;
         
-        Patcher.after(ChannelTextAreaContainer, "render", (_, [{channel, textValue}], returnValue) => {
+        Patcher.after(ChannelTextAreaContainer, "render", (_, [{channel, textValue, type}], returnValue) => {
             const tree = Utilities.findInReactTree(returnValue, e => e?.className?.includes("buttons-"));
-            if (!Array.isArray(tree?.children) || tree.children.some((child: any) => child?.type === InvisibleTyping) || !canViewChannel(channel)) return returnValue;
+            if (type === "profile_bio_input" || !Array.isArray(tree?.children) || tree.children.some((child: any) => child?.type === InvisibleTyping) || !canViewChannel(channel)) return returnValue;
 
             tree.children.unshift(<InvisibleTypingButton channel={channel} textValue={textValue} />);
         });

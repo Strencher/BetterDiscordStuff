@@ -9,7 +9,7 @@
 				"twitter_username": "Strencher3"
 			}
 		],
-		"version": "1.1.3",
+		"version": "1.1.4",
 		"description": "Enhanced version of silent typing.",
 		"github": "https://github.com/Strencher/BetterDiscordStuff/blob/master/InvisibleTyping/InvisibleTyping.plugin.js",
 		"github_raw": "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/InvisibleTyping/InvisibleTyping.plugin.js"
@@ -29,7 +29,7 @@
 			"type": "fixed",
 			"title": "Fixed",
 			"items": [
-				"Fixes for the latest stable update."
+				"Hide inside the profile settings."
 			]
 		}
 	]
