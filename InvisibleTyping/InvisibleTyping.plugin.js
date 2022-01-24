@@ -1,7 +1,7 @@
 /**
  * @name InvisibleTyping
  * @author Strencher
- * @version 1.1.3
+ * @version 1.1.4
  * @description Enhanced version of silent typing.
  * @source https://github.com/Strencher/BetterDiscordStuff/blob/master/InvisibleTyping/InvisibleTyping.plugin.js
  * @updateUrl https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/InvisibleTyping/InvisibleTyping.plugin.js
@@ -38,7 +38,7 @@ const config = {
 			"github_username": "Strencher",
 			"twitter_username": "Strencher3"
 		}],
-		"version": "1.1.3",
+		"version": "1.1.4",
 		"description": "Enhanced version of silent typing.",
 		"github": "https://github.com/Strencher/BetterDiscordStuff/blob/master/InvisibleTyping/InvisibleTyping.plugin.js",
 		"github_raw": "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/InvisibleTyping/InvisibleTyping.plugin.js"
@@ -57,7 +57,7 @@ const config = {
 		"type": "fixed",
 		"title": "Fixed",
 		"items": [
-			"Fixes for the latest stable update."
+			"Hide inside the profile settings."
 		]
 	}]
 };
@@ -133,7 +133,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					return ___createMemoize___(this, 'TransitionGroup', () => BdApi.findModuleByDisplayName('TransitionGroup'))
 				},
 				get 'Button'() {
-					return ___createMemoize___(this, 'Button', () => BdApi.findModuleByProps('DropdownSizes'))
+					return ___createMemoize___(this, 'Button', () => BdApi.findModule(m => 'DropdownSizes' in m && typeof(m) === 'function'))
 				},
 				get 'Popout'() {
 					return ___createMemoize___(this, 'Popout', () => BdApi.findModuleByDisplayName('Popout'))
@@ -536,10 +536,11 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						const ChannelTextAreaContainer = external_PluginApi_namespaceObject.WebpackModules.find((m => "ChannelTextAreaContainer" === m?.type?.render?.displayName))?.type;
 						external_PluginApi_namespaceObject.Patcher.after(ChannelTextAreaContainer, "render", ((_, [{
 							channel,
-							textValue
+							textValue,
+							type
 						}], returnValue) => {
 							const tree = external_PluginApi_namespaceObject.Utilities.findInReactTree(returnValue, (e => e?.className?.includes("buttons-")));
-							if (!Array.isArray(tree?.children) || tree.children.some((child => child?.type === InvisibleTyping)) || !canViewChannel(channel)) return returnValue;
+							if ("profile_bio_input" === type || !Array.isArray(tree?.children) || tree.children.some((child => child?.type === InvisibleTyping)) || !canViewChannel(channel)) return returnValue;
 							tree.children.unshift(InvisibleTyping_React.createElement(InvisibleTypingButton, {
 								channel,
 								textValue
