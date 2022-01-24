@@ -5,7 +5,7 @@ const _cp = require("child_process");
 const _fs = require("fs");
 
 // Install pnpm
-_cp.execSync("npm i -g pnpm", {cwd: ".", stdio: ["ignore", "inherit", "inherit"]});
+//_cp.execSync("npm i -g pnpm", {cwd: ".", stdio: ["ignore", "inherit", "inherit"]});
 
 const changedFilesIgnore = [
   "bdbuilder",
@@ -59,12 +59,12 @@ function actuallyDoSomething() {
 function buildPlugin(pluginName) {
   console.log(`Building ${pluginName}...`);
 
-  _cp.execSync("pnpm i", {
+  _cp.execSync("npm i", {
     cwd: pluginName,
     stdio: ["ignore", "inherit", "inherit"]
   });
 
-  _cp.execSync(`pnpx bdbuilder --plugin="${pluginName}" --build --config=bdbuilder.prod.config.json`, {
+  _cp.execSync(`npx bdbuilder --plugin="${pluginName}" --build --config=bdbuilder.prod.config.json`, {
     cwd: ".",
     stdio: ["ignore", "inherit", "inherit"]
   });
