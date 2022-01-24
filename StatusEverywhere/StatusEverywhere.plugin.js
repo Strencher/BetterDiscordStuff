@@ -1,6 +1,6 @@
 /**
  * @name StatusEverywhere
- * @version 2.2.0
+ * @version 2.3.0
  * @author Strencher, Zerebos
  * @description Adds user status everywhere Discord doesn't.
  * @source https://github.com/Strencher/BetterDiscordStuff/tree/master/StatusEverywhere
@@ -32,7 +32,7 @@
 const config = {
 	"info": {
 		"name": "StatusEverywhere",
-		"version": "2.2.0",
+		"version": "2.3.0",
 		"authors": [{
 				"name": "Strencher",
 				"discord_id": "415849376598982656",
@@ -51,12 +51,22 @@ const config = {
 		"github_raw": "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/StatusEverywhere/StatusEverywhere.plugin.js"
 	},
 	"changelog": [{
-		"title": "fixes",
-		"type": "fixed",
-		"items": [
-			"Fixed account section avatar."
-		]
-	}],
+			"title": "fixes",
+			"type": "fixed",
+			"items": [
+				"Fixed account settings card padding.",
+				"Fixed account section avatar resolution.",
+				"Fixed speaking avatar"
+			]
+		},
+		{
+			"title": "improved",
+			"type": "improved",
+			"items": [
+				"Improved the code base by moving all patches in separate files."
+			]
+		}
+	],
 	"build": {
 		"zlibrary": true,
 		"copy": true,
@@ -162,7 +172,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					return ___createMemoize___(this, 'TransitionGroup', () => BdApi.findModuleByDisplayName('TransitionGroup'))
 				},
 				get 'Button'() {
-					return ___createMemoize___(this, 'Button', () => BdApi.findModuleByProps('DropdownSizes'))
+					return ___createMemoize___(this, 'Button', () => BdApi.findModule(m => 'DropdownSizes' in m && typeof(m) === 'function'))
 				},
 				get 'Popout'() {
 					return ___createMemoize___(this, 'Popout', () => BdApi.findModuleByDisplayName('Popout'))
@@ -311,7 +321,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
 					return i[1];
 				}));
-				___CSS_LOADER_EXPORT___.push([module.id, ".StatusEverywhere-avatar-chatAvatar{overflow:visible !important;box-sizing:border-box}.StatusEverywhere-avatar-userPopout{border-radius:50%;background:var(--background-floating);border:6px solid var(--background-floating);box-sizing:border-box}.StatusEverywhere-avatar-userPopout[data-mobile=false]~svg foreignObject{mask:none;border-radius:50%;overflow:hidden}.StatusEverywhere-avatar-speaking foreignObject,.StatusEverywhere-avatar-radial foreignObject{border:2px solid var(--status-color);border-spacing:2px;border-radius:50%;box-sizing:border-box}.StatusEverywhere-avatar-radial foreignObject{border-width:3px}.StatusEverywhere-avatar-radial[data-mobile=false][data-typing=false] foreignObject{border-width:3px;mask:none}.StatusEverywhere-avatar-radial[data-mobile=false][data-typing=false] rect{display:none}.userInfo-iCloHO{justify-content:flex-start;padding:16px 16px 0 146px}.userInfo-iCloHO .button-38aScr{margin-left:auto}.accountSettingsAvatar{top:46px}", ""]);
+				___CSS_LOADER_EXPORT___.push([module.id, ".StatusEverywhere-avatar-chatAvatar{overflow:visible !important;box-sizing:border-box}.StatusEverywhere-avatar-userPopout{border-radius:50%;background:var(--background-floating);border:6px solid var(--background-floating);box-sizing:border-box}.StatusEverywhere-avatar-userPopout[data-mobile=false]~svg foreignObject{mask:none;border-radius:50%;overflow:hidden}.StatusEverywhere-avatar-speaking foreignObject,.StatusEverywhere-avatar-radial foreignObject{border:2px solid var(--status-color);border-spacing:2px;border-radius:50%;box-sizing:border-box}.StatusEverywhere-avatar-radial foreignObject{border-width:3px}.StatusEverywhere-avatar-radial[data-mobile=false][data-typing=false] foreignObject{border-width:3px;mask:none}.StatusEverywhere-avatar-radial[data-mobile=false][data-typing=false] rect{display:none}.userInfo-regn9W{justify-content:flex-start;padding:16px 16px 0 146px}.userInfo-regn9W .button-f2h6uQ{margin-left:auto}.accountSettingsAvatar{top:46px}", ""]);
 				___CSS_LOADER_EXPORT___.locals = {
 					chatAvatar: "StatusEverywhere-avatar-chatAvatar",
 					userPopout: "StatusEverywhere-avatar-userPopout",
@@ -386,10 +396,27 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
 				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
 			},
-			366: (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+			425: (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 				__webpack_require__.r(__webpack_exports__);
 				__webpack_require__.d(__webpack_exports__, {
 					default: () => StatusEverywhere
+				});
+				var patches_namespaceObject = {};
+				__webpack_require__.r(patches_namespaceObject);
+				__webpack_require__.d(patches_namespaceObject, {
+					patchAccount: () => patchAccountSection,
+					patchAuditLog: () => patchAuditLog,
+					patchChannelMessage: () => patchChannelMessage,
+					patchChatAvatar: () => patchChatAvatar,
+					patchColorModule: () => patchColorModule,
+					patchGuildSettingsMembers: () => patchGuildSettingsMembers,
+					patchHeaderPlaying: () => patchHeaderPlaying,
+					patchMemberList: () => patchMemberListItem,
+					patchPartyMembers: () => patchPartyMembers,
+					patchPrivateChannel: () => patchPrivateChannel,
+					patchUserPopout: () => patchUserPopout,
+					patchUserProfile: () => patchUserProfile,
+					patchVoice: () => patchVoiceUser
 				});
 				const external_PluginApi_namespaceObject = PluginApi;
 				const external_BasePlugin_namespaceObject = BasePlugin;
@@ -399,7 +426,6 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				var external_BdApi_React_default = __webpack_require__.n(external_BdApi_React_);
 				const stores_namespaceObject = Modules["@discord/stores"];
 				const constants_namespaceObject = Modules["@discord/constants"];
-				const utils_namespaceObject = Modules["@discord/utils"];
 				const icons_namespaceObject = Modules["@discord/icons"];
 				var avatar = __webpack_require__(672);
 				const package_namespaceObject = JSON.parse('{"um":{"u2":"StatusEverywhere"}}');
@@ -546,7 +572,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				const classes = {
 					...external_PluginApi_namespaceObject.WebpackModules.getByProps("sizeEmoji", "avatar")
 				};
-				function StatusAvatar(props) {
+				function StatusEverywhereAvatar(props) {
 					const {
 						type,
 						animated = false,
@@ -587,9 +613,9 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					(0, external_BdApi_React_.useEffect)((() => {
 						if ("chat" !== props.type) return;
 						try {
-							const id = constants_namespaceObject.ComponentActions.ANIMATE_CHAT_AVATAR(`${props.subscribeToGroupId}:${user.id}`);
-							ComponentDispatch.subscribe(id, setAnimate);
-							return () => void ComponentDispatch.unsubscribe(id, setAnimate);
+							const key = `${props.subscribeToGroupId}:${user.id}`;
+							ComponentDispatch.subscribeKeyed(constants_namespaceObject.ComponentActionsKeyed.ANIMATE_CHAT_AVATAR, key, setAnimate);
+							return () => void ComponentDispatch.unsubscribeKeyed(constants_namespaceObject.ComponentActionsKeyed.ANIMATE_CHAT_AVATAR, key, setAnimate);
 						} catch (error) {
 							external_PluginApi_namespaceObject.Logger.error("Error while subscribing to ChatAvatarAnimate:\n", error);
 						}
@@ -598,7 +624,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					return external_BdApi_React_default().createElement("div", {
 						onMouseEnter,
 						onMouseLeave,
-						className: (0, utils_namespaceObject.joinClassNames)("avatarWrapper", {
+						className: external_PluginApi_namespaceObject.Utilities.className("avatarWrapper", {
 							[avatar.Z.radial]: radial,
 							[avatar.Z.userPopout]: "user-popout" === type
 						}),
@@ -624,7 +650,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						onClick: setUserPopout.bind(null, !hasUserPopout),
 						statusTooltip: true,
 						statusColor,
-						className: (0, utils_namespaceObject.joinClassNames)(avatar.Z.chatAvatar, "chat" === type ? [classes.avatar, classes.clickable] : null, props.className, {
+						className: external_PluginApi_namespaceObject.Utilities.className(avatar.Z.chatAvatar, "chat" === type && classes.avatar, "chat" === type && classes.clickable, props.className, {
 							[avatar.Z.speaking]: props.isSpeaking
 						}),
 						status,
@@ -635,12 +661,13 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						onContextMenu
 					})))));
 				}
-				StatusAvatar.Sizes = AvatarSizes;
-				const components_avatar = ErrorBoundary.from(StatusAvatar, "StatusEverywhere", (() => external_BdApi_React_default().createElement(components_namespaceObject.TooltipContainer, {
+				StatusEverywhereAvatar.Sizes = AvatarSizes;
+				const StatusAvatar = ErrorBoundary.from(StatusEverywhereAvatar, "StatusEverywhere", (() => external_BdApi_React_default().createElement(components_namespaceObject.TooltipContainer, {
 					text: "Component Error"
 				}, external_BdApi_React_default().createElement(icons_namespaceObject.WarningCircle, {
 					color: "#f04747"
 				}))));
+				const components_avatar = StatusAvatar;
 				const external_StyleLoader_namespaceObject = StyleLoader;
 				var external_StyleLoader_default = __webpack_require__.n(external_StyleLoader_namespaceObject);
 				var createUpdateWrapper_React = __webpack_require__(113);
@@ -667,6 +694,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					}));
 				};
 				const hooks_createUpdateWrapper = createUpdateWrapper;
+				const utils_namespaceObject = Modules["@discord/utils"];
 				var category = __webpack_require__(911);
 				function Category({
 					label,
@@ -848,7 +876,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				}
 				const forms_namespaceObject = Modules["@discord/forms"];
 				var components_settings = __webpack_require__(530);
-				const components_settings_namespaceObject = JSON.parse('{"performance":{"forceLoadStatus":{"name":"Force Load Status","note":"This setting force-loads the status\'s of users from the WebSocket. Be aware, this can cause high usage of resources because of the amount of users in the cache. I can try to work on something that improves this but for now, if you don\'t want it, simply disable.","value":true,"type":"switch"}},"colors":{"dndColor":{"name":"Do Not Disturb Color","note":"Color for \\"Do Not Disturb\\" status indicator.","value":"#ED4245","type":"color"},"idleColor":{"name":"Idle Color","note":"Color for \\"Idle\\" status indicator.","value":"#FAA81A","type":"color"},"onlineColor":{"name":"Online Color","note":"Color for \\"Online\\" status indicator.","value":"#3BA55D","type":"color"},"streamingColor":{"name":"Streaming Color","note":"Color for \\"Streaming\\" status indicator.","value":"#593695","type":"color"},"offlineColor":{"name":"Offline Color","note":"Color for \\"Offline\\" status indicator.","value":"#747F8D","type":"color"}},"chat":{"chatAvatarResolution":{"name":"Resolution","note":"The avatar url size will be eg, url?size=128","value":40,"type":"slider","sticky":true,"markers":[16,32,40,56,80,128,256]},"showChatTyping":{"name":"Typing","note":"Show typing state in the chat.","value":true,"type":"switch"},"chatRadialStatus":{"name":"Radial Status","note":"Shows the status as border instead of pointer.","value":false,"type":"switch"}},"member_list":{"memberListAvatarResolution":{"name":"Resolution","note":"The avatar url size will be eg, url?size=128","value":28,"type":"slider","sticky":true,"markers":[16,32,28,40,56,80,128,256]},"showMemberlistTyping":{"name":"Typing","note":"Show typing state in the member list.","value":true,"type":"switch"},"memberlistRadialStatus":{"name":"Radial Status","note":"Shows the status as border instead of pointer.","value":false,"type":"switch"}},"friends_page":{"friendsPageAvatarResolution":{"name":"Resolution","note":"The avatar url size will be eg, url?size=128","value":56,"type":"slider","sticky":true,"markers":[16,32,40,56,80,128,256]},"showFriendsPageTyping":{"name":"Typing","note":"Show typing state in the friends page.","value":true,"type":"switch"},"friendsPageRadialStatus":{"name":"Radial Status","note":"Shows the status as border instead of pointer.","value":false,"type":"switch"}},"user_popout":{"userPopoutAvatarResolution":{"name":"Resolution","note":"The avatar url size will be eg, url?size=128","value":40,"type":"slider","sticky":true,"markers":[16,32,40,56,80,128,256]},"showUserPopoutTyping":{"name":"Typing","note":"Show typing state in user popout.","value":true,"type":"switch"},"userPopoutRadialStatus":{"name":"Radial Status","note":"Shows the status as border instead of pointer.","value":false,"type":"switch"}},"direct_messages":{"dmAvatarResolution":{"name":"Resolution","note":"The avatar url size will be eg, url?size=128","value":28,"type":"slider","sticky":true,"markers":[16,28,32,40,56,80,128,256]},"showDirectMessagesTyping":{"name":"Typing","note":"Show typing state in direct messages.","value":true,"type":"switch"},"directMessagesRadialStatus":{"name":"Radial Status","note":"Shows the status as border instead of pointer.","value":false,"type":"switch"}},"user_profile":{"userProfileAvatarResolution":{"name":"Resolution","note":"The avatar url size will be eg, url?size=128","value":128,"type":"slider","sticky":true,"markers":[16,32,40,56,80,128,256]},"showUserProfileTyping":{"name":"Typing","note":"Show typing state in user profile modal.","value":true,"type":"switch"},"userProfileRadialStatus":{"name":"Radial Status","note":"Shows the status as border instead of pointer.","value":false,"type":"switch"}},"guild_settings":{"guildSettingsAvatarResolution":{"name":"Resolution","note":"The avatar url size will be eg, url?size=128","value":32,"type":"slider","sticky":true,"markers":[16,32,40,56,80,128,256]},"showGuildSettingsTyping":{"name":"Typing","note":"Show typing state in the guild settings","value":true,"type":"switch"},"guildSettingsRadialStatus":{"name":"Radial Status","note":"Shows the status as border instead of pointer.","value":false,"type":"switch"}},"voice_chat":{"voiceChatAvatarResolution":{"name":"Resolution","note":"The avatar url size will be eg, url?size=128","value":24,"type":"slider","sticky":true,"markers":[16,24,32,40,56,80,128,256]},"showVoiceChatTyping":{"name":"Typing","note":"Show typing state in the voice chat.","value":true,"type":"switch"}},"accounts_section":{"accountSectionAvatarResolution":{"name":"Resolution","note":"The avatar url size will be eg, url?size=128","value":56,"type":"slider","sticky":true,"markers":[16,32,40,56,80,128,256]},"accountSettingsRadialStatus":{"name":"Radial Status","note":"Shows the status as border instead of pointer.","value":false,"type":"switch"}}}');
+				const components_settings_namespaceObject = JSON.parse('{"performance":{"forceLoadStatus":{"name":"Force Load Status","note":"This setting force-loads the status\'s of users from the WebSocket. Be aware, this can cause high usage of resources because of the amount of users in the cache. I can try to work on something that improves this but for now, if you don\'t want it, simply disable.","value":true,"type":"switch"}},"colors":{"dndColor":{"name":"Do Not Disturb Color","note":"Color for \\"Do Not Disturb\\" status indicator.","value":"#ED4245","type":"color"},"idleColor":{"name":"Idle Color","note":"Color for \\"Idle\\" status indicator.","value":"#FAA81A","type":"color"},"onlineColor":{"name":"Online Color","note":"Color for \\"Online\\" status indicator.","value":"#3BA55D","type":"color"},"streamingColor":{"name":"Streaming Color","note":"Color for \\"Streaming\\" status indicator.","value":"#593695","type":"color"},"offlineColor":{"name":"Offline Color","note":"Color for \\"Offline\\" status indicator.","value":"#747F8D","type":"color"}},"chat":{"chatAvatarResolution":{"name":"Resolution","note":"The avatar url size will be eg, url?size=128","value":40,"type":"slider","sticky":true,"markers":[16,32,40,56,80,128,256]},"showChatTyping":{"name":"Typing","note":"Show typing state in the chat.","value":true,"type":"switch"},"chatRadialStatus":{"name":"Radial Status","note":"Shows the status as border instead of pointer.","value":false,"type":"switch"}},"member_list":{"memberListAvatarResolution":{"name":"Resolution","note":"The avatar url size will be eg, url?size=128","value":32,"type":"slider","sticky":true,"markers":[16,32,28,40,56,80,128,256]},"showMemberlistTyping":{"name":"Typing","note":"Show typing state in the member list.","value":true,"type":"switch"},"memberlistRadialStatus":{"name":"Radial Status","note":"Shows the status as border instead of pointer.","value":false,"type":"switch"}},"friends_page":{"friendsPageAvatarResolution":{"name":"Resolution","note":"The avatar url size will be eg, url?size=128","value":56,"type":"slider","sticky":true,"markers":[16,32,40,56,80,128,256]},"showFriendsPageTyping":{"name":"Typing","note":"Show typing state in the friends page.","value":true,"type":"switch"},"friendsPageRadialStatus":{"name":"Radial Status","note":"Shows the status as border instead of pointer.","value":false,"type":"switch"}},"user_popout":{"userPopoutAvatarResolution":{"name":"Resolution","note":"The avatar url size will be eg, url?size=128","value":80,"type":"slider","sticky":true,"markers":[16,32,40,56,80,128,256]},"showUserPopoutTyping":{"name":"Typing","note":"Show typing state in user popout.","value":true,"type":"switch"},"userPopoutRadialStatus":{"name":"Radial Status","note":"Shows the status as border instead of pointer.","value":false,"type":"switch"}},"direct_messages":{"dmAvatarResolution":{"name":"Resolution","note":"The avatar url size will be eg, url?size=128","value":28,"type":"slider","sticky":true,"markers":[16,28,32,40,56,80,128,256]},"showDirectMessagesTyping":{"name":"Typing","note":"Show typing state in direct messages.","value":true,"type":"switch"},"directMessagesRadialStatus":{"name":"Radial Status","note":"Shows the status as border instead of pointer.","value":false,"type":"switch"}},"user_profile":{"userProfileAvatarResolution":{"name":"Resolution","note":"The avatar url size will be eg, url?size=128","value":128,"type":"slider","sticky":true,"markers":[16,32,40,56,80,128,256]},"showUserProfileTyping":{"name":"Typing","note":"Show typing state in user profile modal.","value":true,"type":"switch"},"userProfileRadialStatus":{"name":"Radial Status","note":"Shows the status as border instead of pointer.","value":false,"type":"switch"}},"guild_settings":{"guildSettingsAvatarResolution":{"name":"Resolution","note":"The avatar url size will be eg, url?size=128","value":32,"type":"slider","sticky":true,"markers":[16,32,40,56,80,128,256]},"showGuildSettingsTyping":{"name":"Typing","note":"Show typing state in the guild settings","value":true,"type":"switch"},"guildSettingsRadialStatus":{"name":"Radial Status","note":"Shows the status as border instead of pointer.","value":false,"type":"switch"}},"voice_chat":{"voiceChatAvatarResolution":{"name":"Resolution","note":"The avatar url size will be eg, url?size=128","value":24,"type":"slider","sticky":true,"markers":[16,24,32,40,56,80,128,256]},"showVoiceChatTyping":{"name":"Typing","note":"Show typing state in the voice chat.","value":true,"type":"switch"}},"accounts":{"accountSectionAvatarResolution":{"name":"Resolution","note":"The avatar url size will be eg, url?size=128","value":32,"type":"slider","sticky":true,"markers":[16,32,40,56,80,128,256]},"accountSettingsAvatarResolution":{"name":"Resolution","note":"The avatar url size will be eg, url?size=128","value":128,"type":"slider","sticky":true,"markers":[16,32,40,56,80,128,256]},"accountSettingsRadialStatus":{"name":"Radial Status","note":"Shows the status as border instead of pointer.","value":false,"type":"switch"}}}');
 				function settings_extends() {
 					settings_extends = Object.assign || function(target) {
 						for (var i = 1; i < arguments.length; i++) {
@@ -949,8 +977,8 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						}
 					})))));
 				}
-				function StatusEverywhere_extends() {
-					StatusEverywhere_extends = Object.assign || function(target) {
+				function account_extends() {
+					account_extends = Object.assign || function(target) {
 						for (var i = 1; i < arguments.length; i++) {
 							var source = arguments[i];
 							for (var key in source)
@@ -958,9 +986,106 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						}
 						return target;
 					};
-					return StatusEverywhere_extends.apply(this, arguments);
+					return account_extends.apply(this, arguments);
 				}
-				const VoiceState = external_PluginApi_namespaceObject.WebpackModules.getByProps("isSoundSharing", "isSpeaking");
+				async function patchAccountSection() {
+					const accountSelector = `.${external_PluginApi_namespaceObject.WebpackModules.getByProps("container", "avatar", "redIcon").container}`;
+					const userSettingsSelector = `.${external_PluginApi_namespaceObject.WebpackModules.getByProps("contentColumnDefault").contentColumnDefault + " > div"}`;
+					external_PluginApi_namespaceObject.ReactComponents.getComponentByName("Account", accountSelector).then((Account => {
+						external_PluginApi_namespaceObject.Patcher.after(Account.component.prototype, "render", ((_, __, res) => {
+							const tree = external_PluginApi_namespaceObject.Utilities.findInReactTree(res, (e => e?.renderPopout && !e.child));
+							if (!tree) return res;
+							const old = tree.children;
+							tree.children = e => {
+								const ret = old(e);
+								if (!ret) return ret;
+								const props = ret.props.children.props;
+								if (ret.props.children.toString().indexOf("avatarWrapper") < 0) try {
+									const tree = external_PluginApi_namespaceObject.Utilities.findInReactTree(ret, (e => "function" === typeof e?.children && "renderPopout" in e));
+									const original = tree.children;
+									tree.children = props => {
+										const ret = original(props);
+										const isSpeaking = !!ret.props.children?.props?.isSpeaking;
+										ret.props.children = external_BdApi_React_default().createElement(components_avatar, account_extends({}, props, {
+											user: stores_namespaceObject.Users.getCurrentUser(),
+											shouldWatch: false,
+											radial: {
+												id: "accountSettingsRadialStatus",
+												value: false
+											},
+											isSpeaking,
+											resolution: {
+												id: "accountSectionAvatarResolution",
+												value: components_settings_namespaceObject.accounts.accountSectionAvatarResolution.value
+											},
+											size: components_avatar.Sizes.SIZE_32
+										}));
+										return ret;
+									};
+								} catch (error) {
+									external_PluginApi_namespaceObject.Logger.error("Error in AccountSection patch:", error);
+								} else ret.props.children = external_BdApi_React_default().createElement(components_avatar, account_extends({}, props, {
+									user: stores_namespaceObject.Users.getCurrentUser(),
+									shouldWatch: false,
+									radial: {
+										id: "accountSettingsRadialStatus",
+										value: false
+									},
+									resolution: {
+										id: "accountSectionAvatarResolution",
+										value: components_settings_namespaceObject.accounts.accountSectionAvatarResolution.value
+									},
+									size: components_avatar.Sizes.SIZE_32
+								}));
+								return ret;
+							};
+						}));
+						Account.forceUpdateAll();
+					}));
+					function PatchedUserSettingsAccountProfileCard(params) {
+						const {
+							__originalType,
+							...props
+						} = params;
+						const ret = __originalType(props);
+						try {
+							const avatar = external_PluginApi_namespaceObject.Utilities.findInReactTree(ret, (e => e?.props?.status));
+							if (!avatar) return ret;
+							Object.assign(avatar.props, {
+								user: stores_namespaceObject.Users.getCurrentUser(),
+								shouldWatch: false,
+								size: components_avatar.Sizes.SIZE_120,
+								animated: true,
+								className: external_PluginApi_namespaceObject.Utilities.className(avatar.props.className, "accountSettingsAvatar"),
+								radial: {
+									id: "accountSettingsRadialStatus",
+									value: false
+								},
+								resolution: {
+									id: "accountSettingsAvatarResolution",
+									value: components_settings_namespaceObject.accounts.accountSettingsAvatarResolution.value
+								}
+							});
+							avatar.type = components_avatar;
+						} catch (error) {
+							external_PluginApi_namespaceObject.Logger.error("Error in UserSettingsAccountCard:", error);
+							return ret;
+						}
+						return ret;
+					}
+					external_PluginApi_namespaceObject.ReactComponents.getComponentByName("UserSettingsAccount", userSettingsSelector).then((UserSettingsAccount => {
+						external_PluginApi_namespaceObject.Patcher.after(UserSettingsAccount.component.prototype, "renderAccountSettings", ((_, __, res) => {
+							const tree = external_PluginApi_namespaceObject.Utilities.findInReactTree(res, (e => Array.isArray(e) && e.some((e => "UserSettingsAccountProfileCard" === e?.type?.displayName))));
+							if (!tree) return;
+							const index = tree.findIndex((e => "UserSettingsAccountProfileCard" === e?.type?.displayName));
+							const element = tree[index];
+							tree[index] = external_BdApi_React_default().createElement(PatchedUserSettingsAccountProfileCard, {
+								__originalType: element.type
+							});
+						}));
+						UserSettingsAccount.forceUpdateAll();
+					}));
+				}
 				const lazyPatch = function(module, functionName, callback, id) {
 					if (!module || !functionName || "function" !== typeof module[functionName]) return;
 					const original = module[functionName];
@@ -984,6 +1109,473 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					});
 					return unpatch;
 				};
+				var auditlog_React = __webpack_require__(113);
+				function auditlog_extends() {
+					auditlog_extends = Object.assign || function(target) {
+						for (var i = 1; i < arguments.length; i++) {
+							var source = arguments[i];
+							for (var key in source)
+								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
+						}
+						return target;
+					};
+					return auditlog_extends.apply(this, arguments);
+				}
+				function patchAuditLog() {
+					const AuditLog = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("GuildSettingsAuditLogEntry");
+					const classes = external_PluginApi_namespaceObject.WebpackModules.getByProps("desaturate", "auditLog", "avatar");
+					external_PluginApi_namespaceObject.Patcher.after(AuditLog.prototype, "render", ((_this, _, res) => {
+						const originalChildren = res?.props?.children;
+						if ("function" !== typeof originalChildren) return;
+						if (!_this.props.log?.user) return;
+						lazyPatch(res?.props, "children", ((_, ret) => {
+							const popout = external_PluginApi_namespaceObject.Utilities.findInReactTree(ret, (e => e?.renderPopout));
+							if (!popout) return;
+							lazyPatch(popout, "children", (props => auditlog_React.createElement(components_avatar, auditlog_extends({}, props[0], {
+								user: _this.props.log.user,
+								showTyping: {
+									id: "showGuildSettingsShowTyping",
+									value: true
+								},
+								radial: {
+									id: "guildSettingsRadialStatus",
+									value: false
+								},
+								resolution: {
+									id: "guildSettingsAvatarResolution",
+									value: components_settings_namespaceObject.guild_settings.guildSettingsAvatarResolution.value
+								},
+								className: classes.avatar
+							}))));
+						}));
+					}));
+				}
+				var channelmessage_React = __webpack_require__(113);
+				function channelmessage_extends() {
+					channelmessage_extends = Object.assign || function(target) {
+						for (var i = 1; i < arguments.length; i++) {
+							var source = arguments[i];
+							for (var key in source)
+								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
+						}
+						return target;
+					};
+					return channelmessage_extends.apply(this, arguments);
+				}
+				function patchChannelMessage() {
+					const Patched = Symbol("__StatusEverywhere_patched__");
+					const ChannelMessage = external_PluginApi_namespaceObject.WebpackModules.getModule((m => "ChannelMessage" === m.type.displayName));
+					external_PluginApi_namespaceObject.Patcher.after(ChannelMessage, "type", (function(_, __, res) {
+						const tree = external_PluginApi_namespaceObject.Utilities.findInReactTree(res, (e => e?.childrenHeader));
+						if (!tree) return;
+						external_PluginApi_namespaceObject.Patcher.after(tree.childrenHeader.type, "type", ((_, [props], res) => {
+							const user = props?.message?.author;
+							const channel_id = props?.message?.channel_id;
+							res.props.children[0] = channelmessage_React.createElement(components_avatar, channelmessage_extends({}, props, {
+								type: "chat",
+								user,
+								channel_id,
+								shouldShowUserPopout: true,
+								showTyping: {
+									id: "chatShowTyping",
+									value: true
+								},
+								radial: {
+									id: "chatRadialStatus",
+									value: false
+								},
+								resolution: {
+									id: "chatAvatarResolution",
+									value: components_settings_namespaceObject.chat.chatAvatarResolution.value
+								}
+							}));
+						}));
+						tree.childrenHeader.type[Patched] = true;
+						this.unpatch();
+					}));
+				}
+				var chatavatar_React = __webpack_require__(113);
+				function chatavatar_extends() {
+					chatavatar_extends = Object.assign || function(target) {
+						for (var i = 1; i < arguments.length; i++) {
+							var source = arguments[i];
+							for (var key in source)
+								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
+						}
+						return target;
+					};
+					return chatavatar_extends.apply(this, arguments);
+				}
+				function patchChatAvatar() {
+					const Patched = Symbol("__StatusEverywhere_patched__");
+					const ChatMessage = external_PluginApi_namespaceObject.WebpackModules.getModule((m => m?.default?.toString?.().indexOf("ANIMATE_CHAT_AVATAR") > -1));
+					external_PluginApi_namespaceObject.Patcher.after(ChatMessage, "default", ((_, [props], res) => {
+						const tree = external_PluginApi_namespaceObject.Utilities.findInReactTree(res, (e => e?.renderPopout));
+						const user = props?.message?.author;
+						const channel_id = props?.message?.channel_id;
+						if (!user || !tree?.children || Patched in tree.children || user.bot && "0000" === user.discriminator) return;
+						tree.children = () => chatavatar_React.createElement(components_avatar, chatavatar_extends({}, props, {
+							type: "chat",
+							user,
+							channel_id,
+							shouldShowUserPopout: true,
+							showTyping: {
+								id: "showChatTyping",
+								value: true
+							},
+							radial: {
+								id: "chatRadialStatus",
+								value: false
+							},
+							size: components_avatar.Sizes.SIZE_40,
+							resolution: {
+								id: "chatAvatarResolution",
+								value: components_settings_namespaceObject.chat.chatAvatarResolution.value
+							}
+						}));
+						tree.children[Patched] = true;
+					}));
+				}
+				function patchColorModule() {
+					const StatusModule = external_PluginApi_namespaceObject.WebpackModules.getByProps("getStatusColor");
+					external_PluginApi_namespaceObject.Patcher.after(StatusModule, "getStatusColor", ((_, [status]) => {
+						switch (status) {
+							case "dnd":
+								return settings.get("dndColor", "#ED4245");
+							case "idle":
+								return settings.get("idleColor", "#FAA81A");
+							case "online":
+								return settings.get("onlineColor", "#3BA55D");
+							case "streaming":
+								return settings.get("streamingColor", "#593695");
+							case "offline":
+								return settings.get("offlineColor", "#747F8D");
+							default:
+								return "#747F8D";
+						}
+					}));
+				}
+				var guildsettingsmembers_React = __webpack_require__(113);
+				function guildsettingsmembers_extends() {
+					guildsettingsmembers_extends = Object.assign || function(target) {
+						for (var i = 1; i < arguments.length; i++) {
+							var source = arguments[i];
+							for (var key in source)
+								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
+						}
+						return target;
+					};
+					return guildsettingsmembers_extends.apply(this, arguments);
+				}
+				async function patchGuildSettingsMembers() {
+					const classes = external_PluginApi_namespaceObject.WebpackModules.getByProps("member", "avatar");
+					const Member = await external_PluginApi_namespaceObject.ReactComponents.getComponentByName("Member", `.${classes.member}`);
+					external_PluginApi_namespaceObject.Patcher.after(Member.component.prototype, "render", ((_this, _, returnValue) => {
+						const avatar = external_PluginApi_namespaceObject.Utilities.findInReactTree(returnValue, (e => e?.props?.className === classes.avatar));
+						if (!avatar || "function" !== typeof avatar.type) return;
+						Object.assign(avatar.props, {
+							user: _this.props.user
+						});
+						lazyPatch(avatar, "type", (props => guildsettingsmembers_React.createElement(components_avatar, guildsettingsmembers_extends({}, props[0], {
+							showTyping: {
+								id: "showGuildSettingsShowTyping",
+								value: true
+							},
+							radial: {
+								id: "guildSettingsRadialStatus",
+								value: false
+							},
+							resolution: {
+								id: "guildSettingsAvatarResolution",
+								value: components_settings_namespaceObject.guild_settings.guildSettingsAvatarResolution.value
+							}
+						}))));
+					}));
+					Member.forceUpdateAll();
+				}
+				async function patchHeaderPlaying() {
+					const NowPlayingHeader = external_PluginApi_namespaceObject.WebpackModules.getModule((m => "NowPlayingHeader" === m?.default?.displayName));
+					external_PluginApi_namespaceObject.Patcher.after(NowPlayingHeader, "default", ((_, __, res) => {
+						const original = res.type;
+						res.type = function({
+							priorityUser: {
+								user
+							}
+						}) {
+							const ret = original.apply(this, arguments);
+							try {
+								const avatar = external_PluginApi_namespaceObject.Utilities.findInReactTree(ret, (e => e?.props?.status));
+								if (!avatar) return ret;
+								avatar.props = Object.assign({}, {
+									user,
+									size: components_avatar.Sizes.SIZE_32,
+									shouldWatch: false,
+									channel_id: stores_namespaceObject.Channels.getDMFromUserId(user.id),
+									radial: {
+										id: "friendsPageRadialStatus",
+										value: false
+									},
+									showTyping: {
+										id: "showFriendsPageTyping",
+										value: true
+									},
+									resolution: {
+										id: "friendsPageAvatarResolution",
+										value: components_settings_namespaceObject.friends_page.friendsPageAvatarResolution.value
+									}
+								});
+								avatar.type = components_avatar;
+							} catch (error) {
+								external_PluginApi_namespaceObject.Logger.error("Error in NowPlayHeader patch:\n", error);
+							}
+							return ret;
+						};
+					}));
+				}
+				var memberlist_React = __webpack_require__(113);
+				function memberlist_extends() {
+					memberlist_extends = Object.assign || function(target) {
+						for (var i = 1; i < arguments.length; i++) {
+							var source = arguments[i];
+							for (var key in source)
+								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
+						}
+						return target;
+					};
+					return memberlist_extends.apply(this, arguments);
+				}
+				function patchMemberListItem() {
+					const MemberListItem = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("MemberListItem");
+					external_PluginApi_namespaceObject.Patcher.after(MemberListItem.prototype, "renderAvatar", (_this => memberlist_React.createElement(components_avatar, memberlist_extends({}, _this.props, {
+						type: "member-list",
+						shouldWatch: false,
+						animated: _this.state?.hovered || _this.props.selected,
+						size: components_avatar.Sizes.SIZE_32,
+						showTyping: {
+							id: "showMemberlistTyping",
+							value: true
+						},
+						radial: {
+							id: "memberlistRadialStatus",
+							value: false
+						},
+						resolution: {
+							id: "memberListAvatarResolution",
+							value: components_settings_namespaceObject.member_list.memberListAvatarResolution.value
+						}
+					}))));
+				}
+				var partymembers_React = __webpack_require__(113);
+				function partymembers_extends() {
+					partymembers_extends = Object.assign || function(target) {
+						for (var i = 1; i < arguments.length; i++) {
+							var source = arguments[i];
+							for (var key in source)
+								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
+						}
+						return target;
+					};
+					return partymembers_extends.apply(this, arguments);
+				}
+				async function patchPartyMembers() {
+					const classes = {
+						...Object(external_PluginApi_namespaceObject.WebpackModules.getByProps("partyMember")),
+						...Object(external_PluginApi_namespaceObject.WebpackModules.getByProps("container", "activity", "partyAvatar"))
+					};
+					const selector = "." + Object.values(external_window_default().pick(classes, ["partyMember", "partyAvatar"])).map((e => e.split(" ").join("."))).join(", .");
+					const VoiceUserSummaryItem = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("VoiceUserSummaryItem");
+					const UserSummaryItem = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("UserSummaryItem");
+					const PartyMember = await external_PluginApi_namespaceObject.ReactComponents.getComponentByName("PartyMember", selector);
+					external_PluginApi_namespaceObject.Patcher.before(VoiceUserSummaryItem.prototype, "render", (_this => {
+						if (_this.props.__patched) return;
+						_this.props.__patched = true;
+						const original = _this.props.renderUser;
+						_this.props.renderUser = (props, ...args) => {
+							const user = props?.user ?? props;
+							const ret = original ? original.apply(null, [props].concat(args)) : null;
+							if (!user) return ret;
+							return partymembers_React.createElement(components_avatar, partymembers_extends({}, props, {
+								user,
+								shouldWatch: false,
+								size: _this.props.size ?? components_avatar.Sizes.SIZE_16,
+								showTyping: {
+									id: "showChatTyping",
+									value: true
+								},
+								radial: {
+									id: "chatRadialStatus",
+									value: false
+								},
+								shouldShowUserPopout: true
+							}));
+						};
+					}));
+					external_PluginApi_namespaceObject.Patcher.after(PartyMember.component.prototype, "render", ((_this, _, ret) => {
+						const {
+							member: {
+								user
+							}
+						} = _this.props;
+						ret.props.children = props => partymembers_React.createElement(components_avatar, partymembers_extends({}, props, {
+							user,
+							shouldWatch: false,
+							size: components_avatar.Sizes.SIZE_16,
+							showTyping: {
+								id: "showChatTyping",
+								value: true
+							},
+							radial: {
+								id: "chatRadialStatus",
+								value: false
+							},
+							shouldShowUserPopout: true
+						}));
+					}));
+					external_PluginApi_namespaceObject.Patcher.after(UserSummaryItem.prototype, "renderUsers", (_this => _this.props.users.map((user => partymembers_React.createElement(components_avatar, {
+						user,
+						className: "avatarContainer-3CQrif",
+						type: "voice-user",
+						size: components_avatar.Sizes.SIZE_24,
+						showTyping: {
+							id: "showVoiceChatTyping",
+							value: true
+						},
+						resolution: {
+							id: "voiceChatAvatarResolution",
+							value: 56
+						}
+					})))));
+					PartyMember.forceUpdateAll();
+				}
+				var privatechannel_React = __webpack_require__(113);
+				async function patchPrivateChannel() {
+					const PrivateChannel = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("PrivateChannel");
+					external_PluginApi_namespaceObject.Patcher.after(PrivateChannel.prototype, "renderAvatar", (_this => {
+						if (_this.props.pinned || _this.props.channel.type === constants_namespaceObject.ChannelTypes.GROUP_DM) return;
+						return privatechannel_React.createElement(components_avatar, {
+							user: _this.props.user,
+							shouldWatch: false,
+							channel_id: _this.props.channel.id,
+							type: "direct-message",
+							showTyping: {
+								id: "showDirectMessagesTyping",
+								value: true
+							},
+							radial: {
+								id: "directMessagesRadialStatus",
+								value: false
+							},
+							resolution: {
+								id: "dmAvatarResolution",
+								value: components_settings_namespaceObject.direct_messages.dmAvatarResolution.value
+							},
+							size: components_avatar.Sizes.SIZE_32
+						});
+					}));
+				}
+				var userpopout_React = __webpack_require__(113);
+				function userpopout_extends() {
+					userpopout_extends = Object.assign || function(target) {
+						for (var i = 1; i < arguments.length; i++) {
+							var source = arguments[i];
+							for (var key in source)
+								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
+						}
+						return target;
+					};
+					return userpopout_extends.apply(this, arguments);
+				}
+				function patchUserPopout() {
+					const UserPopoutComponents = external_PluginApi_namespaceObject.WebpackModules.getByProps("UserPopoutAvatar");
+					external_PluginApi_namespaceObject.Patcher.after(UserPopoutComponents, "UserPopoutAvatar", ((_, [props], res) => {
+						const tree = external_PluginApi_namespaceObject.Utilities.findInReactTree(res, (e => e?.className?.indexOf("avatarWrapper") > -1));
+						if (!tree) return;
+						const Component = tree.children[0].type;
+						const WrappedAvatar = ({
+							className,
+							...props
+						}) => userpopout_React.createElement(Component, userpopout_extends({
+							className: external_PluginApi_namespaceObject.Utilities.className(className, tree?.props?.className)
+						}, props));
+						tree.children[0] = userpopout_React.createElement(components_avatar, userpopout_extends({}, props, {
+							shouldWatch: false,
+							type: "user-popout",
+							animated: true,
+							size: components_avatar.Sizes.SIZE_80,
+							AvatarComponent: WrappedAvatar,
+							radial: {
+								id: "userPopoutRadialStatus",
+								value: false
+							},
+							showTyping: {
+								id: "showUserPopoutTyping",
+								value: true
+							},
+							resolution: {
+								id: "userPopoutAvatarResolution",
+								value: components_settings_namespaceObject.user_popout.userPopoutAvatarResolution.value
+							}
+						}));
+					}));
+				}
+				function patchUserProfile() {
+					const UserProfileModalHeader = external_PluginApi_namespaceObject.WebpackModules.getModule((m => "UserProfileModalHeader" === m?.default?.displayName));
+					const classes = external_PluginApi_namespaceObject.WebpackModules.getByProps("header", "headerTop");
+					external_PluginApi_namespaceObject.Patcher.after(UserProfileModalHeader, "default", ((_, [props], res) => {
+						const avatar = external_PluginApi_namespaceObject.Utilities.findInReactTree(res, (e => e?.props?.statusTooltip));
+						if (!avatar) return;
+						avatar.props = Object.assign({}, props, {
+							className: classes.avatar,
+							animated: true,
+							shouldWatch: false,
+							radial: {
+								id: "userProfileRadialStatus",
+								value: false
+							},
+							showTyping: {
+								id: "showUserProfileTyping",
+								value: true
+							},
+							resolution: {
+								id: "userProfileAvatarResolution",
+								value: components_settings_namespaceObject.user_profile.userProfileAvatarResolution.value
+							},
+							size: components_avatar.Sizes.SIZE_120
+						});
+						avatar.type = components_avatar;
+					}));
+				}
+				var voice_React = __webpack_require__(113);
+				function voice_extends() {
+					voice_extends = Object.assign || function(target) {
+						for (var i = 1; i < arguments.length; i++) {
+							var source = arguments[i];
+							for (var key in source)
+								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
+						}
+						return target;
+					};
+					return voice_extends.apply(this, arguments);
+				}
+				function patchVoiceUser() {
+					const VoiceUser = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("VoiceUser");
+					const classes = external_PluginApi_namespaceObject.WebpackModules.getByProps("avatarContainer", "avatarSmall");
+					const classNames = ["avatarContainer", "avatarSmall", "avatar"].map((cl => classes[cl])).join(" ");
+					external_PluginApi_namespaceObject.Patcher.after(VoiceUser.prototype, "renderAvatar", (_this => voice_React.createElement(components_avatar, voice_extends({}, _this.props, {
+						className: classNames,
+						isSpeaking: _this.props.speaking,
+						type: "voice-user",
+						size: components_avatar.Sizes.SIZE_24,
+						showTyping: {
+							id: "showVoiceChatTyping",
+							value: true
+						},
+						resolution: {
+							id: "voiceChatAvatarResolution",
+							value: components_settings_namespaceObject.voice_chat.voiceChatAvatarResolution.value
+						}
+					}))));
+				}
 				class StatusEverywhere extends(external_BasePlugin_default()) {
 					get StatusAvatar() {
 						return components_avatar;
@@ -1003,522 +1595,13 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					}
 					async onStart() {
 						const time = this.createTimeLog("Started StatusEverywhere in %sms.");
-						const methods = Object.keys(Object.getOwnPropertyDescriptors(this.constructor.prototype));
+						const methods = Object.keys(patches_namespaceObject);
 						for (let i = 0; i < methods.length; i++) {
-							if (!methods[i].startsWith("patch") || "function" !== typeof this[methods[i]]) continue;
-							external_PluginApi_namespaceObject.Utilities.suppressErrors(this[methods[i]].bind(this), `${this.constructor.name}.${methods[i]}`)();
+							if (!methods[i].startsWith("patch") || "function" !== typeof patches_namespaceObject[methods[i]]) continue;
+							external_PluginApi_namespaceObject.Utilities.suppressErrors(patches_namespaceObject[methods[i]].bind(this), `${this.constructor.name}.${methods[i]}`)();
 						}
 						time.end();
 						external_StyleLoader_default().inject();
-					}
-					async patchColorModule() {
-						const StatusModule = external_PluginApi_namespaceObject.WebpackModules.getByProps("getStatusColor");
-						external_PluginApi_namespaceObject.Patcher.after(StatusModule, "getStatusColor", ((_, [status]) => {
-							switch (status) {
-								case "dnd":
-									return settings.get("dndColor", "#ED4245");
-								case "idle":
-									return settings.get("idleColor", "#FAA81A");
-								case "online":
-									return settings.get("onlineColor", "#3BA55D");
-								case "streaming":
-									return settings.get("streamingColor", "#593695");
-								case "offline":
-									return settings.get("offlineColor", "#747F8D");
-								default:
-									return "#747F8D";
-							}
-						}));
-					}
-					async patchRTCConnectionUsers() {
-						function PatchedRTCUser(props) {
-							const ret = props.__originalType(props);
-							(0, flux_namespaceObject.useStateFromStores)([VoiceState], (() => VoiceState.isSpeaking(props.user.id) || VoiceState.isSoundSharing(props.user.id)));
-							try {
-								const org = ret.props.children;
-								ret.props.children = e => {
-									const ret = org(e);
-									try {
-										const org2 = ret.props.children;
-										ret.props.children = tooltipProps => {
-											const ret = org2(tooltipProps);
-											return ret;
-										};
-									} catch (error) {
-										external_PluginApi_namespaceObject.Logger.error("Error in PatchedRTCUser:", error);
-									}
-									return ret;
-								};
-							} catch (error) {
-								external_PluginApi_namespaceObject.Logger.error("Error in PatchedRTCUser:", error);
-							}
-							return ret;
-						}
-					}
-					async patchAccountSection() {
-						const accountSelector = `.${external_PluginApi_namespaceObject.WebpackModules.getByProps("container", "avatar", "redIcon").container}`;
-						const userSettingsSelector = `.${external_PluginApi_namespaceObject.WebpackModules.getByProps("contentColumnDefault").contentColumnDefault + " > div"}`;
-						external_PluginApi_namespaceObject.ReactComponents.getComponentByName("Account", accountSelector).then((Account => {
-							external_PluginApi_namespaceObject.Patcher.after(Account.component.prototype, "render", ((_, __, res) => {
-								const tree = external_PluginApi_namespaceObject.Utilities.findInReactTree(res, (e => e?.renderPopout && !e.child));
-								if (!tree) return res;
-								const old = tree.children;
-								tree.children = e => {
-									const ret = old(e);
-									if (!ret) return ret;
-									const props = ret.props.children.props;
-									if (ret.props.children.toString().indexOf("avatarWrapper") < 0) try {
-										const tree = external_PluginApi_namespaceObject.Utilities.findInReactTree(ret, (e => "function" === typeof e?.children && "renderPopout" in e));
-										const original = tree.children;
-										tree.children = props => {
-											const ret = original(props);
-											ret.props.children = external_BdApi_React_default().createElement(components_avatar, StatusEverywhere_extends({}, props, {
-												user: stores_namespaceObject.Users.getCurrentUser(),
-												shouldWatch: false,
-												radial: {
-													id: "accountSettingsRadialStatus",
-													value: false
-												},
-												resolution: {
-													id: "accountSectionAvatarResolution",
-													value: components_settings_namespaceObject.accounts_section.accountSectionAvatarResolution.value
-												},
-												size: components_avatar.Sizes.SIZE_32
-											}));
-											return ret;
-										};
-									} catch (error) {
-										external_PluginApi_namespaceObject.Logger.error("Error in AccountSection patch:", error);
-									} else ret.props.children = external_BdApi_React_default().createElement(components_avatar, StatusEverywhere_extends({}, props, {
-										user: stores_namespaceObject.Users.getCurrentUser(),
-										shouldWatch: false,
-										radial: {
-											id: "accountSettingsRadialStatus",
-											value: false
-										},
-										resolution: {
-											id: "accountSectionAvatarResolution",
-											value: components_settings_namespaceObject.accounts_section.accountSectionAvatarResolution.value
-										},
-										size: components_avatar.Sizes.SIZE_32
-									}));
-									return ret;
-								};
-							}));
-							Account.forceUpdateAll();
-						}));
-						function PatchedUserSettingsAccountProfileCard(params) {
-							const {
-								__originalType,
-								...props
-							} = params;
-							const ret = __originalType(props);
-							try {
-								const avatar = external_PluginApi_namespaceObject.Utilities.findInReactTree(ret, (e => e?.props?.status));
-								if (!avatar) return ret;
-								Object.assign(avatar.props, {
-									user: stores_namespaceObject.Users.getCurrentUser(),
-									shouldWatch: false,
-									size: components_avatar.Sizes.SIZE_120,
-									animated: true,
-									className: (0, utils_namespaceObject.joinClassNames)(avatar.props.className, "accountSettingsAvatar"),
-									radial: {
-										id: "accountSettingsRadialStatus",
-										value: false
-									},
-									resolution: {
-										id: "accountSectionAvatarResolution",
-										value: components_settings_namespaceObject.accounts_section.accountSectionAvatarResolution.value
-									}
-								});
-								avatar.type = components_avatar;
-							} catch (error) {
-								external_PluginApi_namespaceObject.Logger.error("Error in UserSettingsAccountCard:", error);
-								return ret;
-							}
-							return ret;
-						}
-						external_PluginApi_namespaceObject.ReactComponents.getComponentByName("UserSettingsAccount", userSettingsSelector).then((UserSettingsAccount => {
-							external_PluginApi_namespaceObject.Patcher.after(UserSettingsAccount.component.prototype, "renderAccountSettings", ((_, __, res) => {
-								const tree = external_PluginApi_namespaceObject.Utilities.findInReactTree(res, (e => Array.isArray(e) && e.some((e => "UserSettingsAccountProfileCard" === e?.type?.displayName))));
-								if (!tree) return;
-								const index = tree.findIndex((e => "UserSettingsAccountProfileCard" === e?.type?.displayName));
-								const element = tree[index];
-								tree[index] = external_BdApi_React_default().createElement(PatchedUserSettingsAccountProfileCard, {
-									__originalType: element.type
-								});
-							}));
-							UserSettingsAccount.forceUpdateAll();
-						}));
-					}
-					async patchPartyMembers() {
-						const classes = {
-							...Object(external_PluginApi_namespaceObject.WebpackModules.getByProps("partyMember")),
-							...Object(external_PluginApi_namespaceObject.WebpackModules.getByProps("container", "activity", "partyAvatar"))
-						};
-						const selector = "." + Object.values(external_window_default().pick(classes, ["partyMember", "partyAvatar"])).map((e => e.split(" ").join("."))).join(", .");
-						const VoiceUserSummaryItem = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("VoiceUserSummaryItem");
-						const UserSummaryItem = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("UserSummaryItem");
-						const PartyMember = await external_PluginApi_namespaceObject.ReactComponents.getComponentByName("PartyMember", selector);
-						external_PluginApi_namespaceObject.Patcher.before(VoiceUserSummaryItem.prototype, "render", (_this => {
-							if (_this.props.__patched) return;
-							_this.props.__patched = true;
-							const original = _this.props.renderUser;
-							_this.props.renderUser = (props, ...args) => {
-								const user = props?.user ?? props;
-								const ret = original ? original.apply(null, [props].concat(args)) : null;
-								if (!user) return ret;
-								return external_BdApi_React_default().createElement(components_avatar, StatusEverywhere_extends({}, props, {
-									user,
-									shouldWatch: false,
-									size: _this.props.size ?? components_avatar.Sizes.SIZE_16,
-									showTyping: {
-										id: "showChatTyping",
-										value: true
-									},
-									radial: {
-										id: "chatRadialStatus",
-										value: false
-									},
-									shouldShowUserPopout: true
-								}));
-							};
-						}));
-						external_PluginApi_namespaceObject.Patcher.after(PartyMember.component.prototype, "render", ((_this, _, ret) => {
-							const {
-								member: {
-									user
-								}
-							} = _this.props;
-							ret.props.children = props => external_BdApi_React_default().createElement(components_avatar, StatusEverywhere_extends({}, props, {
-								user,
-								shouldWatch: false,
-								size: components_avatar.Sizes.SIZE_16,
-								showTyping: {
-									id: "showChatTyping",
-									value: true
-								},
-								radial: {
-									id: "chatRadialStatus",
-									value: false
-								},
-								shouldShowUserPopout: true
-							}));
-						}));
-						external_PluginApi_namespaceObject.Patcher.after(UserSummaryItem.prototype, "renderUsers", (_this => _this.props.users.map((user => external_BdApi_React_default().createElement(components_avatar, {
-							user,
-							className: "avatarContainer-3CQrif",
-							type: "voice-user",
-							size: components_avatar.Sizes.SIZE_24,
-							showTyping: {
-								id: "showVoiceChatTyping",
-								value: true
-							},
-							resolution: {
-								id: "voiceChatAvatarResolution",
-								value: 56
-							}
-						})))));
-						PartyMember.forceUpdateAll();
-					}
-					async patchPrivateChannel() {
-						const PrivateChannel = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("PrivateChannel");
-						external_PluginApi_namespaceObject.Patcher.after(PrivateChannel.prototype, "renderAvatar", (_this => {
-							if (_this.props.pinned || _this.props.channel.type === constants_namespaceObject.ChannelTypes.GROUP_DM) return;
-							return external_BdApi_React_default().createElement(components_avatar, {
-								user: _this.props.user,
-								shouldWatch: false,
-								channel_id: _this.props.channel.id,
-								type: "direct-message",
-								showTyping: {
-									id: "showDirectMessagesTyping",
-									value: true
-								},
-								radial: {
-									id: "directMessagesRadialStatus",
-									value: false
-								},
-								resolution: {
-									id: "dmAvatarResolution",
-									value: components_settings_namespaceObject.direct_messages.dmAvatarResolution.value
-								},
-								size: components_avatar.Sizes.SIZE_32
-							});
-						}));
-					}
-					async patchHeaderPlaying() {
-						const NowPlayingHeader = external_PluginApi_namespaceObject.WebpackModules.getModule((m => "NowPlayingHeader" === m?.default?.displayName));
-						external_PluginApi_namespaceObject.Patcher.after(NowPlayingHeader, "default", ((_, __, res) => {
-							const original = res.type;
-							res.type = function({
-								priorityUser: {
-									user
-								}
-							}) {
-								const ret = original.apply(this, arguments);
-								try {
-									const avatar = external_PluginApi_namespaceObject.Utilities.findInReactTree(ret, (e => e?.props?.status));
-									if (!avatar) return ret;
-									avatar.props = Object.assign({}, {
-										user,
-										size: components_avatar.Sizes.SIZE_32,
-										shouldWatch: false,
-										channel_id: stores_namespaceObject.Channels.getDMFromUserId(user.id),
-										radial: {
-											id: "friendsPageRadialStatus",
-											value: false
-										},
-										showTyping: {
-											id: "showFriendsPageTyping",
-											value: true
-										},
-										resolution: {
-											id: "friendsPageAvatarResolution",
-											value: components_settings_namespaceObject.friends_page.friendsPageAvatarResolution.value
-										}
-									});
-									avatar.type = components_avatar;
-								} catch (error) {
-									external_PluginApi_namespaceObject.Logger.error("Error in NowPlayHeader patch:\n", error);
-								}
-								return ret;
-							};
-						}));
-					}
-					async patchAvatar() {
-						const Avatars = external_PluginApi_namespaceObject.WebpackModules.getModules((m => m?.type?.toString().includes("GuildIDContext")));
-						for (const Avatar of Avatars) external_PluginApi_namespaceObject.Patcher.after(Avatar, "type", ((_, [props]) => external_BdApi_React_default().createElement(components_avatar, StatusEverywhere_extends({}, props, {
-							animated: props.src?.includes(".gif"),
-							shouldWatch: false,
-							channel_id: stores_namespaceObject.Channels.getDMFromUserId(props.user.id),
-							showTyping: {
-								id: "showFriendsPageTyping",
-								value: true
-							},
-							radial: {
-								id: "friendsPageRadialStatus",
-								value: false
-							},
-							resolution: {
-								id: "friendsPageAvatarResolution",
-								value: components_settings_namespaceObject.friends_page.friendsPageAvatarResolution.value
-							}
-						}))));
-					}
-					async patchUserProfile() {
-						const UserProfileModalHeader = external_PluginApi_namespaceObject.WebpackModules.getModule((m => "UserProfileModalHeader" === m?.default?.displayName));
-						const classes = external_PluginApi_namespaceObject.WebpackModules.getByProps("header", "headerTop");
-						external_PluginApi_namespaceObject.Patcher.after(UserProfileModalHeader, "default", ((_, [props], res) => {
-							const avatar = external_PluginApi_namespaceObject.Utilities.findInReactTree(res, (e => e?.props?.statusTooltip));
-							if (!avatar) return;
-							avatar.props = Object.assign({}, props, {
-								className: classes.avatar,
-								animated: true,
-								shouldWatch: false,
-								radial: {
-									id: "userProfileRadialStatus",
-									value: false
-								},
-								showTyping: {
-									id: "showUserProfileTyping",
-									value: true
-								},
-								resolution: {
-									id: "userProfileAvatarResolution",
-									value: components_settings_namespaceObject.user_profile.userProfileAvatarResolution.value
-								},
-								size: components_avatar.Sizes.SIZE_120
-							});
-							avatar.type = components_avatar;
-						}));
-					}
-					async patchUserPopout() {
-						const UserPopoutComponents = external_PluginApi_namespaceObject.WebpackModules.getByProps("UserPopoutAvatar");
-						external_PluginApi_namespaceObject.Patcher.after(UserPopoutComponents, "UserPopoutAvatar", ((_, [props], res) => {
-							const tree = external_PluginApi_namespaceObject.Utilities.findInReactTree(res, (e => e?.className?.includes("avatarWrapper")));
-							if (!tree) return;
-							const Component = tree.children[0].type;
-							const WrappedAvatar = ({
-								className,
-								...props
-							}) => external_BdApi_React_default().createElement(Component, StatusEverywhere_extends({
-								className: (0, utils_namespaceObject.joinClassNames)(className, tree?.props?.className)
-							}, props));
-							tree.children[0] = external_BdApi_React_default().createElement(components_avatar, StatusEverywhere_extends({}, props, {
-								shouldWatch: false,
-								type: "user-popout",
-								animated: true,
-								size: components_avatar.Sizes.SIZE_80,
-								AvatarComponent: WrappedAvatar,
-								radial: {
-									id: "userPopoutRadialStatus",
-									value: false
-								},
-								showTyping: {
-									id: "showUserPopoutTyping",
-									value: true
-								},
-								resolution: {
-									id: "userPopoutAvatarResolution",
-									value: components_settings_namespaceObject.user_popout.userPopoutAvatarResolution.value
-								}
-							}));
-						}));
-					}
-					async patchMemberListItem() {
-						const MemberListItem = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("MemberListItem");
-						external_PluginApi_namespaceObject.Patcher.after(MemberListItem.prototype, "renderAvatar", (_this => external_BdApi_React_default().createElement(components_avatar, StatusEverywhere_extends({}, _this.props, {
-							type: "member-list",
-							shouldWatch: false,
-							animated: _this.state?.hovered || _this.props.selected,
-							size: components_avatar.Sizes.SIZE_32,
-							showTyping: {
-								id: "showMemberlistTyping",
-								value: true
-							},
-							radial: {
-								id: "memberlistRadialStatus",
-								value: false
-							},
-							resolution: {
-								id: "memberListAvatarResolution",
-								value: components_settings_namespaceObject.member_list.memberListAvatarResolution.value
-							}
-						}))));
-					}
-					async patchChatAvatar() {
-						const ChatMessage = external_PluginApi_namespaceObject.WebpackModules.getModule((m => m?.default?.toString?.().indexOf("ANIMATE_CHAT_AVATAR") > -1));
-						external_PluginApi_namespaceObject.Patcher.after(ChatMessage, "default", ((_, [props], res) => {
-							const tree = external_PluginApi_namespaceObject.Utilities.findInReactTree(res, (e => e?.renderPopout));
-							const user = props?.message?.author;
-							const channel_id = props?.message?.channel_id;
-							if (!user || !tree?.children || tree.children?.__patched || user.bot && "0000" === user.discriminator) return;
-							tree.children = () => external_BdApi_React_default().createElement(components_avatar, StatusEverywhere_extends({}, props, {
-								type: "chat",
-								user,
-								channel_id,
-								shouldShowUserPopout: true,
-								showTyping: {
-									id: "showChatTyping",
-									value: true
-								},
-								radial: {
-									id: "chatRadialStatus",
-									value: false
-								},
-								size: components_avatar.Sizes.SIZE_40,
-								resolution: {
-									id: "chatAvatarResolution",
-									value: components_settings_namespaceObject.chat.chatAvatarResolution.value
-								}
-							}));
-							tree.children.__patched = true;
-						}));
-					}
-					async patchChannelMessage() {
-						const ChannelMessage = external_PluginApi_namespaceObject.WebpackModules.getModule((m => "ChannelMessage" === m.type.displayName));
-						external_PluginApi_namespaceObject.Patcher.after(ChannelMessage, "type", (function(_, __, res) {
-							const tree = external_PluginApi_namespaceObject.Utilities.findInReactTree(res, (e => e?.childrenHeader));
-							if (!tree) return;
-							external_PluginApi_namespaceObject.Patcher.after(tree.childrenHeader.type, "type", ((_, [props], res) => {
-								const user = props?.message?.author;
-								const channel_id = props?.message?.channel_id;
-								res.props.children[0] = external_BdApi_React_default().createElement(components_avatar, StatusEverywhere_extends({}, props, {
-									type: "chat",
-									user,
-									channel_id,
-									shouldShowUserPopout: true,
-									showTyping: {
-										id: "chatShowTyping",
-										value: true
-									},
-									radial: {
-										id: "chatRadialStatus",
-										value: false
-									},
-									resolution: {
-										id: "chatAvatarResolution",
-										value: components_settings_namespaceObject.chat.chatAvatarResolution.value
-									}
-								}));
-							}));
-							tree.childrenHeader.type.__patched_status_everywhere = true;
-							this.unpatch();
-						}));
-					}
-					async patchVoiceUser() {
-						const VoiceUser = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("VoiceUser");
-						const classes = external_PluginApi_namespaceObject.WebpackModules.getByProps("avatarContainer", "avatarSmall");
-						const classNames = ["avatarContainer", "avatarSmall", "avatar"].map((cl => classes[cl])).join(" ");
-						external_PluginApi_namespaceObject.Patcher.after(VoiceUser.prototype, "renderAvatar", (_this => external_BdApi_React_default().createElement(components_avatar, StatusEverywhere_extends({}, _this.props, {
-							className: classNames,
-							isSpeaking: _this.props.speaking,
-							type: "voice-user",
-							size: components_avatar.Sizes.SIZE_24,
-							showTyping: {
-								id: "showVoiceChatTyping",
-								value: true
-							},
-							resolution: {
-								id: "voiceChatAvatarResolution",
-								value: components_settings_namespaceObject.voice_chat.voiceChatAvatarResolution.value
-							}
-						}))));
-					}
-					async patchAuditlog() {
-						const AuditLog = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("GuildSettingsAuditLogEntry");
-						const classes = external_PluginApi_namespaceObject.WebpackModules.getByProps("desaturate", "auditLog", "avatar");
-						external_PluginApi_namespaceObject.Patcher.after(AuditLog.prototype, "render", ((_this, _, res) => {
-							const originalChildren = res?.props?.children;
-							if ("function" !== typeof originalChildren) return;
-							if (!_this.props.log?.user) return;
-							lazyPatch(res?.props, "children", ((_, ret) => {
-								const popout = external_PluginApi_namespaceObject.Utilities.findInReactTree(ret, (e => e?.renderPopout));
-								if (!popout) return;
-								lazyPatch(popout, "children", (props => external_BdApi_React_default().createElement(components_avatar, StatusEverywhere_extends({}, props[0], {
-									user: _this.props.log.user,
-									showTyping: {
-										id: "showGuildSettingsShowTyping",
-										value: true
-									},
-									radial: {
-										id: "guildSettingsRadialStatus",
-										value: false
-									},
-									resolution: {
-										id: "guildSettingsAvatarResolution",
-										value: components_settings_namespaceObject.guild_settings.guildSettingsAvatarResolution.value
-									},
-									className: classes.avatar
-								}))));
-							}));
-						}));
-					}
-					async patchGuildSettingsMembers() {
-						const classes = external_PluginApi_namespaceObject.WebpackModules.getByProps("member", "avatar");
-						const Member = await external_PluginApi_namespaceObject.ReactComponents.getComponentByName("Member", `.${classes.member}`);
-						external_PluginApi_namespaceObject.Patcher.after(Member.component.prototype, "render", ((_this, _, returnValue) => {
-							const avatar = external_PluginApi_namespaceObject.Utilities.findInReactTree(returnValue, (e => e?.props?.className === classes.avatar));
-							if (!avatar || "function" !== typeof avatar.type) return;
-							Object.assign(avatar.props, {
-								user: _this.props.user
-							});
-							lazyPatch(avatar, "type", (props => external_BdApi_React_default().createElement(components_avatar, StatusEverywhere_extends({}, props[0], {
-								showTyping: {
-									id: "showGuildSettingsShowTyping",
-									value: true
-								},
-								radial: {
-									id: "guildSettingsRadialStatus",
-									value: false
-								},
-								resolution: {
-									id: "guildSettingsAvatarResolution",
-									value: components_settings_namespaceObject.guild_settings.guildSettingsAvatarResolution.value
-								}
-							}))));
-						}));
-						Member.forceUpdateAll();
 					}
 					onStop() {
 						external_PluginApi_namespaceObject.Patcher.unpatchAll();
@@ -1604,7 +1687,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				});
 			};
 		})();
-		var __webpack_exports__ = __webpack_require__(366);
+		var __webpack_exports__ = __webpack_require__(425);
 		module.exports.LibraryPluginHack = __webpack_exports__;
 	})();
 	const PluginExports = module.exports.LibraryPluginHack;
