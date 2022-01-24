@@ -49,7 +49,7 @@ export default class TypingUsersPlus extends BasePlugin {
         TypingUsers.forceUpdateAll();
     }
 
-    onStop() {
+    onStop(): void {
         styles.remove();
         Patcher.unpatchAll();
     }
