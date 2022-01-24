@@ -65,7 +65,7 @@
 		"memberListAvatarResolution": {
 			"name": "Resolution",
 			"note": "The avatar url size will be eg, url?size=128",
-			"value": 28,
+			"value": 32,
 			"type": "slider",
 			"sticky": true,
 			"markers": [16,32,28,40,56,80,128,256]
@@ -109,7 +109,7 @@
 		"userPopoutAvatarResolution": {
 			"name": "Resolution",
 			"note": "The avatar url size will be eg, url?size=128",
-			"value": 40,
+			"value": 80,
 			"type": "slider",
 			"sticky": true,
 			"markers": [16,32,40,56,80,128,256]
@@ -209,11 +209,19 @@
 			"type": "switch"
 		}
 	},
-	"accounts_section": {
+	"accounts": {
 		"accountSectionAvatarResolution": {
 			"name": "Resolution",
 			"note": "The avatar url size will be eg, url?size=128",
-			"value": 56,
+			"value": 32,
+			"type": "slider",
+			"sticky": true,
+			"markers": [16,32,40,56,80,128,256]
+		},
+		"accountSettingsAvatarResolution": {
+			"name": "Resolution",
+			"note": "The avatar url size will be eg, url?size=128",
+			"value": 128,
 			"type": "slider",
 			"sticky": true,
 			"markers": [16,32,40,56,80,128,256]

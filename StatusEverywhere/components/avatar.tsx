@@ -1,26 +1,29 @@
-import { useStateFromStoresArray } from "@discord/flux";
-import React, { useEffect, useState } from "react";
-import { Logger, Popouts } from "@zlibrary";
-import { TypingUsers, Status, SelectedChannels, SelectedGuilds } from "@discord/stores";
-import { WebpackModules } from "@zlibrary";
-import { ComponentActions, AVATAR_SIZE, MEDIA_PROXY_SIZES } from "@discord/constants";
-import { joinClassNames } from "@discord/utils";
-import { WarningCircle } from "@discord/icons";
+import {useStateFromStoresArray} from "@discord/flux";
+import React, {useEffect, useState} from "react";
+import {Logger, Utilities} from "@zlibrary";
+import {TypingUsers, Status, SelectedChannels, SelectedGuilds} from "@discord/stores";
+import {WebpackModules} from "@zlibrary";
+// @ts-ignore
+import {ComponentActionsKeyed} from "@discord/constants";
+// @ts-ignore
+import {WarningCircle} from "@discord/icons";
 import styles from "./avatar.scss";
 import Settings from "../settings";
 import _ from "lodash";
 // @ts-ignore
 import ErrorBoundary from "common/components/errorboundary";
-import { TooltipContainer } from "@discord/components";
+import {TooltipContainer} from "@discord/components";
 
 type ComponentDispatcher = {
     subscribe(event: string, listener: (...args: any[]) => any): void;
     unsubscribe(event: string, listener: (...args: any[]) => any): void;
+    unsubscribeKeyed(event: keyof typeof ComponentActionsKeyed, key: string, listener: (...args: any[]) => any): void;
+    subscribeKeyed(event: keyof typeof ComponentActionsKeyed, key: string, listener: (...args: any[]) => any): void;
 };
 
-const { ComponentDispatch }: { ComponentDispatch: ComponentDispatcher } = WebpackModules.getByProps("ComponentDispatch");
-const { Sizes: AvatarSizes, AnimatedAvatar } = WebpackModules.getByProps("AnimatedAvatar");
-const { useContextMenuUser } = WebpackModules.getByProps("useContextMenuUser") ?? { useContextMenuUser: () => void 0 };
+const {ComponentDispatch}: {ComponentDispatch: ComponentDispatcher} = WebpackModules.getByProps("ComponentDispatch");
+const {Sizes: AvatarSizes, AnimatedAvatar} = WebpackModules.getByProps("AnimatedAvatar");
+const {useContextMenuUser} = WebpackModules.getByProps("useContextMenuUser") ?? { useContextMenuUser: () => void 0 };
 const StatusModule = WebpackModules.getByProps("getStatusColor");
 const Members = WebpackModules.getByProps("subscribeMembers");
 const ActivityUtils = WebpackModules.getByProps("isStreaming");
@@ -103,7 +106,7 @@ type StatusAvatarProps = {
     shouldShowUserPopout?: boolean;
 };
 
-function StatusAvatar(props) {
+function StatusEverywhereAvatar(props) {
     const {
         type,
         animated = false,
@@ -155,22 +158,30 @@ function StatusAvatar(props) {
     useEffect(() => {
         if (props.type !== "chat") return;
         try {
-            const id = ComponentActions.ANIMATE_CHAT_AVATAR(`${props.subscribeToGroupId}:${user.id}`);
-            ComponentDispatch.subscribe(id, setAnimate);
-            return () => void ComponentDispatch.unsubscribe(id, setAnimate);
+            const key = `${props.subscribeToGroupId}:${user.id}`;
+            ComponentDispatch.subscribeKeyed(ComponentActionsKeyed.ANIMATE_CHAT_AVATAR, key, setAnimate);
+            return () => void ComponentDispatch.unsubscribeKeyed(ComponentActionsKeyed.ANIMATE_CHAT_AVATAR, key, setAnimate);
         } catch (error) {
             Logger.error("Error while subscribing to ChatAvatarAnimate:\n", error);
         }
     }, [user, props.subscribeToGroupId]);
 
     const onContextMenu = useContextMenuUser(user.id, channel_id);
-    
+    const style: any = {
+        "--status-color": statusColor
+    };
+
     return (
         // @ts-ignore
-        <div onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave} className={joinClassNames("avatarWrapper", {[styles.radial]: radial, [styles.userPopout]: type === "user-popout"})} data-status={status} data-mobile={isMobile} data-typing={isTyping} data-user-id={user.id} style={{
-            // @ts-ignore
-            "--status-color": statusColor
-        }}>
+        <div
+            onMouseEnter={onMouseEnter}
+            onMouseLeave={onMouseLeave}
+            className={Utilities.className("avatarWrapper", {[styles.radial]: radial, [styles.userPopout]: type === "user-popout"})} data-status={status}
+            data-mobile={isMobile}
+            data-typing={isTyping}
+            data-user-id={user.id}
+            style={style}
+        >
             <Popout
                 renderPopout={props => (
                     <UserPopoutContainer
@@ -192,9 +203,13 @@ function StatusAvatar(props) {
                         onClick={setUserPopout.bind(null, !hasUserPopout)}
                         statusTooltip
                         statusColor={statusColor}
-                        className={joinClassNames(styles.chatAvatar, type === "chat" ? [classes.avatar, classes.clickable] : null, props.className, {
-                            [styles.speaking]: props.isSpeaking,
-                        })}
+                        className={Utilities.className(
+                            styles.chatAvatar,
+                            type === "chat" && classes.avatar,
+                            type === "chat" && classes.clickable,
+                            props.className,
+                            {[styles.speaking]: props.isSpeaking}
+                        )}
                         status={status}
                         isTyping={isTyping}
                         isMobile={isMobile}
@@ -209,10 +224,12 @@ function StatusAvatar(props) {
     );
 };
 
-StatusAvatar.Sizes = AvatarSizes;
+StatusEverywhereAvatar.Sizes = AvatarSizes;
 
-export default ErrorBoundary.from(StatusAvatar, "StatusEverywhere", () => (
+const StatusAvatar = ErrorBoundary.from(StatusEverywhereAvatar, "StatusEverywhere", () => (
     <TooltipContainer text="Component Error">
         <WarningCircle color="#f04747" />
     </TooltipContainer>
 ));
+
+export default StatusAvatar;

@@ -1,0 +1,14 @@
+export {default as patchAccount} from "./account";
+export {default as patchAuditLog} from "./auditlog";
+export {default as patchChannelMessage} from "./channelmessage";
+export {default as patchChatAvatar} from "./chatavatar";
+export {default as patchColorModule} from "./colormodule";
+export {default as patchGuildSettingsMembers} from "./guildsettingsmembers";
+export {default as patchHeaderPlaying} from "./headerplaying";
+export {default as patchMemberList} from "./memberlist";
+export {default as patchPartyMembers} from "./partymembers";
+export {default as patchPrivateChannel} from "./privatechannel";
+// export {default as patchRTCConnectionUsers} from "./rtcconnection";
+export {default as patchUserPopout} from "./userpopout";
+export {default as patchUserProfile} from "./userprofile";
+export {default as patchVoice} from "./voice";

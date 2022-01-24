@@ -1,7 +1,7 @@
 {
     "info": {
         "name": "StatusEverywhere",
-        "version": "2.2.0",
+        "version": "2.3.0",
         "authors": [
             {
                 "name": "Strencher",
@@ -25,7 +25,16 @@
             "title": "fixes",
             "type": "fixed",
             "items": [
-                "Fixed account section avatar."
+                "Fixed account settings card padding.",
+                "Fixed account section avatar resolution.",
+                "Fixed speaking avatar"
+            ]
+        },
+        {
+            "title": "improved",
+            "type": "improved",
+            "items": [
+                "Improved the code base by moving all patches in separate files."
             ]
         }
     ],
