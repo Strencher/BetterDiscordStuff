@@ -4982,7 +4982,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						})));
 					}
 					async patchUserContextMenus() {
-						const Menus = external_PluginApi_namespaceObject.WebpackModules.findAll((m => m.default?.displayName?.search(/user.*contextmenu/i) > -1));
+						const Menus = external_PluginApi_namespaceObject.WebpackModules.findAll(external_PluginApi_namespaceObject.Filters.byCode(/user.*contextmenu/i));
 						const SelectOptions = Object.entries(Pronouns).reduce(((items, [key, value]) => {
 							items.push({
 								label: value ?? key,
