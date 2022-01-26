@@ -44,7 +44,7 @@ function InvisibleTypingContextMenu({ channelId }) {
     );
 }
 
-export default function InvisibleTypingButton({ channel, textValue }) {
+export default function InvisibleTypingButton({ channel, isEmpty }) {
     const enabled = useStateFromStores([Settings], InvisibleTypingButton.getState.bind(this, channel.id));
     
     const handleClick = useCallback(() => {
@@ -55,7 +55,7 @@ export default function InvisibleTypingButton({ channel, textValue }) {
             TypingModule.stopTyping(channel.id);
         } else {
             excludeList.push(channel.id);
-            if (textValue) TypingModule.startTyping(channel.id);
+            if (!isEmpty) TypingModule.startTyping(channel.id);
         }
 
         Settings.set("exclude", excludeList);
