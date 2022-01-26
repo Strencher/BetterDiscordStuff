@@ -412,7 +412,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				const cmd = Object.assign({}, options, {
 					__registerId: caller,
 					applicationId: "betterdiscord",
-					type: Types.BOT,
+					type: Types.CHAT,
 					target: 1
 				});
 				DiscordCommands.BUILT_IN_COMMANDS.push(cmd);
