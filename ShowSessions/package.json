@@ -1,7 +1,7 @@
 {
 	"info": {
 		"name": "ShowSessions",
-		"version": "1.0.0",
+		"version": "1.1.0",
 		"description": "Shows your current sessions with a chat command '/sessions' or in the accounts panel.",
 		"authors": [
 			{
@@ -13,6 +13,24 @@
 		"github": "https://github.com/Strencher/BetterDiscordStuff/tree/master/ShowSessions",
 		"github_raw": "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/ShowSessions/ShowSessions.plugin.js"
 	},
+	"changelog": [
+		{
+			"type": "fixed",
+			"title": "Fixes, Fixes, Fixes...",
+			"items": [
+				"Fixed avatar resolution being low res",
+				"Fixed some styling issues",
+				"Fixed chat commands. (Thanks to JadeMin!)"
+			]
+		},
+		{
+			"type": "added",
+			"title": "What's new?",
+			"items": [
+				"Added notifications for when a session is being added/removed/updated. You can adjust that in the settings."
+			]
+		}
+	],
 	"build": {
 		"zlibrary": true,
 		"copy": true,

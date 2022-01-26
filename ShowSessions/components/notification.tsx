@@ -1,58 +1,124 @@
-import { Button, Flex } from "@discord/components";
 import { ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalRoot } from "@discord/modal";
-import createStore from "../../../common/hooks/zustand";
+import createStore from "common/hooks/zustand";
 import styles from "./modal.scss";
 import type { Session } from "../@types/sessionstore";
 import { WebpackModules } from "@zlibrary";
-import SessionsStore from "../@types/sessionstore";
-import { useStateFromStores } from "@discord/flux";
+import { Button, Flex, TooltipContainer as Tooltip } from "@discord/components";
 import { FormDivider } from "@discord/forms";
+import {useEffect} from "react";
+import { Colors } from "@discord/constants";
+import {Info, Users} from "@discord/stores";
+import _ from "lodash";
 
 const [useStore, Api] = createStore({ recent: [] });
-const SessionsStore: SessionsStore = WebpackModules.getByProps("getActiveSession");
+const Header = WebpackModules.getModule(m => m.displayName === "Header" && m.Tags);
+const { TextBadge } = WebpackModules.getByProps("TextBadge");
+const { AnimatedAvatar, Sizes: AvatarSizes } = WebpackModules.getByProps("AnimatedAvatar");
+const StatusModule: {
+    humanizeStatus: (statusId: string) => string;
+} = WebpackModules.getByProps("humanizeStatus");
 
-export function CardItem({ sessionId }: { sessionId: string }) {
-    const { active, activities, clientInfo, status }: Session = useStateFromStores([SessionsStore], () => SessionsStore.getSessionById(sessionId));
+export function CardItem({session, type, timestamp, props}: any) {
+    if (!session) return null;
+
+    const {active, activities, clientInfo, status}: Session = session;
 
     return (
-        <div className={styles.deviceInfo}>
-            <ul className={styles.item}>
-                <span className={styles.label}>SessionID:</span>
-                <span>{sessionId}</span>
-            </ul>
-            <ul className={styles.item}>
-                <span className={styles.label}>Activities:</span>
-                <span>{activities.length}</span>
-            </ul>
-            <ul className={styles.item}>
-                <span className={styles.label}>Client:</span>
-                <span>{clientInfo.client}</span>
-            </ul>
-            <ul className={styles.item}>
-                <span className={styles.label}>OS:</span>
-                <span>{clientInfo.os}</span>
-            </ul>
+        <div className={styles.item}>
+            <div className={styles.headerContainer}>
+                <b>{_.upperFirst(clientInfo.os)}</b>
+                <div className={styles.badgesContainer}>
+                    {active && (
+                        <Tooltip position="top" text="The session is marked as an active session.">
+                            <TextBadge color={Colors.BRAND_NEW_500} text="ACTIVE" />
+                        </Tooltip>
+                    )}
+                    {Info.getSessionId() === session.sessionId && (
+                        <Tooltip position="top" text="This is the current session.">
+                            <TextBadge color={Colors.STATUS_GREEN_500} text="CURRENT" />
+                        </Tooltip>
+                    )}
+                </div>
+                <div className={styles.avatarWrapper}>
+                    <AnimatedAvatar
+                        isMobile={clientInfo.client === "mobile"}
+                        status={status}
+                        isTyping={false}
+                        src={Users.getCurrentUser().getAvatarURL(null, 32, true)}
+                        size={AvatarSizes.SIZE_32}
+                        statusTooltip
+                    />
+                </div>
+            </div>
+            <div className={styles.message}>
+                {(() => {
+                    switch (type) {
+                        case "added": return `This session was added.`;
+                        case "removed": return `This session was removed.`;
+                        case "changed": return (
+                            <span>
+                                The <code className="inline">
+                                    {props.property}
+                                </code> about this session was changed: {props.from} -{">"} {props.to}
+                            </span>
+                        );
+                    }
+                })()}
+            </div>
+            <div className={styles.body}>
+                <div className={styles.sessionInfo} key="timestamp">
+                    <b>Timestamp:</b>
+                    <span>{new Date(timestamp).toLocaleString()}</span>
+                </div>
+                <div className={styles.sessionInfo} key="activities">
+                    <b>Actvities:</b>
+                    <span>{activities.length}</span>
+                </div>
+                <div className={styles.sessionInfo} key="sessionId">
+                    <b>ID:</b>
+                    <code className="inline">{session.sessionId}</code>
+                </div>
+                <div className={styles.sessionInfo} key="sessionClient">
+                    <b>Client:</b>
+                    <span>{_.upperFirst(clientInfo.client)}</span>
+                </div>
+                <div className={styles.sessionInfo} key="sessionOs">
+                    <b>OS:</b>
+                    <span>{_.upperFirst(clientInfo.os)}</span>
+                </div>
+                <div className={styles.sessionInfo} key="sessionStatus">
+                    <b>Status:</b>
+                    <span>{StatusModule.humanizeStatus(status)}</span>
+                </div>
+            </div>
         </div>
     );
 }
 
 export default function Modal(props) {
-    const entries = [...useStore(s => s.recent)];
+    const entries = [...useStore(s => s.recent)].reverse();
 
     const newest = entries.shift();
 
+    useEffect(() => {
+        Api.setState({opened: true});
+
+        return () => {
+            Api.setState({opened: false});
+        };
+    }, []);
+
     return (
-        <ModalRoot {...props}>
-            <ModalHeader>
-                <Flex align={Flex.Align.END}>
-                    <ModalCloseButton onClick={props.onClose} />
-                </Flex>
+        <ModalRoot {...props} size="medium">
+            <ModalHeader separator={false}>
+                <Header tag={Header.Tags.H1} size={Header.Sizes.SIZE_20}>Sessions detected</Header>
+                <ModalCloseButton onClick={props.onClose} className={styles.closeButton} />
             </ModalHeader>
             <ModalContent>
-                <CardItem sessionId={newest} />
-                <FormDivider className={styles.newDivider} />
+                <CardItem {...newest} key={newest.session.sessionId} />
+                {entries.length > 0 && <FormDivider className={styles.newDivider} />}
                 {
-                    entries.map(e => <CardItem sessionId={e} key={e} />)
+                    entries.map(props => <CardItem {...props} key={props.session.sessionId} />)
                 }
             </ModalContent>
             <ModalFooter>
@@ -61,7 +127,7 @@ export default function Modal(props) {
                 </Flex>
             </ModalFooter>
         </ModalRoot>
-    )
+    );
 };
 
 export { Api as ModalApi };

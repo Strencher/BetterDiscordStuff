@@ -20,7 +20,7 @@ const ChangePasswordModal = WebpackModules.getByDisplayName("ChangePasswordModal
 const { RichPresenceSection } = WebpackModules.getByProps("RichPresenceSection");
 const StatusModule: {
     humanizeStatus: (statusId: string) => string;
-} = WebpackModules.getByProps("humanizeStatus")
+} = WebpackModules.getByProps("humanizeStatus");
 
 function CopyButton({ copyText, copiedText, onClick }) {
     const [copied, setCopied] = useState(false);
@@ -77,8 +77,9 @@ export function Item({ session }: { session: string }) {
                         isMobile={clientInfo.client === "mobile"}
                         status={status}
                         isTyping={false}
-                        src={Users.getCurrentUser().getAvatarURL(null, true)}
+                        src={Users.getCurrentUser().getAvatarURL(null, 32, true)}
                         size={AvatarSizes.SIZE_32}
+                        statusTooltip
                     />
                 </div>
             </div>

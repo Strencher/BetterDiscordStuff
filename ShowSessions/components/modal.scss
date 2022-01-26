@@ -1,0 +1,95 @@
+.sessionsList {
+    display: flex;
+    flex-wrap: wrap;
+    color: #fff;
+}
+
+.item {
+    color: #ddd;
+    margin: 10px;
+    padding: 16px;
+    flex-shrink: 0;
+    // height: 300px;
+    background: var(--background-secondary);
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+
+    code {
+        background: var(--background-tertiary);
+        padding: 2px;
+    }
+
+    code,
+    span {
+        margin-left: 3px;
+        color: var(--interactive-normal);
+    }
+}
+
+.headerContainer {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+
+    .avatarWrapper {
+        margin-left: auto;
+    }
+}
+
+.activities {
+    display: block;
+
+    &>section {
+        margin-bottom: 5px;
+    }
+
+    .noActivity {
+        font-weight: 600;
+        color: var(--interactive-normal);
+    }
+}
+
+.divider {
+    margin: 16px 0;
+}
+
+.sessionInfo {
+    margin: 10px 0;
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.body {
+    display: block;
+}
+
+.footer {
+    margin-top: auto;
+    align-items: flex-end;
+}
+
+.listDivider {
+    margin: 40px 0;
+}
+
+.badgesContainer {
+    padding-left: 8px;
+    display: flex;
+    justify-content: space-evenly;
+
+    div {
+        margin-right: 3px;
+    }
+}
+
+.message {
+    margin: 5px 0;
+}
+
+
+.closeButton {
+    margin-left: auto;
+}

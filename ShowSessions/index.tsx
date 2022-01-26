@@ -1,5 +1,5 @@
-/// <reference path="../bdbuilder/typings/main.d.ts" />
-import { Patcher, ReactComponents, Toasts, Utilities, WebpackModules } from "@zlibrary";
+/// <reference path="../types/main.d.ts" />
+import { Logger, Patcher, ReactComponents, Toasts, Utilities, WebpackModules } from "@zlibrary";
 import BasePlugin from "@zlibrary/plugin";
 import Clyde from "common/apis/clyde";
 import Commands from "common/apis/commands";
@@ -9,12 +9,11 @@ import styles from "styles";
 import React from "react";
 import _ from "lodash";
 import {switchCase} from "common/util/any";
-import pkg from "./package.json";
-import { Info, SettingsStore } from "@discord/stores";
-
-/*
-* Temporary disabled notifications because the api isn't relieable.
-*/
+import {Session} from "./@types/sessionstore";
+import Modal, {ModalApi} from "./components/notification";
+import {openModal} from "@discord/modal";
+import Settings from "./settings";
+import SettingsPanel from "./components/Settings";
 
 const UserSettings: {
 	setSection: (id: string, thing?: any) => void;
@@ -24,6 +23,7 @@ const SessionsStore: SessionsStoreType = WebpackModules.getByProps("getActiveSes
 export default class ShowSessions extends BasePlugin {
 	_changeListener: () => void;
 	_originalSessions: any;
+	_wasInitial = false;
 
 	promises = {
 		cancelled: false,
@@ -32,14 +32,24 @@ export default class ShowSessions extends BasePlugin {
 		}
 	};
 
+	getSettingsPanel() {
+		return (
+			<SettingsPanel />
+		);
+	}
+
 	onStart() {
+		const DiscordCommands = WebpackModules.getByProps("BUILT_IN_COMMANDS");
 
 		// Register commands
-		Commands.registerCommand(this.getName(), {
+		DiscordCommands.BUILT_IN_COMMANDS.push({
+			__registerId: this.getName(),
+			applicationId: "betterdiscord",
 			name: "sessions",
 			description: "Shows your account's active sessions.",
 			id: "get-sessions",
-			type: 3,
+			type: 1, // Thanks to JadeMin
+			target: 1,
 			predicate: () => true,
 			execute: (_, { channel }) => {
 				try {
@@ -76,27 +86,95 @@ export default class ShowSessions extends BasePlugin {
 		Utilities.suppressErrors(this.patchAccountSection.bind(this), "AccountSection patch")();
 
 		// Attach listeners
-		// SessionsStore.addChangeListener(this._changeListener = () => {
-		// 	this.handleChangeSessions(SessionsStore.getSessions());
-		// });
+		SessionsStore.addChangeListener(this._changeListener = Utilities.suppressErrors(() => {
+			const data = SessionsStore.getSessions();
+			this.handleChangeSessions(data);
+			this._originalSessions = data;
+		}, "ShowSessions.onChange"));
 
-		// this._originalSessions = SessionsStore.getSessions();
+		this._originalSessions = SessionsStore.getSessions();
 	}
 
-	// handleChangeSessions(data: any) {
-	// 	const hasChange = !_.isEqual(Object.keys(this._originalSessions), Object.keys(data));
-	// 	if (!hasChange) return;
+	maybeOpenModal() {
+		if (ModalApi.getState().opened) return;
 
-	// 	const filter = e => Info.getSessionId() !== e && e !== "all";
-	// 	const changed = Object.keys(data).filter(filter).length - Object.keys(this._originalSessions).filter(filter).length;
-	// 	const hasRemoved = changed < 0;
+		openModal(props => (
+			<Modal {...props} />
+		));
+	}
 
-	// 	Toasts.info(`[${pkg.info.name}]: ${hasRemoved ? Math.abs(changed) : changed} ${hasRemoved ? "old disconnected" : "newly connected"} session${changed > 1 ? "s" : ""} was found`, {
-	// 		timeout: 10000
-	// 	});
+	handleChangeSessions(data: any) {
+		if (!Settings.get("showUpdates", true)) return;
 
-	// 	this._originalSessions = data;
-	// }
+		const filter = e => e !== "all";
+		const sessionFilter = (session1, session2, key) => {
+			if (key === "activities") return session1[key].length !== session2[key].length;
+			if (key === "clientInfo") return !_.isEqual(session1[key], session2[key]);
+
+			return session1[key] !== session2[key];
+		}
+		const compareSessions = function (session1: Session, session2: Session) {
+			const keys = Object.keys(session1).slice(1);
+			
+			const changes = keys.filter(sessionFilter.bind(null, session1, session2));
+			if (!changes.length) return [];
+
+			return changes.map(key => ({
+				property: key,
+				from: key === "activities" ? session1[key].length : JSON.stringify(session1[key]),
+				to: key === "activities" ? session2[key].length : JSON.stringify(session2[key]),
+				id: session1.sessionId
+			}));
+		};
+		const oldKeys = Object.keys(this._originalSessions).filter(filter);
+		const newKeys = Object.keys(data).filter(filter);
+		
+		if (oldKeys.length === 0 && !this._wasInitial) {
+			this._wasInitial = true;
+			return;
+		}
+
+		if (oldKeys.length > newKeys.length && Settings.get("showAdd", true)) {
+			const removed = oldKeys.filter(e => newKeys.indexOf(e) < 0);
+			Logger.log("Detected closed session", removed);
+			ModalApi.setState(state => ({
+				...state,
+				recent: state.recent.concat(removed.map(removed => ({
+					type: "removed",
+					timestamp: new Date(),
+					session: this._originalSessions[removed]
+				})).filter(e => e.session)).slice(0, 30)
+			}));
+			this.maybeOpenModal();
+		} else if (oldKeys.length < newKeys.length && Settings.get("showRemove", true)) {
+			const added = newKeys.filter(e => oldKeys.indexOf(e) < 0);
+			Logger.log("Detected new session", added);
+			ModalApi.setState(state => ({
+				...state,
+				recent: state.recent.concat(added.map(added => ({
+					type: "added",
+					timestamp: new Date(),
+					session: SessionsStore.getSessionById(added)
+				})).filter(e => e.session)).slice(0, 30)
+			}));
+			this.maybeOpenModal();
+		} else if (Settings.get("showActivityUpdate", true)) {
+			const changes = newKeys.map(key => compareSessions(this._originalSessions[key], data[key])).filter(Boolean);
+			if (!changes.length) return;
+			Logger.log("Detected session change");
+
+			ModalApi.setState(state => ({
+				...state,
+				recent: state.recent.concat(changes.flatMap(changes => changes.map(change => ({
+					props: change,
+					type: "changed",
+					timestamp: new Date(),
+					session: SessionsStore.getSessionById(change.id),
+				})))).slice(0, 30)
+			}));
+			this.maybeOpenModal();
+		}
+	}
 
 	openSettings = () => {
 		UserSettings.setSection("My Account");
@@ -130,6 +208,6 @@ export default class ShowSessions extends BasePlugin {
 		styles.remove();
 
 		// Remove listeners
-		// SessionsStore.removeChangeListener(this._changeListener);
+		SessionsStore.removeChangeListener(this._changeListener);
 	}
 }
