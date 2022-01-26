@@ -4,7 +4,7 @@
  * @description Shows you the pronoun of a user right next to their name. Pronouns by https://pronoundb.org. Source code can be found in the ./src folder of the github repo.
  * @source https://github.com/Strencher/BetterDiscordStuff/tree/master/PronounDB
  * @updateUrl https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/PronounDB/PronounDB.plugin.js
- * @version 1.1.0
+ * @version 1.2.0
  */
 /*@cc_on
 @if (@_jscript)
@@ -53,7 +53,7 @@ const config = {
 		"description": "Shows you the pronoun of a user right next to their name. Pronouns by https://pronoundb.org. Source code can be found in the ./src folder of the github repo.",
 		"github": "https://github.com/Strencher/BetterDiscordStuff/tree/master/PronounDB",
 		"github_raw": "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/PronounDB/PronounDB.plugin.js",
-		"version": "1.1.0"
+		"version": "1.2.0"
 	},
 	"build": {
 		"zlibrary": true,
@@ -77,9 +77,9 @@ const config = {
 	},
 	"changelog": [{
 		"type": "fixed",
-		"title": "v1.1.0",
+		"title": "v1.2.0",
 		"items": [
-			"Fixes for the latest stable update."
+			"Fixed context menus."
 		]
 	}],
 	"dependencies": {
@@ -158,7 +158,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					return ___createMemoize___(this, 'TransitionGroup', () => BdApi.findModuleByDisplayName('TransitionGroup'))
 				},
 				get 'Button'() {
-					return ___createMemoize___(this, 'Button', () => BdApi.findModuleByProps('DropdownSizes'))
+					return ___createMemoize___(this, 'Button', () => BdApi.findModule(m => 'DropdownSizes' in m && typeof(m) === 'function'))
 				},
 				get 'Popout'() {
 					return ___createMemoize___(this, 'Popout', () => BdApi.findModuleByDisplayName('Popout'))
@@ -342,7 +342,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				var external_BasePlugin_default = __webpack_require__.n(external_BasePlugin_namespaceObject);
 				const external_events_namespaceObject = require("events");
 				var external_events_default = __webpack_require__.n(external_events_namespaceObject);
-				const package_namespaceObject = JSON.parse('{"um":{"u2":"PronounDB","i8":"1.1.0"}}');
+				const package_namespaceObject = JSON.parse('{"um":{"u2":"PronounDB","i8":"1.2.0"}}');
 				var external_BdApi_React_ = __webpack_require__(113);
 				var external_BdApi_React_default = __webpack_require__.n(external_BdApi_React_);
 				function _defineProperty(obj, key, value) {
@@ -4982,7 +4982,6 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						})));
 					}
 					async patchUserContextMenus() {
-						const Menus = external_PluginApi_namespaceObject.WebpackModules.findAll((m => m.default?.displayName?.search(/user.*contextmenu/i) > -1));
 						const SelectOptions = Object.entries(Pronouns).reduce(((items, [key, value]) => {
 							items.push({
 								label: value ?? key,
@@ -4990,56 +4989,67 @@ function buildPlugin([BasePlugin, PluginApi]) {
 							});
 							return items;
 						}), []);
-						for (const Menu of Menus) this.patches.push(external_PluginApi_namespaceObject.Patcher.after(Menu, "default", ((_, [{
-							user
-						}], ret) => {
-							const children = external_PluginApi_namespaceObject.Utilities.getNestedProp(ret, "props.children.props.children");
-							if (!Array.isArray(children)) return;
-							const localOverride = Settings.get("customPronouns")[user.id];
-							const openModal = () => {
-								let value = "";
-								external_PluginApi_namespaceObject.Modals.showModal("Set local Pronoun", [external_BdApi_React_default().createElement(forms_namespaceObject.FormItem, {
-									title: "Pronoun"
-								}, external_BdApi_React_default().createElement(SelectInput, {
-									value,
-									options: SelectOptions,
-									onChange: val => value = val
-								}), external_BdApi_React_default().createElement(forms_namespaceObject.FormText, {
-									type: "description"
-								}, "This will be displayed as your local pronoun. Only you will see this."), external_BdApi_React_default().createElement(forms_namespaceObject.FormText, null, "OR"), external_BdApi_React_default().createElement(TextInput, {
-									value,
-									onChange: val => {
-										value = val;
-									},
-									placeholder: "Custom Pronoun"
-								}))], {
-									onConfirm: () => {
-										PronounsDB.setPronouns(user.id, value);
-									}
-								});
-							};
-							children.push(external_PluginApi_namespaceObject.DCM.buildMenuChildren([{
-								type: "submenu",
-								id: "pronoun-db",
-								label: "PronounDB",
-								items: [{
-									id: "remove-or-add-pronoun",
-									label: localOverride ? "Remove Pronoun" : "Add Pronoun",
-									danger: Boolean(localOverride),
-									action: () => {
-										if (localOverride) {
-											delete Settings.get("customPronouns")[user.id];
-											Settings.saveState();
-											PronounsDB.removePronoun(user.id);
-										} else openModal();
-									}
-								}, localOverride && {
-									id: "edit-pronoun",
-									label: "Edit Pronoun",
-									action: () => openModal()
-								}].filter(Boolean)
-							}]));
-						})));
+						const openModal = user => {
+							let value = "";
+							external_PluginApi_namespaceObject.Modals.showModal("Set local Pronoun", [external_BdApi_React_default().createElement(forms_namespaceObject.FormItem, {
+								title: "Pronoun"
+							}, external_BdApi_React_default().createElement(SelectInput, {
+								value,
+								options: SelectOptions,
+								onChange: val => value = val
+							}), external_BdApi_React_default().createElement(forms_namespaceObject.FormText, {
+								type: "description"
+							}, "This will be displayed as your local pronoun. Only you will see this."), external_BdApi_React_default().createElement(forms_namespaceObject.FormText, null, "OR"), external_BdApi_React_default().createElement(TextInput, {
+								value,
+								onChange: val => {
+									value = val;
+								},
+								placeholder: "Custom Pronoun"
+							}))], {
+								onConfirm: () => {
+									PronounsDB.setPronouns(user.id, value);
+								}
+							});
+						};
+						const patchUserContextMenu = menu => {
+							this.patches.push(external_PluginApi_namespaceObject.Patcher.after(menu, "default", ((_, [{
+								user
+							}], ret) => {
+								const children = external_PluginApi_namespaceObject.Utilities.getNestedProp(ret, "props.children.props.children");
+								if (!Array.isArray(children)) return;
+								const localOverride = Settings.get("customPronouns")[user.id];
+								children.push(external_PluginApi_namespaceObject.DCM.buildMenuChildren([{
+									type: "submenu",
+									id: "pronoun-db",
+									label: "PronounDB",
+									items: [{
+										id: "remove-or-add-pronoun",
+										label: localOverride ? "Remove Pronoun" : "Add Pronoun",
+										danger: Boolean(localOverride),
+										action: () => {
+											if (localOverride) {
+												delete Settings.get("customPronouns")[user.id];
+												Settings.saveState();
+												PronounsDB.removePronoun(user.id);
+											} else openModal(user);
+										}
+									}, localOverride && {
+										id: "edit-pronoun",
+										label: "Edit Pronoun",
+										action: () => openModal(user)
+									}].filter(Boolean)
+								}]));
+							})));
+						};
+						const patched = new Set;
+						const search = async () => {
+							const Menu = await external_PluginApi_namespaceObject.DCM.getDiscordMenu((m => m.displayName?.search(/user.*contextmenu/i) > -1 && !patched.has(m.displayName)));
+							if (this.promises.cancelled) return;
+							patched.add(Menu.default.displayName);
+							patchUserContextMenu(Menu);
+							search();
+						};
+						search();
 					}
 					onStop() {
 						for (const unpatch of this.patches) unpatch();
