@@ -1,7 +1,7 @@
 /**
  * @name InvisibleTyping
  * @author Strencher
- * @version 1.1.4
+ * @version 1.2.0
  * @description Enhanced version of silent typing.
  * @source https://github.com/Strencher/BetterDiscordStuff/blob/master/InvisibleTyping/InvisibleTyping.plugin.js
  * @updateUrl https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/InvisibleTyping/InvisibleTyping.plugin.js
@@ -38,7 +38,7 @@ const config = {
 			"github_username": "Strencher",
 			"twitter_username": "Strencher3"
 		}],
-		"version": "1.1.4",
+		"version": "1.2.0",
 		"description": "Enhanced version of silent typing.",
 		"github": "https://github.com/Strencher/BetterDiscordStuff/blob/master/InvisibleTyping/InvisibleTyping.plugin.js",
 		"github_raw": "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/InvisibleTyping/InvisibleTyping.plugin.js"
@@ -57,6 +57,7 @@ const config = {
 		"type": "fixed",
 		"title": "Fixed",
 		"items": [
+			"Fixed button for last canary update.",
 			"Hide inside the profile settings."
 		]
 	}]
@@ -415,7 +416,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				}
 				function InvisibleTypingButton({
 					channel,
-					textValue
+					isEmpty
 				}) {
 					const enabled = (0, flux_namespaceObject.useStateFromStores)([settings], InvisibleTypingButton.getState.bind(this, channel.id));
 					const handleClick = (0, external_BdApi_React_.useCallback)((() => {
@@ -425,7 +426,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 							TypingModule.stopTyping(channel.id);
 						} else {
 							excludeList.push(channel.id);
-							if (textValue) TypingModule.startTyping(channel.id);
+							if (!isEmpty) TypingModule.startTyping(channel.id);
 						}
 						settings.set("exclude", excludeList);
 					}), [enabled]);
@@ -508,6 +509,29 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				const constants_namespaceObject = Modules["@discord/constants"];
 				const stores_namespaceObject = Modules["@discord/stores"];
 				var InvisibleTyping_React = __webpack_require__(113);
+				function InvisibleTyping_extends() {
+					InvisibleTyping_extends = Object.assign || function(target) {
+						for (var i = 1; i < arguments.length; i++) {
+							var source = arguments[i];
+							for (var key in source)
+								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
+						}
+						return target;
+					};
+					return InvisibleTyping_extends.apply(this, arguments);
+				}
+				function InvisibleTyping_defineProperty(obj, key, value) {
+					if (key in obj) Object.defineProperty(obj, key, {
+						value,
+						enumerable: true,
+						configurable: true,
+						writable: true
+					});
+					else obj[key] = value;
+					return obj;
+				}
+				const ChannelTextAreaContainer = external_PluginApi_namespaceObject.WebpackModules.find((m => "ChannelTextAreaContainer" === m?.type?.render?.displayName))?.type;
+				const ChannelTextAreaButtons = external_PluginApi_namespaceObject.WebpackModules.find((m => m.type && "ChannelTextAreaButtons" === m.type.displayName));
 				const DMChannels = [constants_namespaceObject.ChannelTypes.DM, constants_namespaceObject.ChannelTypes.GROUP_DM];
 				const canViewChannel = function(channel) {
 					if (!channel) return false;
@@ -520,31 +544,50 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					}
 				};
 				class InvisibleTyping extends(external_BasePlugin_default()) {
+					static setUpdating(state) {
+						this._updating = state;
+					}
 					onStart() {
 						external_StyleLoader_default().inject();
-						external_PluginApi_namespaceObject.Utilities.suppressErrors((() => {
-							this.patchTextAreaButtons();
-						}), "textarea buttons patch")();
-						external_PluginApi_namespaceObject.Utilities.suppressErrors((() => {
-							this.patchStartTyping();
-						}), "start typing patch")();
+						external_PluginApi_namespaceObject.Utilities.suppressErrors(this.patchTextAreaButtons.bind(this), "textarea buttons patch")();
+						external_PluginApi_namespaceObject.Utilities.suppressErrors(this.patchStartTyping.bind(this), "start typing patch")();
 					}
 					getSettingsPanel() {
 						return InvisibleTyping_React.createElement(SettingsPanel, null);
 					}
 					async patchTextAreaButtons() {
-						const ChannelTextAreaContainer = external_PluginApi_namespaceObject.WebpackModules.find((m => "ChannelTextAreaContainer" === m?.type?.render?.displayName))?.type;
-						external_PluginApi_namespaceObject.Patcher.after(ChannelTextAreaContainer, "render", ((_, [{
-							channel,
-							textValue,
-							type
-						}], returnValue) => {
-							const tree = external_PluginApi_namespaceObject.Utilities.findInReactTree(returnValue, (e => e?.className?.includes("buttons-")));
-							if ("profile_bio_input" === type || !Array.isArray(tree?.children) || tree.children.some((child => child?.type === InvisibleTyping)) || !canViewChannel(channel)) return returnValue;
-							tree.children.unshift(InvisibleTyping_React.createElement(InvisibleTypingButton, {
-								channel,
-								textValue
+						const shouldShow = function(children, props) {
+							if ("profile_bio_input" === props.type) return false;
+							if (!Array.isArray(children)) return false;
+							if (children.some((child => child && child.type === InvisibleTyping))) return false;
+							if (!canViewChannel(props.channel)) return false;
+							return true;
+						};
+						if (ChannelTextAreaButtons) {
+							external_PluginApi_namespaceObject.Patcher.after(ChannelTextAreaButtons, "type", ((_, [props], returnValue) => {
+								const children = returnValue && returnValue.props && returnValue.props.children;
+								if (!shouldShow(children, props)) return;
+								children.unshift(InvisibleTyping_React.createElement(InvisibleTypingButton, props));
 							}));
+							this.forceUpdate();
+						} else external_PluginApi_namespaceObject.Patcher.after(ChannelTextAreaContainer, "render", ((_, [props], returnValue) => {
+							const tree = external_PluginApi_namespaceObject.Utilities.findInReactTree(returnValue, (e => e?.className?.indexOf("buttons-") > -1));
+							if (!tree || !shouldShow(tree.children, props)) return returnValue;
+							tree.children.unshift(InvisibleTyping_React.createElement(InvisibleTypingButton, InvisibleTyping_extends({}, props, {
+								isEmpty: !!props.textValue
+							})));
+						}));
+					}
+					forceUpdate() {
+						if (InvisibleTyping._updating) return;
+						InvisibleTyping.setUpdating(true);
+						external_PluginApi_namespaceObject.Patcher.after(ChannelTextAreaContainer, "render", (function() {
+							const [, , returnValue] = arguments;
+							this.unpatch();
+							InvisibleTyping.setUpdating(false);
+							const buttons = external_PluginApi_namespaceObject.Utilities.findInReactTree(returnValue, (e => e && e.type === ChannelTextAreaButtons));
+							if (!buttons) return;
+							buttons.key = Math.random().toString();
 						}));
 					}
 					async patchStartTyping() {
@@ -556,8 +599,10 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					onStop() {
 						external_PluginApi_namespaceObject.Patcher.unpatchAll();
 						external_StyleLoader_default().remove();
+						if (ChannelTextAreaButtons) this.forceUpdate();
 					}
 				}
+				InvisibleTyping_defineProperty(InvisibleTyping, "_updating", false);
 			},
 			645: module => {
 				module.exports = function(cssWithMappingToString) {
