@@ -91,8 +91,6 @@ export default class PronounDB extends BasePlugin {
     }
 
     async patchUserContextMenus() {
-        const Menus = WebpackModules.findAll(m => m.default?.displayName?.search(/user.*contextmenu/i) > -1);
-
         const SelectOptions = Object.entries(Pronouns).reduce((items, [key, value]) => {
             items.push({
                 label: value ?? key,
@@ -102,59 +100,73 @@ export default class PronounDB extends BasePlugin {
             return items;
         }, []);
 
-        for (const Menu of Menus) this.patches.push(
-            Patcher.after(Menu, "default", (_, [{user}], ret) => {
-                const children = Utilities.getNestedProp(ret, "props.children.props.children");
-                if (!Array.isArray(children)) return;
+        const openModal = (user) => {
+            let value = "";
+            Modals.showModal("Set local Pronoun", [
+                <FormItem title="Pronoun">
+                    <SelectInput value={value} options={SelectOptions} onChange={val => value = val} />
+                    <FormText type="description">This will be displayed as your local pronoun. Only you will see this.</FormText>
+                    <FormText>OR</FormText>
+                    <TextInput value={value} onChange={val => {
+                        value = val;
+                    }} placeholder="Custom Pronoun" />
+                </FormItem>
+            ], {
+                onConfirm: () => {
+                    PronounsDB.setPronouns(user.id, value);
+                },
+            });
+        };
 
-                const localOverride = Settings.get("customPronouns")[user.id];
-
-                const openModal = () => {
-                    let value = "";
-                    Modals.showModal("Set local Pronoun", [
-                        <FormItem title="Pronoun">
-                            <SelectInput value={value} options={SelectOptions} onChange={val => value = val} />
-                            <FormText type="description">This will be displayed as your local pronoun. Only you will see this.</FormText>
-                            <FormText>OR</FormText>
-                            <TextInput value={value} onChange={val => {
-                                value = val;
-                            }} placeholder="Custom Pronoun" />
-                        </FormItem>
-                    ], {
-                        onConfirm: () => {
-                            PronounsDB.setPronouns(user.id, value);
-                        },
-                    });
-                };
-
-                children.push(DCM.buildMenuChildren([
-                    {
-                        type: "submenu",
-                        id: "pronoun-db",
-                        label: "PronounDB",
-                        items: [
-                            {
-                                id: "remove-or-add-pronoun",
-                                label: localOverride ? "Remove Pronoun" : "Add Pronoun",
-                                danger: Boolean(localOverride),
-                                action: () => {
-                                    if (localOverride) {
-                                        delete Settings.get("customPronouns")[user.id];
-                                        Settings.saveState();
-                                        PronounsDB.removePronoun(user.id);
-                                    } else openModal();
+        const patchUserContextMenu = (menu) => {
+            this.patches.push(
+                Patcher.after(menu, "default", (_, [{user}], ret) => {
+                    const children = Utilities.getNestedProp(ret, "props.children.props.children");
+                    if (!Array.isArray(children)) return;
+    
+                    const localOverride = Settings.get("customPronouns")[user.id];
+    
+                    children.push(DCM.buildMenuChildren([
+                        {
+                            type: "submenu",
+                            id: "pronoun-db",
+                            label: "PronounDB",
+                            items: [
+                                {
+                                    id: "remove-or-add-pronoun",
+                                    label: localOverride ? "Remove Pronoun" : "Add Pronoun",
+                                    danger: Boolean(localOverride),
+                                    action: () => {
+                                        if (localOverride) {
+                                            delete Settings.get("customPronouns")[user.id];
+                                            Settings.saveState();
+                                            PronounsDB.removePronoun(user.id);
+                                        } else openModal(user);
+                                    }
+                                },
+                                localOverride && {
+                                    id: "edit-pronoun",
+                                    label: "Edit Pronoun",
+                                    action: () => openModal(user)
                                 }
-                            },
-                            localOverride && {
-                                id: "edit-pronoun",
-                                label: "Edit Pronoun",
-                                action: () => openModal()
-                            }
-                        ].filter(Boolean)
-                    }
-                ]));
-            })
-        );
+                            ].filter(Boolean)
+                        }
+                    ]));
+                })
+            );
+        };
+
+        const patched = new Set();
+        const search = async () => {
+            const Menu = await DCM.getDiscordMenu(m => m.displayName?.search(/user.*contextmenu/i) > -1 && !patched.has(m.displayName));
+            if (this.promises.cancelled) return;
+
+            patched.add(Menu.default.displayName);
+            patchUserContextMenu(Menu);
+            search();
+        };
+
+        search();
     }
 
     onStop() {

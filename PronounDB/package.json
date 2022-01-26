@@ -23,7 +23,7 @@
         "description": "Shows you the pronoun of a user right next to their name. Pronouns by https://pronoundb.org. Source code can be found in the ./src folder of the github repo.",
         "github": "https://github.com/Strencher/BetterDiscordStuff/tree/master/PronounDB",
         "github_raw": "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/PronounDB/PronounDB.plugin.js",
-        "version": "1.1.0"
+        "version": "1.2.0"
     },
     "build": {
         "zlibrary": true,
@@ -49,9 +49,9 @@
     "changelog": [
         {
             "type": "fixed",
-            "title": "v1.1.0",
+            "title": "v1.2.0",
             "items": [
-                "Fixes for the latest stable update."
+                "Fixed context menus."
             ]
         }
     ],
