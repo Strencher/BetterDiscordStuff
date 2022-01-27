@@ -1,6 +1,6 @@
 /**
  * @name UserBackgrounds
- * @version 1.6.1
+ * @version 1.6.2
  * @description A database of custom user requested backgrounds designed for BetterDiscord and Powercord.
  * @author Strencher, Tropical
  * @source https://github.com/Strencher/BetterDiscordStuff/tree/development/UserBackgrounds
@@ -33,7 +33,7 @@
 const config = {
 	"info": {
 		"name": "UserBackgrounds",
-		"version": "1.6.1",
+		"version": "1.6.2",
 		"description": "A database of custom user requested backgrounds designed for BetterDiscord and Powercord.",
 		"authors": [{
 				"name": "Strencher",
@@ -55,7 +55,7 @@ const config = {
 		"type": "fixed",
 		"title": "fixed",
 		"items": [
-			"Account settings banner."
+			"Fixed crashing when opening settings too fast."
 		]
 	}],
 	"build": {
@@ -152,7 +152,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					return ___createMemoize___(this, 'TransitionGroup', () => BdApi.findModuleByDisplayName('TransitionGroup'))
 				},
 				get 'Button'() {
-					return ___createMemoize___(this, 'Button', () => BdApi.findModuleByProps('DropdownSizes'))
+					return ___createMemoize___(this, 'Button', () => BdApi.findModule(m => 'DropdownSizes' in m && typeof(m) === 'function'))
 				},
 				get 'Popout'() {
 					return ___createMemoize___(this, 'Popout', () => BdApi.findModuleByDisplayName('Popout'))
@@ -296,7 +296,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				__webpack_require__.d(__webpack_exports__, {
 					Z: () => __WEBPACK_DEFAULT_EXPORT__
 				});
-				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(246);
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(645);
 				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
 				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
 					return i[1];
@@ -312,10 +312,10 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
 				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
 			},
-			246: module => {
+			645: module => {
 				module.exports = function(cssWithMappingToString) {
 					var list = [];
-					list.toString = function() {
+					list.toString = function toString() {
 						return this.map((function(item) {
 							var content = cssWithMappingToString(item);
 							if (item[2]) return "@media ".concat(item[2], " {").concat(content, "}");
@@ -410,7 +410,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				else obj[key] = value;
 				return obj;
 			}
-			let banners;
+			let banners = new Map;
 			const bannerStore = new class extends flux_namespaceObject.Store {
 				constructor() {
 					super(modules_namespaceObject.Dispatcher, {});
