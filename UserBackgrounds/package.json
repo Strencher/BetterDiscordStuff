@@ -1,7 +1,7 @@
 {
 	"info": {
 		"name": "UserBackgrounds",
-		"version": "1.6.1",
+		"version": "1.6.2",
 		"description": "A database of custom user requested backgrounds designed for BetterDiscord and Powercord.",
 		"authors": [
 			{
@@ -25,7 +25,7 @@
 			"type": "fixed",
 			"title": "fixed",
 			"items": [
-				"Account settings banner."
+				"Fixed crashing when opening settings too fast."
 			]
 		}
 	],

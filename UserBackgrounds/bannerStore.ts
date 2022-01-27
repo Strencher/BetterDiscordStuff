@@ -5,7 +5,7 @@ import {get as fetch} from "https";
 import {Logger} from "@discord/utils";
 import {UserBanner} from "./types";
 
-let banners: Map<string, UserBanner>;
+let banners: Map<string, UserBanner> = new Map();
 
 export default new class BannerStore extends Store {
     public logger: Logger = new Logger(this.constructor.name);
