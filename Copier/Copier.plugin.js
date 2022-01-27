@@ -40,7 +40,7 @@ const config = {
                 twitter_username: "Strencher3"
             }
         ],
-        version: "1.3.0",
+        version: "1.3.1",
         description: "Allows you to copy certain stuff with custom options.",
         github: "https://github.com/Strencher/BetterDiscordStuff/blob/master/Copier/Copier.plugin.js",
         github_raw: "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/Copier/Copier.plugin.js"
@@ -50,14 +50,7 @@ const config = {
             type: "fixed",
             title: "Fixed",
             items: [
-                "Fixes context menus with the last discord update."
-            ]
-        },
-        {
-            type: "added",
-            title: "Added",
-            items: [
-                "Added option to copy embeds raw."
+                "Fixed channel context menus."
             ]
         }
     ]
@@ -343,7 +336,6 @@ const ChannelCategoryCopyOptions = [
  * @returns 
  */
 const buildPlugin = ([Plugin, Api]) => {
-
     const {ColorConverter, DCM, Logger, Toasts, Utilities, WebpackModules, PluginUtilities, ContextMenuActions, Patcher} = Api;
     const {React, React: {useEffect, useState}, ElectronModule, GuildStore, ChannelStore, DiscordConstants: {ChannelTypes}, SelectedGuildStore} = Api.DiscordModules;
     const {MenuItem, MenuGroup} = WebpackModules.getByProps("MenuItem");
@@ -403,9 +395,6 @@ const buildPlugin = ([Plugin, Api]) => {
             }
         });
     };
-
-    const TextInput = createUpdateWrapper(WebpackModules.getByDisplayName("TextInput"));
-    const SwitchItem = createUpdateWrapper(WebpackModules.getByDisplayName("SwitchItem"));
 
     class Settings {
         static settings = PluginUtilities.loadSettings(config.info.name, {
@@ -573,9 +562,15 @@ const buildPlugin = ([Plugin, Api]) => {
     }
 
     const Modules = {MemberCountStore, Formatter, VoiceStatesStore, GuildStore, ChannelsStore};
+    const TextInput = createUpdateWrapper(WebpackModules.getByDisplayName("TextInput"));
+    const SwitchItem = createUpdateWrapper(WebpackModules.getByDisplayName("SwitchItem"));
 
     return class Copier extends Plugin {
         hasCanaryLinks = false;
+        promises = {
+            cancelled: false,
+            cancel() {this.cancelled = true;}
+        }
         css = `
             .roleColoredItem {
                 display: flex;
@@ -694,6 +689,7 @@ const buildPlugin = ([Plugin, Api]) => {
 
         async patchMessageContextMenu() {
             const MessageContextMenu = this.MessageContextMenu = await DCM.getDiscordMenu("MessageContextMenu");
+            if (this.promises.cancelled) return;
 
             Patcher.after(MessageContextMenu, "default", (_, [{message}], ret) => {
                 const children = Utilities.getNestedProp(ret, "props.children");
@@ -768,8 +764,6 @@ const buildPlugin = ([Plugin, Api]) => {
                     ])
                 );
             });
-
-            DCM.forceUpdateMenus();
         }
 
         patchCopyIdItem() {
@@ -801,8 +795,10 @@ const buildPlugin = ([Plugin, Api]) => {
             const isTextChannelContextMenu = mod => ~mod.toString().indexOf("AnalyticsLocations.CONTEXT_MENU");
             
             const patchTextChannelContextMenu = (module) => {
+                if (this.promises.cancelled) return;
+
                 Patcher.after(module, "default", (_, [props], ret) => {
-                    const children = Utilities.getNestedProp(ret, "props.children");
+                    const children = Utilities.findInReactTree(ret, Array.isArray);
                     if (!Array.isArray(children)) return;
     
                     const {channel} = props;
@@ -863,8 +859,6 @@ const buildPlugin = ([Plugin, Api]) => {
                         ])
                     );
                 });
-
-                DCM.forceUpdateMenus();
             };
 
             // Normal TextChannel context menu
@@ -875,6 +869,8 @@ const buildPlugin = ([Plugin, Api]) => {
 
             // ChannelCategory context menu
             DCM.getDiscordMenu(m => isChannelContextMenu(m) && !isTextChannelContextMenu(m)).then(CategoryContextMenu => {
+                if (this.promises.cancelled) return;
+
                 Patcher.after(CategoryContextMenu, "default", (_, [props], ret) => {
                     const children = Utilities.getNestedProp(ret, "props.children");
                     if (!Array.isArray(children)) return;
@@ -929,12 +925,12 @@ const buildPlugin = ([Plugin, Api]) => {
                         ])
                     );
                 });
-
-                DCM.forceUpdateMenus();
             });
 
             // VoiceChannel context menu
             DCM.getDiscordMenu("ChannelListVoiceChannelContextMenu").then(VoiceChannelContextMenu => {
+                if (this.promises.cancelled) return;
+
                 Patcher.after(VoiceChannelContextMenu, "default", (_, [props], ret) => {
                     const children = Utilities.getNestedProp(ret, "props.children");
                     if (!Array.isArray(children)) return;
@@ -995,8 +991,6 @@ const buildPlugin = ([Plugin, Api]) => {
                         ])
                     );
                 });
-
-                DCM.forceUpdateMenus();
             });
         }
 
@@ -1006,6 +1000,7 @@ const buildPlugin = ([Plugin, Api]) => {
 
         async patchGuildContextMenu() {
             const GuildContextMenu = await DCM.getDiscordMenu("GuildContextMenu");
+            if (this.promises.cancelled) return;
 
             Patcher.after(GuildContextMenu, "default", (_, [props], ret) => {
                 const children = Utilities.getNestedProp(ret, "props.children");
@@ -1069,12 +1064,11 @@ const buildPlugin = ([Plugin, Api]) => {
                     ])
                 );
             });
-
-            DCM.forceUpdateMenus();
         }
 
         async patchUserContextMenu() {
             const UserContextMenu = await DCM.getDiscordMenu(m => m.displayName?.search(/user.*contextmenu/i) > -1 && !m.__originalFunction);
+            if (this.promises.cancelled) return;
 
             Patcher.after(UserContextMenu, "default", (_, [props], ret) => {
                 const children = Utilities.getNestedProp(ret, "props.children.props.children");
@@ -1146,13 +1140,14 @@ const buildPlugin = ([Plugin, Api]) => {
                     ])
                 );
             });
-
-            DCM.forceUpdateMenus();
+            
             await this.patchUserContextMenu();
         }
 
         patchDeveloperContextMenu() {
             const patchRoleContextMenu = (module) => {
+                if (this.promises.cancelled) return;
+
                 Patcher.after(module, "default", (_, [props], ret) => {
                     const handleClose = () => {
                         ret?.props?.onClose();
@@ -1271,12 +1266,10 @@ const buildPlugin = ([Plugin, Api]) => {
                         }
                     ]));
                 });
-
-                DCM.forceUpdateMenus();
             };
 
             DCM.getDiscordMenu("DeveloperContextMenu").then(patchRoleContextMenu);
-            DCM.getDiscordMenu("GuildSettingsRoleContextMenu");
+            DCM.getDiscordMenu("GuildSettingsRoleContextMenu").then(patchRoleContextMenu);
         }
 
         patchUserPopoutProfileText() {
@@ -1463,6 +1456,7 @@ const buildPlugin = ([Plugin, Api]) => {
         onStop() {
             Patcher.unpatchAll();
             PluginUtilities.removeStyle(config.info.name);
+            this.promises.cancel();
         }
     }
 };
