@@ -6,15 +6,15 @@ export default function patchUserPopout(): void {
     const UserPopoutComponents = WebpackModules.getByProps("UserPopoutAvatar");
 
     Patcher.after(UserPopoutComponents, "UserPopoutAvatar", (_, [props], res) => {
-        const tree = Utilities.findInReactTree(res, e => e?.className?.indexOf("avatarWrapper") > -1);
+        const tree = Utilities.findInReactTree(res, e => e?.className?.indexOf("avatarHoverTarget") > -1);
         if (!tree) return;
-        const Component = tree.children[0].type;
+        const Component = tree.children.type;
 
         const WrappedAvatar = ({className, ...props}) => (
             <Component className={Utilities.className(className, tree?.props?.className)} {...props} />
         );
 
-        tree.children[0] = (
+        tree.children = (
             <StatusAvatar
                 {...props}
                 shouldWatch={false}

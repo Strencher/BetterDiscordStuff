@@ -104,6 +104,7 @@ type StatusAvatarProps = {
     onMouseEnter: () => void;
     onMouseLeave: () => void;
     shouldShowUserPopout?: boolean;
+    borderBox?: boolean;
 };
 
 function StatusEverywhereAvatar(props) {
@@ -120,7 +121,8 @@ function StatusEverywhereAvatar(props) {
         onMouseEnter,
         onMouseLeave,
         shouldShowUserPopout,
-        resolution
+        resolution,
+        borderBox = true
     }: StatusAvatarProps = props;
     if (!user) {
         Logger.warn("No user provided");
@@ -204,7 +206,7 @@ function StatusEverywhereAvatar(props) {
                         statusTooltip
                         statusColor={statusColor}
                         className={Utilities.className(
-                            styles.chatAvatar,
+                            borderBox && styles.chatAvatar,
                             type === "chat" && classes.avatar,
                             type === "chat" && classes.clickable,
                             props.className,

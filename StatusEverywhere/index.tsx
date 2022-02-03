@@ -10,6 +10,8 @@ import _ from "lodash";
 import * as Patches from "./patches";
 
 export default class StatusEverywhere extends BasePlugin {
+    public _flush: Function[] = [];
+
     public get StatusAvatar() { return StatusAvatar; }
 
     public getSettingsPanel() {
@@ -39,7 +41,7 @@ export default class StatusEverywhere extends BasePlugin {
         for (let i = 0; i < methods.length; i++) {
             if (!methods[i].startsWith("patch") || typeof(Patches[methods[i]]) !== "function") continue;
 
-            Utilities.suppressErrors(Patches[methods[i]].bind(this), `${this.constructor.name}.${methods[i]}`)();
+            Utilities.suppressErrors(Patches[methods[i]].bind(this, this._flush), `${this.constructor.name}.${methods[i]}`)();
         }
 
         time.end();
@@ -50,5 +52,9 @@ export default class StatusEverywhere extends BasePlugin {
     onStop(): void {
         Patcher.unpatchAll();
         stylesheet.remove();
+
+        for (let i = 0; i < this._flush.length; i++) {
+            this._flush[i]();
+        }
     }
 }

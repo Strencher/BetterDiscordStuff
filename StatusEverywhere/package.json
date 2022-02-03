@@ -1,7 +1,7 @@
 {
     "info": {
         "name": "StatusEverywhere",
-        "version": "2.3.0",
+        "version": "2.3.1",
         "authors": [
             {
                 "name": "Strencher",
@@ -25,16 +25,8 @@
             "title": "fixes",
             "type": "fixed",
             "items": [
-                "Fixed account settings card padding.",
-                "Fixed account section avatar resolution.",
-                "Fixed speaking avatar"
-            ]
-        },
-        {
-            "title": "improved",
-            "type": "improved",
-            "items": [
-                "Improved the code base by moving all patches in separate files."
+                "Fixed UserPopout avatar being blank.",
+                "Fixed UserProfile modal avatar not being patched at all."
             ]
         }
     ],
