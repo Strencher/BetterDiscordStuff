@@ -1,6 +1,6 @@
 /**
  * @name StatusEverywhere
- * @version 2.3.0
+ * @version 2.3.1
  * @author Strencher, Zerebos
  * @description Adds user status everywhere Discord doesn't.
  * @source https://github.com/Strencher/BetterDiscordStuff/tree/master/StatusEverywhere
@@ -32,7 +32,7 @@
 const config = {
 	"info": {
 		"name": "StatusEverywhere",
-		"version": "2.3.0",
+		"version": "2.3.1",
 		"authors": [{
 				"name": "Strencher",
 				"discord_id": "415849376598982656",
@@ -51,22 +51,13 @@ const config = {
 		"github_raw": "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/StatusEverywhere/StatusEverywhere.plugin.js"
 	},
 	"changelog": [{
-			"title": "fixes",
-			"type": "fixed",
-			"items": [
-				"Fixed account settings card padding.",
-				"Fixed account section avatar resolution.",
-				"Fixed speaking avatar"
-			]
-		},
-		{
-			"title": "improved",
-			"type": "improved",
-			"items": [
-				"Improved the code base by moving all patches in separate files."
-			]
-		}
-	],
+		"title": "fixes",
+		"type": "fixed",
+		"items": [
+			"Fixed UserPopout avatar being blank.",
+			"Fixed UserProfile modal avatar not being patched at all."
+		]
+	}],
 	"build": {
 		"zlibrary": true,
 		"copy": true,
@@ -586,7 +577,8 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						onMouseEnter,
 						onMouseLeave,
 						shouldShowUserPopout,
-						resolution
+						resolution,
+						borderBox = true
 					} = props;
 					if (!user) {
 						external_PluginApi_namespaceObject.Logger.warn("No user provided");
@@ -650,7 +642,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						onClick: setUserPopout.bind(null, !hasUserPopout),
 						statusTooltip: true,
 						statusColor,
-						className: external_PluginApi_namespaceObject.Utilities.className(avatar.Z.chatAvatar, "chat" === type && classes.avatar, "chat" === type && classes.clickable, props.className, {
+						className: external_PluginApi_namespaceObject.Utilities.className(borderBox && avatar.Z.chatAvatar, "chat" === type && classes.avatar, "chat" === type && classes.clickable, props.className, {
 							[avatar.Z.speaking]: props.isSpeaking
 						}),
 						status,
@@ -1488,16 +1480,16 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				function patchUserPopout() {
 					const UserPopoutComponents = external_PluginApi_namespaceObject.WebpackModules.getByProps("UserPopoutAvatar");
 					external_PluginApi_namespaceObject.Patcher.after(UserPopoutComponents, "UserPopoutAvatar", ((_, [props], res) => {
-						const tree = external_PluginApi_namespaceObject.Utilities.findInReactTree(res, (e => e?.className?.indexOf("avatarWrapper") > -1));
+						const tree = external_PluginApi_namespaceObject.Utilities.findInReactTree(res, (e => e?.className?.indexOf("avatarHoverTarget") > -1));
 						if (!tree) return;
-						const Component = tree.children[0].type;
+						const Component = tree.children.type;
 						const WrappedAvatar = ({
 							className,
 							...props
 						}) => userpopout_React.createElement(Component, userpopout_extends({
 							className: external_PluginApi_namespaceObject.Utilities.className(className, tree?.props?.className)
 						}, props));
-						tree.children[0] = userpopout_React.createElement(components_avatar, userpopout_extends({}, props, {
+						tree.children = userpopout_React.createElement(components_avatar, userpopout_extends({}, props, {
 							shouldWatch: false,
 							type: "user-popout",
 							animated: true,
@@ -1518,16 +1510,30 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						}));
 					}));
 				}
-				function patchUserProfile() {
-					const UserProfileModalHeader = external_PluginApi_namespaceObject.WebpackModules.getModule((m => "UserProfileModalHeader" === m?.default?.displayName));
-					const classes = external_PluginApi_namespaceObject.WebpackModules.getByProps("header", "headerTop");
+				async function patchUserProfile(flush) {
+					const UserProfileModalHeader = await new Promise((resolve => {
+						const filter = m => "UserProfileModalHeader" === m?.default?.displayName;
+						const cancel = () => external_PluginApi_namespaceObject.WebpackModules.removeListener(listener); {
+							const fromCache = external_PluginApi_namespaceObject.WebpackModules.getModule(filter);
+							if (fromCache) return resolve(fromCache);
+						}
+						const listener = module => {
+							if (!filter(module)) return;
+							resolve(module);
+							cancel();
+						};
+						external_PluginApi_namespaceObject.WebpackModules.addListener(listener);
+						flush.push(cancel);
+					}));
+					const classes = Object.assign({}, external_PluginApi_namespaceObject.WebpackModules.getByProps("avatarSpeaking", "wrapper"), external_PluginApi_namespaceObject.WebpackModules.getByProps("header", "headerTop"));
 					external_PluginApi_namespaceObject.Patcher.after(UserProfileModalHeader, "default", ((_, [props], res) => {
-						const avatar = external_PluginApi_namespaceObject.Utilities.findInReactTree(res, (e => e?.props?.statusTooltip));
+						const avatar = external_PluginApi_namespaceObject.Utilities.findInReactTree(res, (e => null != e?.props?.statusTooltip));
 						if (!avatar) return;
 						avatar.props = Object.assign({}, props, {
-							className: classes.avatar,
+							className: external_PluginApi_namespaceObject.Utilities.className(classes.avatar, classes.wrapper),
 							animated: true,
 							shouldWatch: false,
+							borderBox: false,
 							radial: {
 								id: "userProfileRadialStatus",
 								value: false
@@ -1576,7 +1582,21 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						}
 					}))));
 				}
+				function StatusEverywhere_defineProperty(obj, key, value) {
+					if (key in obj) Object.defineProperty(obj, key, {
+						value,
+						enumerable: true,
+						configurable: true,
+						writable: true
+					});
+					else obj[key] = value;
+					return obj;
+				}
 				class StatusEverywhere extends(external_BasePlugin_default()) {
+					constructor(...args) {
+						super(...args);
+						StatusEverywhere_defineProperty(this, "_flush", []);
+					}
 					get StatusAvatar() {
 						return components_avatar;
 					}
@@ -1598,7 +1618,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						const methods = Object.keys(patches_namespaceObject);
 						for (let i = 0; i < methods.length; i++) {
 							if (!methods[i].startsWith("patch") || "function" !== typeof patches_namespaceObject[methods[i]]) continue;
-							external_PluginApi_namespaceObject.Utilities.suppressErrors(patches_namespaceObject[methods[i]].bind(this), `${this.constructor.name}.${methods[i]}`)();
+							external_PluginApi_namespaceObject.Utilities.suppressErrors(patches_namespaceObject[methods[i]].bind(this, this._flush), `${this.constructor.name}.${methods[i]}`)();
 						}
 						time.end();
 						external_StyleLoader_default().inject();
@@ -1606,6 +1626,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					onStop() {
 						external_PluginApi_namespaceObject.Patcher.unpatchAll();
 						external_StyleLoader_default().remove();
+						for (let i = 0; i < this._flush.length; i++) this._flush[i]();
 					}
 				}
 			},
