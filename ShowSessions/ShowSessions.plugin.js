@@ -1,6 +1,6 @@
 /**
  * @name ShowSessions
- * @version 1.1.0
+ * @version 1.2.0
  * @description Shows your current sessions with a chat command '/sessions' or in the accounts panel.
  * @author Strencher
  * @source https://github.com/Strencher/BetterDiscordStuff/tree/master/ShowSessions
@@ -32,7 +32,7 @@
 const config = {
 	"info": {
 		"name": "ShowSessions",
-		"version": "1.1.0",
+		"version": "1.2.0",
 		"description": "Shows your current sessions with a chat command '/sessions' or in the accounts panel.",
 		"authors": [{
 			"name": "Strencher",
@@ -46,9 +46,8 @@ const config = {
 			"type": "fixed",
 			"title": "Fixes, Fixes, Fixes...",
 			"items": [
-				"Fixed avatar resolution being low res",
-				"Fixed some styling issues",
-				"Fixed chat commands. (Thanks to JadeMin!)"
+				"Flipped settings.. should now work as intended!",
+				"Made notifications a bit less spammy, check settings for more."
 			]
 		},
 		{
@@ -327,7 +326,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
 					return i[1];
 				}));
-				___CSS_LOADER_EXPORT___.push([module.id, ".ShowSessions-modal-sessionsList{display:flex;flex-wrap:wrap;color:#fff}.ShowSessions-modal-item{color:#ddd;margin:10px;padding:16px;flex-shrink:0;background:var(--background-secondary);border-radius:8px;display:flex;flex-direction:column}.ShowSessions-modal-item code{background:var(--background-tertiary);padding:2px}.ShowSessions-modal-item code,.ShowSessions-modal-item span{margin-left:3px;color:var(--interactive-normal)}.ShowSessions-modal-headerContainer{display:flex;align-items:center;margin-bottom:5px}.ShowSessions-modal-headerContainer .ShowSessions-modal-avatarWrapper{margin-left:auto}.ShowSessions-modal-activities{display:block}.ShowSessions-modal-activities>section{margin-bottom:5px}.ShowSessions-modal-activities .ShowSessions-modal-noActivity{font-weight:600;color:var(--interactive-normal)}.ShowSessions-modal-divider{margin:16px 0}.ShowSessions-modal-sessionInfo{margin:10px 0;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.ShowSessions-modal-body{display:block}.ShowSessions-modal-footer{margin-top:auto;align-items:flex-end}.ShowSessions-modal-listDivider{margin:40px 0}.ShowSessions-modal-badgesContainer{padding-left:8px;display:flex;justify-content:space-evenly}.ShowSessions-modal-badgesContainer div{margin-right:3px}.ShowSessions-modal-message{margin:5px 0}.ShowSessions-modal-closeButton{margin-left:auto}", ""]);
+				___CSS_LOADER_EXPORT___.push([module.id, ".ShowSessions-modal-sessionsList{display:flex;flex-wrap:wrap;color:#fff}.ShowSessions-modal-item{color:#ddd;margin:10px;padding:16px;flex-shrink:0;background:var(--background-secondary);border-radius:8px;display:flex;flex-direction:column}.ShowSessions-modal-item code{background:var(--background-tertiary);padding:2px}.ShowSessions-modal-item code,.ShowSessions-modal-item span{margin-left:3px;color:var(--interactive-normal)}.ShowSessions-modal-headerContainer{display:flex;align-items:center;margin-bottom:5px}.ShowSessions-modal-headerContainer .ShowSessions-modal-avatarWrapper{margin-left:auto}.ShowSessions-modal-activities{display:block}.ShowSessions-modal-activities>section{margin-bottom:5px}.ShowSessions-modal-activities .ShowSessions-modal-noActivity{font-weight:600;color:var(--interactive-normal)}.ShowSessions-modal-divider{margin:16px 0}.ShowSessions-modal-sessionInfo{margin:10px 0;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.ShowSessions-modal-body{display:block}.ShowSessions-modal-footer{margin-top:auto;align-items:flex-end}.ShowSessions-modal-listDivider{margin:40px 0}.ShowSessions-modal-badgesContainer{padding-left:8px;display:flex;justify-content:space-evenly}.ShowSessions-modal-badgesContainer div{margin-right:3px}.ShowSessions-modal-message{margin:5px 0}.ShowSessions-modal-closeButton{margin-left:auto}.ShowSessions-modal-center{color:#ddd;display:flex;flex:1 1 auto;align-items:center;justify-content:center}.ShowSessions-modal-center p{font-size:25px;font-weight:600}", ""]);
 				___CSS_LOADER_EXPORT___.locals = {
 					sessionsList: "ShowSessions-modal-sessionsList",
 					item: "ShowSessions-modal-item",
@@ -342,7 +341,25 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					listDivider: "ShowSessions-modal-listDivider",
 					badgesContainer: "ShowSessions-modal-badgesContainer",
 					message: "ShowSessions-modal-message",
-					closeButton: "ShowSessions-modal-closeButton"
+					closeButton: "ShowSessions-modal-closeButton",
+					center: "ShowSessions-modal-center"
+				};
+				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
+				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
+			},
+			354: (module, __webpack_exports__, __webpack_require__) => {
+				__webpack_require__.d(__webpack_exports__, {
+					Z: () => __WEBPACK_DEFAULT_EXPORT__
+				});
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(645);
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
+				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
+					return i[1];
+				}));
+				___CSS_LOADER_EXPORT___.push([module.id, ".ShowSessions-settings-divider{margin:20px 0}.ShowSessions-settings-marginBottom8{margin-bottom:8px}", ""]);
+				___CSS_LOADER_EXPORT___.locals = {
+					divider: "ShowSessions-settings-divider",
+					marginBottom8: "ShowSessions-settings-marginBottom8"
 				};
 				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
 				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
@@ -372,7 +389,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
 				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
 			},
-			11: (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+			526: (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 				__webpack_require__.r(__webpack_exports__);
 				__webpack_require__.d(__webpack_exports__, {
 					default: () => ShowSessions
@@ -440,8 +457,8 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					unregisterAllCommands
 				};
 				const commands = Commands;
-				var external_BdApi_React_ = __webpack_require__(113);
-				var external_BdApi_React_default = __webpack_require__.n(external_BdApi_React_);
+				const external_BdApi_React_namespaceObject = BdApi.React;
+				var external_BdApi_React_default = __webpack_require__.n(external_BdApi_React_namespaceObject);
 				var list = __webpack_require__(700);
 				const forms_namespaceObject = Modules["@discord/forms"];
 				const external_window_namespaceObject = window._;
@@ -471,7 +488,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					copiedText,
 					onClick
 				}) {
-					const [copied, setCopied] = (0, external_BdApi_React_.useState)(false);
+					const [copied, setCopied] = (0, external_BdApi_React_namespaceObject.useState)(false);
 					return external_BdApi_React_default().createElement(components_namespaceObject.Button, {
 						onClick: e => {
 							setCopied(true);
@@ -623,8 +640,8 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						}
 					};
 					return [function(collector = (_ => _)) {
-						const forceUpdate = (0, external_BdApi_React_.useReducer)((e => e + 1), 0)[1];
-						(0, external_BdApi_React_.useEffect)((() => {
+						const forceUpdate = (0, external_BdApi_React_namespaceObject.useReducer)((e => e + 1), 0)[1];
+						(0, external_BdApi_React_namespaceObject.useEffect)((() => {
 							const handler = () => forceUpdate();
 							listeners.add(handler);
 							return () => listeners.delete(handler);
@@ -633,7 +650,6 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					}, api];
 				}
 				var modal = __webpack_require__(602);
-				var React = __webpack_require__(113);
 				function _extends() {
 					_extends = Object.assign || function(target) {
 						for (var i = 1; i < arguments.length; i++) {
@@ -670,34 +686,34 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						clientInfo,
 						status
 					} = session;
-					return React.createElement("div", {
+					return external_BdApi_React_default().createElement("div", {
 						className: modal.Z.item
-					}, React.createElement("div", {
+					}, external_BdApi_React_default().createElement("div", {
 						className: modal.Z.headerContainer
-					}, React.createElement("b", null, external_window_default().upperFirst(clientInfo.os)), React.createElement("div", {
+					}, external_BdApi_React_default().createElement("b", null, external_window_default().upperFirst(clientInfo.os)), external_BdApi_React_default().createElement("div", {
 						className: modal.Z.badgesContainer
-					}, active && React.createElement(components_namespaceObject.TooltipContainer, {
+					}, active && external_BdApi_React_default().createElement(components_namespaceObject.TooltipContainer, {
 						position: "top",
 						text: "The session is marked as an active session."
-					}, React.createElement(notification_TextBadge, {
+					}, external_BdApi_React_default().createElement(notification_TextBadge, {
 						color: constants_namespaceObject.Colors.BRAND_NEW_500,
 						text: "ACTIVE"
-					})), stores_namespaceObject.Info.getSessionId() === session.sessionId && React.createElement(components_namespaceObject.TooltipContainer, {
+					})), stores_namespaceObject.Info.getSessionId() === session.sessionId && external_BdApi_React_default().createElement(components_namespaceObject.TooltipContainer, {
 						position: "top",
 						text: "This is the current session."
-					}, React.createElement(notification_TextBadge, {
+					}, external_BdApi_React_default().createElement(notification_TextBadge, {
 						color: constants_namespaceObject.Colors.STATUS_GREEN_500,
 						text: "CURRENT"
-					}))), React.createElement("div", {
+					}))), external_BdApi_React_default().createElement("div", {
 						className: modal.Z.avatarWrapper
-					}, React.createElement(notification_AnimatedAvatar, {
+					}, external_BdApi_React_default().createElement(notification_AnimatedAvatar, {
 						isMobile: "mobile" === clientInfo.client,
 						status,
 						isTyping: false,
 						src: stores_namespaceObject.Users.getCurrentUser().getAvatarURL(null, 32, true),
 						size: notification_AvatarSizes.SIZE_32,
 						statusTooltip: true
-					}))), React.createElement("div", {
+					}))), external_BdApi_React_default().createElement("div", {
 						className: modal.Z.message
 					}, (() => {
 						switch (type) {
@@ -706,38 +722,38 @@ function buildPlugin([BasePlugin, PluginApi]) {
 							case "removed":
 								return `This session was removed.`;
 							case "changed":
-								return React.createElement("span", null, "The ", React.createElement("code", {
+								return external_BdApi_React_default().createElement("span", null, "The ", external_BdApi_React_default().createElement("code", {
 									className: "inline"
 								}, props.property), " about this session was changed: ", props.from, " -", ">", " ", props.to);
 						}
-					})()), React.createElement("div", {
+					})()), external_BdApi_React_default().createElement("div", {
 						className: modal.Z.body
-					}, React.createElement("div", {
+					}, external_BdApi_React_default().createElement("div", {
 						className: modal.Z.sessionInfo,
 						key: "timestamp"
-					}, React.createElement("b", null, "Timestamp:"), React.createElement("span", null, new Date(timestamp).toLocaleString())), React.createElement("div", {
+					}, external_BdApi_React_default().createElement("b", null, "Timestamp:"), external_BdApi_React_default().createElement("span", null, new Date(timestamp).toLocaleString())), external_BdApi_React_default().createElement("div", {
 						className: modal.Z.sessionInfo,
 						key: "activities"
-					}, React.createElement("b", null, "Actvities:"), React.createElement("span", null, activities.length)), React.createElement("div", {
+					}, external_BdApi_React_default().createElement("b", null, "Actvities:"), external_BdApi_React_default().createElement("span", null, activities.length)), external_BdApi_React_default().createElement("div", {
 						className: modal.Z.sessionInfo,
 						key: "sessionId"
-					}, React.createElement("b", null, "ID:"), React.createElement("code", {
+					}, external_BdApi_React_default().createElement("b", null, "ID:"), external_BdApi_React_default().createElement("code", {
 						className: "inline"
-					}, session.sessionId)), React.createElement("div", {
+					}, session.sessionId)), external_BdApi_React_default().createElement("div", {
 						className: modal.Z.sessionInfo,
 						key: "sessionClient"
-					}, React.createElement("b", null, "Client:"), React.createElement("span", null, external_window_default().upperFirst(clientInfo.client))), React.createElement("div", {
+					}, external_BdApi_React_default().createElement("b", null, "Client:"), external_BdApi_React_default().createElement("span", null, external_window_default().upperFirst(clientInfo.client))), external_BdApi_React_default().createElement("div", {
 						className: modal.Z.sessionInfo,
 						key: "sessionOs"
-					}, React.createElement("b", null, "OS:"), React.createElement("span", null, external_window_default().upperFirst(clientInfo.os))), React.createElement("div", {
+					}, external_BdApi_React_default().createElement("b", null, "OS:"), external_BdApi_React_default().createElement("span", null, external_window_default().upperFirst(clientInfo.os))), external_BdApi_React_default().createElement("div", {
 						className: modal.Z.sessionInfo,
 						key: "sessionStatus"
-					}, React.createElement("b", null, "Status:"), React.createElement("span", null, notification_StatusModule.humanizeStatus(status)))));
+					}, external_BdApi_React_default().createElement("b", null, "Status:"), external_BdApi_React_default().createElement("span", null, notification_StatusModule.humanizeStatus(status)))));
 				}
 				function Modal(props) {
 					const entries = [...useStore((s => s.recent))].reverse();
 					const newest = entries.shift();
-					(0, external_BdApi_React_.useEffect)((() => {
+					(0, external_BdApi_React_namespaceObject.useEffect)((() => {
 						Api.setState({
 							opened: true
 						});
@@ -747,25 +763,27 @@ function buildPlugin([BasePlugin, PluginApi]) {
 							});
 						};
 					}), []);
-					return React.createElement(modal_namespaceObject.ModalRoot, _extends({}, props, {
-						size: "medium"
-					}), React.createElement(modal_namespaceObject.ModalHeader, {
+					return external_BdApi_React_default().createElement(modal_namespaceObject.ModalRoot, _extends({}, props, {
+						size: !!newest ? "medium" : "small"
+					}), external_BdApi_React_default().createElement(modal_namespaceObject.ModalHeader, {
 						separator: false
-					}, React.createElement(Header, {
+					}, external_BdApi_React_default().createElement(Header, {
 						tag: Header.Tags.H1,
 						size: Header.Sizes.SIZE_20
-					}, "Sessions detected"), React.createElement(modal_namespaceObject.ModalCloseButton, {
+					}, "Sessions Logs"), external_BdApi_React_default().createElement(modal_namespaceObject.ModalCloseButton, {
 						onClick: props.onClose,
 						className: modal.Z.closeButton
-					})), React.createElement(modal_namespaceObject.ModalContent, null, React.createElement(CardItem, _extends({}, newest, {
-						key: newest.session.sessionId
-					})), entries.length > 0 && React.createElement(forms_namespaceObject.FormDivider, {
+					})), external_BdApi_React_default().createElement(modal_namespaceObject.ModalContent, null, !newest ? external_BdApi_React_default().createElement("div", {
+						className: modal.Z.center
+					}, external_BdApi_React_default().createElement("p", null, "Nothing happened yet!")) : external_BdApi_React_default().createElement(external_BdApi_React_default().Fragment, null, external_BdApi_React_default().createElement(CardItem, _extends({}, newest, {
+						key: newest.session?.sessionId
+					})), entries.length > 0 && external_BdApi_React_default().createElement(forms_namespaceObject.FormDivider, {
 						className: modal.Z.newDivider
-					}), entries.map((props => React.createElement(CardItem, _extends({}, props, {
-						key: props.session.sessionId
-					}))))), React.createElement(modal_namespaceObject.ModalFooter, null, React.createElement(components_namespaceObject.Flex, {
-						align: components_namespaceObject.Flex.Align.END
-					}, React.createElement(components_namespaceObject.Button, {
+					}), entries.map((props => external_BdApi_React_default().createElement(CardItem, _extends({}, props, {
+						key: props.session?.sessionId
+					})))))), external_BdApi_React_default().createElement(modal_namespaceObject.ModalFooter, null, external_BdApi_React_default().createElement(components_namespaceObject.Flex, {
+						justify: components_namespaceObject.Flex.Justify.END
+					}, external_BdApi_React_default().createElement(components_namespaceObject.Button, {
 						onClick: props.onClose
 					}, "Okay"))));
 				}
@@ -808,7 +826,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					className,
 					look = Category.Looks.DEFAULT
 				}) {
-					const [opened, toggle] = (0, external_BdApi_React_.useState)(false);
+					const [opened, toggle] = (0, external_BdApi_React_namespaceObject.useState)(false);
 					const isCompact = look === category.Z.compact;
 					return external_BdApi_React_default().createElement("div", {
 						className: (0, utils_namespaceObject.joinClassNames)(className, look, category.Z.category, {
@@ -834,6 +852,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					COMPACT: category.Z.compact,
 					DEFAULT: category.Z["default"]
 				};
+				var components_settings = __webpack_require__(354);
 				function Settings_extends() {
 					Settings_extends = Object.assign || function(target) {
 						for (var i = 1; i < arguments.length; i++) {
@@ -846,6 +865,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					return Settings_extends.apply(this, arguments);
 				}
 				const SwitchItem = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("SwitchItem");
+				const RadioGroup = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("RadioGroup");
 				const SettingsOptions = [{
 					type: "switch",
 					name: "Show Updates",
@@ -856,6 +876,26 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					type: "category",
 					name: "Updates",
 					items: [{
+						id: "noticeType",
+						name: "Notice Type",
+						note: "Shows a desktop/toast notification when an update has triggered. Won't show the modal without being manually opened.",
+						type: "radio",
+						value: 1,
+						requires: ["showUpdates"],
+						options: [{
+							name: "Desktop Notifications",
+							desc: "Shows a normal desktop notification.",
+							value: 1
+						}, {
+							name: "Toast Notification",
+							desc: "Shows a normal toast. Note: this only stays temporarily!",
+							value: 2
+						}, {
+							name: "Prompt Modal",
+							desc: "Shows a modal with updates about your account's sessions.",
+							value: 3
+						}]
+					}, {
 						id: "showActivityUpdate",
 						name: "Activity Update",
 						note: "Shows a notice when the activity of a session has updated.",
@@ -896,11 +936,40 @@ function buildPlugin([BasePlugin, PluginApi]) {
 								label: setting.name,
 								key: setting.name
 							}, setting.items.map((item => renderSetting(item, forceUpdate))));
+						case "radio":
+							return external_BdApi_React_default().createElement(external_BdApi_React_default().Fragment, null, external_BdApi_React_default().createElement(forms_namespaceObject.FormItem, {
+								title: setting.name
+							}, external_BdApi_React_default().createElement(forms_namespaceObject.FormText, {
+								type: "description",
+								className: components_settings.Z.marginBottom8
+							}, setting.note), external_BdApi_React_default().createElement(RadioGroup, Settings_extends({}, setting, {
+								value: settings.get(setting.id, setting.value),
+								disabled: setting.requires ? !setting.requires.every((id => settings.get(id, true))) : false,
+								onChange: ({
+									value
+								}) => {
+									settings.set(setting.id, value);
+									forceUpdate();
+								}
+							}))), external_BdApi_React_default().createElement(forms_namespaceObject.FormDivider, {
+								className: components_settings.Z.divider
+							}));
 					}
 				}
 				function SettingsPanel() {
-					const [, forceUpdate] = (0, external_BdApi_React_.useReducer)((n => !n), true);
+					const [, forceUpdate] = (0, external_BdApi_React_namespaceObject.useReducer)((n => !n), true);
 					return external_BdApi_React_default().createElement(external_BdApi_React_default().Fragment, null, SettingsOptions.map((setting => renderSetting(setting, forceUpdate))));
+				}
+				function ShowSessions_extends() {
+					ShowSessions_extends = Object.assign || function(target) {
+						for (var i = 1; i < arguments.length; i++) {
+							var source = arguments[i];
+							for (var key in source)
+								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
+						}
+						return target;
+					};
+					return ShowSessions_extends.apply(this, arguments);
 				}
 				function ShowSessions_defineProperty(obj, key, value) {
 					if (key in obj) Object.defineProperty(obj, key, {
@@ -912,14 +981,22 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					else obj[key] = value;
 					return obj;
 				}
+				var NoticeTypes;
+				(function(NoticeTypes) {
+					NoticeTypes[NoticeTypes["DESKTOP"] = 1] = "DESKTOP";
+					NoticeTypes[NoticeTypes["TOAST"] = 2] = "TOAST";
+					NoticeTypes[NoticeTypes["PROMPT"] = 3] = "PROMPT";
+				})(NoticeTypes || (NoticeTypes = {}));
 				const UserSettings = external_PluginApi_namespaceObject.WebpackModules.getByProps("updateAccount");
 				const ShowSessions_SessionsStore = external_PluginApi_namespaceObject.WebpackModules.getByProps("getActiveSession");
+				const Button = external_PluginApi_namespaceObject.WebpackModules.getByProps("BorderColors", "Colors");
 				class ShowSessions extends(external_BasePlugin_default()) {
 					constructor(...args) {
 						super(...args);
 						ShowSessions_defineProperty(this, "_changeListener", void 0);
 						ShowSessions_defineProperty(this, "_originalSessions", void 0);
 						ShowSessions_defineProperty(this, "_wasInitial", false);
+						ShowSessions_defineProperty(this, "_currentSessionId", null);
 						ShowSessions_defineProperty(this, "promises", {
 							cancelled: false,
 							cancel() {
@@ -929,6 +1006,9 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						ShowSessions_defineProperty(this, "openSettings", (() => {
 							UserSettings.setSection("My Account");
 						}));
+					}
+					get currentSession() {
+						return stores_namespaceObject.Info.getSessionId();
 					}
 					getSettingsPanel() {
 						return external_BdApi_React_default().createElement(SettingsPanel, null);
@@ -962,20 +1042,47 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						});
 						external_StyleLoader_default().inject();
 						external_PluginApi_namespaceObject.Utilities.suppressErrors(this.patchAccountSection.bind(this), "AccountSection patch")();
+						external_PluginApi_namespaceObject.Utilities.suppressErrors(this.patchHeaderBar.bind(this), "HeaderBar patch")();
 						ShowSessions_SessionsStore.addChangeListener(this._changeListener = external_PluginApi_namespaceObject.Utilities.suppressErrors((() => {
 							const data = ShowSessions_SessionsStore.getSessions();
 							this.handleChangeSessions(data);
 							this._originalSessions = data;
+							this._currentSessionId = this.currentSession;
 						}), "ShowSessions.onChange"));
 						this._originalSessions = ShowSessions_SessionsStore.getSessions();
+						this._currentSessionId = this.currentSession;
 					}
 					maybeOpenModal() {
-						if (Api.getState().opened) return;
+						const noticeType = settings.get("noticeType", NoticeTypes.DESKTOP);
+						switch (noticeType) {
+							case NoticeTypes.DESKTOP: {
+								const notification = new Notification("[ShowSessions] Session update", {
+									silent: false,
+									body: "Devices have been updated."
+								});
+								notification.addEventListener("click", this.openModal);
+							}
+							break;
+						case NoticeTypes.PROMPT:
+							if (Api.getState().opened) return;
+							this.openModal();
+							break;
+						case NoticeTypes.TOAST:
+							external_PluginApi_namespaceObject.Toasts.info("[ShowSessions] Devices update detected!");
+							break;
+						}
+					}
+					openModal() {
 						(0, modal_namespaceObject.openModal)((props => external_BdApi_React_default().createElement(Modal, props)));
 					}
 					handleChangeSessions(data) {
 						if (!settings.get("showUpdates", true)) return;
-						const filter = e => "all" !== e;
+						const filter = sessionId => {
+							if ("all" === sessionId) return false;
+							if (sessionId === this._currentSessionId) return false;
+							if (sessionId === this.currentSession) return false;
+							return true;
+						};
 						const sessionFilter = (session1, session2, key) => {
 							if ("activities" === key) return session1[key].length !== session2[key].length;
 							if ("clientInfo" === key) return !external_window_default().isEqual(session1[key], session2[key]);
@@ -994,49 +1101,81 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						};
 						const oldKeys = Object.keys(this._originalSessions).filter(filter);
 						const newKeys = Object.keys(data).filter(filter);
-						if (0 === oldKeys.length && !this._wasInitial) {
+						if (this._originalSessions[this.currentSession] && 0 === oldKeys.length && !this._wasInitial) {
 							this._wasInitial = true;
 							return;
 						}
-						if (oldKeys.length > newKeys.length && settings.get("showAdd", true)) {
+						if (oldKeys.length > newKeys.length && settings.get("showRemove", true)) {
 							const removed = oldKeys.filter((e => newKeys.indexOf(e) < 0));
 							external_PluginApi_namespaceObject.Logger.log("Detected closed session", removed);
+							const mapped = removed.map((removed => ({
+								type: "removed",
+								timestamp: new Date,
+								session: this._originalSessions[removed]
+							}))).filter((e => e.session));
 							Api.setState((state => ({
 								...state,
-								recent: state.recent.concat(removed.map((removed => ({
-									type: "removed",
-									timestamp: new Date,
-									session: this._originalSessions[removed]
-								}))).filter((e => e.session))).slice(0, 30)
+								recent: state.recent.concat(mapped).slice(0, 30)
 							})));
 							this.maybeOpenModal();
-						} else if (oldKeys.length < newKeys.length && settings.get("showRemove", true)) {
+						} else if (oldKeys.length < newKeys.length && settings.get("showAdd", true)) {
 							const added = newKeys.filter((e => oldKeys.indexOf(e) < 0));
 							external_PluginApi_namespaceObject.Logger.log("Detected new session", added);
+							const mapped = added.map((added => ({
+								type: "added",
+								timestamp: new Date,
+								session: ShowSessions_SessionsStore.getSessionById(added)
+							}))).filter((e => e.session));
 							Api.setState((state => ({
 								...state,
-								recent: state.recent.concat(added.map((added => ({
-									type: "added",
-									timestamp: new Date,
-									session: ShowSessions_SessionsStore.getSessionById(added)
-								}))).filter((e => e.session))).slice(0, 30)
+								recent: state.recent.concat(mapped).slice(0, 30)
 							})));
 							this.maybeOpenModal();
 						} else if (settings.get("showActivityUpdate", true)) {
 							const changes = newKeys.map((key => compareSessions(this._originalSessions[key], data[key]))).filter(Boolean);
 							if (!changes.length) return;
 							external_PluginApi_namespaceObject.Logger.log("Detected session change");
+							const flattened = changes.flatMap((changes => changes.map((change => ({
+								props: change,
+								type: "changed",
+								timestamp: new Date,
+								session: ShowSessions_SessionsStore.getSessionById(change.id)
+							})))));
 							Api.setState((state => ({
 								...state,
-								recent: state.recent.concat(changes.flatMap((changes => changes.map((change => ({
-									props: change,
-									type: "changed",
-									timestamp: new Date,
-									session: ShowSessions_SessionsStore.getSessionById(change.id)
-								})))))).slice(0, 30)
+								recent: state.recent.concat(flattened).slice(0, 30)
 							})));
 							this.maybeOpenModal();
 						}
+					}
+					async patchHeaderBar() {
+						const selector = `.${external_PluginApi_namespaceObject.WebpackModules.getByProps("title", "chat")?.title}`;
+						const headerBarClasses = external_PluginApi_namespaceObject.WebpackModules.getByProps("iconWrapper", "clickable");
+						const HeaderBarContainer = await external_PluginApi_namespaceObject.ReactComponents.getComponentByName("HeaderBarContainer", selector);
+						external_PluginApi_namespaceObject.Patcher.after(HeaderBarContainer.component.prototype, "render", ((_, __, ret) => {
+							const toolbar = ret?.props?.toolbar?.props?.children;
+							if (!Array.isArray(toolbar) || toolbar.some((e => "show-sessions" === e?.key))) return;
+							toolbar.splice(-2, 0, external_BdApi_React_default().createElement(components_namespaceObject.Tooltip, {
+								text: "Open Session logs",
+								key: "show-sessions",
+								position: "bottom"
+							}, (props => external_BdApi_React_default().createElement(Button, ShowSessions_extends({}, props, {
+								size: Button.Sizes.NONE,
+								look: Button.Looks.BLANK,
+								innerClassName: `${headerBarClasses.iconWrapper} ${headerBarClasses.clickable}`,
+								onClick: this.openModal,
+								className: "show-sessions-logs"
+							}), external_BdApi_React_default().createElement("svg", {
+								xmlns: "http://www.w3.org/2000/svg",
+								viewBox: "0 0 24 24",
+								height: "24",
+								width: "24"
+							}, external_BdApi_React_default().createElement("path", {
+								d: "M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z",
+								fill: "currentColor"
+							}))))));
+						}));
+						HeaderBarContainer.forceUpdateAll();
 					}
 					async patchAccountSection() {
 						const UserSettingsAccount = await external_PluginApi_namespaceObject.ReactComponents.getComponentByName("UserSettingsAccount", "." + external_PluginApi_namespaceObject.WebpackModules.getByProps("contentColumnDefault").contentColumnDefault + " > div");
@@ -1086,9 +1225,6 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					};
 					return list;
 				};
-			},
-			113: module => {
-				module.exports = BdApi.React;
 			}
 		};
 		var __webpack_module_cache__ = {};
@@ -1133,7 +1269,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				});
 			};
 		})();
-		var __webpack_exports__ = __webpack_require__(11);
+		var __webpack_exports__ = __webpack_require__(526);
 		module.exports.LibraryPluginHack = __webpack_exports__;
 	})();
 	const PluginExports = module.exports.LibraryPluginHack;
