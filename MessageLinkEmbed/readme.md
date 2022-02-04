@@ -2,4 +2,4 @@
  - Make messagelinks look like any other link but with the message. Converted from a PC plugin -> BD plugin. full credits go to [Juby210](https://github.com/Juby210/).
  - Check out [Juby's repo](https://github.com/Juby210/message-link-embed) for Previews and more.
  - [Support-Server](https://discord.gg/gvA2ree)
-# Download [**🔽MessageLinkEmbed**](https://betterdiscord.net/ghdl?id=3269) Plugin
+# Download [**🔽MessageLinkEmbed**](https://strencher.github.io/download/?plugin=MessageLinkEmbed) Plugin

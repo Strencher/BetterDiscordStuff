@@ -1,3 +1,3 @@
 # OpenLinksInSpecificBrowser
-## Download [**🔽OpenLinksInSpecificBrowser**](https://betterdiscord.net/ghdl?url=https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/OpenLinksInSpecificBrowser/OpenLinksInSpecificBrowser.plugin.js) Plugin
+## Download [**🔽OpenLinksInSpecificBrowser**](https://strencher.github.io/download/?plugin=OpenLinksInSpecificBrowser) Plugin
  - [Support-Server](https://discord.gg/gvA2ree)
