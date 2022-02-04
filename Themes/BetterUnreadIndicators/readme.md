@@ -1,5 +1,5 @@
 ## Makes the unread channel indicators look better.
-### => [Download](https://betterdiscord.net/ghdl?id=3357)
+### => [Download](https://strencher.github.io/download/?theme=BetterUnreadIndicators)
 # Preview
 ![image](https://i.imgur.com/QCrHAeS.png)
 
