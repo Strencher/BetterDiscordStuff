@@ -1,7 +1,7 @@
 {
 	"info": {
 		"name": "ShowSessions",
-		"version": "1.1.0",
+		"version": "1.2.0",
 		"description": "Shows your current sessions with a chat command '/sessions' or in the accounts panel.",
 		"authors": [
 			{
@@ -18,9 +18,8 @@
 			"type": "fixed",
 			"title": "Fixes, Fixes, Fixes...",
 			"items": [
-				"Fixed avatar resolution being low res",
-				"Fixed some styling issues",
-				"Fixed chat commands. (Thanks to JadeMin!)"
+				"Flipped settings.. should now work as intended!",
+				"Made notifications a bit less spammy, check settings for more."
 			]
 		},
 		{

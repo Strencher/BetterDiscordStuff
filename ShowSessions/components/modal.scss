@@ -93,3 +93,16 @@
 .closeButton {
     margin-left: auto;
 }
+
+.center {
+    color: #ddd;
+    display: flex;
+    flex: 1 1 auto;
+    align-items: center;
+    justify-content: center;
+
+    p {
+        font-size: 25px;
+        font-weight: 600;
+    }
+}

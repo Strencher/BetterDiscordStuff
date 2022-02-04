@@ -5,7 +5,7 @@ import type { Session } from "../@types/sessionstore";
 import { WebpackModules } from "@zlibrary";
 import { Button, Flex, TooltipContainer as Tooltip } from "@discord/components";
 import { FormDivider } from "@discord/forms";
-import {useEffect} from "react";
+import React, {useEffect} from "react";
 import { Colors } from "@discord/constants";
 import {Info, Users} from "@discord/stores";
 import _ from "lodash";
@@ -109,20 +109,26 @@ export default function Modal(props) {
     }, []);
 
     return (
-        <ModalRoot {...props} size="medium">
+        <ModalRoot {...props} size={!!newest ? "medium" : "small"}>
             <ModalHeader separator={false}>
-                <Header tag={Header.Tags.H1} size={Header.Sizes.SIZE_20}>Sessions detected</Header>
+                <Header tag={Header.Tags.H1} size={Header.Sizes.SIZE_20}>Sessions Logs</Header>
                 <ModalCloseButton onClick={props.onClose} className={styles.closeButton} />
             </ModalHeader>
             <ModalContent>
-                <CardItem {...newest} key={newest.session.sessionId} />
-                {entries.length > 0 && <FormDivider className={styles.newDivider} />}
-                {
-                    entries.map(props => <CardItem {...props} key={props.session.sessionId} />)
-                }
+                {!newest ? (
+                    <div className={styles.center}>
+                        <p>Nothing happened yet!</p>
+                    </div>
+                ) : (
+                    <React.Fragment>
+                        <CardItem {...newest} key={newest.session?.sessionId} />
+                        {entries.length > 0 && <FormDivider className={styles.newDivider} />}
+                        {entries.map(props => <CardItem {...props} key={props.session?.sessionId} />)}    
+                    </React.Fragment>     
+                )}
             </ModalContent>
             <ModalFooter>
-                <Flex align={Flex.Align.END}>
+                <Flex justify={Flex.Justify.END}>
                     <Button onClick={props.onClose}>Okay</Button>
                 </Flex>
             </ModalFooter>
