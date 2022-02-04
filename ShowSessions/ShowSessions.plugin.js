@@ -734,7 +734,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					}, external_BdApi_React_default().createElement("b", null, "Timestamp:"), external_BdApi_React_default().createElement("span", null, new Date(timestamp).toLocaleString())), external_BdApi_React_default().createElement("div", {
 						className: modal.Z.sessionInfo,
 						key: "activities"
-					}, external_BdApi_React_default().createElement("b", null, "Actvities:"), external_BdApi_React_default().createElement("span", null, activities.length)), external_BdApi_React_default().createElement("div", {
+					}, external_BdApi_React_default().createElement("b", null, "Activities:"), external_BdApi_React_default().createElement("span", null, activities.length)), external_BdApi_React_default().createElement("div", {
 						className: modal.Z.sessionInfo,
 						key: "sessionId"
 					}, external_BdApi_React_default().createElement("b", null, "ID:"), external_BdApi_React_default().createElement("code", {
