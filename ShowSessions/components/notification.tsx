@@ -71,7 +71,7 @@ export function CardItem({session, type, timestamp, props}: any) {
                     <span>{new Date(timestamp).toLocaleString()}</span>
                 </div>
                 <div className={styles.sessionInfo} key="activities">
-                    <b>Actvities:</b>
+                    <b>Activities:</b>
                     <span>{activities.length}</span>
                 </div>
                 <div className={styles.sessionInfo} key="sessionId">
