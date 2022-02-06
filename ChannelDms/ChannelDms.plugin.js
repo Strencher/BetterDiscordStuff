@@ -1,6 +1,6 @@
 /**
  * @name ChannelDms
- * @version 1.1.0
+ * @version 1.1.1
  * @author Strencher
  * @description Allows you to open popout chats of direct messages inside servers.
  * @source https://github.com/Strencher/BetterDiscordStuff/tree/master/ChannelDms
@@ -32,7 +32,7 @@
 const config = {
 	"info": {
 		"name": "ChannelDms",
-		"version": "1.1.0",
+		"version": "1.1.1",
 		"authors": [{
 			"name": "Strencher",
 			"discord_id": "415849376598982656",
@@ -44,10 +44,10 @@ const config = {
 		"github_raw": "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/ChannelDms/ChannelDms.plugin.js"
 	},
 	"changelog": [{
-		"title": "Works again",
-		"type": "fixed",
+		"title": "Improvements",
+		"type": "improved",
 		"items": [
-			"Fixed after discord removed the experiment."
+			"Improved how the member list is replaced, shouldn't cause any issues anymore."
 		]
 	}],
 	"build": {
@@ -283,7 +283,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
 					return i[1];
 				}));
-				___CSS_LOADER_EXPORT___.push([module.id, ".ChannelDms-channelmembers-wrap{display:contents}.ChannelDms-channelmembers-wrap .ChannelDms-channelmembers-header{text-transform:none;padding:10px 0;align-items:center;justify-content:center;font-family:var(--font-primary);border-bottom:thin solid var(--background-modifier-accent);--background-modifier-selected: var(--background-accent)}", ""]);
+				___CSS_LOADER_EXPORT___.push([module.id, ".ChannelDms-channelmembers-wrap{display:flex;flex-direction:column}.ChannelDms-channelmembers-wrap .ChannelDms-channelmembers-header{text-transform:none;padding:10px 0;align-items:center;justify-content:center;font-family:var(--font-primary);border-bottom:thin solid var(--background-modifier-accent);--background-modifier-selected: var(--background-accent);background:var(--background-mobile-secondary)}", ""]);
 				___CSS_LOADER_EXPORT___.locals = {
 					wrap: "ChannelDms-channelmembers-wrap",
 					header: "ChannelDms-channelmembers-header"
@@ -751,7 +751,8 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						});
 					};
 					return channelmembers_React.createElement("div", {
-						className: channelmembers.Z.wrap
+						className: channelmembers.Z.wrap,
+						"data-tab": Tabs[tab]
 					}, channelmembers_React.createElement(TabBar.Header, {
 						className: external_PluginApi_namespaceObject.Utilities.className(channelmembers.Z.header, TabBar.Types.TOP_PILL),
 						key: "TAB_BAR"
@@ -795,17 +796,15 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						return external_BdApi_React_default().createElement(SettingsPanel, null);
 					}
 					async patchChannelMembers() {
-						const classes = external_PluginApi_namespaceObject.WebpackModules.getByProps("membersWrap");
-						const DefaultChannelMembers = await external_PluginApi_namespaceObject.ReactComponents.getComponentByName("ChannelMembers", `.${classes.membersWrap}`);
-						external_PluginApi_namespaceObject.Patcher.instead(DefaultChannelMembers.component.prototype, "render", ((_this, _, original) => {
-							if (_this.props.__IS_PLUGIN) return;
+						const DefaultChannelMembers = external_PluginApi_namespaceObject.WebpackModules.getModule((m => m.default && "ConnectedChannelMembers" === m.default.displayName));
+						external_PluginApi_namespaceObject.Patcher.instead(DefaultChannelMembers, "default", ((_, [props], original) => {
+							if (props.__IS_PLUGIN) return;
 							return external_BdApi_React_default().createElement(ChannelMembers, {
 								original,
-								memberListProps: _this.props,
+								memberListProps: props,
 								key: "CHANNEL_MEMBERS"
 							});
 						}));
-						DefaultChannelMembers.forceUpdateAll();
 					}
 					patchChannelInfo() {
 						const ChannelInfo = external_PluginApi_namespaceObject.WebpackModules.getModule((m => "ChannelInfo" === m.default?.displayName));
