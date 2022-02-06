@@ -1,7 +1,7 @@
 {
     "info": {
         "name": "ChannelDms",
-        "version": "1.0.5",
+        "version": "1.1.0",
         "authors": [
             {
                 "name": "Strencher",
@@ -16,10 +16,10 @@
     },
     "changelog": [
         {
-            "title": "fixed",
+            "title": "Works again",
             "type": "fixed",
             "items": [
-                "Fixes for the latest discord canary update."
+                "Fixed after discord removed the experiment."
             ]
         }
     ],

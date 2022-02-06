@@ -1,5 +1,6 @@
 # Misc
 .idea
+.vscode
 
 node_modules
 ./**/node_modules
@@ -12,11 +13,10 @@ CoffeeTest
 CustomActions
 PcCompat
 ServerLookup
-ShowSessions
 Test
 TestPlugin
 TopRolesEverywhere
-UserBackgrounds
 UserBirthdays
 WeatherDisplay
-WebhookSender
+ChannelDms/components/avatars.scss
+ChannelDms/components/avatars.tsx

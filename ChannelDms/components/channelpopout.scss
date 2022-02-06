@@ -14,8 +14,12 @@
         overflow: hidden;
         border-radius: 8px;
 
-        > main, section {
+        > section {
             height: 561px;
+        }
+
+        > section > div {
+            height: 100%;
         }
     }
 
@@ -31,6 +35,7 @@
         top: 50px;
         background: var(--background-secondary-alt);
         border-radius: 100px;
+        z-index: 999999;
     }
     
     .header {

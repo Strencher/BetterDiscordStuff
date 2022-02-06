@@ -1,0 +1,13 @@
+.wrap {
+    display: contents;
+
+    .header {
+        text-transform: none;
+        padding: 10px 0;
+        align-items: center;
+        justify-content: center;
+        font-family: var(--font-primary);
+        border-bottom: thin solid var(--background-modifier-accent);
+        --background-modifier-selected: var(--background-accent);
+    }
+}

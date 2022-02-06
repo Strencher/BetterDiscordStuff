@@ -10,6 +10,7 @@ import React, {useContext, useMemo} from "react";
 import ChannelPopout from "./components/channelpopout";
 import SettingsPanel from "./components/settings";
 import UnreadBadge from "./components/unreadbadge";
+import ChannelMembers from "./components/channelmembers";
 
 const ChannelInfoActions = WebpackModules.getByProps("setChannelInfoTab");
 const ChannelSidebarStore = WebpackModules.getByProps("getActiveInfoTab");
@@ -17,10 +18,10 @@ const ChannelSidebarStore = WebpackModules.getByProps("getActiveInfoTab");
 export default class ChannelDms extends BasePlugin {
     onStart(): void {
         styles.inject();
+        this.patchChannelMembers();
         this.patchChannelInfo();
         this.patchListItem();
         this.patchPrivateChannel();
-        this.patchExperiment();
     }
 
     getSettingsPanel() {
@@ -29,15 +30,19 @@ export default class ChannelDms extends BasePlugin {
         );
     }
 
-    patchExperiment(): void {
-        const Experiment = WebpackModules.getByProps("ChannelBannersExperiment");
-        if (!Experiment || !Experiment.ChannelBannersExperiment) return;
+    async patchChannelMembers(): Promise<void> {
+        const classes = WebpackModules.getByProps("membersWrap");
+        const DefaultChannelMembers = await ReactComponents.getComponentByName("ChannelMembers", `.${classes.membersWrap}`);
 
-        Patcher.after(Experiment.ChannelBannersExperiment, "getCurrentConfig", (_, __, ret) => ({
-            ...ret,
-            channelBannersEnabled: true,
-            channelInfoEnabled: true
-        }));
+        Patcher.instead(DefaultChannelMembers.component.prototype, "render", (_this, _, original) => {
+            if (_this.props.__IS_PLUGIN) return;
+
+            return (
+                <ChannelMembers original={original} memberListProps={_this.props} key="CHANNEL_MEMBERS"/>
+            );
+        });
+
+        DefaultChannelMembers.forceUpdateAll();
     }
 
     patchChannelInfo(): void {
