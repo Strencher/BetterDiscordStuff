@@ -1,7 +1,7 @@
 {
     "info": {
         "name": "ChannelDms",
-        "version": "1.1.0",
+        "version": "1.1.1",
         "authors": [
             {
                 "name": "Strencher",
@@ -16,10 +16,10 @@
     },
     "changelog": [
         {
-            "title": "Works again",
-            "type": "fixed",
+            "title": "Improvements",
+            "type": "improved",
             "items": [
-                "Fixed after discord removed the experiment."
+                "Improved how the member list is replaced, shouldn't cause any issues anymore."
             ]
         }
     ],

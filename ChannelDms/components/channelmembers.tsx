@@ -56,7 +56,7 @@ export default function ChannelMembers({original: MemberList, memberListProps}) 
     }
     
     return (
-        <div className={styles.wrap}>
+        <div className={styles.wrap} data-tab={Tabs[tab]}>
             <TabBar.Header className={Utilities.className(styles.header, TabBar.Types.TOP_PILL)} key="TAB_BAR">
                 <TabBar.Item
                     selectedItem={tab}

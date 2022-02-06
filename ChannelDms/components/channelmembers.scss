@@ -1,5 +1,6 @@
 .wrap {
-    display: contents;
+    display: flex;
+    flex-direction: column;
 
     .header {
         text-transform: none;
@@ -9,5 +10,6 @@
         font-family: var(--font-primary);
         border-bottom: thin solid var(--background-modifier-accent);
         --background-modifier-selected: var(--background-accent);
+        background: var(--background-mobile-secondary);
     }
 }

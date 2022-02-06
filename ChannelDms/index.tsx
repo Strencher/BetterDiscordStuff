@@ -31,18 +31,15 @@ export default class ChannelDms extends BasePlugin {
     }
 
     async patchChannelMembers(): Promise<void> {
-        const classes = WebpackModules.getByProps("membersWrap");
-        const DefaultChannelMembers = await ReactComponents.getComponentByName("ChannelMembers", `.${classes.membersWrap}`);
+        const DefaultChannelMembers = WebpackModules.getModule(m => m.default && m.default.displayName === "ConnectedChannelMembers");
 
-        Patcher.instead(DefaultChannelMembers.component.prototype, "render", (_this, _, original) => {
-            if (_this.props.__IS_PLUGIN) return;
+        Patcher.instead(DefaultChannelMembers, "default", (_, [props], original) => {
+            if (props.__IS_PLUGIN) return;
 
             return (
-                <ChannelMembers original={original} memberListProps={_this.props} key="CHANNEL_MEMBERS"/>
+                <ChannelMembers original={original} memberListProps={props} key="CHANNEL_MEMBERS"/>
             );
         });
-
-        DefaultChannelMembers.forceUpdateAll();
     }
 
     patchChannelInfo(): void {
