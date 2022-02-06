@@ -1,7 +1,7 @@
 /**
  * @name ChannelDetails
  * @author Strencher
- * @version 1.0.0
+ * @version 1.1.0
  * @description Shows you a lot information about channels, like: channel tooltip, channel accessibility etc.
  * @source https://github.com/Strencher/BetterDiscordStuff/blob/master/ChannelDetails/ChannelDetails.plugin.js
  * @updateUrl https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/ChannelDetails/ChannelDetails.plugin.js
@@ -38,11 +38,18 @@ const config = {
 			"github_username": "Strencher",
 			"twitter_username": "Strencher3"
 		}],
-		"version": "1.0.0",
+		"version": "1.1.0",
 		"description": "Shows you a lot information about channels, like: channel tooltip, channel accessibility etc.",
 		"github": "https://github.com/Strencher/BetterDiscordStuff/blob/master/ChannelDetails/ChannelDetails.plugin.js",
 		"github_raw": "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/ChannelDetails/ChannelDetails.plugin.js"
 	},
+	"changelog": [{
+		"type": "fixed",
+		"title": "Finally",
+		"items": [
+			"Fixes for the latest 3 quadrillion discord updates."
+		]
+	}],
 	"build": {
 		"zlibrary": true,
 		"copy": true,
@@ -94,7 +101,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			},
 			'@discord/utils': {
 				get 'joinClassNames'() {
-					return ___createMemoize___(this, 'joinClassNames', () => BdApi.findModule(m => typeof m?.default?.default === 'function')?.default)
+					return ___createMemoize___(this, 'joinClassNames', () => BdApi.findModule(e => e.toString().indexOf('return e.join(" ")') > 200))
 				},
 				get 'useForceUpdate'() {
 					return ___createMemoize___(this, 'useForceUpdate', () => BdApi.findModuleByProps('useForceUpdate')?.useForceUpdate)
@@ -103,7 +110,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					return ___createMemoize___(this, 'Logger', () => BdApi.findModuleByProps('setLogFn')?.default)
 				},
 				get 'Navigation'() {
-					return ___createMemoize___(this, 'Navigation', () => BdApi.findModuleByProps('replaceWith'))
+					return ___createMemoize___(this, 'Navigation', () => BdApi.findModuleByProps('replaceWith', 'currentRouteIsPeekView'))
 				}
 			},
 			'@discord/components': {
@@ -126,7 +133,10 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					return ___createMemoize___(this, 'TransitionGroup', () => BdApi.findModuleByDisplayName('TransitionGroup'))
 				},
 				get 'Button'() {
-					return ___createMemoize___(this, 'Button', () => BdApi.findModuleByProps('DropdownSizes'))
+					return ___createMemoize___(this, 'Button', () => BdApi.findModule(m => 'DropdownSizes' in m && typeof(m) === 'function'))
+				},
+				get 'Popout'() {
+					return ___createMemoize___(this, 'Popout', () => BdApi.findModuleByDisplayName('Popout'))
 				},
 				get 'Flex'() {
 					return ___createMemoize___(this, 'Flex', () => BdApi.findModuleByDisplayName('Flex'))
@@ -142,11 +152,14 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				get 'Dispatcher'() {
 					return ___createMemoize___(this, 'Dispatcher', () => BdApi.findModuleByProps('dirtyDispatch', 'subscribe'))
 				},
+				get 'ComponentDispatcher'() {
+					return ___createMemoize___(this, 'ComponentDispatcher', () => BdApi.findModuleByProps('ComponentDispatch')?.ComponentDispatch)
+				},
 				get 'EmojiUtils'() {
 					return ___createMemoize___(this, 'EmojiUtils', () => BdApi.findModuleByProps('uploadEmoji'))
 				},
 				get 'PermissionUtils'() {
-					return ___createMemoize___(this, 'PermissionUtils', () => BdApi.findModuleByProps('computePermissions'))
+					return ___createMemoize___(this, 'PermissionUtils', () => BdApi.findModuleByProps('computePermissions', 'canManageUser'))
 				},
 				get 'DMUtils'() {
 					return ___createMemoize___(this, 'DMUtils', () => BdApi.findModuleByProps('openPrivateChannel'))
@@ -157,7 +170,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					return ___createMemoize___(this, 'Messages', () => BdApi.findModuleByProps('getMessage', 'getMessages'))
 				},
 				get 'Channels'() {
-					return ___createMemoize___(this, 'Channels', () => BdApi.findModuleByProps('getChannel'))
+					return ___createMemoize___(this, 'Channels', () => BdApi.findModuleByProps('getChannel', 'getDMFromUserId'))
 				},
 				get 'Guilds'() {
 					return ___createMemoize___(this, 'Guilds', () => BdApi.findModuleByProps('getGuild'))
@@ -172,7 +185,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					return ___createMemoize___(this, 'Info', () => BdApi.findModuleByProps('getSessionId'))
 				},
 				get 'Status'() {
-					return ___createMemoize___(this, 'Status', () => BdApi.findModuleByProps('getStatus'))
+					return ___createMemoize___(this, 'Status', () => BdApi.findModuleByProps('getStatus', 'getActivities', 'getState'))
 				},
 				get 'Users'() {
 					return ___createMemoize___(this, 'Users', () => BdApi.findModuleByProps('getUser', 'getCurrentUser'))
@@ -190,7 +203,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					return ___createMemoize___(this, 'Activities', () => BdApi.findModuleByProps('getActivities'))
 				},
 				get 'Games'() {
-					return ___createMemoize___(this, 'Games', () => BdApi.findModuleByProps('getGame'))
+					return ___createMemoize___(this, 'Games', () => BdApi.findModuleByProps('getGame', 'games'))
 				},
 				get 'Auth'() {
 					return ___createMemoize___(this, 'Auth', () => BdApi.findModuleByProps('getId', 'isGuest'))
@@ -208,7 +221,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				}
 			},
 			get '@discord/i18n'() {
-				return ___createMemoize___(this, '@discord/i18n', () => BdApi.findModuleByProps('getLocale'))
+				return ___createMemoize___(this, '@discord/i18n', () => BdApi.findModule(m => m.Messages?.CLOSE && typeof(m.getLocale) === 'function'))
 			},
 			get '@discord/constants'() {
 				return ___createMemoize___(this, '@discord/constants', () => BdApi.findModuleByProps('API_HOST'))
@@ -233,7 +246,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				return ___createMemoize___(this, '@discord/flux', () => Object.assign({}, BdApi.findModuleByProps('useStateFromStores').default, BdApi.findModuleByProps('useStateFromStores')))
 			},
 			get '@discord/modal'() {
-				return ___createMemoize___(this, '@discord/modal', () => Object.assign({}, BdApi.findModuleByProps('ModalRoot'), BdApi.findModuleByProps('openModal')))
+				return ___createMemoize___(this, '@discord/modal', () => Object.assign({}, BdApi.findModuleByProps('ModalRoot'), BdApi.findModuleByProps('openModal', 'closeAllModals')))
 			},
 			get '@discord/connections'() {
 				return ___createMemoize___(this, '@discord/connections', () => BdApi.findModuleByProps('get', 'isSupported', 'map'))
@@ -303,7 +316,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
 					return i[1];
 				}));
-				___CSS_LOADER_EXPORT___.push([module.id, ".threads.ChannelDetails-tooltip-tooltip{margin-bottom:10px;padding-left:2px}.voiceActivities .ChannelDetails-tooltip-section{margin:0}.voiceActivities .ChannelDetails-tooltip-header{font-family:var(--font-display)}.ChannelDetails-tooltip-divider{width:100%;height:1px;background:var(--background-modifier-accent);margin-bottom:15px}.ChannelDetails-tooltip-section{color:#ddd;margin-top:10px}.ChannelDetails-tooltip-section:not(:first-of-type){margin-bottom:10px}.ChannelDetails-tooltip-section .ChannelDetails-tooltip-header{color:var(--header-secondary);font-weight:700;text-transform:uppercase;font-size:12px;margin-bottom:8px;line-height:16px}.ChannelDetails-tooltip-section .ChannelDetails-tooltip-body{display:flex;flex-wrap:wrap;width:max-content;max-width:290px}.ChannelDetails-tooltip-section .ChannelDetails-tooltip-role{font-size:12px;font-weight:500;background:var(--background-secondary-alt);border-radius:4px;box-sizing:border-box;height:22px;margin:0 4px 4px 0;padding:4px;align-items:center;display:flex}.ChannelDetails-tooltip-section .ChannelDetails-tooltip-role .ChannelDetails-tooltip-avatar{border-radius:50%;width:12px;height:12px;padding:0;margin:0 4px;display:flex}.ChannelDetails-tooltip-section .ChannelDetails-tooltip-role.ChannelDetails-tooltip-isSelf{background:var(--brand-experiment) !important}.ChannelDetails-tooltip-section .ChannelDetails-tooltip-role .ChannelDetails-tooltip-roleCircle{border-radius:50%;width:12px;height:12px;padding:0;margin:0 4px;display:flex;background:var(--color, #ddd)}.ChannelDetails-tooltip-section .ChannelDetails-tooltip-role .ChannelDetails-tooltip-roleName{max-width:200px;white-space:nowrap;text-overflow:ellipsis;overflow:hidden;margin-right:4px}", ""]);
+				___CSS_LOADER_EXPORT___.push([module.id, ".threads.ChannelDetails-tooltip-tooltip{margin-bottom:10px;padding-left:2px}.voiceActivities .ChannelDetails-tooltip-section{margin:0 !important}.voiceActivities .ChannelDetails-tooltip-header{font-family:var(--font-display)}.ChannelDetails-tooltip-divider{width:100%;height:1px;background:var(--background-modifier-accent);margin-bottom:15px}.ChannelDetails-tooltip-section{color:#ddd;margin-top:10px}.ChannelDetails-tooltip-section:not(:first-of-type){margin-bottom:10px}.ChannelDetails-tooltip-section .ChannelDetails-tooltip-header{color:var(--header-secondary);font-weight:700;text-transform:uppercase;font-size:12px;margin-bottom:8px;line-height:16px}.ChannelDetails-tooltip-section .ChannelDetails-tooltip-body{display:flex;flex-wrap:wrap;width:max-content;max-width:290px}.ChannelDetails-tooltip-section .ChannelDetails-tooltip-role{font-size:12px;font-weight:500;background:var(--background-secondary-alt);border-radius:4px;box-sizing:border-box;height:22px;margin:0 4px 4px 0;padding:4px;align-items:center;display:flex}.ChannelDetails-tooltip-section .ChannelDetails-tooltip-role .ChannelDetails-tooltip-avatar{border-radius:50%;width:12px;height:12px;padding:0;margin:0 4px;display:flex}.ChannelDetails-tooltip-section .ChannelDetails-tooltip-role.ChannelDetails-tooltip-isSelf{background:var(--brand-experiment) !important}.ChannelDetails-tooltip-section .ChannelDetails-tooltip-role .ChannelDetails-tooltip-roleCircle{border-radius:50%;width:12px;height:12px;padding:0;margin:0 4px;display:flex;background:var(--color, #ddd)}.ChannelDetails-tooltip-section .ChannelDetails-tooltip-role .ChannelDetails-tooltip-roleName{max-width:200px;white-space:nowrap;text-overflow:ellipsis;overflow:hidden;margin-right:4px}", ""]);
 				___CSS_LOADER_EXPORT___.locals = {
 					tooltip: "ChannelDetails-tooltip-tooltip",
 					section: "ChannelDetails-tooltip-section",
@@ -319,7 +332,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
 				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
 			},
-			761: (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+			878: (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 				__webpack_require__.r(__webpack_exports__);
 				__webpack_require__.d(__webpack_exports__, {
 					default: () => ChannelDetails
@@ -328,7 +341,6 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				const external_PluginApi_namespaceObject = PluginApi;
 				const external_BasePlugin_namespaceObject = BasePlugin;
 				var external_BasePlugin_default = __webpack_require__.n(external_BasePlugin_namespaceObject);
-				const utils_namespaceObject = Modules["@discord/utils"];
 				var external_BdApi_React_ = __webpack_require__(113);
 				var external_BdApi_React_default = __webpack_require__.n(external_BdApi_React_);
 				const constants_namespaceObject = Modules["@discord/constants"];
@@ -378,7 +390,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				}) {
 					const isSelf = ~stores_namespaceObject.Members.getMember(stores_namespaceObject.SelectedGuilds.getGuildId(), stores_namespaceObject.Users.getCurrentUser().id)?.roles.indexOf(id);
 					return React.createElement("div", {
-						className: (0, utils_namespaceObject.joinClassNames)(tooltip.Z.role, isSelf && tooltip.Z.isSelf)
+						className: external_PluginApi_namespaceObject.Utilities.className(tooltip.Z.role, isSelf && tooltip.Z.isSelf)
 					}, React.createElement("div", {
 						className: tooltip.Z.roleCircle,
 						style: {
@@ -393,7 +405,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				}) {
 					const isSelf = stores_namespaceObject.Users.getCurrentUser().id === user?.id;
 					return React.createElement("div", {
-						className: (0, utils_namespaceObject.joinClassNames)(tooltip.Z.role, isSelf && tooltip.Z.isSelf)
+						className: external_PluginApi_namespaceObject.Utilities.className(tooltip.Z.role, isSelf && tooltip.Z.isSelf)
 					}, React.createElement("img", {
 						className: tooltip.Z.avatar,
 						src: AvatarUtils.getUserAvatarURL(user ?? {})
@@ -436,7 +448,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						}) : React.createElement(MemberRole, getProps(enemyId)))))) : null;
 					};
 					return React.createElement("div", {
-						className: (0, utils_namespaceObject.joinClassNames)(tooltip.Z.tooltip, className)
+						className: external_PluginApi_namespaceObject.Utilities.className(tooltip.Z.tooltip, className)
 					}, renderSection(allowedRoles, "role", "ALLOWED_ROLES"), renderSection(deniedRoles, "role", "DENIED_ROLES"), renderSection(allowedUsers, "user", "ALLOWED_USERS"), renderSection(deniedUsers, "user", "DENIED_USERS"));
 				}
 				const PermissionTypes = {
@@ -626,7 +638,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					if (!props) return null;
 					const isSelf = "role" === type ? ~stores_namespaceObject.Members.getMember(guild.id, stores_namespaceObject.Users.getCurrentUser().id)?.roles.indexOf(props.id) : stores_namespaceObject.Users.getCurrentUser().id === props.id;
 					return external_BdApi_React_default().createElement("div", {
-						className: (0, utils_namespaceObject.joinClassNames)(modal.Z.permissionItem, isSelf && modal.Z.self),
+						className: external_PluginApi_namespaceObject.Utilities.className(modal.Z.permissionItem, isSelf && modal.Z.self),
 						"aria-type": type,
 						style: {
 							"--color": props.colorString
@@ -784,7 +796,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					})), external_BdApi_React_default().createElement("div", {
 						className: modal.Z.tabItems
 					}, pages.map((page => external_BdApi_React_default().createElement("div", {
-						className: (0, utils_namespaceObject.joinClassNames)(modal.Z.tabItem, page.id === selected && modal.Z.selected),
+						className: external_PluginApi_namespaceObject.Utilities.className(modal.Z.tabItem, page.id === selected && modal.Z.selected),
 						key: page.id,
 						onClick: handleChannelSelect.bind(null, page.id)
 					}, Strings.get(page.name)))))), external_BdApi_React_default().createElement(modal_namespaceObject.ModalContent, {
@@ -820,6 +832,8 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						external_StyleLoader_default().inject();
 					}
 					async patchVoiceChannelActivities() {
+						const Scroller = external_PluginApi_namespaceObject.WebpackModules.getByProps("thin", "scrollerBase");
+						const ActivityPopout = external_PluginApi_namespaceObject.WebpackModules.getByProps("partyMembers", "container", "activity");
 						const VoiceChannelActivities = external_PluginApi_namespaceObject.WebpackModules.getModule((m => "VoiceChannelActivities" === m?.default?.displayName));
 						external_PluginApi_namespaceObject.Patcher.after(VoiceChannelActivities, "default", ((_, [props], ret) => {
 							if (!props.channel) return;
@@ -833,7 +847,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 								className: tooltip.Z.divider
 							}));
 							else return ChannelDetails_React.createElement("div", {
-								className: "container-2dqNWc thin-1ybCId scrollerBase-289Jih"
+								className: `${ActivityPopout.container} ${Scroller.thin}`
 							}, ChannelDetails_React.createElement(ChannelTooltip, {
 								overrides,
 								guild: stores_namespaceObject.Guilds.getGuild(props.channel.guild_id),
@@ -854,6 +868,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 							if (_this.state.shouldShowActivities && shouldShow)
 								if (props) props.shouldShow = true;
 						}));
+						VoiceChannel.forceUpdateAll();
 					}
 					async patchTextChannel() {
 						const selector = `.${external_PluginApi_namespaceObject.WebpackModules.getByProps("containerDefault", "containerDragAfter")?.containerDefault}`;
@@ -912,18 +927,25 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						}))));
 					}
 					async patchChannelContextMenu() {
-						const [ChannelListTextChannelContextMenu, , CategoryContextMenu] = external_PluginApi_namespaceObject.WebpackModules.findAll((m => "ChannelListTextChannelContextMenu" === m?.default?.displayName));
-						const ChannelListVoiceChannelContextMenu = external_PluginApi_namespaceObject.WebpackModules.getModule((m => "ChannelListVoiceChannelContextMenu" === m?.default?.displayName));
-						const Menus = [ChannelListTextChannelContextMenu, ChannelListVoiceChannelContextMenu, CategoryContextMenu];
-						for (const Menu of Menus) external_PluginApi_namespaceObject.Patcher.after(Menu, "default", ((_, [props], ret) => {
-							const key = 2 == Menus.indexOf(Menu) ? "CATEGORY_DETAILS" : "CHANNEL_DETAILS";
-							ret.props.children.push(ChannelDetails_React.createElement(contextmenu_namespaceObject.MenuItem, {
+						const ChannelEditItem = await external_PluginApi_namespaceObject.DCM.getDiscordMenu("useChannelEditItem");
+						const getType = function(channel) {
+							switch (channel.type) {
+								case constants_namespaceObject.ChannelTypes.GUILD_CATEGORY:
+									return "CATEGORY_DETAILS";
+								default:
+									return "CHANNEL_DETAILS";
+							}
+						};
+						external_PluginApi_namespaceObject.Patcher.after(ChannelEditItem, "default", ((_, [channel], ret) => {
+							const type = getType(channel);
+							return [ChannelDetails_React.createElement(contextmenu_namespaceObject.MenuItem, {
+								key: type,
 								id: "channel-details",
-								label: Strings.get(key),
+								label: Strings.get(type),
 								action: () => {
-									this.openModal(props.channel, key);
+									this.openModal(channel, type);
 								}
-							}));
+							}), ret];
 						}));
 					}
 					onStop() {
@@ -1011,7 +1033,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				});
 			};
 		})();
-		var __webpack_exports__ = __webpack_require__(761);
+		var __webpack_exports__ = __webpack_require__(878);
 		module.exports.LibraryPluginHack = __webpack_exports__;
 	})();
 	const PluginExports = module.exports.LibraryPluginHack;
