@@ -1,6 +1,5 @@
 import { Members, SelectedGuilds, Users } from "@discord/stores";
-import { joinClassNames } from "@discord/utils";
-import { WebpackModules } from "@zlibrary";
+import { Utilities, WebpackModules } from "@zlibrary";
 import { useMemo } from "react";
 import { Keys } from "../data/translations";
 import Strings from "../strings";
@@ -27,7 +26,7 @@ export function MemberRole({ name, colorString, id }: any) {
     const isSelf = ~Members.getMember(SelectedGuilds.getGuildId(), Users.getCurrentUser().id)?.roles.indexOf(id);
 
     return (
-        <div className={joinClassNames(styles.role, isSelf && styles.isSelf)}>
+        <div className={Utilities.className(styles.role, isSelf && styles.isSelf)}>
             <div className={styles.roleCircle} style={{
                 //@ts-ignore
                 "--color": colorString
@@ -41,7 +40,7 @@ export function MemberWithAvatar({ user }) {
     const isSelf = Users.getCurrentUser().id === user?.id;
 
     return (
-        <div className={joinClassNames(styles.role, isSelf && styles.isSelf)}>
+        <div className={Utilities.className(styles.role, isSelf && styles.isSelf)}>
             <img className={styles.avatar} src={AvatarUtils.getUserAvatarURL(user ?? {})} />
             <div className={styles.roleName}>{user?.username ?? "Unknown"}#{user?.discriminator ?? "0000"}</div>
         </div>
@@ -85,7 +84,7 @@ export default function ChannelTooltip({ overrides, guild, className }: ChannelP
     };
 
     return (
-        <div className={joinClassNames(styles.tooltip, className)}>
+        <div className={Utilities.className(styles.tooltip, className)}>
             {renderSection(allowedRoles, "role", "ALLOWED_ROLES")}
             {renderSection(deniedRoles, "role", "DENIED_ROLES")}
             {renderSection(allowedUsers, "user", "ALLOWED_USERS")}

@@ -1,19 +1,18 @@
 // @ts-nocheck
 import { Button, TooltipContainer } from "@discord/components";
 import { ChannelTypes } from "@discord/constants";
-import { closeContextMenu, Menu, MenuGroup, MenuItem } from "@discord/contextmenu";
+import { Menu, MenuGroup, MenuItem } from "@discord/contextmenu";
 import { useStateFromStores } from "@discord/flux";
 import { FormItem, FormText } from "@discord/forms";
 import { ModalCloseButton, ModalContent, ModalHeader } from "@discord/modal";
 import { Channels, Guilds, Members, Users } from "@discord/stores";
-import { joinClassNames } from "@discord/utils";
-import { Logger, WebpackModules } from "@zlibrary";
+import { Logger, Utilities, WebpackModules } from "@zlibrary";
 import { ElectronModule } from "@zlibrary/discord";
 import _ from "lodash";
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Keys } from "../data/translations";
 import Strings from "../strings";
-import { extractDate, getLastChannelMessageDate, getPermissionOverrides } from "../util";
+import { extractDate, getPermissionOverrides } from "../util";
 import Copy from "./icons/copy";
 import Dropper from "./icons/dropper";
 import OverflowMenu from "./icons/overflowMenu";
@@ -95,7 +94,7 @@ const renderPermissionItem = function (id: string, guild: GuildObject, type: "us
     };
 
     return (
-        <div className={joinClassNames(styles.permissionItem, isSelf && styles.self)} aria-type={type} style={{ "--color": props.colorString}}>
+        <div className={Utilities.className(styles.permissionItem, isSelf && styles.self)} aria-type={type} style={{ "--color": props.colorString}}>
             <div className={styles.iconContainer}>
                 {type === "user"
                     ? <img src={props.getAvatarURL(true, true)} className={styles.avatar} />
@@ -238,7 +237,7 @@ export default function ChannelAccessibilityModal({channelId, onClose, type}) {
                 </div>
                 <div className={styles.tabItems}>
                     {pages.map(page => (
-                        <div className={joinClassNames(styles.tabItem, page.id === selected && styles.selected)} key={page.id} onClick={handleChannelSelect.bind(null, page.id)}>
+                        <div className={Utilities.className(styles.tabItem, page.id === selected && styles.selected)} key={page.id} onClick={handleChannelSelect.bind(null, page.id)}>
                             {Strings.get(page.name)}
                         </div>
                     ))}

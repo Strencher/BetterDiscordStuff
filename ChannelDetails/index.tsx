@@ -1,6 +1,6 @@
 import { Tooltip } from "@discord/components";
 import { Guilds } from "@discord/stores";
-import { Logger, Patcher, ReactComponents, Utilities, WebpackModules } from "@zlibrary";
+import { DCM, Logger, Patcher, ReactComponents, Utilities, WebpackModules } from "@zlibrary";
 import BasePlugin from "@zlibrary/plugin";
 import ChannelTooltip from "./components/tooltip";
 import Strings from "./strings";
@@ -9,7 +9,7 @@ import styles from "styles";
 import style from "./components/tooltip.scss";
 import { ModalRoot, openModal } from "@discord/modal";
 import ChannelDetailsModal from "./components/modal";
-import { MenuItem } from "@discord/contextmenu";
+import { MenuGroup, MenuItem, MenuSeparator } from "@discord/contextmenu";
 import { Keys } from "./data/translations";
 import { useStateFromStoresArray } from "@discord/flux";
 import _ from "lodash";
@@ -37,6 +37,8 @@ export default class ChannelDetails extends BasePlugin {
     }
 
     async patchVoiceChannelActivities() {
+        const Scroller = WebpackModules.getByProps("thin", "scrollerBase");
+        const ActivityPopout = WebpackModules.getByProps("partyMembers", "container", "activity");
         const VoiceChannelActivities = WebpackModules.getModule(m => m?.default?.displayName === "VoiceChannelActivities");
 
         Patcher.after(VoiceChannelActivities, "default", (_, [props], ret) => {
@@ -51,7 +53,7 @@ export default class ChannelDetails extends BasePlugin {
                 );
             } else {
                 return (
-                    <div className="container-2dqNWc thin-1ybCId scrollerBase-289Jih">
+                    <div className={`${ActivityPopout.container} ${Scroller.thin}`}>
                         <ChannelTooltip overrides={overrides} guild={Guilds.getGuild(props.channel.guild_id)} className="voiceActivities" />
                     </div>
                 );
@@ -75,7 +77,9 @@ export default class ChannelDetails extends BasePlugin {
             if (_this.state.shouldShowActivities && shouldShow) {
                 if (props) props.shouldShow = true;
             }
-        })
+        });
+
+        VoiceChannel.forceUpdateAll();
     }
 
     async patchTextChannel(): Promise<void> {
@@ -140,7 +144,7 @@ export default class ChannelDetails extends BasePlugin {
         });
     }
 
-    public openModal(channel: ChannelOject, type: keyof Keys) {
+    public openModal(channel: ChannelObject, type: keyof Keys) {
         openModal(props => (
             <ModalRoot {...props} size="medium">
                 <ChannelDetailsModal channelId={channel.id} onClose={props.onClose} type={type} />
@@ -149,27 +153,31 @@ export default class ChannelDetails extends BasePlugin {
     }
 
     async patchChannelContextMenu() {
-        // @ts-ignore
-        const [ChannelListTextChannelContextMenu,, CategoryContextMenu] = WebpackModules.findAll(m => m?.default?.displayName === "ChannelListTextChannelContextMenu");
-        const ChannelListVoiceChannelContextMenu = WebpackModules.getModule(m => m?.default?.displayName === "ChannelListVoiceChannelContextMenu");
-        
-        const Menus = [ChannelListTextChannelContextMenu, ChannelListVoiceChannelContextMenu, CategoryContextMenu];
+        const ChannelEditItem = await DCM.getDiscordMenu("useChannelEditItem");
 
-        for (const Menu of Menus) {
-            Patcher.after(Menu, "default", (_, [props], ret) => {
-                const key = Menus.indexOf(Menu) == 2 ? "CATEGORY_DETAILS" : "CHANNEL_DETAILS";
+        const getType = function (channel: ChannelObject): "CATEGORY_DETAILS" | "CHANNEL_DETAILS" {
+            switch (channel.type) {
+                case ChannelTypes.GUILD_CATEGORY: return "CATEGORY_DETAILS";
 
-                ret.props.children.push(
-                    <MenuItem
-                        id="channel-details"
-                        label={Strings.get(key)}
-                        action={() => {
-                            this.openModal(props.channel, key);
-                        }}
-                    />
-                );
-            });
-        }
+                default: return "CHANNEL_DETAILS";
+            }
+        };
+
+        Patcher.after(ChannelEditItem, "default", (_, [channel], ret) => {
+            const type = getType(channel);
+
+            return [
+                <MenuItem
+                    key={type}
+                    id="channel-details"
+                    label={Strings.get(type)}
+                    action={() => {
+                        this.openModal(channel, type);
+                    }}
+                />,
+                ret
+            ];
+        });
     }
     
     public onStop(): void {
