@@ -1,8 +1,8 @@
 /**
  * @name ChannelDms
- * @version 1.0.4
+ * @version 1.1.0
  * @author Strencher
- * @description TODO
+ * @description Allows you to open popout chats of direct messages inside servers.
  * @source https://github.com/Strencher/BetterDiscordStuff/tree/master/ChannelDms
  * @updateUrl https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/ChannelDms/ChannelDms.plugin.js
  */
@@ -32,22 +32,22 @@
 const config = {
 	"info": {
 		"name": "ChannelDms",
-		"version": "1.0.4",
+		"version": "1.1.0",
 		"authors": [{
 			"name": "Strencher",
 			"discord_id": "415849376598982656",
 			"github_username": "Strencher",
 			"twitter_username": "Strencher3"
 		}],
-		"description": "TODO",
+		"description": "Allows you to open popout chats of direct messages inside servers.",
 		"github": "https://github.com/Strencher/BetterDiscordStuff/tree/master/ChannelDms",
 		"github_raw": "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/ChannelDms/ChannelDms.plugin.js"
 	},
 	"changelog": [{
-		"title": "fixed",
+		"title": "Works again",
 		"type": "fixed",
 		"items": [
-			"It least a week until discord broke it again. #3"
+			"Fixed after discord removed the experiment."
 		]
 	}],
 	"build": {
@@ -274,6 +274,23 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			}
 		};
 		var __webpack_modules__ = {
+			781: (module, __webpack_exports__, __webpack_require__) => {
+				__webpack_require__.d(__webpack_exports__, {
+					Z: () => __WEBPACK_DEFAULT_EXPORT__
+				});
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(645);
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
+				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
+					return i[1];
+				}));
+				___CSS_LOADER_EXPORT___.push([module.id, ".ChannelDms-channelmembers-wrap{display:contents}.ChannelDms-channelmembers-wrap .ChannelDms-channelmembers-header{text-transform:none;padding:10px 0;align-items:center;justify-content:center;font-family:var(--font-primary);border-bottom:thin solid var(--background-modifier-accent);--background-modifier-selected: var(--background-accent)}", ""]);
+				___CSS_LOADER_EXPORT___.locals = {
+					wrap: "ChannelDms-channelmembers-wrap",
+					header: "ChannelDms-channelmembers-header"
+				};
+				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
+				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
+			},
 			290: (module, __webpack_exports__, __webpack_require__) => {
 				__webpack_require__.d(__webpack_exports__, {
 					Z: () => __WEBPACK_DEFAULT_EXPORT__
@@ -283,7 +300,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
 					return i[1];
 				}));
-				___CSS_LOADER_EXPORT___.push([module.id, ".ChannelDms-channelpopout-popout{color:#ddd;background:var(--background-primary);width:400px;height:600px;position:relative;box-shadow:var(--elevation-high)}.ChannelDms-channelpopout-popout.ChannelDms-channelpopout-collapsed{width:100px}.ChannelDms-channelpopout-popout .ChannelDms-channelpopout-content{overflow:hidden;border-radius:8px}.ChannelDms-channelpopout-popout .ChannelDms-channelpopout-content>main,.ChannelDms-channelpopout-popout .ChannelDms-channelpopout-content section{height:561px}.ChannelDms-channelpopout-popout .ChannelDms-channelpopout-removeButton{position:absolute;top:-12px;right:-12px}.ChannelDms-channelpopout-popout .ChannelDms-channelpopout-collapseButton{position:absolute;left:-20px;top:50px;background:var(--background-secondary-alt);border-radius:100px}.ChannelDms-channelpopout-popout .ChannelDms-channelpopout-header{padding:6px;box-shadow:var(--elevation-low);background:var(--background-secondary);display:flex;align-items:center;justify-content:space-between}.ChannelDms-channelpopout-popout .ChannelDms-channelpopout-header .ChannelDms-channelpopout-headerTag{display:flex}.ChannelDms-channelpopout-popout .ChannelDms-channelpopout-header .ChannelDms-channelpopout-headerTag .ChannelDms-channelpopout-channelIcon{display:flex;align-items:center;margin:0 5px;color:var(--text-muted)}.ChannelDms-channelpopout-popout .ChannelDms-channelpopout-header .ChannelDms-channelpopout-headerTag .ChannelDms-channelpopout-headerName{display:inline-flex;align-items:center;font-size:20px;font-weight:600;white-space:nowrap;text-overflow:ellipsis;overflow:hidden;max-width:270px}.ChannelDms-channelpopout-popout .ChannelDms-channelpopout-header .ChannelDms-channelpopout-headerTag .ChannelDms-channelpopout-headerStatus{display:flex;align-items:center;margin-left:5px}.ChannelDms-channelpopout-popout .ChannelDms-channelpopout-header .ChannelDms-channelpopout-buttons{display:flex;align-items:center}.ChannelDms-channelpopout-unread{display:flex;align-items:center}", ""]);
+				___CSS_LOADER_EXPORT___.push([module.id, ".ChannelDms-channelpopout-popout{color:#ddd;background:var(--background-primary);width:400px;height:600px;position:relative;box-shadow:var(--elevation-high)}.ChannelDms-channelpopout-popout.ChannelDms-channelpopout-collapsed{width:100px}.ChannelDms-channelpopout-popout .ChannelDms-channelpopout-content{overflow:hidden;border-radius:8px}.ChannelDms-channelpopout-popout .ChannelDms-channelpopout-content>section{height:561px}.ChannelDms-channelpopout-popout .ChannelDms-channelpopout-content>section>div{height:100%}.ChannelDms-channelpopout-popout .ChannelDms-channelpopout-removeButton{position:absolute;top:-12px;right:-12px}.ChannelDms-channelpopout-popout .ChannelDms-channelpopout-collapseButton{position:absolute;left:-20px;top:50px;background:var(--background-secondary-alt);border-radius:100px;z-index:999999}.ChannelDms-channelpopout-popout .ChannelDms-channelpopout-header{padding:6px;box-shadow:var(--elevation-low);background:var(--background-secondary);display:flex;align-items:center;justify-content:space-between}.ChannelDms-channelpopout-popout .ChannelDms-channelpopout-header .ChannelDms-channelpopout-headerTag{display:flex}.ChannelDms-channelpopout-popout .ChannelDms-channelpopout-header .ChannelDms-channelpopout-headerTag .ChannelDms-channelpopout-channelIcon{display:flex;align-items:center;margin:0 5px;color:var(--text-muted)}.ChannelDms-channelpopout-popout .ChannelDms-channelpopout-header .ChannelDms-channelpopout-headerTag .ChannelDms-channelpopout-headerName{display:inline-flex;align-items:center;font-size:20px;font-weight:600;white-space:nowrap;text-overflow:ellipsis;overflow:hidden;max-width:270px}.ChannelDms-channelpopout-popout .ChannelDms-channelpopout-header .ChannelDms-channelpopout-headerTag .ChannelDms-channelpopout-headerStatus{display:flex;align-items:center;margin-left:5px}.ChannelDms-channelpopout-popout .ChannelDms-channelpopout-header .ChannelDms-channelpopout-buttons{display:flex;align-items:center}.ChannelDms-channelpopout-unread{display:flex;align-items:center}", ""]);
 				___CSS_LOADER_EXPORT___.locals = {
 					popout: "ChannelDms-channelpopout-popout",
 					collapsed: "ChannelDms-channelpopout-collapsed",
@@ -301,7 +318,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
 				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
 			},
-			713: (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+			990: (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 				__webpack_require__.r(__webpack_exports__);
 				__webpack_require__.d(__webpack_exports__, {
 					default: () => ChannelDms
@@ -470,7 +487,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				const ChannelChat = wrapPromise(external_PluginApi_namespaceObject.ReactComponents.getComponentByName("ChannelChat", "." + classes?.chatContent).then((res => res.component)), (() => external_BdApi_React_default().createElement("p", null, "Loading...")));
 				const ChannelContext = external_BdApi_React_default().createContext(null);
 				const StatusIcon = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("FluxContainer(Status)");
-				const CallButtons = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("ConnectedPrivateChannelCallButtonSubscribed");
+				const CallButtons = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("ConnectedPrivateChannelCallButtonSubscribed") ?? external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("ConnectedPrivateChannelCallButton");
 				const FormatPlaceholder = external_PluginApi_namespaceObject.WebpackModules.getModule((m => m?.toString().indexOf("TEXTAREA_PLACEHOLDER") > -1));
 				const RemoveButton = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("RemoveButton");
 				const ChannelNameUtils = external_PluginApi_namespaceObject.WebpackModules.getByProps("computeChannelName");
@@ -634,6 +651,125 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						color: "#ed4245"
 					});
 				}
+				function useSubscribe(store) {
+					const [, forceUpdate] = (0, external_BdApi_React_.useReducer)((n => !n), false);
+					(0, external_BdApi_React_.useEffect)((() => {
+						store.subscribe(forceUpdate);
+						return () => void store.unsubscribe(forceUpdate);
+					}), []);
+				}
+				function store_createStore({
+					handler,
+					initialState
+				}) {
+					let state = initialState;
+					const store = {
+						useStore: factory => {
+							useSubscribe(store);
+							return factory(state);
+						},
+						getState: (factory = (_ => _)) => factory(state),
+						_listeners: new Set,
+						subscribe: listener => {
+							store._listeners.add(listener);
+						},
+						unsubscribe: listener => store._listeners.delete(listener),
+						dispatch: event => {
+							const listeners = [...store._listeners];
+							const data = handler(event, state);
+							if (false === data) return;
+							if (!Array.isArray(data)) Object.assign(state, data);
+							for (let i = 0; i < listeners.length; i++) listeners[i](event);
+						}
+					};
+					return store;
+				}
+				var channelmembers = __webpack_require__(781);
+				var channelmembers_React = __webpack_require__(113);
+				function channelmembers_extends() {
+					channelmembers_extends = Object.assign || function(target) {
+						for (var i = 1; i < arguments.length; i++) {
+							var source = arguments[i];
+							for (var key in source)
+								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
+						}
+						return target;
+					};
+					return channelmembers_extends.apply(this, arguments);
+				}
+				const TabBar = external_PluginApi_namespaceObject.WebpackModules.getByProps("Item", "Header");
+				var Tabs;
+				(function(Tabs) {
+					Tabs[Tabs["MEMBERS"] = 0] = "MEMBERS";
+					Tabs[Tabs["DMS"] = 1] = "DMS";
+				})(Tabs || (Tabs = {}));
+				var Events;
+				(function(Events) {
+					Events[Events["SELECT"] = 0] = "SELECT";
+				})(Events || (Events = {}));
+				const Store = store_createStore({
+					initialState: {
+						tab: Tabs.MEMBERS
+					},
+					handler(event, state) {
+						switch (event.type) {
+							case Events.SELECT:
+								if (!Tabs[event.id]) return false;
+								state.tab = event.id;
+								return state;
+						}
+					}
+				});
+				function renderList({
+					tab,
+					MemberList,
+					memberListProps
+				}) {
+					switch (tab) {
+						case Tabs.MEMBERS:
+							return channelmembers_React.createElement(MemberList, channelmembers_extends({}, memberListProps, {
+								__IS_PLUGIN: true,
+								key: "MEMBERS"
+							}));
+						case Tabs.DMS:
+							return channelmembers_React.createElement(PrivateChannels, {
+								key: "DMS"
+							});
+						default:
+							return channelmembers_React.createElement("p", null, "Uh.");
+					}
+				}
+				function ChannelMembers({
+					original: MemberList,
+					memberListProps
+				}) {
+					const tab = Store.useStore((s => s.tab));
+					const handleSelect = function(id) {
+						Store.dispatch({
+							type: Events.SELECT,
+							id
+						});
+					};
+					return channelmembers_React.createElement("div", {
+						className: channelmembers.Z.wrap
+					}, channelmembers_React.createElement(TabBar.Header, {
+						className: external_PluginApi_namespaceObject.Utilities.className(channelmembers.Z.header, TabBar.Types.TOP_PILL),
+						key: "TAB_BAR"
+					}, channelmembers_React.createElement(TabBar.Item, {
+						selectedItem: tab,
+						id: Tabs.MEMBERS,
+						type: TabBar.Types.TOP,
+						onClick: handleSelect.bind(null, Tabs.MEMBERS)
+					}, "Members"), channelmembers_React.createElement(TabBar.Item, {
+						selectedItem: tab,
+						id: Tabs.DMS,
+						onClick: handleSelect.bind(null, Tabs.DMS)
+					}, "DMs")), renderList({
+						tab,
+						memberListProps,
+						MemberList
+					}));
+				}
 				function ChannelDms_extends() {
 					ChannelDms_extends = Object.assign || function(target) {
 						for (var i = 1; i < arguments.length; i++) {
@@ -650,22 +786,26 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				class ChannelDms extends(external_BasePlugin_default()) {
 					onStart() {
 						external_StyleLoader_default().inject();
+						this.patchChannelMembers();
 						this.patchChannelInfo();
 						this.patchListItem();
 						this.patchPrivateChannel();
-						this.patchExperiment();
 					}
 					getSettingsPanel() {
 						return external_BdApi_React_default().createElement(SettingsPanel, null);
 					}
-					patchExperiment() {
-						const Experiment = external_PluginApi_namespaceObject.WebpackModules.getByProps("ChannelBannersExperiment");
-						if (!Experiment || !Experiment.ChannelBannersExperiment) return;
-						external_PluginApi_namespaceObject.Patcher.after(Experiment.ChannelBannersExperiment, "getCurrentConfig", ((_, __, ret) => ({
-							...ret,
-							channelBannersEnabled: true,
-							channelInfoEnabled: true
-						})));
+					async patchChannelMembers() {
+						const classes = external_PluginApi_namespaceObject.WebpackModules.getByProps("membersWrap");
+						const DefaultChannelMembers = await external_PluginApi_namespaceObject.ReactComponents.getComponentByName("ChannelMembers", `.${classes.membersWrap}`);
+						external_PluginApi_namespaceObject.Patcher.instead(DefaultChannelMembers.component.prototype, "render", ((_this, _, original) => {
+							if (_this.props.__IS_PLUGIN) return;
+							return external_BdApi_React_default().createElement(ChannelMembers, {
+								original,
+								memberListProps: _this.props,
+								key: "CHANNEL_MEMBERS"
+							});
+						}));
+						DefaultChannelMembers.forceUpdateAll();
 					}
 					patchChannelInfo() {
 						const ChannelInfo = external_PluginApi_namespaceObject.WebpackModules.getModule((m => "ChannelInfo" === m.default?.displayName));
@@ -882,7 +1022,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				});
 			};
 		})();
-		var __webpack_exports__ = __webpack_require__(713);
+		var __webpack_exports__ = __webpack_require__(990);
 		module.exports.LibraryPluginHack = __webpack_exports__;
 	})();
 	const PluginExports = module.exports.LibraryPluginHack;

@@ -1,6 +1,6 @@
 # ChannelDms
 
-> TODO
+> Allows you to open popout chats of direct messages inside servers.
 <hr/>
 
 
