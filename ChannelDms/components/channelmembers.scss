@@ -12,4 +12,8 @@
         --background-modifier-selected: var(--background-accent);
         background: var(--background-mobile-secondary);
     }
+
+    :global(.container-2o3qEW) {
+        max-height: calc(100% - 45px);
+    }
 }
