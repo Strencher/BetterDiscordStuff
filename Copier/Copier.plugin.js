@@ -40,7 +40,7 @@ const config = {
                 twitter_username: "Strencher3"
             }
         ],
-        version: "1.3.1",
+        version: "1.4.0",
         description: "Allows you to copy certain stuff with custom options.",
         github: "https://github.com/Strencher/BetterDiscordStuff/blob/master/Copier/Copier.plugin.js",
         github_raw: "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/Copier/Copier.plugin.js"
@@ -50,7 +50,7 @@ const config = {
             type: "fixed",
             title: "Fixed",
             items: [
-                "Fixed channel context menus."
+                "Fixed context menus again. Thanks discord."
             ]
         }
     ]
@@ -337,17 +337,17 @@ const ChannelCategoryCopyOptions = [
  */
 const buildPlugin = ([Plugin, Api]) => {
     const {ColorConverter, DCM, Logger, Toasts, Utilities, WebpackModules, PluginUtilities, ContextMenuActions, Patcher} = Api;
-    const {React, React: {useEffect, useState}, ElectronModule, GuildStore, ChannelStore, DiscordConstants: {ChannelTypes}, SelectedGuildStore} = Api.DiscordModules;
-    const {MenuItem, MenuGroup} = WebpackModules.getByProps("MenuItem");
+    const {React, React: {useEffect, useState}, ElectronModule, GuildStore, ChannelStore, UserStore, DiscordConstants: {ChannelTypes}, SelectedGuildStore} = Api.DiscordModules;
+    const {MenuItem, MenuGroup, MenuSeparator} = WebpackModules.getByProps("MenuItem");
     const findWithDefault = filter => WebpackModules.getModule(m => m && m.default && filter(m.default));
     const DatesModule = WebpackModules.getByProps("dateFormat", "calendarFormat");
     const MemberCountStore = WebpackModules.getByProps("getMemberCount");
-    const {TooltipContainer: Tooltip, TooltipColors} = WebpackModules.getByProps("TooltipContainer");
+    const {TooltipContainer: Tooltip} = WebpackModules.getByProps("TooltipContainer");
     const MiniPopover = findWithDefault(m => m.displayName == "MiniPopover");
     const {Routes} = WebpackModules.getByProps("Routes");
     const VoiceStatesStore = WebpackModules.getByProps("getVoiceStatesForChannel");
     const ChannelsStore = WebpackModules.getByProps("getMutableGuildChannels");
-    const Button = WebpackModules.getByProps("DropdownSizes");
+    const Button = WebpackModules.getByProps("BorderColors", "Colors");
     const CopyIcon = props => React.createElement("svg", {height: 24, width: 24, viewBox: "0 0 24 24", fill: "currentColor", ...props}, React.createElement("path", {fill: "none", d: "M0 0h24v24H0z"}), React.createElement("path", {d: "M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"}));
 
     const createStore = state => {
@@ -469,7 +469,22 @@ const buildPlugin = ([Plugin, Api]) => {
         }
 
         static open(target, render) {return ContextMenuActions.openContextMenu(target, render);}
+
         static close() {return ContextMenuActions.closeContextMenu();}
+
+        static filterContext(name) {
+            const shouldInclude = ["page", "section", "objectType"];
+            const notInclude = ["use", "root"];
+
+            return (module) => {
+                const string = module.toString();
+
+                return !~string.indexOf("return function")
+                    && shouldInclude.every(s => ~string.indexOf(s))
+                    && !notInclude.every(s => ~string.indexOf(s))
+                    && Utilities.getNestedProp(module({}), "props.children.type.displayName") === name;
+            }
+        }
     }
 
     function useKeyState() {
@@ -790,208 +805,190 @@ const buildPlugin = ([Plugin, Api]) => {
             });
         }
 
-        patchChannelContextMenu() {
-            const isChannelContextMenu = mod => mod.displayName === "ChannelListTextChannelContextMenu";
-            const isTextChannelContextMenu = mod => ~mod.toString().indexOf("AnalyticsLocations.CONTEXT_MENU");
-            
-            const patchTextChannelContextMenu = (module) => {
-                if (this.promises.cancelled) return;
+        async patchChannelContextMenu() {
+            const ChannelDeleteItem = await DCM.getDiscordMenu("useChannelDeleteItem");
+            if (this.promises.cancelled) return;
 
-                Patcher.after(module, "default", (_, [props], ret) => {
-                    const children = Utilities.findInReactTree(ret, Array.isArray);
-                    if (!Array.isArray(children)) return;
-    
-                    const {channel} = props;
-    
-                    children.splice(
-                        6,
-                        0,
-                        ContextMenu.buildMenu([
+            Patcher.after(ChannelDeleteItem, "default", (_, [channel], ret) => {
+                switch (channel.type) {
+                    case ChannelTypes.GUILD_VOICE:
+                    case ChannelTypes.GUILD_STAGE_VOICE:
+                        var Menu = buildVoiceChannelMenu(channel);
+                        break;
+                    case ChannelTypes.CHANNEL_CATEGORY:
+                        var Menu = buildCategoryMenu(channel);
+                        break;
+                    
+                    default:
+                        var Menu = buildTextChannelMenu(channel);
+                }
+                
+                return [
+                    Menu,
+                    React.createElement(MenuSeparator, {}),
+                    ret,
+                ];
+            });
+
+            const buildTextChannelMenu = function (channel) {
+                const guild = GuildStore.getGuild(channel.guild_id);
+
+                return ContextMenu.buildMenu([
+                    {
+                        label: "Copy",
+                        id: "copy-channel",
+                        action: () => {
+                            ElectronModule.copy(channel.id);
+                        },
+                        children: [
                             {
-                                label: "Copy",
-                                id: "copy-channel",
+                                label: "Name",
+                                id: "copy-channel-name",
+                                action: () => {
+                                    ElectronModule.copy(channel.name);
+                                    Toasts.success("Copied channel name.");
+                                }
+                            },
+                            {
+                                label: "Custom Format",
+                                id: "copy-channel-custom",
+                                action: () => {
+                                    ElectronModule.copy(
+                                        Formatter.formatString(
+                                            Settings.getSetting("channelCustom"),
+                                            ChannelCopyOptions.reduce((options, option) => {
+                                                options[option.name] = option.getValue({channel, guild}, Modules);
+                                                return options;
+                                            }, {})
+                                        )
+                                    );
+                                    Toasts.success("Copied channel with custom format.");
+                                }
+                            },
+                            {
+                                label: "Id",
+                                id: "copy-channel-id",
                                 action: () => {
                                     ElectronModule.copy(channel.id);
-                                },
-                                children: [
-                                    {
-                                        label: "Name",
-                                        id: "copy-channel-name",
-                                        action: () => {
-                                            ElectronModule.copy(channel.name);
-                                            Toasts.success("Copied channel name.");
-                                        }
-                                    },
-                                    {
-                                        label: "Custom Format",
-                                        id: "copy-channel-custom",
-                                        action: () => {
-                                            ElectronModule.copy(
-                                                Formatter.formatString(
-                                                    Settings.getSetting("channelCustom"),
-                                                    ChannelCopyOptions.reduce((options, option) => {
-                                                        options[option.name] = option.getValue(props, Modules);
-                                                        return options;
-                                                    }, {})
-                                                )
-                                            );
-                                            Toasts.success("Copied channel with custom format.");
-                                        }
-                                    },
-                                    {
-                                        label: "Id",
-                                        id: "copy-channel-id",
-                                        action: () => {
-                                            ElectronModule.copy(channel.id);
-                                            Toasts.success("Copied channel id.");
-                                        }
-                                    },
-                                    {
-                                        label: "Mention",
-                                        id: "copy-channel-mention",
-                                        action: () => {
-                                            ElectronModule.copy(`<#${channel.id}>`);
-                                            Toasts.success("Copied channel mention. (<#channelId>)");
-                                        }
-                                    }
-                                ]
+                                    Toasts.success("Copied channel id.");
+                                }
+                            },
+                            {
+                                label: "Mention",
+                                id: "copy-channel-mention",
+                                action: () => {
+                                    ElectronModule.copy(`<#${channel.id}>`);
+                                    Toasts.success("Copied channel mention. (<#channelId>)");
+                                }
                             }
-                        ])
-                    );
-                });
+                        ]
+                    }
+                ]);
             };
 
-            // Normal TextChannel context menu
-            DCM.getDiscordMenu(m => isChannelContextMenu(m) && isTextChannelContextMenu(m)).then(patchTextChannelContextMenu);
+            const buildVoiceChannelMenu = function (channel) {
+                const guild = GuildStore.getGuild(channel.guild_id);
 
-            // Thread context menu
-            DCM.getDiscordMenu("ChannelListThreadContextMenu").then(patchTextChannelContextMenu);
-
-            // ChannelCategory context menu
-            DCM.getDiscordMenu(m => isChannelContextMenu(m) && !isTextChannelContextMenu(m)).then(CategoryContextMenu => {
-                if (this.promises.cancelled) return;
-
-                Patcher.after(CategoryContextMenu, "default", (_, [props], ret) => {
-                    const children = Utilities.getNestedProp(ret, "props.children");
-                    if (!Array.isArray(children)) return;
-    
-                    const {channel} = props;
-    
-                    children.splice(
-                        children.length - 2,
-                        0,
-                        ContextMenu.buildMenu([
+                return ContextMenu.buildMenu([
+                    {
+                        label: "Copy",
+                        id: "copy-voice-channel",
+                        action: () => {
+                            ElectronModule.copy(channel.id);
+                        },
+                        children: [
                             {
-                                label: "Copy",
-                                id: "copy-category",
+                                label: "Name",
+                                id: "copy-voice-channel-name",
+                                action: () => {
+                                    ElectronModule.copy(channel.name);
+                                    Toasts.success("Copied voice channel name.");
+                                }
+                            },
+                            {
+                                label: "Id",
+                                id: "copy-voice-channel-id",
                                 action: () => {
                                     ElectronModule.copy(channel.id);
-                                },
-                                children: [
-                                    {
-                                        label: "Name",
-                                        id: "copy-category-name",
-                                        action: () => {
-                                            ElectronModule.copy(channel.name);
-                                            Toasts.success("Copied category name.");
-                                        }
-                                    },
-                                    {
-                                        label: "Custom Format",
-                                        id: "copy-category-custom",
-                                        action: () => {
-                                            ElectronModule.copy(
-                                                Formatter.formatString(
-                                                    Settings.getSetting("categoryCustom"),
-                                                    ChannelCategoryCopyOptions.reduce((options, option) => {
-                                                        options[option.name] = option.getValue(props, Modules);
-                                                        return options;
-                                                    }, {})
-                                                )
-                                            );
-                                            Toasts.success("Copied category with custom format.");
-                                        }
-                                    },
-                                    {
-                                        label: "Id",
-                                        id: "copy-category-id",
-                                        action: () => {
-                                            ElectronModule.copy(channel.id);
-                                            Toasts.success("Copied channel id.");
-                                        }
-                                    }
-                                ]
-                            }
-                        ])
-                    );
-                });
-            });
-
-            // VoiceChannel context menu
-            DCM.getDiscordMenu("ChannelListVoiceChannelContextMenu").then(VoiceChannelContextMenu => {
-                if (this.promises.cancelled) return;
-
-                Patcher.after(VoiceChannelContextMenu, "default", (_, [props], ret) => {
-                    const children = Utilities.getNestedProp(ret, "props.children");
-                    if (!Array.isArray(children)) return;
-    
-                    const {channel} = props;
-    
-                    children.push(
-                        ContextMenu.buildMenu([
+                                    Toasts.success("Copied voice channel id.");
+                                }
+                            },
                             {
-                                label: "Copy",
-                                id: "copy-voice-channel",
+                                label: "Mention",
+                                id: "copy-voice-channel-mention",
+                                action: () => {
+                                    ElectronModule.copy(`<#${channel.id}>`);
+                                    Toasts.success("Copied voice channel mention. (<#channelId>)");
+                                }
+                            },
+                            {
+                                label: "Custom Format",
+                                id: "copy-voice-channel-custom",
+                                action: () => {
+                                    ElectronModule.copy(
+                                        Formatter.formatString(
+                                            Settings.getSetting("voiceCustom"),
+                                            VoiceChannelCopyOptions.reduce((options, option) => {
+                                                options[option.name] = option.getValue({guild, channel}, Modules);
+                                                return options;
+                                            }, {})
+                                        )
+                                    );
+                                    Toasts.success("Copied voice channel with custom format.");
+                                }
+                            }
+                        ]
+                    }
+                ]);
+            };
+
+            const buildCategoryMenu = function (channel) {
+                const guild = GuildStore.getGuild(channel.guild_id);
+
+                return ContextMenu.buildMenu([
+                    {
+                        label: "Copy",
+                        id: "copy-category",
+                        action: () => {
+                            ElectronModule.copy(channel.id);
+                        },
+                        children: [
+                            {
+                                label: "Name",
+                                id: "copy-category-name",
+                                action: () => {
+                                    ElectronModule.copy(channel.name);
+                                    Toasts.success("Copied category name.");
+                                }
+                            },
+                            {
+                                label: "Custom Format",
+                                id: "copy-category-custom",
+                                action: () => {
+                                    ElectronModule.copy(
+                                        Formatter.formatString(
+                                            Settings.getSetting("categoryCustom"),
+                                            ChannelCategoryCopyOptions.reduce((options, option) => {
+                                                options[option.name] = option.getValue({channel, guild}, Modules);
+                                                return options;
+                                            }, {})
+                                        )
+                                    );
+                                    Toasts.success("Copied category with custom format.");
+                                }
+                            },
+                            {
+                                label: "Id",
+                                id: "copy-category-id",
                                 action: () => {
                                     ElectronModule.copy(channel.id);
-                                },
-                                children: [
-                                    {
-                                        label: "Name",
-                                        id: "copy-voice-channel-name",
-                                        action: () => {
-                                            ElectronModule.copy(channel.name);
-                                            Toasts.success("Copied voice channel name.");
-                                        }
-                                    },
-                                    {
-                                        label: "Id",
-                                        id: "copy-voice-channel-id",
-                                        action: () => {
-                                            ElectronModule.copy(channel.id);
-                                            Toasts.success("Copied voice channel id.");
-                                        }
-                                    },
-                                    {
-                                        label: "Mention",
-                                        id: "copy-voice-channel-mention",
-                                        action: () => {
-                                            ElectronModule.copy(`<#${channel.id}>`);
-                                            Toasts.success("Copied voice channel mention. (<#channelId>)");
-                                        }
-                                    },
-                                    {
-                                        label: "Custom Format",
-                                        id: "copy-voice-channel-custom",
-                                        action: () => {
-                                            ElectronModule.copy(
-                                                Formatter.formatString(
-                                                    Settings.getSetting("voiceCustom"),
-                                                    VoiceChannelCopyOptions.reduce((options, option) => {
-                                                        options[option.name] = option.getValue(props, Modules);
-                                                        return options;
-                                                    }, {})
-                                                )
-                                            );
-                                            Toasts.success("Copied voice channel with custom format.");
-                                        }
-                                    }
-                                ]
+                                    Toasts.success("Copied channel id.");
+                                }
                             }
-                        ])
-                    );
-                });
-            });
+                        ]
+                    }
+                ]);
+            };
         }
 
         copyMessageLink(guild_id, channel, message) {
@@ -1067,81 +1064,135 @@ const buildPlugin = ([Plugin, Api]) => {
         }
 
         async patchUserContextMenu() {
-            const UserContextMenu = await DCM.getDiscordMenu(m => m.displayName?.search(/user.*contextmenu/i) > -1 && !m.__originalFunction);
-            if (this.promises.cancelled) return;
-
-            Patcher.after(UserContextMenu, "default", (_, [props], ret) => {
-                const children = Utilities.getNestedProp(ret, "props.children.props.children");
-                if (!Array.isArray(children)) return;
-
-                const {user} = props;
-
-                children.splice(
-                    7,
-                    0,
-                    ContextMenu.buildMenu([
-                        {
-                            label: "Copy",
-                            id: "copy-user",
-                            action: () => {
-                                ElectronModule.copy(user.id);
-                            },
-                            children: [
-                                {
-                                    label: "Name",
-                                    id: "copy-user-name",
-                                    action: () => {
-                                        ElectronModule.copy(user.username);
-                                        Toasts.success("Copied username.");
-                                    }
-                                },
-                                {
-                                    label: "Custom Format",
-                                    id: "copy-user-custom",
-                                    action: () => {
-                                        ElectronModule.copy(
-                                            Formatter.formatString(
-                                                Settings.getSetting("userCustom"),
-                                                UserCopyOptions.reduce((options, option) => {
-                                                    options[option.name] = option.getValue(user, Modules);
-                                                    return options;
-                                                }, {})
-                                            )
-                                        );
-                                        Toasts.success("Copied user with custom format.");
-                                    }
-                                },
-                                {
-                                    label: "Id",
-                                    id: "copy-user-id",
-                                    action: () => {
-                                        ElectronModule.copy(user.id);
-                                        Toasts.success("Copied user id.");
-                                    }
-                                },
-                                {
-                                    label: "Avatar Url",
-                                    id: "copy-user-avatar",
-                                    action: () => {
-                                        ElectronModule.copy(user.getAvatarURL("gif"));
-                                        Toasts.success("Copied user avatar url.");
-                                    }
-                                },
-                                module.displayName === "DMUserContextMenu" && {
-                                    label: "DM Id",
-                                    id: "copy-dm-id",
-                                    action: () => {
-                                        ElectronModule.copy(ChannelStore.getDMFromUserId(user.id));
-                                        Toasts.success("Copied dm channelId of user.");
-                                    }
+            const buildUserContextMenu = function (user, isDM = false, menu = true) {
+                return (menu ? ContextMenu.buildMenu : ContextMenu.buildItems).call(ContextMenu, [
+                    {
+                        label: "Copy",
+                        id: "copy-user",
+                        action: () => {
+                            ElectronModule.copy(user.id);
+                        },
+                        children: [
+                            {
+                                label: "Name",
+                                id: "copy-user-name",
+                                action: () => {
+                                    ElectronModule.copy(user.username);
+                                    Toasts.success("Copied username.");
                                 }
-                            ].filter(Boolean)
-                        }
-                    ])
-                );
+                            },
+                            {
+                                label: "Custom Format",
+                                id: "copy-user-custom",
+                                action: () => {
+                                    ElectronModule.copy(
+                                        Formatter.formatString(
+                                            Settings.getSetting("userCustom"),
+                                            UserCopyOptions.reduce((options, option) => {
+                                                options[option.name] = option.getValue(user, Modules);
+                                                return options;
+                                            }, {})
+                                        )
+                                    );
+                                    Toasts.success("Copied user with custom format.");
+                                }
+                            },
+                            {
+                                label: "Id",
+                                id: "copy-user-id",
+                                action: () => {
+                                    ElectronModule.copy(user.id);
+                                    Toasts.success("Copied user id.");
+                                }
+                            },
+                            {
+                                label: "Avatar Url",
+                                id: "copy-user-avatar",
+                                action: () => {
+                                    ElectronModule.copy(user.getAvatarURL("gif"));
+                                    Toasts.success("Copied user avatar url.");
+                                }
+                            },
+                            isDM && {
+                                label: "DM Id",
+                                id: "copy-dm-id",
+                                action: () => {
+                                    ElectronModule.copy(ChannelStore.getDMFromUserId(user.id));
+                                    Toasts.success("Copied dm channelId of user.");
+                                }
+                            }
+                        ].filter(Boolean)
+                    }
+                ]);
+            };
+
+            DCM.getDiscordMenu("useUserRolesItems").then(UserRolesItems => {
+                if (this.promises.cancelled) return;
+
+                Patcher.after(UserRolesItems, "default", (_, [userId], ret) => {
+                    const user = UserStore.getUser(userId);
+                    if (!user) return;
+
+                    return [
+                        ret,
+                        React.createElement(MenuSeparator, null),
+                        buildUserContextMenu(user, false, false)
+                    ];
+                });
             });
-            
-            await this.patchUserContextMenu();
+
+            DCM.getDiscordMenu(ContextMenu.filterContext("DMUserContextMenu")).then(WrappedContext => {
+                if (this.promises.cancelled) return;
+                let original = null;
+
+                function DMUserContextMenu(props) {
+                    const rendered = original.call(this, props);
+
+                    try {
+                        const childs = Utilities.findInReactTree(rendered, Array.isArray);
+                        const user = ChannelStore.getChannel(ChannelStore.getDMFromUserId(props.channel.getRecipientId()));
+                        if (!childs || !user) return rendered;
+
+                        childs.push(buildUserContextMenu(user, true, true));
+                    } catch (error) {
+                        cancel();
+                        Logger.error("Error in context menu patch:", error);
+                    }
+
+                    return rendered;
+                }
+
+                const cancel = Patcher.after(WrappedContext, "default", (...args) => {
+                    const [, , ret] = args;
+                    const contextMenu = Utilities.getNestedProp(ret, "props.children");
+                    if (!contextMenu || typeof contextMenu.type !== "function") return;
+
+                    original ??= contextMenu.type;
+                    contextMenu.type = DMUserContextMenu;
+                });
+            });
+
+            const loop = async () => {
+                const UserContextMenu = await DCM.getDiscordMenu(m => m.displayName?.search(/user.*contextmenu/i) > -1 && !m.__originalFunction);
+                if (this.promises.cancelled) return;
+
+                Patcher.after(UserContextMenu, "default", (_, [props], ret) => {
+                    const children = Utilities.getNestedProp(ret, "props.children.props.children");
+                    if (!Array.isArray(children)) return;
+    
+                    const {user} = props;
+    
+                    children.splice(
+                        7,
+                        0,
+                        buildUserContextMenu(user)
+                    );
+                });
+
+                loop();
+            };
+
+            loop();
         }
 
         patchDeveloperContextMenu() {
