@@ -40,7 +40,7 @@ const config = {
                 twitter_username: "Strencher3"
             }
         ],
-        version: "1.4.0",
+        version: "1.4.1",
         description: "Allows you to copy certain stuff with custom options.",
         github: "https://github.com/Strencher/BetterDiscordStuff/blob/master/Copier/Copier.plugin.js",
         github_raw: "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/Copier/Copier.plugin.js"
@@ -50,7 +50,8 @@ const config = {
             type: "fixed",
             title: "Fixed",
             items: [
-                "Fixed context menus again. Thanks discord."
+                "Fixed context menus again #3. Thanks discord.",
+                "Also fixed duplicated context menu entries"
             ]
         }
     ]
@@ -463,7 +464,7 @@ const buildPlugin = ([Plugin, Api]) => {
         static buildMenu(items) {
             return React.createElement(
                 MenuGroup,
-                null,
+                {key: items[0].id},
                 this.buildItems(items)
             );
         }
@@ -475,14 +476,16 @@ const buildPlugin = ([Plugin, Api]) => {
         static filterContext(name) {
             const shouldInclude = ["page", "section", "objectType"];
             const notInclude = ["use", "root"];
+            const isRegex = name instanceof RegExp;
 
             return (module) => {
-                const string = module.toString();
+                const string = module.toString({});
+                const getDisplayName = () => Utilities.getNestedProp(module({}), "props.children.type.displayName");
 
                 return !~string.indexOf("return function")
                     && shouldInclude.every(s => ~string.indexOf(s))
                     && !notInclude.every(s => ~string.indexOf(s))
-                    && Utilities.getNestedProp(module({}), "props.children.type.displayName") === name;
+                    && (isRegex ? name.test(getDisplayName()) : name === getDisplayName())
             }
         }
     }
@@ -1126,69 +1129,61 @@ const buildPlugin = ([Plugin, Api]) => {
                 ]);
             };
 
-            DCM.getDiscordMenu("useUserRolesItems").then(UserRolesItems => {
-                if (this.promises.cancelled) return;
+            const patched = new WeakSet();
+            const REGEX = /user.*contextmenu/i;
+            const filter = ContextMenu.filterContext(REGEX);
+            const loop = async () => {
+                const UserContextMenu = await DCM.getDiscordMenu(m => {
+                    if (patched.has(m)) return false;
+                    if (m.displayName != null) return REGEX.test(m.displayName);
 
-                Patcher.after(UserRolesItems, "default", (_, [userId], ret) => {
-                    const user = UserStore.getUser(userId);
-                    if (!user) return;
-
-                    return [
-                        ret,
-                        React.createElement(MenuSeparator, null),
-                        buildUserContextMenu(user, false, false)
-                    ];
+                    return filter(m);
                 });
-            });
 
-            DCM.getDiscordMenu(ContextMenu.filterContext("DMUserContextMenu")).then(WrappedContext => {
                 if (this.promises.cancelled) return;
-                let original = null;
+                if (UserContextMenu.default.displayName) {
+                    Patcher.after(UserContextMenu, "default", (_, [props], ret) => {
+                        const children = Utilities.findInReactTree(ret, Array.isArray)
+                        if (!Array.isArray(children)) return;
+        
+                        const {user} = props;
+        
+                        children.splice(
+                            7,
+                            0,
+                            buildUserContextMenu(user)
+                        );
+                    });
+                } else {
+                    let original = null;
+                    function wrapper(props) {
+                        const rendered = original.call(this, props);
 
-                function DMUserContextMenu(props) {
-                    const rendered = original.call(this, props);
+                        try {
+                            const childs = Utilities.findInReactTree(rendered, Array.isArray);
+                            const user = props.user || UserStore.getUser(props.channel?.getRecipientId?.());
+                            if (!childs || !user || childs.some(c => c && c.key === "copy-user")) return rendered;
+                            childs.push(buildUserContextMenu(user, original.displayName === "DMUserContextMenu", true)); 
+                        } catch (error) {
+                            cancel();
+                            Logger.error("Error in context menu patch:", error);
+                        }
 
-                    try {
-                        const childs = Utilities.findInReactTree(rendered, Array.isArray);
-                        const user = ChannelStore.getChannel(ChannelStore.getDMFromUserId(props.channel.getRecipientId()));
-                        if (!childs || !user) return rendered;
-
-                        childs.push(buildUserContextMenu(user, true, true));
-                    } catch (error) {
-                        cancel();
-                        Logger.error("Error in context menu patch:", error);
+                        return rendered;
                     }
 
-                    return rendered;
+                    const cancel = Patcher.after(UserContextMenu, "default", (...args) => {
+                        const [, , ret] = args;
+                        const contextMenu = Utilities.getNestedProp(ret, "props.children");
+                        if (!contextMenu || typeof contextMenu.type !== "function") return;
+
+                        original ??= contextMenu.type;
+                        wrapper.displayName ??= original.displayName;
+                        contextMenu.type = wrapper;
+                    });
                 }
 
-                const cancel = Patcher.after(WrappedContext, "default", (...args) => {
-                    const [, , ret] = args;
-                    const contextMenu = Utilities.getNestedProp(ret, "props.children");
-                    if (!contextMenu || typeof contextMenu.type !== "function") return;
-
-                    original ??= contextMenu.type;
-                    contextMenu.type = DMUserContextMenu;
-                });
-            });
-
-            const loop = async () => {
-                const UserContextMenu = await DCM.getDiscordMenu(m => m.displayName?.search(/user.*contextmenu/i) > -1 && !m.__originalFunction);
-                if (this.promises.cancelled) return;
-
-                Patcher.after(UserContextMenu, "default", (_, [props], ret) => {
-                    const children = Utilities.getNestedProp(ret, "props.children.props.children");
-                    if (!Array.isArray(children)) return;
-    
-                    const {user} = props;
-    
-                    children.splice(
-                        7,
-                        0,
-                        buildUserContextMenu(user)
-                    );
-                });
-
+                patched.add(UserContextMenu.default);
                 loop();
             };
 
