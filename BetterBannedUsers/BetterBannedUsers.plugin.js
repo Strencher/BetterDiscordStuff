@@ -1,6 +1,6 @@
 /**
  * @name BetterBannedUsers
- * @version 1.1.1
+ * @version 1.2.0
  * @description Enhances the banned users page.
  * @author Strencher
  * @source https://github.com/Strencher/BetterDiscordStuff/BetterBannedUsers
@@ -32,7 +32,7 @@
 const config = {
 	"info": {
 		"name": "BetterBannedUsers",
-		"version": "1.1.1",
+		"version": "1.2.0",
 		"description": "Enhances the banned users page.",
 		"authors": [{
 			"name": "Strencher",
@@ -44,9 +44,9 @@ const config = {
 	},
 	"changelog": [{
 		"type": "fixed",
-		"title": "Fixed - 1.1.1",
+		"title": "Fixed - 1.2.0",
 		"items": [
-			"Hotfix for the crashing issue."
+			"Fixes for the latest discord update."
 		]
 	}],
 	"build": {
@@ -149,7 +149,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					return ___createMemoize___(this, 'TransitionGroup', () => BdApi.findModuleByDisplayName('TransitionGroup'))
 				},
 				get 'Button'() {
-					return ___createMemoize___(this, 'Button', () => BdApi.findModuleByProps('DropdownSizes'))
+					return ___createMemoize___(this, 'Button', () => BdApi.findModule(m => 'DropdownSizes' in m && typeof(m) === 'function'))
 				},
 				get 'Popout'() {
 					return ___createMemoize___(this, 'Popout', () => BdApi.findModuleByDisplayName('Popout'))
@@ -298,13 +298,14 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
 					return i[1];
 				}));
-				___CSS_LOADER_EXPORT___.push([module.id, ".BetterBannedUsers-banned-remove{display:none;position:absolute;top:-15px;right:-30px}.bannedUser-1IalTM::before{background-color:rgba(32,34,37,.3);border-color:#202225}.bannedUser-1IalTM .username-1b3MVI{white-space:nowrap;padding-left:0}.bannedUser-1IalTM:hover .BetterBannedUsers-banned-remove{display:flex}.BetterBannedUsers-banned-banReason{text-overflow:ellipsis;color:var(--interactive-normal);overflow:hidden;white-space:nowrap;padding-bottom:1px;max-width:600px;display:inline-block;align-items:center}.BetterBannedUsers-banned-wrapper{margin-left:10px;z-index:10}.BetterBannedUsers-banned-container{margin-bottom:20px}.BetterBannedUsers-banned-search{margin-top:10px}", ""]);
+				___CSS_LOADER_EXPORT___.push([module.id, ".BetterBannedUsers-banned-remove{display:none;position:absolute;top:-15px;right:-30px}.bannedUser-26qsXF::before{background-color:rgba(32,34,37,.3);border-color:#202225}.bannedUser-26qsXF .bannedUser-26qsXF{white-space:nowrap;padding-left:0}.bannedUser-26qsXF:hover .BetterBannedUsers-banned-remove{display:flex}.BetterBannedUsers-banned-banReason{text-overflow:ellipsis;color:var(--interactive-normal);overflow:hidden;white-space:nowrap;padding-bottom:1px;max-width:600px;display:inline-block;align-items:center}.BetterBannedUsers-banned-wrapper{margin-left:10px;z-index:10}.BetterBannedUsers-banned-container{margin-bottom:20px}.BetterBannedUsers-banned-search{margin-top:10px}.BetterBannedUsers-banned-disabled{pointer-events:none}", ""]);
 				___CSS_LOADER_EXPORT___.locals = {
 					remove: "BetterBannedUsers-banned-remove",
 					banReason: "BetterBannedUsers-banned-banReason",
 					wrapper: "BetterBannedUsers-banned-wrapper",
 					container: "BetterBannedUsers-banned-container",
-					search: "BetterBannedUsers-banned-search"
+					search: "BetterBannedUsers-banned-search",
+					disabled: "BetterBannedUsers-banned-disabled"
 				};
 				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
 				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
@@ -328,495 +329,6 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				};
 				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
 				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
-			},
-			833: (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-				__webpack_require__.r(__webpack_exports__);
-				__webpack_require__.d(__webpack_exports__, {
-					default: () => BetterBannedUsers
-				});
-				const external_BasePlugin_namespaceObject = BasePlugin;
-				var external_BasePlugin_default = __webpack_require__.n(external_BasePlugin_namespaceObject);
-				const external_PluginApi_namespaceObject = PluginApi;
-				var banned = __webpack_require__(465);
-				const external_StyleLoader_namespaceObject = StyleLoader;
-				var external_StyleLoader_default = __webpack_require__.n(external_StyleLoader_namespaceObject);
-				const package_namespaceObject = JSON.parse('{"um":{"u2":"BetterBannedUsers"}}');
-				const flux_namespaceObject = Modules["@discord/flux"];
-				const modules_namespaceObject = Modules["@discord/modules"];
-				function _defineProperty(obj, key, value) {
-					if (key in obj) Object.defineProperty(obj, key, {
-						value,
-						enumerable: true,
-						configurable: true,
-						writable: true
-					});
-					else obj[key] = value;
-					return obj;
-				}
-				class SettingsManager extends flux_namespaceObject.Store {
-					constructor(pluginName, defaultSettings = {}) {
-						super(modules_namespaceObject.Dispatcher, {});
-						_defineProperty(this, "settings", void 0);
-						_defineProperty(this, "pluginName", void 0);
-						_defineProperty(this, "get", ((key, defaultValue) => this.settings[key] ?? defaultValue));
-						_defineProperty(this, "set", ((key, value) => {
-							this.settings[key] = value;
-							external_PluginApi_namespaceObject.PluginUtilities.saveSettings(this.pluginName, this.settings);
-							this.emitChange();
-							return value;
-						}));
-						this.pluginName = pluginName;
-						this.settings = external_PluginApi_namespaceObject.PluginUtilities.loadSettings(pluginName, defaultSettings);
-					}
-				}
-				const Settings = new SettingsManager(package_namespaceObject.um.u2);
-				const settings = Settings;
-				const stores_namespaceObject = Modules["@discord/stores"];
-				const external_window_namespaceObject = window._;
-				var external_window_default = __webpack_require__.n(external_window_namespaceObject);
-				const components_namespaceObject = Modules["@discord/components"];
-				const i18n_namespaceObject = Modules["@discord/i18n"];
-				var external_BdApi_React_ = __webpack_require__(113);
-				var components_select = __webpack_require__(894);
-				const utils_namespaceObject = Modules["@discord/utils"];
-				var React = __webpack_require__(113);
-				function _extends() {
-					_extends = Object.assign || function(target) {
-						for (var i = 1; i < arguments.length; i++) {
-							var source = arguments[i];
-							for (var key in source)
-								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-						}
-						return target;
-					};
-					return _extends.apply(this, arguments);
-				}
-				const Popout = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("Popout");
-				const Caret = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("Caret");
-				function Select({
-					value,
-					options,
-					label,
-					onChange
-				}) {
-					const [selected, setSelected] = (0, external_BdApi_React_.useState)(value);
-					const renderPopout = props => React.createElement("div", _extends({}, props, {
-						className: components_select.Z.container
-					}), options.map(((option, index) => React.createElement("div", {
-						className: (0, utils_namespaceObject.joinClassNames)(components_select.Z.option, {
-							[components_select.Z.selected]: selected?.value === option.value
-						}),
-						key: index,
-						onClick: () => {
-							setSelected(option);
-							onChange(option);
-							props.closePopout();
-						}
-					}, option.label))));
-					return React.createElement(Popout, {
-						renderPopout,
-						align: "center",
-						animation: Popout.Animation.FADE,
-						position: "bottom"
-					}, (props => React.createElement(components_namespaceObject.Flex, {
-						className: components_select.Z.select,
-						shrink: 0,
-						grow: 0,
-						align: components_namespaceObject.Flex.Align.CENTER,
-						justify: components_namespaceObject.Flex.Justify.END,
-						onClick: props.onClick
-					}, React.createElement(components_namespaceObject.Text, {
-						color: components_namespaceObject.Text.Colors.MUTED
-					}, label), React.createElement(components_namespaceObject.Text, {
-						className: components_select.Z.selectedText,
-						color: components_namespaceObject.Text.Colors.INTERACTIVE_NORMAL
-					}, selected?.label), React.createElement(Caret, {
-						direction: Caret.Directions.DOWN,
-						className: components_namespaceObject.Text.Colors.INTERACTIVE_NORMAL
-					}))));
-				}
-				var createUpdateWrapper_React = __webpack_require__(113);
-				function createUpdateWrapper_extends() {
-					createUpdateWrapper_extends = Object.assign || function(target) {
-						for (var i = 1; i < arguments.length; i++) {
-							var source = arguments[i];
-							for (var key in source)
-								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-						}
-						return target;
-					};
-					return createUpdateWrapper_extends.apply(this, arguments);
-				}
-				const createUpdateWrapper = (Component, valueProp = "value", changeProp = "onChange", valueIndex = 0) => props => {
-					const [value, setValue] = createUpdateWrapper_React.useState(props[valueProp]);
-					return createUpdateWrapper_React.createElement(Component, createUpdateWrapper_extends({}, props, {
-						[valueProp]: value,
-						[changeProp]: (...args) => {
-							const value = args[valueIndex];
-							if ("function" === typeof props[changeProp]) props[changeProp](value);
-							setValue(value);
-						}
-					}));
-				};
-				const hooks_createUpdateWrapper = createUpdateWrapper;
-				var settings_React = __webpack_require__(113);
-				const SwitchItem = hooks_createUpdateWrapper(external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("SwitchItem"));
-				const settings_settings = {
-					quickUnban: {
-						value: true,
-						note: "Adds a quick unban button (X) to the card."
-					},
-					showReason: {
-						value: true,
-						note: "Shows the reason right inside the card."
-					}
-				};
-				function SettingsPanel() {
-					return settings_React.createElement(settings_React.Fragment, null, Object.keys(settings_settings).map((id => settings_React.createElement(SwitchItem, {
-						children: external_window_default().upperFirst(id),
-						note: settings_settings[id].note,
-						value: settings.get(id, settings_settings[id].value),
-						onChange: value => settings.set(id, value)
-					}))));
-				}
-				function preventPropagation(func) {
-					return function(event) {
-						event.preventDefault?.();
-						event.stopPropagation?.();
-						return func.apply(this, arguments);
-					};
-				}
-				const constants_namespaceObject = Modules["@discord/constants"];
-				const DiscordCommands = BdApi.findModuleByProps("BUILT_IN_COMMANDS");
-				const DiscordCommandTypes = BdApi.findModuleByProps("ApplicationCommandType");
-				const Types = DiscordCommandTypes.ApplicationCommandType;
-				const OptionTypes = DiscordCommandTypes.ApplicationCommandOptionType;
-				const PermissionTypes = DiscordCommandTypes.ApplicationCommandPermissionType;
-				if (!DiscordCommands.BUILT_IN_SECTIONS["betterdiscord"]) DiscordCommands.BUILT_IN_SECTIONS["betterdiscord"] = {
-					icon: "https://github.com/BetterDiscord.png",
-					id: "betterdiscord",
-					name: "BetterDiscord",
-					type: 0
-				};
-				function registerCommand(caller, options) {
-					const cmd = Object.assign({}, options, {
-						__registerId: caller,
-						applicationId: "betterdiscord",
-						type: Types.BOT,
-						target: 1
-					});
-					DiscordCommands.BUILT_IN_COMMANDS.push(cmd);
-					return () => {
-						const index = DiscordCommands.BUILT_IN_COMMANDS.indexOf(cmd);
-						if (index < 0) return false;
-						DiscordCommands.BUILT_IN_COMMANDS.splice(index, 1);
-					};
-				}
-				function unregisterAllCommands(caller) {
-					let index = DiscordCommands.BUILT_IN_COMMANDS.findIndex((cmd => cmd.__registerId === caller));
-					while (index > -1) {
-						DiscordCommands.BUILT_IN_COMMANDS.splice(index, 1);
-						index = DiscordCommands.BUILT_IN_COMMANDS.findIndex((cmd => cmd.__registerId === caller));
-					}
-				}
-				const Commands = {
-					registerCommand,
-					unregisterAllCommands
-				};
-				const commands = Commands;
-				const DefaultMessage = {
-					state: "SENT",
-					author: {
-						avatar: "betterdiscord",
-						id: "81388395867156480",
-						bot: true,
-						discriminator: "5000",
-						username: "BetterDiscord"
-					},
-					content: "Hello <:zere_zoom:477825238172958730>"
-				};
-				const MessageCreators = BdApi.findModuleByProps("createBotMessage");
-				const MessageActions = BdApi.findModuleByProps("receiveMessage");
-				const AvatarDefaults = BdApi.findModuleByProps("BOT_AVATARS");
-				if (AvatarDefaults?.BOT_AVATARS && !AvatarDefaults.BOT_AVATARS.betterdiscord) AvatarDefaults.BOT_AVATARS.betterdiscord = "https://github.com/BetterDiscord.png";
-				function sendMessage(channelId, message) {
-					MessageActions.receiveMessage(channelId, Object.assign({}, MessageCreators.createBotMessage(channelId, message?.content), DefaultMessage, message));
-				}
-				const Clyde = {
-					sendMessage,
-					DefaultMessage
-				};
-				const clyde = Clyde;
-				function switchCase(caze, cases, defaultValue) {
-					for (const caseTest of cases)
-						if (Array.isArray(caseTest)) {
-							const [tester, value] = caseTest;
-							if ("function" === typeof tester) {
-								if (tester(caze)) {
-									if ("function" === typeof value) return value(caze);
-									return value;
-								}
-							} else if (Object.is(caze, tester)) {
-								if ("function" === typeof value) return value(caze);
-								return value;
-							}
-						} else if ("object" === typeof caseTest)
-						if ("function" === typeof caseTest.test) {
-							if (caseTest.test(caze)) return caseTest.value;
-						} else if (Object.is(caze, caseTest.test)) return caseTest.value;
-					return defaultValue;
-				}
-				var BetterBannedUsers_React = __webpack_require__(113);
-				function BetterBannedUsers_defineProperty(obj, key, value) {
-					if (key in obj) Object.defineProperty(obj, key, {
-						value,
-						enumerable: true,
-						configurable: true,
-						writable: true
-					});
-					else obj[key] = value;
-					return obj;
-				}
-				const RemoveButton = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("RemoveButton");
-				const GuildActions = external_PluginApi_namespaceObject.WebpackModules.getByProps("unbanUser");
-				const SearchBar = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("SearchBar");
-				const GuildSettings = external_PluginApi_namespaceObject.WebpackModules.getByProps("updateMemberRoles");
-				const Util = external_PluginApi_namespaceObject.WebpackModules.getByProps("cachedFunction");
-				const APIErrors = {
-					UNKOWN_USER: 10013,
-					MISSING_PERMISSIONS: 50013
-				};
-				class BetterBannedUsers extends(external_BasePlugin_default()) {
-					constructor(...args) {
-						super(...args);
-						BetterBannedUsers_defineProperty(this, "promises", {
-							cancelled: false,
-							cancel() {
-								this.cancelled = true;
-							}
-						});
-						BetterBannedUsers_defineProperty(this, "regex", {
-							userId: /^\d{15}/
-						});
-					}
-					async banUserWithCommand(guild, userId, reason) {
-						try {
-							await GuildActions.banUser(guild.id, userId, void 0, `${stores_namespaceObject.Users.getCurrentUser().tag}: ${reason ? reason : "No reason provided."}`);
-						} catch (error) {
-							external_PluginApi_namespaceObject.Logger.error(`Failed to ban ${userId}:\n`, error);
-							return switchCase(error?.body?.code, [
-								[APIErrors.MISSING_PERMISSIONS, "Sorry, but you don't have enough power to perform that action. 😕"],
-								[APIErrors.UNKOWN_USER, "Sorry, but i couldn't find that user. Are you sure it's their user id? 🤔"]
-							], "Something when wrong when i tried to ban them. Check your console for more details.");
-						}
-						return `Banned <@!${userId}> from this server. 🔨`;
-					}
-					async unbanUserWithCommand(guild, userId) {
-						try {
-							await GuildActions.unbanUser(guild.id, userId);
-						} catch (error) {
-							external_PluginApi_namespaceObject.Logger.error(`Failed to unban ${userId}:\n`, error);
-							return switchCase(error?.body?.code, [
-								[APIErrors.MISSING_PERMISSIONS, "Sorry, but you don't have enough power to perform that action. 😕"],
-								[APIErrors.UNKOWN_USER, "Sorry, but i couldn't find that user. Are you sure it's their user id? 🤔"]
-							], "Something when wrong when i tried to unban them. Check your console for more details.");
-						}
-						return `Unbanned <@!${userId}> from this server. ✅`;
-					}
-					onStart() {
-						external_StyleLoader_default().inject();
-						this.patchBannedUser();
-						this.patchBannedUsers();
-						this.registerCommands();
-					}
-					registerCommands() {
-						commands.registerCommand(this.getName(), {
-							id: "ban-user",
-							name: "ban",
-							predicate: ({
-								guild
-							}) => modules_namespaceObject.PermissionUtils.can(constants_namespaceObject.Permissions.BAN_MEMBERS, stores_namespaceObject.Guilds.getGuild(guild?.id), stores_namespaceObject.Users.getCurrentUser()),
-							description: "Ban someone from this guild. Click the options to choose which method you want.",
-							execute: (props, {
-								guild,
-								channel
-							}) => {
-								const userId = props.userId ? props.userId[0].text : props.mention?.[0]?.userId;
-								if (!this.regex.userId.test(userId?.trim?.())) return clyde.sendMessage(channel.id, {
-									content: "You must specify a user!"
-								});
-								this.banUserWithCommand(guild, userId, props.reason?.[0]?.text).then((message => {
-									clyde.sendMessage(channel.id, {
-										content: message
-									});
-								}));
-							},
-							options: [{
-								type: OptionTypes.USER,
-								name: "mention",
-								description: "The user mention from chat.",
-								required: false
-							}, {
-								type: OptionTypes.STRING,
-								name: "userId",
-								description: "The user id string.",
-								required: false
-							}, {
-								type: OptionTypes.STRING,
-								name: "reason",
-								description: "Select a reason why you want to ban them.",
-								required: false
-							}]
-						});
-						commands.registerCommand(this.getName(), {
-							id: "unban-user",
-							name: "unban",
-							description: "Unbans a user by id or mention from this guild. Click the options to choose the method you want.",
-							predicate: ({
-								guild
-							}) => modules_namespaceObject.PermissionUtils.can(constants_namespaceObject.Permissions.BAN_MEMBERS, stores_namespaceObject.Guilds.getGuild(guild?.id), stores_namespaceObject.Users.getCurrentUser()),
-							execute: (props, {
-								guild,
-								channel
-							}) => {
-								const userId = props.userId ? props.userId[0].text : props.mention?.[0]?.userId;
-								if (!this.regex.userId.test(userId?.trim?.())) return clyde.sendMessage(channel.id, {
-									content: "You must specify a user!"
-								});
-								this.unbanUserWithCommand(guild, userId, props.reason?.[0]?.text).then((message => {
-									clyde.sendMessage(channel.id, {
-										content: message
-									});
-								}));
-							},
-							options: [{
-								type: OptionTypes.USER,
-								name: "mention",
-								description: "The user mention from chat."
-							}, {
-								type: OptionTypes.STRING,
-								name: "userId",
-								description: "The user id string."
-							}]
-						});
-					}
-					getSettingsPanel() {
-						return BetterBannedUsers_React.createElement(SettingsPanel, null);
-					}
-					getSingleClass(...props) {
-						return "." + external_PluginApi_namespaceObject.WebpackModules.getByProps(...props)?.[props[0]];
-					}
-					async patchBannedUser() {
-						const BannedUser = await external_PluginApi_namespaceObject.ReactComponents.getComponentByName("BannedUser", this.getSingleClass(["bannedUser"]));
-						external_PluginApi_namespaceObject.Patcher.after(BannedUser.component.prototype, "render", ((that, _, res) => {
-							if (this.promises.cancelled) return;
-							if (!Array.isArray(res?.props?.children)) return;
-							const {
-								guild,
-								user,
-								ban
-							} = that.props;
-							const name = res.props.children.pop();
-							res.props.children.push(BetterBannedUsers_React.createElement("div", {
-								className: banned.Z.wrapper
-							}, name, settings.get("showReason", true) ? BetterBannedUsers_React.createElement("span", {
-								className: banned.Z.banReason
-							}, ban.reason ?? i18n_namespaceObject.Messages.NO_BAN_REASON) : null), settings.get("quickUnban", true) ? BetterBannedUsers_React.createElement(RemoveButton, {
-								className: banned.Z.remove,
-								onClick: preventPropagation((() => {
-									this.unbanUser(guild.id, user);
-								}))
-							}) : null);
-						}));
-						BannedUser.forceUpdateAll();
-					}
-					async patchBannedUsers() {
-						const BannedUsers = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("FluxContainer(GuildSettingsBans)").prototype.render.call({
-							memoizedGetStateFromStores: constants_namespaceObject.NOOP
-						}).type;
-						external_PluginApi_namespaceObject.Patcher.before(BannedUsers.prototype, "render", (that => {
-							if (this.promises.cancelled) return;
-							const order = settings.get("order", {
-								value: "descending",
-								label: "Descending"
-							});
-							const sort = settings.get("sort", {
-								value: "username",
-								label: "Name"
-							});
-							that.getSortedBans = Util.cachedFunction(((bans, searchQuery) => {
-								if (!bans) return [];
-								const userIds = external_window_default()(bans).keys();
-								if (~userIds.indexOf(searchQuery)) return [stores_namespaceObject.Users.getUser(searchQuery)];
-								let users = userIds.map(stores_namespaceObject.Users.getUser);
-								const tester = new RegExp(`^${external_window_default().escape(searchQuery)}`, "i");
-								if (searchQuery) users = users.filter((user => tester.test(user?.username) || tester.test(bans[user.id]?.reason)));
-								users = users.sortBy((e => "username" === sort.value ? e.username.toLowerCase() : bans[e.id]?.reason?.length ?? 0));
-								if ("ascending" === order.value) users = users.reverse();
-								return users.value();
-							}));
-							const original = that.renderSection;
-							that.renderSection = function() {
-								const res = original(...arguments);
-								const message = res.props.children[0].props.children[0];
-								res.props.children[0] = BetterBannedUsers_React.createElement(components_namespaceObject.Flex, {
-									direction: components_namespaceObject.Flex.Direction.VERTICAL,
-									className: banned.Z.container
-								}, message, BetterBannedUsers_React.createElement(components_namespaceObject.Flex, {
-									direction: components_namespaceObject.Flex.Direction.HORIZONTAL,
-									justify: components_namespaceObject.Flex.Justify.END
-								}, BetterBannedUsers_React.createElement(Select, {
-									label: "Order",
-									value: order,
-									options: [{
-										label: "Ascending",
-										value: "ascending"
-									}, {
-										label: "Descending",
-										value: "descending"
-									}],
-									onChange: value => {
-										that.forceUpdate();
-										settings.set("order", value);
-									}
-								}), BetterBannedUsers_React.createElement(Select, {
-									label: "Sort by",
-									value: sort,
-									options: [{
-										label: "Name",
-										value: "username"
-									}, {
-										label: "Reason length",
-										value: "reason_length"
-									}],
-									onChange: value => {
-										that.forceUpdate();
-										settings.set("sort", value);
-									}
-								})), Object.keys(Object(that.props.bans)).length ? BetterBannedUsers_React.createElement(SearchBar, {
-									onQueryChange: value => {
-										GuildSettings.setSearchQuery(value);
-									},
-									onClear: () => GuildSettings.setSearchQuery(""),
-									placeholder: i18n_namespaceObject.Messages.BANS_SEARCH_PLACEHOLDER,
-									size: SearchBar.Sizes.LARGE,
-									query: that.props.searchQuery,
-									className: banned.Z.search
-								}) : null);
-								return res;
-							};
-						}));
-					}
-					async unbanUser(guildId, user) {
-						await GuildActions.unbanUser(guildId, user.id);
-						external_PluginApi_namespaceObject.Toasts.success(`Unbanned <span style="color: #5865f2;">${user.tag}</span>!`);
-					}
-					onStop() {
-						external_StyleLoader_default().remove();
-						external_PluginApi_namespaceObject.Patcher.unpatchAll();
-						commands.unregisterAllCommands(this.getName());
-					}
-				}
 			},
 			645: module => {
 				module.exports = function(cssWithMappingToString) {
@@ -896,7 +408,517 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				});
 			};
 		})();
-		var __webpack_exports__ = __webpack_require__(833);
+		var __webpack_exports__ = {};
+		(() => {
+			__webpack_require__.r(__webpack_exports__);
+			__webpack_require__.d(__webpack_exports__, {
+				default: () => BetterBannedUsers
+			});
+			const external_BasePlugin_namespaceObject = BasePlugin;
+			var external_BasePlugin_default = __webpack_require__.n(external_BasePlugin_namespaceObject);
+			const external_PluginApi_namespaceObject = PluginApi;
+			var banned = __webpack_require__(465);
+			const external_StyleLoader_namespaceObject = StyleLoader;
+			var external_StyleLoader_default = __webpack_require__.n(external_StyleLoader_namespaceObject);
+			const package_namespaceObject = JSON.parse('{"um":{"u2":"BetterBannedUsers"}}');
+			const flux_namespaceObject = Modules["@discord/flux"];
+			const modules_namespaceObject = Modules["@discord/modules"];
+			function _defineProperty(obj, key, value) {
+				if (key in obj) Object.defineProperty(obj, key, {
+					value,
+					enumerable: true,
+					configurable: true,
+					writable: true
+				});
+				else obj[key] = value;
+				return obj;
+			}
+			class SettingsManager extends flux_namespaceObject.Store {
+				constructor(pluginName, defaultSettings = {}) {
+					super(modules_namespaceObject.Dispatcher, {});
+					_defineProperty(this, "settings", void 0);
+					_defineProperty(this, "pluginName", void 0);
+					_defineProperty(this, "get", ((key, defaultValue) => this.settings[key] ?? defaultValue));
+					_defineProperty(this, "set", ((key, value) => {
+						this.settings[key] = value;
+						external_PluginApi_namespaceObject.PluginUtilities.saveSettings(this.pluginName, this.settings);
+						this.emitChange();
+						return value;
+					}));
+					this.pluginName = pluginName;
+					this.settings = external_PluginApi_namespaceObject.PluginUtilities.loadSettings(pluginName, defaultSettings);
+				}
+			}
+			const Settings = new SettingsManager(package_namespaceObject.um.u2);
+			const settings = Settings;
+			const stores_namespaceObject = Modules["@discord/stores"];
+			const external_window_namespaceObject = window._;
+			var external_window_default = __webpack_require__.n(external_window_namespaceObject);
+			const components_namespaceObject = Modules["@discord/components"];
+			const i18n_namespaceObject = Modules["@discord/i18n"];
+			var external_BdApi_React_ = __webpack_require__(113);
+			var components_select = __webpack_require__(894);
+			const utils_namespaceObject = Modules["@discord/utils"];
+			var React = __webpack_require__(113);
+			function _extends() {
+				_extends = Object.assign || function(target) {
+					for (var i = 1; i < arguments.length; i++) {
+						var source = arguments[i];
+						for (var key in source)
+							if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
+					}
+					return target;
+				};
+				return _extends.apply(this, arguments);
+			}
+			const Popout = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("Popout");
+			const Caret = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("Caret");
+			function Select({
+				value,
+				options,
+				label,
+				onChange
+			}) {
+				const [selected, setSelected] = (0, external_BdApi_React_.useState)(value);
+				const renderPopout = props => React.createElement("div", _extends({}, props, {
+					className: components_select.Z.container
+				}), options.map(((option, index) => React.createElement("div", {
+					className: (0, utils_namespaceObject.joinClassNames)(components_select.Z.option, {
+						[components_select.Z.selected]: selected?.value === option.value
+					}),
+					key: index,
+					onClick: () => {
+						setSelected(option);
+						onChange(option);
+						props.closePopout();
+					}
+				}, option.label))));
+				return React.createElement(Popout, {
+					renderPopout,
+					align: "center",
+					animation: Popout.Animation.FADE,
+					position: "bottom"
+				}, (props => React.createElement(components_namespaceObject.Flex, {
+					className: components_select.Z.select,
+					shrink: 0,
+					grow: 0,
+					align: components_namespaceObject.Flex.Align.CENTER,
+					justify: components_namespaceObject.Flex.Justify.END,
+					onClick: props.onClick
+				}, React.createElement(components_namespaceObject.Text, {
+					color: components_namespaceObject.Text.Colors.MUTED
+				}, label), React.createElement(components_namespaceObject.Text, {
+					className: components_select.Z.selectedText,
+					color: components_namespaceObject.Text.Colors.INTERACTIVE_NORMAL
+				}, selected?.label), React.createElement(Caret, {
+					direction: Caret.Directions.DOWN,
+					className: components_namespaceObject.Text.Colors.INTERACTIVE_NORMAL
+				}))));
+			}
+			var createUpdateWrapper_React = __webpack_require__(113);
+			function createUpdateWrapper_extends() {
+				createUpdateWrapper_extends = Object.assign || function(target) {
+					for (var i = 1; i < arguments.length; i++) {
+						var source = arguments[i];
+						for (var key in source)
+							if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
+					}
+					return target;
+				};
+				return createUpdateWrapper_extends.apply(this, arguments);
+			}
+			const createUpdateWrapper = (Component, valueProp = "value", changeProp = "onChange", valueIndex = 0) => props => {
+				const [value, setValue] = createUpdateWrapper_React.useState(props[valueProp]);
+				return createUpdateWrapper_React.createElement(Component, createUpdateWrapper_extends({}, props, {
+					[valueProp]: value,
+					[changeProp]: (...args) => {
+						const value = args[valueIndex];
+						if ("function" === typeof props[changeProp]) props[changeProp](value);
+						setValue(value);
+					}
+				}));
+			};
+			const hooks_createUpdateWrapper = createUpdateWrapper;
+			var settings_React = __webpack_require__(113);
+			const SwitchItem = hooks_createUpdateWrapper(external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("SwitchItem"));
+			const settings_settings = {
+				quickUnban: {
+					value: true,
+					note: "Adds a quick unban button (X) to the card."
+				},
+				showReason: {
+					value: true,
+					note: "Shows the reason right inside the card."
+				}
+			};
+			function SettingsPanel() {
+				return settings_React.createElement(settings_React.Fragment, null, Object.keys(settings_settings).map((id => settings_React.createElement(SwitchItem, {
+					children: external_window_default().upperFirst(id),
+					note: settings_settings[id].note,
+					value: settings.get(id, settings_settings[id].value),
+					onChange: value => settings.set(id, value)
+				}))));
+			}
+			function preventPropagation(func) {
+				return function(event) {
+					event.preventDefault?.();
+					event.stopPropagation?.();
+					return func.apply(this, arguments);
+				};
+			}
+			const constants_namespaceObject = Modules["@discord/constants"];
+			const DiscordCommands = BdApi.findModuleByProps("BUILT_IN_COMMANDS");
+			const DiscordCommandTypes = BdApi.findModuleByProps("ApplicationCommandType");
+			const Types = DiscordCommandTypes.ApplicationCommandType;
+			const OptionTypes = DiscordCommandTypes.ApplicationCommandOptionType;
+			const PermissionTypes = DiscordCommandTypes.ApplicationCommandPermissionType;
+			if (!DiscordCommands.BUILT_IN_SECTIONS["betterdiscord"]) DiscordCommands.BUILT_IN_SECTIONS["betterdiscord"] = {
+				icon: "https://github.com/BetterDiscord.png",
+				id: "betterdiscord",
+				name: "BetterDiscord",
+				type: 0
+			};
+			function registerCommand(caller, options) {
+				const cmd = Object.assign({}, options, {
+					__registerId: caller,
+					applicationId: "betterdiscord",
+					type: Types.BOT,
+					target: 1
+				});
+				DiscordCommands.BUILT_IN_COMMANDS.push(cmd);
+				return () => {
+					const index = DiscordCommands.BUILT_IN_COMMANDS.indexOf(cmd);
+					if (index < 0) return false;
+					DiscordCommands.BUILT_IN_COMMANDS.splice(index, 1);
+				};
+			}
+			function unregisterAllCommands(caller) {
+				let index = DiscordCommands.BUILT_IN_COMMANDS.findIndex((cmd => cmd.__registerId === caller));
+				while (index > -1) {
+					DiscordCommands.BUILT_IN_COMMANDS.splice(index, 1);
+					index = DiscordCommands.BUILT_IN_COMMANDS.findIndex((cmd => cmd.__registerId === caller));
+				}
+			}
+			const Commands = {
+				registerCommand,
+				unregisterAllCommands
+			};
+			const commands = Commands;
+			const DefaultMessage = {
+				state: "SENT",
+				author: {
+					avatar: "betterdiscord",
+					id: "81388395867156480",
+					bot: true,
+					discriminator: "5000",
+					username: "BetterDiscord"
+				},
+				content: "Hello <:zere_zoom:477825238172958730>"
+			};
+			const MessageCreators = BdApi.findModuleByProps("createBotMessage");
+			const MessageActions = BdApi.findModuleByProps("receiveMessage");
+			const AvatarDefaults = BdApi.findModuleByProps("BOT_AVATARS");
+			if (AvatarDefaults?.BOT_AVATARS && !AvatarDefaults.BOT_AVATARS.betterdiscord) AvatarDefaults.BOT_AVATARS.betterdiscord = "https://github.com/BetterDiscord.png";
+			function sendMessage(channelId, message) {
+				MessageActions.receiveMessage(channelId, Object.assign({}, MessageCreators.createBotMessage(channelId, message?.content), DefaultMessage, message));
+			}
+			const Clyde = {
+				sendMessage,
+				DefaultMessage
+			};
+			const clyde = Clyde;
+			function switchCase(caze, cases, defaultValue) {
+				for (const caseTest of cases)
+					if (Array.isArray(caseTest)) {
+						const [tester, value] = caseTest;
+						if ("function" === typeof tester) {
+							if (tester(caze)) {
+								if ("function" === typeof value) return value(caze);
+								return value;
+							}
+						} else if (Object.is(caze, tester)) {
+							if ("function" === typeof value) return value(caze);
+							return value;
+						}
+					} else if ("object" === typeof caseTest)
+					if ("function" === typeof caseTest.test) {
+						if (caseTest.test(caze)) return caseTest.value;
+					} else if (Object.is(caze, caseTest.test)) return caseTest.value;
+				return defaultValue;
+			}
+			var BetterBannedUsers_React = __webpack_require__(113);
+			function BetterBannedUsers_defineProperty(obj, key, value) {
+				if (key in obj) Object.defineProperty(obj, key, {
+					value,
+					enumerable: true,
+					configurable: true,
+					writable: true
+				});
+				else obj[key] = value;
+				return obj;
+			}
+			const RemoveButton = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("RemoveButton");
+			const GuildActions = external_PluginApi_namespaceObject.WebpackModules.getByProps("unbanUser");
+			const SearchBar = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("SearchBar");
+			const GuildSettings = external_PluginApi_namespaceObject.WebpackModules.getByProps("updateMemberRoles");
+			const Util = external_PluginApi_namespaceObject.WebpackModules.getByProps("cachedFunction");
+			const APIErrors = {
+				UNKOWN_USER: 10013,
+				MISSING_PERMISSIONS: 50013
+			};
+			const getLazy = function(filter) {
+				const fromCache = external_PluginApi_namespaceObject.WebpackModules.getModule(filter);
+				if (fromCache) return Promise.resolve(fromCache);
+				return new Promise((resolve => {
+					const cancel = external_PluginApi_namespaceObject.WebpackModules.addListener((m => {
+						const matches = [m, m?.default];
+						for (let i = 0; i < matches.length; i++) {
+							const match = filter(matches[i]);
+							if (!match) continue;
+							resolve(matches[i]);
+							cancel();
+							break;
+						}
+					}));
+				}));
+			};
+			class BetterBannedUsers extends(external_BasePlugin_default()) {
+				constructor(...args) {
+					super(...args);
+					BetterBannedUsers_defineProperty(this, "promises", {
+						cancelled: false,
+						cancel() {
+							this.cancelled = true;
+						}
+					});
+					BetterBannedUsers_defineProperty(this, "regex", {
+						userId: /^\d{15}/
+					});
+				}
+				async banUserWithCommand(guild, userId, reason) {
+					try {
+						await GuildActions.banUser(guild.id, userId, void 0, `${stores_namespaceObject.Users.getCurrentUser().tag}: ${reason ? reason : "No reason provided."}`);
+					} catch (error) {
+						external_PluginApi_namespaceObject.Logger.error(`Failed to ban ${userId}:\n`, error);
+						return switchCase(error?.body?.code, [
+							[APIErrors.MISSING_PERMISSIONS, "Sorry, but you don't have enough power to perform that action. 😕"],
+							[APIErrors.UNKOWN_USER, "Sorry, but i couldn't find that user. Are you sure it's their user id? 🤔"]
+						], "Something when wrong when i tried to ban them. Check your console for more details.");
+					}
+					return `Banned <@!${userId}> from this server. 🔨`;
+				}
+				async unbanUserWithCommand(guild, userId) {
+					try {
+						await GuildActions.unbanUser(guild.id, userId);
+					} catch (error) {
+						external_PluginApi_namespaceObject.Logger.error(`Failed to unban ${userId}:\n`, error);
+						return switchCase(error?.body?.code, [
+							[APIErrors.MISSING_PERMISSIONS, "Sorry, but you don't have enough power to perform that action. 😕"],
+							[APIErrors.UNKOWN_USER, "Sorry, but i couldn't find that user. Are you sure it's their user id? 🤔"]
+						], "Something when wrong when i tried to unban them. Check your console for more details.");
+					}
+					return `Unbanned <@!${userId}> from this server. ✅`;
+				}
+				async onStart() {
+					external_StyleLoader_default().inject();
+					this.registerCommands();
+					this.patchBannedUsers();
+					this.patchBannedUser();
+				}
+				registerCommands() {
+					commands.registerCommand(this.getName(), {
+						id: "ban-user",
+						name: "ban",
+						predicate: ({
+							guild
+						}) => modules_namespaceObject.PermissionUtils.can(constants_namespaceObject.Permissions.BAN_MEMBERS, stores_namespaceObject.Guilds.getGuild(guild?.id), stores_namespaceObject.Users.getCurrentUser()),
+						description: "Ban someone from this guild. Click the options to choose which method you want.",
+						execute: (props, {
+							guild,
+							channel
+						}) => {
+							const userId = props.userId ? props.userId[0].text : props.mention?.[0]?.userId;
+							if (!this.regex.userId.test(userId?.trim?.())) return clyde.sendMessage(channel.id, {
+								content: "You must specify a user!"
+							});
+							this.banUserWithCommand(guild, userId, props.reason?.[0]?.text).then((message => {
+								clyde.sendMessage(channel.id, {
+									content: message
+								});
+							}));
+						},
+						options: [{
+							type: OptionTypes.USER,
+							name: "mention",
+							description: "The user mention from chat.",
+							required: false
+						}, {
+							type: OptionTypes.STRING,
+							name: "userId",
+							description: "The user id string.",
+							required: false
+						}, {
+							type: OptionTypes.STRING,
+							name: "reason",
+							description: "Select a reason why you want to ban them.",
+							required: false
+						}]
+					});
+					commands.registerCommand(this.getName(), {
+						id: "unban-user",
+						name: "unban",
+						description: "Unbans a user by id or mention from this guild. Click the options to choose the method you want.",
+						predicate: ({
+							guild
+						}) => modules_namespaceObject.PermissionUtils.can(constants_namespaceObject.Permissions.BAN_MEMBERS, stores_namespaceObject.Guilds.getGuild(guild?.id), stores_namespaceObject.Users.getCurrentUser()),
+						execute: (props, {
+							guild,
+							channel
+						}) => {
+							const userId = props.userId ? props.userId[0].text : props.mention?.[0]?.userId;
+							if (!this.regex.userId.test(userId?.trim?.())) return clyde.sendMessage(channel.id, {
+								content: "You must specify a user!"
+							});
+							this.unbanUserWithCommand(guild, userId, props.reason?.[0]?.text).then((message => {
+								clyde.sendMessage(channel.id, {
+									content: message
+								});
+							}));
+						},
+						options: [{
+							type: OptionTypes.USER,
+							name: "mention",
+							description: "The user mention from chat."
+						}, {
+							type: OptionTypes.STRING,
+							name: "userId",
+							description: "The user id string."
+						}]
+					});
+				}
+				getSettingsPanel() {
+					return BetterBannedUsers_React.createElement(SettingsPanel, null);
+				}
+				getSingleClass(...props) {
+					return "." + external_PluginApi_namespaceObject.WebpackModules.getByProps(...props)?.[props[0]];
+				}
+				async patchBannedUser() {
+					const classes = await getLazy(external_PluginApi_namespaceObject.Filters.byProperties(["bannedUser"]));
+					const BannedUser = await external_PluginApi_namespaceObject.ReactComponents.getComponentByName("BannedUser", `.${classes.bannedUser}`);
+					if (this.promises.cancelled) return;
+					external_PluginApi_namespaceObject.Patcher.after(BannedUser.component.prototype, "render", ((that, _, res) => {
+						if (this.promises.cancelled) return;
+						if (!Array.isArray(res?.props?.children)) return;
+						const {
+							guild,
+							user,
+							ban
+						} = that.props;
+						const name = res.props.children.pop();
+						res.props.children.push(BetterBannedUsers_React.createElement("div", {
+							className: banned.Z.wrapper
+						}, name, settings.get("showReason", true) ? BetterBannedUsers_React.createElement("span", {
+							className: banned.Z.banReason
+						}, ban.reason ?? i18n_namespaceObject.Messages.NO_BAN_REASON) : null), settings.get("quickUnban", true) ? BetterBannedUsers_React.createElement(RemoveButton, {
+							className: banned.Z.remove,
+							onClick: preventPropagation((() => {
+								this.unbanUser(guild.id, user);
+							}))
+						}) : null);
+					}));
+					BannedUser.forceUpdateAll();
+				}
+				async patchBannedUsers() {
+					const GuildSettingsBans = await getLazy(external_PluginApi_namespaceObject.Filters.byDisplayName("FluxContainer(GuildSettingsBans)"));
+					const BannedUsers = GuildSettingsBans.prototype.render.call({
+						memoizedGetStateFromStores: constants_namespaceObject.NOOP
+					}).type;
+					if (this.promises.cancelled) return;
+					external_PluginApi_namespaceObject.Patcher.before(BannedUsers.prototype, "render", (that => {
+						if (this.promises.cancelled) return;
+						const order = settings.get("order", {
+							value: "descending",
+							label: "Descending"
+						});
+						const sort = settings.get("sort", {
+							value: "username",
+							label: "Name"
+						});
+						that.getSortedBans = Util.cachedFunction(((bans, searchQuery) => {
+							if (!bans) return [];
+							const userIds = external_window_default()(bans).keys();
+							if (~userIds.indexOf(searchQuery)) return [stores_namespaceObject.Users.getUser(searchQuery)];
+							let users = userIds.map(stores_namespaceObject.Users.getUser);
+							const tester = new RegExp(`^${external_window_default().escape(searchQuery)}`, "i");
+							if (searchQuery) users = users.filter((user => tester.test(user?.username) || tester.test(bans[user.id]?.reason)));
+							users = users.sortBy((e => "username" === sort.value ? e.username.toLowerCase() : bans[e.id]?.reason?.length ?? 0));
+							if ("ascending" === order.value) users = users.reverse();
+							return users.value();
+						}));
+						const original = that.renderSection;
+						that.renderSection = function() {
+							const res = original(...arguments);
+							const message = res.props.children[0].props.children[0];
+							res.props.children[0] = BetterBannedUsers_React.createElement(components_namespaceObject.Flex, {
+								direction: components_namespaceObject.Flex.Direction.VERTICAL,
+								className: banned.Z.container
+							}, message, BetterBannedUsers_React.createElement(components_namespaceObject.Flex, {
+								direction: components_namespaceObject.Flex.Direction.HORIZONTAL,
+								justify: components_namespaceObject.Flex.Justify.END
+							}, BetterBannedUsers_React.createElement(Select, {
+								label: "Order",
+								value: order,
+								options: [{
+									label: "Ascending",
+									value: "ascending"
+								}, {
+									label: "Descending",
+									value: "descending"
+								}],
+								onChange: value => {
+									that.forceUpdate();
+									settings.set("order", value);
+								}
+							}), BetterBannedUsers_React.createElement(Select, {
+								label: "Sort by",
+								value: sort,
+								options: [{
+									label: "Name",
+									value: "username"
+								}, {
+									label: "Reason length",
+									value: "reason_length"
+								}],
+								onChange: value => {
+									that.forceUpdate();
+									settings.set("sort", value);
+								}
+							})), Object.keys(Object(that.props.bans)).length ? BetterBannedUsers_React.createElement(SearchBar, {
+								onChange: value => {
+									GuildSettings.setSearchQuery(value);
+								},
+								onClear: () => GuildSettings.setSearchQuery(""),
+								placeholder: i18n_namespaceObject.Messages.BANS_SEARCH_PLACEHOLDER,
+								size: SearchBar.Sizes.LARGE,
+								query: that.props.searchQuery,
+								className: banned.Z.search
+							}) : null);
+							return res;
+						};
+					}));
+				}
+				async unbanUser(guildId, user) {
+					await GuildActions.unbanUser(guildId, user.id);
+					external_PluginApi_namespaceObject.Toasts.success(`Unbanned <span style="color: #5865f2;">${user.tag}</span>!`);
+				}
+				onStop() {
+					external_StyleLoader_default().remove();
+					external_PluginApi_namespaceObject.Patcher.unpatchAll();
+					commands.unregisterAllCommands(this.getName());
+					this.promises.cancel();
+				}
+			}
+		})();
 		module.exports.LibraryPluginHack = __webpack_exports__;
 	})();
 	const PluginExports = module.exports.LibraryPluginHack;
