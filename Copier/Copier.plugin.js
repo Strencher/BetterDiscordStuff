@@ -668,7 +668,8 @@ const buildPlugin = ([Plugin, Api]) => {
         onStart() {
             PluginUtilities.addStyle(config.info.name, this.css);
 
-            if (BdApi.Plugins.get("ZeresPluginLibrary").version.indexOf("2") !== 0) {
+            const library = BdApi.Plugins.get("ZeresPluginLibrary");
+            if (library && (library.version.indexOf("2") !== 0)) {
                 if (typeof (PluginUpdates) !== "undefined") PluginUpdates.checkAll();
 
                 return BdApi.alert("Outdated Library", "Your ZeresPluginLibrary plugin is outdated. Please update it. https://betterdiscord.app/Download?id=9");
