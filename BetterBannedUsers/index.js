@@ -1,5 +1,5 @@
 import BasePlugin from "@zlibrary/plugin";
-import {Patcher, ReactComponents, WebpackModules, Toasts, Logger} from "@zlibrary";
+import {Filters, Patcher, ReactComponents, WebpackModules, Toasts, Logger} from "@zlibrary";
 import styles from "./banned.scss";
 import style from "styles";
 import Settings from "./settings";
@@ -28,6 +28,26 @@ const Util = WebpackModules.getByProps("cachedFunction");
 const APIErrors = {
 	UNKOWN_USER: 10013,
 	MISSING_PERMISSIONS: 50013
+};
+
+const getLazy = function (filter) {
+    const fromCache = WebpackModules.getModule(filter);
+    if (fromCache) return Promise.resolve(fromCache);
+
+    return new Promise(resolve => {
+        const cancel = WebpackModules.addListener((m) => {
+            const matches = [m, m?.default];
+
+            for (let i = 0; i < matches.length; i++) {
+                const match = filter(matches[i]);
+                if (!match) continue;
+
+                resolve(matches[i]);
+                cancel();
+                break;
+            }
+        });
+    });
 }
 
 export default class BetterBannedUsers extends BasePlugin {
@@ -66,13 +86,13 @@ export default class BetterBannedUsers extends BasePlugin {
 		return `Unbanned <@!${userId}> from this server. ✅`;
 	}
 
-	onStart() {
+	async onStart() {
 		style.inject();
-		this.patchBannedUser();
-		this.patchBannedUsers();
-
 		// Commands
 		this.registerCommands();
+		this.patchBannedUsers();
+		this.patchBannedUser();
+
 	}
 
 	registerCommands() {
@@ -158,7 +178,9 @@ export default class BetterBannedUsers extends BasePlugin {
 	}
 
 	async patchBannedUser() {
-		const BannedUser = await ReactComponents.getComponentByName("BannedUser", this.getSingleClass(["bannedUser"]));
+		const classes = await getLazy(Filters.byProperties(["bannedUser"]));
+		const BannedUser = await ReactComponents.getComponentByName("BannedUser", `.${classes.bannedUser}`);
+		if (this.promises.cancelled) return;
 
 		Patcher.after(BannedUser.component.prototype, "render", (that, _, res) => {
 			if (this.promises.cancelled) return;
@@ -189,7 +211,9 @@ export default class BetterBannedUsers extends BasePlugin {
 	}
 
 	async patchBannedUsers() {
-		const BannedUsers = WebpackModules.getByDisplayName("FluxContainer(GuildSettingsBans)").prototype.render.call({memoizedGetStateFromStores: NOOP}).type;
+		const GuildSettingsBans = await getLazy(Filters.byDisplayName("FluxContainer(GuildSettingsBans)"));
+		const BannedUsers = GuildSettingsBans.prototype.render.call({memoizedGetStateFromStores: NOOP}).type;
+		if (this.promises.cancelled) return;
 
 		Patcher.before(BannedUsers.prototype, "render", that => {
 			if (this.promises.cancelled) return;
@@ -276,5 +300,6 @@ export default class BetterBannedUsers extends BasePlugin {
 		style.remove();
 		Patcher.unpatchAll();
 		Commands.unregisterAllCommands(this.getName());
+		this.promises.cancel();
 	}
 }
