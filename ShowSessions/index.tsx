@@ -1,12 +1,11 @@
 /// <reference path="../types/main.d.ts" />
-import { Logger, Patcher, ReactComponents, Toasts, Utilities, WebpackModules } from "@zlibrary";
+import {Filters, Logger, Patcher, ReactComponents, Toasts, Utilities, WebpackModules} from "@zlibrary";
 import BasePlugin from "@zlibrary/plugin";
 import Clyde from "common/apis/clyde";
 import Commands from "common/apis/commands";
 import SessionsList from "./components/list";
 import type SessionsStoreType from "./@types/sessionstore";
 import styles from "styles";
-import React from "react";
 import _ from "lodash";
 import {switchCase} from "common/util/any";
 import {Session} from "./@types/sessionstore";
@@ -16,6 +15,7 @@ import Settings from "./settings";
 import SettingsPanel from "./components/Settings";
 import {Info} from "@discord/stores";
 import {Tooltip} from "@discord/components";
+import {getLazy, wrapInHooks} from "./util";
 
 enum NoticeTypes {
 	DESKTOP = 1,
@@ -274,17 +274,16 @@ export default class ShowSessions extends BasePlugin {
 	}
 
 	async patchAccountSection() {
-		const UserSettingsAccount = await ReactComponents.getComponentByName("UserSettingsAccount", "." + WebpackModules.getByProps("contentColumnDefault").contentColumnDefault + " > div");
-
-		Patcher.after(UserSettingsAccount.component.prototype, "render", (_this, _, res) => {
+		const ConnectedUserAccountSettings = await getLazy(Filters.byDisplayName("ConnectedUserAccountSettings"));
+		const UserSettingsAccount = wrapInHooks(() => ConnectedUserAccountSettings({})?.type);
+		
+		Patcher.after(UserSettingsAccount.prototype, "render", (_this, _, res) => {
 			if (!Array.isArray(res?.props?.children)) return;
 
 			res.props.children.push(
 				<SessionsList />
 			);
 		});
-
-		UserSettingsAccount.forceUpdateAll();
 	}
 
 	onStop() {
