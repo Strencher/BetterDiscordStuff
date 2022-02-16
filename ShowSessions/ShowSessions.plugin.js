@@ -1,6 +1,6 @@
 /**
  * @name ShowSessions
- * @version 1.2.0
+ * @version 1.3.0
  * @description Shows your current sessions with a chat command '/sessions' or in the accounts panel.
  * @author Strencher
  * @source https://github.com/Strencher/BetterDiscordStuff/tree/master/ShowSessions
@@ -32,7 +32,7 @@
 const config = {
 	"info": {
 		"name": "ShowSessions",
-		"version": "1.2.0",
+		"version": "1.3.0",
 		"description": "Shows your current sessions with a chat command '/sessions' or in the accounts panel.",
 		"authors": [{
 			"name": "Strencher",
@@ -46,8 +46,7 @@ const config = {
 			"type": "fixed",
 			"title": "Fixes, Fixes, Fixes...",
 			"items": [
-				"Flipped settings.. should now work as intended!",
-				"Made notifications a bit less spammy, check settings for more."
+				"Fixed settings ui"
 			]
 		},
 		{
@@ -389,811 +388,6 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
 				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
 			},
-			526: (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-				__webpack_require__.r(__webpack_exports__);
-				__webpack_require__.d(__webpack_exports__, {
-					default: () => ShowSessions
-				});
-				const external_PluginApi_namespaceObject = PluginApi;
-				const external_BasePlugin_namespaceObject = BasePlugin;
-				var external_BasePlugin_default = __webpack_require__.n(external_BasePlugin_namespaceObject);
-				const DefaultMessage = {
-					state: "SENT",
-					author: {
-						avatar: "betterdiscord",
-						id: "81388395867156480",
-						bot: true,
-						discriminator: "5000",
-						username: "BetterDiscord"
-					},
-					content: "Hello <:zere_zoom:477825238172958730>"
-				};
-				const MessageCreators = BdApi.findModuleByProps("createBotMessage");
-				const MessageActions = BdApi.findModuleByProps("receiveMessage");
-				const AvatarDefaults = BdApi.findModuleByProps("BOT_AVATARS");
-				if (AvatarDefaults?.BOT_AVATARS && !AvatarDefaults.BOT_AVATARS.betterdiscord) AvatarDefaults.BOT_AVATARS.betterdiscord = "https://github.com/BetterDiscord.png";
-				function sendMessage(channelId, message) {
-					MessageActions.receiveMessage(channelId, Object.assign({}, MessageCreators.createBotMessage(channelId, message?.content), DefaultMessage, message));
-				}
-				const Clyde = {
-					sendMessage,
-					DefaultMessage
-				};
-				const clyde = Clyde;
-				const DiscordCommands = BdApi.findModuleByProps("BUILT_IN_COMMANDS");
-				const DiscordCommandTypes = BdApi.findModuleByProps("ApplicationCommandType");
-				const Types = DiscordCommandTypes.ApplicationCommandType;
-				const OptionTypes = DiscordCommandTypes.ApplicationCommandOptionType;
-				const PermissionTypes = DiscordCommandTypes.ApplicationCommandPermissionType;
-				if (!DiscordCommands.BUILT_IN_SECTIONS["betterdiscord"]) DiscordCommands.BUILT_IN_SECTIONS["betterdiscord"] = {
-					icon: "https://github.com/BetterDiscord.png",
-					id: "betterdiscord",
-					name: "BetterDiscord",
-					type: 0
-				};
-				function registerCommand(caller, options) {
-					const cmd = Object.assign({}, options, {
-						__registerId: caller,
-						applicationId: "betterdiscord",
-						type: Types.BOT,
-						target: 1
-					});
-					DiscordCommands.BUILT_IN_COMMANDS.push(cmd);
-					return () => {
-						const index = DiscordCommands.BUILT_IN_COMMANDS.indexOf(cmd);
-						if (index < 0) return false;
-						DiscordCommands.BUILT_IN_COMMANDS.splice(index, 1);
-					};
-				}
-				function unregisterAllCommands(caller) {
-					let index = DiscordCommands.BUILT_IN_COMMANDS.findIndex((cmd => cmd.__registerId === caller));
-					while (index > -1) {
-						DiscordCommands.BUILT_IN_COMMANDS.splice(index, 1);
-						index = DiscordCommands.BUILT_IN_COMMANDS.findIndex((cmd => cmd.__registerId === caller));
-					}
-				}
-				const Commands = {
-					registerCommand,
-					unregisterAllCommands
-				};
-				const commands = Commands;
-				const external_BdApi_React_namespaceObject = BdApi.React;
-				var external_BdApi_React_default = __webpack_require__.n(external_BdApi_React_namespaceObject);
-				var list = __webpack_require__(700);
-				const forms_namespaceObject = Modules["@discord/forms"];
-				const external_window_namespaceObject = window._;
-				var external_window_default = __webpack_require__.n(external_window_namespaceObject);
-				const constants_namespaceObject = Modules["@discord/constants"];
-				const stores_namespaceObject = Modules["@discord/stores"];
-				const flux_namespaceObject = Modules["@discord/flux"];
-				const components_namespaceObject = Modules["@discord/components"];
-				const native_namespaceObject = Modules["@discord/native"];
-				const modal_namespaceObject = Modules["@discord/modal"];
-				const SessionsStore = external_PluginApi_namespaceObject.WebpackModules.getByProps("getActiveSession");
-				const {
-					TextBadge
-				} = external_PluginApi_namespaceObject.WebpackModules.getByProps("TextBadge");
-				const {
-					AnimatedAvatar,
-					Sizes: AvatarSizes
-				} = external_PluginApi_namespaceObject.WebpackModules.getByProps("AnimatedAvatar");
-				const AssetUtils = external_PluginApi_namespaceObject.WebpackModules.getByProps("getAssetImage");
-				const ChangePasswordModal = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("ChangePasswordModal");
-				const {
-					RichPresenceSection
-				} = external_PluginApi_namespaceObject.WebpackModules.getByProps("RichPresenceSection");
-				const StatusModule = external_PluginApi_namespaceObject.WebpackModules.getByProps("humanizeStatus");
-				function CopyButton({
-					copyText,
-					copiedText,
-					onClick
-				}) {
-					const [copied, setCopied] = (0, external_BdApi_React_namespaceObject.useState)(false);
-					return external_BdApi_React_default().createElement(components_namespaceObject.Button, {
-						onClick: e => {
-							setCopied(true);
-							setTimeout((() => setCopied(false)), 1e3);
-							onClick(e);
-						},
-						color: copied ? components_namespaceObject.Button.Colors.GREEN : components_namespaceObject.Button.Colors.BRAND,
-						size: components_namespaceObject.Button.Sizes.SMALL,
-						look: components_namespaceObject.Button.Looks.FILLED
-					}, copied ? copiedText : copyText);
-				}
-				function Item({
-					session
-				}) {
-					const {
-						active,
-						activities,
-						clientInfo,
-						sessionId,
-						status
-					} = (0, flux_namespaceObject.useStateFromStores)([SessionsStore], (() => SessionsStore.getSessionById(session)));
-					return external_BdApi_React_default().createElement("div", {
-						className: list.Z.item
-					}, external_BdApi_React_default().createElement("div", {
-						className: list.Z.headerContainer
-					}, external_BdApi_React_default().createElement("b", null, external_window_default().upperFirst(clientInfo.os)), external_BdApi_React_default().createElement("div", {
-						className: list.Z.badgesContainer
-					}, active && external_BdApi_React_default().createElement(components_namespaceObject.TooltipContainer, {
-						position: "top",
-						text: "The session is marked as an active session."
-					}, external_BdApi_React_default().createElement(TextBadge, {
-						color: constants_namespaceObject.Colors.BRAND_NEW_500,
-						text: "ACTIVE"
-					})), stores_namespaceObject.Info.getSessionId() === sessionId && external_BdApi_React_default().createElement(components_namespaceObject.TooltipContainer, {
-						position: "top",
-						text: "This is the current session."
-					}, external_BdApi_React_default().createElement(TextBadge, {
-						color: constants_namespaceObject.Colors.STATUS_GREEN_500,
-						text: "CURRENT"
-					}))), external_BdApi_React_default().createElement("div", {
-						className: list.Z.avatarWrapper
-					}, external_BdApi_React_default().createElement(AnimatedAvatar, {
-						isMobile: "mobile" === clientInfo.client,
-						status,
-						isTyping: false,
-						src: stores_namespaceObject.Users.getCurrentUser().getAvatarURL(null, 32, true),
-						size: AvatarSizes.SIZE_32,
-						statusTooltip: true
-					}))), external_BdApi_React_default().createElement("div", {
-						className: list.Z.body
-					}, external_BdApi_React_default().createElement("div", {
-						className: list.Z.activities
-					}, activities.length ? activities.map((ac => external_BdApi_React_default().createElement(RichPresenceSection, {
-						activity: ac,
-						getAssetImage: AssetUtils.getAssetImage
-					}))) : external_BdApi_React_default().createElement("span", {
-						className: list.Z.noActivity
-					}, "No activities running.")), external_BdApi_React_default().createElement(forms_namespaceObject.FormDivider, {
-						className: list.Z.divider
-					}), external_BdApi_React_default().createElement("div", {
-						className: list.Z.sessionInfo,
-						key: "sessionId"
-					}, external_BdApi_React_default().createElement("b", null, "ID:"), external_BdApi_React_default().createElement("code", {
-						className: "inline"
-					}, sessionId)), external_BdApi_React_default().createElement("div", {
-						className: list.Z.sessionInfo,
-						key: "sessionClient"
-					}, external_BdApi_React_default().createElement("b", null, "Client:"), external_BdApi_React_default().createElement("span", null, external_window_default().upperFirst(clientInfo.client))), external_BdApi_React_default().createElement("div", {
-						className: list.Z.sessionInfo,
-						key: "sessionOs"
-					}, external_BdApi_React_default().createElement("b", null, "OS:"), external_BdApi_React_default().createElement("span", null, external_window_default().upperFirst(clientInfo.os))), external_BdApi_React_default().createElement("div", {
-						className: list.Z.sessionInfo,
-						key: "sessionStatus"
-					}, external_BdApi_React_default().createElement("b", null, "Status:"), external_BdApi_React_default().createElement("span", null, StatusModule.humanizeStatus(status)))), external_BdApi_React_default().createElement(components_namespaceObject.Flex, {
-						className: list.Z.footer,
-						justify: components_namespaceObject.Flex.Justify.END
-					}, external_BdApi_React_default().createElement(components_namespaceObject.Button, {
-						look: components_namespaceObject.Button.Looks.LINK,
-						color: components_namespaceObject.Button.Colors.RED,
-						size: components_namespaceObject.Button.Sizes.SMALL,
-						onClick: () => {
-							(0, modal_namespaceObject.openModal)((props => external_BdApi_React_default().createElement(ChangePasswordModal, props)));
-						}
-					}, "Not you?"), external_BdApi_React_default().createElement(CopyButton, {
-						copiedText: "Copied!",
-						copyText: "Copy JSON",
-						onClick: () => {
-							(0, native_namespaceObject.copy)(JSON.stringify(SessionsStore.getSessionById(session), null, "\t"));
-						}
-					})));
-				}
-				function SessionsList() {
-					const sessions = (0, flux_namespaceObject.useStateFromStores)([SessionsStore], (() => SessionsStore.getSessions()));
-					const keys = Object.keys(sessions).filter((e => "all" !== e));
-					return external_BdApi_React_default().createElement(external_BdApi_React_default().Fragment, null, external_BdApi_React_default().createElement(forms_namespaceObject.FormDivider, {
-						className: list.Z.listDivider
-					}), external_BdApi_React_default().createElement(forms_namespaceObject.FormTitle, {
-						tag: "h1"
-					}, keys.length ? `Active Sessions [${keys.length}]` : "No active Sessions"), external_BdApi_React_default().createElement("div", {
-						className: list.Z.sessionsList
-					}, keys.map((s => external_BdApi_React_default().createElement(Item, {
-						session: s
-					})))));
-				}
-				const external_StyleLoader_namespaceObject = StyleLoader;
-				var external_StyleLoader_default = __webpack_require__.n(external_StyleLoader_namespaceObject);
-				function switchCase(caze, cases, defaultValue) {
-					for (const caseTest of cases)
-						if (Array.isArray(caseTest)) {
-							const [tester, value] = caseTest;
-							if ("function" === typeof tester) {
-								if (tester(caze)) {
-									if ("function" === typeof value) return value(caze);
-									return value;
-								}
-							} else if (Object.is(caze, tester)) {
-								if ("function" === typeof value) return value(caze);
-								return value;
-							}
-						} else if ("object" === typeof caseTest)
-						if ("function" === typeof caseTest.test) {
-							if (caseTest.test(caze)) return caseTest.value;
-						} else if (Object.is(caze, caseTest.test)) return caseTest.value;
-					return defaultValue;
-				}
-				function createStore(state) {
-					const listeners = new Set;
-					const api = {
-						getState() {
-							return state;
-						},
-						setState(partial) {
-							const partialState = "function" === typeof partial ? partial(state) : partial;
-							state = Object.assign({}, state, partialState);
-							listeners.forEach((listener => {
-								listener(state);
-							}));
-						},
-						get listeners() {
-							return listeners;
-						},
-						on(listener) {
-							if (listeners.has(listener)) return;
-							listeners.add(listener);
-							return () => listeners.delete(listener);
-						},
-						off(listener) {
-							return listeners.delete(listener);
-						}
-					};
-					return [function(collector = (_ => _)) {
-						const forceUpdate = (0, external_BdApi_React_namespaceObject.useReducer)((e => e + 1), 0)[1];
-						(0, external_BdApi_React_namespaceObject.useEffect)((() => {
-							const handler = () => forceUpdate();
-							listeners.add(handler);
-							return () => listeners.delete(handler);
-						}), []);
-						return collector(api.getState());
-					}, api];
-				}
-				var modal = __webpack_require__(602);
-				function _extends() {
-					_extends = Object.assign || function(target) {
-						for (var i = 1; i < arguments.length; i++) {
-							var source = arguments[i];
-							for (var key in source)
-								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-						}
-						return target;
-					};
-					return _extends.apply(this, arguments);
-				}
-				const [useStore, Api] = createStore({
-					recent: []
-				});
-				const Header = external_PluginApi_namespaceObject.WebpackModules.getModule((m => "Header" === m.displayName && m.Tags));
-				const {
-					TextBadge: notification_TextBadge
-				} = external_PluginApi_namespaceObject.WebpackModules.getByProps("TextBadge");
-				const {
-					AnimatedAvatar: notification_AnimatedAvatar,
-					Sizes: notification_AvatarSizes
-				} = external_PluginApi_namespaceObject.WebpackModules.getByProps("AnimatedAvatar");
-				const notification_StatusModule = external_PluginApi_namespaceObject.WebpackModules.getByProps("humanizeStatus");
-				function CardItem({
-					session,
-					type,
-					timestamp,
-					props
-				}) {
-					if (!session) return null;
-					const {
-						active,
-						activities,
-						clientInfo,
-						status
-					} = session;
-					return external_BdApi_React_default().createElement("div", {
-						className: modal.Z.item
-					}, external_BdApi_React_default().createElement("div", {
-						className: modal.Z.headerContainer
-					}, external_BdApi_React_default().createElement("b", null, external_window_default().upperFirst(clientInfo.os)), external_BdApi_React_default().createElement("div", {
-						className: modal.Z.badgesContainer
-					}, active && external_BdApi_React_default().createElement(components_namespaceObject.TooltipContainer, {
-						position: "top",
-						text: "The session is marked as an active session."
-					}, external_BdApi_React_default().createElement(notification_TextBadge, {
-						color: constants_namespaceObject.Colors.BRAND_NEW_500,
-						text: "ACTIVE"
-					})), stores_namespaceObject.Info.getSessionId() === session.sessionId && external_BdApi_React_default().createElement(components_namespaceObject.TooltipContainer, {
-						position: "top",
-						text: "This is the current session."
-					}, external_BdApi_React_default().createElement(notification_TextBadge, {
-						color: constants_namespaceObject.Colors.STATUS_GREEN_500,
-						text: "CURRENT"
-					}))), external_BdApi_React_default().createElement("div", {
-						className: modal.Z.avatarWrapper
-					}, external_BdApi_React_default().createElement(notification_AnimatedAvatar, {
-						isMobile: "mobile" === clientInfo.client,
-						status,
-						isTyping: false,
-						src: stores_namespaceObject.Users.getCurrentUser().getAvatarURL(null, 32, true),
-						size: notification_AvatarSizes.SIZE_32,
-						statusTooltip: true
-					}))), external_BdApi_React_default().createElement("div", {
-						className: modal.Z.message
-					}, (() => {
-						switch (type) {
-							case "added":
-								return `This session was added.`;
-							case "removed":
-								return `This session was removed.`;
-							case "changed":
-								return external_BdApi_React_default().createElement("span", null, "The ", external_BdApi_React_default().createElement("code", {
-									className: "inline"
-								}, props.property), " about this session was changed: ", props.from, " -", ">", " ", props.to);
-						}
-					})()), external_BdApi_React_default().createElement("div", {
-						className: modal.Z.body
-					}, external_BdApi_React_default().createElement("div", {
-						className: modal.Z.sessionInfo,
-						key: "timestamp"
-					}, external_BdApi_React_default().createElement("b", null, "Timestamp:"), external_BdApi_React_default().createElement("span", null, new Date(timestamp).toLocaleString())), external_BdApi_React_default().createElement("div", {
-						className: modal.Z.sessionInfo,
-						key: "activities"
-					}, external_BdApi_React_default().createElement("b", null, "Activities:"), external_BdApi_React_default().createElement("span", null, activities.length)), external_BdApi_React_default().createElement("div", {
-						className: modal.Z.sessionInfo,
-						key: "sessionId"
-					}, external_BdApi_React_default().createElement("b", null, "ID:"), external_BdApi_React_default().createElement("code", {
-						className: "inline"
-					}, session.sessionId)), external_BdApi_React_default().createElement("div", {
-						className: modal.Z.sessionInfo,
-						key: "sessionClient"
-					}, external_BdApi_React_default().createElement("b", null, "Client:"), external_BdApi_React_default().createElement("span", null, external_window_default().upperFirst(clientInfo.client))), external_BdApi_React_default().createElement("div", {
-						className: modal.Z.sessionInfo,
-						key: "sessionOs"
-					}, external_BdApi_React_default().createElement("b", null, "OS:"), external_BdApi_React_default().createElement("span", null, external_window_default().upperFirst(clientInfo.os))), external_BdApi_React_default().createElement("div", {
-						className: modal.Z.sessionInfo,
-						key: "sessionStatus"
-					}, external_BdApi_React_default().createElement("b", null, "Status:"), external_BdApi_React_default().createElement("span", null, notification_StatusModule.humanizeStatus(status)))));
-				}
-				function Modal(props) {
-					const entries = [...useStore((s => s.recent))].reverse();
-					const newest = entries.shift();
-					(0, external_BdApi_React_namespaceObject.useEffect)((() => {
-						Api.setState({
-							opened: true
-						});
-						return () => {
-							Api.setState({
-								opened: false
-							});
-						};
-					}), []);
-					return external_BdApi_React_default().createElement(modal_namespaceObject.ModalRoot, _extends({}, props, {
-						size: !!newest ? "medium" : "small"
-					}), external_BdApi_React_default().createElement(modal_namespaceObject.ModalHeader, {
-						separator: false
-					}, external_BdApi_React_default().createElement(Header, {
-						tag: Header.Tags.H1,
-						size: Header.Sizes.SIZE_20
-					}, "Sessions Logs"), external_BdApi_React_default().createElement(modal_namespaceObject.ModalCloseButton, {
-						onClick: props.onClose,
-						className: modal.Z.closeButton
-					})), external_BdApi_React_default().createElement(modal_namespaceObject.ModalContent, null, !newest ? external_BdApi_React_default().createElement("div", {
-						className: modal.Z.center
-					}, external_BdApi_React_default().createElement("p", null, "Nothing happened yet!")) : external_BdApi_React_default().createElement(external_BdApi_React_default().Fragment, null, external_BdApi_React_default().createElement(CardItem, _extends({}, newest, {
-						key: newest.session?.sessionId
-					})), entries.length > 0 && external_BdApi_React_default().createElement(forms_namespaceObject.FormDivider, {
-						className: modal.Z.newDivider
-					}), entries.map((props => external_BdApi_React_default().createElement(CardItem, _extends({}, props, {
-						key: props.session?.sessionId
-					})))))), external_BdApi_React_default().createElement(modal_namespaceObject.ModalFooter, null, external_BdApi_React_default().createElement(components_namespaceObject.Flex, {
-						justify: components_namespaceObject.Flex.Justify.END
-					}, external_BdApi_React_default().createElement(components_namespaceObject.Button, {
-						onClick: props.onClose
-					}, "Okay"))));
-				}
-				const modules_namespaceObject = Modules["@discord/modules"];
-				function _defineProperty(obj, key, value) {
-					if (key in obj) Object.defineProperty(obj, key, {
-						value,
-						enumerable: true,
-						configurable: true,
-						writable: true
-					});
-					else obj[key] = value;
-					return obj;
-				}
-				class SettingsManager extends flux_namespaceObject.Store {
-					constructor(pluginName, defaultSettings = {}) {
-						super(modules_namespaceObject.Dispatcher, {});
-						_defineProperty(this, "settings", void 0);
-						_defineProperty(this, "pluginName", void 0);
-						_defineProperty(this, "get", ((key, defaultValue) => this.settings[key] ?? defaultValue));
-						_defineProperty(this, "set", ((key, value) => {
-							this.settings[key] = value;
-							external_PluginApi_namespaceObject.PluginUtilities.saveSettings(this.pluginName, this.settings);
-							this.emitChange();
-							return value;
-						}));
-						this.pluginName = pluginName;
-						this.settings = external_PluginApi_namespaceObject.PluginUtilities.loadSettings(pluginName, defaultSettings);
-					}
-				}
-				const package_namespaceObject = JSON.parse('{"um":{"u2":"ShowSessions"}}');
-				const Settings = new SettingsManager(package_namespaceObject.um.u2);
-				const settings = Settings;
-				const icons_namespaceObject = Modules["@discord/icons"];
-				const utils_namespaceObject = Modules["@discord/utils"];
-				var category = __webpack_require__(911);
-				function Category({
-					label,
-					children,
-					className,
-					look = Category.Looks.DEFAULT
-				}) {
-					const [opened, toggle] = (0, external_BdApi_React_namespaceObject.useState)(false);
-					const isCompact = look === category.Z.compact;
-					return external_BdApi_React_default().createElement("div", {
-						className: (0, utils_namespaceObject.joinClassNames)(className, look, category.Z.category, {
-							[category.Z.opened]: opened
-						})
-					}, external_BdApi_React_default().createElement("div", {
-						className: category.Z.header,
-						onClick: () => toggle(!opened)
-					}, external_BdApi_React_default().createElement("div", {
-						className: category.Z.label
-					}, label), isCompact ? external_BdApi_React_default().createElement("div", {
-						className: category.Z.stroke
-					}) : null, external_BdApi_React_default().createElement(icons_namespaceObject.Caret, {
-						direction: opened ? icons_namespaceObject.Caret.Directions.DOWN : isCompact ? icons_namespaceObject.Caret.Directions.LEFT : icons_namespaceObject.Caret.Directions.RIGHT,
-						className: category.Z.caret
-					})), !isCompact ? external_BdApi_React_default().createElement("div", {
-						className: category.Z.divider
-					}) : null, external_BdApi_React_default().createElement("div", {
-						className: category.Z.content
-					}, opened ? children : null));
-				}
-				Category.Looks = {
-					COMPACT: category.Z.compact,
-					DEFAULT: category.Z["default"]
-				};
-				var components_settings = __webpack_require__(354);
-				function Settings_extends() {
-					Settings_extends = Object.assign || function(target) {
-						for (var i = 1; i < arguments.length; i++) {
-							var source = arguments[i];
-							for (var key in source)
-								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-						}
-						return target;
-					};
-					return Settings_extends.apply(this, arguments);
-				}
-				const SwitchItem = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("SwitchItem");
-				const RadioGroup = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("RadioGroup");
-				const SettingsOptions = [{
-					type: "switch",
-					name: "Show Updates",
-					note: "Shows updates about sessions.",
-					id: "showUpdates",
-					value: true
-				}, {
-					type: "category",
-					name: "Updates",
-					items: [{
-						id: "noticeType",
-						name: "Notice Type",
-						note: "Shows a desktop/toast notification when an update has triggered. Won't show the modal without being manually opened.",
-						type: "radio",
-						value: 1,
-						requires: ["showUpdates"],
-						options: [{
-							name: "Desktop Notifications",
-							desc: "Shows a normal desktop notification.",
-							value: 1
-						}, {
-							name: "Toast Notification",
-							desc: "Shows a normal toast. Note: this only stays temporarily!",
-							value: 2
-						}, {
-							name: "Prompt Modal",
-							desc: "Shows a modal with updates about your account's sessions.",
-							value: 3
-						}]
-					}, {
-						id: "showActivityUpdate",
-						name: "Activity Update",
-						note: "Shows a notice when the activity of a session has updated.",
-						type: "switch",
-						value: true,
-						requires: ["showUpdates"]
-					}, {
-						id: "showAdd",
-						name: "Session Add",
-						note: "Shows a notice when a session was added.",
-						type: "switch",
-						value: true,
-						requires: ["showUpdates"]
-					}, {
-						id: "showRemove",
-						name: "Session Remove",
-						note: "Shows a notice when a session was removed/closed.",
-						type: "switch",
-						value: true,
-						requires: ["showUpdates"]
-					}]
-				}];
-				function renderSetting(setting, forceUpdate) {
-					switch (setting.type) {
-						case "switch":
-							return external_BdApi_React_default().createElement(SwitchItem, Settings_extends({}, setting, {
-								children: setting.name,
-								value: settings.get(setting.id, setting.value),
-								disabled: setting.requires ? !setting.requires.every((id => settings.get(id, true))) : false,
-								onChange: value => {
-									settings.set(setting.id, value);
-									forceUpdate();
-								}
-							}));
-						case "category":
-							return external_BdApi_React_default().createElement(Category, {
-								look: Category.Looks.COMPACT,
-								label: setting.name,
-								key: setting.name
-							}, setting.items.map((item => renderSetting(item, forceUpdate))));
-						case "radio":
-							return external_BdApi_React_default().createElement(external_BdApi_React_default().Fragment, null, external_BdApi_React_default().createElement(forms_namespaceObject.FormItem, {
-								title: setting.name
-							}, external_BdApi_React_default().createElement(forms_namespaceObject.FormText, {
-								type: "description",
-								className: components_settings.Z.marginBottom8
-							}, setting.note), external_BdApi_React_default().createElement(RadioGroup, Settings_extends({}, setting, {
-								value: settings.get(setting.id, setting.value),
-								disabled: setting.requires ? !setting.requires.every((id => settings.get(id, true))) : false,
-								onChange: ({
-									value
-								}) => {
-									settings.set(setting.id, value);
-									forceUpdate();
-								}
-							}))), external_BdApi_React_default().createElement(forms_namespaceObject.FormDivider, {
-								className: components_settings.Z.divider
-							}));
-					}
-				}
-				function SettingsPanel() {
-					const [, forceUpdate] = (0, external_BdApi_React_namespaceObject.useReducer)((n => !n), true);
-					return external_BdApi_React_default().createElement(external_BdApi_React_default().Fragment, null, SettingsOptions.map((setting => renderSetting(setting, forceUpdate))));
-				}
-				function ShowSessions_extends() {
-					ShowSessions_extends = Object.assign || function(target) {
-						for (var i = 1; i < arguments.length; i++) {
-							var source = arguments[i];
-							for (var key in source)
-								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-						}
-						return target;
-					};
-					return ShowSessions_extends.apply(this, arguments);
-				}
-				function ShowSessions_defineProperty(obj, key, value) {
-					if (key in obj) Object.defineProperty(obj, key, {
-						value,
-						enumerable: true,
-						configurable: true,
-						writable: true
-					});
-					else obj[key] = value;
-					return obj;
-				}
-				var NoticeTypes;
-				(function(NoticeTypes) {
-					NoticeTypes[NoticeTypes["DESKTOP"] = 1] = "DESKTOP";
-					NoticeTypes[NoticeTypes["TOAST"] = 2] = "TOAST";
-					NoticeTypes[NoticeTypes["PROMPT"] = 3] = "PROMPT";
-				})(NoticeTypes || (NoticeTypes = {}));
-				const UserSettings = external_PluginApi_namespaceObject.WebpackModules.getByProps("updateAccount");
-				const ShowSessions_SessionsStore = external_PluginApi_namespaceObject.WebpackModules.getByProps("getActiveSession");
-				const Button = external_PluginApi_namespaceObject.WebpackModules.getByProps("BorderColors", "Colors");
-				class ShowSessions extends(external_BasePlugin_default()) {
-					constructor(...args) {
-						super(...args);
-						ShowSessions_defineProperty(this, "_changeListener", void 0);
-						ShowSessions_defineProperty(this, "_originalSessions", void 0);
-						ShowSessions_defineProperty(this, "_wasInitial", false);
-						ShowSessions_defineProperty(this, "_currentSessionId", null);
-						ShowSessions_defineProperty(this, "promises", {
-							cancelled: false,
-							cancel() {
-								this.cancelled = true;
-							}
-						});
-						ShowSessions_defineProperty(this, "openSettings", (() => {
-							UserSettings.setSection("My Account");
-						}));
-					}
-					get currentSession() {
-						return stores_namespaceObject.Info.getSessionId();
-					}
-					getSettingsPanel() {
-						return external_BdApi_React_default().createElement(SettingsPanel, null);
-					}
-					onStart() {
-						const DiscordCommands = external_PluginApi_namespaceObject.WebpackModules.getByProps("BUILT_IN_COMMANDS");
-						DiscordCommands.BUILT_IN_COMMANDS.push({
-							__registerId: this.getName(),
-							applicationId: "betterdiscord",
-							name: "sessions",
-							description: "Shows your account's active sessions.",
-							id: "get-sessions",
-							type: 1,
-							target: 1,
-							predicate: () => true,
-							execute: (_, {
-								channel
-							}) => {
-								try {
-									clyde.sendMessage(channel.id, {
-										content: switchCase(Object.entries(ShowSessions_SessionsStore.getSessions()), [
-											[e => e.length, sessions => "**__I found these clients are currently active:__**\n\n" + sessions.filter((([id]) => "all" !== id)).map((([id, info]) => `> **Id:** \`${id}\`\n\t\t\t\t\t\t\t\t\t> **Active:** \`${info.active}\`\n\t\t\t\t\t\t\t\t\t> **Status:** \`${info.status}\`\n\t\t\t\t\t\t\t\t\t> **Activities: [${info.activities.length}]**${(info.activities.length ? "\n>" : "") + info.activities.map((ac => `  **•** ${ac.name}: \`${ac.state}\``)).join("\n")}\n\t\t\t\t\t\t\t\t\t> **Client:**\n\t\t\t\t\t\t\t\t\t>  **•** os: \`${info.clientInfo.os}\`\n\t\t\t\t\t\t\t\t\t>  **•** client: \`${info.clientInfo.client}\`\n\t\t\t\t\t\t\t\t\t`)).join("\n")],
-											[e => !e.length, "I didn't find any active clients. Maybe discord didn't told me about them? :thinking:"]
-										])
-									});
-								} catch (error) {
-									console.error(error);
-								}
-							},
-							options: []
-						});
-						external_StyleLoader_default().inject();
-						external_PluginApi_namespaceObject.Utilities.suppressErrors(this.patchAccountSection.bind(this), "AccountSection patch")();
-						external_PluginApi_namespaceObject.Utilities.suppressErrors(this.patchHeaderBar.bind(this), "HeaderBar patch")();
-						ShowSessions_SessionsStore.addChangeListener(this._changeListener = external_PluginApi_namespaceObject.Utilities.suppressErrors((() => {
-							const data = ShowSessions_SessionsStore.getSessions();
-							this.handleChangeSessions(data);
-							this._originalSessions = data;
-							this._currentSessionId = this.currentSession;
-						}), "ShowSessions.onChange"));
-						this._originalSessions = ShowSessions_SessionsStore.getSessions();
-						this._currentSessionId = this.currentSession;
-					}
-					maybeOpenModal() {
-						const noticeType = settings.get("noticeType", NoticeTypes.DESKTOP);
-						switch (noticeType) {
-							case NoticeTypes.DESKTOP: {
-								const notification = new Notification("[ShowSessions] Session update", {
-									silent: false,
-									body: "Devices have been updated."
-								});
-								notification.addEventListener("click", this.openModal);
-							}
-							break;
-						case NoticeTypes.PROMPT:
-							if (Api.getState().opened) return;
-							this.openModal();
-							break;
-						case NoticeTypes.TOAST:
-							external_PluginApi_namespaceObject.Toasts.info("[ShowSessions] Devices update detected!");
-							break;
-						}
-					}
-					openModal() {
-						(0, modal_namespaceObject.openModal)((props => external_BdApi_React_default().createElement(Modal, props)));
-					}
-					handleChangeSessions(data) {
-						if (!settings.get("showUpdates", true)) return;
-						const filter = sessionId => {
-							if ("all" === sessionId) return false;
-							if (sessionId === this._currentSessionId) return false;
-							if (sessionId === this.currentSession) return false;
-							return true;
-						};
-						const sessionFilter = (session1, session2, key) => {
-							if ("activities" === key) return session1[key].length !== session2[key].length;
-							if ("clientInfo" === key) return !external_window_default().isEqual(session1[key], session2[key]);
-							return session1[key] !== session2[key];
-						};
-						const compareSessions = function(session1, session2) {
-							const keys = Object.keys(session1).slice(1);
-							const changes = keys.filter(sessionFilter.bind(null, session1, session2));
-							if (!changes.length) return [];
-							return changes.map((key => ({
-								property: key,
-								from: "activities" === key ? session1[key].length : JSON.stringify(session1[key]),
-								to: "activities" === key ? session2[key].length : JSON.stringify(session2[key]),
-								id: session1.sessionId
-							})));
-						};
-						const oldKeys = Object.keys(this._originalSessions).filter(filter);
-						const newKeys = Object.keys(data).filter(filter);
-						if (this._originalSessions[this.currentSession] && 0 === oldKeys.length && !this._wasInitial) {
-							this._wasInitial = true;
-							return;
-						}
-						if (oldKeys.length > newKeys.length && settings.get("showRemove", true)) {
-							const removed = oldKeys.filter((e => newKeys.indexOf(e) < 0));
-							external_PluginApi_namespaceObject.Logger.log("Detected closed session", removed);
-							const mapped = removed.map((removed => ({
-								type: "removed",
-								timestamp: new Date,
-								session: this._originalSessions[removed]
-							}))).filter((e => e.session));
-							Api.setState((state => ({
-								...state,
-								recent: state.recent.concat(mapped).slice(0, 30)
-							})));
-							this.maybeOpenModal();
-						} else if (oldKeys.length < newKeys.length && settings.get("showAdd", true)) {
-							const added = newKeys.filter((e => oldKeys.indexOf(e) < 0));
-							external_PluginApi_namespaceObject.Logger.log("Detected new session", added);
-							const mapped = added.map((added => ({
-								type: "added",
-								timestamp: new Date,
-								session: ShowSessions_SessionsStore.getSessionById(added)
-							}))).filter((e => e.session));
-							Api.setState((state => ({
-								...state,
-								recent: state.recent.concat(mapped).slice(0, 30)
-							})));
-							this.maybeOpenModal();
-						} else if (settings.get("showActivityUpdate", true)) {
-							const changes = newKeys.map((key => compareSessions(this._originalSessions[key], data[key]))).filter(Boolean);
-							if (!changes.length) return;
-							external_PluginApi_namespaceObject.Logger.log("Detected session change");
-							const flattened = changes.flatMap((changes => changes.map((change => ({
-								props: change,
-								type: "changed",
-								timestamp: new Date,
-								session: ShowSessions_SessionsStore.getSessionById(change.id)
-							})))));
-							Api.setState((state => ({
-								...state,
-								recent: state.recent.concat(flattened).slice(0, 30)
-							})));
-							this.maybeOpenModal();
-						}
-					}
-					async patchHeaderBar() {
-						const selector = `.${external_PluginApi_namespaceObject.WebpackModules.getByProps("title", "chat")?.title}`;
-						const headerBarClasses = external_PluginApi_namespaceObject.WebpackModules.getByProps("iconWrapper", "clickable");
-						const HeaderBarContainer = await external_PluginApi_namespaceObject.ReactComponents.getComponentByName("HeaderBarContainer", selector);
-						external_PluginApi_namespaceObject.Patcher.after(HeaderBarContainer.component.prototype, "render", ((_, __, ret) => {
-							const toolbar = ret?.props?.toolbar?.props?.children;
-							if (!Array.isArray(toolbar) || toolbar.some((e => "show-sessions" === e?.key))) return;
-							toolbar.splice(-2, 0, external_BdApi_React_default().createElement(components_namespaceObject.Tooltip, {
-								text: "Open Session logs",
-								key: "show-sessions",
-								position: "bottom"
-							}, (props => external_BdApi_React_default().createElement(Button, ShowSessions_extends({}, props, {
-								size: Button.Sizes.NONE,
-								look: Button.Looks.BLANK,
-								innerClassName: `${headerBarClasses.iconWrapper} ${headerBarClasses.clickable}`,
-								onClick: this.openModal,
-								className: "show-sessions-logs"
-							}), external_BdApi_React_default().createElement("svg", {
-								xmlns: "http://www.w3.org/2000/svg",
-								viewBox: "0 0 24 24",
-								height: "24",
-								width: "24"
-							}, external_BdApi_React_default().createElement("path", {
-								d: "M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z",
-								fill: "currentColor"
-							}))))));
-						}));
-						HeaderBarContainer.forceUpdateAll();
-					}
-					async patchAccountSection() {
-						const UserSettingsAccount = await external_PluginApi_namespaceObject.ReactComponents.getComponentByName("UserSettingsAccount", "." + external_PluginApi_namespaceObject.WebpackModules.getByProps("contentColumnDefault").contentColumnDefault + " > div");
-						external_PluginApi_namespaceObject.Patcher.after(UserSettingsAccount.component.prototype, "render", ((_this, _, res) => {
-							if (!Array.isArray(res?.props?.children)) return;
-							res.props.children.push(external_BdApi_React_default().createElement(SessionsList, null));
-						}));
-						UserSettingsAccount.forceUpdateAll();
-					}
-					onStop() {
-						commands.unregisterAllCommands(this.getName());
-						external_PluginApi_namespaceObject.Patcher.unpatchAll();
-						this.promises.cancel();
-						external_StyleLoader_default().remove();
-						ShowSessions_SessionsStore.removeChangeListener(this._changeListener);
-					}
-				}
-			},
 			645: module => {
 				module.exports = function(cssWithMappingToString) {
 					var list = [];
@@ -1225,6 +419,9 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					};
 					return list;
 				};
+			},
+			113: module => {
+				module.exports = BdApi.React;
 			}
 		};
 		var __webpack_module_cache__ = {};
@@ -1269,7 +466,856 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				});
 			};
 		})();
-		var __webpack_exports__ = __webpack_require__(526);
+		var __webpack_exports__ = {};
+		(() => {
+			__webpack_require__.r(__webpack_exports__);
+			__webpack_require__.d(__webpack_exports__, {
+				default: () => ShowSessions
+			});
+			const external_PluginApi_namespaceObject = PluginApi;
+			const external_BasePlugin_namespaceObject = BasePlugin;
+			var external_BasePlugin_default = __webpack_require__.n(external_BasePlugin_namespaceObject);
+			const DefaultMessage = {
+				state: "SENT",
+				author: {
+					avatar: "betterdiscord",
+					id: "81388395867156480",
+					bot: true,
+					discriminator: "5000",
+					username: "BetterDiscord"
+				},
+				content: "Hello <:zere_zoom:477825238172958730>"
+			};
+			const MessageCreators = BdApi.findModuleByProps("createBotMessage");
+			const MessageActions = BdApi.findModuleByProps("receiveMessage");
+			const AvatarDefaults = BdApi.findModuleByProps("BOT_AVATARS");
+			if (AvatarDefaults?.BOT_AVATARS && !AvatarDefaults.BOT_AVATARS.betterdiscord) AvatarDefaults.BOT_AVATARS.betterdiscord = "https://github.com/BetterDiscord.png";
+			function sendMessage(channelId, message) {
+				MessageActions.receiveMessage(channelId, Object.assign({}, MessageCreators.createBotMessage(channelId, message?.content), DefaultMessage, message));
+			}
+			const Clyde = {
+				sendMessage,
+				DefaultMessage
+			};
+			const clyde = Clyde;
+			const DiscordCommands = BdApi.findModuleByProps("BUILT_IN_COMMANDS");
+			const DiscordCommandTypes = BdApi.findModuleByProps("ApplicationCommandType");
+			const Types = DiscordCommandTypes.ApplicationCommandType;
+			const OptionTypes = DiscordCommandTypes.ApplicationCommandOptionType;
+			const PermissionTypes = DiscordCommandTypes.ApplicationCommandPermissionType;
+			if (!DiscordCommands.BUILT_IN_SECTIONS["betterdiscord"]) DiscordCommands.BUILT_IN_SECTIONS["betterdiscord"] = {
+				icon: "https://github.com/BetterDiscord.png",
+				id: "betterdiscord",
+				name: "BetterDiscord",
+				type: 0
+			};
+			function registerCommand(caller, options) {
+				const cmd = Object.assign({}, options, {
+					__registerId: caller,
+					applicationId: "betterdiscord",
+					type: Types.BOT,
+					target: 1
+				});
+				DiscordCommands.BUILT_IN_COMMANDS.push(cmd);
+				return () => {
+					const index = DiscordCommands.BUILT_IN_COMMANDS.indexOf(cmd);
+					if (index < 0) return false;
+					DiscordCommands.BUILT_IN_COMMANDS.splice(index, 1);
+				};
+			}
+			function unregisterAllCommands(caller) {
+				let index = DiscordCommands.BUILT_IN_COMMANDS.findIndex((cmd => cmd.__registerId === caller));
+				while (index > -1) {
+					DiscordCommands.BUILT_IN_COMMANDS.splice(index, 1);
+					index = DiscordCommands.BUILT_IN_COMMANDS.findIndex((cmd => cmd.__registerId === caller));
+				}
+			}
+			const Commands = {
+				registerCommand,
+				unregisterAllCommands
+			};
+			const commands = Commands;
+			var external_BdApi_React_ = __webpack_require__(113);
+			var external_BdApi_React_default = __webpack_require__.n(external_BdApi_React_);
+			var list = __webpack_require__(700);
+			const forms_namespaceObject = Modules["@discord/forms"];
+			const external_window_namespaceObject = window._;
+			var external_window_default = __webpack_require__.n(external_window_namespaceObject);
+			const constants_namespaceObject = Modules["@discord/constants"];
+			const stores_namespaceObject = Modules["@discord/stores"];
+			const flux_namespaceObject = Modules["@discord/flux"];
+			const components_namespaceObject = Modules["@discord/components"];
+			const native_namespaceObject = Modules["@discord/native"];
+			const modal_namespaceObject = Modules["@discord/modal"];
+			const SessionsStore = external_PluginApi_namespaceObject.WebpackModules.getByProps("getActiveSession");
+			const {
+				TextBadge
+			} = external_PluginApi_namespaceObject.WebpackModules.getByProps("TextBadge");
+			const {
+				AnimatedAvatar,
+				Sizes: AvatarSizes
+			} = external_PluginApi_namespaceObject.WebpackModules.getByProps("AnimatedAvatar");
+			const AssetUtils = external_PluginApi_namespaceObject.WebpackModules.getByProps("getAssetImage");
+			const ChangePasswordModal = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("ChangePasswordModal");
+			const {
+				RichPresenceSection
+			} = external_PluginApi_namespaceObject.WebpackModules.getByProps("RichPresenceSection");
+			const StatusModule = external_PluginApi_namespaceObject.WebpackModules.getByProps("humanizeStatus");
+			function CopyButton({
+				copyText,
+				copiedText,
+				onClick
+			}) {
+				const [copied, setCopied] = (0, external_BdApi_React_.useState)(false);
+				return external_BdApi_React_default().createElement(components_namespaceObject.Button, {
+					onClick: e => {
+						setCopied(true);
+						setTimeout((() => setCopied(false)), 1e3);
+						onClick(e);
+					},
+					color: copied ? components_namespaceObject.Button.Colors.GREEN : components_namespaceObject.Button.Colors.BRAND,
+					size: components_namespaceObject.Button.Sizes.SMALL,
+					look: components_namespaceObject.Button.Looks.FILLED
+				}, copied ? copiedText : copyText);
+			}
+			function Item({
+				session
+			}) {
+				const {
+					active,
+					activities,
+					clientInfo,
+					sessionId,
+					status
+				} = (0, flux_namespaceObject.useStateFromStores)([SessionsStore], (() => SessionsStore.getSessionById(session)));
+				return external_BdApi_React_default().createElement("div", {
+					className: list.Z.item
+				}, external_BdApi_React_default().createElement("div", {
+					className: list.Z.headerContainer
+				}, external_BdApi_React_default().createElement("b", null, external_window_default().upperFirst(clientInfo.os)), external_BdApi_React_default().createElement("div", {
+					className: list.Z.badgesContainer
+				}, active && external_BdApi_React_default().createElement(components_namespaceObject.TooltipContainer, {
+					position: "top",
+					text: "The session is marked as an active session."
+				}, external_BdApi_React_default().createElement(TextBadge, {
+					color: constants_namespaceObject.Colors.BRAND_NEW_500,
+					text: "ACTIVE"
+				})), stores_namespaceObject.Info.getSessionId() === sessionId && external_BdApi_React_default().createElement(components_namespaceObject.TooltipContainer, {
+					position: "top",
+					text: "This is the current session."
+				}, external_BdApi_React_default().createElement(TextBadge, {
+					color: constants_namespaceObject.Colors.STATUS_GREEN_500,
+					text: "CURRENT"
+				}))), external_BdApi_React_default().createElement("div", {
+					className: list.Z.avatarWrapper
+				}, external_BdApi_React_default().createElement(AnimatedAvatar, {
+					isMobile: "mobile" === clientInfo.client,
+					status,
+					isTyping: false,
+					src: stores_namespaceObject.Users.getCurrentUser().getAvatarURL(null, 32, true),
+					size: AvatarSizes.SIZE_32,
+					statusTooltip: true
+				}))), external_BdApi_React_default().createElement("div", {
+					className: list.Z.body
+				}, external_BdApi_React_default().createElement("div", {
+					className: list.Z.activities
+				}, activities.length ? activities.map((ac => external_BdApi_React_default().createElement(RichPresenceSection, {
+					activity: ac,
+					getAssetImage: AssetUtils.getAssetImage
+				}))) : external_BdApi_React_default().createElement("span", {
+					className: list.Z.noActivity
+				}, "No activities running.")), external_BdApi_React_default().createElement(forms_namespaceObject.FormDivider, {
+					className: list.Z.divider
+				}), external_BdApi_React_default().createElement("div", {
+					className: list.Z.sessionInfo,
+					key: "sessionId"
+				}, external_BdApi_React_default().createElement("b", null, "ID:"), external_BdApi_React_default().createElement("code", {
+					className: "inline"
+				}, sessionId)), external_BdApi_React_default().createElement("div", {
+					className: list.Z.sessionInfo,
+					key: "sessionClient"
+				}, external_BdApi_React_default().createElement("b", null, "Client:"), external_BdApi_React_default().createElement("span", null, external_window_default().upperFirst(clientInfo.client))), external_BdApi_React_default().createElement("div", {
+					className: list.Z.sessionInfo,
+					key: "sessionOs"
+				}, external_BdApi_React_default().createElement("b", null, "OS:"), external_BdApi_React_default().createElement("span", null, external_window_default().upperFirst(clientInfo.os))), external_BdApi_React_default().createElement("div", {
+					className: list.Z.sessionInfo,
+					key: "sessionStatus"
+				}, external_BdApi_React_default().createElement("b", null, "Status:"), external_BdApi_React_default().createElement("span", null, StatusModule.humanizeStatus(status)))), external_BdApi_React_default().createElement(components_namespaceObject.Flex, {
+					className: list.Z.footer,
+					justify: components_namespaceObject.Flex.Justify.END
+				}, external_BdApi_React_default().createElement(components_namespaceObject.Button, {
+					look: components_namespaceObject.Button.Looks.LINK,
+					color: components_namespaceObject.Button.Colors.RED,
+					size: components_namespaceObject.Button.Sizes.SMALL,
+					onClick: () => {
+						(0, modal_namespaceObject.openModal)((props => external_BdApi_React_default().createElement(ChangePasswordModal, props)));
+					}
+				}, "Not you?"), external_BdApi_React_default().createElement(CopyButton, {
+					copiedText: "Copied!",
+					copyText: "Copy JSON",
+					onClick: () => {
+						(0, native_namespaceObject.copy)(JSON.stringify(SessionsStore.getSessionById(session), null, "\t"));
+					}
+				})));
+			}
+			function SessionsList() {
+				const sessions = (0, flux_namespaceObject.useStateFromStores)([SessionsStore], (() => SessionsStore.getSessions()));
+				const keys = Object.keys(sessions).filter((e => "all" !== e));
+				return external_BdApi_React_default().createElement(external_BdApi_React_default().Fragment, null, external_BdApi_React_default().createElement(forms_namespaceObject.FormDivider, {
+					className: list.Z.listDivider
+				}), external_BdApi_React_default().createElement(forms_namespaceObject.FormTitle, {
+					tag: "h1"
+				}, keys.length ? `Active Sessions [${keys.length}]` : "No active Sessions"), external_BdApi_React_default().createElement("div", {
+					className: list.Z.sessionsList
+				}, keys.map((s => external_BdApi_React_default().createElement(Item, {
+					session: s
+				})))));
+			}
+			const external_StyleLoader_namespaceObject = StyleLoader;
+			var external_StyleLoader_default = __webpack_require__.n(external_StyleLoader_namespaceObject);
+			function switchCase(caze, cases, defaultValue) {
+				for (const caseTest of cases)
+					if (Array.isArray(caseTest)) {
+						const [tester, value] = caseTest;
+						if ("function" === typeof tester) {
+							if (tester(caze)) {
+								if ("function" === typeof value) return value(caze);
+								return value;
+							}
+						} else if (Object.is(caze, tester)) {
+							if ("function" === typeof value) return value(caze);
+							return value;
+						}
+					} else if ("object" === typeof caseTest)
+					if ("function" === typeof caseTest.test) {
+						if (caseTest.test(caze)) return caseTest.value;
+					} else if (Object.is(caze, caseTest.test)) return caseTest.value;
+				return defaultValue;
+			}
+			function createStore(state) {
+				const listeners = new Set;
+				const api = {
+					getState() {
+						return state;
+					},
+					setState(partial) {
+						const partialState = "function" === typeof partial ? partial(state) : partial;
+						state = Object.assign({}, state, partialState);
+						listeners.forEach((listener => {
+							listener(state);
+						}));
+					},
+					get listeners() {
+						return listeners;
+					},
+					on(listener) {
+						if (listeners.has(listener)) return;
+						listeners.add(listener);
+						return () => listeners.delete(listener);
+					},
+					off(listener) {
+						return listeners.delete(listener);
+					}
+				};
+				return [function(collector = (_ => _)) {
+					const forceUpdate = (0, external_BdApi_React_.useReducer)((e => e + 1), 0)[1];
+					(0, external_BdApi_React_.useEffect)((() => {
+						const handler = () => forceUpdate();
+						listeners.add(handler);
+						return () => listeners.delete(handler);
+					}), []);
+					return collector(api.getState());
+				}, api];
+			}
+			var modal = __webpack_require__(602);
+			function _extends() {
+				_extends = Object.assign || function(target) {
+					for (var i = 1; i < arguments.length; i++) {
+						var source = arguments[i];
+						for (var key in source)
+							if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
+					}
+					return target;
+				};
+				return _extends.apply(this, arguments);
+			}
+			const [useStore, Api] = createStore({
+				recent: []
+			});
+			const Header = external_PluginApi_namespaceObject.WebpackModules.getModule((m => "Header" === m.displayName && m.Tags));
+			const {
+				TextBadge: notification_TextBadge
+			} = external_PluginApi_namespaceObject.WebpackModules.getByProps("TextBadge");
+			const {
+				AnimatedAvatar: notification_AnimatedAvatar,
+				Sizes: notification_AvatarSizes
+			} = external_PluginApi_namespaceObject.WebpackModules.getByProps("AnimatedAvatar");
+			const notification_StatusModule = external_PluginApi_namespaceObject.WebpackModules.getByProps("humanizeStatus");
+			function CardItem({
+				session,
+				type,
+				timestamp,
+				props
+			}) {
+				if (!session) return null;
+				const {
+					active,
+					activities,
+					clientInfo,
+					status
+				} = session;
+				return external_BdApi_React_default().createElement("div", {
+					className: modal.Z.item
+				}, external_BdApi_React_default().createElement("div", {
+					className: modal.Z.headerContainer
+				}, external_BdApi_React_default().createElement("b", null, external_window_default().upperFirst(clientInfo.os)), external_BdApi_React_default().createElement("div", {
+					className: modal.Z.badgesContainer
+				}, active && external_BdApi_React_default().createElement(components_namespaceObject.TooltipContainer, {
+					position: "top",
+					text: "The session is marked as an active session."
+				}, external_BdApi_React_default().createElement(notification_TextBadge, {
+					color: constants_namespaceObject.Colors.BRAND_NEW_500,
+					text: "ACTIVE"
+				})), stores_namespaceObject.Info.getSessionId() === session.sessionId && external_BdApi_React_default().createElement(components_namespaceObject.TooltipContainer, {
+					position: "top",
+					text: "This is the current session."
+				}, external_BdApi_React_default().createElement(notification_TextBadge, {
+					color: constants_namespaceObject.Colors.STATUS_GREEN_500,
+					text: "CURRENT"
+				}))), external_BdApi_React_default().createElement("div", {
+					className: modal.Z.avatarWrapper
+				}, external_BdApi_React_default().createElement(notification_AnimatedAvatar, {
+					isMobile: "mobile" === clientInfo.client,
+					status,
+					isTyping: false,
+					src: stores_namespaceObject.Users.getCurrentUser().getAvatarURL(null, 32, true),
+					size: notification_AvatarSizes.SIZE_32,
+					statusTooltip: true
+				}))), external_BdApi_React_default().createElement("div", {
+					className: modal.Z.message
+				}, (() => {
+					switch (type) {
+						case "added":
+							return `This session was added.`;
+						case "removed":
+							return `This session was removed.`;
+						case "changed":
+							return external_BdApi_React_default().createElement("span", null, "The ", external_BdApi_React_default().createElement("code", {
+								className: "inline"
+							}, props.property), " about this session was changed: ", props.from, " -", ">", " ", props.to);
+					}
+				})()), external_BdApi_React_default().createElement("div", {
+					className: modal.Z.body
+				}, external_BdApi_React_default().createElement("div", {
+					className: modal.Z.sessionInfo,
+					key: "timestamp"
+				}, external_BdApi_React_default().createElement("b", null, "Timestamp:"), external_BdApi_React_default().createElement("span", null, new Date(timestamp).toLocaleString())), external_BdApi_React_default().createElement("div", {
+					className: modal.Z.sessionInfo,
+					key: "activities"
+				}, external_BdApi_React_default().createElement("b", null, "Activities:"), external_BdApi_React_default().createElement("span", null, activities.length)), external_BdApi_React_default().createElement("div", {
+					className: modal.Z.sessionInfo,
+					key: "sessionId"
+				}, external_BdApi_React_default().createElement("b", null, "ID:"), external_BdApi_React_default().createElement("code", {
+					className: "inline"
+				}, session.sessionId)), external_BdApi_React_default().createElement("div", {
+					className: modal.Z.sessionInfo,
+					key: "sessionClient"
+				}, external_BdApi_React_default().createElement("b", null, "Client:"), external_BdApi_React_default().createElement("span", null, external_window_default().upperFirst(clientInfo.client))), external_BdApi_React_default().createElement("div", {
+					className: modal.Z.sessionInfo,
+					key: "sessionOs"
+				}, external_BdApi_React_default().createElement("b", null, "OS:"), external_BdApi_React_default().createElement("span", null, external_window_default().upperFirst(clientInfo.os))), external_BdApi_React_default().createElement("div", {
+					className: modal.Z.sessionInfo,
+					key: "sessionStatus"
+				}, external_BdApi_React_default().createElement("b", null, "Status:"), external_BdApi_React_default().createElement("span", null, notification_StatusModule.humanizeStatus(status)))));
+			}
+			function Modal(props) {
+				const entries = [...useStore((s => s.recent))].reverse();
+				const newest = entries.shift();
+				(0, external_BdApi_React_.useEffect)((() => {
+					Api.setState({
+						opened: true
+					});
+					return () => {
+						Api.setState({
+							opened: false
+						});
+					};
+				}), []);
+				return external_BdApi_React_default().createElement(modal_namespaceObject.ModalRoot, _extends({}, props, {
+					size: !!newest ? "medium" : "small"
+				}), external_BdApi_React_default().createElement(modal_namespaceObject.ModalHeader, {
+					separator: false
+				}, external_BdApi_React_default().createElement(Header, {
+					tag: Header.Tags.H1,
+					size: Header.Sizes.SIZE_20
+				}, "Sessions Logs"), external_BdApi_React_default().createElement(modal_namespaceObject.ModalCloseButton, {
+					onClick: props.onClose,
+					className: modal.Z.closeButton
+				})), external_BdApi_React_default().createElement(modal_namespaceObject.ModalContent, null, !newest ? external_BdApi_React_default().createElement("div", {
+					className: modal.Z.center
+				}, external_BdApi_React_default().createElement("p", null, "Nothing happened yet!")) : external_BdApi_React_default().createElement(external_BdApi_React_default().Fragment, null, external_BdApi_React_default().createElement(CardItem, _extends({}, newest, {
+					key: newest.session?.sessionId
+				})), entries.length > 0 && external_BdApi_React_default().createElement(forms_namespaceObject.FormDivider, {
+					className: modal.Z.newDivider
+				}), entries.map((props => external_BdApi_React_default().createElement(CardItem, _extends({}, props, {
+					key: props.session?.sessionId
+				})))))), external_BdApi_React_default().createElement(modal_namespaceObject.ModalFooter, null, external_BdApi_React_default().createElement(components_namespaceObject.Flex, {
+					justify: components_namespaceObject.Flex.Justify.END
+				}, external_BdApi_React_default().createElement(components_namespaceObject.Button, {
+					onClick: props.onClose
+				}, "Okay"))));
+			}
+			const modules_namespaceObject = Modules["@discord/modules"];
+			function _defineProperty(obj, key, value) {
+				if (key in obj) Object.defineProperty(obj, key, {
+					value,
+					enumerable: true,
+					configurable: true,
+					writable: true
+				});
+				else obj[key] = value;
+				return obj;
+			}
+			class SettingsManager extends flux_namespaceObject.Store {
+				constructor(pluginName, defaultSettings = {}) {
+					super(modules_namespaceObject.Dispatcher, {});
+					_defineProperty(this, "settings", void 0);
+					_defineProperty(this, "pluginName", void 0);
+					_defineProperty(this, "get", ((key, defaultValue) => this.settings[key] ?? defaultValue));
+					_defineProperty(this, "set", ((key, value) => {
+						this.settings[key] = value;
+						external_PluginApi_namespaceObject.PluginUtilities.saveSettings(this.pluginName, this.settings);
+						this.emitChange();
+						return value;
+					}));
+					this.pluginName = pluginName;
+					this.settings = external_PluginApi_namespaceObject.PluginUtilities.loadSettings(pluginName, defaultSettings);
+				}
+			}
+			const package_namespaceObject = JSON.parse('{"um":{"u2":"ShowSessions"}}');
+			const Settings = new SettingsManager(package_namespaceObject.um.u2);
+			const settings = Settings;
+			const icons_namespaceObject = Modules["@discord/icons"];
+			const utils_namespaceObject = Modules["@discord/utils"];
+			var category = __webpack_require__(911);
+			function Category({
+				label,
+				children,
+				className,
+				look = Category.Looks.DEFAULT
+			}) {
+				const [opened, toggle] = (0, external_BdApi_React_.useState)(false);
+				const isCompact = look === category.Z.compact;
+				return external_BdApi_React_default().createElement("div", {
+					className: (0, utils_namespaceObject.joinClassNames)(className, look, category.Z.category, {
+						[category.Z.opened]: opened
+					})
+				}, external_BdApi_React_default().createElement("div", {
+					className: category.Z.header,
+					onClick: () => toggle(!opened)
+				}, external_BdApi_React_default().createElement("div", {
+					className: category.Z.label
+				}, label), isCompact ? external_BdApi_React_default().createElement("div", {
+					className: category.Z.stroke
+				}) : null, external_BdApi_React_default().createElement(icons_namespaceObject.Caret, {
+					direction: opened ? icons_namespaceObject.Caret.Directions.DOWN : isCompact ? icons_namespaceObject.Caret.Directions.LEFT : icons_namespaceObject.Caret.Directions.RIGHT,
+					className: category.Z.caret
+				})), !isCompact ? external_BdApi_React_default().createElement("div", {
+					className: category.Z.divider
+				}) : null, external_BdApi_React_default().createElement("div", {
+					className: category.Z.content
+				}, opened ? children : null));
+			}
+			Category.Looks = {
+				COMPACT: category.Z.compact,
+				DEFAULT: category.Z["default"]
+			};
+			var components_settings = __webpack_require__(354);
+			function Settings_extends() {
+				Settings_extends = Object.assign || function(target) {
+					for (var i = 1; i < arguments.length; i++) {
+						var source = arguments[i];
+						for (var key in source)
+							if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
+					}
+					return target;
+				};
+				return Settings_extends.apply(this, arguments);
+			}
+			const SwitchItem = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("SwitchItem");
+			const RadioGroup = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("RadioGroup");
+			const SettingsOptions = [{
+				type: "switch",
+				name: "Show Updates",
+				note: "Shows updates about sessions.",
+				id: "showUpdates",
+				value: true
+			}, {
+				type: "category",
+				name: "Updates",
+				items: [{
+					id: "noticeType",
+					name: "Notice Type",
+					note: "Shows a desktop/toast notification when an update has triggered. Won't show the modal without being manually opened.",
+					type: "radio",
+					value: 1,
+					requires: ["showUpdates"],
+					options: [{
+						name: "Desktop Notifications",
+						desc: "Shows a normal desktop notification.",
+						value: 1
+					}, {
+						name: "Toast Notification",
+						desc: "Shows a normal toast. Note: this only stays temporarily!",
+						value: 2
+					}, {
+						name: "Prompt Modal",
+						desc: "Shows a modal with updates about your account's sessions.",
+						value: 3
+					}]
+				}, {
+					id: "showActivityUpdate",
+					name: "Activity Update",
+					note: "Shows a notice when the activity of a session has updated.",
+					type: "switch",
+					value: true,
+					requires: ["showUpdates"]
+				}, {
+					id: "showAdd",
+					name: "Session Add",
+					note: "Shows a notice when a session was added.",
+					type: "switch",
+					value: true,
+					requires: ["showUpdates"]
+				}, {
+					id: "showRemove",
+					name: "Session Remove",
+					note: "Shows a notice when a session was removed/closed.",
+					type: "switch",
+					value: true,
+					requires: ["showUpdates"]
+				}]
+			}];
+			function renderSetting(setting, forceUpdate) {
+				switch (setting.type) {
+					case "switch":
+						return external_BdApi_React_default().createElement(SwitchItem, Settings_extends({}, setting, {
+							children: setting.name,
+							value: settings.get(setting.id, setting.value),
+							disabled: setting.requires ? !setting.requires.every((id => settings.get(id, true))) : false,
+							onChange: value => {
+								settings.set(setting.id, value);
+								forceUpdate();
+							}
+						}));
+					case "category":
+						return external_BdApi_React_default().createElement(Category, {
+							look: Category.Looks.COMPACT,
+							label: setting.name,
+							key: setting.name
+						}, setting.items.map((item => renderSetting(item, forceUpdate))));
+					case "radio":
+						return external_BdApi_React_default().createElement(external_BdApi_React_default().Fragment, null, external_BdApi_React_default().createElement(forms_namespaceObject.FormItem, {
+							title: setting.name
+						}, external_BdApi_React_default().createElement(forms_namespaceObject.FormText, {
+							type: "description",
+							className: components_settings.Z.marginBottom8
+						}, setting.note), external_BdApi_React_default().createElement(RadioGroup, Settings_extends({}, setting, {
+							value: settings.get(setting.id, setting.value),
+							disabled: setting.requires ? !setting.requires.every((id => settings.get(id, true))) : false,
+							onChange: ({
+								value
+							}) => {
+								settings.set(setting.id, value);
+								forceUpdate();
+							}
+						}))), external_BdApi_React_default().createElement(forms_namespaceObject.FormDivider, {
+							className: components_settings.Z.divider
+						}));
+				}
+			}
+			function SettingsPanel() {
+				const [, forceUpdate] = (0, external_BdApi_React_.useReducer)((n => !n), true);
+				return external_BdApi_React_default().createElement(external_BdApi_React_default().Fragment, null, SettingsOptions.map((setting => renderSetting(setting, forceUpdate))));
+			}
+			const overrides = {
+				useMemo: factory => factory(),
+				useState: initialState => [initialState, () => {}],
+				useReducer: initialValue => [initialValue, () => {}],
+				useEffect: () => {},
+				useLayoutEffect: () => {},
+				useRef: () => ({
+					current: null
+				}),
+				useCallback: callback => callback
+			};
+			const keys = Object.keys(overrides);
+			function wrapInHooks(functionalComponent) {
+				const ReactDispatcher = external_BdApi_React_default().__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED.ReactCurrentDispatcher.current;
+				const originals = keys.map((e => [e, ReactDispatcher[e]]));
+				Object.assign(ReactDispatcher, overrides);
+				let returnValue = null,
+					error = null;
+				try {
+					returnValue = functionalComponent();
+				} catch (err) {
+					error = err;
+				}
+				Object.assign(ReactDispatcher, Object.fromEntries(originals));
+				if (error) throw error;
+				return returnValue;
+			}
+			const getLazy = function(filter) {
+				const fromCache = external_PluginApi_namespaceObject.WebpackModules.getModule(filter);
+				if (fromCache) return Promise.resolve(fromCache);
+				return new Promise((resolve => {
+					const cancel = external_PluginApi_namespaceObject.WebpackModules.addListener((m => {
+						const matches = [m, m?.default];
+						for (let i = 0; i < matches.length; i++) {
+							const match = filter(matches[i]);
+							if (!match) continue;
+							resolve(matches[i]);
+							cancel();
+							break;
+						}
+					}));
+				}));
+			};
+			var React = __webpack_require__(113);
+			function ShowSessions_extends() {
+				ShowSessions_extends = Object.assign || function(target) {
+					for (var i = 1; i < arguments.length; i++) {
+						var source = arguments[i];
+						for (var key in source)
+							if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
+					}
+					return target;
+				};
+				return ShowSessions_extends.apply(this, arguments);
+			}
+			function ShowSessions_defineProperty(obj, key, value) {
+				if (key in obj) Object.defineProperty(obj, key, {
+					value,
+					enumerable: true,
+					configurable: true,
+					writable: true
+				});
+				else obj[key] = value;
+				return obj;
+			}
+			var NoticeTypes;
+			(function(NoticeTypes) {
+				NoticeTypes[NoticeTypes["DESKTOP"] = 1] = "DESKTOP";
+				NoticeTypes[NoticeTypes["TOAST"] = 2] = "TOAST";
+				NoticeTypes[NoticeTypes["PROMPT"] = 3] = "PROMPT";
+			})(NoticeTypes || (NoticeTypes = {}));
+			const UserSettings = external_PluginApi_namespaceObject.WebpackModules.getByProps("updateAccount");
+			const ShowSessions_SessionsStore = external_PluginApi_namespaceObject.WebpackModules.getByProps("getActiveSession");
+			const Button = external_PluginApi_namespaceObject.WebpackModules.getByProps("BorderColors", "Colors");
+			class ShowSessions extends(external_BasePlugin_default()) {
+				constructor(...args) {
+					super(...args);
+					ShowSessions_defineProperty(this, "_changeListener", void 0);
+					ShowSessions_defineProperty(this, "_originalSessions", void 0);
+					ShowSessions_defineProperty(this, "_wasInitial", false);
+					ShowSessions_defineProperty(this, "_currentSessionId", null);
+					ShowSessions_defineProperty(this, "promises", {
+						cancelled: false,
+						cancel() {
+							this.cancelled = true;
+						}
+					});
+					ShowSessions_defineProperty(this, "openSettings", (() => {
+						UserSettings.setSection("My Account");
+					}));
+				}
+				get currentSession() {
+					return stores_namespaceObject.Info.getSessionId();
+				}
+				getSettingsPanel() {
+					return React.createElement(SettingsPanel, null);
+				}
+				onStart() {
+					const DiscordCommands = external_PluginApi_namespaceObject.WebpackModules.getByProps("BUILT_IN_COMMANDS");
+					DiscordCommands.BUILT_IN_COMMANDS.push({
+						__registerId: this.getName(),
+						applicationId: "betterdiscord",
+						name: "sessions",
+						description: "Shows your account's active sessions.",
+						id: "get-sessions",
+						type: 1,
+						target: 1,
+						predicate: () => true,
+						execute: (_, {
+							channel
+						}) => {
+							try {
+								clyde.sendMessage(channel.id, {
+									content: switchCase(Object.entries(ShowSessions_SessionsStore.getSessions()), [
+										[e => e.length, sessions => "**__I found these clients are currently active:__**\n\n" + sessions.filter((([id]) => "all" !== id)).map((([id, info]) => `> **Id:** \`${id}\`\n\t\t\t\t\t\t\t\t\t> **Active:** \`${info.active}\`\n\t\t\t\t\t\t\t\t\t> **Status:** \`${info.status}\`\n\t\t\t\t\t\t\t\t\t> **Activities: [${info.activities.length}]**${(info.activities.length ? "\n>" : "") + info.activities.map((ac => `  **•** ${ac.name}: \`${ac.state}\``)).join("\n")}\n\t\t\t\t\t\t\t\t\t> **Client:**\n\t\t\t\t\t\t\t\t\t>  **•** os: \`${info.clientInfo.os}\`\n\t\t\t\t\t\t\t\t\t>  **•** client: \`${info.clientInfo.client}\`\n\t\t\t\t\t\t\t\t\t`)).join("\n")],
+										[e => !e.length, "I didn't find any active clients. Maybe discord didn't told me about them? :thinking:"]
+									])
+								});
+							} catch (error) {
+								console.error(error);
+							}
+						},
+						options: []
+					});
+					external_StyleLoader_default().inject();
+					external_PluginApi_namespaceObject.Utilities.suppressErrors(this.patchAccountSection.bind(this), "AccountSection patch")();
+					external_PluginApi_namespaceObject.Utilities.suppressErrors(this.patchHeaderBar.bind(this), "HeaderBar patch")();
+					ShowSessions_SessionsStore.addChangeListener(this._changeListener = external_PluginApi_namespaceObject.Utilities.suppressErrors((() => {
+						const data = ShowSessions_SessionsStore.getSessions();
+						this.handleChangeSessions(data);
+						this._originalSessions = data;
+						this._currentSessionId = this.currentSession;
+					}), "ShowSessions.onChange"));
+					this._originalSessions = ShowSessions_SessionsStore.getSessions();
+					this._currentSessionId = this.currentSession;
+				}
+				maybeOpenModal() {
+					const noticeType = settings.get("noticeType", NoticeTypes.DESKTOP);
+					switch (noticeType) {
+						case NoticeTypes.DESKTOP: {
+							const notification = new Notification("[ShowSessions] Session update", {
+								silent: false,
+								body: "Devices have been updated."
+							});
+							notification.addEventListener("click", this.openModal);
+						}
+						break;
+					case NoticeTypes.PROMPT:
+						if (Api.getState().opened) return;
+						this.openModal();
+						break;
+					case NoticeTypes.TOAST:
+						external_PluginApi_namespaceObject.Toasts.info("[ShowSessions] Devices update detected!");
+						break;
+					}
+				}
+				openModal() {
+					(0, modal_namespaceObject.openModal)((props => React.createElement(Modal, props)));
+				}
+				handleChangeSessions(data) {
+					if (!settings.get("showUpdates", true)) return;
+					const filter = sessionId => {
+						if ("all" === sessionId) return false;
+						if (sessionId === this._currentSessionId) return false;
+						if (sessionId === this.currentSession) return false;
+						return true;
+					};
+					const sessionFilter = (session1, session2, key) => {
+						if ("activities" === key) return session1[key].length !== session2[key].length;
+						if ("clientInfo" === key) return !external_window_default().isEqual(session1[key], session2[key]);
+						return session1[key] !== session2[key];
+					};
+					const compareSessions = function(session1, session2) {
+						const keys = Object.keys(session1).slice(1);
+						const changes = keys.filter(sessionFilter.bind(null, session1, session2));
+						if (!changes.length) return [];
+						return changes.map((key => ({
+							property: key,
+							from: "activities" === key ? session1[key].length : JSON.stringify(session1[key]),
+							to: "activities" === key ? session2[key].length : JSON.stringify(session2[key]),
+							id: session1.sessionId
+						})));
+					};
+					const oldKeys = Object.keys(this._originalSessions).filter(filter);
+					const newKeys = Object.keys(data).filter(filter);
+					if (this._originalSessions[this.currentSession] && 0 === oldKeys.length && !this._wasInitial) {
+						this._wasInitial = true;
+						return;
+					}
+					if (oldKeys.length > newKeys.length && settings.get("showRemove", true)) {
+						const removed = oldKeys.filter((e => newKeys.indexOf(e) < 0));
+						external_PluginApi_namespaceObject.Logger.log("Detected closed session", removed);
+						const mapped = removed.map((removed => ({
+							type: "removed",
+							timestamp: new Date,
+							session: this._originalSessions[removed]
+						}))).filter((e => e.session));
+						Api.setState((state => ({
+							...state,
+							recent: state.recent.concat(mapped).slice(0, 30)
+						})));
+						this.maybeOpenModal();
+					} else if (oldKeys.length < newKeys.length && settings.get("showAdd", true)) {
+						const added = newKeys.filter((e => oldKeys.indexOf(e) < 0));
+						external_PluginApi_namespaceObject.Logger.log("Detected new session", added);
+						const mapped = added.map((added => ({
+							type: "added",
+							timestamp: new Date,
+							session: ShowSessions_SessionsStore.getSessionById(added)
+						}))).filter((e => e.session));
+						Api.setState((state => ({
+							...state,
+							recent: state.recent.concat(mapped).slice(0, 30)
+						})));
+						this.maybeOpenModal();
+					} else if (settings.get("showActivityUpdate", true)) {
+						const changes = newKeys.map((key => compareSessions(this._originalSessions[key], data[key]))).filter(Boolean);
+						if (!changes.length) return;
+						external_PluginApi_namespaceObject.Logger.log("Detected session change");
+						const flattened = changes.flatMap((changes => changes.map((change => ({
+							props: change,
+							type: "changed",
+							timestamp: new Date,
+							session: ShowSessions_SessionsStore.getSessionById(change.id)
+						})))));
+						Api.setState((state => ({
+							...state,
+							recent: state.recent.concat(flattened).slice(0, 30)
+						})));
+						this.maybeOpenModal();
+					}
+				}
+				async patchHeaderBar() {
+					const selector = `.${external_PluginApi_namespaceObject.WebpackModules.getByProps("title", "chat")?.title}`;
+					const headerBarClasses = external_PluginApi_namespaceObject.WebpackModules.getByProps("iconWrapper", "clickable");
+					const HeaderBarContainer = await external_PluginApi_namespaceObject.ReactComponents.getComponentByName("HeaderBarContainer", selector);
+					external_PluginApi_namespaceObject.Patcher.after(HeaderBarContainer.component.prototype, "render", ((_, __, ret) => {
+						const toolbar = ret?.props?.toolbar?.props?.children;
+						if (!Array.isArray(toolbar) || toolbar.some((e => "show-sessions" === e?.key))) return;
+						toolbar.splice(-2, 0, React.createElement(components_namespaceObject.Tooltip, {
+							text: "Open Session logs",
+							key: "show-sessions",
+							position: "bottom"
+						}, (props => React.createElement(Button, ShowSessions_extends({}, props, {
+							size: Button.Sizes.NONE,
+							look: Button.Looks.BLANK,
+							innerClassName: `${headerBarClasses.iconWrapper} ${headerBarClasses.clickable}`,
+							onClick: this.openModal,
+							className: "show-sessions-logs"
+						}), React.createElement("svg", {
+							xmlns: "http://www.w3.org/2000/svg",
+							viewBox: "0 0 24 24",
+							height: "24",
+							width: "24"
+						}, React.createElement("path", {
+							d: "M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z",
+							fill: "currentColor"
+						}))))));
+					}));
+					HeaderBarContainer.forceUpdateAll();
+				}
+				async patchAccountSection() {
+					const ConnectedUserAccountSettings = await getLazy(external_PluginApi_namespaceObject.Filters.byDisplayName("ConnectedUserAccountSettings"));
+					const UserSettingsAccount = wrapInHooks((() => ConnectedUserAccountSettings({})?.type));
+					external_PluginApi_namespaceObject.Patcher.after(UserSettingsAccount.prototype, "render", ((_this, _, res) => {
+						if (!Array.isArray(res?.props?.children)) return;
+						res.props.children.push(React.createElement(SessionsList, null));
+					}));
+				}
+				onStop() {
+					commands.unregisterAllCommands(this.getName());
+					external_PluginApi_namespaceObject.Patcher.unpatchAll();
+					this.promises.cancel();
+					external_StyleLoader_default().remove();
+					ShowSessions_SessionsStore.removeChangeListener(this._changeListener);
+				}
+			}
+		})();
 		module.exports.LibraryPluginHack = __webpack_exports__;
 	})();
 	const PluginExports = module.exports.LibraryPluginHack;
