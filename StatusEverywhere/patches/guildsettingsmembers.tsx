@@ -1,10 +1,11 @@
-import {Patcher, ReactComponents, Utilities, WebpackModules} from "@zlibrary";
+import {Filters, Patcher, ReactComponents, Utilities, WebpackModules} from "@zlibrary";
+import React from "react";
 import StatusAvatar from "../components/avatar";
 import settings from "../components/settings.json";
-import {lazyPatch} from "../util";
+import {getLazy, lazyPatch} from "../util";
 
 export default async function patchGuildSettingsMembers(): Promise<void> {
-    const classes = WebpackModules.getByProps("member", "avatar");
+    const classes = await getLazy(Filters.byProperties(["member", "avatar"]));
     const Member = await ReactComponents.getComponentByName("Member", `.${classes.member}`);
     
     Patcher.after(Member.component.prototype, "render", (_this, _, returnValue) => {

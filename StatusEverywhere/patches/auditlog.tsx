@@ -1,12 +1,13 @@
-import {Patcher, Utilities, WebpackModules} from "@zlibrary";
+import {Filters, Patcher, Utilities, WebpackModules} from "@zlibrary";
+import React from "react";
 import StatusAvatar from "../components/avatar";
 import settings from "../components/settings.json";
-import {lazyPatch} from "../util";
+import {lazyPatch, getLazy} from "../util";
 
-export default function patchAuditLog(): void {
-    const AuditLog = WebpackModules.getByDisplayName("GuildSettingsAuditLogEntry");
+export default async function patchAuditLog(): Promise<void> {
+    const AuditLog = await getLazy(Filters.byDisplayName("GuildSettingsAuditLogEntry"));
     const classes = WebpackModules.getByProps("desaturate", "auditLog", "avatar");
-    Utilities
+
     Patcher.after(AuditLog.prototype, "render", (_this, _, res) => {
         const originalChildren: Function | void = res?.props?.children;
         if (typeof originalChildren !== "function") return;

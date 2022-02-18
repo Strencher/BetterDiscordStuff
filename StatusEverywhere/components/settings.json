@@ -131,7 +131,7 @@
 		"dmAvatarResolution": {
 			"name": "Resolution",
 			"note": "The avatar url size will be eg, url?size=128",
-			"value": 28,
+			"value": 32,
 			"type": "slider",
 			"sticky": true,
 			"markers": [16,28,32,40,56,80,128,256]

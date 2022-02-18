@@ -1,4 +1,4 @@
-import {Logger} from "@zlibrary";
+import {Logger, WebpackModules} from "@zlibrary";
 import config from "./package.json";
 
 // Basically "Patcher" but garbage collector friendly version.
@@ -35,3 +35,23 @@ export const lazyPatch = function (module: any, functionName: string, callback: 
 
     return unpatch;
 };
+
+export const getLazy = function (filter: (m: any) => boolean) {
+    const fromCache = WebpackModules.getModule(filter);
+    if (fromCache) return Promise.resolve(fromCache);
+
+    return new Promise(resolve => {
+        const cancel = WebpackModules.addListener((m) => {
+            const matches = [m, m?.default];
+
+            for (let i = 0; i < matches.length; i++) {
+                const match = filter(matches[i]);
+                if (!match) continue;
+
+                resolve(matches[i]);
+                cancel();
+                break;
+            }
+        });
+    });
+}

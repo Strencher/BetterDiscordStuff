@@ -1,4 +1,5 @@
 import {Patcher, WebpackModules} from "@zlibrary";
+import React from "react";
 import StatusAvatar from "../components/avatar";
 import settings from "../components/settings.json";
 

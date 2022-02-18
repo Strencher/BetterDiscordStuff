@@ -5,8 +5,8 @@
 
 .userPopout {
     border-radius: 50%;
-    background: var(--background-floating);
-    border: 6px solid var(--background-floating);
+    // background: var(--background-floating);
+    // border: 6px solid var(--background-floating);
     box-sizing: border-box;
 
     &[data-mobile=false] {

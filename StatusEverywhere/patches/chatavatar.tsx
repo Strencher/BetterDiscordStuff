@@ -1,4 +1,5 @@
 import {Patcher, Utilities, WebpackModules} from "@zlibrary";
+import React from "react";
 import StatusAvatar from "../components/avatar";
 import settings from "../components/settings.json";
 
@@ -13,7 +14,7 @@ export default function patchChatAvatar(): void {
     };
     
     Patcher.after(ChatMessage, "default", (_, [props]: PatchArgs[], res) => {
-        const tree = Utilities.findInReactTree(res, e => e?.renderPopout);
+        const tree = Utilities.findInTree(res, e => e?.renderPopout);
         const user = props?.message?.author;
         const channel_id = props?.message?.channel_id;
         

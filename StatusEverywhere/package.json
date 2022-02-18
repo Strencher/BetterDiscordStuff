@@ -1,7 +1,7 @@
 {
     "info": {
         "name": "StatusEverywhere",
-        "version": "2.3.1",
+        "version": "2.3.2",
         "authors": [
             {
                 "name": "Strencher",
@@ -25,8 +25,8 @@
             "title": "fixes",
             "type": "fixed",
             "items": [
-                "Fixed UserPopout avatar being blank.",
-                "Fixed UserProfile modal avatar not being patched at all."
+                "Fix chat avatars.",
+                "Also fix UserPopout error."
             ]
         }
     ],
