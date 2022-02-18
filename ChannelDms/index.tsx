@@ -12,14 +12,10 @@ import SettingsPanel from "./components/settings";
 import UnreadBadge from "./components/unreadbadge";
 import ChannelMembers from "./components/channelmembers";
 
-const ChannelInfoActions = WebpackModules.getByProps("setChannelInfoTab");
-const ChannelSidebarStore = WebpackModules.getByProps("getActiveInfoTab");
-
 export default class ChannelDms extends BasePlugin {
     onStart(): void {
         styles.inject();
         this.patchChannelMembers();
-        this.patchChannelInfo();
         this.patchListItem();
         this.patchPrivateChannel();
     }
@@ -34,37 +30,10 @@ export default class ChannelDms extends BasePlugin {
         const DefaultChannelMembers = WebpackModules.getModule(m => m.default && m.default.displayName === "ConnectedChannelMembers");
 
         Patcher.instead(DefaultChannelMembers, "default", (_, [props], original) => {
-            if (props.__IS_PLUGIN) return;
+            if (props?.__IS_PLUGIN) return;
 
             return (
                 <ChannelMembers original={original} memberListProps={props} key="CHANNEL_MEMBERS"/>
-            );
-        });
-    }
-
-    patchChannelInfo(): void {
-        const ChannelInfo = WebpackModules.getModule(m => m.default?.displayName === "ChannelInfo");
-        const ChannelInfoClasses = WebpackModules.getByProps("container", "members");
-        const {Item} = WebpackModules.getByProps("Header", "Item") ?? {};
-        const join = (...classNames) => classNames.filter(Boolean).join(" ");
-
-        Patcher.after(ChannelInfo, "default", (_, __, ret) => {
-            const activeTab = ChannelSidebarStore.getActiveInfoTab();
-            const header = Utilities.findInReactTree(ret, e => e && "onItemSelect" in e);
-
-            if (!Array.isArray(header?.children) || !Array.isArray(ret?.props?.children)) return;
-
-            header.children.push(
-                <Item
-                    className={join(ChannelInfoClasses.tab, activeTab === 3 && ChannelInfoClasses.active)}
-                    id={3}
-                >DMs</Item>
-            );
-
-            if (activeTab !== 3) return;
-
-            ret.props.children[ret.props.children.length - 1] = (
-                <PrivateChannels />
             );
         });
     }
@@ -76,8 +45,11 @@ export default class ChannelDms extends BasePlugin {
         Patcher.after(PrivateChannel.component.prototype, "render", (_this, _, ret) => {
             if (!ret?.props) return;
             
-            const original = ret.props.children;
-            ret.props.children = (id: string) => {
+            const props = Utilities.findInReactTree(ret, e => typeof e?.children === "function");
+            if (!props) return;
+
+            const original = props.children;
+            props.children = (id: string) => {
                 const returnValue = Reflect.apply(original, null, [id]);
 
                 try {
@@ -94,8 +66,9 @@ export default class ChannelDms extends BasePlugin {
     }
 
     patchListItem(): void {
-        const ListItem = WebpackModules.getModule(e => e?.render?.toString().indexOf("nameAndDecorators") > -1);
-        const ListItemClasses = WebpackModules.getByProps("nameAndDecorators", "wrappedName", "selected");
+        const regex = /focusProps.*"li"/is;
+        const ListItem = WebpackModules.getModule(e => regex.test(e?.render?.toString()));
+        const InteractiveClasses = WebpackModules.getByProps("interactiveSelected", "interactive");
 
         function PatchedNestedRoute({__original, ...props}) {
             const ret = Reflect.apply(__original.render, this, [props]);
@@ -143,28 +116,35 @@ export default class ChannelDms extends BasePlugin {
             const selected = useMemo(() => selectedChannelId === channel.id, [selectedChannelId]);
 
             const child = React.cloneElement<any>(children.props.children);
+            const route = Utilities.findInReactTree(children, e => e?.type?.render);
             
             try {
-                const original = child.type;
-                if (selected) child.props.className += (" " + ListItemClasses.selected);
-                child.props.__original = original;
-                child.props.onSelect = (event) => {
-                    event.preventDefault();
-                    event.stopPropagation();
-                    setSelectedChannelId(selected ? "" : channel.id);
+                const interactive = Utilities.findInReactTree(child, e => e?.type?.displayName === "Interactive");
+                if (route) {
+                    if (selected) {
+                        if (interactive) {
+                            interactive.props.className += ` ${InteractiveClasses.interactiveSelected}`;
+                        }
+                    }
+                    route.props.__original = route.type;
+                    route.props.onSelect = (event) => {
+                        event.preventDefault();
+                        event.stopPropagation();
+                        setSelectedChannelId(selected ? "" : channel.id);
+                    };
+    
+                    route.type = PatchedRoute;
                 }
-                
-                (child as any).type = PatchedRoute;
 
-                const childrenContainer = Utilities.findInReactTree(child, e => e?.className?.indexOf("children") > -1);
-                
-                if (childrenContainer) {
-                    childrenContainer.children = [
-                        <UnreadBadge channel={channel} />,
-                        childrenContainer.children
-                    ];
+                const close = interactive?.props?.children?.[1];
 
-                    childrenContainer.className += " ChannelDms-channelpopout-unread";
+                if (close) {
+                    interactive.props.children[1] = (
+                        <div className="ChannelDms-channelpopout-unread">
+                            <UnreadBadge channel={channel} />
+                            {close}
+                        </div>
+                    );
                 }
             } catch (error) {
                 Logger.error("Error in ListItem patch:", error);
@@ -197,9 +177,5 @@ export default class ChannelDms extends BasePlugin {
     onStop() {
         Patcher.unpatchAll();
         styles.remove();
-
-        if (ChannelSidebarStore.getActiveInfoTab() === 3) {
-            ChannelInfoActions.setChannelInfoTab(0);
-        }
     }
 }

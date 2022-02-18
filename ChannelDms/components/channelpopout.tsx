@@ -16,6 +16,7 @@ const ChannelChat = wrapPromise(
     () => <p>Loading...</p>
 );
 const ChannelContext = React.createContext(null);
+const {ChatInputTypes} = WebpackModules.getByProps("ChatInputTypes") ?? {};
 const StatusIcon = WebpackModules.getByDisplayName("FluxContainer(Status)");
 const CallButtons = WebpackModules.getByDisplayName("ConnectedPrivateChannelCallButtonSubscribed") ?? WebpackModules.getByDisplayName("ConnectedPrivateChannelCallButton");
 const FormatPlaceholder = WebpackModules.getModule(m => m?.toString().indexOf("TEXTAREA_PLACEHOLDER") > -1);
@@ -119,7 +120,7 @@ export default function ChannelPopout({channel, onClose}) {
                     <ChannelChat
                         channel={channel}
                         guild={guild}
-                        textareaType="sidebar"
+                        chatInputType={ChatInputTypes.SIDEBAR}
                         placeholder={FormatPlaceholder(channel)}
                         pendingReply={pendingReply}
                     />
