@@ -1,6 +1,6 @@
 /**
  * @name ChannelDms
- * @version 1.1.1
+ * @version 1.2.0
  * @author Strencher
  * @description Allows you to open popout chats of direct messages inside servers.
  * @source https://github.com/Strencher/BetterDiscordStuff/tree/master/ChannelDms
@@ -32,7 +32,7 @@
 const config = {
 	"info": {
 		"name": "ChannelDms",
-		"version": "1.1.1",
+		"version": "1.2.0",
 		"authors": [{
 			"name": "Strencher",
 			"discord_id": "415849376598982656",
@@ -47,7 +47,8 @@ const config = {
 		"title": "Improvements",
 		"type": "improved",
 		"items": [
-			"Improved how the member list is replaced, shouldn't cause any issues anymore."
+			"Fixed for the latest discord update.",
+			"Direct messages shouldn't disappear anymore."
 		]
 	}],
 	"build": {
@@ -318,631 +319,6 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
 				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
 			},
-			990: (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-				__webpack_require__.r(__webpack_exports__);
-				__webpack_require__.d(__webpack_exports__, {
-					default: () => ChannelDms
-				});
-				const external_PluginApi_namespaceObject = PluginApi;
-				const external_BasePlugin_namespaceObject = BasePlugin;
-				var external_BasePlugin_default = __webpack_require__.n(external_BasePlugin_namespaceObject);
-				var external_BdApi_React_ = __webpack_require__(113);
-				var external_BdApi_React_default = __webpack_require__.n(external_BdApi_React_);
-				const ChannelInfoContext = external_BdApi_React_default().createContext({
-					shouldShow: false,
-					selectedChannelId: "",
-					setSelectedChannelId: () => {}
-				});
-				const context = ChannelInfoContext;
-				function createStore(state) {
-					const listeners = new Set;
-					const api = {
-						getState() {
-							return state;
-						},
-						setState(partial) {
-							const partialState = "function" === typeof partial ? partial(state) : partial;
-							state = Object.assign({}, state, partialState);
-							listeners.forEach((listener => {
-								listener(state);
-							}));
-						},
-						get listeners() {
-							return listeners;
-						},
-						on(listener) {
-							if (listeners.has(listener)) return;
-							listeners.add(listener);
-							return () => listeners.delete(listener);
-						},
-						off(listener) {
-							return listeners.delete(listener);
-						}
-					};
-					return [function(collector = (_ => _)) {
-						const forceUpdate = (0, external_BdApi_React_.useReducer)((e => e + 1), 0)[1];
-						(0, external_BdApi_React_.useEffect)((() => {
-							const handler = () => forceUpdate();
-							listeners.add(handler);
-							return () => listeners.delete(handler);
-						}), []);
-						return collector(api.getState());
-					}, api];
-				}
-				var React = __webpack_require__(113);
-				const PrivateChannelsConnected = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("PrivateChannelsConnected");
-				const [useChannelStore, Api] = createStore({
-					shouldShow: true,
-					selectedChannelId: ""
-				});
-				function PrivateChannelsPatched(props) {
-					const ret = PrivateChannelsConnected(props);
-					try {
-						ret.props.showNitroTab = false;
-						ret.props.showLibrary = false;
-						ret.props.homeLink = null;
-					} catch (error) {
-						external_PluginApi_namespaceObject.Logger.error(`Failed to set properties on PrivateChannels:`, error);
-					}
-					return ret;
-				}
-				function PrivateChannels() {
-					const {
-						selectedChannelId
-					} = useChannelStore();
-					const setSelectedChannelId = (0, external_BdApi_React_.useCallback)((id => {
-						Api.setState({
-							selectedChannelId: id
-						});
-					}), [selectedChannelId]);
-					return React.createElement(external_PluginApi_namespaceObject.Components.ErrorBoundary, null, React.createElement(context.Provider, {
-						value: {
-							shouldShow: true,
-							selectedChannelId,
-							setSelectedChannelId
-						}
-					}, React.createElement(PrivateChannelsPatched, null)));
-				}
-				const external_StyleLoader_namespaceObject = StyleLoader;
-				var external_StyleLoader_default = __webpack_require__.n(external_StyleLoader_namespaceObject);
-				const components_namespaceObject = Modules["@discord/components"];
-				const stores_namespaceObject = Modules["@discord/stores"];
-				var asynccomponent_React = __webpack_require__(113);
-				function _extends() {
-					_extends = Object.assign || function(target) {
-						for (var i = 1; i < arguments.length; i++) {
-							var source = arguments[i];
-							for (var key in source)
-								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-						}
-						return target;
-					};
-					return _extends.apply(this, arguments);
-				}
-				function AsyncComponent({
-					promise,
-					fallback,
-					...props
-				}) {
-					const [Component, setComponent] = (0, external_BdApi_React_.useState)((() => fallback));
-					(0, external_BdApi_React_.useEffect)((() => {
-						Promise.resolve(promise).then((comp => {
-							setComponent((() => comp));
-						}));
-					}), [promise]);
-					return asynccomponent_React.createElement(Component, props);
-				}
-				function wrapPromise(promise, fallback) {
-					return props => asynccomponent_React.createElement(AsyncComponent, _extends({
-						promise,
-						fallback
-					}, props));
-				}
-				var channelpopout = __webpack_require__(290);
-				const icons_namespaceObject = Modules["@discord/icons"];
-				const constants_namespaceObject = Modules["@discord/constants"];
-				const flux_namespaceObject = Modules["@discord/flux"];
-				const modules_namespaceObject = Modules["@discord/modules"];
-				function _defineProperty(obj, key, value) {
-					if (key in obj) Object.defineProperty(obj, key, {
-						value,
-						enumerable: true,
-						configurable: true,
-						writable: true
-					});
-					else obj[key] = value;
-					return obj;
-				}
-				class SettingsManager extends flux_namespaceObject.Store {
-					constructor(pluginName, defaultSettings = {}) {
-						super(modules_namespaceObject.Dispatcher, {});
-						_defineProperty(this, "settings", void 0);
-						_defineProperty(this, "pluginName", void 0);
-						_defineProperty(this, "get", ((key, defaultValue) => this.settings[key] ?? defaultValue));
-						_defineProperty(this, "set", ((key, value) => {
-							this.settings[key] = value;
-							external_PluginApi_namespaceObject.PluginUtilities.saveSettings(this.pluginName, this.settings);
-							this.emitChange();
-							return value;
-						}));
-						this.pluginName = pluginName;
-						this.settings = external_PluginApi_namespaceObject.PluginUtilities.loadSettings(pluginName, defaultSettings);
-					}
-				}
-				const package_namespaceObject = JSON.parse('{"um":{"u2":"ChannelDms"}}');
-				const Settings = new SettingsManager(package_namespaceObject.um.u2);
-				const settings = Settings;
-				function channelpopout_extends() {
-					channelpopout_extends = Object.assign || function(target) {
-						for (var i = 1; i < arguments.length; i++) {
-							var source = arguments[i];
-							for (var key in source)
-								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-						}
-						return target;
-					};
-					return channelpopout_extends.apply(this, arguments);
-				}
-				const classes = external_PluginApi_namespaceObject.WebpackModules.getByProps("chatContent");
-				const ChannelChat = wrapPromise(external_PluginApi_namespaceObject.ReactComponents.getComponentByName("ChannelChat", "." + classes?.chatContent).then((res => res.component)), (() => external_BdApi_React_default().createElement("p", null, "Loading...")));
-				const ChannelContext = external_BdApi_React_default().createContext(null);
-				const StatusIcon = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("FluxContainer(Status)");
-				const CallButtons = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("ConnectedPrivateChannelCallButtonSubscribed") ?? external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("ConnectedPrivateChannelCallButton");
-				const FormatPlaceholder = external_PluginApi_namespaceObject.WebpackModules.getModule((m => m?.toString().indexOf("TEXTAREA_PLACEHOLDER") > -1));
-				const RemoveButton = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("RemoveButton");
-				const ChannelNameUtils = external_PluginApi_namespaceObject.WebpackModules.getByProps("computeChannelName");
-				const RepliesStore = external_PluginApi_namespaceObject.WebpackModules.getByProps("getPendingReply");
-				const Button = external_PluginApi_namespaceObject.WebpackModules.getModule((e => "DropdownSizes" in e && "function" === typeof e));
-				const join = (...classNames) => classNames.filter(Boolean).join(" ");
-				const [useCollapsedStore, channelpopout_Api] = createStore({
-					collapsed: {}
-				});
-				function HeaderBar() {
-					const channel = (0, external_BdApi_React_.useContext)(ChannelContext);
-					return external_BdApi_React_default().createElement("div", {
-						className: channelpopout.Z.header
-					}, external_BdApi_React_default().createElement("div", {
-						className: channelpopout.Z.headerTag
-					}, external_BdApi_React_default().createElement("div", {
-						className: channelpopout.Z.channelIcon
-					}, channel.type === constants_namespaceObject.ChannelTypes.GROUP_DM ? external_BdApi_React_default().createElement(icons_namespaceObject.People, null) : external_BdApi_React_default().createElement(icons_namespaceObject.At, null)), external_BdApi_React_default().createElement("div", {
-						className: channelpopout.Z.headerName
-					}, channel.type === constants_namespaceObject.ChannelTypes.GROUP_DM ? ChannelNameUtils.default(channel) : stores_namespaceObject.Users.getUser(channel.getRecipientId())?.username), channel.type !== constants_namespaceObject.ChannelTypes.GROUP_DM && external_BdApi_React_default().createElement(StatusIcon, {
-						size: 10,
-						userId: channel.getRecipientId(),
-						position: "bottom",
-						isMobile: stores_namespaceObject.Status.isMobileOnline(channel.getRecipientId()),
-						className: channelpopout.Z.headerStatus
-					})), external_BdApi_React_default().createElement("div", {
-						className: channelpopout.Z.buttons
-					}, external_BdApi_React_default().createElement(CallButtons, {
-						channel
-					})));
-				}
-				function CollapseButton({
-					state,
-					onClick
-				}) {
-					return external_BdApi_React_default().createElement(components_namespaceObject.Tooltip, {
-						text: state ? "Expand" : "Collapse",
-						position: "top"
-					}, (props => external_BdApi_React_default().createElement(Button, channelpopout_extends({}, props, {
-						look: Button.Looks.BLANK,
-						size: Button.Sizes.ICON,
-						className: channelpopout.Z.collapseButton,
-						onClick
-					}), external_BdApi_React_default().createElement(icons_namespaceObject.Caret, {
-						direction: state ? icons_namespaceObject.Caret.Directions.LEFT : icons_namespaceObject.Caret.Directions.RIGHT
-					}))));
-				}
-				function ChannelPopout({
-					channel,
-					onClose
-				}) {
-					const guild = (0, external_BdApi_React_.useMemo)((() => stores_namespaceObject.Guilds.getGuild(channel?.guild_id)), [channel]);
-					const ref = (0, external_BdApi_React_.useRef)();
-					const pendingReply = (0, flux_namespaceObject.useStateFromStores)([RepliesStore], (() => RepliesStore.getPendingReply(channel.id)));
-					const closeOnOuterClick = (0, flux_namespaceObject.useStateFromStores)([settings], (() => settings.get("closeOnOuterClick", true)));
-					const isCollapsed = useCollapsedStore((state => Boolean(state.collapsed[channel.id])));
-					const collapse = (0, external_BdApi_React_.useCallback)((value => {
-						channelpopout_Api.setState((state => {
-							if (value) state.collapsed[channel.id] = true;
-							else delete state.collapsed[channel.id];
-							return {
-								...state
-							};
-						}));
-					}), [isCollapsed]);
-					(0, external_BdApi_React_.useEffect)((() => {
-						const listener = event => {
-							if (!event.target || !ref.current || !closeOnOuterClick) return;
-							if (event.target === ref.current || ref.current.contains(event.target)) return;
-							onClose();
-						};
-						document.body.classList.add("mouse-mode");
-						document.addEventListener("click", listener);
-						return () => {
-							document.body.classList.remove("mouse-mode");
-							document.removeEventListener("click", listener);
-						};
-					}), [ref, closeOnOuterClick]);
-					return external_BdApi_React_default().createElement(ChannelContext.Provider, {
-						value: channel
-					}, external_BdApi_React_default().createElement("div", {
-						className: join(channelpopout.Z.popout, isCollapsed && channelpopout.Z.collapsed),
-						ref
-					}, external_BdApi_React_default().createElement(RemoveButton, {
-						onClick: onClose,
-						className: channelpopout.Z.removeButton
-					}), external_BdApi_React_default().createElement(CollapseButton, {
-						state: isCollapsed,
-						onClick: () => {
-							collapse(!isCollapsed);
-						}
-					}), external_BdApi_React_default().createElement("div", {
-						className: channelpopout.Z.content
-					}, external_BdApi_React_default().createElement(HeaderBar, null), external_BdApi_React_default().createElement(ChannelChat, {
-						channel,
-						guild,
-						textareaType: "sidebar",
-						placeholder: FormatPlaceholder(channel),
-						pendingReply
-					}))));
-				}
-				var createUpdateWrapper_React = __webpack_require__(113);
-				function createUpdateWrapper_extends() {
-					createUpdateWrapper_extends = Object.assign || function(target) {
-						for (var i = 1; i < arguments.length; i++) {
-							var source = arguments[i];
-							for (var key in source)
-								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-						}
-						return target;
-					};
-					return createUpdateWrapper_extends.apply(this, arguments);
-				}
-				const createUpdateWrapper = (Component, valueProp = "value", changeProp = "onChange", valueIndex = 0) => props => {
-					const [value, setValue] = createUpdateWrapper_React.useState(props[valueProp]);
-					return createUpdateWrapper_React.createElement(Component, createUpdateWrapper_extends({}, props, {
-						[valueProp]: value,
-						[changeProp]: (...args) => {
-							const value = args[valueIndex];
-							if ("function" === typeof props[changeProp]) props[changeProp](value);
-							setValue(value);
-						}
-					}));
-				};
-				const hooks_createUpdateWrapper = createUpdateWrapper;
-				const SwitchItem = hooks_createUpdateWrapper(external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("SwitchItem"));
-				const SettingsItems = [{
-					name: "Close on outer click",
-					note: "Closes the popout when clicking outside of it.",
-					id: "closeOnOuterClick",
-					value: true
-				}];
-				function SettingsPanel() {
-					return external_BdApi_React_default().createElement(external_BdApi_React_default().Fragment, null, SettingsItems.map((item => external_BdApi_React_default().createElement(SwitchItem, {
-						key: item.id,
-						note: item.note,
-						children: item.name,
-						value: settings.get(item.id, item.value),
-						onChange: value => {
-							settings.set(item.id, value);
-						}
-					}))));
-				}
-				var unreadbadge_React = __webpack_require__(113);
-				const Badges = external_PluginApi_namespaceObject.WebpackModules.getByProps("NumberBadge");
-				const UnreadStore = external_PluginApi_namespaceObject.WebpackModules.getByProps("getUnreadCount");
-				const MutedStore = external_PluginApi_namespaceObject.WebpackModules.getByProps("getMutedChannels");
-				const isChannelMuted = function(guildId, channelId) {
-					return MutedStore.getMutedChannels(guildId).has(channelId);
-				};
-				function UnreadBadge({
-					channel
-				}) {
-					const unreadCount = (0, flux_namespaceObject.useStateFromStores)([UnreadStore, MutedStore], (() => {
-						if (isChannelMuted(channel.guild_id, channel.id)) return 0;
-						return UnreadStore.getMentionCount(channel.id);
-					}));
-					if (unreadCount < 1) return null;
-					return unreadbadge_React.createElement(Badges.NumberBadge, {
-						count: unreadCount,
-						color: "#ed4245"
-					});
-				}
-				function useSubscribe(store) {
-					const [, forceUpdate] = (0, external_BdApi_React_.useReducer)((n => !n), false);
-					(0, external_BdApi_React_.useEffect)((() => {
-						store.subscribe(forceUpdate);
-						return () => void store.unsubscribe(forceUpdate);
-					}), []);
-				}
-				function store_createStore({
-					handler,
-					initialState
-				}) {
-					let state = initialState;
-					const store = {
-						useStore: factory => {
-							useSubscribe(store);
-							return factory(state);
-						},
-						getState: (factory = (_ => _)) => factory(state),
-						_listeners: new Set,
-						subscribe: listener => {
-							store._listeners.add(listener);
-						},
-						unsubscribe: listener => store._listeners.delete(listener),
-						dispatch: event => {
-							const listeners = [...store._listeners];
-							const data = handler(event, state);
-							if (false === data) return;
-							if (!Array.isArray(data)) Object.assign(state, data);
-							for (let i = 0; i < listeners.length; i++) listeners[i](event);
-						}
-					};
-					return store;
-				}
-				var channelmembers = __webpack_require__(781);
-				var channelmembers_React = __webpack_require__(113);
-				function channelmembers_extends() {
-					channelmembers_extends = Object.assign || function(target) {
-						for (var i = 1; i < arguments.length; i++) {
-							var source = arguments[i];
-							for (var key in source)
-								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-						}
-						return target;
-					};
-					return channelmembers_extends.apply(this, arguments);
-				}
-				const TabBar = external_PluginApi_namespaceObject.WebpackModules.getByProps("Item", "Header");
-				var Tabs;
-				(function(Tabs) {
-					Tabs[Tabs["MEMBERS"] = 0] = "MEMBERS";
-					Tabs[Tabs["DMS"] = 1] = "DMS";
-				})(Tabs || (Tabs = {}));
-				var Events;
-				(function(Events) {
-					Events[Events["SELECT"] = 0] = "SELECT";
-				})(Events || (Events = {}));
-				const Store = store_createStore({
-					initialState: {
-						tab: Tabs.MEMBERS
-					},
-					handler(event, state) {
-						switch (event.type) {
-							case Events.SELECT:
-								if (!Tabs[event.id]) return false;
-								state.tab = event.id;
-								return state;
-						}
-					}
-				});
-				function renderList({
-					tab,
-					MemberList,
-					memberListProps
-				}) {
-					switch (tab) {
-						case Tabs.MEMBERS:
-							return channelmembers_React.createElement(MemberList, channelmembers_extends({}, memberListProps, {
-								__IS_PLUGIN: true,
-								key: "MEMBERS"
-							}));
-						case Tabs.DMS:
-							return channelmembers_React.createElement(PrivateChannels, {
-								key: "DMS"
-							});
-						default:
-							return channelmembers_React.createElement("p", null, "Uh.");
-					}
-				}
-				function ChannelMembers({
-					original: MemberList,
-					memberListProps
-				}) {
-					const tab = Store.useStore((s => s.tab));
-					const handleSelect = function(id) {
-						Store.dispatch({
-							type: Events.SELECT,
-							id
-						});
-					};
-					return channelmembers_React.createElement("div", {
-						className: channelmembers.Z.wrap,
-						"data-tab": Tabs[tab]
-					}, channelmembers_React.createElement(TabBar.Header, {
-						className: external_PluginApi_namespaceObject.Utilities.className(channelmembers.Z.header, TabBar.Types.TOP_PILL),
-						key: "TAB_BAR"
-					}, channelmembers_React.createElement(TabBar.Item, {
-						selectedItem: tab,
-						id: Tabs.MEMBERS,
-						type: TabBar.Types.TOP,
-						onClick: handleSelect.bind(null, Tabs.MEMBERS)
-					}, "Members"), channelmembers_React.createElement(TabBar.Item, {
-						selectedItem: tab,
-						id: Tabs.DMS,
-						onClick: handleSelect.bind(null, Tabs.DMS)
-					}, "DMs")), renderList({
-						tab,
-						memberListProps,
-						MemberList
-					}));
-				}
-				function ChannelDms_extends() {
-					ChannelDms_extends = Object.assign || function(target) {
-						for (var i = 1; i < arguments.length; i++) {
-							var source = arguments[i];
-							for (var key in source)
-								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-						}
-						return target;
-					};
-					return ChannelDms_extends.apply(this, arguments);
-				}
-				const ChannelInfoActions = external_PluginApi_namespaceObject.WebpackModules.getByProps("setChannelInfoTab");
-				const ChannelSidebarStore = external_PluginApi_namespaceObject.WebpackModules.getByProps("getActiveInfoTab");
-				class ChannelDms extends(external_BasePlugin_default()) {
-					onStart() {
-						external_StyleLoader_default().inject();
-						this.patchChannelMembers();
-						this.patchChannelInfo();
-						this.patchListItem();
-						this.patchPrivateChannel();
-					}
-					getSettingsPanel() {
-						return external_BdApi_React_default().createElement(SettingsPanel, null);
-					}
-					async patchChannelMembers() {
-						const DefaultChannelMembers = external_PluginApi_namespaceObject.WebpackModules.getModule((m => m.default && "ConnectedChannelMembers" === m.default.displayName));
-						external_PluginApi_namespaceObject.Patcher.instead(DefaultChannelMembers, "default", ((_, [props], original) => {
-							if (props.__IS_PLUGIN) return;
-							return external_BdApi_React_default().createElement(ChannelMembers, {
-								original,
-								memberListProps: props,
-								key: "CHANNEL_MEMBERS"
-							});
-						}));
-					}
-					patchChannelInfo() {
-						const ChannelInfo = external_PluginApi_namespaceObject.WebpackModules.getModule((m => "ChannelInfo" === m.default?.displayName));
-						const ChannelInfoClasses = external_PluginApi_namespaceObject.WebpackModules.getByProps("container", "members");
-						const {
-							Item
-						} = external_PluginApi_namespaceObject.WebpackModules.getByProps("Header", "Item") ?? {};
-						const join = (...classNames) => classNames.filter(Boolean).join(" ");
-						external_PluginApi_namespaceObject.Patcher.after(ChannelInfo, "default", ((_, __, ret) => {
-							const activeTab = ChannelSidebarStore.getActiveInfoTab();
-							const header = external_PluginApi_namespaceObject.Utilities.findInReactTree(ret, (e => e && "onItemSelect" in e));
-							if (!Array.isArray(header?.children) || !Array.isArray(ret?.props?.children)) return;
-							header.children.push(external_BdApi_React_default().createElement(Item, {
-								className: join(ChannelInfoClasses.tab, 3 === activeTab && ChannelInfoClasses.active),
-								id: 3
-							}, "DMs"));
-							if (3 !== activeTab) return;
-							ret.props.children[ret.props.children.length - 1] = external_BdApi_React_default().createElement(PrivateChannels, null);
-						}));
-					}
-					async patchPrivateChannel() {
-						const classes = external_PluginApi_namespaceObject.WebpackModules.getByProps("channel", "closeButton");
-						const PrivateChannel = await external_PluginApi_namespaceObject.ReactComponents.getComponentByName("PrivateChannel", "." + classes?.channel);
-						external_PluginApi_namespaceObject.Patcher.after(PrivateChannel.component.prototype, "render", ((_this, _, ret) => {
-							if (!ret?.props) return;
-							const original = ret.props.children;
-							ret.props.children = id => {
-								const returnValue = Reflect.apply(original, null, [id]);
-								try {
-									Object.assign(returnValue.props, {
-										channel: _this.props.channel
-									});
-								} catch (error) {
-									external_PluginApi_namespaceObject.Logger.error("Failed to assign props to nested element:", error);
-								}
-								return returnValue;
-							};
-						}));
-						PrivateChannel.forceUpdateAll();
-					}
-					patchListItem() {
-						const ListItem = external_PluginApi_namespaceObject.WebpackModules.getModule((e => e?.render?.toString().indexOf("nameAndDecorators") > -1));
-						const ListItemClasses = external_PluginApi_namespaceObject.WebpackModules.getByProps("nameAndDecorators", "wrappedName", "selected");
-						function PatchedNestedRoute({
-							__original,
-							...props
-						}) {
-							const ret = Reflect.apply(__original.render, this, [props]);
-							try {
-								delete ret.props.href;
-								ret.props.onClick = props.onSelect;
-							} catch (error) {
-								external_PluginApi_namespaceObject.Logger.error("Error in PatchedNestedRoute:", error);
-							}
-							return ret;
-						}
-						function PatchedRoute({
-							__original,
-							...props
-						}) {
-							const ret = Reflect.apply(__original.render, this, [props]);
-							try {
-								const originalConsumer = ret.props.children;
-								ret.props.children = props2 => {
-									const returnValue = Reflect.apply(originalConsumer, null, [props2]);
-									try {
-										const original = returnValue.type;
-										returnValue.type = PatchedNestedRoute;
-										returnValue.props.__original = original;
-										returnValue.props.onSelect = props.onSelect;
-									} catch (error) {
-										external_PluginApi_namespaceObject.Logger.error("Error while injecting PatchedNestedRoute:", error);
-									}
-									return returnValue;
-								};
-							} catch (error) {
-								external_PluginApi_namespaceObject.Logger.error("Error in Route patch:", error);
-							}
-							return ret;
-						}
-						function PatchedListItem({
-							children,
-							channel
-						}) {
-							const {
-								selectedChannelId,
-								shouldShow,
-								setSelectedChannelId
-							} = (0, external_BdApi_React_.useContext)(context);
-							if (!shouldShow) return children;
-							const selected = (0, external_BdApi_React_.useMemo)((() => selectedChannelId === channel.id), [selectedChannelId]);
-							const child = external_BdApi_React_default().cloneElement(children.props.children);
-							try {
-								const original = child.type;
-								if (selected) child.props.className += " " + ListItemClasses.selected;
-								child.props.__original = original;
-								child.props.onSelect = event => {
-									event.preventDefault();
-									event.stopPropagation();
-									setSelectedChannelId(selected ? "" : channel.id);
-								};
-								child.type = PatchedRoute;
-								const childrenContainer = external_PluginApi_namespaceObject.Utilities.findInReactTree(child, (e => e?.className?.indexOf("children") > -1));
-								if (childrenContainer) {
-									childrenContainer.children = [external_BdApi_React_default().createElement(UnreadBadge, {
-										channel
-									}), childrenContainer.children];
-									childrenContainer.className += " ChannelDms-channelpopout-unread";
-								}
-							} catch (error) {
-								external_PluginApi_namespaceObject.Logger.error("Error in ListItem patch:", error);
-							}
-							return external_BdApi_React_default().createElement(components_namespaceObject.Popout, {
-								shouldShow: selected,
-								spacing: 25,
-								position: components_namespaceObject.Popout.Positions.LEFT,
-								animation: components_namespaceObject.Popout.Animation.TRANSLATE,
-								renderPopout: props => external_BdApi_React_default().createElement(ChannelPopout, ChannelDms_extends({
-									channel
-								}, props, {
-									onClose: () => setSelectedChannelId("")
-								}))
-							}, (() => child));
-						}
-						external_PluginApi_namespaceObject.Patcher.after(ListItem, "render", ((_, [props], ret) => {
-							if (!Reflect.has(props, "channel")) return;
-							return external_BdApi_React_default().createElement(PatchedListItem, ChannelDms_extends({}, props, {
-								children: ret
-							}));
-						}));
-					}
-					onStop() {
-						external_PluginApi_namespaceObject.Patcher.unpatchAll();
-						external_StyleLoader_default().remove();
-						if (3 === ChannelSidebarStore.getActiveInfoTab()) ChannelInfoActions.setChannelInfoTab(0);
-					}
-				}
-			},
 			645: module => {
 				module.exports = function(cssWithMappingToString) {
 					var list = [];
@@ -1021,7 +397,617 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				});
 			};
 		})();
-		var __webpack_exports__ = __webpack_require__(990);
+		var __webpack_exports__ = {};
+		(() => {
+			__webpack_require__.r(__webpack_exports__);
+			__webpack_require__.d(__webpack_exports__, {
+				default: () => ChannelDms
+			});
+			const external_PluginApi_namespaceObject = PluginApi;
+			const external_BasePlugin_namespaceObject = BasePlugin;
+			var external_BasePlugin_default = __webpack_require__.n(external_BasePlugin_namespaceObject);
+			const external_StyleLoader_namespaceObject = StyleLoader;
+			var external_StyleLoader_default = __webpack_require__.n(external_StyleLoader_namespaceObject);
+			var external_BdApi_React_ = __webpack_require__(113);
+			var external_BdApi_React_default = __webpack_require__.n(external_BdApi_React_);
+			const ChannelInfoContext = external_BdApi_React_default().createContext({
+				shouldShow: false,
+				selectedChannelId: "",
+				setSelectedChannelId: () => {}
+			});
+			const context = ChannelInfoContext;
+			const components_namespaceObject = Modules["@discord/components"];
+			const stores_namespaceObject = Modules["@discord/stores"];
+			var React = __webpack_require__(113);
+			function _extends() {
+				_extends = Object.assign || function(target) {
+					for (var i = 1; i < arguments.length; i++) {
+						var source = arguments[i];
+						for (var key in source)
+							if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
+					}
+					return target;
+				};
+				return _extends.apply(this, arguments);
+			}
+			function AsyncComponent({
+				promise,
+				fallback,
+				...props
+			}) {
+				const [Component, setComponent] = (0, external_BdApi_React_.useState)((() => fallback));
+				(0, external_BdApi_React_.useEffect)((() => {
+					Promise.resolve(promise).then((comp => {
+						setComponent((() => comp));
+					}));
+				}), [promise]);
+				return React.createElement(Component, props);
+			}
+			function wrapPromise(promise, fallback) {
+				return props => React.createElement(AsyncComponent, _extends({
+					promise,
+					fallback
+				}, props));
+			}
+			var channelpopout = __webpack_require__(290);
+			const icons_namespaceObject = Modules["@discord/icons"];
+			const constants_namespaceObject = Modules["@discord/constants"];
+			const flux_namespaceObject = Modules["@discord/flux"];
+			const modules_namespaceObject = Modules["@discord/modules"];
+			function _defineProperty(obj, key, value) {
+				if (key in obj) Object.defineProperty(obj, key, {
+					value,
+					enumerable: true,
+					configurable: true,
+					writable: true
+				});
+				else obj[key] = value;
+				return obj;
+			}
+			class SettingsManager extends flux_namespaceObject.Store {
+				constructor(pluginName, defaultSettings = {}) {
+					super(modules_namespaceObject.Dispatcher, {});
+					_defineProperty(this, "settings", void 0);
+					_defineProperty(this, "pluginName", void 0);
+					_defineProperty(this, "get", ((key, defaultValue) => this.settings[key] ?? defaultValue));
+					_defineProperty(this, "set", ((key, value) => {
+						this.settings[key] = value;
+						external_PluginApi_namespaceObject.PluginUtilities.saveSettings(this.pluginName, this.settings);
+						this.emitChange();
+						return value;
+					}));
+					this.pluginName = pluginName;
+					this.settings = external_PluginApi_namespaceObject.PluginUtilities.loadSettings(pluginName, defaultSettings);
+				}
+			}
+			const package_namespaceObject = JSON.parse('{"um":{"u2":"ChannelDms"}}');
+			const Settings = new SettingsManager(package_namespaceObject.um.u2);
+			const settings = Settings;
+			function createStore(state) {
+				const listeners = new Set;
+				const api = {
+					getState() {
+						return state;
+					},
+					setState(partial) {
+						const partialState = "function" === typeof partial ? partial(state) : partial;
+						state = Object.assign({}, state, partialState);
+						listeners.forEach((listener => {
+							listener(state);
+						}));
+					},
+					get listeners() {
+						return listeners;
+					},
+					on(listener) {
+						if (listeners.has(listener)) return;
+						listeners.add(listener);
+						return () => listeners.delete(listener);
+					},
+					off(listener) {
+						return listeners.delete(listener);
+					}
+				};
+				return [function(collector = (_ => _)) {
+					const forceUpdate = (0, external_BdApi_React_.useReducer)((e => e + 1), 0)[1];
+					(0, external_BdApi_React_.useEffect)((() => {
+						const handler = () => forceUpdate();
+						listeners.add(handler);
+						return () => listeners.delete(handler);
+					}), []);
+					return collector(api.getState());
+				}, api];
+			}
+			function channelpopout_extends() {
+				channelpopout_extends = Object.assign || function(target) {
+					for (var i = 1; i < arguments.length; i++) {
+						var source = arguments[i];
+						for (var key in source)
+							if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
+					}
+					return target;
+				};
+				return channelpopout_extends.apply(this, arguments);
+			}
+			const classes = external_PluginApi_namespaceObject.WebpackModules.getByProps("chatContent");
+			const ChannelChat = wrapPromise(external_PluginApi_namespaceObject.ReactComponents.getComponentByName("ChannelChat", "." + classes?.chatContent).then((res => res.component)), (() => external_BdApi_React_default().createElement("p", null, "Loading...")));
+			const ChannelContext = external_BdApi_React_default().createContext(null);
+			const {
+				ChatInputTypes
+			} = external_PluginApi_namespaceObject.WebpackModules.getByProps("ChatInputTypes") ?? {};
+			const StatusIcon = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("FluxContainer(Status)");
+			const CallButtons = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("ConnectedPrivateChannelCallButtonSubscribed") ?? external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("ConnectedPrivateChannelCallButton");
+			const FormatPlaceholder = external_PluginApi_namespaceObject.WebpackModules.getModule((m => m?.toString().indexOf("TEXTAREA_PLACEHOLDER") > -1));
+			const RemoveButton = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("RemoveButton");
+			const ChannelNameUtils = external_PluginApi_namespaceObject.WebpackModules.getByProps("computeChannelName");
+			const RepliesStore = external_PluginApi_namespaceObject.WebpackModules.getByProps("getPendingReply");
+			const Button = external_PluginApi_namespaceObject.WebpackModules.getModule((e => "DropdownSizes" in e && "function" === typeof e));
+			const join = (...classNames) => classNames.filter(Boolean).join(" ");
+			const [useCollapsedStore, Api] = createStore({
+				collapsed: {}
+			});
+			function HeaderBar() {
+				const channel = (0, external_BdApi_React_.useContext)(ChannelContext);
+				return external_BdApi_React_default().createElement("div", {
+					className: channelpopout.Z.header
+				}, external_BdApi_React_default().createElement("div", {
+					className: channelpopout.Z.headerTag
+				}, external_BdApi_React_default().createElement("div", {
+					className: channelpopout.Z.channelIcon
+				}, channel.type === constants_namespaceObject.ChannelTypes.GROUP_DM ? external_BdApi_React_default().createElement(icons_namespaceObject.People, null) : external_BdApi_React_default().createElement(icons_namespaceObject.At, null)), external_BdApi_React_default().createElement("div", {
+					className: channelpopout.Z.headerName
+				}, channel.type === constants_namespaceObject.ChannelTypes.GROUP_DM ? ChannelNameUtils.default(channel) : stores_namespaceObject.Users.getUser(channel.getRecipientId())?.username), channel.type !== constants_namespaceObject.ChannelTypes.GROUP_DM && external_BdApi_React_default().createElement(StatusIcon, {
+					size: 10,
+					userId: channel.getRecipientId(),
+					position: "bottom",
+					isMobile: stores_namespaceObject.Status.isMobileOnline(channel.getRecipientId()),
+					className: channelpopout.Z.headerStatus
+				})), external_BdApi_React_default().createElement("div", {
+					className: channelpopout.Z.buttons
+				}, external_BdApi_React_default().createElement(CallButtons, {
+					channel
+				})));
+			}
+			function CollapseButton({
+				state,
+				onClick
+			}) {
+				return external_BdApi_React_default().createElement(components_namespaceObject.Tooltip, {
+					text: state ? "Expand" : "Collapse",
+					position: "top"
+				}, (props => external_BdApi_React_default().createElement(Button, channelpopout_extends({}, props, {
+					look: Button.Looks.BLANK,
+					size: Button.Sizes.ICON,
+					className: channelpopout.Z.collapseButton,
+					onClick
+				}), external_BdApi_React_default().createElement(icons_namespaceObject.Caret, {
+					direction: state ? icons_namespaceObject.Caret.Directions.LEFT : icons_namespaceObject.Caret.Directions.RIGHT
+				}))));
+			}
+			function ChannelPopout({
+				channel,
+				onClose
+			}) {
+				const guild = (0, external_BdApi_React_.useMemo)((() => stores_namespaceObject.Guilds.getGuild(channel?.guild_id)), [channel]);
+				const ref = (0, external_BdApi_React_.useRef)();
+				const pendingReply = (0, flux_namespaceObject.useStateFromStores)([RepliesStore], (() => RepliesStore.getPendingReply(channel.id)));
+				const closeOnOuterClick = (0, flux_namespaceObject.useStateFromStores)([settings], (() => settings.get("closeOnOuterClick", true)));
+				const isCollapsed = useCollapsedStore((state => Boolean(state.collapsed[channel.id])));
+				const collapse = (0, external_BdApi_React_.useCallback)((value => {
+					Api.setState((state => {
+						if (value) state.collapsed[channel.id] = true;
+						else delete state.collapsed[channel.id];
+						return {
+							...state
+						};
+					}));
+				}), [isCollapsed]);
+				(0, external_BdApi_React_.useEffect)((() => {
+					const listener = event => {
+						if (!event.target || !ref.current || !closeOnOuterClick) return;
+						if (event.target === ref.current || ref.current.contains(event.target)) return;
+						onClose();
+					};
+					document.body.classList.add("mouse-mode");
+					document.addEventListener("click", listener);
+					return () => {
+						document.body.classList.remove("mouse-mode");
+						document.removeEventListener("click", listener);
+					};
+				}), [ref, closeOnOuterClick]);
+				return external_BdApi_React_default().createElement(ChannelContext.Provider, {
+					value: channel
+				}, external_BdApi_React_default().createElement("div", {
+					className: join(channelpopout.Z.popout, isCollapsed && channelpopout.Z.collapsed),
+					ref
+				}, external_BdApi_React_default().createElement(RemoveButton, {
+					onClick: onClose,
+					className: channelpopout.Z.removeButton
+				}), external_BdApi_React_default().createElement(CollapseButton, {
+					state: isCollapsed,
+					onClick: () => {
+						collapse(!isCollapsed);
+					}
+				}), external_BdApi_React_default().createElement("div", {
+					className: channelpopout.Z.content
+				}, external_BdApi_React_default().createElement(HeaderBar, null), external_BdApi_React_default().createElement(ChannelChat, {
+					channel,
+					guild,
+					chatInputType: ChatInputTypes.SIDEBAR,
+					placeholder: FormatPlaceholder(channel),
+					pendingReply
+				}))));
+			}
+			var createUpdateWrapper_React = __webpack_require__(113);
+			function createUpdateWrapper_extends() {
+				createUpdateWrapper_extends = Object.assign || function(target) {
+					for (var i = 1; i < arguments.length; i++) {
+						var source = arguments[i];
+						for (var key in source)
+							if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
+					}
+					return target;
+				};
+				return createUpdateWrapper_extends.apply(this, arguments);
+			}
+			const createUpdateWrapper = (Component, valueProp = "value", changeProp = "onChange", valueIndex = 0) => props => {
+				const [value, setValue] = createUpdateWrapper_React.useState(props[valueProp]);
+				return createUpdateWrapper_React.createElement(Component, createUpdateWrapper_extends({}, props, {
+					[valueProp]: value,
+					[changeProp]: (...args) => {
+						const value = args[valueIndex];
+						if ("function" === typeof props[changeProp]) props[changeProp](value);
+						setValue(value);
+					}
+				}));
+			};
+			const hooks_createUpdateWrapper = createUpdateWrapper;
+			const SwitchItem = hooks_createUpdateWrapper(external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("SwitchItem"));
+			const SettingsItems = [{
+				name: "Close on outer click",
+				note: "Closes the popout when clicking outside of it.",
+				id: "closeOnOuterClick",
+				value: true
+			}];
+			function SettingsPanel() {
+				return external_BdApi_React_default().createElement(external_BdApi_React_default().Fragment, null, SettingsItems.map((item => external_BdApi_React_default().createElement(SwitchItem, {
+					key: item.id,
+					note: item.note,
+					children: item.name,
+					value: settings.get(item.id, item.value),
+					onChange: value => {
+						settings.set(item.id, value);
+					}
+				}))));
+			}
+			var unreadbadge_React = __webpack_require__(113);
+			const Badges = external_PluginApi_namespaceObject.WebpackModules.getByProps("NumberBadge");
+			const UnreadStore = external_PluginApi_namespaceObject.WebpackModules.getByProps("getUnreadCount");
+			const MutedStore = external_PluginApi_namespaceObject.WebpackModules.getByProps("getMutedChannels");
+			const isChannelMuted = function(guildId, channelId) {
+				return MutedStore.getMutedChannels(guildId).has(channelId);
+			};
+			function UnreadBadge({
+				channel
+			}) {
+				const unreadCount = (0, flux_namespaceObject.useStateFromStores)([UnreadStore, MutedStore], (() => {
+					if (isChannelMuted(channel.guild_id, channel.id)) return 0;
+					return UnreadStore.getMentionCount(channel.id);
+				}));
+				if (unreadCount < 1) return null;
+				return unreadbadge_React.createElement(Badges.NumberBadge, {
+					count: unreadCount,
+					color: "#ed4245"
+				});
+			}
+			function useSubscribe(store) {
+				const [, forceUpdate] = (0, external_BdApi_React_.useReducer)((n => !n), false);
+				(0, external_BdApi_React_.useEffect)((() => {
+					store.subscribe(forceUpdate);
+					return () => void store.unsubscribe(forceUpdate);
+				}), []);
+			}
+			function store_createStore({
+				handler,
+				initialState
+			}) {
+				let state = initialState;
+				const store = {
+					useStore: factory => {
+						useSubscribe(store);
+						return factory(state);
+					},
+					getState: (factory = (_ => _)) => factory(state),
+					_listeners: new Set,
+					subscribe: listener => {
+						store._listeners.add(listener);
+					},
+					unsubscribe: listener => store._listeners.delete(listener),
+					dispatch: event => {
+						const listeners = [...store._listeners];
+						const data = handler(event, state);
+						if (false === data) return;
+						if (!Array.isArray(data)) Object.assign(state, data);
+						for (let i = 0; i < listeners.length; i++) listeners[i](event);
+					}
+				};
+				return store;
+			}
+			var channelmembers = __webpack_require__(781);
+			var privatechannels_React = __webpack_require__(113);
+			const PrivateChannelsConnected = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("PrivateChannelsConnected");
+			const [useChannelStore, privatechannels_Api] = createStore({
+				shouldShow: true,
+				selectedChannelId: ""
+			});
+			function PrivateChannelsPatched(props) {
+				const ret = PrivateChannelsConnected(props);
+				try {
+					ret.props.showNitroTab = false;
+					ret.props.showLibrary = false;
+					ret.props.homeLink = null;
+				} catch (error) {
+					external_PluginApi_namespaceObject.Logger.error(`Failed to set properties on PrivateChannels:`, error);
+				}
+				return ret;
+			}
+			function PrivateChannels() {
+				const {
+					selectedChannelId
+				} = useChannelStore();
+				const setSelectedChannelId = (0, external_BdApi_React_.useCallback)((id => {
+					privatechannels_Api.setState({
+						selectedChannelId: id
+					});
+				}), [selectedChannelId]);
+				return privatechannels_React.createElement(external_PluginApi_namespaceObject.Components.ErrorBoundary, null, privatechannels_React.createElement(context.Provider, {
+					value: {
+						shouldShow: true,
+						selectedChannelId,
+						setSelectedChannelId
+					}
+				}, privatechannels_React.createElement(PrivateChannelsPatched, null)));
+			}
+			var channelmembers_React = __webpack_require__(113);
+			function channelmembers_extends() {
+				channelmembers_extends = Object.assign || function(target) {
+					for (var i = 1; i < arguments.length; i++) {
+						var source = arguments[i];
+						for (var key in source)
+							if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
+					}
+					return target;
+				};
+				return channelmembers_extends.apply(this, arguments);
+			}
+			const TabBar = external_PluginApi_namespaceObject.WebpackModules.getByProps("Item", "Header");
+			var Tabs;
+			(function(Tabs) {
+				Tabs[Tabs["MEMBERS"] = 0] = "MEMBERS";
+				Tabs[Tabs["DMS"] = 1] = "DMS";
+			})(Tabs || (Tabs = {}));
+			var Events;
+			(function(Events) {
+				Events[Events["SELECT"] = 0] = "SELECT";
+			})(Events || (Events = {}));
+			const Store = store_createStore({
+				initialState: {
+					tab: Tabs.MEMBERS
+				},
+				handler(event, state) {
+					switch (event.type) {
+						case Events.SELECT:
+							if (!Tabs[event.id]) return false;
+							state.tab = event.id;
+							return state;
+					}
+				}
+			});
+			function renderList({
+				tab,
+				MemberList,
+				memberListProps
+			}) {
+				switch (tab) {
+					case Tabs.MEMBERS:
+						return channelmembers_React.createElement(MemberList, channelmembers_extends({}, memberListProps, {
+							__IS_PLUGIN: true,
+							key: "MEMBERS"
+						}));
+					case Tabs.DMS:
+						return channelmembers_React.createElement(PrivateChannels, {
+							key: "DMS"
+						});
+					default:
+						return channelmembers_React.createElement("p", null, "Uh.");
+				}
+			}
+			function ChannelMembers({
+				original: MemberList,
+				memberListProps
+			}) {
+				const tab = Store.useStore((s => s.tab));
+				const handleSelect = function(id) {
+					Store.dispatch({
+						type: Events.SELECT,
+						id
+					});
+				};
+				return channelmembers_React.createElement("div", {
+					className: channelmembers.Z.wrap,
+					"data-tab": Tabs[tab]
+				}, channelmembers_React.createElement(TabBar.Header, {
+					className: external_PluginApi_namespaceObject.Utilities.className(channelmembers.Z.header, TabBar.Types.TOP_PILL),
+					key: "TAB_BAR"
+				}, channelmembers_React.createElement(TabBar.Item, {
+					selectedItem: tab,
+					id: Tabs.MEMBERS,
+					type: TabBar.Types.TOP,
+					onClick: handleSelect.bind(null, Tabs.MEMBERS)
+				}, "Members"), channelmembers_React.createElement(TabBar.Item, {
+					selectedItem: tab,
+					id: Tabs.DMS,
+					onClick: handleSelect.bind(null, Tabs.DMS)
+				}, "DMs")), renderList({
+					tab,
+					memberListProps,
+					MemberList
+				}));
+			}
+			function ChannelDms_extends() {
+				ChannelDms_extends = Object.assign || function(target) {
+					for (var i = 1; i < arguments.length; i++) {
+						var source = arguments[i];
+						for (var key in source)
+							if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
+					}
+					return target;
+				};
+				return ChannelDms_extends.apply(this, arguments);
+			}
+			class ChannelDms extends(external_BasePlugin_default()) {
+				onStart() {
+					external_StyleLoader_default().inject();
+					this.patchChannelMembers();
+					this.patchListItem();
+					this.patchPrivateChannel();
+				}
+				getSettingsPanel() {
+					return external_BdApi_React_default().createElement(SettingsPanel, null);
+				}
+				async patchChannelMembers() {
+					const DefaultChannelMembers = external_PluginApi_namespaceObject.WebpackModules.getModule((m => m.default && "ConnectedChannelMembers" === m.default.displayName));
+					external_PluginApi_namespaceObject.Patcher.instead(DefaultChannelMembers, "default", ((_, [props], original) => {
+						if (props?.__IS_PLUGIN) return;
+						return external_BdApi_React_default().createElement(ChannelMembers, {
+							original,
+							memberListProps: props,
+							key: "CHANNEL_MEMBERS"
+						});
+					}));
+				}
+				async patchPrivateChannel() {
+					const classes = external_PluginApi_namespaceObject.WebpackModules.getByProps("channel", "closeButton");
+					const PrivateChannel = await external_PluginApi_namespaceObject.ReactComponents.getComponentByName("PrivateChannel", "." + classes?.channel);
+					external_PluginApi_namespaceObject.Patcher.after(PrivateChannel.component.prototype, "render", ((_this, _, ret) => {
+						if (!ret?.props) return;
+						const props = external_PluginApi_namespaceObject.Utilities.findInReactTree(ret, (e => "function" === typeof e?.children));
+						if (!props) return;
+						const original = props.children;
+						props.children = id => {
+							const returnValue = Reflect.apply(original, null, [id]);
+							try {
+								Object.assign(returnValue.props, {
+									channel: _this.props.channel
+								});
+							} catch (error) {
+								external_PluginApi_namespaceObject.Logger.error("Failed to assign props to nested element:", error);
+							}
+							return returnValue;
+						};
+					}));
+					PrivateChannel.forceUpdateAll();
+				}
+				patchListItem() {
+					const ListItem = external_PluginApi_namespaceObject.WebpackModules.getModule((e => /focusProps.*"li"/is.test(e?.render?.toString())));
+					const InteractiveClasses = external_PluginApi_namespaceObject.WebpackModules.getByProps("interactiveSelected", "interactive");
+					function PatchedNestedRoute({
+						__original,
+						...props
+					}) {
+						const ret = Reflect.apply(__original.render, this, [props]);
+						try {
+							delete ret.props.href;
+							ret.props.onClick = props.onSelect;
+						} catch (error) {
+							external_PluginApi_namespaceObject.Logger.error("Error in PatchedNestedRoute:", error);
+						}
+						return ret;
+					}
+					function PatchedRoute({
+						__original,
+						...props
+					}) {
+						const ret = Reflect.apply(__original.render, this, [props]);
+						try {
+							const originalConsumer = ret.props.children;
+							ret.props.children = props2 => {
+								const returnValue = Reflect.apply(originalConsumer, null, [props2]);
+								try {
+									const original = returnValue.type;
+									returnValue.type = PatchedNestedRoute;
+									returnValue.props.__original = original;
+									returnValue.props.onSelect = props.onSelect;
+								} catch (error) {
+									external_PluginApi_namespaceObject.Logger.error("Error while injecting PatchedNestedRoute:", error);
+								}
+								return returnValue;
+							};
+						} catch (error) {
+							external_PluginApi_namespaceObject.Logger.error("Error in Route patch:", error);
+						}
+						return ret;
+					}
+					function PatchedListItem({
+						children,
+						channel
+					}) {
+						const {
+							selectedChannelId,
+							shouldShow,
+							setSelectedChannelId
+						} = (0, external_BdApi_React_.useContext)(context);
+						if (!shouldShow) return children;
+						const selected = (0, external_BdApi_React_.useMemo)((() => selectedChannelId === channel.id), [selectedChannelId]);
+						const child = external_BdApi_React_default().cloneElement(children.props.children);
+						const route = external_PluginApi_namespaceObject.Utilities.findInReactTree(children, (e => e?.type?.render));
+						try {
+							const interactive = external_PluginApi_namespaceObject.Utilities.findInReactTree(child, (e => "Interactive" === e?.type?.displayName));
+							if (route) {
+								if (selected)
+									if (interactive) interactive.props.className += ` ${InteractiveClasses.interactiveSelected}`;
+								route.props.__original = route.type;
+								route.props.onSelect = event => {
+									event.preventDefault();
+									event.stopPropagation();
+									setSelectedChannelId(selected ? "" : channel.id);
+								};
+								route.type = PatchedRoute;
+							}
+							const close = interactive?.props?.children?.[1];
+							if (close) interactive.props.children[1] = external_BdApi_React_default().createElement("div", {
+								className: "ChannelDms-channelpopout-unread"
+							}, external_BdApi_React_default().createElement(UnreadBadge, {
+								channel
+							}), close);
+						} catch (error) {
+							external_PluginApi_namespaceObject.Logger.error("Error in ListItem patch:", error);
+						}
+						return external_BdApi_React_default().createElement(components_namespaceObject.Popout, {
+							shouldShow: selected,
+							spacing: 25,
+							position: components_namespaceObject.Popout.Positions.LEFT,
+							animation: components_namespaceObject.Popout.Animation.TRANSLATE,
+							renderPopout: props => external_BdApi_React_default().createElement(ChannelPopout, ChannelDms_extends({
+								channel
+							}, props, {
+								onClose: () => setSelectedChannelId("")
+							}))
+						}, (() => child));
+					}
+					external_PluginApi_namespaceObject.Patcher.after(ListItem, "render", ((_, [props], ret) => {
+						if (!Reflect.has(props, "channel")) return;
+						return external_BdApi_React_default().createElement(PatchedListItem, ChannelDms_extends({}, props, {
+							children: ret
+						}));
+					}));
+				}
+				onStop() {
+					external_PluginApi_namespaceObject.Patcher.unpatchAll();
+					external_StyleLoader_default().remove();
+				}
+			}
+		})();
 		module.exports.LibraryPluginHack = __webpack_exports__;
 	})();
 	const PluginExports = module.exports.LibraryPluginHack;
