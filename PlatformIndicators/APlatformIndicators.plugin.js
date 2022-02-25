@@ -3,7 +3,7 @@
 * @displayName PlatformIndicators
 * @authorId 415849376598982656
 * @invite gvA2ree
-* @version 1.1.3
+* @version 1.2.1
 */
 /*@cc_on
 @if (@_jscript)
@@ -40,17 +40,17 @@ module.exports = (() => {
                     twitter_username: "Strencher3"
                 }
             ],
-            version: "1.2.0",
+            version: "1.2.1",
             description: "Adds indicators for every platform that the user is using. Source code available on the repo in the 'src' folder.",
             github: "https://github.com/Strencher/BetterDiscordStuff/blob/master/PlatformIndicators/APlatformIndicators.plugin.js",
             github_raw: "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/PlatformIndicators/APlatformIndicators.plugin.js"
         },
         changelog: [
             {
-                title: "v1.1.3",
+                title: "v1.2.1",
                 type: "fixed",
                 items: [
-                    "Fixed indicators showing in the dms list. #2"
+                    "Fixed indicators showing next usernames in messages."
                 ]
             },
         ],
@@ -346,7 +346,7 @@ module.exports = (() => {
 
                     Patcher.after(MessageHeader, "default", (_, [props], returnValue) => {
                         try {
-                            const tree = Utils.getNestedProp(returnValue, "props.children.1.props.children");
+                            const tree = Utils.getNestedProp(returnValue, "props.username.props.children");
                             if (!Array.isArray(tree)) return;
                             tree.splice(2, 0, h(StatusIndicators, {user: props.message.author, type: "Chat"}));
                         }
