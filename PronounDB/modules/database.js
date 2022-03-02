@@ -58,7 +58,7 @@ export default class PronounsDB {
                         
                         for (const {id} of users) {
                             if (!allUsers[id]) continue;
-                            Logger.info("Updating for", id);
+                            Logger.debug("Updating for", id);
                             dispatcher.update.fire(id);
                         }
 

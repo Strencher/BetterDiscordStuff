@@ -1,3 +1,5 @@
+/// <reference path="../types/main.d.ts" />
+
 import {DCM, Patcher, Utilities, WebpackModules, Modals, ReactComponents} from "@zlibrary";
 import BasePlugin from "@zlibrary/plugin";
 import PronounTag from "./components/pronouns";
@@ -10,6 +12,7 @@ import {FormItem, FormText} from "@discord/forms";
 import {Pronouns} from "./data/constants";
 import SettingsPanel from "./components/Settings";
 import createUpdateWrapper from "common/hooks/createUpdateWrapper";
+import {Users} from "@discord/stores";
 
 const SelectInput = createUpdateWrapper(WebpackModules.getByProps("SingleSelect").SingleSelect);
 const TextInput = createUpdateWrapper(WebpackModules.getByDisplayName("TextInput"));
@@ -38,14 +41,31 @@ export default class PronounDB extends BasePlugin {
 
     async patchMessageTimestamp() {
         const OriginalMessageTimestamp = WebpackModules.getModule(m => m?.default?.toString().indexOf("showTimestampOnHover") > -1);
+        
+        function PatchedMessageHeader({__PDB_original__, user, ...props}) {
+            const rendered = __PDB_original__.call(this, props);
+
+            try {
+                const children = rendered?.props?.children?.[1]?.props?.children;
+                if (Array.isArray(children)) {
+                    children.push(
+                        <PronounTag userId={user.id} type="showOnTimestamp" />
+                    );
+                }
+            } catch (error) {
+                Logger.error("Failed to inject pronoun tag in chat:", error);
+            }
+
+            return rendered;
+        }
 
         this.patches.push(Patcher.after(OriginalMessageTimestamp, "default", (_, [{message: {author: user}}], ret) => {
-            const children = Utilities.getNestedProp(ret, "props.children.1.props.children");
-            if (!Array.isArray(children)) return;
+            Object.assign(ret.props, {
+                __PDB_original__: ret.type,
+                user
+            });
 
-            children.push(
-                <PronounTag userId={user.id} type="showOnTimestamp" />
-            );
+            ret.type = PatchedMessageHeader;
         }));
 
         // Thanks discord.
@@ -120,13 +140,16 @@ export default class PronounDB extends BasePlugin {
 
         const patchUserContextMenu = (menu) => {
             this.patches.push(
-                Patcher.after(menu, "default", (_, [{user}], ret) => {
-                    const children = Utilities.getNestedProp(ret, "props.children.props.children");
-                    if (!Array.isArray(children)) return;
-    
+                Patcher.after(menu, "default", (_, [user], ret) => {
+                    const isMenuItem = typeof user === "string";
+
+                    if (isMenuItem) user = Users.getUser(user);
+                    else ({user} = user);
+                    
+                    if (!user) return;
+                    
                     const localOverride = Settings.get("customPronouns")[user.id];
-    
-                    children.push(DCM.buildMenuChildren([
+                    const item = DCM.buildMenuChildren([
                         {
                             type: "submenu",
                             id: "pronoun-db",
@@ -151,14 +174,22 @@ export default class PronounDB extends BasePlugin {
                                 }
                             ].filter(Boolean)
                         }
-                    ]));
+                    ])
+    
+                    if (isMenuItem) {
+                        return [ret, item];
+                    } else {
+                        const children = Utilities.findInReactTree(ret, Array.isArray);
+                        children && children.push(item);
+                    }
                 })
             );
         };
 
         const patched = new Set();
+        const regex = /user.*contextmenu|useUserRolesItems/i;
         const search = async () => {
-            const Menu = await DCM.getDiscordMenu(m => m.displayName?.search(/user.*contextmenu/i) > -1 && !patched.has(m.displayName));
+            const Menu = await DCM.getDiscordMenu(m => regex.test(m.displayName) && !patched.has(m.displayName));
             if (this.promises.cancelled) return;
 
             patched.add(Menu.default.displayName);
