@@ -3,6 +3,10 @@
     box-sizing: border-box;
 }
 
+.chatAvatar::before {
+    display: none;
+}
+
 .userPopout {
     border-radius: 50%;
     // background: var(--background-floating);
