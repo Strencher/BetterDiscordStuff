@@ -1,6 +1,6 @@
 /**
  * @name UnreadCountBadges
- * @version 1.2.0
+ * @version 1.3.0
  * @author Strencher, Metalloriff
  * @description Adds unread badges to guilds, channels & more.
  * @source https://github.com/Strencher/BetterDiscordStuff/tree/master/UnreadCountBadges
@@ -32,7 +32,7 @@
 const config = {
 	"info": {
 		"name": "UnreadCountBadges",
-		"version": "1.2.0",
+		"version": "1.3.0",
 		"authors": [{
 				"name": "Strencher",
 				"discord_id": "415849376598982656",
@@ -54,9 +54,8 @@ const config = {
 		"type": "fixed",
 		"title": "Fixes",
 		"items": [
-			"Fixed unread count on guilds",
-			"Fixed settings crash",
-			"Fixed displaying wrong amount of unread messages"
+			"Fixed unread count on guilds 2.0",
+			"Fixed crashing."
 		]
 	}],
 	"build": {
@@ -147,7 +146,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					return ___createMemoize___(this, 'TransitionGroup', () => BdApi.findModuleByDisplayName('TransitionGroup'))
 				},
 				get 'Button'() {
-					return ___createMemoize___(this, 'Button', () => BdApi.findModuleByProps('DropdownSizes'))
+					return ___createMemoize___(this, 'Button', () => BdApi.findModule(m => 'DropdownSizes' in m && typeof(m) === 'function'))
 				},
 				get 'Popout'() {
 					return ___createMemoize___(this, 'Popout', () => BdApi.findModuleByDisplayName('Popout'))
@@ -291,7 +290,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				__webpack_require__.d(__webpack_exports__, {
 					Z: () => __WEBPACK_DEFAULT_EXPORT__
 				});
-				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(246);
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(645);
 				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
 				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
 					return i[1];
@@ -308,7 +307,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				__webpack_require__.d(__webpack_exports__, {
 					Z: () => __WEBPACK_DEFAULT_EXPORT__
 				});
-				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(246);
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(645);
 				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
 				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
 					return i[1];
@@ -324,7 +323,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				__webpack_require__.d(__webpack_exports__, {
 					Z: () => __WEBPACK_DEFAULT_EXPORT__
 				});
-				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(246);
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(645);
 				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
 				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
 					return i[1];
@@ -345,7 +344,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				__webpack_require__.d(__webpack_exports__, {
 					Z: () => __WEBPACK_DEFAULT_EXPORT__
 				});
-				var _css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(246);
+				var _css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(645);
 				var _css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
 				var ___CSS_LOADER_EXPORT___ = _css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
 					return i[1];
@@ -366,822 +365,10 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
 				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
 			},
-			762: (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-				__webpack_require__.r(__webpack_exports__);
-				__webpack_require__.d(__webpack_exports__, {
-					default: () => UnreadCountBadges
-				});
-				const external_PluginApi_namespaceObject = PluginApi;
-				const external_BasePlugin_namespaceObject = BasePlugin;
-				var external_BasePlugin_default = __webpack_require__.n(external_BasePlugin_namespaceObject);
-				var external_BdApi_React_ = __webpack_require__(832);
-				var external_BdApi_React_default = __webpack_require__.n(external_BdApi_React_);
-				const external_Modules_react_spring_namespaceObject = Modules["react-spring"];
-				var badge = __webpack_require__(185);
-				const external_StyleLoader_namespaceObject = StyleLoader;
-				var external_StyleLoader_default = __webpack_require__.n(external_StyleLoader_namespaceObject);
-				const flux_namespaceObject = Modules["@discord/flux"];
-				const modules_namespaceObject = Modules["@discord/modules"];
-				function _defineProperty(obj, key, value) {
-					if (key in obj) Object.defineProperty(obj, key, {
-						value,
-						enumerable: true,
-						configurable: true,
-						writable: true
-					});
-					else obj[key] = value;
-					return obj;
-				}
-				class SettingsManager extends flux_namespaceObject.Store {
-					constructor(pluginName, defaultSettings = {}) {
-						super(modules_namespaceObject.Dispatcher, {});
-						_defineProperty(this, "settings", void 0);
-						_defineProperty(this, "pluginName", void 0);
-						_defineProperty(this, "get", ((key, defaultValue) => this.settings[key] ?? defaultValue));
-						_defineProperty(this, "set", ((key, value) => {
-							this.settings[key] = value;
-							external_PluginApi_namespaceObject.PluginUtilities.saveSettings(this.pluginName, this.settings);
-							this.emitChange();
-							return value;
-						}));
-						this.pluginName = pluginName;
-						this.settings = external_PluginApi_namespaceObject.PluginUtilities.loadSettings(pluginName, defaultSettings);
-					}
-				}
-				const package_namespaceObject = JSON.parse('{"um":{"u2":"UnreadCountBadges"}}');
-				const Settings = new SettingsManager(package_namespaceObject.um.u2);
-				const settings = Settings;
-				const constants_namespaceObject = Modules["@discord/constants"];
-				var React = __webpack_require__(832);
-				function _extends() {
-					_extends = Object.assign || function(target) {
-						for (var i = 1; i < arguments.length; i++) {
-							var source = arguments[i];
-							for (var key in source)
-								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-						}
-						return target;
-					};
-					return _extends.apply(this, arguments);
-				}
-				const Badges = external_PluginApi_namespaceObject.WebpackModules.getByProps("NumberBadge");
-				const UnreadStore = external_PluginApi_namespaceObject.WebpackModules.getByProps("getUnreadCount");
-				const MutedStore = external_PluginApi_namespaceObject.WebpackModules.getByProps("getMutedChannels");
-				const isChannelMuted = function(guildId, channelId) {
-					return MutedStore.getMutedChannels(guildId).has(channelId);
-				};
-				function ConnectedUnreadBadge(props) {
-					const color = (0, flux_namespaceObject.useStateFromStores)([settings], (() => settings.get(props.color, "#5865F2")));
-					return React.createElement(Badges.NumberBadge, _extends({}, props, {
-						color
-					}));
-				}
-				function ChannelUnreadBadge({
-					channelId,
-					guildId,
-					selected
-				}) {
-					const unreadCount = (0, flux_namespaceObject.useStateFromStores)([UnreadStore, settings], (() => {
-						if (!UnreadStore.hasUnread(channelId)) return 0;
-						if (!settings.get("showOnChannels", true)) return 0;
-						if (!settings.get("showMutedChannelUnread", false) && isChannelMuted(guildId, channelId) && settings.get("showMutedChannelWhenSelected", true) ? !selected : false) return 0;
-						return UnreadStore.getUnreadCount(channelId);
-					}));
-					if (0 === unreadCount) return null;
-					return React.createElement(ConnectedUnreadBadge, {
-						color: "channelColor",
-						count: unreadCount,
-						className: badge.Z.channelUnread
-					});
-				}
-				function blobContainer_defineProperty(obj, key, value) {
-					if (key in obj) Object.defineProperty(obj, key, {
-						value,
-						enumerable: true,
-						configurable: true,
-						writable: true
-					});
-					else obj[key] = value;
-					return obj;
-				}
-				class BlobContainer extends external_BdApi_React_default().Component {
-					constructor(...args) {
-						super(...args);
-						blobContainer_defineProperty(this, "timeoutId", void 0);
-					}
-					componentDidMount() {
-						this.forceUpdate();
-					}
-					componentWillAppear(start) {
-						start();
-					}
-					componentWillEnter(start) {
-						start();
-					}
-					componentWillLeave(start) {
-						this.timeoutId = setTimeout(start, 300);
-					}
-					componentWillUnmount() {
-						clearInterval(this.timeoutId);
-					}
-					render() {
-						const {
-							className,
-							animatedStyle,
-							children
-						} = this.props;
-						return external_BdApi_React_default().createElement(external_Modules_react_spring_namespaceObject.animated.div, {
-							className,
-							style: animatedStyle
-						}, children);
-					}
-				}
-				const forms_namespaceObject = Modules["@discord/forms"];
-				const components_namespaceObject = Modules["@discord/components"];
-				var colorPicker = __webpack_require__(605);
-				function colorPicker_extends() {
-					colorPicker_extends = Object.assign || function(target) {
-						for (var i = 1; i < arguments.length; i++) {
-							var source = arguments[i];
-							for (var key in source)
-								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-						}
-						return target;
-					};
-					return colorPicker_extends.apply(this, arguments);
-				}
-				const Checkmark = external_BdApi_React_default().memo((props => external_BdApi_React_default().createElement("svg", colorPicker_extends({
-					width: "16",
-					height: "16",
-					viewBox: "0 0 24 24"
-				}, props), external_BdApi_React_default().createElement("path", {
-					fillRule: "evenodd",
-					clipRule: "evenodd",
-					fill: props.color ?? "#ddd",
-					d: "M8.99991 16.17L4.82991 12L3.40991 13.41L8.99991 19L20.9999 7.00003L19.5899 5.59003L8.99991 16.17Z"
-				}))));
-				const Dropper = external_BdApi_React_default().memo((props => external_BdApi_React_default().createElement("svg", colorPicker_extends({
-					width: "14",
-					height: "14",
-					viewBox: "0 0 16 16"
-				}, props), external_BdApi_React_default().createElement("g", {
-					fill: "none"
-				}, external_BdApi_React_default().createElement("path", {
-					d: "M-4-4h24v24H-4z"
-				}), external_BdApi_React_default().createElement("path", {
-					fill: props.color ?? "#ddd",
-					d: "M14.994 1.006C13.858-.257 11.904-.3 10.72.89L8.637 2.975l-.696-.697-1.387 1.388 5.557 5.557 1.387-1.388-.697-.697 1.964-1.964c1.13-1.13 1.3-2.985.23-4.168zm-13.25 10.25c-.225.224-.408.48-.55.764L.02 14.37l1.39 1.39 2.35-1.174c.283-.14.54-.33.765-.55l4.808-4.808-2.776-2.776-4.813 4.803z"
-				})))));
-				const defaultColors = [1752220, 3066993, 3447003, 10181046, 15277667, 15844367, 15105570, 15158332, 9807270, 6323595, 1146986, 2067276, 2123412, 7419530, 11342935, 12745742, 11027200, 10038562, 9936031, 5533306];
-				const resolveColor = (color, hex = true) => {
-					switch (typeof color) {
-						case hex && "number":
-							return external_PluginApi_namespaceObject.ColorConverter.int2hex(color);
-						case !hex && "string":
-							return external_PluginApi_namespaceObject.ColorConverter.hex2int(color);
-						case !hex && "number":
-							return color;
-						case hex && "string":
-							return color;
-						default:
-							return color;
-					}
-				};
-				const ColorPicker = ({
-					value,
-					defaultValue,
-					onChange,
-					colors = defaultColors
-				}) => {
-					const [color, setColor] = (0, external_BdApi_React_.useState)(resolveColor(value));
-					const intValue = (0, external_BdApi_React_.useMemo)((() => resolveColor(color, false)), [color]);
-					const handleChange = (0, external_BdApi_React_.useCallback)((({
-						target: {
-							value
-						}
-					}) => {
-						setColor(value);
-						onChange(resolveColor(value));
-					}), []);
-					return external_BdApi_React_default().createElement(components_namespaceObject.Flex, {
-						direction: components_namespaceObject.Flex.Direction.HORIZONTAL
-					}, external_BdApi_React_default().createElement("div", {
-						className: colorPicker.Z.controls
-					}, external_BdApi_React_default().createElement(components_namespaceObject.Tooltip, {
-						text: "Default",
-						position: "bottom"
-					}, (props => external_BdApi_React_default().createElement("div", colorPicker_extends({}, props, {
-						className: colorPicker.Z.defaultColor,
-						style: {
-							backgroundColor: resolveColor(defaultValue)
-						},
-						onClick: () => handleChange({
-							target: {
-								value: defaultValue
-							}
-						})
-					}), intValue === resolveColor(defaultValue, false) ? external_BdApi_React_default().createElement(Checkmark, {
-						width: "25",
-						height: "25"
-					}) : null))), external_BdApi_React_default().createElement(components_namespaceObject.Tooltip, {
-						text: "Custom Color",
-						position: "bottom"
-					}, (props => external_BdApi_React_default().createElement("div", {
-						className: colorPicker.Z.inputContainer
-					}, external_BdApi_React_default().createElement(Dropper, null), external_BdApi_React_default().createElement("input", colorPicker_extends({}, props, {
-						style: {
-							backgroundColor: resolveColor(color)
-						},
-						type: "color",
-						className: colorPicker.Z.colorInput,
-						value: resolveColor(color),
-						onChange: handleChange
-					})))))), external_BdApi_React_default().createElement(components_namespaceObject.Flex, {
-						wrap: components_namespaceObject.Flex.Wrap.WRAP,
-						className: colorPicker.Z.colorSwatches
-					}, colors.map(((int, index) => external_BdApi_React_default().createElement("div", {
-						key: index,
-						className: colorPicker.Z.colorSwatch,
-						style: {
-							backgroundColor: resolveColor(int)
-						},
-						onClick: () => handleChange({
-							target: {
-								value: int
-							}
-						})
-					}, intValue === int ? external_BdApi_React_default().createElement(Checkmark, null) : null)))));
-				};
-				const components_colorPicker = ColorPicker;
-				const external_window_namespaceObject = window._;
-				var external_window_default = __webpack_require__.n(external_window_namespaceObject);
-				const icons_namespaceObject = Modules["@discord/icons"];
-				const utils_namespaceObject = Modules["@discord/utils"];
-				var category = __webpack_require__(911);
-				function Category({
-					label,
-					children,
-					className,
-					look = Category.Looks.DEFAULT
-				}) {
-					const [opened, toggle] = (0, external_BdApi_React_.useState)(false);
-					const isCompact = look === category.Z.compact;
-					return external_BdApi_React_default().createElement("div", {
-						className: (0, utils_namespaceObject.joinClassNames)(className, look, category.Z.category, {
-							[category.Z.opened]: opened
-						})
-					}, external_BdApi_React_default().createElement("div", {
-						className: category.Z.header,
-						onClick: () => toggle(!opened)
-					}, external_BdApi_React_default().createElement("div", {
-						className: category.Z.label
-					}, label), isCompact ? external_BdApi_React_default().createElement("div", {
-						className: category.Z.stroke
-					}) : null, external_BdApi_React_default().createElement(icons_namespaceObject.Caret, {
-						direction: opened ? icons_namespaceObject.Caret.Directions.DOWN : isCompact ? icons_namespaceObject.Caret.Directions.LEFT : icons_namespaceObject.Caret.Directions.RIGHT,
-						className: category.Z.caret
-					})), !isCompact ? external_BdApi_React_default().createElement("div", {
-						className: category.Z.divider
-					}) : null, external_BdApi_React_default().createElement("div", {
-						className: category.Z.content
-					}, opened ? children : null));
-				}
-				Category.Looks = {
-					COMPACT: category.Z.compact,
-					DEFAULT: category.Z.default
-				};
-				var createUpdateWrapper_React = __webpack_require__(832);
-				function createUpdateWrapper_extends() {
-					createUpdateWrapper_extends = Object.assign || function(target) {
-						for (var i = 1; i < arguments.length; i++) {
-							var source = arguments[i];
-							for (var key in source)
-								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-						}
-						return target;
-					};
-					return createUpdateWrapper_extends.apply(this, arguments);
-				}
-				const createUpdateWrapper = (Component, valueProp = "value", changeProp = "onChange", valueIndex = 0) => props => {
-					const [value, setValue] = createUpdateWrapper_React.useState(props[valueProp]);
-					return createUpdateWrapper_React.createElement(Component, createUpdateWrapper_extends({}, props, {
-						[valueProp]: value,
-						[changeProp]: (...args) => {
-							const value = args[valueIndex];
-							if ("function" === typeof props[changeProp]) props[changeProp](value);
-							setValue(value);
-						}
-					}));
-				};
-				const hooks_createUpdateWrapper = createUpdateWrapper;
-				var components_Settings = __webpack_require__(927);
-				function Settings_extends() {
-					Settings_extends = Object.assign || function(target) {
-						for (var i = 1; i < arguments.length; i++) {
-							var source = arguments[i];
-							for (var key in source)
-								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-						}
-						return target;
-					};
-					return Settings_extends.apply(this, arguments);
-				}
-				const SwitchItem = hooks_createUpdateWrapper(external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("SwitchItem"));
-				function SwitchSetting({
-					id,
-					name,
-					note,
-					defaultValue
-				}) {
-					return external_BdApi_React_default().createElement(SwitchItem, {
-						note,
-						value: settings.get(id, defaultValue),
-						onChange: value => settings.set(id, value)
-					}, name);
-				}
-				function ColorSetting({
-					id,
-					name,
-					note,
-					defaultValue
-				}) {
-					return external_BdApi_React_default().createElement(forms_namespaceObject.FormItem, {
-						title: name
-					}, external_BdApi_React_default().createElement(components_colorPicker, {
-						value: resolveColor(settings.get(id, defaultValue)),
-						defaultValue,
-						onChange: external_window_default().debounce((color => settings.set(id, resolveColor(color))), 300),
-						colors: defaultColors
-					}), external_BdApi_React_default().createElement(forms_namespaceObject.FormText, {
-						type: "description"
-					}, note), external_BdApi_React_default().createElement(forms_namespaceObject.FormDivider, {
-						className: components_Settings.Z.divider
-					}));
-				}
-				const settingsItems = {
-					total: {
-						totalColor: {
-							name: "Total Unread Color",
-							type: "color",
-							defaultValue: "#5865F2",
-							note: "Color of the unread badge on the home icon."
-						},
-						showTotalUnreadCount: {
-							type: "switch",
-							name: "Total Unreads",
-							note: "Shows a unread counter of your total unread messages in the dm icon.",
-							defaultValue: true
-						},
-						includeMutedGuildsInTotal: {
-							type: "switch",
-							name: "Include Muted Guilds",
-							note: "Includes the muted count of a guild in the unread count calculation.",
-							defaultValue: false
-						},
-						includeMutedChannelsInTotal: {
-							type: "switch",
-							name: "Include Muted Channels of Guilds",
-							note: "Includes muted channels inside guilds in the unread count calculation.",
-							defaultValue: false
-						},
-						includeDmsInTotal: {
-							type: "switch",
-							name: "Include DMS",
-							note: "Includes direct messages in the unread count calculation.",
-							defaultValue: true
-						},
-						includeGroupsInTotal: {
-							type: "switch",
-							name: "Include Groups",
-							note: "Includes groups in the unread count calculation.",
-							defaultValue: true
-						},
-						includeMutedDms: {
-							type: "switch",
-							name: "Include Muted DMS",
-							note: "Includes muted dms in the unread count calculation.",
-							defaultValue: false
-						},
-						includeMutedGroups: {
-							type: "switch",
-							name: "Include Muted groups of Guilds",
-							note: "Includes muted groups in the unread count calculation.",
-							defaultValue: false
-						}
-					},
-					guilds: {
-						guildColor: {
-							name: "Guild Unread Color",
-							type: "color",
-							defaultValue: "#5865F2",
-							note: "Color of the unread badge on the guild icon."
-						},
-						showOnGuilds: {
-							type: "switch",
-							name: "Show on Guilds",
-							note: "Shows a unread counter of unread messages on guilds.",
-							defaultValue: true
-						},
-						showMutedGuildUnread: {
-							type: "switch",
-							name: "Include Muted Guilds",
-							note: "Show a unread counter on muted guilds.",
-							defaultValue: false
-						},
-						includeMutedInGuild: {
-							type: "switch",
-							name: "Include Muted Channels in Guild",
-							note: "Includes muted channels inside the guild in the unread count calculation.",
-							defaultValue: false
-						}
-					},
-					channels: {
-						channelColor: {
-							name: "Channel Unread Color",
-							type: "color",
-							defaultValue: "#5865F2",
-							note: "Color of the unread badge on the channel item."
-						},
-						showOnChannels: {
-							type: "switch",
-							name: "Show on Channels",
-							note: "Shows a unread counter of unread messages on channel items.",
-							defaultValue: true
-						},
-						showMutedChannelUnread: {
-							type: "switch",
-							name: "Include Muted Channels",
-							note: "Show a unread counter on channel items.",
-							defaultValue: false
-						},
-						showMutedChannelWhenSelected: {
-							type: "switch",
-							name: "Show when selected",
-							note: "Shows the unread counter no matter if the channel is muted when it's selected.",
-							defaultValue: true
-						}
-					},
-					folders: {
-						folderColor: {
-							name: "Folder Unread Color",
-							type: "color",
-							defaultValue: "#5865F2",
-							note: "Color of the unread badge on the folders."
-						},
-						showOnFolders: {
-							type: "switch",
-							name: "Show on Folders",
-							note: "Shows a unread counter of unread messages on folders.",
-							defaultValue: true
-						},
-						includeMutedGuildsInFolders: {
-							type: "switch",
-							name: "Include Muted Guilds",
-							note: "Includes the muted count of a guild in the unread count calculation.",
-							defaultValue: false
-						},
-						includeMutedChannelsInFolders: {
-							type: "switch",
-							name: "Include Muted Channels of Guilds",
-							note: "Includes muted channels inside guilds in the unread count calculation.",
-							defaultValue: false
-						}
-					}
-				};
-				function SettingsPanel() {
-					return Object.entries(settingsItems).map((([key, items]) => external_BdApi_React_default().createElement(Category, {
-						look: Category.Looks.COMPACT,
-						label: external_window_default().upperFirst(key),
-						key
-					}, Object.entries(items).map((([id, props]) => {
-						switch (props.type) {
-							case "switch":
-								return external_BdApi_React_default().createElement(SwitchSetting, Settings_extends({}, props, {
-									id,
-									key: id
-								}));
-							case "color":
-								return external_BdApi_React_default().createElement(ColorSetting, Settings_extends({}, props, {
-									id,
-									key: id
-								}));
-						}
-					})))));
-				}
-				const stores_namespaceObject = Modules["@discord/stores"];
-				function UnreadCountBadges_defineProperty(obj, key, value) {
-					if (key in obj) Object.defineProperty(obj, key, {
-						value,
-						enumerable: true,
-						configurable: true,
-						writable: true
-					});
-					else obj[key] = value;
-					return obj;
-				}
-				const UnreadCountBadges_MutedStore = external_PluginApi_namespaceObject.WebpackModules.getByProps("getMutedChannels");
-				const UnreadCountBadges_UnreadStore = external_PluginApi_namespaceObject.WebpackModules.getByProps("getUnreadCount");
-				const ChannelsStore = external_PluginApi_namespaceObject.WebpackModules.getByProps("getChannels");
-				const UnreadCountBadges_Badges = external_PluginApi_namespaceObject.WebpackModules.getByProps("NumberBadge");
-				const GuildChannelsStore = external_PluginApi_namespaceObject.WebpackModules.getByProps("getMutableGuildChannels");
-				const FolderStatesStore = external_PluginApi_namespaceObject.WebpackModules.getByProps("isFolderExpanded");
-				function BlobMaskWrapper(props) {
-					const {
-						collector,
-						maskType,
-						shouldShow,
-						color
-					} = props;
-					const unreadCount = (0, flux_namespaceObject.useStateFromStores)([settings, UnreadCountBadges_MutedStore, UnreadCountBadges_UnreadStore], collector.bind(null, props));
-					const isActive = shouldShow(unreadCount, props);
-					props.unreadBadge = isActive ? external_BdApi_React_default().createElement(ConnectedUnreadBadge, {
-						color,
-						count: unreadCount
-					}) : null;
-					props.unreadBadgeWidth = isActive ? UnreadCountBadges_Badges.getBadgeWidthForValue(unreadCount) : null;
-					return external_BdApi_React_default().createElement(maskType, props);
-				}
-				class UnreadCountBadges extends(external_BasePlugin_default()) {
-					constructor() {
-						super();
-						UnreadCountBadges_defineProperty(this, "guildsClasses", void 0);
-						UnreadCountBadges_defineProperty(this, "updateHomeIcon", void 0);
-						UnreadCountBadges_defineProperty(this, "id", Math.random().toString().slice(2, 10));
-						UnreadCountBadges_defineProperty(this, "settings", settings);
-						UnreadCountBadges_defineProperty(this, "patchAll", (unsubscribe => {
-							this.patchBlobMask();
-							this.patchGuild();
-							this.patchChannelItem();
-							this.patchFolder();
-							this.patchHomeIcon();
-							if (false !== unsubscribe) modules_namespaceObject.Dispatcher.unsubscribe(constants_namespaceObject.ActionTypes.CONNECTION_OPEN, this.patchAll);
-						}));
-						this.guildsClasses = external_PluginApi_namespaceObject.WebpackModules.getByProps("downloadProgressCircle", "guilds");
-					}
-					getSettingsPanel() {
-						return external_BdApi_React_default().createElement(SettingsPanel, null);
-					}
-					onStart() {
-						external_StyleLoader_default().inject();
-						if (!stores_namespaceObject.Users.getCurrentUser()) modules_namespaceObject.Dispatcher.subscribe(constants_namespaceObject.ActionTypes.CONNECTION_OPEN, this.patchAll);
-						else this.patchAll(false);
-					}
-					async patchChannelItem() {
-						const ChannelItem = external_PluginApi_namespaceObject.WebpackModules.getModule((m => "ChannelItem" === m?.default?.displayName));
-						external_PluginApi_namespaceObject.Patcher.before(ChannelItem, "default", ((_, [{
-							channel,
-							children,
-							muted,
-							selected
-						}]) => {
-							if (!Array.isArray(children) || channel.type == constants_namespaceObject.ChannelTypes.GUILD_VOICE) return;
-							children.push(external_BdApi_React_default().createElement(ChannelUnreadBadge, {
-								channelId: channel.id,
-								guildId: channel.guild_id,
-								selected
-							}));
-						}));
-					}
-					async patchBlobMask() {
-						const BlobMask = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("BlobMask");
-						const configs = {
-							in: {
-								friction: 30,
-								tension: 900,
-								mass: 1
-							},
-							out: {
-								duration: 150,
-								friction: 10,
-								tension: 100,
-								mass: 1
-							}
-						};
-						const ensureMask = _this => {
-							if (!_this.state || _this.state.unreadBadgeMask) return;
-							_this.state.unreadBadgeMask = new external_Modules_react_spring_namespaceObject.Controller({
-								spring: 0
-							});
-						};
-						external_PluginApi_namespaceObject.Patcher.after(BlobMask, "getDerivedStateFromProps", ((_, [props, state], res) => {
-							if (!props.unreadBadge) return;
-							if (!res) res = {
-								hasRenderedBadge: false,
-								lowerBadgeMask: state.lowerBadgeMask ? state.lowerBadgeMask.update({
-									spring: props.lowerBadge ? 1 : 0,
-									immediate: true
-								}) : new external_Modules_react_spring_namespaceObject.Controller({
-									spring: props.lowerBadge ? 1 : 0,
-									immediate: true
-								}),
-								upperBadgeMask: state.upperBadgeMask ? state.upperBadgeMask.update({
-									spring: props.upperBadge ? 1 : 0,
-									immediate: true
-								}) : new external_Modules_react_spring_namespaceObject.Controller({
-									spring: props.upperBadge ? 1 : 0,
-									immediate: true
-								}),
-								unreadBadgeMask: null,
-								borderRadiusMask: state.borderRadiusMask || new external_Modules_react_spring_namespaceObject.Controller({
-									spring: 0
-								}),
-								renderComplex: false
-							};
-							if (!res.unreadBadgeMask) res.unreadBadgeMask = state.unreadBadgeMask ?? new external_Modules_react_spring_namespaceObject.Controller({
-								spring: props.unreadBadge ? 1 : 0
-							});
-							if (!res.hasRenderedBadge) {
-								res.hasRenderedBadge = Boolean(props.unreadBadge);
-								if (!res.renderComplex) res.renderComplex = Boolean(props.unreadBadge);
-							}
-							return res;
-						}));
-						external_PluginApi_namespaceObject.Patcher.after(BlobMask.prototype, "componentDidMount", (_this => {
-							ensureMask(_this);
-							if (_this.state.unreadBadgeMask) _this.state.unreadBadgeMask.update({
-								spring: _this.props.unreadBadge ? 1 : 0,
-								immediate: !document.hasFocus()
-							}).start();
-						}));
-						external_PluginApi_namespaceObject.Patcher.after(BlobMask.prototype, "componentDidUpdate", ((_this, [prevProps]) => {
-							ensureMask(_this);
-							if (_this.props.unreadBadge && !prevProps.unreadBadge) {
-								if (_this.state.unreadBadgeMask) _this.state.unreadBadgeMask.update({
-									spring: 1,
-									immediate: !document.hasFocus(),
-									config: configs.in
-								}).start();
-							} else if (!_this.props.unreadBadge && prevProps.unreadBadge)
-								if (_this.state.unreadBadgeMask) _this.state.unreadBadgeMask.update({
-									spring: 0,
-									immediate: !document.hasFocus(),
-									config: configs.out
-								}).start();
-						}));
-						external_PluginApi_namespaceObject.Patcher.after(BlobMask.prototype, "componentWillUnmount", (_this => {
-							if (_this.state.unreadBadgeMask) _this.state.unreadBadgeMask.dispose();
-						}));
-						external_PluginApi_namespaceObject.Patcher.after(BlobMask.prototype, "render", (function(_this, _, res) {
-							ensureMask(_this);
-							if (!_this.state.renderComplex) return;
-							const [defs, {
-								props: {
-									children: [, masks]
-								}
-							}, stroke] = external_PluginApi_namespaceObject.Utilities.findInReactTree(res, (e => e?.overflow))?.children || [];
-							const childTree = external_PluginApi_namespaceObject.Utilities.findInReactTree(res, (e => e?.hasOwnProperty?.("transitionAppear")));
-							if (!defs || !masks || !stroke || !childTree) return;
-							const useElement = external_BdApi_React_default().createElement("use", {
-								href: "#" + _this.state.maskId + "-unreadBadge",
-								fill: "black"
-							});
-							const spring = _this.state.unreadBadgeMask.springs.spring;
-							const badgeStyle = {
-								opacity: spring.to([0, .5, 1], [0, 0, 1]),
-								transform: spring.to((e => `translate(${26 - 16 * e}px, ${16 - 15 * e})`))
-							};
-							defs.props.children.push(external_BdApi_React_default().createElement(external_Modules_react_spring_namespaceObject.animated.rect, {
-								id: _this.state.maskId + "-unreadBadge",
-								x: "-5",
-								y: "28",
-								width: _this.props.unreadBadgeWidth + 8,
-								height: "24",
-								rx: "12",
-								ry: "12",
-								transform: _this.getBadgePositionInterpolation(_this.state.unreadBadgeMask)
-							}));
-							masks.props.children.push(useElement);
-							stroke.props.children.push(useElement);
-							childTree.children.push(_this.props.unreadBadge ? external_BdApi_React_default().createElement(BlobContainer, {
-								className: badge.Z.unread,
-								animatedStyle: badgeStyle,
-								key: "unreadBadge"
-							}, _this.props.unreadBadge) : null);
-						}));
-					}
-					checkCount(count) {
-						return count > 1e3 ? 1e3 * Math.floor(count / 1e3) : count;
-					}
-					getUnreadCountForGuild(guildId, includeMutedChannels) {
-						const channels = ChannelsStore.getChannels(guildId);
-						if (!Array.isArray(channels.SELECTABLE)) return 0;
-						return channels.SELECTABLE.reduce(((count, {
-							channel
-						}) => {
-							if (!UnreadCountBadges_UnreadStore.hasUnread(channel.id)) return count;
-							if (!includeMutedChannels && isChannelMuted(channel.guild_id, channel.id)) return count;
-							if (!includeMutedChannels && channel.parent_id && isChannelMuted(guildId, channel.parent_id)) return count;
-							return count += UnreadCountBadges_UnreadStore.getUnreadCount(channel.id);
-						}), 0);
-					}
-					updateGuilds() {
-						const [guilds] = document.getElementsByClassName(this.guildsClasses.guilds);
-						if (!guilds) return;
-						const instance = external_PluginApi_namespaceObject.ReactTools.getOwnerInstance(guilds);
-						if (!instance || !instance.forceUpdate) return;
-						instance.forceUpdate();
-					}
-					async patchGuild() {
-						const GuildNode = external_PluginApi_namespaceObject.WebpackModules.find((m => m.default && "GuildNode" === m.default.displayName));
-						const PatchedGuild = ({
-							__originalType,
-							...props
-						}) => {
-							const res = Reflect.apply(__originalType, this, [props]);
-							try {
-								const mask = external_PluginApi_namespaceObject.Utilities.findInReactTree(res, (m => m?.props?.hasOwnProperty("lowerBadgeWidth")));
-								if (!mask || mask.type === BlobMaskWrapper) return res;
-								Object.assign(mask.props, {
-									maskType: mask.type,
-									shouldShow: unread => unread > 0,
-									collector: ({
-										guildId
-									}) => {
-										if (!settings.get("showOnGuilds", true)) return 0;
-										if (!settings.get("showMutedGuildUnread", false) && UnreadCountBadges_MutedStore.isMuted(guildId)) return 0;
-										return this.checkCount(this.getUnreadCountForGuild(guildId, settings.get("includeMutedInGuild", false)));
-									},
-									color: "guildColor",
-									guildId: props.guild.id
-								});
-								mask.type = BlobMaskWrapper;
-							} catch (error) {
-								external_PluginApi_namespaceObject.Logger.error(error);
-							}
-							return res;
-						};
-						external_PluginApi_namespaceObject.Patcher.after(GuildNode, "default", ((_this, __, res) => {
-							if (!res || !res.props) return;
-							const original = res.type;
-							res.props.__originalType = original;
-							res.type = PatchedGuild;
-						}));
-						this.updateGuilds();
-					}
-					async patchHomeIcon() {
-						const selector = `.${external_PluginApi_namespaceObject.WebpackModules.getByProps("wrapper", "childWrapper")?.childWrapper}`;
-						const TutorialIndicator = await external_PluginApi_namespaceObject.ReactComponents.getComponentByName("TutorialIndicator", selector);
-						external_PluginApi_namespaceObject.Patcher.after(TutorialIndicator.component.prototype, "render", ((_this, _, res) => {
-							if ("friends-list" !== _this.props.tutorialId) return;
-							const mask = external_PluginApi_namespaceObject.Utilities.findInReactTree(res, (m => m?.props?.hasOwnProperty("lowerBadgeWidth")));
-							if (!mask || mask.type === BlobMaskWrapper) return;
-							Object.assign(mask.props, {
-								collector: () => {
-									if (!settings.get("showTotalUnreadCount", true)) return 0;
-									const guilds = Object.values(stores_namespaceObject.Guilds.getGuilds()).reduce(((count, guild) => {
-										if (!settings.get("includeMutedGuildsInTotal", false) && UnreadCountBadges_MutedStore.isMuted(guild.id)) return count;
-										return count += this.getUnreadCountForGuild(guild.id, settings.get("includeMutedChannelsInTotal", false));
-									}), 0);
-									const dms = Object.values(GuildChannelsStore.getMutablePrivateChannels()).reduce(((count, channel) => {
-										if (settings.get("includeDmsInTotal", true) && channel.type === constants_namespaceObject.ChannelTypes.DM && (settings.get("includeMutedDms", false) ? !isChannelMuted(channel.guild_id, channel.id) : true)) count += UnreadCountBadges_UnreadStore.getUnreadCount(channel.id);
-										if (!settings.get("includeGroupsInTotal", true) && channel.type === constants_namespaceObject.ChannelTypes.GROUP_DM && (settings.get("includeMutedGroups", false) ? !isChannelMuted(channel.guild_id, channel.id) : true)) count += UnreadCountBadges_UnreadStore.getUnreadCount(channel.id);
-										return count;
-									}), 0);
-									return this.checkCount(guilds + dms);
-								},
-								color: "totalColor",
-								maskType: mask.type,
-								shouldShow: unread => unread > 0
-							});
-							mask.type = BlobMaskWrapper;
-						}));
-						this.updateHomeIcon = () => TutorialIndicator.forceUpdateAll();
-						TutorialIndicator.forceUpdateAll();
-					}
-					async patchFolder() {
-						const FolderHeader = external_PluginApi_namespaceObject.WebpackModules.find((m => m.default && "FolderHeader" === m.default.displayName));
-						external_PluginApi_namespaceObject.Patcher.after(FolderHeader, "default", ((_, [props], res) => {
-							Object.assign(res.props, {
-								collector: ({
-									guildIds
-								}) => {
-									if (!settings.get("showOnFolders", true)) return 0;
-									return this.checkCount(guildIds.reduce(((count, id) => {
-										if (!settings.get("includeMutedGuildsInFolders", false) && UnreadCountBadges_MutedStore.isMuted(id)) return count;
-										return count += this.getUnreadCountForGuild(id, settings.get("includeMutedChannelsInFolders", false));
-									}), 0));
-								},
-								color: "folderColor",
-								maskType: res.type,
-								guildIds: props.folderNode?.children?.map((e => e.id)) ?? [],
-								shouldShow: (unread, props) => unread > 0 && (props.isFolderExpanded ? settings.get("showOnExpandedFolders", true) : true),
-								isFolderExpanded: FolderStatesStore.isFolderExpanded(props.folderId)
-							});
-							res.type = BlobMaskWrapper;
-						}));
-					}
-					onStop() {
-						external_StyleLoader_default().remove();
-						external_PluginApi_namespaceObject.Patcher.unpatchAll();
-						if ("function" === typeof this.updateGuilds) this.updateGuilds();
-						if ("function" === typeof this.updateHomeIcon) this.updateHomeIcon();
-					}
-				}
-			},
-			246: module => {
+			645: module => {
 				module.exports = function(cssWithMappingToString) {
 					var list = [];
-					list.toString = function() {
+					list.toString = function toString() {
 						return this.map((function(item) {
 							var content = cssWithMappingToString(item);
 							if (item[2]) return "@media ".concat(item[2], " {").concat(content, "}");
@@ -1210,7 +397,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					return list;
 				};
 			},
-			832: module => {
+			113: module => {
 				module.exports = BdApi.React;
 			}
 		};
@@ -1256,7 +443,845 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				});
 			};
 		})();
-		var __webpack_exports__ = __webpack_require__(762);
+		var __webpack_exports__ = {};
+		(() => {
+			__webpack_require__.r(__webpack_exports__);
+			__webpack_require__.d(__webpack_exports__, {
+				default: () => UnreadCountBadges
+			});
+			const external_PluginApi_namespaceObject = PluginApi;
+			const external_BasePlugin_namespaceObject = BasePlugin;
+			var external_BasePlugin_default = __webpack_require__.n(external_BasePlugin_namespaceObject);
+			var external_BdApi_React_ = __webpack_require__(113);
+			var external_BdApi_React_default = __webpack_require__.n(external_BdApi_React_);
+			const external_Modules_react_spring_namespaceObject = Modules["react-spring"];
+			var badge = __webpack_require__(185);
+			const external_StyleLoader_namespaceObject = StyleLoader;
+			var external_StyleLoader_default = __webpack_require__.n(external_StyleLoader_namespaceObject);
+			const flux_namespaceObject = Modules["@discord/flux"];
+			const modules_namespaceObject = Modules["@discord/modules"];
+			function _defineProperty(obj, key, value) {
+				if (key in obj) Object.defineProperty(obj, key, {
+					value,
+					enumerable: true,
+					configurable: true,
+					writable: true
+				});
+				else obj[key] = value;
+				return obj;
+			}
+			class SettingsManager extends flux_namespaceObject.Store {
+				constructor(pluginName, defaultSettings = {}) {
+					super(modules_namespaceObject.Dispatcher, {});
+					_defineProperty(this, "settings", void 0);
+					_defineProperty(this, "pluginName", void 0);
+					_defineProperty(this, "get", ((key, defaultValue) => this.settings[key] ?? defaultValue));
+					_defineProperty(this, "set", ((key, value) => {
+						this.settings[key] = value;
+						external_PluginApi_namespaceObject.PluginUtilities.saveSettings(this.pluginName, this.settings);
+						this.emitChange();
+						return value;
+					}));
+					this.pluginName = pluginName;
+					this.settings = external_PluginApi_namespaceObject.PluginUtilities.loadSettings(pluginName, defaultSettings);
+				}
+			}
+			const package_namespaceObject = JSON.parse('{"um":{"u2":"UnreadCountBadges"}}');
+			const Settings = new SettingsManager(package_namespaceObject.um.u2);
+			const settings = Settings;
+			const constants_namespaceObject = Modules["@discord/constants"];
+			var React = __webpack_require__(113);
+			function _extends() {
+				_extends = Object.assign || function(target) {
+					for (var i = 1; i < arguments.length; i++) {
+						var source = arguments[i];
+						for (var key in source)
+							if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
+					}
+					return target;
+				};
+				return _extends.apply(this, arguments);
+			}
+			const Badges = external_PluginApi_namespaceObject.WebpackModules.getByProps("NumberBadge");
+			const UnreadStore = external_PluginApi_namespaceObject.WebpackModules.getByProps("getUnreadCount");
+			const MutedStore = external_PluginApi_namespaceObject.WebpackModules.getByProps("getMutedChannels");
+			const isChannelMuted = function(guildId, channelId) {
+				return MutedStore.getMutedChannels(guildId).has(channelId);
+			};
+			function ConnectedUnreadBadge(props) {
+				const color = (0, flux_namespaceObject.useStateFromStores)([settings], (() => settings.get(props.color, "#5865F2")));
+				return React.createElement(Badges.NumberBadge, _extends({}, props, {
+					color
+				}));
+			}
+			function ChannelUnreadBadge({
+				channelId,
+				guildId,
+				selected
+			}) {
+				const unreadCount = (0, flux_namespaceObject.useStateFromStores)([UnreadStore, settings], (() => {
+					if (!UnreadStore.hasUnread(channelId)) return 0;
+					if (!settings.get("showOnChannels", true)) return 0;
+					if (!settings.get("showMutedChannelUnread", false) && isChannelMuted(guildId, channelId) && settings.get("showMutedChannelWhenSelected", true) ? !selected : false) return 0;
+					return UnreadStore.getUnreadCount(channelId);
+				}));
+				if (0 === unreadCount) return null;
+				return React.createElement(ConnectedUnreadBadge, {
+					color: "channelColor",
+					count: unreadCount,
+					className: badge.Z.channelUnread
+				});
+			}
+			function blobContainer_defineProperty(obj, key, value) {
+				if (key in obj) Object.defineProperty(obj, key, {
+					value,
+					enumerable: true,
+					configurable: true,
+					writable: true
+				});
+				else obj[key] = value;
+				return obj;
+			}
+			class BlobContainer extends external_BdApi_React_default().Component {
+				constructor(...args) {
+					super(...args);
+					blobContainer_defineProperty(this, "timeoutId", void 0);
+				}
+				componentDidMount() {
+					this.forceUpdate();
+				}
+				componentWillAppear(start) {
+					start();
+				}
+				componentWillEnter(start) {
+					start();
+				}
+				componentWillLeave(start) {
+					this.timeoutId = setTimeout(start, 300);
+				}
+				componentWillUnmount() {
+					clearInterval(this.timeoutId);
+				}
+				render() {
+					const {
+						className,
+						animatedStyle,
+						children
+					} = this.props;
+					return external_BdApi_React_default().createElement(external_Modules_react_spring_namespaceObject.animated.div, {
+						className,
+						style: animatedStyle
+					}, children);
+				}
+			}
+			const forms_namespaceObject = Modules["@discord/forms"];
+			const components_namespaceObject = Modules["@discord/components"];
+			var colorPicker = __webpack_require__(605);
+			function colorPicker_extends() {
+				colorPicker_extends = Object.assign || function(target) {
+					for (var i = 1; i < arguments.length; i++) {
+						var source = arguments[i];
+						for (var key in source)
+							if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
+					}
+					return target;
+				};
+				return colorPicker_extends.apply(this, arguments);
+			}
+			const Checkmark = external_BdApi_React_default().memo((props => external_BdApi_React_default().createElement("svg", colorPicker_extends({
+				width: "16",
+				height: "16",
+				viewBox: "0 0 24 24"
+			}, props), external_BdApi_React_default().createElement("path", {
+				fillRule: "evenodd",
+				clipRule: "evenodd",
+				fill: props.color ?? "#ddd",
+				d: "M8.99991 16.17L4.82991 12L3.40991 13.41L8.99991 19L20.9999 7.00003L19.5899 5.59003L8.99991 16.17Z"
+			}))));
+			const Dropper = external_BdApi_React_default().memo((props => external_BdApi_React_default().createElement("svg", colorPicker_extends({
+				width: "14",
+				height: "14",
+				viewBox: "0 0 16 16"
+			}, props), external_BdApi_React_default().createElement("g", {
+				fill: "none"
+			}, external_BdApi_React_default().createElement("path", {
+				d: "M-4-4h24v24H-4z"
+			}), external_BdApi_React_default().createElement("path", {
+				fill: props.color ?? "#ddd",
+				d: "M14.994 1.006C13.858-.257 11.904-.3 10.72.89L8.637 2.975l-.696-.697-1.387 1.388 5.557 5.557 1.387-1.388-.697-.697 1.964-1.964c1.13-1.13 1.3-2.985.23-4.168zm-13.25 10.25c-.225.224-.408.48-.55.764L.02 14.37l1.39 1.39 2.35-1.174c.283-.14.54-.33.765-.55l4.808-4.808-2.776-2.776-4.813 4.803z"
+			})))));
+			const defaultColors = [1752220, 3066993, 3447003, 10181046, 15277667, 15844367, 15105570, 15158332, 9807270, 6323595, 1146986, 2067276, 2123412, 7419530, 11342935, 12745742, 11027200, 10038562, 9936031, 5533306];
+			const resolveColor = (color, hex = true) => {
+				switch (typeof color) {
+					case hex && "number":
+						return external_PluginApi_namespaceObject.ColorConverter.int2hex(color);
+					case !hex && "string":
+						return external_PluginApi_namespaceObject.ColorConverter.hex2int(color);
+					case !hex && "number":
+						return color;
+					case hex && "string":
+						return color;
+					default:
+						return color;
+				}
+			};
+			const ColorPicker = ({
+				value,
+				defaultValue,
+				onChange,
+				colors = defaultColors
+			}) => {
+				const [color, setColor] = (0, external_BdApi_React_.useState)(resolveColor(value));
+				const intValue = (0, external_BdApi_React_.useMemo)((() => resolveColor(color, false)), [color]);
+				const handleChange = (0, external_BdApi_React_.useCallback)((({
+					target: {
+						value
+					}
+				}) => {
+					setColor(value);
+					onChange(resolveColor(value));
+				}), []);
+				return external_BdApi_React_default().createElement(components_namespaceObject.Flex, {
+					direction: components_namespaceObject.Flex.Direction.HORIZONTAL
+				}, external_BdApi_React_default().createElement("div", {
+					className: colorPicker.Z.controls
+				}, external_BdApi_React_default().createElement(components_namespaceObject.Tooltip, {
+					text: "Default",
+					position: "bottom"
+				}, (props => external_BdApi_React_default().createElement("div", colorPicker_extends({}, props, {
+					className: colorPicker.Z.defaultColor,
+					style: {
+						backgroundColor: resolveColor(defaultValue)
+					},
+					onClick: () => handleChange({
+						target: {
+							value: defaultValue
+						}
+					})
+				}), intValue === resolveColor(defaultValue, false) ? external_BdApi_React_default().createElement(Checkmark, {
+					width: "25",
+					height: "25"
+				}) : null))), external_BdApi_React_default().createElement(components_namespaceObject.Tooltip, {
+					text: "Custom Color",
+					position: "bottom"
+				}, (props => external_BdApi_React_default().createElement("div", {
+					className: colorPicker.Z.inputContainer
+				}, external_BdApi_React_default().createElement(Dropper, null), external_BdApi_React_default().createElement("input", colorPicker_extends({}, props, {
+					style: {
+						backgroundColor: resolveColor(color)
+					},
+					type: "color",
+					className: colorPicker.Z.colorInput,
+					value: resolveColor(color),
+					onChange: handleChange
+				})))))), external_BdApi_React_default().createElement(components_namespaceObject.Flex, {
+					wrap: components_namespaceObject.Flex.Wrap.WRAP,
+					className: colorPicker.Z.colorSwatches
+				}, colors.map(((int, index) => external_BdApi_React_default().createElement("div", {
+					key: index,
+					className: colorPicker.Z.colorSwatch,
+					style: {
+						backgroundColor: resolveColor(int)
+					},
+					onClick: () => handleChange({
+						target: {
+							value: int
+						}
+					})
+				}, intValue === int ? external_BdApi_React_default().createElement(Checkmark, null) : null)))));
+			};
+			const components_colorPicker = ColorPicker;
+			const external_window_namespaceObject = window._;
+			var external_window_default = __webpack_require__.n(external_window_namespaceObject);
+			const icons_namespaceObject = Modules["@discord/icons"];
+			const utils_namespaceObject = Modules["@discord/utils"];
+			var category = __webpack_require__(911);
+			function Category({
+				label,
+				children,
+				className,
+				look = Category.Looks.DEFAULT
+			}) {
+				const [opened, toggle] = (0, external_BdApi_React_.useState)(false);
+				const isCompact = look === category.Z.compact;
+				return external_BdApi_React_default().createElement("div", {
+					className: (0, utils_namespaceObject.joinClassNames)(className, look, category.Z.category, {
+						[category.Z.opened]: opened
+					})
+				}, external_BdApi_React_default().createElement("div", {
+					className: category.Z.header,
+					onClick: () => toggle(!opened)
+				}, external_BdApi_React_default().createElement("div", {
+					className: category.Z.label
+				}, label), isCompact ? external_BdApi_React_default().createElement("div", {
+					className: category.Z.stroke
+				}) : null, external_BdApi_React_default().createElement(icons_namespaceObject.Caret, {
+					direction: opened ? icons_namespaceObject.Caret.Directions.DOWN : isCompact ? icons_namespaceObject.Caret.Directions.LEFT : icons_namespaceObject.Caret.Directions.RIGHT,
+					className: category.Z.caret
+				})), !isCompact ? external_BdApi_React_default().createElement("div", {
+					className: category.Z.divider
+				}) : null, external_BdApi_React_default().createElement("div", {
+					className: category.Z.content
+				}, opened ? children : null));
+			}
+			Category.Looks = {
+				COMPACT: category.Z.compact,
+				DEFAULT: category.Z["default"]
+			};
+			var createUpdateWrapper_React = __webpack_require__(113);
+			function createUpdateWrapper_extends() {
+				createUpdateWrapper_extends = Object.assign || function(target) {
+					for (var i = 1; i < arguments.length; i++) {
+						var source = arguments[i];
+						for (var key in source)
+							if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
+					}
+					return target;
+				};
+				return createUpdateWrapper_extends.apply(this, arguments);
+			}
+			const createUpdateWrapper = (Component, valueProp = "value", changeProp = "onChange", valueIndex = 0) => props => {
+				const [value, setValue] = createUpdateWrapper_React.useState(props[valueProp]);
+				return createUpdateWrapper_React.createElement(Component, createUpdateWrapper_extends({}, props, {
+					[valueProp]: value,
+					[changeProp]: (...args) => {
+						const value = args[valueIndex];
+						if ("function" === typeof props[changeProp]) props[changeProp](value);
+						setValue(value);
+					}
+				}));
+			};
+			const hooks_createUpdateWrapper = createUpdateWrapper;
+			var components_Settings = __webpack_require__(927);
+			function Settings_extends() {
+				Settings_extends = Object.assign || function(target) {
+					for (var i = 1; i < arguments.length; i++) {
+						var source = arguments[i];
+						for (var key in source)
+							if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
+					}
+					return target;
+				};
+				return Settings_extends.apply(this, arguments);
+			}
+			const SwitchItem = hooks_createUpdateWrapper(external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("SwitchItem"));
+			function SwitchSetting({
+				id,
+				name,
+				note,
+				defaultValue
+			}) {
+				return external_BdApi_React_default().createElement(SwitchItem, {
+					note,
+					value: settings.get(id, defaultValue),
+					onChange: value => settings.set(id, value)
+				}, name);
+			}
+			function ColorSetting({
+				id,
+				name,
+				note,
+				defaultValue
+			}) {
+				return external_BdApi_React_default().createElement(forms_namespaceObject.FormItem, {
+					title: name
+				}, external_BdApi_React_default().createElement(components_colorPicker, {
+					value: resolveColor(settings.get(id, defaultValue)),
+					defaultValue,
+					onChange: external_window_default().debounce((color => settings.set(id, resolveColor(color))), 300),
+					colors: defaultColors
+				}), external_BdApi_React_default().createElement(forms_namespaceObject.FormText, {
+					type: "description"
+				}, note), external_BdApi_React_default().createElement(forms_namespaceObject.FormDivider, {
+					className: components_Settings.Z.divider
+				}));
+			}
+			const settingsItems = {
+				total: {
+					totalColor: {
+						name: "Total Unread Color",
+						type: "color",
+						defaultValue: "#5865F2",
+						note: "Color of the unread badge on the home icon."
+					},
+					showTotalUnreadCount: {
+						type: "switch",
+						name: "Total Unreads",
+						note: "Shows a unread counter of your total unread messages in the dm icon.",
+						defaultValue: true
+					},
+					includeMutedGuildsInTotal: {
+						type: "switch",
+						name: "Include Muted Guilds",
+						note: "Includes the muted count of a guild in the unread count calculation.",
+						defaultValue: false
+					},
+					includeMutedChannelsInTotal: {
+						type: "switch",
+						name: "Include Muted Channels of Guilds",
+						note: "Includes muted channels inside guilds in the unread count calculation.",
+						defaultValue: false
+					},
+					includeDmsInTotal: {
+						type: "switch",
+						name: "Include DMS",
+						note: "Includes direct messages in the unread count calculation.",
+						defaultValue: true
+					},
+					includeGroupsInTotal: {
+						type: "switch",
+						name: "Include Groups",
+						note: "Includes groups in the unread count calculation.",
+						defaultValue: true
+					},
+					includeMutedDms: {
+						type: "switch",
+						name: "Include Muted DMS",
+						note: "Includes muted dms in the unread count calculation.",
+						defaultValue: false
+					},
+					includeMutedGroups: {
+						type: "switch",
+						name: "Include Muted groups of Guilds",
+						note: "Includes muted groups in the unread count calculation.",
+						defaultValue: false
+					}
+				},
+				guilds: {
+					guildColor: {
+						name: "Guild Unread Color",
+						type: "color",
+						defaultValue: "#5865F2",
+						note: "Color of the unread badge on the guild icon."
+					},
+					showOnGuilds: {
+						type: "switch",
+						name: "Show on Guilds",
+						note: "Shows a unread counter of unread messages on guilds.",
+						defaultValue: true
+					},
+					showMutedGuildUnread: {
+						type: "switch",
+						name: "Include Muted Guilds",
+						note: "Show a unread counter on muted guilds.",
+						defaultValue: false
+					},
+					includeMutedInGuild: {
+						type: "switch",
+						name: "Include Muted Channels in Guild",
+						note: "Includes muted channels inside the guild in the unread count calculation.",
+						defaultValue: false
+					}
+				},
+				channels: {
+					channelColor: {
+						name: "Channel Unread Color",
+						type: "color",
+						defaultValue: "#5865F2",
+						note: "Color of the unread badge on the channel item."
+					},
+					showOnChannels: {
+						type: "switch",
+						name: "Show on Channels",
+						note: "Shows a unread counter of unread messages on channel items.",
+						defaultValue: true
+					},
+					showMutedChannelUnread: {
+						type: "switch",
+						name: "Include Muted Channels",
+						note: "Show a unread counter on channel items.",
+						defaultValue: false
+					},
+					showMutedChannelWhenSelected: {
+						type: "switch",
+						name: "Show when selected",
+						note: "Shows the unread counter no matter if the channel is muted when it's selected.",
+						defaultValue: true
+					}
+				},
+				folders: {
+					folderColor: {
+						name: "Folder Unread Color",
+						type: "color",
+						defaultValue: "#5865F2",
+						note: "Color of the unread badge on the folders."
+					},
+					showOnFolders: {
+						type: "switch",
+						name: "Show on Folders",
+						note: "Shows a unread counter of unread messages on folders.",
+						defaultValue: true
+					},
+					includeMutedGuildsInFolders: {
+						type: "switch",
+						name: "Include Muted Guilds",
+						note: "Includes the muted count of a guild in the unread count calculation.",
+						defaultValue: false
+					},
+					includeMutedChannelsInFolders: {
+						type: "switch",
+						name: "Include Muted Channels of Guilds",
+						note: "Includes muted channels inside guilds in the unread count calculation.",
+						defaultValue: false
+					}
+				}
+			};
+			function SettingsPanel() {
+				return Object.entries(settingsItems).map((([key, items]) => external_BdApi_React_default().createElement(Category, {
+					look: Category.Looks.COMPACT,
+					label: external_window_default().upperFirst(key),
+					key
+				}, Object.entries(items).map((([id, props]) => {
+					switch (props.type) {
+						case "switch":
+							return external_BdApi_React_default().createElement(SwitchSetting, Settings_extends({}, props, {
+								id,
+								key: id
+							}));
+						case "color":
+							return external_BdApi_React_default().createElement(ColorSetting, Settings_extends({}, props, {
+								id,
+								key: id
+							}));
+					}
+				})))));
+			}
+			const stores_namespaceObject = Modules["@discord/stores"];
+			function UnreadCountBadges_defineProperty(obj, key, value) {
+				if (key in obj) Object.defineProperty(obj, key, {
+					value,
+					enumerable: true,
+					configurable: true,
+					writable: true
+				});
+				else obj[key] = value;
+				return obj;
+			}
+			const UnreadCountBadges_MutedStore = external_PluginApi_namespaceObject.WebpackModules.getByProps("getMutedChannels");
+			const UnreadCountBadges_UnreadStore = external_PluginApi_namespaceObject.WebpackModules.getByProps("getUnreadCount");
+			const ChannelsStore = external_PluginApi_namespaceObject.WebpackModules.getByProps("getChannels");
+			const UnreadCountBadges_Badges = external_PluginApi_namespaceObject.WebpackModules.getByProps("NumberBadge");
+			const GuildChannelsStore = external_PluginApi_namespaceObject.WebpackModules.getByProps("getMutablePrivateChannels");
+			const FolderStatesStore = external_PluginApi_namespaceObject.WebpackModules.getByProps("isFolderExpanded");
+			const GuildsBar = external_PluginApi_namespaceObject.WebpackModules.getModule((m => m.default?.type?.toString().indexOf("guildsnav") > -1));
+			function BlobMaskWrapper(props) {
+				const {
+					collector,
+					maskType,
+					shouldShow,
+					color
+				} = props;
+				const unreadCount = (0, flux_namespaceObject.useStateFromStores)([settings, UnreadCountBadges_MutedStore, UnreadCountBadges_UnreadStore], collector.bind(null, props));
+				const isActive = shouldShow(unreadCount, props);
+				props.unreadBadge = isActive ? external_BdApi_React_default().createElement(ConnectedUnreadBadge, {
+					color,
+					count: unreadCount
+				}) : null;
+				props.unreadBadgeWidth = isActive ? UnreadCountBadges_Badges.getBadgeWidthForValue(unreadCount) : null;
+				return external_BdApi_React_default().createElement(maskType, props);
+			}
+			class UnreadCountBadges extends(external_BasePlugin_default()) {
+				constructor() {
+					super();
+					UnreadCountBadges_defineProperty(this, "guildsClasses", void 0);
+					UnreadCountBadges_defineProperty(this, "updateHomeIcon", void 0);
+					UnreadCountBadges_defineProperty(this, "id", Math.random().toString().slice(2, 10));
+					UnreadCountBadges_defineProperty(this, "settings", settings);
+					UnreadCountBadges_defineProperty(this, "patchAll", (unsubscribe => {
+						this.patchBlobMask();
+						this.patchGuild();
+						this.patchChannelItem();
+						this.patchFolder();
+						this.patchHomeIcon();
+						if (false !== unsubscribe) modules_namespaceObject.Dispatcher.unsubscribe(constants_namespaceObject.ActionTypes.CONNECTION_OPEN, this.patchAll);
+					}));
+					this.guildsClasses = external_PluginApi_namespaceObject.WebpackModules.getByProps("downloadProgressCircle", "guilds");
+				}
+				getSettingsPanel() {
+					return external_BdApi_React_default().createElement(SettingsPanel, null);
+				}
+				onStart() {
+					external_StyleLoader_default().inject();
+					if (!stores_namespaceObject.Users.getCurrentUser()) modules_namespaceObject.Dispatcher.subscribe(constants_namespaceObject.ActionTypes.CONNECTION_OPEN, this.patchAll);
+					else this.patchAll(false);
+				}
+				async patchChannelItem() {
+					const ChannelItem = external_PluginApi_namespaceObject.WebpackModules.getModule((m => "ChannelItem" === m?.default?.displayName));
+					external_PluginApi_namespaceObject.Patcher.before(ChannelItem, "default", ((_, [{
+						channel,
+						children,
+						muted,
+						selected
+					}]) => {
+						if (!Array.isArray(children) || channel.type == constants_namespaceObject.ChannelTypes.GUILD_VOICE) return;
+						children.push(external_BdApi_React_default().createElement(ChannelUnreadBadge, {
+							channelId: channel.id,
+							guildId: channel.guild_id,
+							selected
+						}));
+					}));
+				}
+				async patchBlobMask() {
+					const BlobMask = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("BlobMask");
+					const configs = {
+						in: {
+							friction: 30,
+							tension: 900,
+							mass: 1
+						},
+						out: {
+							duration: 150,
+							friction: 10,
+							tension: 100,
+							mass: 1
+						}
+					};
+					const ensureMask = _this => {
+						if (!_this.state || _this.state.unreadBadgeMask) return;
+						_this.state.unreadBadgeMask = new external_Modules_react_spring_namespaceObject.Controller({
+							spring: 0
+						});
+					};
+					external_PluginApi_namespaceObject.Patcher.after(BlobMask, "getDerivedStateFromProps", ((_, [props, state], res) => {
+						if (!props.unreadBadge) return;
+						if (!res) res = {
+							hasRenderedBadge: false,
+							lowerBadgeMask: state.lowerBadgeMask ? state.lowerBadgeMask.update({
+								spring: props.lowerBadge ? 1 : 0,
+								immediate: true
+							}) : new external_Modules_react_spring_namespaceObject.Controller({
+								spring: props.lowerBadge ? 1 : 0,
+								immediate: true
+							}),
+							upperBadgeMask: state.upperBadgeMask ? state.upperBadgeMask.update({
+								spring: props.upperBadge ? 1 : 0,
+								immediate: true
+							}) : new external_Modules_react_spring_namespaceObject.Controller({
+								spring: props.upperBadge ? 1 : 0,
+								immediate: true
+							}),
+							unreadBadgeMask: null,
+							borderRadiusMask: state.borderRadiusMask || new external_Modules_react_spring_namespaceObject.Controller({
+								spring: 0
+							}),
+							renderComplex: false
+						};
+						if (!res.unreadBadgeMask) res.unreadBadgeMask = state.unreadBadgeMask ?? new external_Modules_react_spring_namespaceObject.Controller({
+							spring: props.unreadBadge ? 1 : 0
+						});
+						if (!res.hasRenderedBadge) {
+							res.hasRenderedBadge = Boolean(props.unreadBadge);
+							if (!res.renderComplex) res.renderComplex = Boolean(props.unreadBadge);
+						}
+						return res;
+					}));
+					external_PluginApi_namespaceObject.Patcher.after(BlobMask.prototype, "componentDidMount", (_this => {
+						ensureMask(_this);
+						if (_this.state.unreadBadgeMask) _this.state.unreadBadgeMask.update({
+							spring: _this.props.unreadBadge ? 1 : 0,
+							immediate: !document.hasFocus()
+						}).start();
+					}));
+					external_PluginApi_namespaceObject.Patcher.after(BlobMask.prototype, "componentDidUpdate", ((_this, [prevProps]) => {
+						ensureMask(_this);
+						if (_this.props.unreadBadge && !prevProps.unreadBadge) {
+							if (_this.state.unreadBadgeMask) _this.state.unreadBadgeMask.update({
+								spring: 1,
+								immediate: !document.hasFocus(),
+								config: configs.in
+							}).start();
+						} else if (!_this.props.unreadBadge && prevProps.unreadBadge)
+							if (_this.state.unreadBadgeMask) _this.state.unreadBadgeMask.update({
+								spring: 0,
+								immediate: !document.hasFocus(),
+								config: configs.out
+							}).start();
+					}));
+					external_PluginApi_namespaceObject.Patcher.after(BlobMask.prototype, "componentWillUnmount", (_this => {
+						if (_this.state.unreadBadgeMask) _this.state.unreadBadgeMask.dispose();
+					}));
+					external_PluginApi_namespaceObject.Patcher.after(BlobMask.prototype, "render", (function(_this, _, res) {
+						ensureMask(_this);
+						if (!_this.state.renderComplex) return;
+						const [defs, {
+							props: {
+								children: [, masks]
+							}
+						}, stroke] = external_PluginApi_namespaceObject.Utilities.findInReactTree(res, (e => e?.overflow))?.children || [];
+						const childTree = external_PluginApi_namespaceObject.Utilities.findInReactTree(res, (e => e?.hasOwnProperty?.("transitionAppear")));
+						if (!defs || !masks || !stroke || !childTree) return;
+						const useElement = external_BdApi_React_default().createElement("use", {
+							href: "#" + _this.state.maskId + "-unreadBadge",
+							fill: "black"
+						});
+						const spring = _this.state.unreadBadgeMask.springs.spring;
+						const badgeStyle = {
+							opacity: spring.to([0, .5, 1], [0, 0, 1]),
+							transform: spring.to((e => `translate(${26 - 16 * e}px, ${16 - 15 * e})`))
+						};
+						defs.props.children.push(external_BdApi_React_default().createElement(external_Modules_react_spring_namespaceObject.animated.rect, {
+							id: _this.state.maskId + "-unreadBadge",
+							x: "-5",
+							y: "28",
+							width: (_this.props.unreadBadgeWidth ?? 0) + 8,
+							height: "24",
+							rx: "12",
+							ry: "12",
+							transform: _this.getBadgePositionInterpolation(_this.state.unreadBadgeMask)
+						}));
+						masks.props.children.push(useElement);
+						stroke.props.children.push(useElement);
+						childTree.children.push(_this.props.unreadBadge ? external_BdApi_React_default().createElement(BlobContainer, {
+							className: badge.Z.unread,
+							animatedStyle: badgeStyle,
+							key: "unreadBadge"
+						}, _this.props.unreadBadge) : null);
+					}));
+				}
+				checkCount(count) {
+					return count > 1e3 ? 1e3 * Math.floor(count / 1e3) : count;
+				}
+				getUnreadCountForGuild(guildId, includeMutedChannels) {
+					const channels = ChannelsStore.getChannels(guildId);
+					if (!Array.isArray(channels.SELECTABLE)) return 0;
+					return channels.SELECTABLE.reduce(((count, {
+						channel
+					}) => {
+						if (!UnreadCountBadges_UnreadStore.hasUnread(channel.id)) return count;
+						if (!includeMutedChannels && isChannelMuted(channel.guild_id, channel.id)) return count;
+						if (!includeMutedChannels && channel.parent_id && isChannelMuted(guildId, channel.parent_id)) return count;
+						return count += UnreadCountBadges_UnreadStore.getUnreadCount(channel.id);
+					}), 0);
+				}
+				updateGuilds(effect = (() => {})) {
+					GuildsBar.default = Object.assign({}, GuildsBar.default);
+					effect();
+					const SettingsStore = external_PluginApi_namespaceObject.WebpackModules.getByProps("getUserAgnosticState", "accessibilitySupportEnabled");
+					const desc = Object.getOwnPropertyDescriptor(SettingsStore.constructor.prototype, "darkSidebar");
+					const scrollerHook = (() => {
+						const values = ["keyboardModeEnabled", "return", "orientation", "scrollToEnd"];
+						return external_PluginApi_namespaceObject.WebpackModules.getModule((m => {
+							if ("function" !== typeof m.default) return false;
+							let lastIndex = 0;
+							const string = m.default.toString();
+							return values.every((str => (lastIndex = string.indexOf(str, lastIndex)) > -1));
+						}));
+					})();
+					if (!scrollerHook) return external_PluginApi_namespaceObject.Logger.warn("Could not force update guilds.");
+					Object.defineProperty(SettingsStore.constructor.prototype, "darkSidebar", {
+						...desc,
+						get() {
+							return !desc.get();
+						}
+					});
+					const original = scrollerHook.default;
+					scrollerHook.default = () => ({
+						containerProps: {}
+					});
+					SettingsStore.emitChange();
+					setTimeout((() => {
+						Object.defineProperty(SettingsStore.constructor.prototype, "darkSidebar", desc);
+						scrollerHook.default = original;
+						SettingsStore.emitChange();
+					}));
+				}
+				async patchGuild() {
+					const Guild = external_PluginApi_namespaceObject.WebpackModules.getModule((m => m?.default?.type?.toString().indexOf("guildJoinRequestStatus") > -1));
+					let GuildNode = null;
+					let OriginalGuildNode = null;
+					const PatchedGuild = props => {
+						const res = Reflect.apply(OriginalGuildNode, this, [props]);
+						try {
+							const mask = external_PluginApi_namespaceObject.Utilities.findInReactTree(res, (m => m?.props?.hasOwnProperty("lowerBadgeWidth")));
+							if (!mask || mask.type === BlobMaskWrapper) return res;
+							Object.assign(mask.props, {
+								maskType: mask.type,
+								shouldShow: unread => unread > 0,
+								collector: ({
+									guildId
+								}) => {
+									if (!settings.get("showOnGuilds", true)) return 0;
+									if (!settings.get("showMutedGuildUnread", false) && UnreadCountBadges_MutedStore.isMuted(guildId)) return 0;
+									return this.checkCount(this.getUnreadCountForGuild(guildId, settings.get("includeMutedInGuild", false)));
+								},
+								color: "guildColor",
+								guildId: props.guild.id
+							});
+							mask.type = BlobMaskWrapper;
+						} catch (error) {
+							external_PluginApi_namespaceObject.Logger.error(error);
+						}
+						return res;
+					};
+					this.updateGuilds((() => {
+						external_PluginApi_namespaceObject.Patcher.after(Guild.default, "type", ((_, __, ret) => {
+							GuildNode ?? = external_BdApi_React_default().memo(PatchedGuild, ret.type.compare);
+							OriginalGuildNode ?? = ret.type.type;
+							ret.type = GuildNode;
+						}));
+						Guild.default = Object.assign({}, Guild.default);
+					}));
+				}
+				async patchHomeIcon() {
+					const selector = `.${external_PluginApi_namespaceObject.WebpackModules.getByProps("wrapper", "childWrapper")?.childWrapper}`;
+					const TutorialIndicator = await external_PluginApi_namespaceObject.ReactComponents.getComponentByName("TutorialIndicator", selector);
+					external_PluginApi_namespaceObject.Patcher.after(TutorialIndicator.component.prototype, "render", ((_this, _, res) => {
+						if ("friends-list" !== _this.props.tutorialId) return;
+						const mask = external_PluginApi_namespaceObject.Utilities.findInReactTree(res, (m => m?.props?.hasOwnProperty("lowerBadgeWidth")));
+						if (!mask || mask.type === BlobMaskWrapper) return;
+						Object.assign(mask.props, {
+							collector: () => {
+								if (!settings.get("showTotalUnreadCount", true)) return 0;
+								const guilds = Object.values(stores_namespaceObject.Guilds.getGuilds()).reduce(((count, guild) => {
+									if (!settings.get("includeMutedGuildsInTotal", false) && UnreadCountBadges_MutedStore.isMuted(guild.id)) return count;
+									return count += this.getUnreadCountForGuild(guild.id, settings.get("includeMutedChannelsInTotal", false));
+								}), 0);
+								const dms = Object.values(GuildChannelsStore.getMutablePrivateChannels()).reduce(((count, channel) => {
+									if (settings.get("includeDmsInTotal", true) && channel.type === constants_namespaceObject.ChannelTypes.DM && (settings.get("includeMutedDms", false) ? !isChannelMuted(channel.guild_id, channel.id) : true)) count += UnreadCountBadges_UnreadStore.getUnreadCount(channel.id);
+									if (!settings.get("includeGroupsInTotal", true) && channel.type === constants_namespaceObject.ChannelTypes.GROUP_DM && (settings.get("includeMutedGroups", false) ? !isChannelMuted(channel.guild_id, channel.id) : true)) count += UnreadCountBadges_UnreadStore.getUnreadCount(channel.id);
+									return count;
+								}), 0);
+								return this.checkCount(guilds + dms);
+							},
+							color: "totalColor",
+							maskType: mask.type,
+							shouldShow: unread => unread > 0
+						});
+						mask.type = BlobMaskWrapper;
+					}));
+					this.updateHomeIcon = () => TutorialIndicator.forceUpdateAll();
+					TutorialIndicator.forceUpdateAll();
+				}
+				async patchFolder() {
+					const FolderHeader = external_PluginApi_namespaceObject.WebpackModules.find((m => m.default && "FolderHeader" === m.default.displayName));
+					external_PluginApi_namespaceObject.Patcher.after(FolderHeader, "default", ((_, [props], res) => {
+						Object.assign(res.props, {
+							collector: ({
+								guildIds
+							}) => {
+								if (!settings.get("showOnFolders", true)) return 0;
+								return this.checkCount(guildIds.reduce(((count, id) => {
+									if (!settings.get("includeMutedGuildsInFolders", false) && UnreadCountBadges_MutedStore.isMuted(id)) return count;
+									return count += this.getUnreadCountForGuild(id, settings.get("includeMutedChannelsInFolders", false));
+								}), 0));
+							},
+							color: "folderColor",
+							maskType: res.type,
+							guildIds: props.folderNode?.children?.map((e => e.id)) ?? [],
+							shouldShow: (unread, props) => unread > 0 && (props.isFolderExpanded ? settings.get("showOnExpandedFolders", true) : true),
+							isFolderExpanded: FolderStatesStore.isFolderExpanded(props.folderId)
+						});
+						res.type = BlobMaskWrapper;
+					}));
+				}
+				onStop() {
+					external_StyleLoader_default().remove();
+					external_PluginApi_namespaceObject.Patcher.unpatchAll();
+					if ("function" === typeof this.updateGuilds) this.updateGuilds();
+					if ("function" === typeof this.updateHomeIcon) this.updateHomeIcon();
+				}
+			}
+		})();
 		module.exports.LibraryPluginHack = __webpack_exports__;
 	})();
 	const PluginExports = module.exports.LibraryPluginHack;
