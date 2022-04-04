@@ -40,7 +40,7 @@ module.exports = (() => {
                     twitter_username: "Strencher3"
                 }
             ],
-            version: "0.0.2",
+            version: "0.0.3",
             description: "Suppresses mentions from Replied messages and when replying to someone else.",
             github: "https://github.com/Strencher/BetterDiscordStuff/blob/master/SuppressReplyMentions/SuppressReplyMentions.plugin.js",
             github_raw: "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/SuppressReplyMentions/SuppressReplyMentions.plugin.js"
@@ -59,6 +59,13 @@ module.exports = (() => {
                 name: "Disable Mention",
                 note: "Automatically disables the 'Mention' option when replying to someone else.",
                 value: true
+            },
+            {
+                type: "switch",
+                id: "allowManualPing",
+                name: "Allow Manual Ping",
+                note: "Allow manual pings to mention even if they are in replies.",
+                value: false
             }
         ]
     };
@@ -113,6 +120,11 @@ module.exports = (() => {
                         if (type != ActionTypes.MESSAGE_CREATE) return;
                         const currentUser = UserUtils.getCurrentUser();
                         if (!currentUser || !Array.isArray(message.mentions) || !message.referenced_message) return;
+
+                        if(this.settings.allowManualPing) {
+                            const manualPing = "<@!" + currentUser.id + ">";
+                            if(message.content.includes(manualPing)) return;
+                        }
 
                         const mentionIndex = message.mentions.findIndex(e => e.id === currentUser.id);
                         if (message.referenced_message.author.id === currentUser.id && mentionIndex > -1) {
