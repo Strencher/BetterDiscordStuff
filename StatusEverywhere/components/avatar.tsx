@@ -29,7 +29,7 @@ const Members = WebpackModules.getByProps("subscribeMembers");
 const ActivityUtils = WebpackModules.getByProps("isStreaming");
 const Popout = WebpackModules.getByDisplayName("Popout");
 const UserPopoutContainer = WebpackModules.getModule(m => m.type?.displayName === "UserPopoutContainer");
-const ActivityStore = WebpackModules.getByProps("getActivities");
+const ActivityStore = WebpackModules.getByProps("getAllApplicationActivities");
 
 function isStreaming(userId: string) {
     const activities = ActivityStore.getActivities(userId);

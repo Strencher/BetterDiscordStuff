@@ -1,7 +1,7 @@
 {
     "info": {
         "name": "StatusEverywhere",
-        "version": "2.3.2",
+        "version": "2.3.3",
         "authors": [
             {
                 "name": "Strencher",
@@ -25,8 +25,8 @@
             "title": "fixes",
             "type": "fixed",
             "items": [
-                "Fix chat avatars.",
-                "Also fix UserPopout error."
+                "Fix chat avatars 2.0",
+                "Fixed streaming status (hopefully)"
             ]
         }
     ],
