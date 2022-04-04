@@ -1,6 +1,6 @@
 /**
  * @name StatusEverywhere
- * @version 2.3.2
+ * @version 2.3.3
  * @author Strencher, Zerebos
  * @description Adds user status everywhere Discord doesn't.
  * @source https://github.com/Strencher/BetterDiscordStuff/tree/master/StatusEverywhere
@@ -32,7 +32,7 @@
 const config = {
 	"info": {
 		"name": "StatusEverywhere",
-		"version": "2.3.2",
+		"version": "2.3.3",
 		"authors": [{
 				"name": "Strencher",
 				"discord_id": "415849376598982656",
@@ -54,8 +54,8 @@ const config = {
 		"title": "fixes",
 		"type": "fixed",
 		"items": [
-			"Fix chat avatars.",
-			"Also fix UserPopout error."
+			"Fix chat avatars 2.0",
+			"Fixed streaming status (hopefully)"
 		]
 	}],
 	"build": {
@@ -312,7 +312,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
 					return i[1];
 				}));
-				___CSS_LOADER_EXPORT___.push([module.id, ".StatusEverywhere-avatar-chatAvatar{overflow:visible !important;box-sizing:border-box}.StatusEverywhere-avatar-userPopout{border-radius:50%;box-sizing:border-box}.StatusEverywhere-avatar-userPopout[data-mobile=false]~svg foreignObject{mask:none;border-radius:50%;overflow:hidden}.StatusEverywhere-avatar-speaking foreignObject,.StatusEverywhere-avatar-radial foreignObject{border:2px solid var(--status-color);border-spacing:2px;border-radius:50%;box-sizing:border-box}.StatusEverywhere-avatar-radial foreignObject{border-width:3px}.StatusEverywhere-avatar-radial[data-mobile=false][data-typing=false] foreignObject{border-width:3px;mask:none}.StatusEverywhere-avatar-radial[data-mobile=false][data-typing=false] rect{display:none}.userInfo-regn9W{justify-content:flex-start;padding:16px 16px 0 146px}.userInfo-regn9W .button-f2h6uQ{margin-left:auto}.accountSettingsAvatar{top:46px}", ""]);
+				___CSS_LOADER_EXPORT___.push([module.id, ".StatusEverywhere-avatar-chatAvatar{overflow:visible !important;box-sizing:border-box}.StatusEverywhere-avatar-userPopout{border-radius:50%;box-sizing:border-box}.StatusEverywhere-avatar-userPopout[data-mobile=false]~svg foreignObject{mask:none;border-radius:50%;overflow:hidden}.StatusEverywhere-avatar-speaking foreignObject,.StatusEverywhere-avatar-radial foreignObject{border:2px solid var(--status-color);border-spacing:2px;border-radius:50%;box-sizing:border-box}.StatusEverywhere-avatar-radial foreignObject{border-width:3px}.StatusEverywhere-avatar-radial[data-mobile=false][data-typing=false] foreignObject{border-width:3px;mask:none}.StatusEverywhere-avatar-radial[data-mobile=false][data-typing=false] rect{display:none}.userInfo-regn9W{justify-content:flex-start;padding:16px 16px 0 146px}.userInfo-regn9W .button-f2h6uQ{margin-left:auto}.accountSettingsAvatar{top:46px}.avatar-2e8lTP::before{display:none}", ""]);
 				___CSS_LOADER_EXPORT___.locals = {
 					chatAvatar: "StatusEverywhere-avatar-chatAvatar",
 					userPopout: "StatusEverywhere-avatar-userPopout",
@@ -610,7 +610,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			const ActivityUtils = external_PluginApi_namespaceObject.WebpackModules.getByProps("isStreaming");
 			const Popout = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("Popout");
 			const UserPopoutContainer = external_PluginApi_namespaceObject.WebpackModules.getModule((m => "UserPopoutContainer" === m.type?.displayName));
-			const ActivityStore = external_PluginApi_namespaceObject.WebpackModules.getByProps("getActivities");
+			const ActivityStore = external_PluginApi_namespaceObject.WebpackModules.getByProps("getAllApplicationActivities");
 			function isStreaming(userId) {
 				const activities = ActivityStore.getActivities(userId);
 				return ActivityUtils.isStreaming(activities);
