@@ -1,4 +1,4 @@
-/// <reference path="../bdbuilder/typings/main.d.ts" />
+/// <reference path="../types/main.d.ts" />
 
 import { Logger, Patcher, ReactComponents, ReactTools, Utilities, WebpackModules } from "@zlibrary";
 import BasePlugin from "@zlibrary/plugin";
@@ -20,8 +20,9 @@ const MutedStore = WebpackModules.getByProps("getMutedChannels");
 const UnreadStore = WebpackModules.getByProps("getUnreadCount");
 const ChannelsStore = WebpackModules.getByProps("getChannels");
 const Badges = WebpackModules.getByProps("NumberBadge");
-const GuildChannelsStore = WebpackModules.getByProps("getMutableGuildChannels");
+const GuildChannelsStore = WebpackModules.getByProps("getMutablePrivateChannels");
 const FolderStatesStore = WebpackModules.getByProps("isFolderExpanded");
+const GuildsBar = WebpackModules.getModule(m => m.default?.type?.toString().indexOf("guildsnav") > -1);
 
 /* Thanks to lighty for figuring this out */
 function BlobMaskWrapper(props) {
@@ -200,12 +201,12 @@ export default class UnreadCountBadges extends BasePlugin {
                 <animated.rect
                     id={_this.state.maskId + "-unreadBadge"}
                     x="-5"
-                        y="28"
-                        width={_this.props.unreadBadgeWidth + 8}
-                        height="24"
-                        rx="12"
-                        ry="12"
-                        transform={_this.getBadgePositionInterpolation(_this.state.unreadBadgeMask)}
+                    y="28"
+                    width={(_this.props.unreadBadgeWidth ?? 0) + 8}
+                    height="24"
+                    rx="12"
+                    ry="12"
+                    transform={_this.getBadgePositionInterpolation(_this.state.unreadBadgeMask)}
                 />
             );
 
@@ -241,20 +242,51 @@ export default class UnreadCountBadges extends BasePlugin {
         }, 0);
     }
 
-    updateGuilds() {
-        const [guilds] = document.getElementsByClassName(this.guildsClasses.guilds);
-        if (!guilds) return;
-        const instance = ReactTools.getOwnerInstance(guilds);
-        if (!instance || !instance.forceUpdate) return;
+    updateGuilds(effect = () => {}) {
+        GuildsBar.default = Object.assign({}, GuildsBar.default);
 
-        instance.forceUpdate();
+        effect();
+
+        const SettingsStore = WebpackModules.getByProps("getUserAgnosticState", "accessibilitySupportEnabled");
+        const desc = Object.getOwnPropertyDescriptor(SettingsStore.constructor.prototype, "darkSidebar");
+        const scrollerHook = (() => {
+            const values = ["keyboardModeEnabled", "return", "orientation", "scrollToEnd"];
+            return WebpackModules.getModule(m => {
+                if (typeof m.default !== "function") return false;
+                let lastIndex = 0;
+                const string = m.default.toString();
+
+                return values.every(str => (lastIndex = string.indexOf(str, lastIndex)) > -1);
+            });
+        })();
+        if (!scrollerHook) return Logger.warn("Could not force update guilds.");
+        
+        Object.defineProperty(SettingsStore.constructor.prototype, "darkSidebar", {
+            ...desc,
+            get() {return !desc.get();}
+        });
+
+
+        const original = scrollerHook.default;
+        scrollerHook.default = () => ({containerProps: {}});
+
+        SettingsStore.emitChange();
+
+        setTimeout(() => {
+            Object.defineProperty(SettingsStore.constructor.prototype, "darkSidebar", desc);
+            
+            scrollerHook.default = original;
+            SettingsStore.emitChange();
+        });
     }
 
     async patchGuild() {
-        const GuildNode = WebpackModules.find(m => m.default && m.default.displayName === "GuildNode");
+        const Guild = WebpackModules.getModule(m => m?.default?.type?.toString().indexOf("guildJoinRequestStatus") > -1);
+        let GuildNode = null;
+        let OriginalGuildNode = null;
 
-        const PatchedGuild = ({__originalType, ...props}) => {
-            const res = Reflect.apply(__originalType, this, [props]);
+        const PatchedGuild = (props) => {
+            const res = Reflect.apply(OriginalGuildNode, this, [props]);
 
             try {
                 const mask = Utilities.findInReactTree(res, m => m?.props?.hasOwnProperty("lowerBadgeWidth"));
@@ -283,15 +315,16 @@ export default class UnreadCountBadges extends BasePlugin {
             return res;
         }
 
-        Patcher.after(GuildNode, "default", (_this, __, res) => {
-            if (!res || !res.props) return;
+        this.updateGuilds(() => {
+            Patcher.after(Guild.default, "type", (_, __, ret) => {
+                GuildNode ??= React.memo(PatchedGuild, ret.type.compare);
+                OriginalGuildNode ??= ret.type.type;
 
-            const original = res.type;
-            res.props.__originalType = original;
-            res.type = PatchedGuild;
+                ret.type = GuildNode;
+            });
+
+            Guild.default = Object.assign({}, Guild.default);
         });
-
-        this.updateGuilds();
     }
 
     async patchHomeIcon() {

@@ -1,7 +1,7 @@
 {
     "info": {
         "name": "UnreadCountBadges",
-        "version": "1.2.0",
+        "version": "1.3.0",
         "authors": [
             {
                 "name": "Strencher",
@@ -25,9 +25,8 @@
             "type": "fixed",
             "title": "Fixes",
             "items": [
-                "Fixed unread count on guilds",
-                "Fixed settings crash",
-                "Fixed displaying wrong amount of unread messages"
+                "Fixed unread count on guilds 2.0",
+                "Fixed crashing."
             ]
         }
     ],
