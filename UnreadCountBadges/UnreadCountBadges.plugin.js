@@ -32,7 +32,7 @@
 const config = {
 	"info": {
 		"name": "UnreadCountBadges",
-		"version": "1.3.0",
+		"version": "1.3.1",
 		"authors": [{
 				"name": "Strencher",
 				"discord_id": "415849376598982656",
@@ -1215,8 +1215,8 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					};
 					this.updateGuilds((() => {
 						external_PluginApi_namespaceObject.Patcher.after(Guild.default, "type", ((_, __, ret) => {
-							GuildNode ?? = external_BdApi_React_default().memo(PatchedGuild, ret.type.compare);
-							OriginalGuildNode ?? = ret.type.type;
+							GuildNode ??= external_BdApi_React_default().memo(PatchedGuild, ret.type.compare);
+							OriginalGuildNode ??= ret.type.type;
 							ret.type = GuildNode;
 						}));
 						Guild.default = Object.assign({}, Guild.default);
