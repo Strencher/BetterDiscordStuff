@@ -1,22 +1,22 @@
 [
     {
-        "name": "JustBlack",
-        "version": "1.0.0",
-        "url": "https://betterdiscord.net/ghdl?id=3336",
-        "source": "https://github.com/Strencher/BetterDiscordStuff/tree/master/Themes/JustBlack",
-        "img": "https://i.imgur.com/FHMFy8n.png",
-        "broken": false,
-        "official": true,
-        "description": "A nice and Simple dark theme"
-    },
-    {
         "name": "BetterUnreadIdicators",
         "version": "1.0.0",
-        "url": "https://betterdiscord.net/ghdl?id=3357",
+        "url": "https://strencher.github.io/download/?theme=BetterUnreadIndicators",
         "source": "https://github.com/Strencher/BetterDiscordStuff/tree/master/Themes/BetterUnreadIndicators",
-        "img": "https://i.imgur.com/QCrHAeS.png",
+        "img": "https://camo.githubusercontent.com/f0ed8bc18da816dfebe771b553be3ce392e38139ff72cebd3a874b23e84d9f71/68747470733a2f2f692e696d6775722e636f6d2f514372484165532e706e67",
         "broken": false,
-        "official": true,
+        "official": false,
         "description": "Makes the unread indicators look better."
-    }  
+    },
+    {
+        "name": "JustBlack",
+        "version": "1.0.0",
+        "url": "https://strencher.github.io/download/?theme=JustBlack",
+        "source": "https://github.com/Strencher/BetterDiscordStuff/tree/master/Themes/JustBlack",
+        "img": "https://camo.githubusercontent.com/cb599282155bcae5bbf37086946647dc48f65179eb8004995e7a6d5390543d93/68747470733a2f2f692e696d6775722e636f6d2f46484d4679386e2e706e67",
+        "broken": false,
+        "official": false,
+        "description": "A nice and Simple dark theme"
+    } 
  ]

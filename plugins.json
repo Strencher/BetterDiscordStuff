@@ -1,52 +1,312 @@
 [
-   {
-	   "name": "ShowAllActivities",
-	   "version": "0.0.2",
-	   "url": "https://betterdiscord.net/ghdl?id=3354",
-	   "source": "https://github.com/Strencher/BetterDiscordStuff/blob/master/ShowAllActivities/ShowAllActivities.plugin.js",
-	   "img": "https://i.imgur.com/pjNoZmp.gif",
-	   "broken": false,
-	   "official": true,
-	   "description": "See every status a user has enabled. Original made by Juby210#0577."
-   },
-   {
-	   "name": "VoiceUsersCounter",
-	   "version": "0.0.6",
-	   "url": "https://betterdiscord.net/ghdl?id=3253",
-	   "source": "https://github.com/Strencher/BetterDiscordStuff/tree/master/VoiceUsersCounter",
-	   "img": "https://i.imgur.com/BgXeB0M.png",
-	   "broken": false,
-	   "official": true,
-	   "description": "Adds a count of users theyre connected to a VoiceChannel. Customize the Color of the count in the SettingsPanel."
-   },
-   {
-	   "name": "LinkChannels",
-	   "version": "0.0.7",
-	   "url": "https://betterdiscord.net/ghdl?id=3238",
-	   "source": "https://github.com/Strencher/BetterDiscordStuff/tree/master/LinkChannels",
-	   "img": "https://i.imgur.com/l7UZ47S.png",
-	   "broken": false,
-	   "official": true,
-	   "description": "Adds an Icon to channels that copys <#channelId>. Press Shift & Click to insert the channel in the textarea."
-   },
-   {
-	   "name": "Open Spotify Links In Spotify",
-	   "version": "0.0.3",
-	   "url": "https://betterdiscord.net/ghdl?id=3113",
-	   "source": "https://github.com/Strencher/BetterDiscordStuff/tree/master/OpenSpotifylinksInSpotify",
-	   "img": "https://i.imgur.com/tHdEHwq.png",
-	   "broken": false,
-	   "official": true,
-	   "description": "Open spotify links directly in the Spotify Desktop App."
-   },
-   {
-	   "name": "QuickMuteChannels",
-	   "version": "0.0.8",
-	   "url": "https://betterdiscord.net/ghdl?id=3214",
-	   "source": "https://github.com/Strencher/BetterDiscordStuff/tree/master/QuickMuteChannels",
-	   "img": "https://i.imgur.com/tHdEHwq.png",
-	   "broken": false,
-	   "official": true,
-	   "description": "Adds an Speaker to channels to Quickly mute/unmute them."
-   }  
+	{
+		"name": "AutoCorrectV2",
+		"version": "0.0.2",
+		"url": "https://strencher.github.io/download/?plugin=AutoCorrectV2",
+		"source": "https://github.com/Strencher/BetterDiscordStuff/blob/master/AutoCorrectV2/AutoCorrectV2.plugin.js",
+		"img": "",
+		"broken": false,
+		"official": false,
+		"description": "Corrects your message when you send it."
+	},
+	{
+		"name": "BetterBannedUsers",
+		"version": "1.2.0",
+		"url": "https://strencher.github.io/download/?plugin=BetterBannedUsers",
+		"source": "https://github.com/Strencher/BetterDiscordStuff/blob/master/BetterBannedUsers/BetterBannedUsers.plugin.js",
+		"img": "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/BetterBannedUsers/assets/preview.png",
+		"broken": false,
+		"official": true,
+		"description": "Enhances the banned users page."
+	},
+	{
+		"name": "ChannelDetails",
+		"version": "1.1.0",
+		"url": "https://strencher.github.io/download/?plugin=ChannelDetails",
+		"source": "https://github.com/Strencher/BetterDiscordStuff/blob/master/ChannelDetails/ChannelDetails.plugin.js",
+		"img": "",
+		"broken": false,
+		"official": false,
+		"description": "Shows you a lot information about channels, like: channel tooltip, channel accessibility etc."
+	},
+	{
+		"name": "ChannelDms",
+		"version": "1.2.0",
+		"url": "https://strencher.github.io/download/?plugin=ChannelDms",
+		"source": "https://github.com/Strencher/BetterDiscordStuff/blob/master/ChannelDms/ChannelDms.plugin.js",
+		"img": "https://betterdiscord.app/resources/thumbnails/924.png",
+		"broken": false,
+		"official": true,
+		"description": "Allows you to open popout chats of direct messages inside servers."
+	},
+	{
+		"name": "CharCounter",
+		"version": "1.0.2",
+		"url": "https://strencher.github.io/download/?plugin=CharCounter",
+		"source": "https://github.com/Strencher/BetterDiscordStuff/blob/master/ChannelDms/ChannelDms.plugin.js",
+		"img": "",
+		"broken": true,
+		"official": false,
+		"description": "Counts your character length of the text area."
+	},
+	{
+		"name": "Copier",
+		"version": "1.4.1",
+		"url": "https://strencher.github.io/download/?plugin=Copier",
+		"source": "https://github.com/Strencher/BetterDiscordStuff/blob/master/Copier/Copier.plugin.js",
+		"img": "https://camo.githubusercontent.com/d0d2a07a4c9f97545cb536a2982699ced42a3279f49c7ab770ff33c7eb148432/68747470733a2f2f692e696d6775722e636f6d2f78316f514861352e706e67",
+		"broken": false,
+		"official": true,
+		"description": "Allows you to copy certain stuff with custom options."
+	},
+	{
+		"name": "InvisibleTyping",
+		"version": "1.2.0",
+		"url": "https://strencher.github.io/download/?plugin=InvisibleTyping",
+		"source": "https://github.com/Strencher/BetterDiscordStuff/blob/master/InvisibleTyping/InvisibleTyping.plugin.js",
+		"img": "https://betterdiscord.app/resources/thumbnails/516.png",
+		"broken": false,
+		"official": true,
+		"description": "Enhanced version of silent typing."
+	},
+	{
+		"name": "LinkChannels",
+		"version": "1.1.0",
+		"url": "https://strencher.github.io/download/?plugin=LinkChannels",
+		"source": "https://github.com/Strencher/BetterDiscordStuff/blob/master/LinkChannels/LinkChannels.plugin.js",
+		"img": "",
+		"broken": false,
+		"official": true,
+		"description": "Adds an Icon to channels that copys <#channelId>. (channelId is replaced)"
+	},
+	{
+		"name": "MemberCount",
+		"version": "0.0.3",
+		"url": "https://strencher.github.io/download/?plugin=MemberCount",
+		"source": "https://github.com/Strencher/BetterDiscordStuff/blob/master/MemberCount/MemberCount.plugin.js",
+		"img": "",
+		"broken": false,
+		"official": false,
+		"description": "Adds online-offline member count to the member list."
+	},
+	{
+		"name": "MessageDoubleClickActions",
+		"version": "0.0.5",
+		"url": "https://strencher.github.io/download/?plugin=MessageDoubleClickActions",
+		"source": "https://github.com/Strencher/BetterDiscordStuff/blob/master/MessageDoubleClickActions/MessageDoubleClickActions.plugin.js",
+		"img": "",
+		"broken": true,
+		"official": false,
+		"description": "Adds an Action by Double Clicking a message."
+	},
+	{
+		"name": "MessageLinkEmbed",
+		"version": "0.0.2",
+		"url": "https://strencher.github.io/download/?plugin=MessageLinkEmbed",
+		"source": "https://github.com/Strencher/BetterDiscordStuff/blob/master/MessageLinkEmbed/MessageLinkEmbed.plugin.js",
+		"img": "",
+		"broken": true,
+		"official": false,
+		"description": "Make messagelinks look like any other link but with the message. Converted from a PC plugin -> BD plugin. full credits go to @Juby210"
+	},
+	{
+		"name": "OpenLinksInDiscordV2",
+		"version": "0.0.1",
+		"url": "https://strencher.github.io/download/?plugin=OpenLinksInDiscordV2",
+		"source": "https://github.com/Strencher/BetterDiscordStuff/blob/master/OpenLinksInDiscordV2/OpenLinksInDiscordV2.plugin.js",
+		"img": "",
+		"broken": true,
+		"official": false,
+		"description": "Opens Links in a Discord Browserwindow, rewrite of Metalloriff's"
+	},
+	{
+		"name": "OpenLinksInSpecificBrowser",
+		"version": "1.0.1",
+		"url": "https://strencher.github.io/download/?plugin=OpenLinksInSpecificBrowser",
+		"source": "https://github.com/Strencher/BetterDiscordStuff/blob/master/OpenLinksInSpecificBrowser/OpenLinksInSpecificBrowser.plugin.js",
+		"img": "",
+		"broken": true,
+		"official": false,
+		"description": "Let you open links in your choosen browser."
+	},
+	{
+		"name": "OpenSpotifylinksInSpotify",
+		"version": "0.0.8",
+		"url": "https://strencher.github.io/download/?plugin=OpenSpotifylinksInSpotify",
+		"source": "https://github.com/Strencher/BetterDiscordStuff/blob/master/OpenSpotifylinksInSpotify/OpenSpotifylinksInSpotify.plugin.js",
+		"img": "",
+		"broken": false,
+		"official": false,
+		"description": "Opens Spotify links Direct in Spotify (Spotify Desktop App required!) by clicking on it."
+	},
+	{
+		"name": "PlatformIndicators",
+		"version": "1.2.1",
+		"url": "https://betterdiscord.app/Download?id=158",
+		"source": "https://github.com/Strencher/BetterDiscordStuff/blob/master/PlatformIndicators/APlatformIndicators.plugin.js",
+		"img": "",
+		"broken": false,
+		"official": true,
+		"description": "Adds indicators for every platform that the user is using. Source code available on the repo in the 'src' folder."
+	},
+	{
+		"name": "PronounDB",
+		"version": "1.2.1",
+		"url": "https://strencher.github.io/download/?plugin=PronounDB",
+		"source": "https://github.com/Strencher/BetterDiscordStuff/blob/master/PronounDB/PronounDB.plugin.js",
+		"img": "",
+		"broken": false,
+		"official": true,
+		"description": "Shows you the pronoun of a user right next to their name. Pronouns by https://pronoundb.org. Source code can be found in the ./src folder of the github repo."
+	},
+	{
+		"name": "QuickInspector",
+		"version": "0.0.1",
+		"url": "https://strencher.github.io/download/?plugin=QuickInspector",
+		"source": "https://github.com/Strencher/BetterDiscordStuff/blob/master/QuickInspector/QuickInspector.plugin.js",
+		"img": "",
+		"broken": false,
+		"official": false,
+		"description": "Quick inspect's element by Holding alt and click."
+	},
+	{
+		"name": "QuickMuteChannels",
+		"version": "1.0.3",
+		"url": "https://strencher.github.io/download/?plugin=QuickMuteChannels",
+		"source": "https://github.com/Strencher/BetterDiscordStuff/blob/master/QuickMuteChannels/QuickMuteChannels.plugin.js",
+		"img": "",
+		"broken": false,
+		"official": false,
+		"description": "Adds an Speaker to channels to Quickly mute/unmute them."
+	},
+	{
+		"name": "RelationshipCounter",
+		"version": "0.0.3",
+		"url": "https://strencher.github.io/download/?plugin=RelationshipCounter",
+		"source": "https://github.com/Strencher/BetterDiscordStuff/blob/master/RelationshipCounter/RelationshipCounter.plugin.js",
+		"img": "",
+		"broken": true,
+		"official": false,
+		"description": "Counts your'e Friends, blocked users & pending friends"
+	},
+	{
+		"name": "ShowAllActivities",
+		"version": "1.0.0",
+		"url": "https://strencher.github.io/download/?plugin=ShowAllActivities",
+		"source": "https://github.com/Strencher/BetterDiscordStuff/blob/master/ShowAllActivities/ShowAllActivities.plugin.js",
+		"img": "https://betterdiscord.app/resources/thumbnails/825.png",
+		"broken": false,
+		"official": true,
+		"description": "See every status a user has enabled. Original made by Juby210#0577."
+	},
+	{
+		"name": "ShowSessions",
+		"version": "1.3.0",
+		"url": "https://strencher.github.io/download/?plugin=ShowSessions",
+		"source": "https://github.com/Strencher/BetterDiscordStuff/blob/master/ShowSessions/ShowSessions.plugin.js",
+		"img": "https://betterdiscord.app/resources/thumbnails/633.png",
+		"broken": false,
+		"official": true,
+		"description": "Shows your current sessions with a chat command '/sessions' or in the accounts panel."
+	},
+	{
+		"name": "ShutUpClyde",
+		"version": "0.0.1",
+		"url": "https://strencher.github.io/download/?plugin=ShutUpClyde",
+		"source": "https://github.com/Strencher/BetterDiscordStuff/blob/master/ShutUpClyde/ShutUpClyde.plugin.js",
+		"img": "",
+		"broken": false,
+		"official": true,
+		"description": "Prevents Clyde from disturbing you."
+	},
+	{
+		"name": "StatusEverywhere",
+		"version": "2.3.3",
+		"url": "https://strencher.github.io/download/?plugin=StatusEverywhere",
+		"source": "https://github.com/Strencher/BetterDiscordStuff/blob/master/StatusEverywhere/StatusEverywhere.plugin.js",
+		"img": "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/StatusEverywhere/assets/chat.png",
+		"broken": false,
+		"official": true,
+		"description": "Adds user status everywhere Discord doesn't."
+	},
+	{
+		"name": "SuppressReplyMentions",
+		"version": "0.0.3",
+		"url": "https://strencher.github.io/download/?plugin=SuppressReplyMentions",
+		"source": "https://github.com/Strencher/BetterDiscordStuff/blob/master/SuppressReplyMentions/SuppressReplyMentions.plugin.js",
+		"img": "https://camo.githubusercontent.com/87ac4eb80ec9bcf51cc10ebd899a87552c0c07e09d484fc039fba47e664f8ed1/68747470733a2f2f692e696d6775722e636f6d2f44696667514b672e706e67",
+		"broken": false,
+		"official": true,
+		"description": "Suppresses mentions from Replied messages and when replying to someone else."
+	},
+	{
+		"name": "TwitchChatV2",
+		"version": "0.0.6",
+		"url": "https://strencher.github.io/download/?plugin=TwitchChatV2",
+		"source": "https://github.com/Strencher/BetterDiscordStuff/blob/master/TwitchChatV2/TwitchChatV2.plugin.js",
+		"img": "https://camo.githubusercontent.com/57c845071664375da21d75c30488510d2f485e3a2abfefbd06d92703c3597c55/68747470733a2f2f737472656e636865722e6769746875622e696f2f54776974636843686174507265776965772e676966",
+		"broken": true,
+		"official": false,
+		"description": "Adds an Twitch chat to discord."
+	},
+	{
+		"name": "TypingUsersPlus",
+		"version": "1.0.0",
+		"url": "https://strencher.github.io/download/?plugin=TypingUsersPlus",
+		"source": "https://github.com/Strencher/BetterDiscordStuff/blob/master/TypingUsersPlus/TypingUsersPlus.plugin.js",
+		"img": "",
+		"broken": false,
+		"official": false,
+		"description": "Enhances the typing users bar in discord. Adds avatar + status, colorized username, role icons and clickable name."
+	},
+	{
+		"name": "UnreadCountBadges",
+		"version": "1.3.1",
+		"url": "https://strencher.github.io/download/?plugin=UnreadCountBadges",
+		"source": "https://github.com/Strencher/BetterDiscordStuff/blob/master/UnreadCountBadges/UnreadCountBadges.plugin.js",
+		"img": "https://betterdiscord.app/resources/thumbnails/643.png",
+		"broken": false,
+		"official": true,
+		"description": "Adds unread badges to guilds, channels & more."
+	},
+	{
+		"name": "UserBackgrounds",
+		"version": "1.6.2",
+		"url": "https://strencher.github.io/download/?plugin=UserBackgrounds",
+		"source": "https://github.com/Strencher/BetterDiscordStuff/blob/master/UserBackgrounds/UserBackgrounds.plugin.js",
+		"img": "",
+		"broken": false,
+		"official": false,
+		"description": "A database of custom user requested backgrounds designed for BetterDiscord and Powercord."
+	},
+	{
+		"name": "UserDetails",
+		"version": "2.7.1",
+		"url": "https://strencher.github.io/download/?plugin=UserDetails",
+		"source": "https://github.com/Strencher/BetterDiscordStuff/blob/master/UserDetails/UserDetails.plugin.js",
+		"img": "https://betterdiscord.app/resources/thumbnails/514.png",
+		"broken": false,
+		"official": true,
+		"description": "Shows you a lot information about users in popouts."
+	},
+	{
+		"name": "VoiceChatNotifications",
+		"version": "1.2.1",
+		"url": "https://strencher.github.io/download/?plugin=VoiceChatNotifications",
+		"source": "https://github.com/Strencher/BetterDiscordStuff/blob/master/VoiceChatNotifications/VoiceChatNotifications.plugin.js",
+		"img": "https://betterdiscord.app/resources/thumbnails/517.png",
+		"broken": false,
+		"official": true,
+		"description": "Shows you certain events from voicechats in a logs panel or as desktop notification."
+	},
+	{
+		"name": "VoiceUsersCounter",
+		"version": "1.2.1",
+		"url": "https://strencher.github.io/download/?plugin=VoiceUsersCounter",
+		"source": "https://github.com/Strencher/BetterDiscordStuff/blob/master/VoiceUsersCounter/VoiceUsersCounter.plugin.js",
+		"img": "https://camo.githubusercontent.com/36157473f6b02408a94918099e9ce72c980576584736c66e6dcd9d57a107f1ee/68747470733a2f2f63646e2e646973636f72646170702e636f6d2f6174746163686d656e74732f3635393433323936363935383631323439302f3730313936343637313838333933353735342f756e6b6e6f776e2e706e67",
+		"broken": false,
+		"official": true,
+		"description": "Adds a count of users they're connected to a VoiceChannel. Customize the Color of the count in the settingspanel when your'e connected to the voicechannel."
+	}
 ]
