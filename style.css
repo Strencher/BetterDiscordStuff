@@ -141,6 +141,7 @@ body {
 }
 
 .card .preview {
+    object-fit: cover;
     max-height: 175px;
 }
 
@@ -151,6 +152,7 @@ body {
 
 .image-viewer {
     position: fixed;
+    z-index: 1;
 }
 
 .backdrop {
