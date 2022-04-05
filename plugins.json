@@ -43,7 +43,7 @@
 		"name": "CharCounter",
 		"version": "1.0.2",
 		"url": "https://strencher.github.io/download/?plugin=CharCounter",
-		"source": "https://github.com/Strencher/BetterDiscordStuff/blob/master/ChannelDms/ChannelDms.plugin.js",
+		"source": "https://github.com/Strencher/BetterDiscordStuff/blob/master/CharCounter/CharCounter.plugin.js",
 		"img": "",
 		"broken": true,
 		"official": false,
