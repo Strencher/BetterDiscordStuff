@@ -657,12 +657,12 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					return external_BdApi_React_default().createElement("div", null, external_BdApi_React_default().createElement(Category, {
 						label: "General",
 						look: Category.Looks.COMPACT
-					}, Object.keys(otherSettings).map((key => external_BdApi_React_default().createElement(SwitchItem, Settings_extends({}, otherSettings[key], {
-						value: settings.get(key, otherSettings[key].value),
+					}, Object.keys(otherSettings).reduce(((items, key) => external_BdApi_React_default().createElement(SwitchItem, Settings_extends({}, items, {
+						value: settings.get(key, items),
 						onChange: value => {
-							settings.set(key, value);
+							settings.set(key, items);
 						}
-					}), otherSettings[key].name))), external_BdApi_React_default().createElement(forms_namespaceObject.FormItem, {
+					}), items.name))), external_BdApi_React_default().createElement(forms_namespaceObject.FormItem, {
 						title: "InApp Notifications"
 					}, external_BdApi_React_default().createElement(NotificationSetting, {
 						position: settings.get("inappPosition", "topleft"),
