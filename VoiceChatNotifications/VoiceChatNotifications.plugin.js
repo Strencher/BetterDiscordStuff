@@ -1,6 +1,6 @@
 /**
  * @name VoiceChatNotifications
- * @version 1.2.1
+ * @version 1.2.2
  * @description Shows you certain events from voicechats in a logs panel or as desktop notification.
  * @author Strencher
  * @source https://github.com/Strencher/BetterDiscordStuff/tree/master/VoiceChatNotifications
@@ -32,7 +32,7 @@
 const config = {
 	"info": {
 		"name": "VoiceChatNotifications",
-		"version": "1.2.1",
+		"version": "1.2.2",
 		"description": "Shows you certain events from voicechats in a logs panel or as desktop notification.",
 		"authors": [{
 			"name": "Strencher",
@@ -43,6 +43,12 @@ const config = {
 		"github_raw": "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/VoiceChatNotifications/VoiceChatNotifications.plugin.js"
 	},
 	"changelog": [
+		{
+			"title": "New Stuff",
+			"items": [
+				"Added setting to disable notifications for stages."
+			]
+		},
 		{
 			"type": "fixed",
 			"title": "Fixes",
