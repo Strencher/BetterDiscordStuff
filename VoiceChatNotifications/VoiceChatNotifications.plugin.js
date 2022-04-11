@@ -648,6 +648,11 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						note: "Suppress desktop notifications in DND, this automatically enables the In-App notification api.",
 						name: "Suppress in DND"
 					},
+					disableInStage: {
+						value: false,
+						note: "Disables notifications from triggering in stage channels.",
+						name: "Disable in Stage Channels"
+					},
 					notifications: {
 						value: true,
 						note: "Defines if notifications should be shown when an event happens in your current call.",
@@ -1044,6 +1049,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						timestamp,
 						channelId
 					}) {
+						if (settings.get("disableInStage", false) && stores_namespaceObject.Channels.getChannel(channelId)?.type === 13) return;
 						if (!settings.get("notifications", true) || LogsPanel.Store.getState().paused) return;
 						const useInApp = settings.get("suppressInDnd", true) && "dnd" === SettingsStore.status || "disabled" !== settings.get("inappPosition", "topLeft");
 						if (useInApp) show(VoiceChatNotifications_React.createElement(VoiceChatNotifications_React.Fragment, null, VoiceChatNotifications_React.createElement(AnimatedAvatar, {
