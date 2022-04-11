@@ -42,14 +42,15 @@ const config = {
 		"github": "https://github.com/Strencher/BetterDiscordStuff/tree/master/VoiceChatNotifications",
 		"github_raw": "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/VoiceChatNotifications/VoiceChatNotifications.plugin.js"
 	},
-	"changelog": [{
-		"type": "fixed",
-		"title": "Fixes",
-		"items": [
-			"Discord update fixes #2",
-			"Fix typo"
-		]
-	}],
+	"changelog": [
+		{
+			"type": "fixed",
+			"title": "Fixes",
+			"items": [
+				"Fixed Settings."
+			]
+		}
+	],
 	"build": {
 		"zlibrary": true,
 		"copy": true,
@@ -657,11 +658,12 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					return external_BdApi_React_default().createElement("div", null, external_BdApi_React_default().createElement(Category, {
 						label: "General",
 						look: Category.Looks.COMPACT
-					}, Object.keys(otherSettings).map((key => external_BdApi_React_default().createElement(SwitchItem, Settings_extends({}, otherSettings[key], {
+					}, Object.keys(otherSettings).map(((key) => external_BdApi_React_default().createElement(SwitchItem, Settings_extends({}, key, {
 						value: settings.get(key, otherSettings[key].value),
 						onChange: value => {
 							settings.set(key, value);
-						}
+						},
+						note: otherSettings[key].note
 					}), otherSettings[key].name))), external_BdApi_React_default().createElement(forms_namespaceObject.FormItem, {
 						title: "InApp Notifications"
 					}, external_BdApi_React_default().createElement(NotificationSetting, {
