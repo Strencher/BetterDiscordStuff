@@ -32,7 +32,7 @@ export default function SettingsPanel() {
         <div>
             <Category label="General" look={Category.Looks.COMPACT}>
                 {
-                    Object.entries(otherSettings).map((([key, items]) => (
+                    Object.entries(otherSettings).map(([key, items]) => (
                         <SwitchItem
                             {...items}
                             value={Settings.get(key, items.value)}
