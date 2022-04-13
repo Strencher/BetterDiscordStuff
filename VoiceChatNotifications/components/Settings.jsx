@@ -32,12 +32,12 @@ export default function SettingsPanel() {
         <div>
             <Category label="General" look={Category.Looks.COMPACT}>
                 {
-                    Object.keys(otherSettings).map(key => (
+                    Object.entries(otherSettings).map((([key, items]) => (
                         <SwitchItem
-                            {...otherSettings[key]}
-                            value={Settings.get(key, otherSettings[key].value)}
+                            {...items}
+                            value={Settings.get(key, items.value)}
                             onChange={value => {Settings.set(key, value);}}
-                        >{otherSettings[key].name}</SwitchItem>
+                        >{items.name}</SwitchItem>
                     ))
                 }
                 <FormItem title="InApp Notifications">
