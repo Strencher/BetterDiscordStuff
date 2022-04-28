@@ -3,7 +3,7 @@
 * @displayName PlatformIndicators
 * @authorId 415849376598982656
 * @invite gvA2ree
-* @version 1.2.1
+* @version 1.2.2
 */
 /*@cc_on
 @if (@_jscript)
@@ -40,17 +40,17 @@ module.exports = (() => {
                     twitter_username: "Strencher3"
                 }
             ],
-            version: "1.2.1",
+            version: "1.2.2",
             description: "Adds indicators for every platform that the user is using. Source code available on the repo in the 'src' folder.",
             github: "https://github.com/Strencher/BetterDiscordStuff/blob/master/PlatformIndicators/APlatformIndicators.plugin.js",
             github_raw: "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/PlatformIndicators/APlatformIndicators.plugin.js"
         },
         changelog: [
             {
-                title: "v1.2.1",
+                title: "v1.2.2",
                 type: "fixed",
                 items: [
-                    "Fixed indicators showing next usernames in messages."
+                    "Fixed indicators not showing in the member list."
                 ]
             },
         ],
@@ -148,7 +148,7 @@ module.exports = (() => {
         stop() { }
     } : (([Plugin, Api]) => {
         const plugin = (Plugin, Api) => {
-            const { Utilities, WebpackModules, PluginUtilities, ReactTools, Patcher, Logger, DiscordModules: { React, UserStatusStore, UserStore, Dispatcher, DiscordConstants: { ActionTypes } } } = Api;
+            const { ReactComponents, Utilities, WebpackModules, PluginUtilities, ReactTools, Patcher, Logger, DiscordModules: { React, UserStatusStore, UserStore, Dispatcher, DiscordConstants: { ActionTypes } } } = Api;
             const { TooltipContainer: Tooltip } = WebpackModules.getByProps("TooltipContainer");
             const h = React.createElement;
             const StatusModule = WebpackModules.getByProps("Status", "getStatusMask");
@@ -157,12 +157,10 @@ module.exports = (() => {
             const AuthStore = WebpackModules.getByProps("getId", "getEmail");
             const SessionsStore = WebpackModules.getByProps("getSessions", "_dispatchToken");
             const friendsRowClasses = WebpackModules.getByProps("hovered", "discriminator");
-            const Utils = Object.assign(Utilities, {
-                joinClassNames: (...classNames) => classNames.filter(Boolean).join(" "),
-                capFirst(text) {
-                    return text[0].toUpperCase() + text.slice(1);
-                }
-            });
+
+            class StringUtils {
+                static upperFirst(string) {return string.charAt(0).toUpperCase() + string.slice(1);}
+            }
 
             const Settings = new class Settings extends Flux.Store {
                 constructor() {super(Dispatcher, {});}
@@ -180,12 +178,20 @@ module.exports = (() => {
 
             function DesktopIcon(props) {
                 return h("svg", Object.assign({className: "PI-icon_desktop", width: "24", height: "24"}, props, {viewBox: "0 0 24 24"}),
-                    h("path", {fill: "currentColor", d: "M4 2.5C2.897 2.5 2 3.397 2 4.5V15.5C2 16.604 2.897 17.5 4 17.5H11V19.5H7V21.5H17V19.5H13V17.5H20C21.103 17.5 22 16.604 22 15.5V4.5C22 3.397 21.103 2.5 20 2.5H4ZM20 4.5V13.5H4V4.5H20Z"}));
+                    h("path", {
+                        fill: "currentColor",
+                        d: "M4 2.5C2.897 2.5 2 3.397 2 4.5V15.5C2 16.604 2.897 17.5 4 17.5H11V19.5H7V21.5H17V19.5H13V17.5H20C21.103 17.5 22 16.604 22 15.5V4.5C22 3.397 21.103 2.5 20 2.5H4ZM20 4.5V13.5H4V4.5H20Z"
+                    })
+                );
             };
 
             function WebIcon(props) {
                 return h("svg", Object.assign({className: "PI-icon_web", width: "24", height: "24"}, props, {viewBox: "0 0 24 24"}),
-                    h("path", {fill: "currentColor", d: "M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM11 19.93C7.05 19.44 4 16.08 4 12C4 11.38 4.08 10.79 4.21 10.21L9 15V16C9 17.1 9.9 18 11 18V19.93ZM17.9 17.39C17.64 16.58 16.9 16 16 16H15V13C15 12.45 14.55 12 14 12H8V10H10C10.55 10 11 9.55 11 9V7H13C14.1 7 15 6.1 15 5V4.59C17.93 5.78 20 8.65 20 12C20 14.08 19.2 15.97 17.9 17.39Z"}));
+                    h("path", {
+                        fill: "currentColor",
+                        d: "M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM11 19.93C7.05 19.44 4 16.08 4 12C4 11.38 4.08 10.79 4.21 10.21L9 15V16C9 17.1 9.9 18 11 18V19.93ZM17.9 17.39C17.64 16.58 16.9 16 16 16H15V13C15 12.45 14.55 12 14 12H8V10H10C10.55 10 11 9.55 11 9V7H13C14.1 7 15 6.1 15 5V4.59C17.93 5.78 20 8.65 20 12C20 14.08 19.2 15.97 17.9 17.39Z"
+                    })
+                );
             };
 
             function MobileIcon(props) {
@@ -229,25 +235,34 @@ module.exports = (() => {
             } : {};
             
             const StatusIndicators = function StatusIndicators(props) {
+                const iconStates = Flux.useStateFromStoresObject([Settings], () => Settings.get("icons", {}));
                 const user = Flux.useStateFromStores([UserStore], () => {
                     const userId = props.userId ?? props.user?.id;
                     return UserStore.getUser(userId);
                 });
-                const shouldShow = Flux.useStateFromStores([Settings], () => Settings.get("showIn" + props.type, true) && (Settings.get("ignoreBots", true) ? !user?.bot : true));
-                const iconStates = Flux.useStateFromStoresObject([Settings], () => Settings.get("icons", {}));
+
+                const shouldShow = Flux.useStateFromStores([Settings], () => {
+                    const shownInArea = Settings.get("showIn" + props.type, true);
+                    const isBot = Settings.get("ignoreBots", true) && (user?.bot ?? false);
+
+                    return shownInArea && !isBot;
+                });
+
                 const clients = Flux.useStateFromStoresObject([UserStatusStore], () => {
                     if (user?.id === AuthStore.getId()) return currentClientStatus;
 
                     return UserStatusStore.getState().clientStatuses[user?.id] ?? {};
                 });
-                if (!_.size(clients) || !shouldShow || !user) return null;
+
+                if (!Object.keys(clients).length || !shouldShow || !user) return null;
 
                 return h("div", {
                     className: Utilities.className("PI-indicatorContainer", "PI-type_" + props.type),
                     children: Object.entries(clients)
                         .filter(([key]) => iconStates[key] ?? true)
                         .map(([key, status]) => h(Tooltip, {
-                            text: Utils.capFirst(key) + ": " + Messages[`STATUS_${(status == "mobile" ? "mobile_online" : status).toUpperCase()}`],
+                            key,
+                            text: StringUtils.upperFirst(key) + ": " + Messages[`STATUS_${(status == "mobile" ? "mobile_online" : status).toUpperCase()}`],
                             position: "top",
                             children: h(Icons[key], {
                                 style: {color: StatusModule.getStatusColor(status)},
@@ -312,16 +327,18 @@ module.exports = (() => {
 
                 onStart() {
                     PluginUtilities.addStyle(config.info.name, this.css);
-                    Utils.suppressErrors(this.patchMessageHeader.bind(this), "MessageHeaderPatch")();
-                    Utils.suppressErrors(this.patchMemberListItem.bind(this))();
-                    Utils.suppressErrors(this.patchDmList.bind(this))();
-                    Utils.suppressErrors(this.patchDiscordTag.bind(this))();
+                    Utilities.suppressErrors(this.patchMessageHeader.bind(this), "MessageHeaderPatch")();
+                    Utilities.suppressErrors(this.patchMemberListItem.bind(this))();
+                    Utilities.suppressErrors(this.patchDmList.bind(this))();
+                    Utilities.suppressErrors(this.patchDiscordTag.bind(this))();
                     Dispatcher.subscribe(ActionTypes.PRESENCE_UPDATE, this.ON_PRESENCE_UPDATE);
                 }
 
                 async patchMemberListItem() {
-                    const MemberListItem = WebpackModules.getByDisplayName("MemberListItem");
-                    Patcher.after(MemberListItem.prototype, "renderDecorators", ({ props }, _, returnValue) => {
+                    const classes = WebpackModules.getByProps("member", "lostPermission");
+                    const MemberListItem = await ReactComponents.getComponentByName("MemberListItem", `.${classes.member}`);
+
+                    Patcher.after(MemberListItem.component.prototype, "renderDecorators", ({ props }, _, returnValue) => {
                         try {
                             const tree = returnValue?.props?.children;
                             if (!Array.isArray(tree)) return;
@@ -338,7 +355,7 @@ module.exports = (() => {
                         }
                     });
 
-                    this.forceUpdate(getClass(["member"], ["member"], [], true));
+                    MemberListItem.forceUpdateAll();
                 }
 
                 patchMessageHeader() {
@@ -346,12 +363,12 @@ module.exports = (() => {
 
                     Patcher.after(MessageHeader, "default", (_, [props], returnValue) => {
                         try {
-                            const tree = Utils.getNestedProp(returnValue, "props.username.props.children");
+                            const tree = Utilities.getNestedProp(returnValue, "props.username.props.children");
                             if (!Array.isArray(tree)) return;
                             tree.splice(2, 0, h(StatusIndicators, {user: props.message.author, type: "Chat"}));
                         }
                         catch (error) {
-                            Logger.error("Error while patching MessageTimestammp:", error);
+                            Logger.error("Error while patching MessageTimestamp:", error);
                         }
                     });
                 }
