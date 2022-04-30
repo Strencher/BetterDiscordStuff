@@ -32,7 +32,7 @@ export default class TypingUsersPlus extends BasePlugin {
                     return user && user.id !== me.id && !FriendsStore.isBlocked(user.id);
                 });
             
-            const tree = ret?.props?.children?.[0]?.props?.children;
+            const tree = ret?.props?.children?.[0]?.props?.children?.[1]?.props?.children;
             if (!tree || !typingUsers.length) return;
 
             for (const [index, user] of typingUsers.entries()) {
