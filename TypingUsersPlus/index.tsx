@@ -36,7 +36,7 @@ export default class TypingUsersPlus extends BasePlugin {
             if (!tree || !typingUsers.length) return;
 
             for (const [index, user] of typingUsers.entries()) {
-                const child = tree[1 + index * 2];
+                const child = tree[index * 2];
 
                 if (!Array.isArray(child?.props?.children)) continue;
 
