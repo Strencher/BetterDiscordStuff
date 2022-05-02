@@ -292,221 +292,6 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
 				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
 			},
-			715: (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-				__webpack_require__.r(__webpack_exports__);
-				__webpack_require__.d(__webpack_exports__, {
-					default: () => TypingUsersPlus
-				});
-				const stores_namespaceObject = Modules["@discord/stores"];
-				const external_PluginApi_namespaceObject = PluginApi;
-				const external_BasePlugin_namespaceObject = BasePlugin;
-				var external_BasePlugin_default = __webpack_require__.n(external_BasePlugin_namespaceObject);
-				const external_StyleLoader_namespaceObject = StyleLoader;
-				var external_StyleLoader_default = __webpack_require__.n(external_StyleLoader_namespaceObject);
-				const flux_namespaceObject = Modules["@discord/flux"];
-				var components_user = __webpack_require__(27);
-				const components_namespaceObject = Modules["@discord/components"];
-				const modules_namespaceObject = Modules["@discord/modules"];
-				function _defineProperty(obj, key, value) {
-					if (key in obj) Object.defineProperty(obj, key, {
-						value,
-						enumerable: true,
-						configurable: true,
-						writable: true
-					});
-					else obj[key] = value;
-					return obj;
-				}
-				class SettingsManager extends flux_namespaceObject.Store {
-					constructor(pluginName, defaultSettings = {}) {
-						super(modules_namespaceObject.Dispatcher, {});
-						_defineProperty(this, "settings", void 0);
-						_defineProperty(this, "pluginName", void 0);
-						_defineProperty(this, "get", ((key, defaultValue) => this.settings[key] ?? defaultValue));
-						_defineProperty(this, "set", ((key, value) => {
-							this.settings[key] = value;
-							external_PluginApi_namespaceObject.PluginUtilities.saveSettings(this.pluginName, this.settings);
-							this.emitChange();
-							return value;
-						}));
-						this.pluginName = pluginName;
-						this.settings = external_PluginApi_namespaceObject.PluginUtilities.loadSettings(pluginName, defaultSettings);
-					}
-				}
-				const package_namespaceObject = JSON.parse('{"um":{"u2":"TypingUsersPlus"}}');
-				const Settings = new SettingsManager(package_namespaceObject.um.u2);
-				const settings = Settings;
-				var React = __webpack_require__(113);
-				function _extends() {
-					_extends = Object.assign || function(target) {
-						for (var i = 1; i < arguments.length; i++) {
-							var source = arguments[i];
-							for (var key in source)
-								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-						}
-						return target;
-					};
-					return _extends.apply(this, arguments);
-				}
-				const UserUtils = external_PluginApi_namespaceObject.WebpackModules.getByProps("useUserNickAndColor");
-				const {
-					AnimatedAvatar,
-					Sizes
-				} = external_PluginApi_namespaceObject.WebpackModules.getByProps("AnimatedAvatar") ?? {};
-				const WindowStore = external_PluginApi_namespaceObject.WebpackModules.getByProps("isFocused", "_dispatchToken");
-				const UserPopoutContainer = external_PluginApi_namespaceObject.WebpackModules.getModule((m => "UserPopoutContainer" === m.type?.displayName));
-				const RoleIconUtils = external_PluginApi_namespaceObject.WebpackModules.getByProps("useRoleIcon");
-				const DiscordRoleIcon = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("RoleIcon");
-				function RoleIcon({
-					member,
-					channel,
-					className
-				}) {
-					const shouldShow = (0, flux_namespaceObject.useStateFromStores)([settings], (() => settings.get("showRoleIcon", true)));
-					const roleIcon = RoleIconUtils.useRoleIcon({
-						roleId: member.iconRoleId,
-						guildId: channel.guild_id,
-						size: 16
-					});
-					if (!roleIcon || !shouldShow) return null;
-					return React.createElement(DiscordRoleIcon, _extends({}, roleIcon, {
-						className
-					}));
-				}
-				function TypingUser({
-					channel,
-					user
-				}) {
-					const [colorizeName, showAvatar] = (0, flux_namespaceObject.useStateFromStoresArray)([settings], (() => [settings.get("colorizeName", true), settings.get("showAvatar", true)]));
-					const isFocused = (0, flux_namespaceObject.useStateFromStores)([WindowStore], (() => WindowStore.isFocused()));
-					const member = UserUtils.useUserNickAndColor(user, channel);
-					const status = (0, flux_namespaceObject.useStateFromStores)([stores_namespaceObject.Status], (() => stores_namespaceObject.Status.getStatus(user.id)));
-					return React.createElement(components_namespaceObject.Popout, {
-						animation: components_namespaceObject.Popout.Animation.TRANSLATE,
-						position: components_namespaceObject.Popout.Positions.TOP,
-						align: components_namespaceObject.Popout.Align.CENTER,
-						renderPopout: props => React.createElement(UserPopoutContainer, _extends({}, props, {
-							channelId: channel.id,
-							guildId: channel.guild_id,
-							userId: user.id,
-							position: "top"
-						}))
-					}, (props => React.createElement("div", _extends({}, props, {
-						className: components_user.Z.user
-					}), showAvatar && React.createElement(AnimatedAvatar, {
-						className: components_user.Z.avatar,
-						src: user.getAvatarURL(channel.guild_id, 16, isFocused),
-						size: Sizes.SIZE_16,
-						status,
-						isMobile: stores_namespaceObject.Status.isMobileOnline(user.id)
-					}), React.createElement("span", {
-						className: components_user.Z.name,
-						style: {
-							color: colorizeName && member.colorString
-						}
-					}, member.nick), React.createElement(RoleIcon, {
-						className: components_user.Z.roleIcon,
-						channel,
-						member,
-						key: "role-icon"
-					}))));
-				}
-				var external_BdApi_React_ = __webpack_require__(113);
-				var external_BdApi_React_default = __webpack_require__.n(external_BdApi_React_);
-				var createUpdateWrapper_React = __webpack_require__(113);
-				function createUpdateWrapper_extends() {
-					createUpdateWrapper_extends = Object.assign || function(target) {
-						for (var i = 1; i < arguments.length; i++) {
-							var source = arguments[i];
-							for (var key in source)
-								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-						}
-						return target;
-					};
-					return createUpdateWrapper_extends.apply(this, arguments);
-				}
-				const createUpdateWrapper = (Component, valueProp = "value", changeProp = "onChange", valueIndex = 0) => props => {
-					const [value, setValue] = createUpdateWrapper_React.useState(props[valueProp]);
-					return createUpdateWrapper_React.createElement(Component, createUpdateWrapper_extends({}, props, {
-						[valueProp]: value,
-						[changeProp]: (...args) => {
-							const value = args[valueIndex];
-							if ("function" === typeof props[changeProp]) props[changeProp](value);
-							setValue(value);
-						}
-					}));
-				};
-				const hooks_createUpdateWrapper = createUpdateWrapper;
-				function settings_extends() {
-					settings_extends = Object.assign || function(target) {
-						for (var i = 1; i < arguments.length; i++) {
-							var source = arguments[i];
-							for (var key in source)
-								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-						}
-						return target;
-					};
-					return settings_extends.apply(this, arguments);
-				}
-				const SwitchItem = hooks_createUpdateWrapper(external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("SwitchItem"));
-				const SettingsOptions = [{
-					id: "showRoleIcon",
-					name: "Show Role Icon",
-					note: "Shows the user's role icon next to their name.",
-					value: true
-				}, {
-					id: "showAvatar",
-					name: "Show Avatar",
-					note: "Shows the user's avatar next to their name.",
-					value: true
-				}, {
-					id: "colorizeName",
-					name: "Colorize Name",
-					note: "Colorizes the name with their role color.",
-					value: true
-				}];
-				function SettingsPanel() {
-					return external_BdApi_React_default().createElement(external_BdApi_React_default().Fragment, null, SettingsOptions.map((setting => external_BdApi_React_default().createElement(SwitchItem, settings_extends({}, setting, {
-						children: setting.name,
-						value: settings.get(setting.id, setting.value),
-						onChange: value => settings.set(setting.id, value)
-					})))));
-				}
-				var TypingUsersPlus_React = __webpack_require__(113);
-				const FriendsStore = external_PluginApi_namespaceObject.WebpackModules.getByProps("isBlocked", "_dispatchToken");
-				class TypingUsersPlus extends(external_BasePlugin_default()) {
-					onStart() {
-						external_StyleLoader_default().inject();
-						this.patchTypingUsers();
-					}
-					getSettingsPanel() {
-						return TypingUsersPlus_React.createElement(SettingsPanel, null);
-					}
-					async patchTypingUsers() {
-						const classes = external_PluginApi_namespaceObject.WebpackModules.getByProps("typing");
-						const TypingUsers = await external_PluginApi_namespaceObject.ReactComponents.getComponentByName("TypingUsers", `.${classes.typing.split(" ").join(".")}`);
-						external_PluginApi_namespaceObject.Patcher.after(TypingUsers.component.prototype, "render", ((_this, __, ret) => {
-							const me = stores_namespaceObject.Users.getCurrentUser();
-							const typingUsers = Object.keys(_this.props.typingUsers ?? {}).map(stores_namespaceObject.Users.getUser).filter((user => user && user.id !== me.id && !FriendsStore.isBlocked(user.id)));
-							const tree = ret?.props?.children?.[1]?.props?.children;
-							if (!tree || !typingUsers.length) return;
-							for (const [index, user] of typingUsers.entries()) {
-								const child = tree[2 * index];
-								if (!Array.isArray(child?.props?.children)) continue;
-								child.props.children = TypingUsersPlus_React.createElement(TypingUser, {
-									channel: _this.props.channel,
-									user
-								});
-							}
-						}));
-						TypingUsers.forceUpdateAll();
-					}
-					onStop() {
-						external_StyleLoader_default().remove();
-						external_PluginApi_namespaceObject.Patcher.unpatchAll();
-					}
-				}
-			},
 			645: module => {
 				module.exports = function(cssWithMappingToString) {
 					var list = [];
@@ -585,7 +370,222 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				});
 			};
 		})();
-		var __webpack_exports__ = __webpack_require__(715);
+		var __webpack_exports__ = {};
+		(() => {
+			__webpack_require__.r(__webpack_exports__);
+			__webpack_require__.d(__webpack_exports__, {
+				default: () => TypingUsersPlus
+			});
+			const stores_namespaceObject = Modules["@discord/stores"];
+			const external_PluginApi_namespaceObject = PluginApi;
+			const external_BasePlugin_namespaceObject = BasePlugin;
+			var external_BasePlugin_default = __webpack_require__.n(external_BasePlugin_namespaceObject);
+			const external_StyleLoader_namespaceObject = StyleLoader;
+			var external_StyleLoader_default = __webpack_require__.n(external_StyleLoader_namespaceObject);
+			const flux_namespaceObject = Modules["@discord/flux"];
+			var components_user = __webpack_require__(27);
+			const components_namespaceObject = Modules["@discord/components"];
+			const modules_namespaceObject = Modules["@discord/modules"];
+			function _defineProperty(obj, key, value) {
+				if (key in obj) Object.defineProperty(obj, key, {
+					value,
+					enumerable: true,
+					configurable: true,
+					writable: true
+				});
+				else obj[key] = value;
+				return obj;
+			}
+			class SettingsManager extends flux_namespaceObject.Store {
+				constructor(pluginName, defaultSettings = {}) {
+					super(modules_namespaceObject.Dispatcher, {});
+					_defineProperty(this, "settings", void 0);
+					_defineProperty(this, "pluginName", void 0);
+					_defineProperty(this, "get", ((key, defaultValue) => this.settings[key] ?? defaultValue));
+					_defineProperty(this, "set", ((key, value) => {
+						this.settings[key] = value;
+						external_PluginApi_namespaceObject.PluginUtilities.saveSettings(this.pluginName, this.settings);
+						this.emitChange();
+						return value;
+					}));
+					this.pluginName = pluginName;
+					this.settings = external_PluginApi_namespaceObject.PluginUtilities.loadSettings(pluginName, defaultSettings);
+				}
+			}
+			const package_namespaceObject = JSON.parse('{"um":{"u2":"TypingUsersPlus"}}');
+			const Settings = new SettingsManager(package_namespaceObject.um.u2);
+			const settings = Settings;
+			var React = __webpack_require__(113);
+			function _extends() {
+				_extends = Object.assign || function(target) {
+					for (var i = 1; i < arguments.length; i++) {
+						var source = arguments[i];
+						for (var key in source)
+							if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
+					}
+					return target;
+				};
+				return _extends.apply(this, arguments);
+			}
+			const UserUtils = external_PluginApi_namespaceObject.WebpackModules.getByProps("useUserNickAndColor");
+			const {
+				AnimatedAvatar,
+				Sizes
+			} = external_PluginApi_namespaceObject.WebpackModules.getByProps("AnimatedAvatar") ?? {};
+			const WindowStore = external_PluginApi_namespaceObject.WebpackModules.getByProps("isFocused", "_dispatchToken");
+			const UserPopoutContainer = external_PluginApi_namespaceObject.WebpackModules.getModule((m => "UserPopoutContainer" === m.type?.displayName));
+			const RoleIconUtils = external_PluginApi_namespaceObject.WebpackModules.getByProps("useRoleIcon");
+			const DiscordRoleIcon = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("RoleIcon");
+			function RoleIcon({
+				member,
+				channel,
+				className
+			}) {
+				const shouldShow = (0, flux_namespaceObject.useStateFromStores)([settings], (() => settings.get("showRoleIcon", true)));
+				const roleIcon = RoleIconUtils.useRoleIcon({
+					roleId: member.iconRoleId,
+					guildId: channel.guild_id,
+					size: 16
+				});
+				if (!roleIcon || !shouldShow) return null;
+				return React.createElement(DiscordRoleIcon, _extends({}, roleIcon, {
+					className
+				}));
+			}
+			function TypingUser({
+				channel,
+				user
+			}) {
+				const [colorizeName, showAvatar] = (0, flux_namespaceObject.useStateFromStoresArray)([settings], (() => [settings.get("colorizeName", true), settings.get("showAvatar", true)]));
+				const isFocused = (0, flux_namespaceObject.useStateFromStores)([WindowStore], (() => WindowStore.isFocused()));
+				const member = UserUtils.useUserNickAndColor(user, channel);
+				const status = (0, flux_namespaceObject.useStateFromStores)([stores_namespaceObject.Status], (() => stores_namespaceObject.Status.getStatus(user.id)));
+				return React.createElement(components_namespaceObject.Popout, {
+					animation: components_namespaceObject.Popout.Animation.TRANSLATE,
+					position: components_namespaceObject.Popout.Positions.TOP,
+					align: components_namespaceObject.Popout.Align.CENTER,
+					renderPopout: props => React.createElement(UserPopoutContainer, _extends({}, props, {
+						channelId: channel.id,
+						guildId: channel.guild_id,
+						userId: user.id,
+						position: "top"
+					}))
+				}, (props => React.createElement("div", _extends({}, props, {
+					className: components_user.Z.user
+				}), showAvatar && React.createElement(AnimatedAvatar, {
+					className: components_user.Z.avatar,
+					src: user.getAvatarURL(channel.guild_id, 16, isFocused),
+					size: Sizes.SIZE_16,
+					status,
+					isMobile: stores_namespaceObject.Status.isMobileOnline(user.id)
+				}), React.createElement("span", {
+					className: components_user.Z.name,
+					style: {
+						color: colorizeName && member.colorString
+					}
+				}, member.nick), React.createElement(RoleIcon, {
+					className: components_user.Z.roleIcon,
+					channel,
+					member,
+					key: "role-icon"
+				}))));
+			}
+			var external_BdApi_React_ = __webpack_require__(113);
+			var external_BdApi_React_default = __webpack_require__.n(external_BdApi_React_);
+			var createUpdateWrapper_React = __webpack_require__(113);
+			function createUpdateWrapper_extends() {
+				createUpdateWrapper_extends = Object.assign || function(target) {
+					for (var i = 1; i < arguments.length; i++) {
+						var source = arguments[i];
+						for (var key in source)
+							if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
+					}
+					return target;
+				};
+				return createUpdateWrapper_extends.apply(this, arguments);
+			}
+			const createUpdateWrapper = (Component, valueProp = "value", changeProp = "onChange", valueIndex = 0) => props => {
+				const [value, setValue] = createUpdateWrapper_React.useState(props[valueProp]);
+				return createUpdateWrapper_React.createElement(Component, createUpdateWrapper_extends({}, props, {
+					[valueProp]: value,
+					[changeProp]: (...args) => {
+						const value = args[valueIndex];
+						if ("function" === typeof props[changeProp]) props[changeProp](value);
+						setValue(value);
+					}
+				}));
+			};
+			const hooks_createUpdateWrapper = createUpdateWrapper;
+			function settings_extends() {
+				settings_extends = Object.assign || function(target) {
+					for (var i = 1; i < arguments.length; i++) {
+						var source = arguments[i];
+						for (var key in source)
+							if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
+					}
+					return target;
+				};
+				return settings_extends.apply(this, arguments);
+			}
+			const SwitchItem = hooks_createUpdateWrapper(external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("SwitchItem"));
+			const SettingsOptions = [{
+				id: "showRoleIcon",
+				name: "Show Role Icon",
+				note: "Shows the user's role icon next to their name.",
+				value: true
+			}, {
+				id: "showAvatar",
+				name: "Show Avatar",
+				note: "Shows the user's avatar next to their name.",
+				value: true
+			}, {
+				id: "colorizeName",
+				name: "Colorize Name",
+				note: "Colorizes the name with their role color.",
+				value: true
+			}];
+			function SettingsPanel() {
+				return external_BdApi_React_default().createElement(external_BdApi_React_default().Fragment, null, SettingsOptions.map((setting => external_BdApi_React_default().createElement(SwitchItem, settings_extends({}, setting, {
+					children: setting.name,
+					value: settings.get(setting.id, setting.value),
+					onChange: value => settings.set(setting.id, value)
+				})))));
+			}
+			var TypingUsersPlus_React = __webpack_require__(113);
+			const FriendsStore = external_PluginApi_namespaceObject.WebpackModules.getByProps("isBlocked", "_dispatchToken");
+			class TypingUsersPlus extends(external_BasePlugin_default()) {
+				onStart() {
+					external_StyleLoader_default().inject();
+					this.patchTypingUsers();
+				}
+				getSettingsPanel() {
+					return TypingUsersPlus_React.createElement(SettingsPanel, null);
+				}
+				async patchTypingUsers() {
+					const classes = external_PluginApi_namespaceObject.WebpackModules.getByProps("typing");
+					const TypingUsers = await external_PluginApi_namespaceObject.ReactComponents.getComponentByName("TypingUsers", `.${classes.typing.split(" ").join(".")}`);
+					external_PluginApi_namespaceObject.Patcher.after(TypingUsers.component.prototype, "render", ((_this, __, ret) => {
+						const me = stores_namespaceObject.Users.getCurrentUser();
+						const typingUsers = Object.keys(_this.props.typingUsers ?? {}).map(stores_namespaceObject.Users.getUser).filter((user => user && user.id !== me.id && !FriendsStore.isBlocked(user.id)));
+						const tree = ret?.props?.children?.[0]?.props?.children?.[1]?.props?.children;
+						if (!tree || !typingUsers.length) return;
+						for (const [index, user] of typingUsers.entries()) {
+							const child = tree[2 * index];
+							if (!Array.isArray(child?.props?.children)) continue;
+							child.props.children = TypingUsersPlus_React.createElement(TypingUser, {
+								channel: _this.props.channel,
+								user
+							});
+						}
+					}));
+					TypingUsers.forceUpdateAll();
+				}
+				onStop() {
+					external_StyleLoader_default().remove();
+					external_PluginApi_namespaceObject.Patcher.unpatchAll();
+				}
+			}
+		})();
 		module.exports.LibraryPluginHack = __webpack_exports__;
 	})();
 	const PluginExports = module.exports.LibraryPluginHack;
