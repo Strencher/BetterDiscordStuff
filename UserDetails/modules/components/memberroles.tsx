@@ -1,14 +1,16 @@
-import {Text} from "@discord/components";
 import {useStateFromStores, useStateFromStoresArray} from "@discord/flux";
 import {Messages} from "@discord/i18n";
 import {Guilds, Members, SelectedGuilds, Users} from "@discord/stores";
 import {joinClassNames} from "@discord/utils";
 import {WebpackModules} from "@zlibrary";
 import ErrorBoundary from "./errorboundary";
+import Utilities from "../Utilities";
 
-const {default: MemberRolesList} = WebpackModules.getByProps("MemberRole") ?? {};
-const classes = WebpackModules.getByProps("userInfoSectionHeader");
-const Header = WebpackModules.getModule(m => m.displayName === "Header" && m.Sizes);
+const textNames = new Set(["Text", "LegacyText"]);
+const Text = WebpackModules.getModule(m => textNames.has(m.displayName));
+const {default: MemberRolesList} = WebpackModules.getByProps("MemberRole") ?? {default: () => null};
+const classes = Utilities.makeLazy(() => WebpackModules.getByProps("userInfoSectionHeader"));
+const {Heading} = WebpackModules.getByProps("Heading") ?? {Heading: () => null};
 
 export default function MemberRolesSection({userId, guildId = SelectedGuilds.getGuildId()}) {
     const roles = useStateFromStoresArray([Members], () => Members.getMember(guildId, userId)?.roles);
@@ -19,10 +21,10 @@ export default function MemberRolesSection({userId, guildId = SelectedGuilds.get
 
     return (
         <ErrorBoundary id="MemberRolesSection">
-            <div className={joinClassNames(classes.userInfoSection, Text.Colors.STANDARD)}>
-                <Header uppercase size={Text.Sizes.SIZE_12} className={classes.userInfoSectionHeader}>
+            <div className={joinClassNames(classes()?.userInfoSection, Text?.Colors?.STANDARD)}>
+                <Heading level={3} variant="eyebrow" uppercase className={classes()?.userInfoSectionHeader}>
                     {Messages.ROLES_LIST.format({numRoles: roles.length})}
-                </Header>
+                </Heading>
                 <MemberRolesList guild={guild} user={user} userRoles={roles} />
             </div>
         </ErrorBoundary>

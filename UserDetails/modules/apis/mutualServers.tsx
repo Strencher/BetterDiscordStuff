@@ -15,7 +15,7 @@ import styles from "./mutualServers.scss";
 import {useSettings} from "./util";
 
 const FriendsStore = WebpackModules.getByProps("getMutualGuilds");
-const Header = WebpackModules.getModule(m => m.displayName === "Header" && m.Sizes);
+const {Heading} = WebpackModules.getByProps("Heading") ?? {Heading: () => null};
 const WindowStore = WebpackModules.getByProps("isFocused");
 
 export function MutualServer({guild, nick, onClick}) {
@@ -67,7 +67,7 @@ export default function MutualServers({user}) {
         ? mutualGuilds.length
             ? (
                 <div className={styles.body}>
-                    <Header size={Header.Sizes.SIZE_12} className={styles.header} uppercase muted>{Messages.MUTUAL_GUILDS}</Header>
+                    <Heading level={3} variant="eyebrow" className={styles.header} uppercase muted>{Messages.MUTUAL_GUILDS}</Heading>
                     <div className={joinClassNames(styles.guilds, settings.stackMutualServers && styles.stack)}>
                         {
                             mutualGuilds.map(props => <MutualServer {...props} onClick={GuildActions.transitionToGuildSync} />)
@@ -76,15 +76,15 @@ export default function MutualServers({user}) {
                 </div>
             )
             : settings.showEmptyMutualGuilds && (
-                <Header size={Header.Sizes.SIZE_12} className={styles.header} uppercase muted>
+                <Heading level={3} variant="eyebrow" className={styles.header} uppercase muted>
                     {Strings.get("NO_MUTUAL_GUILDS")}
-                </Header>
+                </Heading>
             )
         : (
             <React.Fragment>
-                <Header size={Header.Sizes.SIZE_12} className={styles.header} uppercase muted>
+                <Heading level={3} variant="eyebrow" className={styles.header} uppercase muted>
                     {Strings.get(message ? "NO_MUTUAL_GUILDS" : "LOADING_MUTUAL_GUILDS")}
-                </Header>
+                </Heading>
                 {message && (
                     <Tooltip text={message} position="top">
                         <Error />

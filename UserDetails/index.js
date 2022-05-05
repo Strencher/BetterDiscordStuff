@@ -64,7 +64,7 @@ export default class Plugin extends BasePlugin {
         this.patchUserProfile();
         this.patchMemberListItem();
         this.patchUserActivityStatus();
-        this.patchAccountSection();
+        // this.patchAccountSection();
 
         // Commands
         Commands.registerCommand(this.getName(), {
@@ -173,7 +173,7 @@ export default class Plugin extends BasePlugin {
     }
 
     async patchUserProfile() {
-        const UserProfileModalHeader = WebpackModules.getModule(m => m.default.displayName === "UserProfileModalHeader");
+        const UserProfileModalHeader = await Utilities.getLazy(m => m.default?.displayName === "UserProfileModalHeader");
         const UserInfoBase = WebpackModules.getModule(m => m.default?.displayName === "UserInfoBase");
         
         Patcher.after(UserInfoBase, "default", (_, [props], returnValue) => {

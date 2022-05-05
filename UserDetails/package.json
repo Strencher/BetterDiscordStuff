@@ -1,7 +1,7 @@
 {
     "info": {
         "name": "UserDetails",
-        "version": "2.7.1",
+        "version": "2.8.0",
         "authors": [
             {
                 "name": "Strencher",
@@ -20,7 +20,7 @@
             "title": "Fixed",
             "type": "fixed",
             "items": [
-                "More fixes for the last canary update."
+                "Fixed crashing."
             ]
         }
     ],

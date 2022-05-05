@@ -16,7 +16,7 @@ import Strings from "../strings";
 import {joinClassNames} from "@discord/utils";
 import {Dispatcher} from "@discord/modules";
 
-const Header = WebpackModules.getModule(m => m.displayName === "Header" && m.Sizes);
+const {Heading} = WebpackModules.getByProps("Heading") ?? {Heading: () => null};
 const defaultConnections = Object.fromEntries(Connections.map(item => [item.type, true]));
 
 export default function UserConnections({user}) {
@@ -41,7 +41,7 @@ export default function UserConnections({user}) {
         <div className={styles.connectionsBody}>
             {   
                 (!connections?.length && Settings.get("showEmptyConnections", true)) || connections?.length
-                    ? <Header className={joinClassNames(styles.container, styles.header)} size={Header.Sizes.SIZE_12} uppercase muted>{Strings.get(connections?.length ? "CONNECTIONS" : "NO_CONNECTIONS")}</Header>
+                    ? <Heading level={3} variant="eyebrow" className={joinClassNames(styles.container, styles.header)} uppercase muted>{Strings.get(connections?.length ? "CONNECTIONS" : "NO_CONNECTIONS")}</Heading>
                     : null
             }
             {

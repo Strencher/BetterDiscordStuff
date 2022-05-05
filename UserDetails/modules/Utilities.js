@@ -65,4 +65,30 @@ export default class Utilities extends ZlibUtils {
             }
         };
     }
+
+    static makeLazy(factory) {
+        let cache = {value: null, ran: false};
+
+        return () => cache.ran ? cache.value : (cache.ran = true, cache.value = factory());
+    }
+
+    static getLazy(filter) {
+        const fromCache = WebpackModules.getModule(filter);
+        if (fromCache) return Promise.resolve(fromCache);
+    
+        return new Promise(resolve => {
+            const cancel = WebpackModules.addListener((m) => {
+                const matches = [m, m?.default];
+    
+                for (let i = 0; i < matches.length; i++) {
+                    const match = filter(matches[i]);
+                    if (!match) continue;
+    
+                    resolve(matches[i]);
+                    cancel();
+                    break;
+                }
+            });
+        });
+    }
 }

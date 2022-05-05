@@ -13,7 +13,7 @@ import {ProfileActions} from "@discord/actions";
 import {Dispatcher} from "@discord/modules";
 import {useSettings} from "./util";
 
-const Header = WebpackModules.getModule(m => m.displayName === "Header" && m.Sizes);
+const {Heading} = WebpackModules.getByProps("Heading") ?? {Heading: () => null};
 const WindowStore = WebpackModules.getByProps("isFocused");
 const {AnimatedAvatar, Sizes} = WebpackModules.getByProps("AnimatedAvatar");
 const UserProfileModal = WebpackModules.getByProps("openUserProfileModal");
@@ -68,20 +68,20 @@ export default function MutualFriends({user}) {
         ? mutualFriends.length
             ? (
                 <div className={styles.body}>
-                    <Header size={Header.Sizes.SIZE_12} className={styles.header} uppercase muted>{Messages.MUTUAL_FRIENDS}</Header>
+                    <Heading level={3} variant="eyebrow" className={styles.header} uppercase muted>{Messages.MUTUAL_FRIENDS}</Heading>
                     <div className={joinClassNames(styles.friends, settings.stackMutualFriends && styles.stack)}>
                         {mutualFriends.map(props => <MutualFriend {...props} />)}
                     </div>
                 </div>
             )
             : settings.showEmptyMutualFriends && (
-                <Header size={Header.Sizes.SIZE_12} className={styles.header} uppercase muted>
+                <Heading level={3} variant="eyebrow" className={styles.header} uppercase muted>
                     {Strings.get("NO_MUTUAL_FRIENDS")}
-                </Header>
+                </Heading>
             )
         : (
-            <Header size={Header.Sizes.SIZE_12} className={styles.header} uppercase muted>
+            <Heading level={3} variant="eyebrow" className={styles.header} uppercase muted>
                 {Strings.get("LOADING_MUTUAL_FRIENDS")}
-            </Header>
+            </Heading>
         );
 };
