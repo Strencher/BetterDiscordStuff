@@ -9,8 +9,7 @@ const _fs = require("fs");
 
 const changedFilesIgnore = [
   "bdbuilder",
-  "scripts",
-  "UserDetails" // can't compile atm
+  "scripts"
 ];
 const releaseExtensions = [".md", ".plugin.js"];
 
