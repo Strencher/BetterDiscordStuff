@@ -1,6 +1,6 @@
 /**
  * @name UserDetails
- * @version 2.8.0
+ * @version 2.8.1
  * @author Strencher
  * @description Shows you a lot information about users in popouts.
  * @source https://github.com/Strencher/BetterDiscordStuff/tree/development/UserDetails
@@ -33,7 +33,7 @@
 const config = {
 	"info": {
 		"name": "UserDetails",
-		"version": "2.8.0",
+		"version": "2.8.1",
 		"authors": [{
 			"name": "Strencher",
 			"discord_id": "415849376598982656",
@@ -49,7 +49,7 @@ const config = {
 		"title": "Fixed",
 		"type": "fixed",
 		"items": [
-			"Fixed crashing."
+			"Fixed small issue"
 		]
 	}],
 	"build": {
@@ -815,8 +815,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						const cancel = external_PluginApi_namespaceObject.WebpackModules.addListener((m => {
 							const matches = [m, m?.default];
 							for (let i = 0; i < matches.length; i++) {
-								const match = filter(matches[i]);
-								if (!match) continue;
+								if (!matches[i] || !filter(matches[i])) continue;
 								resolve(matches[i]);
 								cancel();
 								break;
