@@ -81,8 +81,7 @@ export default class Utilities extends ZlibUtils {
                 const matches = [m, m?.default];
     
                 for (let i = 0; i < matches.length; i++) {
-                    const match = filter(matches[i]);
-                    if (!match) continue;
+                    if (!matches[i] || !filter(matches[i])) continue;
     
                     resolve(matches[i]);
                     cancel();

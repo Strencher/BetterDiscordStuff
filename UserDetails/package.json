@@ -1,7 +1,7 @@
 {
     "info": {
         "name": "UserDetails",
-        "version": "2.8.0",
+        "version": "2.8.1",
         "authors": [
             {
                 "name": "Strencher",
@@ -20,7 +20,7 @@
             "title": "Fixed",
             "type": "fixed",
             "items": [
-                "Fixed crashing."
+                "Fixed small issue"
             ]
         }
     ],
