@@ -193,7 +193,6 @@ export default class Plugin extends BasePlugin {
                 const ret = original.apply(this, args);
                 
                 try {
-
                     return (
                         <div className={dateStyles.wrapper}>
                             {ret}
