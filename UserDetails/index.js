@@ -75,9 +75,9 @@ export default class Plugin extends BasePlugin {
             execute: (props, {channel, guild}) => {
                 const users = props.user.map(e => Users.getUser(e.userId)).filter(e => e);
 
-                if (!users.length) return Clyde.sendMessage(channel.id, {content: "Sorry, but i can't resolve that user."});
+                if (!users.length) return Clyde.sendMessage(channel.id, {content: "Sorry, but I can't resolve that user."});
                 Clyde.sendMessage(channel.id, {
-                    content: "That's what i've found so far:",
+                    content: "That's what I've found so far:",
                     embeds: users.map(user => this.createEmbedForUser(user, guild, channel))
                 });
             },
@@ -193,7 +193,6 @@ export default class Plugin extends BasePlugin {
                 const ret = original.apply(this, args);
                 
                 try {
-
                     return (
                         <div className={dateStyles.wrapper}>
                             {ret}
