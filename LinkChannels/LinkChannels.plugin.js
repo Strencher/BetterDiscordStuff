@@ -40,33 +40,17 @@ module.exports = (() => {
                     twitter_username: "Strencher3"
                 }
             ],
-            version: "1.1.0",
+            version: "1.2.0",
             description: "Adds an Icon to channels that copies <#channelId>. Shift + Click to insert the channel in the textarea.",
             github: "https://github.com/Strencher/BetterDiscordStuff/blob/master/LinkChannels/LinkChannels.plugin.js",
             github_raw: "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/LinkChannels/LinkChannels.plugin.js"
         },
         changelog: [
             {
-                title: "added",
-                type: "added",
-                items: [
-                    "Added support for voice channels.",
-                    "Added translations!"
-                ]
-            },
-            {
                 title: "fixed",
                 type: "fixed",
                 items: [
-                    "Fixed the weird issue when several link icons appeared.",
-                    "Channels should be properly updated after the first start."
-                ]
-            },
-            {
-                title: "Improved",
-                type: "improved",
-                items: [
-                    "Improved the tooltips",
+                    "Fixed inserting text."
                 ]
             }
         ],
@@ -129,7 +113,7 @@ module.exports = (() => {
             const {Components, DiscordModules: {React, UserSettingsStore}, WebpackModules, PluginUtilities, DiscordModules, Patcher, Utilities, Toasts} = Api;
             const {TooltipContainer} = WebpackModules.getByProps("TooltipContainer") ?? {};
             const {ComponentDispatch: ComponentDispatcher} = WebpackModules.getByProps("ComponentDispatch") ?? {};
-            const insertText = (text) => ComponentDispatcher.dispatchToLastSubscribed("INSERT_TEXT", {content: text});
+            const insertText = (text) => ComponentDispatcher.dispatchToLastSubscribed("INSERT_TEXT", {plainText: text, addSpace: true});
             const classes = Object(WebpackModules.getByProps("iconItem"));
             const joinClass = (...classNames) => classNames.filter(Boolean).join(" ");
 
