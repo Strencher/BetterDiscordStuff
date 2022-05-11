@@ -1,6 +1,6 @@
 /**
  * @name BetterBannedUsers
- * @version 1.2.1
+ * @version 1.2.2
  * @description Enhances the banned users page.
  * @author Strencher
  * @source https://github.com/Strencher/BetterDiscordStuff/BetterBannedUsers
@@ -32,7 +32,7 @@
 const config = {
 	"info": {
 		"name": "BetterBannedUsers",
-		"version": "1.2.1",
+		"version": "1.2.2",
 		"description": "Enhances the banned users page.",
 		"authors": [{
 			"name": "Strencher",
@@ -44,9 +44,10 @@ const config = {
 	},
 	"changelog": [{
 		"type": "fixed",
-		"title": "Fixed - 1.2.1",
+		"title": "Fixed - 1.2.2",
 		"items": [
-			"Fixes for the latest discord update."
+			"Fixes for the latest discord update.",
+			"Fixed search bar not allowing to search."
 		]
 	}],
 	"build": {
@@ -894,7 +895,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 									settings.set("sort", value);
 								}
 							})), Object.keys(Object(that.props.bans)).length ? BetterBannedUsers_React.createElement(SearchBar, {
-								onChange: value => {
+								onQueryChange: value => {
 									GuildSettings.setSearchQuery(value);
 								},
 								onClear: () => GuildSettings.setSearchQuery(""),
