@@ -1,7 +1,7 @@
 {
 	"info": {
 		"name": "BetterBannedUsers",
-		"version": "1.2.1",
+		"version": "1.2.2",
 		"description": "Enhances the banned users page.",
 		"authors": [
 			{
@@ -16,9 +16,10 @@
 	"changelog": [
 		{
 			"type": "fixed",
-			"title": "Fixed - 1.2.1",
+			"title": "Fixed - 1.2.2",
 			"items": [
-				"Fixes for the latest discord update."
+				"Fixes for the latest discord update.",
+				"Fixed search bar not allowing to search."
 			]
 		}
 	],

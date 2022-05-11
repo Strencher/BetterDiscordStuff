@@ -271,7 +271,7 @@ export default class BetterBannedUsers extends BasePlugin {
 						</Flex>
 						{Object.keys(Object(that.props.bans)).length
 							? <SearchBar
-								onChange={value => {
+								onQueryChange={value => {
 									GuildSettings.setSearchQuery(value);
 								}}
 								onClear={() => GuildSettings.setSearchQuery("")}
