@@ -1,11 +1,12 @@
 import {useState} from "react";
 import {WebpackModules} from "@zlibrary";
-import {Flex, Text} from "@discord/components";
+import {Flex} from "@discord/components";
 import styles from "./select.scss";
 import {joinClassNames} from "@discord/utils";
 
 const Popout = WebpackModules.getByDisplayName("Popout");
 const Caret = WebpackModules.getByDisplayName("Caret");
+const Text = WebpackModules.getByDisplayName("LegacyText");
 
 export default function Select({value, options, label, onChange}) {
     const [selected, setSelected] = useState(value);
