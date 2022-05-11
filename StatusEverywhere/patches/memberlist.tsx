@@ -1,12 +1,15 @@
-import {Patcher, WebpackModules} from "@zlibrary";
+import {Patcher, ReactComponents, WebpackModules} from "@zlibrary";
 import React from "react";
 import StatusAvatar from "../components/avatar";
 import settings from "../components/settings.json";
 
-export default function patchMemberListItem(): void {
-    const MemberListItem = WebpackModules.getByDisplayName("MemberListItem");
+export default async function patchMemberListItem(_, promises: { cancelled: boolean, cancel(): void }): Promise<void> {
+    const classes = WebpackModules.getByProps("avatarDecorationPadding", "member");
+    const MemberListItem = await ReactComponents.getComponentByName("MemberListItem", `.${classes.member}`);
     
-    Patcher.after(MemberListItem.prototype, "renderAvatar", _this => {
+    if (promises.cancelled) return;
+
+    Patcher.after(MemberListItem.component.prototype, "renderAvatar", _this => {
         return (
             <StatusAvatar
                 {..._this.props}
@@ -20,4 +23,6 @@ export default function patchMemberListItem(): void {
             />
         );
     });
+
+    MemberListItem.forceUpdateAll();
 }

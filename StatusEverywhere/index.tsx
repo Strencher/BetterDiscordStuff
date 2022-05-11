@@ -12,6 +12,11 @@ import * as Patches from "./patches";
 export default class StatusEverywhere extends BasePlugin {
     public _flush: Function[] = [];
 
+    public promises = {
+        cancelled: false,
+        cancel: () => { this.promises.cancelled = true; }
+    };
+
     public get StatusAvatar() { return StatusAvatar; }
 
     public getSettingsPanel() {
@@ -41,7 +46,7 @@ export default class StatusEverywhere extends BasePlugin {
         for (let i = 0; i < methods.length; i++) {
             if (!methods[i].startsWith("patch") || typeof(Patches[methods[i]]) !== "function") continue;
 
-            Utilities.suppressErrors(Patches[methods[i]].bind(this, this._flush), `${this.constructor.name}.${methods[i]}`)();
+            Utilities.suppressErrors(Patches[methods[i]].bind(this, this._flush, this.promises), `${this.constructor.name}.${methods[i]}`)();
         }
 
         time.end();
