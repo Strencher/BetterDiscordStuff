@@ -1,6 +1,6 @@
 /**
  * @name StatusEverywhere
- * @version 2.3.3
+ * @version 2.3.4
  * @author Strencher, Zerebos
  * @description Adds user status everywhere Discord doesn't.
  * @source https://github.com/Strencher/BetterDiscordStuff/tree/master/StatusEverywhere
@@ -32,7 +32,7 @@
 const config = {
 	"info": {
 		"name": "StatusEverywhere",
-		"version": "2.3.3",
+		"version": "2.3.4",
 		"authors": [{
 				"name": "Strencher",
 				"discord_id": "415849376598982656",
@@ -54,8 +54,7 @@ const config = {
 		"title": "fixes",
 		"type": "fixed",
 		"items": [
-			"Fix chat avatars 2.0",
-			"Fixed streaming status (hopefully)"
+			"Fixed patching MemberList."
 		]
 	}],
 	"build": {
@@ -1424,9 +1423,11 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				};
 				return memberlist_extends.apply(this, arguments);
 			}
-			function patchMemberListItem() {
-				const MemberListItem = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("MemberListItem");
-				external_PluginApi_namespaceObject.Patcher.after(MemberListItem.prototype, "renderAvatar", (_this => external_BdApi_React_default().createElement(components_avatar, memberlist_extends({}, _this.props, {
+			async function patchMemberListItem(_, promises) {
+				const classes = external_PluginApi_namespaceObject.WebpackModules.getByProps("avatarDecorationPadding", "member");
+				const MemberListItem = await external_PluginApi_namespaceObject.ReactComponents.getComponentByName("MemberListItem", `.${classes.member}`);
+				if (promises.cancelled) return;
+				external_PluginApi_namespaceObject.Patcher.after(MemberListItem.component.prototype, "renderAvatar", (_this => external_BdApi_React_default().createElement(components_avatar, memberlist_extends({}, _this.props, {
 					type: "member-list",
 					shouldWatch: false,
 					animated: _this.state?.hovered || _this.props.selected,
@@ -1444,6 +1445,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						value: components_settings_namespaceObject.member_list.memberListAvatarResolution.value
 					}
 				}))));
+				MemberListItem.forceUpdateAll();
 			}
 			var partymembers_React = __webpack_require__(113);
 			function partymembers_extends() {
@@ -1573,18 +1575,17 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						props: props2,
 						type: Component
 					} = tree.children;
-					const WrappedAvatar = ({
-						className,
-						...props
-					}) => external_BdApi_React_default().createElement(Component, userpopout_extends({
-						className: external_PluginApi_namespaceObject.Utilities.className(className, tree?.props?.className)
-					}, props, props2));
 					tree.children = external_BdApi_React_default().createElement(components_avatar, userpopout_extends({}, props, props2, {
 						shouldWatch: false,
 						type: "user-popout",
 						animated: true,
 						size: components_avatar.Sizes.SIZE_80,
-						AvatarComponent: WrappedAvatar,
+						AvatarComponent: ({
+							className,
+							...props
+						}) => external_BdApi_React_default().createElement(Component, userpopout_extends({
+							className: external_PluginApi_namespaceObject.Utilities.className(className, tree?.props?.className)
+						}, props, props2)),
 						radial: {
 							id: "userPopoutRadialStatus",
 							value: false
@@ -1686,6 +1687,12 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				constructor(...args) {
 					super(...args);
 					StatusEverywhere_defineProperty(this, "_flush", []);
+					StatusEverywhere_defineProperty(this, "promises", {
+						cancelled: false,
+						cancel: () => {
+							this.promises.cancelled = true;
+						}
+					});
 				}
 				get StatusAvatar() {
 					return components_avatar;
@@ -1708,7 +1715,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					const methods = Object.keys(patches_namespaceObject);
 					for (let i = 0; i < methods.length; i++) {
 						if (!methods[i].startsWith("patch") || "function" !== typeof patches_namespaceObject[methods[i]]) continue;
-						external_PluginApi_namespaceObject.Utilities.suppressErrors(patches_namespaceObject[methods[i]].bind(this, this._flush), `${this.constructor.name}.${methods[i]}`)();
+						external_PluginApi_namespaceObject.Utilities.suppressErrors(patches_namespaceObject[methods[i]].bind(this, this._flush, this.promises), `${this.constructor.name}.${methods[i]}`)();
 					}
 					time.end();
 					external_StyleLoader_default().inject();
