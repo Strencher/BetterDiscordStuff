@@ -1,6 +1,5 @@
 .container {
-    align-content: center;
-    display: flex;
+    margin-bottom: 16px;
     
     .header {
         font-weight: 700;
@@ -13,6 +12,5 @@
     .tag {
         font-size: 12px;
         color: var(--text-normal);
-        margin-left: 5px;
     }
 }

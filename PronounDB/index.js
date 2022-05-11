@@ -1,6 +1,6 @@
 /// <reference path="../types/main.d.ts" />
 
-import {DCM, Patcher, Utilities, WebpackModules, Modals, ReactComponents} from "@zlibrary";
+import {DCM, Patcher, Utilities, WebpackModules, Modals, ReactComponents, Components} from "@zlibrary";
 import BasePlugin from "@zlibrary/plugin";
 import PronounTag from "./components/pronouns";
 import Settings from "./modules/settings";
@@ -13,17 +13,18 @@ import {Pronouns} from "./data/constants";
 import SettingsPanel from "./components/Settings";
 import createUpdateWrapper from "common/hooks/createUpdateWrapper";
 import {Users} from "@discord/stores";
+import ContextMenu from "./modules/contextmenu";
 
 const SelectInput = createUpdateWrapper(WebpackModules.getByProps("SingleSelect").SingleSelect);
 const TextInput = createUpdateWrapper(WebpackModules.getByDisplayName("TextInput"));
-const Header = WebpackModules.getModule(m => m.displayName === "Header" && "Sizes" in m);
+const {Heading} = WebpackModules.getByProps("Heading") ?? {Heading: () => null};
 
 export default class PronounDB extends BasePlugin {
+    patches = [];
     promises = {
         cancelled: false,
         cancel() {this.cancelled = true;}
     }
-    patches = [];
 
     onStart() {
         style.inject();
@@ -89,20 +90,29 @@ export default class PronounDB extends BasePlugin {
     async patchUserPopout() {
         const UserPopoutBody = WebpackModules.getModule(m => m.default.displayName === "UserPopoutBody");
 
+        const wrap = (func, fallback) => {
+            return (...args) => {
+                try {return func.apply(null, args);}
+                catch {return fallback;}
+            }
+        };
+
         this.patches.push(Patcher.after(UserPopoutBody, "default", (_, [{user}], res) => {
             if (this.promises.cancelled) return;
             if (!Array.isArray(res?.props?.children) || res.props.children.some(s => s?.type === PronounTag)) return;
 
-            const renderPronoun = data => {
+            const renderPronoun = wrap(data => {
                 if (!data) return data;
 
                 return (
-                    <div className={styles.container}>
-                        <Header className={styles.header} size={Header.Sizes.SIZE_12} uppercase muted>Pronouns</Header>
-                        <div className={styles.tag}>{data}</div>
-                    </div>
+                    <Components.ErrorBoundary>
+                        <div className={styles.container}>
+                            <Heading level={3} variant="eyebrow" className={styles.header} uppercase muted>Pronouns</Heading>
+                            <div className={styles.tag}>{data}</div>
+                        </div>
+                    </Components.ErrorBoundary>
                 );
-            };
+            }, null);
 
             res.props.children.unshift(
                 <PronounTag userId={user.id} render={renderPronoun} type="showInUserPopout" />
@@ -138,66 +148,95 @@ export default class PronounDB extends BasePlugin {
             });
         };
 
-        const patchUserContextMenu = (menu) => {
-            this.patches.push(
-                Patcher.after(menu, "default", (_, [user], ret) => {
-                    const isMenuItem = typeof user === "string";
-
-                    if (isMenuItem) user = Users.getUser(user);
-                    else ({user} = user);
-                    
-                    if (!user) return;
-                    
-                    const localOverride = Settings.get("customPronouns")[user.id];
-                    const item = DCM.buildMenuChildren([
+        const buildUserContextMenu = (user) => {
+            const localOverride = Settings.get("customPronouns")[user.id];
+            return DCM.buildMenuChildren([
+                {
+                    type: "submenu",
+                    id: "pronoun-db",
+                    label: "PronounDB",
+                    items: [
                         {
-                            type: "submenu",
-                            id: "pronoun-db",
-                            label: "PronounDB",
-                            items: [
-                                {
-                                    id: "remove-or-add-pronoun",
-                                    label: localOverride ? "Remove Pronoun" : "Add Pronoun",
-                                    danger: Boolean(localOverride),
-                                    action: () => {
-                                        if (localOverride) {
-                                            delete Settings.get("customPronouns")[user.id];
-                                            Settings.saveState();
-                                            PronounsDB.removePronoun(user.id);
-                                        } else openModal(user);
-                                    }
-                                },
-                                localOverride && {
-                                    id: "edit-pronoun",
-                                    label: "Edit Pronoun",
-                                    action: () => openModal(user)
-                                }
-                            ].filter(Boolean)
+                            id: "remove-or-add-pronoun",
+                            label: localOverride ? "Remove Pronoun" : "Add Pronoun",
+                            danger: Boolean(localOverride),
+                            action: () => {
+                                if (localOverride) {
+                                    delete Settings.get("customPronouns")[user.id];
+                                    Settings.saveState();
+                                    PronounsDB.removePronoun(user.id);
+                                } else openModal(user);
+                            }
+                        },
+                        localOverride && {
+                            id: "edit-pronoun",
+                            label: "Edit Pronoun",
+                            action: () => openModal(user)
                         }
-                    ])
-    
-                    if (isMenuItem) {
-                        return [ret, item];
-                    } else {
-                        const children = Utilities.findInReactTree(ret, Array.isArray);
-                        children && children.push(item);
-                    }
-                })
-            );
-        };
+                    ].filter(Boolean)
+                }
+            ]);
+        }
 
-        const patched = new Set();
-        const regex = /user.*contextmenu|useUserRolesItems/i;
-        const search = async () => {
-            const Menu = await DCM.getDiscordMenu(m => regex.test(m.displayName) && !patched.has(m.displayName));
+        const patched = new WeakSet();
+        const REGEX = /user.*contextmenu/i;
+        const filter = ContextMenu.filterContext(REGEX);
+        const loop = async () => {
+            const UserContextMenu = await DCM.getDiscordMenu(m => {
+                if (patched.has(m)) return false;
+                if (m.displayName != null) return REGEX.test(m.displayName);
+
+                return filter(m);
+            });
+
             if (this.promises.cancelled) return;
+            if (UserContextMenu.default.displayName) {
+                Patcher.after(UserContextMenu, "default", (_, [props], ret) => {
+                    const children = Utilities.findInReactTree(ret, Array.isArray)
+                    if (!Array.isArray(children)) return;
+    
+                    const {user} = props;
+    
+                    children.splice(
+                        7,
+                        0,
+                        buildUserContextMenu(user)
+                    );
+                });
+            } else {
+                let original = null;
+                function wrapper(props) {
+                    const rendered = original.call(this, props);
 
-            patched.add(Menu.default.displayName);
-            patchUserContextMenu(Menu);
-            search();
+                    try {
+                        const childs = Utilities.findInReactTree(rendered, Array.isArray);
+                        const user = props.user || UserStore.getUser(props.channel?.getRecipientId?.());
+                        if (!childs || !user || childs.some(c => c && c.key === "copy-user")) return rendered;
+                        childs.push(buildUserContextMenu(user)); 
+                    } catch (error) {
+                        cancel();
+                        Logger.error("Error in context menu patch:", error);
+                    }
+
+                    return rendered;
+                }
+
+                const cancel = Patcher.after(UserContextMenu, "default", (...args) => {
+                    const [, , ret] = args;
+                    const contextMenu = Utilities.getNestedProp(ret, "props.children");
+                    if (!contextMenu || typeof contextMenu.type !== "function") return;
+
+                    original ??= contextMenu.type;
+                    wrapper.displayName ??= original.displayName;
+                    contextMenu.type = wrapper;
+                });
+            }
+
+            patched.add(UserContextMenu.default);
+            loop();
         };
 
-        search();
+        loop();
     }
 
     onStop() {
