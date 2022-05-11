@@ -1,7 +1,7 @@
 {
 	"info": {
 		"name": "ShowSessions",
-		"version": "1.3.0",
+		"version": "1.3.1",
 		"description": "Shows your current sessions with a chat command '/sessions' or in the accounts panel.",
 		"authors": [
 			{
@@ -16,16 +16,9 @@
 	"changelog": [
 		{
 			"type": "fixed",
-			"title": "Fixes, Fixes, Fixes...",
+			"title": "Fixes",
 			"items": [
-				"Fixed settings ui"
-			]
-		},
-		{
-			"type": "added",
-			"title": "What's new?",
-			"items": [
-				"Added notifications for when a session is being added/removed/updated. You can adjust that in the settings."
+				"Fixed crashing when opening the modal."
 			]
 		}
 	],

@@ -11,7 +11,7 @@ import {Info, Users} from "@discord/stores";
 import _ from "lodash";
 
 const [useStore, Api] = createStore({ recent: [] });
-const Header = WebpackModules.getModule(m => m.displayName === "Header" && m.Tags);
+const {Heading} = WebpackModules.getByProps("Heading") ?? {Heading: () => null};
 const { TextBadge } = WebpackModules.getByProps("TextBadge");
 const { AnimatedAvatar, Sizes: AvatarSizes } = WebpackModules.getByProps("AnimatedAvatar");
 const StatusModule: {
@@ -111,7 +111,7 @@ export default function Modal(props) {
     return (
         <ModalRoot {...props} size={!!newest ? "medium" : "small"}>
             <ModalHeader separator={false}>
-                <Header tag={Header.Tags.H1} size={Header.Sizes.SIZE_20}>Sessions Logs</Header>
+                <Heading level="2" variant="heading-lg/medium">Sessions Logs</Heading>
                 <ModalCloseButton onClick={props.onClose} className={styles.closeButton} />
             </ModalHeader>
             <ModalContent>
