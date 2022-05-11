@@ -1,6 +1,6 @@
 /**
  * @name ShowSessions
- * @version 1.3.0
+ * @version 1.3.1
  * @description Shows your current sessions with a chat command '/sessions' or in the accounts panel.
  * @author Strencher
  * @source https://github.com/Strencher/BetterDiscordStuff/tree/master/ShowSessions
@@ -32,7 +32,7 @@
 const config = {
 	"info": {
 		"name": "ShowSessions",
-		"version": "1.3.0",
+		"version": "1.3.1",
 		"description": "Shows your current sessions with a chat command '/sessions' or in the accounts panel.",
 		"authors": [{
 			"name": "Strencher",
@@ -43,20 +43,12 @@ const config = {
 		"github_raw": "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/ShowSessions/ShowSessions.plugin.js"
 	},
 	"changelog": [{
-			"type": "fixed",
-			"title": "Fixes, Fixes, Fixes...",
-			"items": [
-				"Fixed settings ui"
-			]
-		},
-		{
-			"type": "added",
-			"title": "What's new?",
-			"items": [
-				"Added notifications for when a session is being added/removed/updated. You can adjust that in the settings."
-			]
-		}
-	],
+		"type": "fixed",
+		"title": "Fixes",
+		"items": [
+			"Fixed crashing when opening the modal."
+		]
+	}],
 	"build": {
 		"zlibrary": true,
 		"copy": true,
@@ -742,7 +734,11 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			const [useStore, Api] = createStore({
 				recent: []
 			});
-			const Header = external_PluginApi_namespaceObject.WebpackModules.getModule((m => "Header" === m.displayName && m.Tags));
+			const {
+				Heading
+			} = external_PluginApi_namespaceObject.WebpackModules.getByProps("Heading") ?? {
+				Heading: () => null
+			};
 			const {
 				TextBadge: notification_TextBadge
 			} = external_PluginApi_namespaceObject.WebpackModules.getByProps("TextBadge");
@@ -845,9 +841,9 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					size: !!newest ? "medium" : "small"
 				}), external_BdApi_React_default().createElement(modal_namespaceObject.ModalHeader, {
 					separator: false
-				}, external_BdApi_React_default().createElement(Header, {
-					tag: Header.Tags.H1,
-					size: Header.Sizes.SIZE_20
+				}, external_BdApi_React_default().createElement(Heading, {
+					level: "2",
+					variant: "heading-lg/medium"
 				}, "Sessions Logs"), external_BdApi_React_default().createElement(modal_namespaceObject.ModalCloseButton, {
 					onClick: props.onClose,
 					className: modal.Z.closeButton
@@ -1185,13 +1181,13 @@ function buildPlugin([BasePlugin, PluginApi]) {
 							notification.addEventListener("click", this.openModal);
 						}
 						break;
-					case NoticeTypes.PROMPT:
-						if (Api.getState().opened) return;
-						this.openModal();
-						break;
-					case NoticeTypes.TOAST:
-						external_PluginApi_namespaceObject.Toasts.info("[ShowSessions] Devices update detected!");
-						break;
+						case NoticeTypes.PROMPT:
+							if (Api.getState().opened) return;
+							this.openModal();
+							break;
+						case NoticeTypes.TOAST:
+							external_PluginApi_namespaceObject.Toasts.info("[ShowSessions] Devices update detected!");
+							break;
 					}
 				}
 				openModal() {

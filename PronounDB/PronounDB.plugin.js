@@ -4,7 +4,7 @@
  * @description Shows you the pronoun of a user right next to their name. Pronouns by https://pronoundb.org. Source code can be found in the ./src folder of the github repo.
  * @source https://github.com/Strencher/BetterDiscordStuff/tree/master/PronounDB
  * @updateUrl https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/PronounDB/PronounDB.plugin.js
- * @version 1.2.1
+ * @version 1.3.0
  */
 /*@cc_on
 @if (@_jscript)
@@ -53,7 +53,7 @@ const config = {
 		"description": "Shows you the pronoun of a user right next to their name. Pronouns by https://pronoundb.org. Source code can be found in the ./src folder of the github repo.",
 		"github": "https://github.com/Strencher/BetterDiscordStuff/tree/master/PronounDB",
 		"github_raw": "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/PronounDB/PronounDB.plugin.js",
-		"version": "1.2.1"
+		"version": "1.3.0"
 	},
 	"build": {
 		"zlibrary": true,
@@ -77,10 +77,11 @@ const config = {
 	},
 	"changelog": [{
 		"type": "fixed",
-		"title": "v1.2.0",
+		"title": "v1.3.0",
 		"items": [
-			"Fixed context menus. #2",
-			"Fix showing up in chat."
+			"Fixed crashing.",
+			"Fixed showing up in ContextMenu.",
+			"Fixed styles in UserPopout."
 		]
 	}],
 	"dependencies": {
@@ -308,7 +309,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
 					return i[1];
 				}));
-				___CSS_LOADER_EXPORT___.push([module.id, ".PronounDB-pronouns-text{font-size:.75rem}", ""]);
+				___CSS_LOADER_EXPORT___.push([module.id, ".PronounDB-pronouns-text{font-size:.75rem;line-height:1.375rem;cursor:default;font-weight:500;color:var(--text-muted);vertical-align:baseline}", ""]);
 				___CSS_LOADER_EXPORT___.locals = {
 					text: "PronounDB-pronouns-text"
 				};
@@ -324,7 +325,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
 					return i[1];
 				}));
-				___CSS_LOADER_EXPORT___.push([module.id, ".PronounDB-style-container{align-content:center;display:flex}.PronounDB-style-container .PronounDB-style-header{font-weight:700;text-transform:uppercase;font-size:12px;margin-bottom:8px;color:var(--header-secondary)}.PronounDB-style-container .PronounDB-style-tag{font-size:12px;color:var(--text-normal);margin-left:5px}", ""]);
+				___CSS_LOADER_EXPORT___.push([module.id, ".PronounDB-style-container{margin-bottom:16px}.PronounDB-style-container .PronounDB-style-header{font-weight:700;text-transform:uppercase;font-size:12px;margin-bottom:8px;color:var(--header-secondary)}.PronounDB-style-container .PronounDB-style-tag{font-size:12px;color:var(--text-normal)}", ""]);
 				___CSS_LOADER_EXPORT___.locals = {
 					container: "PronounDB-style-container",
 					header: "PronounDB-style-header",
@@ -422,7 +423,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			var external_BasePlugin_default = __webpack_require__.n(external_BasePlugin_namespaceObject);
 			const external_events_namespaceObject = require("events");
 			var external_events_default = __webpack_require__.n(external_events_namespaceObject);
-			const package_namespaceObject = JSON.parse('{"um":{"u2":"PronounDB","i8":"1.2.1"}}');
+			const package_namespaceObject = JSON.parse('{"um":{"u2":"PronounDB","i8":"1.3.0"}}');
 			var external_BdApi_React_ = __webpack_require__(113);
 			var external_BdApi_React_default = __webpack_require__.n(external_BdApi_React_);
 			function _defineProperty(obj, key, value) {
@@ -4974,6 +4975,18 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			};
 			const hooks_createUpdateWrapper = createUpdateWrapper_createUpdateWrapper;
 			const stores_namespaceObject = Modules["@discord/stores"];
+			class ContextMenu {
+				static filterContext(name) {
+					const shouldInclude = ["page", "section", "objectType"];
+					const notInclude = ["use", "root"];
+					const isRegex = name instanceof RegExp;
+					return module => {
+						const string = module.toString({});
+						const getDisplayName = () => external_PluginApi_namespaceObject.Utilities.getNestedProp(module({}), "props.children.type.displayName");
+						return !~string.indexOf("return function") && shouldInclude.every((s => ~string.indexOf(s))) && !notInclude.every((s => ~string.indexOf(s))) && (isRegex ? name.test(getDisplayName()) : name === getDisplayName());
+					};
+				}
+			}
 			function PronounDB_defineProperty(obj, key, value) {
 				if (key in obj) Object.defineProperty(obj, key, {
 					value,
@@ -4986,17 +4999,21 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			}
 			const SelectInput = hooks_createUpdateWrapper(external_PluginApi_namespaceObject.WebpackModules.getByProps("SingleSelect").SingleSelect);
 			const TextInput = hooks_createUpdateWrapper(external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("TextInput"));
-			const Header = external_PluginApi_namespaceObject.WebpackModules.getModule((m => "Header" === m.displayName && "Sizes" in m));
+			const {
+				Heading
+			} = external_PluginApi_namespaceObject.WebpackModules.getByProps("Heading") ?? {
+				Heading: () => null
+			};
 			class PronounDB extends(external_BasePlugin_default()) {
 				constructor(...args) {
 					super(...args);
+					PronounDB_defineProperty(this, "patches", []);
 					PronounDB_defineProperty(this, "promises", {
 						cancelled: false,
 						cancel() {
 							this.cancelled = true;
 						}
 					});
-					PronounDB_defineProperty(this, "patches", []);
 				}
 				onStart() {
 					external_StyleLoader_default().inject();
@@ -5054,26 +5071,35 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				}
 				async patchUserPopout() {
 					const UserPopoutBody = external_PluginApi_namespaceObject.WebpackModules.getModule((m => "UserPopoutBody" === m.default.displayName));
+					const wrap = (func, fallback) => (...args) => {
+						try {
+							return func.apply(null, args);
+						} catch {
+							return fallback;
+						}
+					};
 					this.patches.push(external_PluginApi_namespaceObject.Patcher.after(UserPopoutBody, "default", ((_, [{
 						user
 					}], res) => {
 						if (this.promises.cancelled) return;
 						if (!Array.isArray(res?.props?.children) || res.props.children.some((s => s?.type === components_pronouns))) return;
+						const renderPronoun = wrap((data => {
+							if (!data) return data;
+							return external_BdApi_React_default().createElement(external_PluginApi_namespaceObject.Components.ErrorBoundary, null, external_BdApi_React_default().createElement("div", {
+								className: style.Z.container
+							}, external_BdApi_React_default().createElement(Heading, {
+								level: 3,
+								variant: "eyebrow",
+								className: style.Z.header,
+								uppercase: true,
+								muted: true
+							}, "Pronouns"), external_BdApi_React_default().createElement("div", {
+								className: style.Z.tag
+							}, data)));
+						}), null);
 						res.props.children.unshift(external_BdApi_React_default().createElement(components_pronouns, {
 							userId: user.id,
-							render: data => {
-								if (!data) return data;
-								return external_BdApi_React_default().createElement("div", {
-									className: style.Z.container
-								}, external_BdApi_React_default().createElement(Header, {
-									className: style.Z.header,
-									size: Header.Sizes.SIZE_12,
-									uppercase: true,
-									muted: true
-								}, "Pronouns"), external_BdApi_React_default().createElement("div", {
-									className: style.Z.tag
-								}, data));
-							},
+							render: renderPronoun,
 							type: "showInUserPopout"
 						}));
 					})));
@@ -5108,52 +5134,76 @@ function buildPlugin([BasePlugin, PluginApi]) {
 							}
 						});
 					};
-					const patchUserContextMenu = menu => {
-						this.patches.push(external_PluginApi_namespaceObject.Patcher.after(menu, "default", ((_, [user], ret) => {
-							const isMenuItem = "string" === typeof user;
-							if (isMenuItem) user = stores_namespaceObject.Users.getUser(user);
-							else({
-								user
-							} = user);
-							if (!user) return;
-							const localOverride = Settings.get("customPronouns")[user.id];
-							const item = external_PluginApi_namespaceObject.DCM.buildMenuChildren([{
-								type: "submenu",
-								id: "pronoun-db",
-								label: "PronounDB",
-								items: [{
-									id: "remove-or-add-pronoun",
-									label: localOverride ? "Remove Pronoun" : "Add Pronoun",
-									danger: Boolean(localOverride),
-									action: () => {
-										if (localOverride) {
-											delete Settings.get("customPronouns")[user.id];
-											Settings.saveState();
-											PronounsDB.removePronoun(user.id);
-										} else openModal(user);
-									}
-								}, localOverride && {
-									id: "edit-pronoun",
-									label: "Edit Pronoun",
-									action: () => openModal(user)
-								}].filter(Boolean)
-							}]);
-							if (isMenuItem) return [ret, item];
-							else {
-								const children = external_PluginApi_namespaceObject.Utilities.findInReactTree(ret, Array.isArray);
-								children && children.push(item);
-							}
-						})));
+					const buildUserContextMenu = user => {
+						const localOverride = Settings.get("customPronouns")[user.id];
+						return external_PluginApi_namespaceObject.DCM.buildMenuChildren([{
+							type: "submenu",
+							id: "pronoun-db",
+							label: "PronounDB",
+							items: [{
+								id: "remove-or-add-pronoun",
+								label: localOverride ? "Remove Pronoun" : "Add Pronoun",
+								danger: Boolean(localOverride),
+								action: () => {
+									if (localOverride) {
+										delete Settings.get("customPronouns")[user.id];
+										Settings.saveState();
+										PronounsDB.removePronoun(user.id);
+									} else openModal(user);
+								}
+							}, localOverride && {
+								id: "edit-pronoun",
+								label: "Edit Pronoun",
+								action: () => openModal(user)
+							}].filter(Boolean)
+						}]);
 					};
-					const patched = new Set;
-					const search = async () => {
-						const Menu = await external_PluginApi_namespaceObject.DCM.getDiscordMenu((m => /user.*contextmenu|useUserRolesItems/i.test(m.displayName) && !patched.has(m.displayName)));
+					const patched = new WeakSet;
+					const REGEX = /user.*contextmenu/i;
+					const filter = ContextMenu.filterContext(REGEX);
+					const loop = async () => {
+						const UserContextMenu = await external_PluginApi_namespaceObject.DCM.getDiscordMenu((m => {
+							if (patched.has(m)) return false;
+							if (null != m.displayName) return REGEX.test(m.displayName);
+							return filter(m);
+						}));
 						if (this.promises.cancelled) return;
-						patched.add(Menu.default.displayName);
-						patchUserContextMenu(Menu);
-						search();
+						if (UserContextMenu.default.displayName) external_PluginApi_namespaceObject.Patcher.after(UserContextMenu, "default", ((_, [props], ret) => {
+							const children = external_PluginApi_namespaceObject.Utilities.findInReactTree(ret, Array.isArray);
+							if (!Array.isArray(children)) return;
+							const {
+								user
+							} = props;
+							children.splice(7, 0, buildUserContextMenu(user));
+						}));
+						else {
+							let original = null;
+							function wrapper(props) {
+								const rendered = original.call(this, props);
+								try {
+									const childs = external_PluginApi_namespaceObject.Utilities.findInReactTree(rendered, Array.isArray);
+									const user = props.user || UserStore.getUser(props.channel?.getRecipientId?.());
+									if (!childs || !user || childs.some((c => c && "copy-user" === c.key))) return rendered;
+									childs.push(buildUserContextMenu(user));
+								} catch (error) {
+									cancel();
+									Logger.error("Error in context menu patch:", error);
+								}
+								return rendered;
+							}
+							const cancel = external_PluginApi_namespaceObject.Patcher.after(UserContextMenu, "default", ((...args) => {
+								const [, , ret] = args;
+								const contextMenu = external_PluginApi_namespaceObject.Utilities.getNestedProp(ret, "props.children");
+								if (!contextMenu || "function" !== typeof contextMenu.type) return;
+								original ??= contextMenu.type;
+								wrapper.displayName ??= original.displayName;
+								contextMenu.type = wrapper;
+							}));
+						}
+						patched.add(UserContextMenu.default);
+						loop();
 					};
-					search();
+					loop();
 				}
 				onStop() {
 					for (const unpatch of this.patches) unpatch();

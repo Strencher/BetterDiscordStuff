@@ -1,6 +1,6 @@
 /**
  * @name BetterBannedUsers
- * @version 1.2.0
+ * @version 1.2.1
  * @description Enhances the banned users page.
  * @author Strencher
  * @source https://github.com/Strencher/BetterDiscordStuff/BetterBannedUsers
@@ -32,7 +32,7 @@
 const config = {
 	"info": {
 		"name": "BetterBannedUsers",
-		"version": "1.2.0",
+		"version": "1.2.1",
 		"description": "Enhances the banned users page.",
 		"authors": [{
 			"name": "Strencher",
@@ -44,7 +44,7 @@ const config = {
 	},
 	"changelog": [{
 		"type": "fixed",
-		"title": "Fixed - 1.2.0",
+		"title": "Fixed - 1.2.1",
 		"items": [
 			"Fixes for the latest discord update."
 		]
@@ -473,6 +473,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			}
 			const Popout = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("Popout");
 			const Caret = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("Caret");
+			const Text = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("LegacyText");
 			function Select({
 				value,
 				options,
@@ -480,21 +481,20 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				onChange
 			}) {
 				const [selected, setSelected] = (0, external_BdApi_React_.useState)(value);
-				const renderPopout = props => React.createElement("div", _extends({}, props, {
-					className: components_select.Z.container
-				}), options.map(((option, index) => React.createElement("div", {
-					className: (0, utils_namespaceObject.joinClassNames)(components_select.Z.option, {
-						[components_select.Z.selected]: selected?.value === option.value
-					}),
-					key: index,
-					onClick: () => {
-						setSelected(option);
-						onChange(option);
-						props.closePopout();
-					}
-				}, option.label))));
 				return React.createElement(Popout, {
-					renderPopout,
+					renderPopout: props => React.createElement("div", _extends({}, props, {
+						className: components_select.Z.container
+					}), options.map(((option, index) => React.createElement("div", {
+						className: (0, utils_namespaceObject.joinClassNames)(components_select.Z.option, {
+							[components_select.Z.selected]: selected?.value === option.value
+						}),
+						key: index,
+						onClick: () => {
+							setSelected(option);
+							onChange(option);
+							props.closePopout();
+						}
+					}, option.label)))),
 					align: "center",
 					animation: Popout.Animation.FADE,
 					position: "bottom"
@@ -505,14 +505,14 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					align: components_namespaceObject.Flex.Align.CENTER,
 					justify: components_namespaceObject.Flex.Justify.END,
 					onClick: props.onClick
-				}, React.createElement(components_namespaceObject.Text, {
-					color: components_namespaceObject.Text.Colors.MUTED
-				}, label), React.createElement(components_namespaceObject.Text, {
+				}, React.createElement(Text, {
+					color: Text.Colors.MUTED
+				}, label), React.createElement(Text, {
 					className: components_select.Z.selectedText,
-					color: components_namespaceObject.Text.Colors.INTERACTIVE_NORMAL
+					color: Text.Colors.INTERACTIVE_NORMAL
 				}, selected?.label), React.createElement(Caret, {
 					direction: Caret.Directions.DOWN,
-					className: components_namespaceObject.Text.Colors.INTERACTIVE_NORMAL
+					className: Text.Colors.INTERACTIVE_NORMAL
 				}))));
 			}
 			var createUpdateWrapper_React = __webpack_require__(113);
