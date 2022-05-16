@@ -156,7 +156,7 @@ const VoiceChannelCopyOptions = [
     },
     {
         name: "type",
-        getValue: ({channel}, {Formatter}) => Formatter.parseSnowFlake(channel.id).toLocaleString(),
+        getValue: ({channel}, {Formatter}) => Formatter.formatChannelType(channel.type),
         description: "Will be replaced with the type of the voice channel."
     },
     {
