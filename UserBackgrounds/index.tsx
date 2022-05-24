@@ -1,22 +1,21 @@
-/// <reference path="../bdbuilder/typings/main.d.ts" />
+/// <reference path="../types/main.d.ts" />
 
-import BasePlugin from "@zlibrary/plugin";
-import { Patcher, Utilities, WebpackModules, DiscordModules, ReactComponents, Logger } from "@zlibrary";
-import BannerStore from "./bannerStore";
-import Settings from "./settings";
-import { useStateFromStores } from "@discord/flux";
-import _ from "lodash";
-import { joinClassNames } from "@discord/utils";
-import { switchCase } from "common/util/any";
+import { DiscordModules, Logger, Patcher, ReactComponents, Utilities, WebpackModules } from "@zlibrary";
+import { closeContextMenu, Menu, MenuItem, openContextMenu } from "@discord/contextmenu";
+import { ModalRoot, ModalSize } from "@discord/modal";
+//@ts-expect-error
 import ErrorBoundary from "common/components/errorboundary";
 import React, { useMemo, useRef, useState } from "react";
+import { useStateFromStores } from "@discord/flux";
+import { UserBanner as banner } from "./types";
+import { Button } from "@discord/components";
+import { switchCase } from "common/util/any";
+import { Colors } from "@discord/constants";
+import BasePlugin from "@zlibrary/plugin";
+import BannerStore from "./bannerStore";
 import styles from "./banner.scss";
 import stylesheet from "styles";
-import { Button } from "@discord/components";
-import { Colors } from "@discord/constants";
-import { closeContextMenu, Menu, MenuItem, openContextMenu } from "@discord/contextmenu";
-import { ModalRoot, ModalSize, openModal } from "@discord/modal";
-import {UserBanner as banner} from "./types";
+import _ from "lodash";
 
 type UserBanner = {
     BannerTypes: {
@@ -32,11 +31,12 @@ const Arrow: any = ErrorBoundary.from(WebpackModules.getByDisplayName("Arrow"), 
 const TextBadge: any = ErrorBoundary.from(WebpackModules.getByProps("TextBadge")?.TextBadge);
 const ImageModal: any = ErrorBoundary.from(WebpackModules.getByDisplayName("ImageModal"));
 const MaskedLink: any = ErrorBoundary.from(WebpackModules.getByDisplayName("MaskedLink"));
-const ModalClasses: {image, modal} = WebpackModules.find(e => typeof e === "object" && Object.keys(e).length === 2 && e.modal && e.image);
+const ModalActions = WebpackModules.getByProps("useModalsStore", "openModal");
+const ModalClasses: { image, modal } = WebpackModules.find(e => typeof e === "object" && Object.keys(e).length === 2 && e.modal && e.image) ?? {};
 const AssetUtils = WebpackModules.getByProps("getUserBannerURL");
 
 const showImageModal = async function (src: string, original = src, width: number, height: number, animated: boolean, children: any, placeholder: any) {
-    const bounds = await new Promise(resolve => {
+    const bounds = await new Promise<{width: number, height: number}>(resolve => {
         Object.assign(new Image(), {
             src: src,
             onload: ({target}) => {
@@ -46,7 +46,7 @@ const showImageModal = async function (src: string, original = src, width: numbe
         });
     });
 
-    openModal(props => (
+    ModalActions.openModal(props => (
         <ModalRoot
             {...props}
             className={ModalClasses.modal}
@@ -86,7 +86,7 @@ export default class UserBackgrounds extends BasePlugin {
 
     public onStart() {
         stylesheet.inject();
-        BannerStore.initialize();
+        BannerStore.init();
         Utilities.suppressErrors(this.patchBanners.bind(this), "UserBanner.default patch")();
         Utilities.suppressErrors(this.patchUserPopout.bind(this), "UserPopoutContainer.type patch")();
         Utilities.suppressErrors(this.patchMemberListItem.bind(this), "MemberListIte.render patch")();
@@ -130,8 +130,8 @@ export default class UserBackgrounds extends BasePlugin {
             children.props["data-user-id"] = user.id; // make theme devs happy
 
             children.props.className = switchCase(bannerType, [
-                [0, joinClassNames("user-background", BannerClasses.banner, BannerClasses.popoutBannerPremium)],
-                [1, joinClassNames("user-background", BannerClasses.banner, BannerClasses.profileBannerPremium)]
+                [0, Utilities.className("user-background", BannerClasses.banner, BannerClasses.popoutBannerPremium)],
+                [1, Utilities.className("user-background", BannerClasses.banner, BannerClasses.profileBannerPremium)]
             ]);
 
             children.ref = ref;
@@ -180,7 +180,7 @@ export default class UserBackgrounds extends BasePlugin {
                     {
                         (banner != null && user.banner != null) && (
                             <Button
-                                className={joinClassNames(styles.arrow, styles.left)}
+                                className={Utilities.className(styles.arrow, styles.left)}
                                 key="left"
                                 look={Button.Looks.BLANK}
                                 size={Button.Sizes.TINY}
@@ -195,7 +195,7 @@ export default class UserBackgrounds extends BasePlugin {
                     {
                         (banner != null && user.banner != null) && (
                             <Button
-                                className={joinClassNames(styles.arrow, styles.right)}
+                                className={Utilities.className(styles.arrow, styles.right)}
                                 key="right"
                                 look={Button.Looks.BLANK}
                                 size={Button.Sizes.TINY}

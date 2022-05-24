@@ -28,7 +28,7 @@ export default new class BannerStore extends Store {
         return banners;
     }
 
-    initialize(): void {
+    init() {
         this._initialized = true;
 
         this._interval = setInterval(this.fetchBanners, this.intervalTimer);
