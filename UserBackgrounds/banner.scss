@@ -35,6 +35,7 @@ $padding: 20px;
 /* UserBackground Plugin My Account fix by _david_ */
 :global(.accountProfileCard-lbN7n-) > .container {
     height: 100px;
+    display: flex;
 }
 :global(.accountProfileCard-lbN7n-) .badge + div,
 :global(.accountProfileCard-lbN7n-) .left + div {
