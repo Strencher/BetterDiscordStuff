@@ -1,6 +1,6 @@
 /**
  * @name UserBackgrounds
- * @version 1.6.3
+ * @version 1.6.4
  * @description A database of custom user requested backgrounds designed for BetterDiscord and Powercord.
  * @author Strencher, Tropical
  * @source https://github.com/Strencher/BetterDiscordStuff/tree/development/UserBackgrounds
@@ -33,7 +33,7 @@
 const config = {
 	"info": {
 		"name": "UserBackgrounds",
-		"version": "1.6.3",
+		"version": "1.6.4",
 		"description": "A database of custom user requested backgrounds designed for BetterDiscord and Powercord.",
 		"authors": [{
 				"name": "Strencher",
@@ -302,7 +302,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
 					return i[1];
 				}));
-				___CSS_LOADER_EXPORT___.push([module.id, ".UserBackgrounds-banner-arrow{position:absolute;top:0;z-index:99;padding-top:20px;padding-bottom:20px}.UserBackgrounds-banner-arrow svg{color:var(--interactive-normal)}.UserBackgrounds-banner-arrow.UserBackgrounds-banner-left{left:0}.UserBackgrounds-banner-arrow.UserBackgrounds-banner-right{right:0}.UserBackgrounds-banner-container{display:block;position:relative}.UserBackgrounds-banner-badge{position:absolute;bottom:10px;right:10px;z-index:99}.accountProfileCard-lbN7n->.UserBackgrounds-banner-container{height:100px}.accountProfileCard-lbN7n- .UserBackgrounds-banner-badge+div,.accountProfileCard-lbN7n- .UserBackgrounds-banner-left+div{width:100%;background:center/cover}", ""]);
+				___CSS_LOADER_EXPORT___.push([module.id, ".UserBackgrounds-banner-arrow{position:absolute;top:0;z-index:99;padding-top:20px;padding-bottom:20px}.UserBackgrounds-banner-arrow svg{color:var(--interactive-normal)}.UserBackgrounds-banner-arrow.UserBackgrounds-banner-left{left:0}.UserBackgrounds-banner-arrow.UserBackgrounds-banner-right{right:0}.UserBackgrounds-banner-container{display:block;position:relative}.UserBackgrounds-banner-badge{position:absolute;bottom:10px;right:10px;z-index:99}.accountProfileCard-lbN7n->.UserBackgrounds-banner-container{height:100px;display:flex}.accountProfileCard-lbN7n- .UserBackgrounds-banner-badge+div,.accountProfileCard-lbN7n- .UserBackgrounds-banner-left+div{width:100%;background:center/cover}", ""]);
 				___CSS_LOADER_EXPORT___.locals = {
 					arrow: "UserBackgrounds-banner-arrow",
 					left: "UserBackgrounds-banner-left",
@@ -552,7 +552,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				return obj;
 			}
 			function _extends() {
-				_extends = Object.assign || function(target) {
+				_extends = Object.assign ? Object.assign.bind() : function(target) {
 					for (var i = 1; i < arguments.length; i++) {
 						var source = arguments[i];
 						for (var key in source)
