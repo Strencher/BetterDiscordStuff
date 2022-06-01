@@ -1,6 +1,6 @@
 /**
  * @name VoiceChatNotifications
- * @version 1.2.1
+ * @version 1.2.2
  * @description Shows you certain events from voicechats in a logs panel or as desktop notification.
  * @author Strencher
  * @source https://github.com/Strencher/BetterDiscordStuff/tree/master/VoiceChatNotifications
@@ -32,7 +32,7 @@
 const config = {
 	"info": {
 		"name": "VoiceChatNotifications",
-		"version": "1.2.1",
+		"version": "1.2.2",
 		"description": "Shows you certain events from voicechats in a logs panel or as desktop notification.",
 		"authors": [{
 			"name": "Strencher",
@@ -46,8 +46,7 @@ const config = {
 		"type": "fixed",
 		"title": "Fixes",
 		"items": [
-			"Discord update fixes #2",
-			"Fix typo"
+			"Fixed showing icon in the header bar."
 		]
 	}],
 	"build": {
@@ -136,7 +135,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					return ___createMemoize___(this, 'TransitionGroup', () => BdApi.findModuleByDisplayName('TransitionGroup'))
 				},
 				get 'Button'() {
-					return ___createMemoize___(this, 'Button', () => BdApi.findModuleByProps('DropdownSizes'))
+					return ___createMemoize___(this, 'Button', () => BdApi.findModule(m => 'DropdownSizes' in m && typeof(m) === 'function'))
 				},
 				get 'Popout'() {
 					return ___createMemoize___(this, 'Popout', () => BdApi.findModuleByDisplayName('Popout'))
@@ -280,7 +279,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				__webpack_require__.d(__webpack_exports__, {
 					Z: () => __WEBPACK_DEFAULT_EXPORT__
 				});
-				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(246);
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(645);
 				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
 				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
 					return i[1];
@@ -296,7 +295,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				__webpack_require__.d(__webpack_exports__, {
 					Z: () => __WEBPACK_DEFAULT_EXPORT__
 				});
-				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(246);
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(645);
 				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
 				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
 					return i[1];
@@ -325,7 +324,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				__webpack_require__.d(__webpack_exports__, {
 					Z: () => __WEBPACK_DEFAULT_EXPORT__
 				});
-				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(246);
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(645);
 				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
 				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
 					return i[1];
@@ -344,7 +343,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				__webpack_require__.d(__webpack_exports__, {
 					Z: () => __WEBPACK_DEFAULT_EXPORT__
 				});
-				var _css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(246);
+				var _css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(645);
 				var _css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
 				var ___CSS_LOADER_EXPORT___ = _css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
 					return i[1];
@@ -365,727 +364,10 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
 				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
 			},
-			856: (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-				__webpack_require__.r(__webpack_exports__);
-				__webpack_require__.d(__webpack_exports__, {
-					default: () => VoiceChatNotifications
-				});
-				const classes_namespaceObject = Modules["@discord/classes"];
-				const modal_namespaceObject = Modules["@discord/modal"];
-				const stores_namespaceObject = Modules["@discord/stores"];
-				const external_PluginApi_namespaceObject = PluginApi;
-				const external_BasePlugin_namespaceObject = BasePlugin;
-				var external_BasePlugin_default = __webpack_require__.n(external_BasePlugin_namespaceObject);
-				const components_namespaceObject = Modules["@discord/components"];
-				var components_button = __webpack_require__(36);
-				var React = __webpack_require__(832);
-				function _extends() {
-					_extends = Object.assign || function(target) {
-						for (var i = 1; i < arguments.length; i++) {
-							var source = arguments[i];
-							for (var key in source)
-								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-						}
-						return target;
-					};
-					return _extends.apply(this, arguments);
-				}
-				function VoiceNotificationsButton(props) {
-					return React.createElement(components_namespaceObject.TooltipContainer, {
-						position: "bottom",
-						text: "Open VoiceLogs"
-					}, React.createElement("div", _extends({
-						className: components_button.Z.icon
-					}, props), React.createElement("svg", {
-						fill: "currentColor",
-						xmlns: "http://www.w3.org/2000/svg",
-						x: "0px",
-						y: "0px",
-						viewBox: "0 0 512 512",
-						width: "20",
-						height: "20"
-					}, React.createElement("g", null, React.createElement("path", {
-						d: "M299.389,412.924l-53.346,24.248c-5.285,2.402-10.87,3.62-16.602,3.62c-6.846,0-13.425-1.743-19.222-4.94   c-0.288,0.016-0.574,0.044-0.867,0.044H96.137c-8.284,0-15-6.716-15-15c0-8.284,6.716-15,15-15h93.655   c-0.938-7.26,0.133-14.757,3.285-21.69l3.777-8.31H96.137c-8.284,0-15-6.716-15-15c0-8.284,6.716-15,15-15H210.49l6.907-15.196   c0.018-0.04,0.038-0.072,0.057-0.11c1.471-3.201,3.502-6.151,6.041-8.69l6.005-6.004H96.137c-8.284,0-15-6.716-15-15   s6.716-15,15-15H259.5l30-29.999H96.137c-8.284,0-15-6.716-15-15c0-8.284,6.716-15,15-15H319.5l77.724-77.723l0.345-0.344V67.001   c0-8.284-6.716-15-15-15h-35V15c0-8.284-6.716-15-15-15c-8.284,0-15,6.716-15,15v37h-31.429V15c0-8.284-6.716-15-15-15   c-8.284,0-15,6.716-15,15v37H224.71V15c0-8.284-6.716-15-15-15c-8.284,0-15,6.716-15,15v37h-31.429V15c0-8.284-6.716-15-15-15   c-8.284,0-15,6.716-15,15v37h-31.429V15c0-8.284-6.716-15-15-15s-15,6.716-15,15v37H36.137c-8.284,0-15,6.716-15,15v400   c0,24.813,20.187,45,45,45h286.432c24.813,0,45-20.187,45-45V317.533l-89.221,89.22   C305.682,409.419,302.637,411.471,299.389,412.924z M209.71,195.897H96.137c-8.284,0-15-6.716-15-15c0-8.284,6.716-15,15-15H209.71   c8.284,0,15,6.716,15,15C224.71,189.182,217.994,195.897,209.71,195.897z"
-					}), React.createElement("path", {
-						d: "M397.224,190.6L244.708,343.114l-24.32,53.505c-3.824,8.412,4.83,17.065,13.242,13.242l53.505-24.32h0L439.65,233.026   L397.224,190.6L397.224,190.6z"
-					}), React.createElement("path", {
-						d: "M482.077,148.174c-11.716-11.716-30.711-11.716-42.426,0l-21.213,21.213l42.426,42.426l21.213-21.213   C493.792,178.884,493.792,159.89,482.077,148.174z"
-					})))));
-				}
-				const flux_namespaceObject = Modules["@discord/flux"];
-				const modules_namespaceObject = Modules["@discord/modules"];
-				function _defineProperty(obj, key, value) {
-					if (key in obj) Object.defineProperty(obj, key, {
-						value,
-						enumerable: true,
-						configurable: true,
-						writable: true
-					});
-					else obj[key] = value;
-					return obj;
-				}
-				class SettingsManager extends flux_namespaceObject.Store {
-					constructor(pluginName, defaultSettings = {}) {
-						super(modules_namespaceObject.Dispatcher, {});
-						_defineProperty(this, "settings", void 0);
-						_defineProperty(this, "pluginName", void 0);
-						_defineProperty(this, "get", ((key, defaultValue) => this.settings[key] ?? defaultValue));
-						_defineProperty(this, "set", ((key, value) => {
-							this.settings[key] = value;
-							external_PluginApi_namespaceObject.PluginUtilities.saveSettings(this.pluginName, this.settings);
-							this.emitChange();
-							return value;
-						}));
-						this.pluginName = pluginName;
-						this.settings = external_PluginApi_namespaceObject.PluginUtilities.loadSettings(pluginName, defaultSettings);
-					}
-				}
-				const package_namespaceObject = JSON.parse('{"um":{"u2":"VoiceChatNotifications"}}');
-				const Settings = new SettingsManager(package_namespaceObject.um.u2, {});
-				const settings = Settings;
-				var notification = __webpack_require__(713);
-				const external_StyleLoader_namespaceObject = StyleLoader;
-				var external_StyleLoader_default = __webpack_require__.n(external_StyleLoader_namespaceObject);
-				const external_PluginApi_DiscordModules_namespaceObject = PluginApi.DiscordModules;
-				const scrollbars_namespaceObject = Modules["@discord/scrollbars"];
-				var external_BdApi_React_ = __webpack_require__(832);
-				var external_BdApi_React_default = __webpack_require__.n(external_BdApi_React_);
-				function createStore(state) {
-					const listeners = new Set;
-					const api = {
-						getState() {
-							return state;
-						},
-						setState(partial) {
-							const partialState = "function" === typeof partial ? partial(state) : partial;
-							state = Object.assign({}, state, partialState);
-							listeners.forEach((listener => {
-								listener(state);
-							}));
-						},
-						get listeners() {
-							return listeners;
-						},
-						on(listener) {
-							if (listeners.has(listener)) return;
-							listeners.add(listener);
-							return () => listeners.delete(listener);
-						},
-						off(listener) {
-							return listeners.delete(listener);
-						}
-					};
-					return [function(collector = (_ => _)) {
-						const forceUpdate = (0, external_BdApi_React_.useReducer)((e => e + 1), 0)[1];
-						(0, external_BdApi_React_.useEffect)((() => {
-							const handler = () => forceUpdate();
-							listeners.add(handler);
-							return () => listeners.delete(handler);
-						}), []);
-						return collector(api.getState());
-					}, api];
-				}
-				var panel = __webpack_require__(865);
-				var panel_React = __webpack_require__(832);
-				const ChannelMessage = external_PluginApi_namespaceObject.WebpackModules.getModule((m => "ChannelMessage" === m?.type?.displayName));
-				const dummyChannel = new classes_namespaceObject.Channel({
-					name: "dumb-channel",
-					id: "-1"
-				});
-				const [useStore, Api] = createStore({
-					logs: []
-				});
-				function LogsPanel() {
-					const logs = useStore((s => s.logs));
-					if (!logs.length) return panel_React.createElement("b", {
-						className: panel.Z.empty
-					}, "Don't worry, the plugin isn't broken, nothing has happened yet.");
-					const formattedLogs = [];
-					let lastItem = null;
-					for (const item of logs) {
-						let isGroupStart = lastItem?.user?.id === item.user.id;
-						const message = new classes_namespaceObject.Message({
-							content: item.message,
-							timestamp: item.timestamp,
-							author: new classes_namespaceObject.User(item.user)
-						});
-						message.start = !isGroupStart;
-						formattedLogs.push(message);
-						lastItem = item;
-					}
-					return panel_React.createElement("div", null, panel_React.createElement(components_namespaceObject.Button, {
-						className: panel.Z.clearButton,
-						onClick: () => Api.setState({
-							logs: []
-						})
-					}, "Clear Logs"), panel_React.createElement(scrollbars_namespaceObject.ScrollerThin, {
-						className: panel.Z.contents
-					}, formattedLogs.map((message => panel_React.createElement("div", {
-						className: message.start && panel.Z.message
-					}, panel_React.createElement(ChannelMessage, {
-						message,
-						channel: dummyChannel,
-						isGroupStart: message.start
-					}))))));
-				}
-				LogsPanel.Store = Api;
-				const constants = {
-					VOICE_STATES: {
-						deaf: {
-							setting: "serverDeaf",
-							strings: ["Got Server undeafened", "Got Server deafened"],
-							description: "Fires if someone got server deafened/undeafened."
-						},
-						mute: {
-							setting: "serverMute",
-							strings: ["Got Server unmuted", "Got Server muted"],
-							description: "Fires if someone got server muted/unmuted."
-						},
-						selfDeaf: {
-							setting: "selfDeaf",
-							strings: ["Undeafened", "Deafened"],
-							description: "Fires if someone deafen/undeafen oneself."
-						},
-						selfMute: {
-							setting: "selfMute",
-							strings: ["Unmuted self.", "Muted self."],
-							description: "Fires if someone mutes/unmutes oneself."
-						},
-						selfStream: {
-							setting: "selfStream",
-							strings: ["Stopped streaming.", "Started streaming."],
-							description: "Fires if someone stopps/startes streaming."
-						},
-						selfVideo: {
-							setting: "selfVideo",
-							strings: ["Stopped screenshare.", "Started screenshare."],
-							description: "Fires if someone stopps/starts screensharing."
-						}
-					}
-				};
-				const icons_namespaceObject = Modules["@discord/icons"];
-				const utils_namespaceObject = Modules["@discord/utils"];
-				var category = __webpack_require__(911);
-				function Category({
-					label,
-					children,
-					className,
-					look = Category.Looks.DEFAULT
-				}) {
-					const [opened, toggle] = (0, external_BdApi_React_.useState)(false);
-					const isCompact = look === category.Z.compact;
-					return external_BdApi_React_default().createElement("div", {
-						className: (0, utils_namespaceObject.joinClassNames)(className, look, category.Z.category, {
-							[category.Z.opened]: opened
-						})
-					}, external_BdApi_React_default().createElement("div", {
-						className: category.Z.header,
-						onClick: () => toggle(!opened)
-					}, external_BdApi_React_default().createElement("div", {
-						className: category.Z.label
-					}, label), isCompact ? external_BdApi_React_default().createElement("div", {
-						className: category.Z.stroke
-					}) : null, external_BdApi_React_default().createElement(icons_namespaceObject.Caret, {
-						direction: opened ? icons_namespaceObject.Caret.Directions.DOWN : isCompact ? icons_namespaceObject.Caret.Directions.LEFT : icons_namespaceObject.Caret.Directions.RIGHT,
-						className: category.Z.caret
-					})), !isCompact ? external_BdApi_React_default().createElement("div", {
-						className: category.Z.divider
-					}) : null, external_BdApi_React_default().createElement("div", {
-						className: category.Z.content
-					}, opened ? children : null));
-				}
-				Category.Looks = {
-					COMPACT: category.Z.compact,
-					DEFAULT: category.Z.default
-				};
-				var createUpdateWrapper_React = __webpack_require__(832);
-				function createUpdateWrapper_extends() {
-					createUpdateWrapper_extends = Object.assign || function(target) {
-						for (var i = 1; i < arguments.length; i++) {
-							var source = arguments[i];
-							for (var key in source)
-								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-						}
-						return target;
-					};
-					return createUpdateWrapper_extends.apply(this, arguments);
-				}
-				const createUpdateWrapper = (Component, valueProp = "value", changeProp = "onChange", valueIndex = 0) => props => {
-					const [value, setValue] = createUpdateWrapper_React.useState(props[valueProp]);
-					return createUpdateWrapper_React.createElement(Component, createUpdateWrapper_extends({}, props, {
-						[valueProp]: value,
-						[changeProp]: (...args) => {
-							const value = args[valueIndex];
-							if ("function" === typeof props[changeProp]) props[changeProp](value);
-							setValue(value);
-						}
-					}));
-				};
-				const hooks_createUpdateWrapper = createUpdateWrapper;
-				const forms_namespaceObject = Modules["@discord/forms"];
-				function Settings_extends() {
-					Settings_extends = Object.assign || function(target) {
-						for (var i = 1; i < arguments.length; i++) {
-							var source = arguments[i];
-							for (var key in source)
-								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-						}
-						return target;
-					};
-					return Settings_extends.apply(this, arguments);
-				}
-				const SwitchItem = hooks_createUpdateWrapper(external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("SwitchItem"));
-				const NotificationSetting = hooks_createUpdateWrapper(external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("NotificationSettings"), "position", "onChange", 1);
-				const otherSettings = {
-					ignoreSelf: {
-						value: false,
-						note: "Defines if logs about your own actions should be ignored.",
-						name: "Ignore yourself"
-					},
-					suppressInDnd: {
-						value: true,
-						note: "Suppress desktop notifications in DND, this automatically enables the In-App notification api.",
-						name: "Suppress in DND"
-					},
-					notifications: {
-						value: true,
-						note: "Defines if notifications should be shown when an event happens in your current call.",
-						name: "Notifications"
-					}
-				};
-				function SettingsPanel() {
-					return external_BdApi_React_default().createElement("div", null, external_BdApi_React_default().createElement(Category, {
-						label: "General",
-						look: Category.Looks.COMPACT
-					}, Object.keys(otherSettings).map((key => external_BdApi_React_default().createElement(SwitchItem, Settings_extends({}, otherSettings[key], {
-						value: settings.get(key, otherSettings[key].value),
-						onChange: value => {
-							settings.set(key, value);
-						}
-					}), otherSettings[key].name))), external_BdApi_React_default().createElement(forms_namespaceObject.FormItem, {
-						title: "InApp Notifications"
-					}, external_BdApi_React_default().createElement(NotificationSetting, {
-						position: settings.get("inappPosition", "topleft"),
-						onChange: value => settings.set("inappPosition", value)
-					}), external_BdApi_React_default().createElement(forms_namespaceObject.FormText, {
-						type: "description"
-					}, "Defines if notifications should be shown when an event happens in your current call."))), external_BdApi_React_default().createElement(Category, {
-						label: "Voice Updates",
-						look: Category.Looks.COMPACT
-					}, Object.keys(constants.VOICE_STATES).reduce(((items, key) => {
-						items.push(external_BdApi_React_default().createElement(SwitchItem, {
-							value: settings.get(key, true),
-							onChange: value => {
-								settings.set(key, value);
-							},
-							note: constants.VOICE_STATES[key].description
-						}, _.upperFirst(key)));
-						return items;
-					}), [])));
-				}
-				const external_Modules_react_spring_namespaceObject = Modules["react-spring"];
-				var notification_React = __webpack_require__(832);
-				function notification_extends() {
-					notification_extends = Object.assign || function(target) {
-						for (var i = 1; i < arguments.length; i++) {
-							var source = arguments[i];
-							for (var key in source)
-								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-						}
-						return target;
-					};
-					return notification_extends.apply(this, arguments);
-				}
-				const RemoveIcon = props => notification_React.createElement("svg", notification_extends({
-					width: "12",
-					height: "12",
-					viewBox: "0 0 24 24"
-				}, props), notification_React.createElement("path", {
-					fill: "currentColor",
-					d: "M18.4 4L12 10.4L5.6 4L4 5.6L10.4 12L4 18.4L5.6 20L12 13.6L18.4 20L20 18.4L13.6 12L20 5.6L18.4 4Z"
-				}));
-				function notification_Notification(props) {
-					const [closing, setClosing] = (0, external_BdApi_React_.useState)(false);
-					const timeout = (0, external_BdApi_React_.useMemo)((() => props.timeout || 5e3), []);
-					const spring = (0, external_Modules_react_spring_namespaceObject.useSpring)({
-						from: {
-							progress: 0,
-							backdrop: closing ? 10 : 0
-						},
-						to: {
-							progress: 100,
-							backdrop: closing ? 0 : 10
-						},
-						config: key => {
-							switch (key) {
-								case "progress":
-									return {
-										duration: timeout
-									};
-								default:
-									return {
-										duration: 250
-									};
-							}
-						}
-					});
-					return notification_React.createElement(external_Modules_react_spring_namespaceObject.animated.div, {
-						style: {
-							backdropFilter: spring.backdrop.to((e => {
-								if (closing && 0 === e && "function" === typeof props.onClose) props.onClose();
-								return `blur(${e}px)`;
-							}))
-						},
-						onMouseEnter: () => spring.progress.pause(),
-						onMouseLeave: () => spring.progress.resume(),
-						className: (0, utils_namespaceObject.joinClassNames)(notification.Z.container, {
-							closing
-						})
-					}, notification_React.createElement("div", {
-						className: notification.Z.content
-					}, props.content), notification_React.createElement(components_namespaceObject.Button, {
-						look: components_namespaceObject.Button.Looks.BLANK,
-						size: components_namespaceObject.Button.Sizes.NONE,
-						className: notification.Z.closeButton,
-						onClick: () => setClosing(true)
-					}, notification_React.createElement(RemoveIcon, null)), notification_React.createElement("div", {
-						className: notification.Z.progress
-					}, notification_React.createElement(external_Modules_react_spring_namespaceObject.animated.div, {
-						className: notification.Z.progressBar,
-						style: {
-							width: spring.progress.to((e => {
-								if (e > 97 && 0 !== props.timeout && !closing) setClosing(true);
-								return `${e}%`;
-							})),
-							backgroundColor: props.color
-						}
-					})));
-				}
-				const external_BdApi_ReactDOM_namespaceObject = BdApi.ReactDOM;
-				var external_BdApi_ReactDOM_default = __webpack_require__.n(external_BdApi_ReactDOM_namespaceObject);
-				var notifications_React = __webpack_require__(832);
-				function notifications_extends() {
-					notifications_extends = Object.assign || function(target) {
-						for (var i = 1; i < arguments.length; i++) {
-							var source = arguments[i];
-							for (var key in source)
-								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-						}
-						return target;
-					};
-					return notifications_extends.apply(this, arguments);
-				}
-				const [notifications_useStore, notifications_Api] = createStore({
-					notifications: {},
-					paused: false
-				});
-				const DOMNode = Object.assign(document.createElement("div"), {
-					id: "voicechatnotifications",
-					className: "VoiceChatNotifications-notification-" + settings.get("inappPosition", "topleft")
-				});
-				function initialize() {
-					external_BdApi_ReactDOM_default().render(notifications_React.createElement(VoiceNotifications, null), DOMNode);
-					document.getElementById("app-mount").appendChild(DOMNode);
-				}
-				function shutdown() {
-					const node = document.getElementById("voicechatnotifications");
-					if (!node) return false;
-					const didUnmount = external_BdApi_ReactDOM_default().unmountComponentAtNode(node);
-					if (didUnmount) node.remove();
-				}
-				function show(content, options = {}) {
-					const id = parseInt(Math.random().toString().slice(2, 16));
-					const props = {
-						id,
-						content,
-						...options,
-						onClose: () => {
-							notifications_Api.setState((state => {
-								delete state.notifications[id];
-								return {
-									...state
-								};
-							}));
-						}
-					};
-					notifications_Api.setState((state => ({
-						notifications: {
-							...state.notifications,
-							[id]: props
-						}
-					})));
-					return id;
-				}
-				settings.addChangeListener((() => {
-					const value = settings.get("inappPosition", "topleft");
-					DOMNode.className = "VoiceChatNotifications-notification-" + value;
-				}));
-				function VoiceNotifications() {
-					const state = notifications_useStore((e => Object.entries(e.notifications)));
-					return state.map((([id, props]) => notifications_React.createElement(notification_Notification, notifications_extends({}, props, {
-						key: id
-					}))));
-				}
-				const DiscordCommands = BdApi.findModuleByProps("BUILT_IN_COMMANDS");
-				const DiscordCommandTypes = BdApi.findModuleByProps("ApplicationCommandType");
-				const Types = DiscordCommandTypes.ApplicationCommandType;
-				const OptionTypes = DiscordCommandTypes.ApplicationCommandOptionType;
-				const PermissionTypes = DiscordCommandTypes.ApplicationCommandPermissionType;
-				if (!DiscordCommands.BUILT_IN_SECTIONS["betterdiscord"]) DiscordCommands.BUILT_IN_SECTIONS["betterdiscord"] = {
-					icon: "https://github.com/BetterDiscord.png",
-					id: "betterdiscord",
-					name: "BetterDiscord",
-					type: 0
-				};
-				function registerCommand(caller, options) {
-					const cmd = Object.assign({}, options, {
-						__registerId: caller,
-						applicationId: "betterdiscord",
-						type: Types.BOT,
-						target: 1
-					});
-					DiscordCommands.BUILT_IN_COMMANDS.push(cmd);
-					return () => {
-						const index = DiscordCommands.BUILT_IN_COMMANDS.indexOf(cmd);
-						if (index < 0) return false;
-						DiscordCommands.BUILT_IN_COMMANDS.splice(index, 1);
-					};
-				}
-				function unregisterAllCommands(caller) {
-					let index = DiscordCommands.BUILT_IN_COMMANDS.findIndex((cmd => cmd.__registerId === caller));
-					while (index > -1) {
-						DiscordCommands.BUILT_IN_COMMANDS.splice(index, 1);
-						index = DiscordCommands.BUILT_IN_COMMANDS.findIndex((cmd => cmd.__registerId === caller));
-					}
-				}
-				const Commands = {
-					registerCommand,
-					unregisterAllCommands
-				};
-				const commands = Commands;
-				const DefaultMessage = {
-					state: "SENT",
-					author: {
-						avatar: "betterdiscord",
-						id: "81388395867156480",
-						bot: true,
-						discriminator: "5000",
-						username: "BetterDiscord"
-					},
-					content: "Hello <:zere_zoom:477825238172958730>"
-				};
-				const MessageCreators = BdApi.findModuleByProps("createBotMessage");
-				const MessageActions = BdApi.findModuleByProps("receiveMessage");
-				const AvatarDefaults = BdApi.findModuleByProps("BOT_AVATARS");
-				if (AvatarDefaults?.BOT_AVATARS && !AvatarDefaults.BOT_AVATARS.betterdiscord) AvatarDefaults.BOT_AVATARS.betterdiscord = "https://github.com/BetterDiscord.png";
-				function sendMessage(channelId, message) {
-					MessageActions.receiveMessage(channelId, Object.assign({}, MessageCreators.createBotMessage(channelId, message?.content), DefaultMessage, message));
-				}
-				const Clyde = {
-					sendMessage,
-					DefaultMessage
-				};
-				const clyde = Clyde;
-				var VoiceChatNotifications_React = __webpack_require__(832);
-				function VoiceChatNotifications_defineProperty(obj, key, value) {
-					if (key in obj) Object.defineProperty(obj, key, {
-						value,
-						enumerable: true,
-						configurable: true,
-						writable: true
-					});
-					else obj[key] = value;
-					return obj;
-				}
-				const VoiceStateStore = external_PluginApi_namespaceObject.WebpackModules.getByProps("getVoiceStatesForChannel");
-				const SelectedVoiceChannelStore = external_PluginApi_namespaceObject.WebpackModules.getByProps("getVoiceChannelId");
-				const {
-					AnimatedAvatar,
-					Sizes: AvatarSizes
-				} = external_PluginApi_namespaceObject.WebpackModules.getByProps("AnimatedAvatar");
-				const MessageTimestamp = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("MessageTimestamp");
-				const Members = external_PluginApi_namespaceObject.WebpackModules.getByProps("getMember");
-				const SettingsStore = external_PluginApi_namespaceObject.WebpackModules.getByProps("getAllSettings");
-				class VoiceChatNotifications extends(external_BasePlugin_default()) {
-					constructor(...args) {
-						super(...args);
-						VoiceChatNotifications_defineProperty(this, "logs", []);
-						VoiceChatNotifications_defineProperty(this, "lastStates", {});
-						VoiceChatNotifications_defineProperty(this, "logsRef", VoiceChatNotifications_React.createRef());
-						VoiceChatNotifications_defineProperty(this, "currentVoiceChannelId", void 0);
-						VoiceChatNotifications_defineProperty(this, "openLogs", (() => {
-							(0, modal_namespaceObject.openModal)((props => VoiceChatNotifications_React.createElement(modal_namespaceObject.ModalRoot, props, VoiceChatNotifications_React.createElement(LogsPanel, null))));
-						}));
-						VoiceChatNotifications_defineProperty(this, "onVoiceStateChange", BdApi.suppressErrors((props => {
-							for (const update of props.voiceStates) {
-								let user = stores_namespaceObject.Users.getUser(update.userId) || {};
-								if (settings.get("ignoreSelf", false) && user.id === stores_namespaceObject.Users.getCurrentUser().id) return;
-								const pushToLog = message => {
-									const timestamp = new classes_namespaceObject.Timestamp(new Date);
-									const log = {
-										user,
-										timestamp,
-										message,
-										channelId: update.channelId
-									};
-									this.updateLogs(log);
-									LogsPanel.Store.setState((state => {
-										state.logs.unshift(log);
-										return {
-											logs: state.logs
-										};
-									}));
-								};
-								if (this.lastStates[update.userId] && !update.channelId && settings.get("leave", true)) {
-									pushToLog("Left the call.");
-									delete this.lastStates[update.userId];
-								}
-								if (!update.channelId || update.channelId !== this.currentVoiceChannelId) return;
-								if (!this.lastStates[update.userId]) {
-									if (settings.get("join", true)) pushToLog("Joined the call.");
-									this.lastStates[update.userId] = update;
-								} else {
-									if (_.isEqual(this.lastStates[update.userId], update)) return;
-									for (const prop in constants.VOICE_STATES) {
-										const value = constants.VOICE_STATES[prop];
-										const hasChanges = this.lastStates[update.userId][prop] !== update[prop];
-										if (settings.get(value.setting, true) && hasChanges) pushToLog(value.strings[Number(Boolean(update[prop]))]);
-									}
-									this.lastStates[update.userId] = update;
-								}
-							}
-						}), "VoiceChatNotifications.onVoiceStateChange"));
-						VoiceChatNotifications_defineProperty(this, "onSelect", (e => {
-							this.logs = [];
-							this.lastStates = {};
-							this.currentVoiceChannelId = e.channelId;
-						}));
-					}
-					get subscriptions() {
-						return [
-							[external_PluginApi_DiscordModules_namespaceObject.DiscordConstants.ActionTypes.VOICE_STATE_UPDATES, this.onVoiceStateChange],
-							[external_PluginApi_DiscordModules_namespaceObject.DiscordConstants.ActionTypes.VOICE_CHANNEL_SELECT, this.onSelect]
-						];
-					}
-					getSettingsPanel() {
-						return VoiceChatNotifications_React.createElement(SettingsPanel, null);
-					}
-					onStart() {
-						external_StyleLoader_default().inject();
-						initialize();
-						for (const [event, callback] of this.subscriptions) modules_namespaceObject.Dispatcher.subscribe(event, callback);
-						const selectedVoiceChannel = SelectedVoiceChannelStore.getVoiceChannelId();
-						if (selectedVoiceChannel) {
-							const state = VoiceStateStore.getVoiceStatesForChannel(selectedVoiceChannel);
-							if (!state) return;
-							Object.values(state).forEach((user => {
-								this.lastStates[user.userId] = user;
-							}));
-							this.currentVoiceChannelId = selectedVoiceChannel;
-						}
-						external_PluginApi_namespaceObject.Utilities.suppressErrors(this.patchHeaderBar.bind(this), "HeaderBar patch")();
-						commands.registerCommand(this.getName(), {
-							id: "disable-notifications",
-							type: 3,
-							name: "Disable VCN",
-							description: "Disables Voicechat notifications for this session.",
-							predicate: () => !LogsPanel.Store.getState().paused && this.currentVoiceChannelId,
-							options: [],
-							execute: (_, {
-								channel
-							}) => {
-								clyde.sendMessage(channel.id, {
-									content: "Hiding Voicechat notifications for now."
-								});
-								LogsPanel.Store.setState({
-									paused: true
-								});
-							}
-						});
-						commands.registerCommand(this.getName(), {
-							id: "enable-notifications",
-							type: 3,
-							name: "Enable VCN",
-							description: "Enables Voicechat notifications for this session again.",
-							predicate: () => LogsPanel.Store.getState().paused && this.currentVoiceChannelId,
-							options: [],
-							execute: (_, {
-								channel
-							}) => {
-								clyde.sendMessage(channel.id, {
-									content: "Showing Voicechat notifications again."
-								});
-								LogsPanel.Store.setState({
-									paused: false
-								});
-							}
-						});
-					}
-					async patchHeaderBar() {
-						const HeaderBarContainer = await external_PluginApi_namespaceObject.ReactComponents.getComponentByName("HeaderBarContainer", `.${external_PluginApi_namespaceObject.WebpackModules.getByProps("chat", "title", "uploadArea").title}`);
-						external_PluginApi_namespaceObject.Patcher.after(HeaderBarContainer.component.prototype, "render", (_this => {
-							const tree = external_PluginApi_namespaceObject.Utilities.getNestedProp(_this, "props.toolbar");
-							if (!Array.isArray(tree)) return;
-							try {
-								tree.unshift(VoiceChatNotifications_React.createElement(VoiceNotificationsButton, {
-									onClick: this.openLogs
-								}));
-							} catch (error) {
-								external_PluginApi_namespaceObject.Logger.error(`Failed to inject HeaderBarIcon!\n`, error);
-							}
-						}));
-						HeaderBarContainer.forceUpdateAll();
-					}
-					updateLogs({
-						message,
-						user,
-						timestamp,
-						channelId
-					}) {
-						if (!settings.get("notifications", true) || LogsPanel.Store.getState().paused) return;
-						const useInApp = settings.get("suppressInDnd", true) && "dnd" === SettingsStore.status || "disabled" !== settings.get("inappPosition", "topLeft");
-						if (useInApp) show(VoiceChatNotifications_React.createElement(VoiceChatNotifications_React.Fragment, null, VoiceChatNotifications_React.createElement(AnimatedAvatar, {
-							isMobile: false,
-							status: stores_namespaceObject.Status.getStatus(user.id),
-							isTyping: false,
-							src: user.getAvatarURL(),
-							size: AvatarSizes.SIZE_32
-						}), VoiceChatNotifications_React.createElement("div", {
-							className: notification.Z.wrapper
-						}, VoiceChatNotifications_React.createElement("div", {
-							className: notification.Z.header
-						}, VoiceChatNotifications_React.createElement("div", {
-							className: notification.Z.username
-						}, user.username), VoiceChatNotifications_React.createElement(MessageTimestamp, {
-							timestamp,
-							className: notification.Z.timestamp
-						})), VoiceChatNotifications_React.createElement("div", {
-							className: notification.Z.message
-						}, message))), {
-							color: Members.getMember(stores_namespaceObject.Channels.getChannel(channelId)?.guild_id, user.id)?.colorString
-						});
-						else {
-							const notification = new Notification(user.username + " - " + timestamp._d.toLocaleTimeString(), {
-								icon: user.getAvatarURL(),
-								body: message,
-								silent: true
-							});
-							notification.addEventListener("click", (() => this.openLogs()));
-						}
-					}
-					onStop() {
-						external_StyleLoader_default().remove();
-						external_PluginApi_namespaceObject.Patcher.unpatchAll();
-						commands.unregisterAllCommands(this.getName());
-						shutdown();
-						for (const [event, callack] of this.subscriptions) modules_namespaceObject.Dispatcher.unsubscribe(event, callack);
-					}
-				}
-			},
-			246: module => {
+			645: module => {
 				module.exports = function(cssWithMappingToString) {
 					var list = [];
-					list.toString = function() {
+					list.toString = function toString() {
 						return this.map((function(item) {
 							var content = cssWithMappingToString(item);
 							if (item[2]) return "@media ".concat(item[2], " {").concat(content, "}");
@@ -1114,7 +396,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					return list;
 				};
 			},
-			832: module => {
+			113: module => {
 				module.exports = BdApi.React;
 			}
 		};
@@ -1160,7 +442,723 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				});
 			};
 		})();
-		var __webpack_exports__ = __webpack_require__(856);
+		var __webpack_exports__ = {};
+		(() => {
+			__webpack_require__.r(__webpack_exports__);
+			__webpack_require__.d(__webpack_exports__, {
+				default: () => VoiceChatNotifications
+			});
+			const classes_namespaceObject = Modules["@discord/classes"];
+			const modal_namespaceObject = Modules["@discord/modal"];
+			const stores_namespaceObject = Modules["@discord/stores"];
+			const external_PluginApi_namespaceObject = PluginApi;
+			const external_BasePlugin_namespaceObject = BasePlugin;
+			var external_BasePlugin_default = __webpack_require__.n(external_BasePlugin_namespaceObject);
+			const components_namespaceObject = Modules["@discord/components"];
+			var components_button = __webpack_require__(36);
+			var React = __webpack_require__(113);
+			function _extends() {
+				_extends = Object.assign ? Object.assign.bind() : function(target) {
+					for (var i = 1; i < arguments.length; i++) {
+						var source = arguments[i];
+						for (var key in source)
+							if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
+					}
+					return target;
+				};
+				return _extends.apply(this, arguments);
+			}
+			function VoiceNotificationsButton(props) {
+				return React.createElement(components_namespaceObject.TooltipContainer, {
+					position: "bottom",
+					text: "Open VoiceLogs"
+				}, React.createElement("div", _extends({
+					className: components_button.Z.icon
+				}, props), React.createElement("svg", {
+					fill: "currentColor",
+					xmlns: "http://www.w3.org/2000/svg",
+					x: "0px",
+					y: "0px",
+					viewBox: "0 0 512 512",
+					width: "20",
+					height: "20"
+				}, React.createElement("g", null, React.createElement("path", {
+					d: "M299.389,412.924l-53.346,24.248c-5.285,2.402-10.87,3.62-16.602,3.62c-6.846,0-13.425-1.743-19.222-4.94   c-0.288,0.016-0.574,0.044-0.867,0.044H96.137c-8.284,0-15-6.716-15-15c0-8.284,6.716-15,15-15h93.655   c-0.938-7.26,0.133-14.757,3.285-21.69l3.777-8.31H96.137c-8.284,0-15-6.716-15-15c0-8.284,6.716-15,15-15H210.49l6.907-15.196   c0.018-0.04,0.038-0.072,0.057-0.11c1.471-3.201,3.502-6.151,6.041-8.69l6.005-6.004H96.137c-8.284,0-15-6.716-15-15   s6.716-15,15-15H259.5l30-29.999H96.137c-8.284,0-15-6.716-15-15c0-8.284,6.716-15,15-15H319.5l77.724-77.723l0.345-0.344V67.001   c0-8.284-6.716-15-15-15h-35V15c0-8.284-6.716-15-15-15c-8.284,0-15,6.716-15,15v37h-31.429V15c0-8.284-6.716-15-15-15   c-8.284,0-15,6.716-15,15v37H224.71V15c0-8.284-6.716-15-15-15c-8.284,0-15,6.716-15,15v37h-31.429V15c0-8.284-6.716-15-15-15   c-8.284,0-15,6.716-15,15v37h-31.429V15c0-8.284-6.716-15-15-15s-15,6.716-15,15v37H36.137c-8.284,0-15,6.716-15,15v400   c0,24.813,20.187,45,45,45h286.432c24.813,0,45-20.187,45-45V317.533l-89.221,89.22   C305.682,409.419,302.637,411.471,299.389,412.924z M209.71,195.897H96.137c-8.284,0-15-6.716-15-15c0-8.284,6.716-15,15-15H209.71   c8.284,0,15,6.716,15,15C224.71,189.182,217.994,195.897,209.71,195.897z"
+				}), React.createElement("path", {
+					d: "M397.224,190.6L244.708,343.114l-24.32,53.505c-3.824,8.412,4.83,17.065,13.242,13.242l53.505-24.32h0L439.65,233.026   L397.224,190.6L397.224,190.6z"
+				}), React.createElement("path", {
+					d: "M482.077,148.174c-11.716-11.716-30.711-11.716-42.426,0l-21.213,21.213l42.426,42.426l21.213-21.213   C493.792,178.884,493.792,159.89,482.077,148.174z"
+				})))));
+			}
+			const flux_namespaceObject = Modules["@discord/flux"];
+			const modules_namespaceObject = Modules["@discord/modules"];
+			function _defineProperty(obj, key, value) {
+				if (key in obj) Object.defineProperty(obj, key, {
+					value,
+					enumerable: true,
+					configurable: true,
+					writable: true
+				});
+				else obj[key] = value;
+				return obj;
+			}
+			class SettingsManager extends flux_namespaceObject.Store {
+				constructor(pluginName, defaultSettings = {}) {
+					super(modules_namespaceObject.Dispatcher, {});
+					_defineProperty(this, "settings", void 0);
+					_defineProperty(this, "pluginName", void 0);
+					_defineProperty(this, "get", ((key, defaultValue) => this.settings[key] ?? defaultValue));
+					_defineProperty(this, "set", ((key, value) => {
+						this.settings[key] = value;
+						external_PluginApi_namespaceObject.PluginUtilities.saveSettings(this.pluginName, this.settings);
+						this.emitChange();
+						return value;
+					}));
+					this.pluginName = pluginName;
+					this.settings = external_PluginApi_namespaceObject.PluginUtilities.loadSettings(pluginName, defaultSettings);
+				}
+			}
+			const package_namespaceObject = JSON.parse('{"um":{"u2":"VoiceChatNotifications"}}');
+			const Settings = new SettingsManager(package_namespaceObject.um.u2, {});
+			const settings = Settings;
+			var notification = __webpack_require__(713);
+			const external_StyleLoader_namespaceObject = StyleLoader;
+			var external_StyleLoader_default = __webpack_require__.n(external_StyleLoader_namespaceObject);
+			const external_PluginApi_DiscordModules_namespaceObject = PluginApi.DiscordModules;
+			const scrollbars_namespaceObject = Modules["@discord/scrollbars"];
+			var external_BdApi_React_ = __webpack_require__(113);
+			var external_BdApi_React_default = __webpack_require__.n(external_BdApi_React_);
+			function createStore(state) {
+				const listeners = new Set;
+				const api = {
+					getState() {
+						return state;
+					},
+					setState(partial) {
+						const partialState = "function" === typeof partial ? partial(state) : partial;
+						state = Object.assign({}, state, partialState);
+						listeners.forEach((listener => {
+							listener(state);
+						}));
+					},
+					get listeners() {
+						return listeners;
+					},
+					on(listener) {
+						if (listeners.has(listener)) return;
+						listeners.add(listener);
+						return () => listeners.delete(listener);
+					},
+					off(listener) {
+						return listeners.delete(listener);
+					}
+				};
+				return [function(collector = (_ => _)) {
+					const forceUpdate = (0, external_BdApi_React_.useReducer)((e => e + 1), 0)[1];
+					(0, external_BdApi_React_.useEffect)((() => {
+						const handler = () => forceUpdate();
+						listeners.add(handler);
+						return () => listeners.delete(handler);
+					}), []);
+					return collector(api.getState());
+				}, api];
+			}
+			var panel = __webpack_require__(865);
+			var panel_React = __webpack_require__(113);
+			const ChannelMessage = external_PluginApi_namespaceObject.WebpackModules.getModule((m => "ChannelMessage" === m?.type?.displayName));
+			const dummyChannel = new classes_namespaceObject.Channel({
+				name: "dumb-channel",
+				id: "-1"
+			});
+			const [useStore, Api] = createStore({
+				logs: []
+			});
+			function LogsPanel() {
+				const logs = useStore((s => s.logs));
+				if (!logs.length) return panel_React.createElement("b", {
+					className: panel.Z.empty
+				}, "Don't worry, the plugin isn't broken, nothing has happened yet.");
+				const formattedLogs = [];
+				let lastItem = null;
+				for (const item of logs) {
+					let isGroupStart = lastItem?.user?.id === item.user.id;
+					const message = new classes_namespaceObject.Message({
+						content: item.message,
+						timestamp: item.timestamp,
+						author: new classes_namespaceObject.User(item.user)
+					});
+					message.start = !isGroupStart;
+					formattedLogs.push(message);
+					lastItem = item;
+				}
+				return panel_React.createElement("div", null, panel_React.createElement(components_namespaceObject.Button, {
+					className: panel.Z.clearButton,
+					onClick: () => Api.setState({
+						logs: []
+					})
+				}, "Clear Logs"), panel_React.createElement(scrollbars_namespaceObject.ScrollerThin, {
+					className: panel.Z.contents
+				}, formattedLogs.map((message => panel_React.createElement("div", {
+					className: message.start && panel.Z.message
+				}, panel_React.createElement(ChannelMessage, {
+					message,
+					channel: dummyChannel,
+					isGroupStart: message.start
+				}))))));
+			}
+			LogsPanel.Store = Api;
+			const constants = {
+				VOICE_STATES: {
+					deaf: {
+						setting: "serverDeaf",
+						strings: ["Got Server undeafened", "Got Server deafened"],
+						description: "Fires if someone got server deafened/undeafened."
+					},
+					mute: {
+						setting: "serverMute",
+						strings: ["Got Server unmuted", "Got Server muted"],
+						description: "Fires if someone got server muted/unmuted."
+					},
+					selfDeaf: {
+						setting: "selfDeaf",
+						strings: ["Undeafened", "Deafened"],
+						description: "Fires if someone deafen/undeafen oneself."
+					},
+					selfMute: {
+						setting: "selfMute",
+						strings: ["Unmuted self.", "Muted self."],
+						description: "Fires if someone mutes/unmutes oneself."
+					},
+					selfStream: {
+						setting: "selfStream",
+						strings: ["Stopped streaming.", "Started streaming."],
+						description: "Fires if someone stopps/startes streaming."
+					},
+					selfVideo: {
+						setting: "selfVideo",
+						strings: ["Stopped screenshare.", "Started screenshare."],
+						description: "Fires if someone stopps/starts screensharing."
+					}
+				}
+			};
+			const icons_namespaceObject = Modules["@discord/icons"];
+			const utils_namespaceObject = Modules["@discord/utils"];
+			var category = __webpack_require__(911);
+			function Category({
+				label,
+				children,
+				className,
+				look = Category.Looks.DEFAULT
+			}) {
+				const [opened, toggle] = (0, external_BdApi_React_.useState)(false);
+				const isCompact = look === category.Z.compact;
+				return external_BdApi_React_default().createElement("div", {
+					className: (0, utils_namespaceObject.joinClassNames)(className, look, category.Z.category, {
+						[category.Z.opened]: opened
+					})
+				}, external_BdApi_React_default().createElement("div", {
+					className: category.Z.header,
+					onClick: () => toggle(!opened)
+				}, external_BdApi_React_default().createElement("div", {
+					className: category.Z.label
+				}, label), isCompact ? external_BdApi_React_default().createElement("div", {
+					className: category.Z.stroke
+				}) : null, external_BdApi_React_default().createElement(icons_namespaceObject.Caret, {
+					direction: opened ? icons_namespaceObject.Caret.Directions.DOWN : isCompact ? icons_namespaceObject.Caret.Directions.LEFT : icons_namespaceObject.Caret.Directions.RIGHT,
+					className: category.Z.caret
+				})), !isCompact ? external_BdApi_React_default().createElement("div", {
+					className: category.Z.divider
+				}) : null, external_BdApi_React_default().createElement("div", {
+					className: category.Z.content
+				}, opened ? children : null));
+			}
+			Category.Looks = {
+				COMPACT: category.Z.compact,
+				DEFAULT: category.Z["default"]
+			};
+			var createUpdateWrapper_React = __webpack_require__(113);
+			function createUpdateWrapper_extends() {
+				createUpdateWrapper_extends = Object.assign ? Object.assign.bind() : function(target) {
+					for (var i = 1; i < arguments.length; i++) {
+						var source = arguments[i];
+						for (var key in source)
+							if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
+					}
+					return target;
+				};
+				return createUpdateWrapper_extends.apply(this, arguments);
+			}
+			const createUpdateWrapper = (Component, valueProp = "value", changeProp = "onChange", valueIndex = 0) => props => {
+				const [value, setValue] = createUpdateWrapper_React.useState(props[valueProp]);
+				return createUpdateWrapper_React.createElement(Component, createUpdateWrapper_extends({}, props, {
+					[valueProp]: value,
+					[changeProp]: (...args) => {
+						const value = args[valueIndex];
+						if ("function" === typeof props[changeProp]) props[changeProp](value);
+						setValue(value);
+					}
+				}));
+			};
+			const hooks_createUpdateWrapper = createUpdateWrapper;
+			const forms_namespaceObject = Modules["@discord/forms"];
+			function Settings_extends() {
+				Settings_extends = Object.assign ? Object.assign.bind() : function(target) {
+					for (var i = 1; i < arguments.length; i++) {
+						var source = arguments[i];
+						for (var key in source)
+							if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
+					}
+					return target;
+				};
+				return Settings_extends.apply(this, arguments);
+			}
+			const SwitchItem = hooks_createUpdateWrapper(external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("SwitchItem"));
+			const NotificationSetting = hooks_createUpdateWrapper(external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("NotificationSettings"), "position", "onChange", 1);
+			const otherSettings = {
+				ignoreSelf: {
+					value: false,
+					note: "Defines if logs about your own actions should be ignored.",
+					name: "Ignore yourself"
+				},
+				suppressInDnd: {
+					value: true,
+					note: "Suppress desktop notifications in DND, this automatically enables the In-App notification api.",
+					name: "Suppress in DND"
+				},
+				notifications: {
+					value: true,
+					note: "Defines if notifications should be shown when an event happens in your current call.",
+					name: "Notifications"
+				}
+			};
+			function SettingsPanel() {
+				return external_BdApi_React_default().createElement("div", null, external_BdApi_React_default().createElement(Category, {
+					label: "General",
+					look: Category.Looks.COMPACT
+				}, Object.keys(otherSettings).map((key => external_BdApi_React_default().createElement(SwitchItem, Settings_extends({}, otherSettings[key], {
+					value: settings.get(key, otherSettings[key].value),
+					onChange: value => {
+						settings.set(key, value);
+					}
+				}), otherSettings[key].name))), external_BdApi_React_default().createElement(forms_namespaceObject.FormItem, {
+					title: "InApp Notifications"
+				}, external_BdApi_React_default().createElement(NotificationSetting, {
+					position: settings.get("inappPosition", "topleft"),
+					onChange: value => settings.set("inappPosition", value)
+				}), external_BdApi_React_default().createElement(forms_namespaceObject.FormText, {
+					type: "description"
+				}, "Defines if notifications should be shown when an event happens in your current call."))), external_BdApi_React_default().createElement(Category, {
+					label: "Voice Updates",
+					look: Category.Looks.COMPACT
+				}, Object.keys(constants.VOICE_STATES).reduce(((items, key) => {
+					items.push(external_BdApi_React_default().createElement(SwitchItem, {
+						value: settings.get(key, true),
+						onChange: value => {
+							settings.set(key, value);
+						},
+						note: constants.VOICE_STATES[key].description
+					}, _.upperFirst(key)));
+					return items;
+				}), [])));
+			}
+			const external_Modules_react_spring_namespaceObject = Modules["react-spring"];
+			var notification_React = __webpack_require__(113);
+			function notification_extends() {
+				notification_extends = Object.assign ? Object.assign.bind() : function(target) {
+					for (var i = 1; i < arguments.length; i++) {
+						var source = arguments[i];
+						for (var key in source)
+							if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
+					}
+					return target;
+				};
+				return notification_extends.apply(this, arguments);
+			}
+			const RemoveIcon = props => notification_React.createElement("svg", notification_extends({
+				width: "12",
+				height: "12",
+				viewBox: "0 0 24 24"
+			}, props), notification_React.createElement("path", {
+				fill: "currentColor",
+				d: "M18.4 4L12 10.4L5.6 4L4 5.6L10.4 12L4 18.4L5.6 20L12 13.6L18.4 20L20 18.4L13.6 12L20 5.6L18.4 4Z"
+			}));
+			function notification_Notification(props) {
+				const [closing, setClosing] = (0, external_BdApi_React_.useState)(false);
+				const timeout = (0, external_BdApi_React_.useMemo)((() => props.timeout || 5e3), []);
+				const spring = (0, external_Modules_react_spring_namespaceObject.useSpring)({
+					from: {
+						progress: 0,
+						backdrop: closing ? 10 : 0
+					},
+					to: {
+						progress: 100,
+						backdrop: closing ? 0 : 10
+					},
+					config: key => {
+						switch (key) {
+							case "progress":
+								return {
+									duration: timeout
+								};
+							default:
+								return {
+									duration: 250
+								};
+						}
+					}
+				});
+				return notification_React.createElement(external_Modules_react_spring_namespaceObject.animated.div, {
+					style: {
+						backdropFilter: spring.backdrop.to((e => {
+							if (closing && 0 === e && "function" === typeof props.onClose) props.onClose();
+							return `blur(${e}px)`;
+						}))
+					},
+					onMouseEnter: () => spring.progress.pause(),
+					onMouseLeave: () => spring.progress.resume(),
+					className: (0, utils_namespaceObject.joinClassNames)(notification.Z.container, {
+						closing
+					})
+				}, notification_React.createElement("div", {
+					className: notification.Z.content
+				}, props.content), notification_React.createElement(components_namespaceObject.Button, {
+					look: components_namespaceObject.Button.Looks.BLANK,
+					size: components_namespaceObject.Button.Sizes.NONE,
+					className: notification.Z.closeButton,
+					onClick: () => setClosing(true)
+				}, notification_React.createElement(RemoveIcon, null)), notification_React.createElement("div", {
+					className: notification.Z.progress
+				}, notification_React.createElement(external_Modules_react_spring_namespaceObject.animated.div, {
+					className: notification.Z.progressBar,
+					style: {
+						width: spring.progress.to((e => {
+							if (e > 97 && 0 !== props.timeout && !closing) setClosing(true);
+							return `${e}%`;
+						})),
+						backgroundColor: props.color
+					}
+				})));
+			}
+			const external_BdApi_ReactDOM_namespaceObject = BdApi.ReactDOM;
+			var external_BdApi_ReactDOM_default = __webpack_require__.n(external_BdApi_ReactDOM_namespaceObject);
+			var notifications_React = __webpack_require__(113);
+			function notifications_extends() {
+				notifications_extends = Object.assign ? Object.assign.bind() : function(target) {
+					for (var i = 1; i < arguments.length; i++) {
+						var source = arguments[i];
+						for (var key in source)
+							if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
+					}
+					return target;
+				};
+				return notifications_extends.apply(this, arguments);
+			}
+			const [notifications_useStore, notifications_Api] = createStore({
+				notifications: {},
+				paused: false
+			});
+			const DOMNode = Object.assign(document.createElement("div"), {
+				id: "voicechatnotifications",
+				className: "VoiceChatNotifications-notification-" + settings.get("inappPosition", "topleft")
+			});
+			function initialize() {
+				external_BdApi_ReactDOM_default().render(notifications_React.createElement(VoiceNotifications, null), DOMNode);
+				document.getElementById("app-mount").appendChild(DOMNode);
+			}
+			function shutdown() {
+				const node = document.getElementById("voicechatnotifications");
+				if (!node) return false;
+				const didUnmount = external_BdApi_ReactDOM_default().unmountComponentAtNode(node);
+				if (didUnmount) node.remove();
+			}
+			function show(content, options = {}) {
+				const id = parseInt(Math.random().toString().slice(2, 16));
+				const props = {
+					id,
+					content,
+					...options,
+					onClose: () => {
+						notifications_Api.setState((state => {
+							delete state.notifications[id];
+							return {
+								...state
+							};
+						}));
+					}
+				};
+				notifications_Api.setState((state => ({
+					notifications: {
+						...state.notifications,
+						[id]: props
+					}
+				})));
+				return id;
+			}
+			settings.addChangeListener((() => {
+				const value = settings.get("inappPosition", "topleft");
+				DOMNode.className = "VoiceChatNotifications-notification-" + value;
+			}));
+			function VoiceNotifications() {
+				const state = notifications_useStore((e => Object.entries(e.notifications)));
+				return state.map((([id, props]) => notifications_React.createElement(notification_Notification, notifications_extends({}, props, {
+					key: id
+				}))));
+			}
+			const DiscordCommands = BdApi.findModuleByProps("BUILT_IN_COMMANDS");
+			const DiscordCommandTypes = BdApi.findModuleByProps("ApplicationCommandType");
+			const Types = DiscordCommandTypes.ApplicationCommandType;
+			const OptionTypes = DiscordCommandTypes.ApplicationCommandOptionType;
+			const PermissionTypes = DiscordCommandTypes.ApplicationCommandPermissionType;
+			if (!DiscordCommands.BUILT_IN_SECTIONS["betterdiscord"]) DiscordCommands.BUILT_IN_SECTIONS["betterdiscord"] = {
+				icon: "https://github.com/BetterDiscord.png",
+				id: "betterdiscord",
+				name: "BetterDiscord",
+				type: 0
+			};
+			function registerCommand(caller, options) {
+				const cmd = Object.assign({}, options, {
+					__registerId: caller,
+					applicationId: "betterdiscord",
+					type: Types.BOT,
+					target: 1
+				});
+				DiscordCommands.BUILT_IN_COMMANDS.push(cmd);
+				return () => {
+					const index = DiscordCommands.BUILT_IN_COMMANDS.indexOf(cmd);
+					if (index < 0) return false;
+					DiscordCommands.BUILT_IN_COMMANDS.splice(index, 1);
+				};
+			}
+			function unregisterAllCommands(caller) {
+				let index = DiscordCommands.BUILT_IN_COMMANDS.findIndex((cmd => cmd.__registerId === caller));
+				while (index > -1) {
+					DiscordCommands.BUILT_IN_COMMANDS.splice(index, 1);
+					index = DiscordCommands.BUILT_IN_COMMANDS.findIndex((cmd => cmd.__registerId === caller));
+				}
+			}
+			const Commands = {
+				registerCommand,
+				unregisterAllCommands
+			};
+			const commands = Commands;
+			const DefaultMessage = {
+				state: "SENT",
+				author: {
+					avatar: "betterdiscord",
+					id: "81388395867156480",
+					bot: true,
+					discriminator: "5000",
+					username: "BetterDiscord"
+				},
+				content: "Hello <:zere_zoom:477825238172958730>"
+			};
+			const MessageCreators = BdApi.findModuleByProps("createBotMessage");
+			const MessageActions = BdApi.findModuleByProps("receiveMessage");
+			const AvatarDefaults = BdApi.findModuleByProps("BOT_AVATARS");
+			if (AvatarDefaults?.BOT_AVATARS && !AvatarDefaults.BOT_AVATARS.betterdiscord) AvatarDefaults.BOT_AVATARS.betterdiscord = "https://github.com/BetterDiscord.png";
+			function sendMessage(channelId, message) {
+				MessageActions.receiveMessage(channelId, Object.assign({}, MessageCreators.createBotMessage(channelId, message?.content), DefaultMessage, message));
+			}
+			const Clyde = {
+				sendMessage,
+				DefaultMessage
+			};
+			const clyde = Clyde;
+			var VoiceChatNotifications_React = __webpack_require__(113);
+			function VoiceChatNotifications_defineProperty(obj, key, value) {
+				if (key in obj) Object.defineProperty(obj, key, {
+					value,
+					enumerable: true,
+					configurable: true,
+					writable: true
+				});
+				else obj[key] = value;
+				return obj;
+			}
+			const VoiceStateStore = external_PluginApi_namespaceObject.WebpackModules.getByProps("getVoiceStatesForChannel");
+			const SelectedVoiceChannelStore = external_PluginApi_namespaceObject.WebpackModules.getByProps("getVoiceChannelId");
+			const {
+				AnimatedAvatar,
+				Sizes: AvatarSizes
+			} = external_PluginApi_namespaceObject.WebpackModules.getByProps("AnimatedAvatar");
+			const MessageTimestamp = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("MessageTimestamp");
+			const Members = external_PluginApi_namespaceObject.WebpackModules.getByProps("getMember");
+			const SettingsStore = external_PluginApi_namespaceObject.WebpackModules.getByProps("getAllSettings");
+			class VoiceChatNotifications extends(external_BasePlugin_default()) {
+				constructor(...args) {
+					super(...args);
+					VoiceChatNotifications_defineProperty(this, "logs", []);
+					VoiceChatNotifications_defineProperty(this, "lastStates", {});
+					VoiceChatNotifications_defineProperty(this, "logsRef", VoiceChatNotifications_React.createRef());
+					VoiceChatNotifications_defineProperty(this, "currentVoiceChannelId", void 0);
+					VoiceChatNotifications_defineProperty(this, "openLogs", (() => {
+						(0, modal_namespaceObject.openModal)((props => VoiceChatNotifications_React.createElement(modal_namespaceObject.ModalRoot, props, VoiceChatNotifications_React.createElement(LogsPanel, null))));
+					}));
+					VoiceChatNotifications_defineProperty(this, "onVoiceStateChange", BdApi.suppressErrors((props => {
+						for (const update of props.voiceStates) {
+							let user = stores_namespaceObject.Users.getUser(update.userId) || {};
+							if (settings.get("ignoreSelf", false) && user.id === stores_namespaceObject.Users.getCurrentUser().id) return;
+							const pushToLog = message => {
+								const timestamp = new classes_namespaceObject.Timestamp(new Date);
+								const log = {
+									user,
+									timestamp,
+									message,
+									channelId: update.channelId
+								};
+								this.updateLogs(log);
+								LogsPanel.Store.setState((state => {
+									state.logs.unshift(log);
+									return {
+										logs: state.logs
+									};
+								}));
+							};
+							if (this.lastStates[update.userId] && !update.channelId && settings.get("leave", true)) {
+								pushToLog("Left the call.");
+								delete this.lastStates[update.userId];
+							}
+							if (!update.channelId || update.channelId !== this.currentVoiceChannelId) return;
+							if (!this.lastStates[update.userId]) {
+								if (settings.get("join", true)) pushToLog("Joined the call.");
+								this.lastStates[update.userId] = update;
+							} else {
+								if (_.isEqual(this.lastStates[update.userId], update)) return;
+								for (const prop in constants.VOICE_STATES) {
+									const value = constants.VOICE_STATES[prop];
+									const hasChanges = this.lastStates[update.userId][prop] !== update[prop];
+									if (settings.get(value.setting, true) && hasChanges) pushToLog(value.strings[Number(Boolean(update[prop]))]);
+								}
+								this.lastStates[update.userId] = update;
+							}
+						}
+					}), "VoiceChatNotifications.onVoiceStateChange"));
+					VoiceChatNotifications_defineProperty(this, "onSelect", (e => {
+						this.logs = [];
+						this.lastStates = {};
+						this.currentVoiceChannelId = e.channelId;
+					}));
+				}
+				get subscriptions() {
+					return [
+						[external_PluginApi_DiscordModules_namespaceObject.DiscordConstants.ActionTypes.VOICE_STATE_UPDATES, this.onVoiceStateChange],
+						[external_PluginApi_DiscordModules_namespaceObject.DiscordConstants.ActionTypes.VOICE_CHANNEL_SELECT, this.onSelect]
+					];
+				}
+				getSettingsPanel() {
+					return VoiceChatNotifications_React.createElement(SettingsPanel, null);
+				}
+				onStart() {
+					external_StyleLoader_default().inject();
+					initialize();
+					for (const [event, callback] of this.subscriptions) modules_namespaceObject.Dispatcher.subscribe(event, callback);
+					const selectedVoiceChannel = SelectedVoiceChannelStore.getVoiceChannelId();
+					if (selectedVoiceChannel) {
+						const state = VoiceStateStore.getVoiceStatesForChannel(selectedVoiceChannel);
+						if (!state) return;
+						Object.values(state).forEach((user => {
+							this.lastStates[user.userId] = user;
+						}));
+						this.currentVoiceChannelId = selectedVoiceChannel;
+					}
+					external_PluginApi_namespaceObject.Utilities.suppressErrors(this.patchHeaderBar.bind(this), "HeaderBar patch")();
+					commands.registerCommand(this.getName(), {
+						id: "disable-notifications",
+						type: 3,
+						name: "Disable VCN",
+						description: "Disables Voicechat notifications for this session.",
+						predicate: () => !LogsPanel.Store.getState().paused && this.currentVoiceChannelId,
+						options: [],
+						execute: (_, {
+							channel
+						}) => {
+							clyde.sendMessage(channel.id, {
+								content: "Hiding Voicechat notifications for now."
+							});
+							LogsPanel.Store.setState({
+								paused: true
+							});
+						}
+					});
+					commands.registerCommand(this.getName(), {
+						id: "enable-notifications",
+						type: 3,
+						name: "Enable VCN",
+						description: "Enables Voicechat notifications for this session again.",
+						predicate: () => LogsPanel.Store.getState().paused && this.currentVoiceChannelId,
+						options: [],
+						execute: (_, {
+							channel
+						}) => {
+							clyde.sendMessage(channel.id, {
+								content: "Showing Voicechat notifications again."
+							});
+							LogsPanel.Store.setState({
+								paused: false
+							});
+						}
+					});
+				}
+				async patchHeaderBar() {
+					const HeaderBarContainer = external_PluginApi_namespaceObject.WebpackModules.getModule((m => "HeaderBarContainer" === m.default?.displayName));
+					external_PluginApi_namespaceObject.Patcher.after(HeaderBarContainer, "default", ((_, [props]) => {
+						const tree = props.toolbar;
+						if (!Array.isArray(tree)) return;
+						try {
+							tree.unshift(VoiceChatNotifications_React.createElement(VoiceNotificationsButton, {
+								onClick: this.openLogs
+							}));
+						} catch (error) {
+							external_PluginApi_namespaceObject.Logger.error(`Failed to inject HeaderBarIcon!\n`, error);
+						}
+					}));
+				}
+				updateLogs({
+					message,
+					user,
+					timestamp,
+					channelId
+				}) {
+					if (!settings.get("notifications", true) || LogsPanel.Store.getState().paused) return;
+					const useInApp = settings.get("suppressInDnd", true) && "dnd" === SettingsStore.status || "disabled" !== settings.get("inappPosition", "topLeft");
+					if (useInApp) show(VoiceChatNotifications_React.createElement(VoiceChatNotifications_React.Fragment, null, VoiceChatNotifications_React.createElement(AnimatedAvatar, {
+						isMobile: false,
+						status: stores_namespaceObject.Status.getStatus(user.id),
+						isTyping: false,
+						src: user.getAvatarURL(),
+						size: AvatarSizes.SIZE_32
+					}), VoiceChatNotifications_React.createElement("div", {
+						className: notification.Z.wrapper
+					}, VoiceChatNotifications_React.createElement("div", {
+						className: notification.Z.header
+					}, VoiceChatNotifications_React.createElement("div", {
+						className: notification.Z.username
+					}, user.username), VoiceChatNotifications_React.createElement(MessageTimestamp, {
+						timestamp,
+						className: notification.Z.timestamp
+					})), VoiceChatNotifications_React.createElement("div", {
+						className: notification.Z.message
+					}, message))), {
+						color: Members.getMember(stores_namespaceObject.Channels.getChannel(channelId)?.guild_id, user.id)?.colorString
+					});
+					else {
+						const notification = new Notification(user.username + " - " + timestamp._d.toLocaleTimeString(), {
+							icon: user.getAvatarURL(),
+							body: message,
+							silent: true
+						});
+						notification.addEventListener("click", (() => this.openLogs()));
+					}
+				}
+				onStop() {
+					external_StyleLoader_default().remove();
+					external_PluginApi_namespaceObject.Patcher.unpatchAll();
+					commands.unregisterAllCommands(this.getName());
+					shutdown();
+					for (const [event, callack] of this.subscriptions) modules_namespaceObject.Dispatcher.unsubscribe(event, callack);
+				}
+			}
+		})();
 		module.exports.LibraryPluginHack = __webpack_exports__;
 	})();
 	const PluginExports = module.exports.LibraryPluginHack;
