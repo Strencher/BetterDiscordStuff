@@ -1,7 +1,7 @@
 {
 	"info": {
 		"name": "VoiceChatNotifications",
-		"version": "1.2.1",
+		"version": "1.2.2",
 		"description": "Shows you certain events from voicechats in a logs panel or as desktop notification.",
 		"authors": [
 			{
@@ -18,8 +18,7 @@
 			"type": "fixed",
 			"title": "Fixes",
 			"items": [
-				"Discord update fixes #2",
-				"Fix typo"
+				"Fixed showing icon in the header bar."
 			]
 		}
 	],
