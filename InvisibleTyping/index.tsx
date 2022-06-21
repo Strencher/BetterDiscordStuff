@@ -45,7 +45,7 @@ export default class InvisibleTyping extends BasePlugin {
         type TextAreaButtonsProps = {type: string, channel: ChannelObject, disabled: boolean, handleSubmit: Function, isEmpty: boolean};
 
         const shouldShow = function (children: any[], props: TextAreaButtonsProps) {
-            if (props.type.analyticsName === "profile_bio_input") return false;
+            if (props.type?.analyticsName === "profile_bio_input") return false;
             if (!Array.isArray(children)) return false;
             if (children.some(child => child && child.type === InvisibleTyping)) return false;
             if (!canViewChannel(props.channel)) return false;
