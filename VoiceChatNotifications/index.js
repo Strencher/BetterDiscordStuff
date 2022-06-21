@@ -97,10 +97,10 @@ export default class VoiceChatNotifications extends BasePlugin {
 	}
 
 	async patchHeaderBar() {
-		const HeaderBarContainer = await ReactComponents.getComponentByName("HeaderBarContainer", `.${WebpackModules.getByProps("chat", "title", "uploadArea").title}`);
+		const HeaderBarContainer = WebpackModules.getModule(m => m.default?.displayName === "HeaderBarContainer");
 
-		Patcher.after(HeaderBarContainer.component.prototype, "render", _this => {
-			const tree = Utilities.getNestedProp(_this, "props.toolbar");
+		Patcher.after(HeaderBarContainer, "default", (_, [props]) => {
+			const tree = props.toolbar;
 			if (!Array.isArray(tree)) return;
 
 			try {
@@ -111,8 +111,6 @@ export default class VoiceChatNotifications extends BasePlugin {
 				Logger.error(`Failed to inject HeaderBarIcon!\n`, error);
 			}
 		});
-
-		HeaderBarContainer.forceUpdateAll();
 	}
 
 	updateLogs({message, user, timestamp, channelId}) {
