@@ -40,7 +40,7 @@ module.exports = (() => {
                     twitter_username: "Strencher3"
                 }
             ],
-            version: "0.0.3",
+            version: "0.0.4",
             description: "Suppresses mentions from Replied messages and when replying to someone else.",
             github: "https://github.com/Strencher/BetterDiscordStuff/blob/master/SuppressReplyMentions/SuppressReplyMentions.plugin.js",
             github_raw: "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/SuppressReplyMentions/SuppressReplyMentions.plugin.js"
@@ -53,6 +53,17 @@ module.exports = (() => {
             }
         ],
         defaultConfig: [
+            {
+                type: "dropdown",
+                id: "mentionSettings",
+                name: "Mention Settings for Replies",
+                value: 1,
+                options: [
+                    { label: "Default", value: 0 },
+                    { label: "Suppress Mentions", value: 1 },
+                    { label: "Force Mentions", value: 2 },
+                ]
+            },
             {
                 type: "switch",
                 id: "autoDisableMention",
@@ -117,7 +128,7 @@ module.exports = (() => {
 
                 patchMessageCreate() {
                     Patcher.before(DiscordModules.Dispatcher, "_dispatch", (_, [{message, type}]) => {
-                        if (type != ActionTypes.MESSAGE_CREATE) return;
+                        if (type != ActionTypes.MESSAGE_CREATE || this.settings.mentionSettings == 0) return;
                         const currentUser = UserUtils.getCurrentUser();
                         if (!currentUser || !Array.isArray(message.mentions) || !message.referenced_message) return;
 
@@ -127,9 +138,17 @@ module.exports = (() => {
                         }
 
                         const mentionIndex = message.mentions.findIndex(e => e.id === currentUser.id);
-                        if (message.referenced_message.author.id === currentUser.id && mentionIndex > -1) {
-                            message.mentions.splice(mentionIndex, 1);
-                            suppressed.push(message.id);
+
+                        if (this.settings.mentionSettings == 1) {
+                            if (message.referenced_message.author.id === currentUser.id && mentionIndex > -1) {
+                                message.mentions.splice(mentionIndex, 1);
+                                suppressed.push(message.id);
+                            }
+    
+                        } else if (this.settings.mentionSettings == 2) {
+                            if (message.referenced_message.author.id === currentUser.id && mentionIndex === -1) {
+                                message.mentions.push(currentUser);
+                            }
                         }
                     });
                 }
