@@ -81,6 +81,21 @@ const getBannerURL = function (user: User, animated = false) {
     }
 };
 
+// Should return the Guild Banner. But idk how
+const getGuildBannerURL = function (user: User, animated = false) {
+    try {
+        return AssetUtils.getUserBannerURL({
+            id: user.id,
+            canAnimate: animated,
+            banner: user.banner,
+            size: 300
+        });
+    } catch (error) {
+        Logger.error("Could not get banner url of " + user.tag, error);
+        return "";
+    }
+};
+
 export default class UserBackgrounds extends BasePlugin {
     public Store = BannerStore;
 
@@ -121,10 +136,10 @@ export default class UserBackgrounds extends BasePlugin {
 
         function BannerContainer({user, bannerType, children}: params) {
             const banner: banner = useStateFromStores([BannerStore], () => BannerStore.getBanner(user.id), null, _.isEqual);
-            const [selection, setSelection] = useState(banner == null ? 1 : 0);
+            const [selection, setSelection] = useState(user.banner == null ? user.banner == null ? 2 : 1 : 0 ); // Check if User has Guild Banner if not check if User has Nitro Banner if not use USRBG
             const ref = useRef(null);
-            const currentBanner = useMemo(() => (selection === 1 || banner == null) ? getBannerURL(user, true) : banner?.background, [banner, user, selection]);
-            const currentOrientation = useMemo(() => (banner != null && selection === 0) ? banner.orientation : void 0, [banner, selection]);
+            const currentBanner = useMemo(() => ((selection === 0 || banner == null) && user.banner) ? getGuildBannerURL(user, true) : (selection === 1 || banner == null) ? getBannerURL(user, true) : banner?.background, [banner, user, selection]);
+            const currentOrientation = useMemo(() => (banner != null && selection === 2) ? banner.orientation : void 0, [banner, selection]);
 
             if (!user.banner && !banner) return children;
             children.props["data-user-id"] = user.id; // make theme devs happy
@@ -176,7 +191,7 @@ export default class UserBackgrounds extends BasePlugin {
 
             return (
                 <div className={styles.container} onContextMenu={handleContextMenu}>
-                    <TextBadge color={Colors.BRAND_NEW_500} text={selection === 0 ? "USRBG" : "NATIVE"} className={styles.badge} />
+                    <TextBadge color={Colors.BRAND_NEW_500} text={selection === 0 ? "GUILD" : selection === 1 ? "NATIVE" : "USRBG"} className={styles.badge} />
                     {
                         (banner != null && user.banner != null) && (
                             <Button
@@ -184,7 +199,7 @@ export default class UserBackgrounds extends BasePlugin {
                                 key="left"
                                 look={Button.Looks.BLANK}
                                 size={Button.Sizes.TINY}
-                                onClick={setSelection.bind(null, 0)}
+                                onClick={selection === 1 ? setSelection.bind(null, 0) : setSelection.bind(null, 1)}
                                 disabled={selection === 0 || user.banner == null}
                             >
                                 <Arrow direction={Arrow.Directions.LEFT} />
@@ -199,8 +214,8 @@ export default class UserBackgrounds extends BasePlugin {
                                 key="right"
                                 look={Button.Looks.BLANK}
                                 size={Button.Sizes.TINY}
-                                onClick={setSelection.bind(null, 1)}
-                                disabled={selection === 1 || banner == null}
+                                onClick={selection === 0 ? setSelection.bind(null, 1) : setSelection.bind(null, 2)}
+                                disabled={selection === 2 || user.banner == null || banner == null}
                             >
                                 <Arrow direction={Arrow.Directions.RIGHT} key="right" />
                             </Button>
