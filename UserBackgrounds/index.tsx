@@ -83,12 +83,11 @@ const getBannerURL = function (user: User, animated = false) {
 
 const getGuildBannerURL = function (user: User, guildId, animated = false) {
     try {
-        const guildMember = DiscordModules.GuildMemberStore.getMember(guildId, user.id);
         return AssetUtils.getGuildMemberBannerURL({
-            id: user.id,
+            id: user.userId,
             canAnimate: animated,
             guildId: guildId,
-            banner: guildMember.banner,
+            banner: user.banner,
             size: 300
         });
     } catch (error) {
@@ -136,10 +135,11 @@ export default class UserBackgrounds extends BasePlugin {
         };
 
         function BannerContainer({user, guildId, bannerType, children}: params) {
+            const guildMember = DiscordModules.GuildMemberStore.getMember(guildId, user.id);
             const banner: banner = useStateFromStores([BannerStore], () => BannerStore.getBanner(user.id), null, _.isEqual);
-            const [selection, setSelection] = useState(user.banner == null ? user.banner == null ? 2 : 1 : 0 ); // Check if User has Guild Banner if not check if User has Nitro Banner if not use USRBG
+            const [selection, setSelection] = useState(guildMember.banner == null ? user.banner == null ? 2 : 1 : 0 );
             const ref = useRef(null);
-            const currentBanner = useMemo(() => ((selection === 0 || banner == null) && user.banner) ? getGuildBannerURL(user, guildId, true) : (selection === 1 || banner == null) ? getBannerURL(user, true) : banner?.background, [banner, user, selection]);
+            const currentBanner = useMemo(() => ((selection === 0 || banner == null) && guildMember.banner) ? getGuildBannerURL(guildMember, guildId, true) : (selection === 1 || banner == null) ? getBannerURL(user, true) : banner?.background, [banner, user, selection]);
             const currentOrientation = useMemo(() => (banner != null && selection === 2) ? banner.orientation : void 0, [banner, selection]);
 
             if (!user.banner && !banner) return children;
