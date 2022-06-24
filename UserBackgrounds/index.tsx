@@ -83,11 +83,12 @@ const getBannerURL = function (user: User, animated = false) {
 
 const getGuildBannerURL = function (user: User, guildId, animated = false) {
     try {
+        const guildMember = DiscordModules.GuildMemberStore.getMember(guildId, user.id);
         return AssetUtils.getGuildMemberBannerURL({
             id: user.id,
             canAnimate: animated,
             guildId: guildId,
-            banner: user.banner,
+            banner: guildMember.banner,
             size: 300
         });
     } catch (error) {
