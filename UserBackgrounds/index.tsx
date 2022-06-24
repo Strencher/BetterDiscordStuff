@@ -81,12 +81,12 @@ const getBannerURL = function (user: User, animated = false) {
     }
 };
 
-// Should return the Guild Banner. But idk how
-const getGuildBannerURL = function (user: User, animated = false) {
+const getGuildBannerURL = function (user: User, guildId, animated = false) {
     try {
-        return AssetUtils.getUserBannerURL({
+        return AssetUtils.getGuildMemberBannerURL({
             id: user.id,
             canAnimate: animated,
+            guildId: guildId,
             banner: user.banner,
             size: 300
         });
@@ -134,11 +134,11 @@ export default class UserBackgrounds extends BasePlugin {
             children: React.ReactElement;
         };
 
-        function BannerContainer({user, bannerType, children}: params) {
+        function BannerContainer({user, guildId, bannerType, children}: params) {
             const banner: banner = useStateFromStores([BannerStore], () => BannerStore.getBanner(user.id), null, _.isEqual);
             const [selection, setSelection] = useState(user.banner == null ? user.banner == null ? 2 : 1 : 0 ); // Check if User has Guild Banner if not check if User has Nitro Banner if not use USRBG
             const ref = useRef(null);
-            const currentBanner = useMemo(() => ((selection === 0 || banner == null) && user.banner) ? getGuildBannerURL(user, true) : (selection === 1 || banner == null) ? getBannerURL(user, true) : banner?.background, [banner, user, selection]);
+            const currentBanner = useMemo(() => ((selection === 0 || banner == null) && user.banner) ? getGuildBannerURL(user, guildId, true) : (selection === 1 || banner == null) ? getBannerURL(user, true) : banner?.background, [banner, user, selection]);
             const currentOrientation = useMemo(() => (banner != null && selection === 2) ? banner.orientation : void 0, [banner, selection]);
 
             if (!user.banner && !banner) return children;
