@@ -81,7 +81,7 @@ const getBannerURL = function (user: User, animated = false) {
     }
 };
 
-const getGuildBannerURL = function (user: User, guildId, animated = false) {
+const getGuildBannerURL = function (user: User, guildId: string, animated = false) {
     try {
         return AssetUtils.getGuildMemberBannerURL({
             id: user.userId,
@@ -135,11 +135,11 @@ export default class UserBackgrounds extends BasePlugin {
         };
 
         function BannerContainer({user, guildId, bannerType, children}: params) {
-            const guildMember = DiscordModules.GuildMemberStore.getMember(guildId, user.id);
+            const guildMember = useStateFromStores([DiscordModules.GuildMemberStore], () => DiscordModules.GuildMemberStore.getMember(guildId, user.id));
             const banner: banner = useStateFromStores([BannerStore], () => BannerStore.getBanner(user.id), null, _.isEqual);
             const [selection, setSelection] = useState(guildMember?.banner == null ? user.banner == null ? 2 : 1 : 0 );
             const ref = useRef(null);
-            const currentBanner = useMemo(() => ((selection === 0 || banner == null) && guildMember?.banner) ? getGuildBannerURL(guildMember, guildId, true) : (selection === 1 || banner == null) ? getBannerURL(user, true) : banner?.background, [banner, user, selection]);
+            const currentBanner = useMemo(() => ((selection === 0 || banner == null) && guildMember?.banner) ? getGuildBannerURL(guildMember, guildId!, true) : (selection === 1 || banner == null) ? getBannerURL(user, true) : banner?.background, [banner, user, selection]);
             const currentOrientation = useMemo(() => (banner != null && selection === 2) ? banner.orientation : void 0, [banner, selection]);
 
             if (!user.banner && !banner) return children;
@@ -200,7 +200,7 @@ export default class UserBackgrounds extends BasePlugin {
                                 key="left"
                                 look={Button.Looks.BLANK}
                                 size={Button.Sizes.TINY}
-                                onClick={selection === 1 ? setSelection.bind(null, 0) : setSelection.bind(null, 1)}
+                                onClick={setSelection.bind(null, selection === 1 ? 0 : 1)}
                                 disabled={selection === 0 || user.banner == null}
                             >
                                 <Arrow direction={Arrow.Directions.LEFT} />
@@ -215,7 +215,7 @@ export default class UserBackgrounds extends BasePlugin {
                                 key="right"
                                 look={Button.Looks.BLANK}
                                 size={Button.Sizes.TINY}
-                                onClick={selection === 0 ? setSelection.bind(null, 1) : setSelection.bind(null, 2)}
+                                onClick={setSelection.bind(null, selection === 0 ? 1 : 2)}
                                 disabled={selection === 2 || user.banner == null || banner == null}
                             >
                                 <Arrow direction={Arrow.Directions.RIGHT} key="right" />
