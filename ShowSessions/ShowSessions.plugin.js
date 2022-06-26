@@ -1,6 +1,6 @@
 /**
  * @name ShowSessions
- * @version 1.3.1
+ * @version 1.3.2
  * @description Shows your current sessions with a chat command '/sessions' or in the accounts panel.
  * @author Strencher
  * @source https://github.com/Strencher/BetterDiscordStuff/tree/master/ShowSessions
@@ -32,7 +32,7 @@
 const config = {
 	"info": {
 		"name": "ShowSessions",
-		"version": "1.3.1",
+		"version": "1.3.2",
 		"description": "Shows your current sessions with a chat command '/sessions' or in the accounts panel.",
 		"authors": [{
 			"name": "Strencher",
@@ -46,7 +46,7 @@ const config = {
 		"type": "fixed",
 		"title": "Fixes",
 		"items": [
-			"Fixed crashing when opening the modal."
+			"Fixed crashing when typing something in chat."
 		]
 	}],
 	"build": {
@@ -721,7 +721,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			}
 			var modal = __webpack_require__(602);
 			function _extends() {
-				_extends = Object.assign || function(target) {
+				_extends = Object.assign ? Object.assign.bind() : function(target) {
 					for (var i = 1; i < arguments.length; i++) {
 						var source = arguments[i];
 						for (var key in source)
@@ -928,7 +928,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			};
 			var components_settings = __webpack_require__(354);
 			function Settings_extends() {
-				Settings_extends = Object.assign || function(target) {
+				Settings_extends = Object.assign ? Object.assign.bind() : function(target) {
 					for (var i = 1; i < arguments.length; i++) {
 						var source = arguments[i];
 						for (var key in source)
@@ -1079,7 +1079,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			};
 			var React = __webpack_require__(113);
 			function ShowSessions_extends() {
-				ShowSessions_extends = Object.assign || function(target) {
+				ShowSessions_extends = Object.assign ? Object.assign.bind() : function(target) {
 					for (var i = 1; i < arguments.length; i++) {
 						var source = arguments[i];
 						for (var key in source)
@@ -1137,6 +1137,9 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						__registerId: this.getName(),
 						applicationId: "betterdiscord",
 						name: "sessions",
+						get displayName() {
+							return this.name;
+						},
 						description: "Shows your account's active sessions.",
 						id: "get-sessions",
 						type: 1,
