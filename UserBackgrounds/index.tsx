@@ -139,7 +139,11 @@ export default class UserBackgrounds extends BasePlugin {
             const banner: banner = useStateFromStores([BannerStore], () => BannerStore.getBanner(user.id), null, _.isEqual);
             const [selection, setSelection] = useState(guildMember?.banner == null ? user.banner == null ? 2 : 1 : 0 );
             const ref = useRef(null);
-            const currentBanner = useMemo(() => ((selection === 0 || banner == null) && guildMember?.banner) ? getGuildBannerURL(guildMember, guildId!, true) : (selection === 1 || banner == null) ? getBannerURL(user, true) : banner?.background, [banner, user, selection]);
+            const currentBanner = useMemo(() => {
+                if (selection === 0 && guildMember?.banner) return getGuildBannerURL(guildMember, guildId!, true)
+                else if (selection === 1 || guildMember?.banner == null) return getBannerURL(user, true)
+                else return banner?.background
+            }, [banner, user, selection]);
             const currentOrientation = useMemo(() => (banner != null && selection === 2) ? banner.orientation : void 0, [banner, selection]);
 
             if (!user.banner && !banner) return children;
@@ -201,7 +205,7 @@ export default class UserBackgrounds extends BasePlugin {
                                 look={Button.Looks.BLANK}
                                 size={Button.Sizes.TINY}
                                 onClick={setSelection.bind(null, selection === 1 ? 0 : 1)}
-                                disabled={selection === 0 || user.banner == null}
+                                disabled={selection === 0 || selection == 1 && guildMember?.banner == null || user.banner == null}
                             >
                                 <Arrow direction={Arrow.Directions.LEFT} />
                             </Button>
