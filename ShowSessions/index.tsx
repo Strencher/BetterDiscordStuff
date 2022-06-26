@@ -58,6 +58,7 @@ export default class ShowSessions extends BasePlugin {
 			__registerId: this.getName(),
 			applicationId: "betterdiscord",
 			name: "sessions",
+			get displayName() {return this.name;},
 			description: "Shows your account's active sessions.",
 			id: "get-sessions",
 			type: 1, // Thanks to JadeMin
