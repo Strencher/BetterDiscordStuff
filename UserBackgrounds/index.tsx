@@ -141,7 +141,7 @@ export default class UserBackgrounds extends BasePlugin {
             const ref = useRef(null);
             const currentBanner = useMemo(() => {
                 if (selection === 0 && guildMember?.banner) return getGuildBannerURL(guildMember, guildId!, true)
-                else if (selection === 1 || guildMember?.banner == null) return getBannerURL(user, true)
+                else if (selection === 1 && user.banner) return getBannerURL(user, true)
                 else return banner?.background
             }, [banner, user, selection]);
             const currentOrientation = useMemo(() => (banner != null && selection === 2) ? banner.orientation : void 0, [banner, selection]);
