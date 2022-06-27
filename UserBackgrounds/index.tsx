@@ -81,6 +81,21 @@ const getBannerURL = function (user: User, animated = false) {
     }
 };
 
+const getGuildBannerURL = function (user: User, guildId: string, animated = false) {
+    try {
+        return AssetUtils.getGuildMemberBannerURL({
+            id: user.userId,
+            canAnimate: animated,
+            guildId: guildId,
+            banner: user.banner,
+            size: 300
+        });
+    } catch (error) {
+        Logger.error("Could not get banner url of " + user.tag, error);
+        return "";
+    }
+};
+
 export default class UserBackgrounds extends BasePlugin {
     public Store = BannerStore;
 
@@ -119,12 +134,17 @@ export default class UserBackgrounds extends BasePlugin {
             children: React.ReactElement;
         };
 
-        function BannerContainer({user, bannerType, children}: params) {
+        function BannerContainer({user, guildId, bannerType, children}: params) {
+            const guildMember = useStateFromStores([DiscordModules.GuildMemberStore], () => DiscordModules.GuildMemberStore.getMember(guildId, user.id));
             const banner: banner = useStateFromStores([BannerStore], () => BannerStore.getBanner(user.id), null, _.isEqual);
-            const [selection, setSelection] = useState(banner == null ? 1 : 0);
+            const [selection, setSelection] = useState(guildMember?.banner == null ? user.banner == null ? 2 : 1 : 0 );
             const ref = useRef(null);
-            const currentBanner = useMemo(() => (selection === 1 || banner == null) ? getBannerURL(user, true) : banner?.background, [banner, user, selection]);
-            const currentOrientation = useMemo(() => (banner != null && selection === 0) ? banner.orientation : void 0, [banner, selection]);
+            const currentBanner = useMemo(() => {
+                if (selection === 0 && guildMember?.banner) return getGuildBannerURL(guildMember, guildId!, true)
+                else if (selection === 1 && user.banner) return getBannerURL(user, true)
+                else return banner?.background
+            }, [banner, user, selection]);
+            const currentOrientation = useMemo(() => (banner != null && selection === 2) ? banner.orientation : void 0, [banner, selection]);
 
             if (!user.banner && !banner) return children;
             children.props["data-user-id"] = user.id; // make theme devs happy
@@ -176,7 +196,7 @@ export default class UserBackgrounds extends BasePlugin {
 
             return (
                 <div className={styles.container} onContextMenu={handleContextMenu}>
-                    <TextBadge color={Colors.BRAND_NEW_500} text={selection === 0 ? "USRBG" : "NATIVE"} className={styles.badge} />
+                    <TextBadge color={Colors.BRAND_NEW_500} text={selection === 0 ? "GUILD" : selection === 1 ? "NATIVE" : "USRBG"} className={styles.badge} />
                     {
                         (banner != null && user.banner != null) && (
                             <Button
@@ -184,8 +204,8 @@ export default class UserBackgrounds extends BasePlugin {
                                 key="left"
                                 look={Button.Looks.BLANK}
                                 size={Button.Sizes.TINY}
-                                onClick={setSelection.bind(null, 0)}
-                                disabled={selection === 0 || user.banner == null}
+                                onClick={setSelection.bind(null, selection === 1 ? 0 : 1)}
+                                disabled={selection === 0 || selection == 1 && guildMember?.banner == null || user.banner == null}
                             >
                                 <Arrow direction={Arrow.Directions.LEFT} />
                             </Button>
@@ -199,8 +219,8 @@ export default class UserBackgrounds extends BasePlugin {
                                 key="right"
                                 look={Button.Looks.BLANK}
                                 size={Button.Sizes.TINY}
-                                onClick={setSelection.bind(null, 1)}
-                                disabled={selection === 1 || banner == null}
+                                onClick={setSelection.bind(null, selection === 0 ? 1 : 2)}
+                                disabled={selection === 2 || user.banner == null || banner == null}
                             >
                                 <Arrow direction={Arrow.Directions.RIGHT} key="right" />
                             </Button>
