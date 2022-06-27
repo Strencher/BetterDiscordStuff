@@ -615,6 +615,20 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					return "";
 				}
 			};
+			const getGuildBannerURL = function(user, guildId, animated = false) {
+				try {
+					return AssetUtils.getGuildMemberBannerURL({
+						id: user.userId,
+						canAnimate: animated,
+						guildId,
+						banner: user.banner,
+						size: 300
+					});
+				} catch (error) {
+					external_PluginApi_namespaceObject.Logger.error("Could not get banner url of " + user.tag, error);
+					return "";
+				}
+			};
 			class UserBackgrounds extends(external_BasePlugin_default()) {
 				constructor(...args) {
 					super(...args);
@@ -643,14 +657,20 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					const UserBanner = external_PluginApi_namespaceObject.WebpackModules.getModule((m => "UserBanner" === m.default.displayName));
 					function BannerContainer({
 						user,
+						guildId,
 						bannerType,
 						children
 					}) {
+						const guildMember = (0, flux_namespaceObject.useStateFromStores)([external_PluginApi_namespaceObject.DiscordModules.GuildMemberStore], (() => external_PluginApi_namespaceObject.DiscordModules.GuildMemberStore.getMember(guildId, user.id)));
 						const banner = (0, flux_namespaceObject.useStateFromStores)([bannerStore], (() => bannerStore.getBanner(user.id)), null, external_window_default().isEqual);
-						const [selection, setSelection] = (0, external_BdApi_React_namespaceObject.useState)(null == banner ? 1 : 0);
+						const [selection, setSelection] = (0, external_BdApi_React_namespaceObject.useState)(null == guildMember?.banner ? null == user.banner ? 2 : 1 : 0);
 						const ref = (0, external_BdApi_React_namespaceObject.useRef)(null);
-						const currentBanner = (0, external_BdApi_React_namespaceObject.useMemo)((() => 1 === selection || null == banner ? getBannerURL(user, true) : banner?.background), [banner, user, selection]);
-						const currentOrientation = (0, external_BdApi_React_namespaceObject.useMemo)((() => null != banner && 0 === selection ? banner.orientation : void 0), [banner, selection]);
+						const currentBanner = (0, external_BdApi_React_namespaceObject.useMemo)((() => {
+							if (0 === selection && guildMember?.banner) return getGuildBannerURL(guildMember, guildId, true);
+							else if (1 === selection && user.banner) return getBannerURL(user, true);
+							else return banner?.background;
+						}), [banner, user, selection]);
+						const currentOrientation = (0, external_BdApi_React_namespaceObject.useMemo)((() => null != banner && 2 === selection ? banner.orientation : void 0), [banner, selection]);
 						if (!user.banner && !banner) return children;
 						children.props["data-user-id"] = user.id;
 						children.props.className = switchCase(bannerType, [
@@ -683,15 +703,15 @@ function buildPlugin([BasePlugin, PluginApi]) {
 							}
 						}, external_BdApi_React_default().createElement(TextBadge, {
 							color: constants_namespaceObject.Colors.BRAND_NEW_500,
-							text: 0 === selection ? "USRBG" : "NATIVE",
+							text: 0 === selection ? "GUILD" : 1 === selection ? "NATIVE" : "USRBG",
 							className: UserBackgrounds_banner.Z.badge
 						}), null != banner && null != user.banner && external_BdApi_React_default().createElement(components_namespaceObject.Button, {
 							className: external_PluginApi_namespaceObject.Utilities.className(UserBackgrounds_banner.Z.arrow, UserBackgrounds_banner.Z.left),
 							key: "left",
 							look: components_namespaceObject.Button.Looks.BLANK,
 							size: components_namespaceObject.Button.Sizes.TINY,
-							onClick: setSelection.bind(null, 0),
-							disabled: 0 === selection || null == user.banner
+							onClick: setSelection.bind(null, 1 === selection ? 0 : 1),
+							disabled: 0 === selection || 1 == selection && null == guildMember?.banner || null == user.banner
 						}, external_BdApi_React_default().createElement(Arrow, {
 							direction: Arrow.Directions.LEFT
 						})), children, null != banner && null != user.banner && external_BdApi_React_default().createElement(components_namespaceObject.Button, {
@@ -699,8 +719,8 @@ function buildPlugin([BasePlugin, PluginApi]) {
 							key: "right",
 							look: components_namespaceObject.Button.Looks.BLANK,
 							size: components_namespaceObject.Button.Sizes.TINY,
-							onClick: setSelection.bind(null, 1),
-							disabled: 1 === selection || null == banner
+							onClick: setSelection.bind(null, 0 === selection ? 1 : 2),
+							disabled: 2 === selection || null == user.banner || null == banner
 						}, external_BdApi_React_default().createElement(Arrow, {
 							direction: Arrow.Directions.RIGHT,
 							key: "right"
