@@ -40,7 +40,7 @@ const config = {
                 twitter_username: "Strencher3"
             }
         ],
-        version: "1.4.1",
+        version: "1.5.0",
         description: "Allows you to copy certain stuff with custom options.",
         github: "https://github.com/Strencher/BetterDiscordStuff/blob/master/Copier/Copier.plugin.js",
         github_raw: "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/Copier/Copier.plugin.js"
@@ -48,10 +48,10 @@ const config = {
     changelog: [
         {
             type: "fixed",
-            title: "Fixed",
+            title: "Bug Fixes",
             items: [
-                "Fixed context menus again #3. Thanks discord.",
-                "Also fixed duplicated context menu entries"
+                "Fixed context menus again #4. Thanks discord.",
+                "Fixed copy icon in about me."
             ]
         }
     ]
@@ -337,7 +337,8 @@ const ChannelCategoryCopyOptions = [
  * @returns 
  */
 const buildPlugin = ([Plugin, Api]) => {
-    const {ColorConverter, DCM, Logger, Toasts, Utilities, WebpackModules, PluginUtilities, ContextMenuActions, Patcher} = Api;
+    const flush = new Set;
+    const {ColorConverter, DCM, Logger, Toasts, WebpackModules, PluginUtilities, ContextMenuActions, Patcher} = Api;
     const {React, React: {useEffect, useState}, ElectronModule, GuildStore, ChannelStore, UserStore, DiscordConstants: {ChannelTypes}, SelectedGuildStore} = Api.DiscordModules;
     const {MenuItem, MenuGroup, MenuSeparator} = WebpackModules.getByProps("MenuItem");
     const findWithDefault = filter => WebpackModules.getModule(m => m && m.default && filter(m.default));
@@ -366,7 +367,7 @@ const buildPlugin = ([Plugin, Api]) => {
         setState.getState = () => state;
     
         function storeListener(getter = _ => _) {
-            const [, forceUpdate] = React.useReducer(n => n + 1, 0);
+            const [, forceUpdate] = React.useReducer(n => !n, true);
     
             useEffect(() => {
                 listeners.add(forceUpdate);
@@ -396,6 +397,12 @@ const buildPlugin = ([Plugin, Api]) => {
             }
         });
     };
+
+    class Utilities extends Api.Utilities {
+        static combine(...filters) {
+            return (...args) => filters.every(filter => filter(...args));
+        }
+    }
 
     class Settings {
         static settings = PluginUtilities.loadSettings(config.info.name, {
@@ -450,10 +457,13 @@ const buildPlugin = ([Plugin, Api]) => {
                 else item.children = this.buildItem(item.children);
             }
 
+            const id = (item.id ? item.id : item.label.toLowerCase().replace(/ /g, "-"))
+                + (item.children ? "" : "-submenu");
+
             return React.createElement(MenuItem, {
                 ...item,
-                id: (item.id ? item.id : item.label.toLowerCase().replace(/ /g, "-"))
-                    + (item.children ? "" : "-submenu"),
+                id: id,
+                key: id
             });
         }
 
@@ -473,20 +483,38 @@ const buildPlugin = ([Plugin, Api]) => {
 
         static close() {return ContextMenuActions.closeContextMenu();}
 
-        static filterContext(name) {
-            const shouldInclude = ["page", "section", "objectType"];
-            const notInclude = ["use", "root"];
-            const isRegex = name instanceof RegExp;
+        static async findContextMenu(displayName, filter = _ => true) {
+            const regex = new RegExp(displayName, "i");
+            const normalFilter = (exports) => exports && exports.default && regex.test(exports.default.displayName) && filter(exports.default);
+            const nestedFilter = (module) => regex.test(module.toString());
 
-            return (module) => {
-                const string = module.toString({});
-                const getDisplayName = () => Utilities.getNestedProp(module({}), "props.children.type.displayName");
-
-                return !~string.indexOf("return function")
-                    && shouldInclude.every(s => ~string.indexOf(s))
-                    && !notInclude.every(s => ~string.indexOf(s))
-                    && (isRegex ? name.test(getDisplayName()) : name === getDisplayName())
+            {
+                const normalCache = WebpackModules.getModule(Utilities.combine(normalFilter, (e) => filter(e.default)));
+                if (normalCache) return {type: "normal", module: normalCache};
             }
+
+            {
+                const webpackId = Object.keys(WebpackModules.require.m).find(id => nestedFilter(WebpackModules.require.m[id]));
+                const nestedCache = webpackId !== undefined && WebpackModules.getByIndex(webpackId);
+                if (nestedCache && filter(nestedCache?.default)) return {type: "nested", module: nestedCache};
+            }
+
+            return new Promise((resolve) => {
+                const cancel = () => WebpackModules.removeListener(listener);
+                const listener = (exports, module) => {
+                    const normal = normalFilter(exports);
+                    const nested = nestedFilter(module);
+
+                    if ((!nested && !normal) || !filter(exports?.default)) return;
+
+                    resolve({type: normal ? "normal" : "nested", module: exports});
+                    WebpackModules.removeListener(listener);
+                    flush.delete(cancel);
+                };
+
+                WebpackModules.addListener(listener);
+                flush.add(cancel);
+            });
         }
     }
 
@@ -652,12 +680,7 @@ const buildPlugin = ([Plugin, Api]) => {
                 color: #0870f3;
                 display: inline-flex;
                 margin-left: 5px;
-                margin-top: -9px;
-            }
-
-            .cpr-buttonContainer {
-                display: flex;
-                align-items: center;
+                margin-top: 1px;
             }
 
             .cpr-tooltip {
@@ -668,11 +691,15 @@ const buildPlugin = ([Plugin, Api]) => {
         onStart() {
             PluginUtilities.addStyle(config.info.name, this.css);
 
-            const library = BdApi.Plugins.get("ZeresPluginLibrary");
-            if (library && (library.version.indexOf("2") !== 0)) {
-                if (typeof (PluginUpdates) !== "undefined") PluginUpdates.checkAll();
+            try {
+                const library = BdApi.Plugins.get("ZeresPluginLibrary");
+                if (library && (library.version.indexOf("2") !== 0)) {
+                    if (typeof (PluginUpdates) !== "undefined") PluginUpdates.checkAll();
 
-                return BdApi.alert("Outdated Library", "Your ZeresPluginLibrary plugin is outdated. Please update it. https://betterdiscord.app/Download?id=9");
+                    return BdApi.alert("Outdated Library", "Your ZeresPluginLibrary plugin is outdated. Please update it. https://betterdiscord.app/Download?id=9");
+                }
+            } catch (error) {
+                Logger.warn("Failed to validate ZeresLib, you may run into issues.");
             }
 
             Utilities.suppressErrors(this.checkForCanaryLinks.bind(this), "canary links check")();
@@ -814,17 +841,17 @@ const buildPlugin = ([Plugin, Api]) => {
             if (this.promises.cancelled) return;
 
             Patcher.after(ChannelDeleteItem, "default", (_, [channel], ret) => {
-                switch (channel.type) {
+                let Menu; switch (channel.type) {
                     case ChannelTypes.GUILD_VOICE:
                     case ChannelTypes.GUILD_STAGE_VOICE:
-                        var Menu = buildVoiceChannelMenu(channel);
+                        Menu = buildVoiceChannelMenu(channel);
                         break;
                     case ChannelTypes.CHANNEL_CATEGORY:
-                        var Menu = buildCategoryMenu(channel);
+                        Menu = buildCategoryMenu(channel);
                         break;
                     
                     default:
-                        var Menu = buildTextChannelMenu(channel);
+                        Menu = buildTextChannelMenu(channel);
                 }
                 
                 return [
@@ -1000,70 +1027,83 @@ const buildPlugin = ([Plugin, Api]) => {
         }
 
         async patchGuildContextMenu() {
-            const GuildContextMenu = await DCM.getDiscordMenu("GuildContextMenu");
+            const GuildContextMenu = await DCM.getDiscordMenu("GuildContextMenuWrapper");
+            let original = () => Logger.warn("This shouldn't happen.");
             if (this.promises.cancelled) return;
 
-            Patcher.after(GuildContextMenu, "default", (_, [props], ret) => {
-                const children = Utilities.getNestedProp(ret, "props.children");
-                if (!Array.isArray(children)) return;
+            function AnotherUselessGuildContextMenuWrapperExceptItsForCopierAndNotForDiscordsAmazingAnalytics(props) {
+                const ret = original.call(this, props);
 
-                const {guild} = props;
+                try {
+                    const tree = Utilities.getNestedProp(ret, "props.children");
+                    const {guild} = props;
 
-                children.splice(
-                    5,
-                    0,
-                    ContextMenu.buildMenu([
-                        {
-                            label: "Copy",
-                            id: "copy-guild",
-                            action: () => {
-                                ElectronModule.copy(guild.id);
-                            },
-                            children: [
-                                {
-                                    label: "Name",
-                                    id: "copy-guild-name",
-                                    action: () => {
-                                        ElectronModule.copy(guild.name);
-                                        Toasts.success("Copied server name.");
-                                    }
+                    tree.splice(5, 0,
+                        ContextMenu.buildMenu([
+                            {
+                                label: "Copy",
+                                id: "copy-guild",
+                                action: () => {
+                                    ElectronModule.copy(guild.id);
                                 },
-                                {
-                                    label: "Custom Format",
-                                    id: "copy-guild-custom",
-                                    action: () => {
-                                        ElectronModule.copy(
-                                            Formatter.formatString(
-                                                Settings.getSetting("guildCustom"),
-                                                GuildCopyOptions.reduce((options, option) => {
-                                                    options[option.name] = option.getValue(guild, Modules);
-                                                    return options;
-                                                }, {})
-                                            )
-                                        );
-                                        Toasts.success("Copied server with custom format.");
+                                children: [
+                                    {
+                                        label: "Name",
+                                        id: "copy-guild-name",
+                                        action: () => {
+                                            ElectronModule.copy(guild.name);
+                                            Toasts.success("Copied server name.");
+                                        }
+                                    },
+                                    {
+                                        label: "Custom Format",
+                                        id: "copy-guild-custom",
+                                        action: () => {
+                                            ElectronModule.copy(
+                                                Formatter.formatString(
+                                                    Settings.getSetting("guildCustom"),
+                                                    GuildCopyOptions.reduce((options, option) => {
+                                                        options[option.name] = option.getValue(guild, Modules);
+                                                        return options;
+                                                    }, {})
+                                                )
+                                            );
+                                            Toasts.success("Copied server with custom format.");
+                                        }
+                                    },
+                                    {
+                                        label: "Id",
+                                        id: "copy-guild-id",
+                                        action: () => {
+                                            ElectronModule.copy(guild.id);
+                                            Toasts.success("Copied server id.");
+                                        }
+                                    },
+                                    {
+                                        label: "Icon",
+                                        id: "copy-guild-icon",
+                                        action: () => {
+                                            ElectronModule.copy(guild.getIconURL());
+                                            Toasts.success("Copied server icon url.");
+                                        }
                                     }
-                                },
-                                {
-                                    label: "Id",
-                                    id: "copy-guild-id",
-                                    action: () => {
-                                        ElectronModule.copy(guild.id);
-                                        Toasts.success("Copied server id.");
-                                    }
-                                },
-                                {
-                                    label: "Icon",
-                                    id: "copy-guild-icon",
-                                    action: () => {
-                                        ElectronModule.copy(guild.getIconURL());
-                                        Toasts.success("Copied server icon url.");
-                                    }
-                                }
-                            ]
-                        }
-                    ])
-                );
+                                ]
+                            }
+                        ])
+                    );
+                } catch (error) {
+                    Logger.error("Unsurprising error during GuildContextMenu patch:", error);
+                }
+
+                return ret;
+            }
+
+            Patcher.after(GuildContextMenu, "default", (...args) => {
+                const ret = args[2]?.props?.children;
+                if (!ret) return;
+
+                original = ret?.type;
+                ret.type = AnotherUselessGuildContextMenuWrapperExceptItsForCopierAndNotForDiscordsAmazingAnalytics;
             });
         }
 
@@ -1131,19 +1171,56 @@ const buildPlugin = ([Plugin, Api]) => {
             };
 
             const patched = new WeakSet();
-            const REGEX = /user.*contextmenu/i;
-            const filter = ContextMenu.filterContext(REGEX);
+            const Regex = /displayName="\S+?usercontextmenu./i;
+            const originalSymbol = Symbol("Copier Original");
             const loop = async () => {
-                const UserContextMenu = await DCM.getDiscordMenu(m => {
-                    if (patched.has(m)) return false;
-                    if (m.displayName != null) return REGEX.test(m.displayName);
-
-                    return filter(m);
-                });
+                const UserContextMenu = await ContextMenu.findContextMenu(Regex, m => !patched.has(m));
 
                 if (this.promises.cancelled) return;
-                if (UserContextMenu.default.displayName) {
-                    Patcher.after(UserContextMenu, "default", (_, [props], ret) => {
+
+                const patch = (rendered, props) => {
+                    const childs = Utilities.findInReactTree(rendered, Array.isArray);
+                    const user = props.user || UserStore.getUser(props.channel?.getRecipientId?.());
+                    if (!childs || !user || childs.some(c => c && c.key === "copy-user")) return rendered;
+                    childs.push(buildUserContextMenu(user, original.displayName === "DMUserContextMenu", true));
+                };
+
+                function CopierDeepWrapperForDiscordsCoolAnalyticsWrappers(props) {
+                    const rendered = props[originalSymbol].call(this, props);
+
+                    try {
+                        patch(rendered, props);
+                    } catch (error) {
+                        Logger.error("Error in context menu patch:", error);
+                    }
+
+                    return rendered;
+                }
+
+                let original = null;
+                function CopierContextMenuWrapper(props, _, rendered) {
+                    rendered ??= original.call(this, props);
+
+                    try {
+                        if (rendered?.props?.children?.type?.displayName.indexOf("ContextMenu") > 0) {
+                            const child = rendered.props.children;
+                            child.props[originalSymbol] = child.type;
+                            CopierDeepWrapperForDiscordsCoolAnalyticsWrappers.displayName = child.type.displayName;
+                            child.type = CopierDeepWrapperForDiscordsCoolAnalyticsWrappers;
+                            return rendered;
+                        }
+
+                        patch(rendered, props);
+                    } catch (error) {
+                        cancel();
+                        Logger.error("Error in context menu patch:", error);
+                    }
+
+                    return rendered;
+                }
+
+                Patcher.after(UserContextMenu.module, "default", (_, [props], ret) => {
+                    if (UserContextMenu.type === "normal") {
                         const children = Utilities.findInReactTree(ret, Array.isArray)
                         if (!Array.isArray(children)) return;
         
@@ -1154,37 +1231,17 @@ const buildPlugin = ([Plugin, Api]) => {
                             0,
                             buildUserContextMenu(user)
                         );
-                    });
-                } else {
-                    let original = null;
-                    function wrapper(props) {
-                        const rendered = original.call(this, props);
-
-                        try {
-                            const childs = Utilities.findInReactTree(rendered, Array.isArray);
-                            const user = props.user || UserStore.getUser(props.channel?.getRecipientId?.());
-                            if (!childs || !user || childs.some(c => c && c.key === "copy-user")) return rendered;
-                            childs.push(buildUserContextMenu(user, original.displayName === "DMUserContextMenu", true)); 
-                        } catch (error) {
-                            cancel();
-                            Logger.error("Error in context menu patch:", error);
-                        }
-
-                        return rendered;
-                    }
-
-                    const cancel = Patcher.after(UserContextMenu, "default", (...args) => {
-                        const [, , ret] = args;
+                    } else {
                         const contextMenu = Utilities.getNestedProp(ret, "props.children");
                         if (!contextMenu || typeof contextMenu.type !== "function") return;
 
                         original ??= contextMenu.type;
-                        wrapper.displayName ??= original.displayName;
-                        contextMenu.type = wrapper;
-                    });
-                }
+                        CopierContextMenuWrapper.displayName ??= original.displayName;
+                        contextMenu.type = CopierContextMenuWrapper;
+                    }
+                });
 
-                patched.add(UserContextMenu.default);
+                patched.add(UserContextMenu.module.default);
                 loop();
             };
 
@@ -1323,38 +1380,28 @@ const buildPlugin = ([Plugin, Api]) => {
             const UserPopoutComponents = WebpackModules.getByProps("UserPopoutProfileText");
 
             Patcher.after(UserPopoutComponents, "UserPopoutProfileText", (_, [props], ret) => {
-                const header = Utilities.findInReactTree(ret, e => e?.props?.className?.indexOf("aboutMeTitle") > -1);
+                const header = Utilities.findInReactTree(ret, e => e?.className?.indexOf("userInfoTitle") > -1);
                 const userBio = Utilities.findInReactTree(ret, e => e?.userBio != null)?.userBio;
                 if (!header || !userBio) return;
 
-                const originalType = header.type;
-                header.type = (...args) => {
-                    const originalChildren = originalType(...args);
-
-                    return React.createElement("div", {
-                        className: "cpr-buttonContainer",
-                        children: [
-                            originalChildren,
-                            React.createElement(Tooltip, {
-                                className: "copr-button",
-                                text: "Copy About me",
-                                position: "top",
-                                tooltipClassName: "cpr-tooltip"
-                            }, React.createElement(Button, {
-                                look: Button.Looks.BLANK,
-                                size: Button.Sizes.NONE,
-                                onClick: () => {
-                                    ElectronModule.copy(userBio);
-                                    Toasts.success("Successfully copied user bio.");
-                                }
-                            }, React.createElement(CopyIcon, {
-                                width: 14,
-                                height: 14
-                            })))
-                        ]
-                    });
-                };
-
+                header.children.push(
+                    React.createElement(Tooltip, {
+                        className: "copr-button",
+                        text: "Copy About me",
+                        position: "top",
+                        tooltipClassName: "cpr-tooltip"
+                    }, React.createElement(Button, {
+                        look: Button.Looks.BLANK,
+                        size: Button.Sizes.NONE,
+                        onClick: () => {
+                            ElectronModule.copy(userBio);
+                            Toasts.success("Successfully copied user bio.");
+                        }
+                    }, React.createElement(CopyIcon, {
+                        width: 14,
+                        height: 14
+                    })))
+                );
             });
         }
 
@@ -1504,6 +1551,7 @@ const buildPlugin = ([Plugin, Api]) => {
             Patcher.unpatchAll();
             PluginUtilities.removeStyle(config.info.name);
             this.promises.cancel();
+            flush.forEach(f => f());
         }
     }
 };
@@ -1511,6 +1559,7 @@ const buildPlugin = ([Plugin, Api]) => {
 module.exports = window.hasOwnProperty("ZeresPluginLibrary")
     ? buildPlugin(window.ZeresPluginLibrary.buildPlugin(config))
     : class {
+        get _config() {return ":zere_zoom:";}
         getName() {return config.info.name;}
         getAuthor() {return config.info.authors.map(a => a.name).join(", ");}
         getDescription() {return `${config.info.description}. __**ZeresPluginLibrary was not found! This plugin will not work!**__`;}
