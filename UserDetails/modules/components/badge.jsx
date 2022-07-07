@@ -10,6 +10,7 @@ import {Messages} from "@discord/i18n";
 import {copy} from "@discord/native";
 import _ from "lodash";
 import Utilities from "../Utilities";
+import MainStyles from "../apis/styles.scss";
 
 export default function Badge({item}) {
     const connection = Connections.get(item.type);
@@ -34,7 +35,7 @@ export default function Badge({item}) {
     const shouldVerified = Settings.get("showVerifiedConnections", true) && item.verified;
 
     return (
-        <Tooltip text={`${_.upperFirst(item.type)}: ${item.name}`}>
+        <Tooltip text={`${_.upperFirst(item.type)}: ${item.name}`} tooltipClassName={MainStyles.tooltip}>
             {props => (
                 <div {...props} onClick={onClick} className={joinClassNames(styles.connection, {[styles.verified]: shouldVerified})}>
                     <img onContextMenu={onContextMenu} src={connection.icon[Utilities.getIconURL(item.type)]} />

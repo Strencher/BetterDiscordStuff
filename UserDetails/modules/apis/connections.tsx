@@ -4,7 +4,7 @@ import Badge from "../components/badge";
 import Circle from "../components/blankslates/circle";
 import Error from "../components/icons/error";
 import Settings from "../Settings";
-import {WebpackModules} from "@zlibrary";
+import {Utilities, WebpackModules} from "@zlibrary";
 import styles from "./connections.scss";
 import {TooltipContainer as Tooltip} from "@discord/components";
 import {useStateFromStores} from "@discord/flux";
@@ -15,6 +15,7 @@ import Connections from "@discord/connections";
 import Strings from "../strings";
 import {joinClassNames} from "@discord/utils";
 import {Dispatcher} from "@discord/modules";
+import MainStyles from "./styles.scss";
 
 const {Heading} = WebpackModules.getByProps("Heading") ?? {Heading: () => null};
 const defaultConnections = Object.fromEntries(Connections.map(item => [item.type, true]));
@@ -38,7 +39,7 @@ export default function UserConnections({user}) {
     }, []);
 
     return (
-        <div className={styles.connectionsBody}>
+        <div className={Utilities.className(styles.connectionsBody, MainStyles.body)}>
             {   
                 (!connections?.length && Settings.get("showEmptyConnections", true)) || connections?.length
                     ? <Heading level={3} variant="eyebrow" className={joinClassNames(styles.container, styles.header)} uppercase muted>{Strings.get(connections?.length ? "CONNECTIONS" : "NO_CONNECTIONS")}</Heading>

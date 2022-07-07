@@ -2,7 +2,7 @@
 import {useStateFromStores} from "@discord/flux";
 import {Messages} from "@discord/i18n";
 import {SelectedGuilds, Status, UserProfile, Users} from "@discord/stores";
-import {Logger, WebpackModules} from "@zlibrary";
+import {Logger, Utilities, WebpackModules} from "@zlibrary";
 import React, {useEffect, useState} from "react";
 import Settings from "../Settings";
 import Strings from "../strings";
@@ -12,6 +12,7 @@ import {joinClassNames} from "@discord/utils";
 import {ProfileActions} from "@discord/actions";
 import {Dispatcher} from "@discord/modules";
 import {useSettings} from "./util";
+import MainStyles from "./styles.scss";
 
 const {Heading} = WebpackModules.getByProps("Heading") ?? {Heading: () => null};
 const WindowStore = WebpackModules.getByProps("isFocused");
@@ -24,7 +25,7 @@ export function MutualFriend({user}) {
     const isWindowFocused = useStateFromStores([WindowStore], () => WindowStore.isFocused());
 
     return (
-        <Tooltip text={user.tag} position="top">
+        <Tooltip text={user.tag} position="top" tooltipClassName={MainStyles.tooltip}>
             {props => (
                 <div
                     className={styles.mutualFriend}
@@ -67,7 +68,7 @@ export default function MutualFriends({user}) {
     return Array.isArray(mutualFriends)
         ? mutualFriends.length
             ? (
-                <div className={styles.body}>
+                <div className={Utilities.className(styles.body, MainStyles.body)}>
                     <Heading level={3} variant="eyebrow" className={styles.header} uppercase muted>{Messages.MUTUAL_FRIENDS}</Heading>
                     <div className={joinClassNames(styles.friends, settings.stackMutualFriends && styles.stack)}>
                         {mutualFriends.map(props => <MutualFriend {...props} />)}

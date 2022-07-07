@@ -17,6 +17,7 @@ export default class Utilities extends ZlibUtils {
             case "steam": return colored ? "lightSVG" : "darkSVG";
             case "xbox": return colored ? "customPNG" : "whiteSVG"
             case "youtube": return colored ? "darkSVG" : "whitePNG";
+            case "epicgames": return colored ? "lightSVG" : "whitePNG"
 
             default: return colored ? "darkSVG" : "whitePNG";
         }

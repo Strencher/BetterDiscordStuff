@@ -67,6 +67,7 @@ export default class Plugin extends BasePlugin {
         // this.patchAccountSection();
 
         // Commands
+        
         Commands.registerCommand(this.getName(), {
             id: "user-info",
             name: "userinfo",
@@ -137,10 +138,10 @@ export default class Plugin extends BasePlugin {
     }
     
     async patchUserPopout() {
-        const UserPopoutInfo = WebpackModules.getByProps("UserPopoutInfo");
-        const UserPopoutBody = WebpackModules.getModule(m => m.default.displayName === "UserPopoutBody");
+        const UserPopoutComponents = WebpackModules.getByProps("UserPopoutInfo");
+        const UserPopoutBody = WebpackModules.getModule(m => m?.default?.displayName === "UserPopoutBody" && m.default.toString().indexOf("ROLES_LIST") > -1);
 
-        Patcher.after(UserPopoutInfo, "UserPopoutInfo", (_, [{user}], returnValue) => {
+        Patcher.after(UserPopoutComponents, "UserPopoutInfo", (_, [{user}], returnValue) => {
             if (this.promises.cancelled) return;
             const tree = Utilities.findInReactTree(returnValue, e => e?.className?.indexOf("headerText") > -1);
             if (!Array.isArray(tree?.children) || !user) return;
@@ -158,7 +159,7 @@ export default class Plugin extends BasePlugin {
             if (this.promises.cancelled) return;
             if (!Array.isArray(returnValue?.props?.children) || returnValue.props.children.some(child => child?.type === ErrorBoundary)) return returnValue;
 
-            returnValue.props.children.unshift(
+            returnValue.props.children.splice(-1, 0,
                 <ErrorBoundary id="UserPopoutBody" mini key="connections">
                     <UserConnections user={user} />
                 </ErrorBoundary>,

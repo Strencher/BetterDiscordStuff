@@ -7,12 +7,13 @@ import {Messages} from "@discord/i18n";
 import {Dispatcher} from "@discord/modules";
 import {UserProfile, Users} from "@discord/stores";
 import {joinClassNames} from "@discord/utils";
-import {Logger, WebpackModules} from "@zlibrary";
+import {Logger, Utilities, WebpackModules} from "@zlibrary";
 import React, {useEffect, useState} from "react";
 import Error from "../components/icons/error";
 import Strings from "../strings";
 import styles from "./mutualServers.scss";
 import {useSettings} from "./util";
+import MainStyles from "./styles.scss";
 
 const FriendsStore = WebpackModules.getByProps("getMutualGuilds");
 const {Heading} = WebpackModules.getByProps("Heading") ?? {Heading: () => null};
@@ -23,7 +24,7 @@ export function MutualServer({guild, nick, onClick}) {
     const isWindowFocused = useStateFromStores([WindowStore], () => WindowStore.isFocused());
 
     return (
-        <Tooltip key={guild.id} text={nick ? `${guild.name} (${nick})` : guild.name} position="top" className={styles.mutualGuild}>
+        <Tooltip key={guild.id} text={nick ? `${guild.name} (${nick})` : guild.name} position="top" className={styles.mutualGuild} tooltipClassName={MainStyles.tooltip}>
             {guild.icon
                 ? <img
                     onMouseOver={() => setMouseOver(true)}
@@ -66,7 +67,7 @@ export default function MutualServers({user}) {
     return Array.isArray(mutualGuilds)
         ? mutualGuilds.length
             ? (
-                <div className={styles.body}>
+                <div className={Utilities.className(styles.body, MainStyles.body)}>
                     <Heading level={3} variant="eyebrow" className={styles.header} uppercase muted>{Messages.MUTUAL_GUILDS}</Heading>
                     <div className={joinClassNames(styles.guilds, settings.stackMutualServers && styles.stack)}>
                         {
