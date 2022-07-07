@@ -1,8 +1,8 @@
 /**
  * @name UserDetails
- * @version 2.8.1
+ * @version 2.9.0
  * @author Strencher
- * @description Shows you a lot information about users in popouts.
+ * @description Shows you a lot information about users in both the UserPopout and UserProfile Modal. To enumerate: Creation Date, Joined At Date, Last Message Date, Mutual Friends, Mutual Servers & Connections. It also shows the Roles List in the UserProfile Modal.
  * @source https://github.com/Strencher/BetterDiscordStuff/tree/development/UserDetails
  * @updateUrl https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/UserDetails/UserDetails.plugin.js
  * @invite gvA2ree
@@ -33,25 +33,34 @@
 const config = {
 	"info": {
 		"name": "UserDetails",
-		"version": "2.8.1",
+		"version": "2.9.0",
 		"authors": [{
 			"name": "Strencher",
 			"discord_id": "415849376598982656",
 			"github_username": "Strencher",
 			"twitter_username": "Strencher3"
 		}],
-		"description": "Shows you a lot information about users in popouts.",
+		"description": "Shows you a lot information about users in both the UserPopout and UserProfile Modal. To enumerate: Creation Date, Joined At Date, Last Message Date, Mutual Friends, Mutual Servers & Connections. It also shows the Roles List in the UserProfile Modal.",
 		"github": "https://github.com/Strencher/BetterDiscordStuff/tree/development/UserDetails",
 		"github_raw": "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/UserDetails/UserDetails.plugin.js",
 		"invite": "gvA2ree"
 	},
 	"changelog": [{
-		"title": "Fixed",
-		"type": "fixed",
-		"items": [
-			"Fixed small issue"
-		]
-	}],
+			"title": "Bug Fixes",
+			"type": "fixed",
+			"items": [
+				"Fixed MutualFriends & MutualServers showing up in the UserPopout."
+			]
+		},
+		{
+			"title": "Improvements",
+			"type": "improved",
+			"items": [
+				"Improved badge for the EpicGames connection.",
+				"Improved tooltip color in the UserPopout."
+			]
+		}
+	],
 	"build": {
 		"zlibrary": true,
 		"copy": true,
@@ -363,6 +372,23 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					mutualGuild: "UserDetails-mutualServers-mutualGuild",
 					guildAcronym: "UserDetails-mutualServers-guildAcronym",
 					stack: "UserDetails-mutualServers-stack"
+				};
+				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
+				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
+			},
+			965: (module, __webpack_exports__, __webpack_require__) => {
+				__webpack_require__.d(__webpack_exports__, {
+					Z: () => __WEBPACK_DEFAULT_EXPORT__
+				});
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(645);
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
+				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
+					return i[1];
+				}));
+				___CSS_LOADER_EXPORT___.push([module.id, ".UserDetails-styles-body:first-child{margin-top:8px}.UserDetails-styles-tooltip{--background-floating: var(--background-secondary)}", ""]);
+				___CSS_LOADER_EXPORT___.locals = {
+					body: "UserDetails-styles-body",
+					tooltip: "UserDetails-styles-tooltip"
 				};
 				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
 				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
@@ -702,7 +728,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			const modules_Settings = Settings;
 			var flowerstar = __webpack_require__(564);
 			function _extends() {
-				_extends = Object.assign || function(target) {
+				_extends = Object.assign ? Object.assign.bind() : function(target) {
 					for (var i = 1; i < arguments.length; i++) {
 						var source = arguments[i];
 						for (var key in source)
@@ -737,7 +763,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			const external_window_namespaceObject = window._;
 			var external_window_default = __webpack_require__.n(external_window_namespaceObject);
 			function Utilities_extends() {
-				Utilities_extends = Object.assign || function(target) {
+				Utilities_extends = Object.assign ? Object.assign.bind() : function(target) {
 					for (var i = 1; i < arguments.length; i++) {
 						var source = arguments[i];
 						for (var key in source)
@@ -763,6 +789,8 @@ function buildPlugin([BasePlugin, PluginApi]) {
 							return colored ? "customPNG" : "whiteSVG";
 						case "youtube":
 							return colored ? "darkSVG" : "whitePNG";
+						case "epicgames":
+							return colored ? "lightSVG" : "whitePNG";
 						default:
 							return colored ? "darkSVG" : "whitePNG";
 					}
@@ -824,8 +852,9 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					}));
 				}
 			}
+			var styles = __webpack_require__(965);
 			function badge_extends() {
-				badge_extends = Object.assign || function(target) {
+				badge_extends = Object.assign ? Object.assign.bind() : function(target) {
 					for (var i = 1; i < arguments.length; i++) {
 						var source = arguments[i];
 						for (var key in source)
@@ -856,7 +885,8 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				};
 				const shouldVerified = modules_Settings.get("showVerifiedConnections", true) && item.verified;
 				return external_BdApi_React_default().createElement(components_namespaceObject.Tooltip, {
-					text: `${external_window_default().upperFirst(item.type)}: ${item.name}`
+					text: `${external_window_default().upperFirst(item.type)}: ${item.name}`,
+					tooltipClassName: styles.Z.tooltip
 				}, (props => external_BdApi_React_default().createElement("div", badge_extends({}, props, {
 					onClick,
 					className: (0, utils_namespaceObject.joinClassNames)(badge.Z.connection, {
@@ -870,7 +900,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				}))));
 			}
 			function circle_extends() {
-				circle_extends = Object.assign || function(target) {
+				circle_extends = Object.assign ? Object.assign.bind() : function(target) {
 					for (var i = 1; i < arguments.length; i++) {
 						var source = arguments[i];
 						for (var key in source)
@@ -889,7 +919,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				r: "18"
 			}));
 			function error_extends() {
-				error_extends = Object.assign || function(target) {
+				error_extends = Object.assign ? Object.assign.bind() : function(target) {
 					for (var i = 1; i < arguments.length; i++) {
 						var source = arguments[i];
 						for (var key in source)
@@ -992,7 +1022,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					}));
 				}), []);
 				return external_BdApi_React_default().createElement("div", {
-					className: apis_connections.Z.connectionsBody
+					className: external_PluginApi_namespaceObject.Utilities.className(apis_connections.Z.connectionsBody, styles.Z.body)
 				}, !connections?.length && modules_Settings.get("showEmptyConnections", true) || connections?.length ? external_BdApi_React_default().createElement(Heading, {
 					level: 3,
 					variant: "eyebrow",
@@ -1015,7 +1045,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				})))));
 			}
 			function cake_extends() {
-				cake_extends = Object.assign || function(target) {
+				cake_extends = Object.assign ? Object.assign.bind() : function(target) {
 					for (var i = 1; i < arguments.length; i++) {
 						var source = arguments[i];
 						for (var key in source)
@@ -1184,7 +1214,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				}, external_BdApi_React_default().createElement(cake, null)) : external_BdApi_React_default().createElement(TextScroller, null, text);
 			}
 			function calendar_extends() {
-				calendar_extends = Object.assign || function(target) {
+				calendar_extends = Object.assign ? Object.assign.bind() : function(target) {
 					for (var i = 1; i < arguments.length; i++) {
 						var source = arguments[i];
 						for (var key in source)
@@ -1206,7 +1236,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				d: "M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"
 			}));
 			function cube_extends() {
-				cube_extends = Object.assign || function(target) {
+				cube_extends = Object.assign ? Object.assign.bind() : function(target) {
 					for (var i = 1; i < arguments.length; i++) {
 						var source = arguments[i];
 						for (var key in source)
@@ -1370,7 +1400,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				}) : external_BdApi_React_default().createElement(LoadingText, null));
 			}
 			function textbubble_extends() {
-				textbubble_extends = Object.assign || function(target) {
+				textbubble_extends = Object.assign ? Object.assign.bind() : function(target) {
 					for (var i = 1; i < arguments.length; i++) {
 						var source = arguments[i];
 						for (var key in source)
@@ -1586,7 +1616,8 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				const isWindowFocused = (0, flux_namespaceObject.useStateFromStores)([WindowStore], (() => WindowStore.isFocused()));
 				return external_BdApi_React_default().createElement(components_namespaceObject.Tooltip, {
 					text: user.tag,
-					position: "top"
+					position: "top",
+					tooltipClassName: styles.Z.tooltip
 				}, (props => external_BdApi_React_default().createElement("div", {
 					className: apis_mutualFriends.Z.mutualFriend,
 					onMouseOver: () => (setMouseOver(true), props.onMouseEnter()),
@@ -1620,7 +1651,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					modules_namespaceObject.Dispatcher.wait((() => actions_namespaceObject.ProfileActions.fetchMutualFriends(user.id)));
 				}), []);
 				return Array.isArray(mutualFriends) ? mutualFriends.length ? external_BdApi_React_default().createElement("div", {
-					className: apis_mutualFriends.Z.body
+					className: external_PluginApi_namespaceObject.Utilities.className(apis_mutualFriends.Z.body, styles.Z.body)
 				}, external_BdApi_React_default().createElement(mutualFriends_Heading, {
 					level: 3,
 					variant: "eyebrow",
@@ -1645,7 +1676,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			}
 			var mutualServers = __webpack_require__(416);
 			function mutualServers_extends() {
-				mutualServers_extends = Object.assign || function(target) {
+				mutualServers_extends = Object.assign ? Object.assign.bind() : function(target) {
 					for (var i = 1; i < arguments.length; i++) {
 						var source = arguments[i];
 						for (var key in source)
@@ -1673,7 +1704,8 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					key: guild.id,
 					text: nick ? `${guild.name} (${nick})` : guild.name,
 					position: "top",
-					className: mutualServers.Z.mutualGuild
+					className: mutualServers.Z.mutualGuild,
+					tooltipClassName: styles.Z.tooltip
 				}, guild.icon ? external_BdApi_React_default().createElement("img", {
 					onMouseOver: () => setMouseOver(true),
 					onMouseLeave: () => setMouseOver(false),
@@ -1707,7 +1739,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					}));
 				}), []);
 				return Array.isArray(mutualGuilds) ? mutualGuilds.length ? external_BdApi_React_default().createElement("div", {
-					className: mutualServers.Z.body
+					className: external_PluginApi_namespaceObject.Utilities.className(mutualServers.Z.body, styles.Z.body)
 				}, external_BdApi_React_default().createElement(mutualServers_Heading, {
 					level: 3,
 					variant: "eyebrow",
@@ -1737,7 +1769,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			}
 			var React = __webpack_require__(113);
 			function spotify_extends() {
-				spotify_extends = Object.assign || function(target) {
+				spotify_extends = Object.assign ? Object.assign.bind() : function(target) {
 					for (var i = 1; i < arguments.length; i++) {
 						var source = arguments[i];
 						for (var key in source)
@@ -1757,7 +1789,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			}));
 			var twitch_React = __webpack_require__(113);
 			function twitch_extends() {
-				twitch_extends = Object.assign || function(target) {
+				twitch_extends = Object.assign ? Object.assign.bind() : function(target) {
 					for (var i = 1; i < arguments.length; i++) {
 						var source = arguments[i];
 						for (var key in source)
@@ -1794,7 +1826,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			})));
 			var youtube_React = __webpack_require__(113);
 			function youtube_extends() {
-				youtube_extends = Object.assign || function(target) {
+				youtube_extends = Object.assign ? Object.assign.bind() : function(target) {
 					for (var i = 1; i < arguments.length; i++) {
 						var source = arguments[i];
 						for (var key in source)
@@ -1814,7 +1846,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			}));
 			var gamepad_React = __webpack_require__(113);
 			function gamepad_extends() {
-				gamepad_extends = Object.assign || function(target) {
+				gamepad_extends = Object.assign ? Object.assign.bind() : function(target) {
 					for (var i = 1; i < arguments.length; i++) {
 						var source = arguments[i];
 						for (var key in source)
@@ -1841,7 +1873,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			var components_activity = __webpack_require__(755);
 			var googleChrome_React = __webpack_require__(113);
 			function googleChrome_extends() {
-				googleChrome_extends = Object.assign || function(target) {
+				googleChrome_extends = Object.assign ? Object.assign.bind() : function(target) {
 					for (var i = 1; i < arguments.length; i++) {
 						var source = arguments[i];
 						for (var key in source)
@@ -2001,7 +2033,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			}
 			var headphones_React = __webpack_require__(113);
 			function headphones_extends() {
-				headphones_extends = Object.assign || function(target) {
+				headphones_extends = Object.assign ? Object.assign.bind() : function(target) {
 					for (var i = 1; i < arguments.length; i++) {
 						var source = arguments[i];
 						for (var key in source)
@@ -2066,7 +2098,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			var settings = __webpack_require__(128);
 			const forms_namespaceObject = Modules["@discord/forms"];
 			function chain_extends() {
-				chain_extends = Object.assign || function(target) {
+				chain_extends = Object.assign ? Object.assign.bind() : function(target) {
 					for (var i = 1; i < arguments.length; i++) {
 						var source = arguments[i];
 						for (var key in source)
@@ -2084,7 +2116,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				d: "M326.612 185.391c59.747 59.809 58.927 155.698.36 214.59-.11.12-.24.25-.36.37l-67.2 67.2c-59.27 59.27-155.699 59.262-214.96 0-59.27-59.26-59.27-155.7 0-214.96l37.106-37.106c9.84-9.84 26.786-3.3 27.294 10.606.648 17.722 3.826 35.527 9.69 52.721 1.986 5.822.567 12.262-3.783 16.612l-13.087 13.087c-28.026 28.026-28.905 73.66-1.155 101.96 28.024 28.579 74.086 28.749 102.325.51l67.2-67.19c28.191-28.191 28.073-73.757 0-101.83-3.701-3.694-7.429-6.564-10.341-8.569a16.037 16.037 0 0 1-6.947-12.606c-.396-10.567 3.348-21.456 11.698-29.806l21.054-21.055c5.521-5.521 14.182-6.199 20.584-1.731a152.482 152.482 0 0 1 20.522 17.197zM467.547 44.449c-59.261-59.262-155.69-59.27-214.96 0l-67.2 67.2c-.12.12-.25.25-.36.37-58.566 58.892-59.387 154.781.36 214.59a152.454 152.454 0 0 0 20.521 17.196c6.402 4.468 15.064 3.789 20.584-1.731l21.054-21.055c8.35-8.35 12.094-19.239 11.698-29.806a16.037 16.037 0 0 0-6.947-12.606c-2.912-2.005-6.64-4.875-10.341-8.569-28.073-28.073-28.191-73.639 0-101.83l67.2-67.19c28.239-28.239 74.3-28.069 102.325.51 27.75 28.3 26.872 73.934-1.155 101.96l-13.087 13.087c-4.35 4.35-5.769 10.79-3.783 16.612 5.864 17.194 9.042 34.999 9.69 52.721.509 13.906 17.454 20.446 27.294 10.606l37.106-37.106c59.271-59.259 59.271-155.699.001-214.959z"
 			}));
 			function wrench_extends() {
-				wrench_extends = Object.assign || function(target) {
+				wrench_extends = Object.assign ? Object.assign.bind() : function(target) {
 					for (var i = 1; i < arguments.length; i++) {
 						var source = arguments[i];
 						for (var key in source)
@@ -2103,7 +2135,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			}));
 			var valorant_React = __webpack_require__(113);
 			function valorant_extends() {
-				valorant_extends = Object.assign || function(target) {
+				valorant_extends = Object.assign ? Object.assign.bind() : function(target) {
 					for (var i = 1; i < arguments.length; i++) {
 						var source = arguments[i];
 						for (var key in source)
@@ -2126,7 +2158,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			})));
 			var language_React = __webpack_require__(113);
 			function language_extends() {
-				language_extends = Object.assign || function(target) {
+				language_extends = Object.assign ? Object.assign.bind() : function(target) {
 					for (var i = 1; i < arguments.length; i++) {
 						var source = arguments[i];
 						for (var key in source)
@@ -2150,7 +2182,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			}));
 			var mutual_React = __webpack_require__(113);
 			function mutual_extends() {
-				mutual_extends = Object.assign || function(target) {
+				mutual_extends = Object.assign ? Object.assign.bind() : function(target) {
 					for (var i = 1; i < arguments.length; i++) {
 						var source = arguments[i];
 						for (var key in source)
@@ -2176,7 +2208,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			})))));
 			var user_React = __webpack_require__(113);
 			function user_extends() {
-				user_extends = Object.assign || function(target) {
+				user_extends = Object.assign ? Object.assign.bind() : function(target) {
 					for (var i = 1; i < arguments.length; i++) {
 						var source = arguments[i];
 						for (var key in source)
@@ -2198,7 +2230,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			}));
 			var friends_React = __webpack_require__(113);
 			function friends_extends() {
-				friends_extends = Object.assign || function(target) {
+				friends_extends = Object.assign ? Object.assign.bind() : function(target) {
 					for (var i = 1; i < arguments.length; i++) {
 						var source = arguments[i];
 						for (var key in source)
@@ -2221,7 +2253,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			})));
 			var profile_React = __webpack_require__(113);
 			function profile_extends() {
-				profile_extends = Object.assign || function(target) {
+				profile_extends = Object.assign ? Object.assign.bind() : function(target) {
 					for (var i = 1; i < arguments.length; i++) {
 						var source = arguments[i];
 						for (var key in source)
@@ -2272,7 +2304,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				return icons_React.createElement(IconComponent, props);
 			}
 			function settings_extends() {
-				settings_extends = Object.assign || function(target) {
+				settings_extends = Object.assign ? Object.assign.bind() : function(target) {
 					for (var i = 1; i < arguments.length; i++) {
 						var source = arguments[i];
 						for (var key in source)
@@ -2480,7 +2512,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				})))) : pages_namespaceObject[activeItem].items.map(renderSetting)));
 			}
 			function UserDetails_extends() {
-				UserDetails_extends = Object.assign || function(target) {
+				UserDetails_extends = Object.assign ? Object.assign.bind() : function(target) {
 					for (var i = 1; i < arguments.length; i++) {
 						var source = arguments[i];
 						for (var key in source)
@@ -2600,9 +2632,9 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					};
 				}
 				async patchUserPopout() {
-					const UserPopoutInfo = external_PluginApi_namespaceObject.WebpackModules.getByProps("UserPopoutInfo");
-					const UserPopoutBody = external_PluginApi_namespaceObject.WebpackModules.getModule((m => "UserPopoutBody" === m.default.displayName));
-					external_PluginApi_namespaceObject.Patcher.after(UserPopoutInfo, "UserPopoutInfo", ((_, [{
+					const UserPopoutComponents = external_PluginApi_namespaceObject.WebpackModules.getByProps("UserPopoutInfo");
+					const UserPopoutBody = external_PluginApi_namespaceObject.WebpackModules.getModule((m => "UserPopoutBody" === m?.default?.displayName && m.default.toString().indexOf("ROLES_LIST") > -1));
+					external_PluginApi_namespaceObject.Patcher.after(UserPopoutComponents, "UserPopoutInfo", ((_, [{
 						user
 					}], returnValue) => {
 						if (this.promises.cancelled) return;
@@ -2630,7 +2662,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					}], returnValue) => {
 						if (this.promises.cancelled) return;
 						if (!Array.isArray(returnValue?.props?.children) || returnValue.props.children.some((child => child?.type === ErrorBoundary))) return returnValue;
-						returnValue.props.children.unshift(external_BdApi_React_default().createElement(ErrorBoundary, {
+						returnValue.props.children.splice(-1, 0, external_BdApi_React_default().createElement(ErrorBoundary, {
 							id: "UserPopoutBody",
 							mini: true,
 							key: "connections"

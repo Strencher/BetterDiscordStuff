@@ -1,6 +1,6 @@
 # UserDetails
 
-> Shows you a lot information about users in popouts.
+> Shows you a lot information about users in both the UserPopout and UserProfile Modal. To enumerate: Creation Date, Joined At Date, Last Message Date, Mutual Friends, Mutual Servers & Connections. It also shows the Roles List in the UserProfile Modal.
 <hr/>
 
 
