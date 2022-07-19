@@ -1,6 +1,6 @@
 /**
  * @name ChannelDms
- * @version 1.2.0
+ * @version 1.2.1
  * @author Strencher
  * @description Allows you to open popout chats of direct messages inside servers.
  * @source https://github.com/Strencher/BetterDiscordStuff/tree/master/ChannelDms
@@ -32,7 +32,7 @@
 const config = {
 	"info": {
 		"name": "ChannelDms",
-		"version": "1.2.0",
+		"version": "1.2.1",
 		"authors": [{
 			"name": "Strencher",
 			"discord_id": "415849376598982656",
@@ -44,11 +44,10 @@ const config = {
 		"github_raw": "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/ChannelDms/ChannelDms.plugin.js"
 	},
 	"changelog": [{
-		"title": "Improvements",
-		"type": "improved",
+		"title": "Bug Fixes",
+		"type": "fixed",
 		"items": [
-			"Fixed for the latest discord update.",
-			"Direct messages shouldn't disappear anymore."
+			"Fixed for the latest discord update."
 		]
 	}],
 	"build": {
@@ -420,7 +419,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			const stores_namespaceObject = Modules["@discord/stores"];
 			var React = __webpack_require__(113);
 			function _extends() {
-				_extends = Object.assign || function(target) {
+				_extends = Object.assign ? Object.assign.bind() : function(target) {
 					for (var i = 1; i < arguments.length; i++) {
 						var source = arguments[i];
 						for (var key in source)
@@ -519,7 +518,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				}, api];
 			}
 			function channelpopout_extends() {
-				channelpopout_extends = Object.assign || function(target) {
+				channelpopout_extends = Object.assign ? Object.assign.bind() : function(target) {
 					for (var i = 1; i < arguments.length; i++) {
 						var source = arguments[i];
 						for (var key in source)
@@ -640,7 +639,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			}
 			var createUpdateWrapper_React = __webpack_require__(113);
 			function createUpdateWrapper_extends() {
-				createUpdateWrapper_extends = Object.assign || function(target) {
+				createUpdateWrapper_extends = Object.assign ? Object.assign.bind() : function(target) {
 					for (var i = 1; i < arguments.length; i++) {
 						var source = arguments[i];
 						for (var key in source)
@@ -734,18 +733,31 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				return store;
 			}
 			var channelmembers = __webpack_require__(781);
-			var privatechannels_React = __webpack_require__(113);
 			const PrivateChannelsConnected = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("PrivateChannelsConnected");
 			const [useChannelStore, privatechannels_Api] = createStore({
 				shouldShow: true,
 				selectedChannelId: ""
 			});
+			const original = Symbol("original");
+			function NestedPrivateChannels(props) {
+				const res = props[original](props);
+				try {
+					const items = res?.props?.children?.[1]?.props?.children;
+					if (Array.isArray(items))
+						while (items.length) items.pop();
+				} catch (error) {
+					external_PluginApi_namespaceObject.Logger.error("Failed to patch NestedPrivateChannels:", error);
+				}
+				return res;
+			}
 			function PrivateChannelsPatched(props) {
 				const ret = PrivateChannelsConnected(props);
 				try {
 					ret.props.showNitroTab = false;
 					ret.props.showLibrary = false;
-					ret.props.homeLink = null;
+					ret.props.homeLink = "";
+					ret.props[original] = ret.type;
+					ret.type = NestedPrivateChannels;
 				} catch (error) {
 					external_PluginApi_namespaceObject.Logger.error(`Failed to set properties on PrivateChannels:`, error);
 				}
@@ -760,17 +772,17 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						selectedChannelId: id
 					});
 				}), [selectedChannelId]);
-				return privatechannels_React.createElement(external_PluginApi_namespaceObject.Components.ErrorBoundary, null, privatechannels_React.createElement(context.Provider, {
+				return external_BdApi_React_default().createElement(external_PluginApi_namespaceObject.Components.ErrorBoundary, null, external_BdApi_React_default().createElement(context.Provider, {
 					value: {
 						shouldShow: true,
 						selectedChannelId,
 						setSelectedChannelId
 					}
-				}, privatechannels_React.createElement(PrivateChannelsPatched, null)));
+				}, external_BdApi_React_default().createElement(PrivateChannelsPatched, null)));
 			}
 			var channelmembers_React = __webpack_require__(113);
 			function channelmembers_extends() {
-				channelmembers_extends = Object.assign || function(target) {
+				channelmembers_extends = Object.assign ? Object.assign.bind() : function(target) {
 					for (var i = 1; i < arguments.length; i++) {
 						var source = arguments[i];
 						for (var key in source)
@@ -855,7 +867,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				}));
 			}
 			function ChannelDms_extends() {
-				ChannelDms_extends = Object.assign || function(target) {
+				ChannelDms_extends = Object.assign ? Object.assign.bind() : function(target) {
 					for (var i = 1; i < arguments.length; i++) {
 						var source = arguments[i];
 						for (var key in source)
@@ -909,7 +921,8 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					PrivateChannel.forceUpdateAll();
 				}
 				patchListItem() {
-					const ListItem = external_PluginApi_namespaceObject.WebpackModules.getModule((e => /focusProps.*"li"/is.test(e?.render?.toString())));
+					const regex = /focusProps.*"li"/is;
+					const ListItem = external_PluginApi_namespaceObject.WebpackModules.getModule((e => regex.test(e?.render?.toString())));
 					const InteractiveClasses = external_PluginApi_namespaceObject.WebpackModules.getByProps("interactiveSelected", "interactive");
 					function PatchedNestedRoute({
 						__original,
