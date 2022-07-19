@@ -1,7 +1,7 @@
 {
     "info": {
         "name": "ChannelDms",
-        "version": "1.2.0",
+        "version": "1.2.1",
         "authors": [
             {
                 "name": "Strencher",
@@ -16,11 +16,10 @@
     },
     "changelog": [
         {
-            "title": "Improvements",
-            "type": "improved",
+            "title": "Bug Fixes",
+            "type": "fixed",
             "items": [
-                "Fixed for the latest discord update.",
-                "Direct messages shouldn't disappear anymore."
+                "Fixed for the latest discord update."
             ]
         }
     ],
