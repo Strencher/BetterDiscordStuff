@@ -195,12 +195,10 @@ export default class PronounDB extends BasePlugin {
                     const children = Utilities.findInReactTree(ret, Array.isArray)
                     if (!Array.isArray(children)) return;
     
-                    const {user} = props;
-    
                     children.splice(
                         7,
                         0,
-                        buildUserContextMenu(user)
+                        buildUserContextMenu(props)
                     );
                 });
             } else {
