@@ -143,13 +143,13 @@ export default class PronounDB extends BasePlugin {
                 </FormItem>
             ], {
                 onConfirm: () => {
-                    PronounsDB.setPronouns(user.id, value);
+                    PronounsDB.setPronouns(user, value);
                 },
             });
         };
 
         const buildUserContextMenu = (user) => {
-            const localOverride = Settings.get("customPronouns")[user.id];
+            const localOverride = Settings.get("customPronouns")[user];
             return DCM.buildMenuChildren([
                 {
                     type: "submenu",
@@ -162,9 +162,9 @@ export default class PronounDB extends BasePlugin {
                             danger: Boolean(localOverride),
                             action: () => {
                                 if (localOverride) {
-                                    delete Settings.get("customPronouns")[user.id];
+                                    delete Settings.get("customPronouns")[user];
                                     Settings.saveState();
-                                    PronounsDB.removePronoun(user.id);
+                                    PronounsDB.removePronoun(user);
                                 } else openModal(user);
                             }
                         },
@@ -179,7 +179,7 @@ export default class PronounDB extends BasePlugin {
         }
 
         const patched = new WeakSet();
-        const REGEX = /user.*contextmenu/i;
+        const REGEX = /useUserRolesItems/i;
         const filter = ContextMenu.filterContext(REGEX);
         const loop = async () => {
             const UserContextMenu = await DCM.getDiscordMenu(m => {
