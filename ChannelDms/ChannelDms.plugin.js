@@ -1,6 +1,6 @@
 /**
  * @name ChannelDms
- * @version 1.2.1
+ * @version 1.2.2
  * @author Strencher
  * @description Allows you to open popout chats of direct messages inside servers.
  * @source https://github.com/Strencher/BetterDiscordStuff/tree/master/ChannelDms
@@ -32,7 +32,7 @@
 const config = {
 	"info": {
 		"name": "ChannelDms",
-		"version": "1.2.1",
+		"version": "1.2.2",
 		"authors": [{
 			"name": "Strencher",
 			"discord_id": "415849376598982656",
@@ -417,37 +417,6 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			const context = ChannelInfoContext;
 			const components_namespaceObject = Modules["@discord/components"];
 			const stores_namespaceObject = Modules["@discord/stores"];
-			var React = __webpack_require__(113);
-			function _extends() {
-				_extends = Object.assign ? Object.assign.bind() : function(target) {
-					for (var i = 1; i < arguments.length; i++) {
-						var source = arguments[i];
-						for (var key in source)
-							if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-					}
-					return target;
-				};
-				return _extends.apply(this, arguments);
-			}
-			function AsyncComponent({
-				promise,
-				fallback,
-				...props
-			}) {
-				const [Component, setComponent] = (0, external_BdApi_React_.useState)((() => fallback));
-				(0, external_BdApi_React_.useEffect)((() => {
-					Promise.resolve(promise).then((comp => {
-						setComponent((() => comp));
-					}));
-				}), [promise]);
-				return React.createElement(Component, props);
-			}
-			function wrapPromise(promise, fallback) {
-				return props => React.createElement(AsyncComponent, _extends({
-					promise,
-					fallback
-				}, props));
-			}
 			var channelpopout = __webpack_require__(290);
 			const icons_namespaceObject = Modules["@discord/icons"];
 			const constants_namespaceObject = Modules["@discord/constants"];
@@ -517,8 +486,8 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					return collector(api.getState());
 				}, api];
 			}
-			function channelpopout_extends() {
-				channelpopout_extends = Object.assign ? Object.assign.bind() : function(target) {
+			function _extends() {
+				_extends = Object.assign ? Object.assign.bind() : function(target) {
 					for (var i = 1; i < arguments.length; i++) {
 						var source = arguments[i];
 						for (var key in source)
@@ -526,10 +495,10 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					}
 					return target;
 				};
-				return channelpopout_extends.apply(this, arguments);
+				return _extends.apply(this, arguments);
 			}
 			const classes = external_PluginApi_namespaceObject.WebpackModules.getByProps("chatContent");
-			const ChannelChat = wrapPromise(external_PluginApi_namespaceObject.ReactComponents.getComponentByName("ChannelChat", "." + classes?.chatContent).then((res => res.component)), (() => external_BdApi_React_default().createElement("p", null, "Loading...")));
+			const ChannelChat = external_PluginApi_namespaceObject.WebpackModules.getModule((m => m?.type?.toString().indexOf("communicationDisabledUntil") > -1));
 			const ChannelContext = external_BdApi_React_default().createContext(null);
 			const {
 				ChatInputTypes
@@ -574,7 +543,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				return external_BdApi_React_default().createElement(components_namespaceObject.Tooltip, {
 					text: state ? "Expand" : "Collapse",
 					position: "top"
-				}, (props => external_BdApi_React_default().createElement(Button, channelpopout_extends({}, props, {
+				}, (props => external_BdApi_React_default().createElement(Button, _extends({}, props, {
 					look: Button.Looks.BLANK,
 					size: Button.Sizes.ICON,
 					className: channelpopout.Z.collapseButton,
@@ -637,7 +606,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					pendingReply
 				}))));
 			}
-			var createUpdateWrapper_React = __webpack_require__(113);
+			var React = __webpack_require__(113);
 			function createUpdateWrapper_extends() {
 				createUpdateWrapper_extends = Object.assign ? Object.assign.bind() : function(target) {
 					for (var i = 1; i < arguments.length; i++) {
@@ -650,8 +619,8 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				return createUpdateWrapper_extends.apply(this, arguments);
 			}
 			const createUpdateWrapper = (Component, valueProp = "value", changeProp = "onChange", valueIndex = 0) => props => {
-				const [value, setValue] = createUpdateWrapper_React.useState(props[valueProp]);
-				return createUpdateWrapper_React.createElement(Component, createUpdateWrapper_extends({}, props, {
+				const [value, setValue] = React.useState(props[valueProp]);
+				return React.createElement(Component, createUpdateWrapper_extends({}, props, {
 					[valueProp]: value,
 					[changeProp]: (...args) => {
 						const value = args[valueIndex];
