@@ -11,10 +11,11 @@ import createStore from "common/hooks/zustand";
 import {Tooltip} from "@discord/components";
 
 const classes = WebpackModules.getByProps("chatContent");
-const ChannelChat = wrapPromise(
+const ChannelChat = WebpackModules.getModule(m => m?.type?.toString().indexOf("communicationDisabledUntil") > -1);
+/*const ChannelChat = wrapPromise(
     ReactComponents.getComponentByName("ChannelChat", "." + classes?.chatContent).then(res => res.component),
     () => <p>Loading...</p>
-);
+);*/
 const ChannelContext = React.createContext(null);
 const {ChatInputTypes} = WebpackModules.getByProps("ChatInputTypes") ?? {};
 const StatusIcon = WebpackModules.getByDisplayName("FluxContainer(Status)");
