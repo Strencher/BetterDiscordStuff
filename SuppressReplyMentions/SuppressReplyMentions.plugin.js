@@ -105,7 +105,7 @@ module.exports = (() => {
     } : (([Plugin, Api]) => {
         const plugin = (Plugin, Api) => {
 
-            const {PluginUtilities, Utilities, WebpackModules, DiscordModules, Patcher, DiscordModules: {React, DiscordConstants: {ActionTypes}}} = Api;
+            const {PluginUtilities, Utilities, WebpackModules, DiscordModules, Patcher, DiscordModules: {React}} = Api;
             const suppressed = [];
             const UserUtils = WebpackModules.getByProps("getCurrentUser");
             const Tooltip = WebpackModules.getByDisplayName("Tooltip");
@@ -128,7 +128,7 @@ module.exports = (() => {
 
                 patchMessageCreate() {
                     Patcher.before(DiscordModules.Dispatcher, "_dispatch", (_, [{message, type}]) => {
-                        if (type != ActionTypes.MESSAGE_CREATE || this.settings.mentionSettings == 0) return;
+                        if (type != "MESSAGE_CREATE" || this.settings.mentionSettings == 0) return;
                         const currentUser = UserUtils.getCurrentUser();
                         if (!currentUser || !Array.isArray(message.mentions) || !message.referenced_message) return;
 
