@@ -52,13 +52,6 @@ const config = {
 			"items": [
 				"Fixed Plugin build crash."
 			]
-		},
-		{
-			"title": "Improvements",
-			"type": "improved",
-			"items": [
-				
-			]
 		}
 	],
 	"build": {
