@@ -1,5 +1,4 @@
 /// <reference path="../types/main.d.ts" />
-
 import {ActivityTypes} from "@discord/constants";
 import {connectStores, useStateFromStores} from "@discord/flux";
 import {Messages} from "@discord/i18n";
