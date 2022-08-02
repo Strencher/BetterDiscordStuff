@@ -1,5 +1,5 @@
 /// <reference path="../types/main.d.ts" />
-
+import {ActivityTypes} from "@discord/constants";
 import {connectStores, useStateFromStores} from "@discord/flux";
 import {Messages} from "@discord/i18n";
 import {Dispatcher} from "@discord/modules";
@@ -255,8 +255,8 @@ export default class Plugin extends BasePlugin {
             }
 
             switch (props.type) {
-                case "PLAYING": return <Gamepad {...props} />;
-                case "LISTENING": return <Headphones {...props} />;
+                case ActivityTypes.PLAYING: return <Gamepad {...props} />;
+                case ActivityTypes.LISTENING: return <Headphones {...props} />;
             }
         });
     }

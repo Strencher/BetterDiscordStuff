@@ -120,7 +120,7 @@ class JoinedAtStore extends Store {
 
 const JoinedAt: JoinedAtStore = new JoinedAtStore(Dispatcher, {
     // @ts-ignore
-    ["GUILD_MEMBERS_CHUNK"]: handleGuildMembersChunk
+    GUILD_MEMBERS_CHUNK: handleGuildMembersChunk
 });
 
 export default JoinedAt;
