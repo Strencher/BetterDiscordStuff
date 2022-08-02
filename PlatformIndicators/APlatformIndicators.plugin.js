@@ -148,7 +148,7 @@ module.exports = (() => {
         stop() { }
     } : (([Plugin, Api]) => {
         const plugin = (Plugin, Api) => {
-            const { ReactComponents, Utilities, WebpackModules, PluginUtilities, ReactTools, Patcher, Logger, DiscordModules: { React, UserStatusStore, UserStore, Dispatcher, DiscordConstants: { ActionTypes } } } = Api;
+            const { ReactComponents, Utilities, WebpackModules, PluginUtilities, ReactTools, Patcher, Logger, DiscordModules: { React, UserStatusStore, UserStore, Dispatcher } } = Api;
             const { TooltipContainer: Tooltip } = WebpackModules.getByProps("TooltipContainer");
             const h = React.createElement;
             const StatusModule = WebpackModules.getByProps("Status", "getStatusMask");
@@ -230,9 +230,6 @@ module.exports = (() => {
                     return "";
                 return (selector ? "." : "") + items.map(item => module[item]).join(selector ? "." : " ");
             };
-            let currentClientStatus = SessionsStore.getSession() ? {
-                [SessionsStore.getSession().clientInfo.client]: SessionsStore.getSession().status
-            } : {};
             
             const StatusIndicators = function StatusIndicators(props) {
                 const iconStates = Flux.useStateFromStoresObject([Settings], () => Settings.get("icons", {}));
@@ -249,7 +246,9 @@ module.exports = (() => {
                 });
 
                 const clients = Flux.useStateFromStoresObject([UserStatusStore], () => {
-                    if (user?.id === AuthStore.getId()) return currentClientStatus;
+                    if (user?.id === AuthStore.getId()) return SessionsStore.getSession() ? {
+                [SessionsStore.getSession().clientInfo.client]: SessionsStore.getSession().status
+            } : {};
 
                     return UserStatusStore.getState().clientStatuses[user?.id] ?? {};
                 });
@@ -285,12 +284,6 @@ module.exports = (() => {
                     });
 
                     return panel.getElement();
-                }
-
-                ON_PRESENCE_UPDATE = ({ user, clientStatus }) => {
-                    if (user.id !== AuthStore.getId()) return;
-                    currentClientStatus = clientStatus;
-                    UserStatusStore.emitChange();
                 }
 
                 css = `
@@ -331,7 +324,6 @@ module.exports = (() => {
                     Utilities.suppressErrors(this.patchMemberListItem.bind(this))();
                     Utilities.suppressErrors(this.patchDmList.bind(this))();
                     Utilities.suppressErrors(this.patchDiscordTag.bind(this))();
-                    Dispatcher.subscribe(ActionTypes.PRESENCE_UPDATE, this.ON_PRESENCE_UPDATE);
                 }
 
                 async patchMemberListItem() {
@@ -449,7 +441,6 @@ module.exports = (() => {
                 onStop() {
                     Patcher.unpatchAll();
                     PluginUtilities.removeStyle(config.info.name);
-                    Dispatcher.unsubscribe(ActionTypes.PRESENCE_UPDATE, this.ON_PRESENCE_UPDATE);
                 }
             };
         };
