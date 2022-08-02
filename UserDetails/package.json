@@ -1,7 +1,7 @@
 {
     "info": {
         "name": "UserDetails",
-        "version": "2.9.0",
+        "version": "2.9.1",
         "authors": [
             {
                 "name": "Strencher",
@@ -20,15 +20,7 @@
             "title": "Bug Fixes",
             "type": "fixed",
             "items": [
-                "Fixed MutualFriends & MutualServers showing up in the UserPopout."
-            ]
-        },
-        {
-            "title": "Improvements",
-            "type": "improved",
-            "items": [
-                "Improved badge for the EpicGames connection.",
-                "Improved tooltip color in the UserPopout."
+                "Plugin works again"
             ]
         }
     ],
