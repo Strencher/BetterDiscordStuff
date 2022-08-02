@@ -1,6 +1,6 @@
 /**
  * @name UserDetails
- * @version 2.9.0
+ * @version 2.9.1
  * @author Strencher
  * @description Shows you a lot information about users in both the UserPopout and UserProfile Modal. To enumerate: Creation Date, Joined At Date, Last Message Date, Mutual Friends, Mutual Servers & Connections. It also shows the Roles List in the UserProfile Modal.
  * @source https://github.com/Strencher/BetterDiscordStuff/tree/development/UserDetails
@@ -33,7 +33,7 @@
 const config = {
 	"info": {
 		"name": "UserDetails",
-		"version": "2.9.0",
+		"version": "2.9.1",
 		"authors": [{
 			"name": "Strencher",
 			"discord_id": "415849376598982656",
@@ -46,21 +46,12 @@ const config = {
 		"invite": "gvA2ree"
 	},
 	"changelog": [{
-			"title": "Bug Fixes",
-			"type": "fixed",
-			"items": [
-				"Fixed MutualFriends & MutualServers showing up in the UserPopout."
-			]
-		},
-		{
-			"title": "Improvements",
-			"type": "improved",
-			"items": [
-				"Improved badge for the EpicGames connection.",
-				"Improved tooltip color in the UserPopout."
-			]
-		}
-	],
+		"title": "Bug Fixes",
+		"type": "fixed",
+		"items": [
+			"Plugin works again"
+		]
+	}],
 	"build": {
 		"zlibrary": true,
 		"copy": true,
@@ -980,10 +971,10 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			class Strings {
 				static init() {
 					this.setLanguage(i18n_default().getLocale());
-					modules_namespaceObject.Dispatcher.subscribe(constants_namespaceObject.ActionTypes.USER_SETTINGS_UPDATE, this.handleLocaleChange);
+					modules_namespaceObject.Dispatcher.subscribe("USER_SETTINGS_UPDATE", this.handleLocaleChange);
 				}
 				static shutdown() {
-					modules_namespaceObject.Dispatcher.unsubscribe(constants_namespaceObject.ActionTypes.USER_SETTINGS_UPDATE, this.handleLocaleChange);
+					modules_namespaceObject.Dispatcher.unsubscribe("USER_SETTINGS_UPDATE", this.handleLocaleChange);
 				}
 				static setLanguage(lang) {
 					this._strings = locales[lang] ?? locales["en-US"];
@@ -1365,7 +1356,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				}
 			}
 			const JoinedAt = new JoinedAtStore(modules_namespaceObject.Dispatcher, {
-				[constants_namespaceObject.ActionTypes.GUILD_MEMBERS_CHUNK]: handleGuildMembersChunk
+				GUILD_MEMBERS_CHUNK: handleGuildMembersChunk
 			});
 			const joinedAt = JoinedAt;
 			const joinedDate_DEFAULT_FORMAT = "Joined At: $hour:$minute:$second, $day.$month.$year $daysago days";
