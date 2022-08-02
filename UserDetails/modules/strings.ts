@@ -1,4 +1,3 @@
-import { ActionTypes } from "@discord/constants";
 import LocaleManager from "@discord/i18n";
 import { Dispatcher } from "@discord/modules";
 import Languages, { Keys } from "./locales";
@@ -9,7 +8,7 @@ export default class Strings {
     public static init(): void {
         this.setLanguage(LocaleManager.getLocale());
 
-        Dispatcher.subscribe(ActionTypes.USER_SETTINGS_UPDATE, this.handleLocaleChange);
+        Dispatcher.subscribe("USER_SETTINGS_UPDATE", this.handleLocaleChange);
     }
 
     static handleLocaleChange = () => {
@@ -17,7 +16,7 @@ export default class Strings {
     }
     
     public static shutdown(): void {
-        Dispatcher.unsubscribe(ActionTypes.USER_SETTINGS_UPDATE, this.handleLocaleChange);
+        Dispatcher.unsubscribe("USER_SETTINGS_UPDATE", this.handleLocaleChange);
     }
 
     public static setLanguage(lang: string) {

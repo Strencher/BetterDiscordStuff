@@ -1,5 +1,4 @@
 import { GuildActions } from "@discord/actions";
-import { ActionTypes } from "@discord/constants";
 import { Store } from "@discord/flux";
 import { Dispatcher } from "@discord/modules";
 import { Members } from "@discord/stores";
@@ -121,7 +120,7 @@ class JoinedAtStore extends Store {
 
 const JoinedAt: JoinedAtStore = new JoinedAtStore(Dispatcher, {
     // @ts-ignore
-    [ActionTypes.GUILD_MEMBERS_CHUNK]: handleGuildMembersChunk
+    ["GUILD_MEMBERS_CHUNK"]: handleGuildMembersChunk
 });
 
 export default JoinedAt;
