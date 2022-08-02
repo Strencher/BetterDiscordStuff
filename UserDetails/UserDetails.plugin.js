@@ -1,6 +1,6 @@
 /**
  * @name UserDetails
- * @version 2.9.0
+ * @version 2.9.1
  * @author Strencher
  * @description Shows you a lot information about users in both the UserPopout and UserProfile Modal. To enumerate: Creation Date, Joined At Date, Last Message Date, Mutual Friends, Mutual Servers & Connections. It also shows the Roles List in the UserProfile Modal.
  * @source https://github.com/Strencher/BetterDiscordStuff/tree/development/UserDetails
@@ -33,7 +33,7 @@
 const config = {
 	"info": {
 		"name": "UserDetails",
-		"version": "2.9.0",
+		"version": "2.9.1",
 		"authors": [{
 			"name": "Strencher",
 			"discord_id": "415849376598982656",
@@ -45,19 +45,19 @@ const config = {
 		"github_raw": "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/UserDetails/UserDetails.plugin.js",
 		"invite": "gvA2ree"
 	},
-	"changelog": [{
+	"changelog": [
+		{
 			"title": "Bug Fixes",
 			"type": "fixed",
 			"items": [
-				"Fixed MutualFriends & MutualServers showing up in the UserPopout."
+				"Fixed Plugin build crash."
 			]
 		},
 		{
 			"title": "Improvements",
 			"type": "improved",
 			"items": [
-				"Improved badge for the EpicGames connection.",
-				"Improved tooltip color in the UserPopout."
+				
 			]
 		}
 	],
