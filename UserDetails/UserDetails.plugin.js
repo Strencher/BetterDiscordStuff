@@ -980,10 +980,10 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			class Strings {
 				static init() {
 					this.setLanguage(i18n_default().getLocale());
-					modules_namespaceObject.Dispatcher.subscribe(constants_namespaceObject.ActionTypes.USER_SETTINGS_UPDATE, this.handleLocaleChange);
+					modules_namespaceObject.Dispatcher.subscribe(constants_namespaceObject.USER_SETTINGS_UPDATE, this.handleLocaleChange);
 				}
 				static shutdown() {
-					modules_namespaceObject.Dispatcher.unsubscribe(constants_namespaceObject.ActionTypes.USER_SETTINGS_UPDATE, this.handleLocaleChange);
+					modules_namespaceObject.Dispatcher.unsubscribe(constants_namespaceObject.USER_SETTINGS_UPDATE, this.handleLocaleChange);
 				}
 				static setLanguage(lang) {
 					this._strings = locales[lang] ?? locales["en-US"];
@@ -1365,7 +1365,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				}
 			}
 			const JoinedAt = new JoinedAtStore(modules_namespaceObject.Dispatcher, {
-				[constants_namespaceObject.ActionTypes.GUILD_MEMBERS_CHUNK]: handleGuildMembersChunk
+				[constants_namespaceObject.GUILD_MEMBERS_CHUNK]: handleGuildMembersChunk
 			});
 			const joinedAt = JoinedAt;
 			const joinedDate_DEFAULT_FORMAT = "Joined At: $hour:$minute:$second, $day.$month.$year $daysago days";
