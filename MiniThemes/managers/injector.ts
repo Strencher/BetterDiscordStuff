@@ -1,8 +1,10 @@
 import {Store} from "@discord/flux";
-import {Dispatcher} from "@discord/modules";
+// import {Dispatcher} from "@discord/modules";
 import {PluginUtilities, WebpackModules} from "@zlibrary";
 import React from "react";
 import config from "../package.json";
+
+const Dispatcher = WebpackModules.getByProps('dispatch', 'subscribe');
 
 const SnippetsInjector = new class SnippetsInjector extends Store {
     constructor() {

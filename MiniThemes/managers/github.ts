@@ -1,7 +1,10 @@
 import {Store} from "@discord/flux";
-import {Dispatcher} from "@discord/modules";
+// import {Dispatcher} from "@discord/modules";
 import {Logger, Toasts} from "@zlibrary";
 import https from "https";
+
+import { WebpackModules } from "@zlibrary";
+const Dispatcher = WebpackModules.getByProps('dispatch', 'subscribe');
 
 type DispatchEvent<T> = {
     type: T;

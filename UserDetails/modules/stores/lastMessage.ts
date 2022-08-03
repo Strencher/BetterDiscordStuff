@@ -2,7 +2,11 @@
 
 import { Endpoints } from "@discord/constants";
 import { Store } from "@discord/flux";
-import { Dispatcher } from "@discord/modules";
+
+// import { Dispatcher } from "@discord/modules";
+import { WebpackModules } from "@zlibrary";
+const Dispatcher = WebpackModules.getByProps('dispatch', 'subscribe');
+
 import { stringify } from "@discord/sanitize";
 import { Logger } from "@discord/utils";
 import { APIModule } from "@zlibrary/discord";

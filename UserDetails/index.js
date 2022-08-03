@@ -2,7 +2,10 @@
 import {ActivityTypes} from "@discord/constants";
 import {connectStores, useStateFromStores} from "@discord/flux";
 import {Messages} from "@discord/i18n";
-import {Dispatcher} from "@discord/modules";
+
+// import {Dispatcher} from "@discord/modules";
+const Dispatcher = WebpackModules.getByProps('dispatch', 'subscribe');
+
 import {Activities, Members, SelectedChannels, SelectedGuilds, Users} from "@discord/stores";
 import {ColorConverter, Patcher, ReactComponents, WebpackModules} from "@zlibrary";
 import BasePlugin from "@zlibrary/plugin";

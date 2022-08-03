@@ -9,7 +9,11 @@ import Settings from "./modules/settings";
 import style from "./components/notification.scss";
 import styles from "styles";
 import {DiscordConstants} from "@zlibrary/discord";
-import {Dispatcher} from "@discord/modules";
+
+// import {Dispatcher} from "@discord/modules";
+import { WebpackModules } from "@zlibrary";
+const Dispatcher = WebpackModules.getByProps('dispatch', 'subscribe');
+
 import LogsPanel from "./components/panel";
 import Constants from "./data/constants";
 import SettingsPanel from "./components/Settings";

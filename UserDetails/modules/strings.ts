@@ -1,5 +1,9 @@
 import LocaleManager from "@discord/i18n";
-import { Dispatcher } from "@discord/modules";
+
+// import { Dispatcher } from "@discord/modules";
+import { WebpackModules } from "@zlibrary";
+const Dispatcher = WebpackModules.getByProps('dispatch', 'subscribe');
+
 import Languages, { Keys } from "./locales";
 
 export default class Strings {

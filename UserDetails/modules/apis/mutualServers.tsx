@@ -4,7 +4,11 @@ import {GuildActions, ProfileActions} from "@discord/actions";
 import {TooltipContainer as Tooltip} from "@discord/components";
 import {useStateFromStores} from "@discord/flux";
 import {Messages} from "@discord/i18n";
-import {Dispatcher} from "@discord/modules";
+
+// import {Dispatcher} from "@discord/modules";
+import { WebpackModules } from "@zlibrary";
+const Dispatcher = WebpackModules.getByProps('dispatch', 'subscribe');
+
 import {UserProfile, Users} from "@discord/stores";
 import {joinClassNames} from "@discord/utils";
 import {Logger, Utilities, WebpackModules} from "@zlibrary";

@@ -1,5 +1,9 @@
 import {Store} from "@discord/flux";
-import {Dispatcher} from "@discord/modules";
+
+// import {Dispatcher} from "@discord/modules";
+import { WebpackModules } from "@zlibrary";
+const Dispatcher = WebpackModules.getByProps('dispatch', 'subscribe');
+
 // @ts-ignore
 import {get as fetch} from "https";
 import {Logger} from "@discord/utils";

@@ -10,7 +10,10 @@ import styles from "./mutualFriends.scss";
 import {Tooltip} from "@discord/components";
 import {joinClassNames} from "@discord/utils";
 import {ProfileActions} from "@discord/actions";
-import {Dispatcher} from "@discord/modules";
+
+// import {Dispatcher} from "@discord/modules";
+const Dispatcher = WebpackModules.getByProps('dispatch', 'subscribe');
+
 import {useSettings} from "./util";
 import MainStyles from "./styles.scss";
 

@@ -14,7 +14,10 @@ import {Logger} from "@zlibrary";
 import Connections from "@discord/connections";
 import Strings from "../strings";
 import {joinClassNames} from "@discord/utils";
-import {Dispatcher} from "@discord/modules";
+
+// import {Dispatcher} from "@discord/modules";
+const Dispatcher = WebpackModules.getByProps('dispatch', 'subscribe');
+
 import MainStyles from "./styles.scss";
 
 const {Heading} = WebpackModules.getByProps("Heading") ?? {Heading: () => null};

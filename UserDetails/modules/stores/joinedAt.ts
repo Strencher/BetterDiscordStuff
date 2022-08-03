@@ -1,6 +1,10 @@
 import { GuildActions } from "@discord/actions";
 import { Store } from "@discord/flux";
-import { Dispatcher } from "@discord/modules";
+
+// import { Dispatcher } from "@discord/modules";
+import { WebpackModules } from "@zlibrary";
+const Dispatcher = WebpackModules.getByProps('dispatch', 'subscribe');
+
 import { Members } from "@discord/stores";
 import { Logger } from "@discord/utils";
 

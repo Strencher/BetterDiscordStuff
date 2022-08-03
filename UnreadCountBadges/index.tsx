@@ -13,8 +13,12 @@ import ChannelUnreadBadge, {ConnectedUnreadBadge, isChannelMuted} from "./compon
 import BlobContainer from "./components/blobContainer";
 import SettingsPanel from "./components/Settings";
 import { Guilds, Users } from "@discord/stores";
-import {Dispatcher} from "@discord/modules";
+
+// import {Dispatcher} from "@discord/modules";
+const Dispatcher = WebpackModules.getByProps('dispatch', 'subscribe');
+
 import { ActionTypes } from "@discord/constants";
+
 
 const MutedStore = WebpackModules.getByProps("getMutedChannels");
 const UnreadStore = WebpackModules.getByProps("getUnreadCount");

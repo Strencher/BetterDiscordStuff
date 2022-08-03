@@ -6,7 +6,9 @@ import MiniThemesSettings from "./components/settings";
 import styles from "styles";
 import SnippetsInjector from "./managers/injector";
 import GithubStore from "./managers/github";
-import {Dispatcher} from "@discord/modules";
+
+// import {Dispatcher} from "@discord/modules";
+const Dispatcher = WebpackModules.getByProps('dispatch', 'subscribe');
 
 export default class MiniThemes extends BasePlugin {
     onStart() {
