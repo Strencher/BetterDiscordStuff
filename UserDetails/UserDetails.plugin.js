@@ -49,7 +49,7 @@ const config = {
 		"title": "Bug Fixes",
 		"type": "fixed",
 		"items": [
-			"Plugin works again"
+			"The Plugin works again"
 		]
 	}],
 	"build": {
@@ -149,7 +149,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					return ___createMemoize___(this, 'Flex', () => BdApi.findModuleByDisplayName('Flex'))
 				},
 				get 'Text'() {
-					return ___createMemoize___(this, 'Text', () => BdApi.findModuleByDisplayName('Text'))
+					return ___createMemoize___(this, 'Text', () => BdApi.findModuleByDisplayName('LegacyText'))
 				},
 				get 'Card'() {
 					return ___createMemoize___(this, 'Card', () => BdApi.findModuleByDisplayName('Card'))
@@ -157,7 +157,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			},
 			'@discord/modules': {
 				get 'Dispatcher'() {
-					return ___createMemoize___(this, 'Dispatcher', () => BdApi.findModuleByProps('dirtyDispatch', 'subscribe'))
+					return ___createMemoize___(this, 'Dispatcher', () => BdApi.findModuleByProps('dispatch', 'isDispatching'))
 				},
 				get 'ComponentDispatcher'() {
 					return ___createMemoize___(this, 'ComponentDispatcher', () => BdApi.findModuleByProps('ComponentDispatch')?.ComponentDispatch)
@@ -718,18 +718,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			const Settings = new SettingsManager(package_namespaceObject.um.u2);
 			const modules_Settings = Settings;
 			var flowerstar = __webpack_require__(564);
-			function _extends() {
-				_extends = Object.assign ? Object.assign.bind() : function(target) {
-					for (var i = 1; i < arguments.length; i++) {
-						var source = arguments[i];
-						for (var key in source)
-							if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-					}
-					return target;
-				};
-				return _extends.apply(this, arguments);
-			}
-			const icons_flowerstar = props => external_BdApi_React_default().createElement("div", _extends({}, props, {
+			const icons_flowerstar = props => external_BdApi_React_default().createElement("div", Object.assign({}, props, {
 				className: (0, utils_namespaceObject.joinClassNames)(flowerstar.Z.wrapper, props.className)
 			}), external_BdApi_React_default().createElement("svg", {
 				width: "16",
@@ -753,17 +742,6 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			const native_namespaceObject = Modules["@discord/native"];
 			const external_window_namespaceObject = window._;
 			var external_window_default = __webpack_require__.n(external_window_namespaceObject);
-			function Utilities_extends() {
-				Utilities_extends = Object.assign ? Object.assign.bind() : function(target) {
-					for (var i = 1; i < arguments.length; i++) {
-						var source = arguments[i];
-						for (var key in source)
-							if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-					}
-					return target;
-				};
-				return Utilities_extends.apply(this, arguments);
-			}
 			const FormItem = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("FormItem");
 			const FormText = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("FormText");
 			const FormDivider = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("FormDivider");
@@ -801,7 +779,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 							direction: Flex.Direction.VERTICAL
 						}, external_BdApi_React_default().createElement(FormItem, {
 							title: props.name
-						}, external_BdApi_React_default().createElement(Component, Utilities_extends({}, props, {
+						}, external_BdApi_React_default().createElement(Component, Object.assign({}, props, {
 							onChange: value => {
 								value = value.value ?? value;
 								setState(value);
@@ -811,7 +789,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 							type: "description",
 							disabled: Boolean(props.note)
 						}, props.note)), external_BdApi_React_default().createElement(FormDivider, null));
-						else return external_BdApi_React_default().createElement(Component, Utilities_extends({}, props, {
+						else return external_BdApi_React_default().createElement(Component, Object.assign({}, props, {
 							onChange: value => {
 								value = value.value ?? value;
 								setState(value);
@@ -844,17 +822,6 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				}
 			}
 			var styles = __webpack_require__(965);
-			function badge_extends() {
-				badge_extends = Object.assign ? Object.assign.bind() : function(target) {
-					for (var i = 1; i < arguments.length; i++) {
-						var source = arguments[i];
-						for (var key in source)
-							if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-					}
-					return target;
-				};
-				return badge_extends.apply(this, arguments);
-			}
 			function Badge({
 				item
 			}) {
@@ -878,7 +845,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				return external_BdApi_React_default().createElement(components_namespaceObject.Tooltip, {
 					text: `${external_window_default().upperFirst(item.type)}: ${item.name}`,
 					tooltipClassName: styles.Z.tooltip
-				}, (props => external_BdApi_React_default().createElement("div", badge_extends({}, props, {
+				}, (props => external_BdApi_React_default().createElement("div", Object.assign({}, props, {
 					onClick,
 					className: (0, utils_namespaceObject.joinClassNames)(badge.Z.connection, {
 						[badge.Z.verified]: shouldVerified
@@ -890,18 +857,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					className: badge.Z.verifiedBadge
 				}))));
 			}
-			function circle_extends() {
-				circle_extends = Object.assign ? Object.assign.bind() : function(target) {
-					for (var i = 1; i < arguments.length; i++) {
-						var source = arguments[i];
-						for (var key in source)
-							if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-					}
-					return target;
-				};
-				return circle_extends.apply(this, arguments);
-			}
-			const circle = props => external_BdApi_React_default().createElement("svg", circle_extends({}, props, {
+			const circle = props => external_BdApi_React_default().createElement("svg", Object.assign({}, props, {
 				xmlns: "http://www.w3.org/2000/svg",
 				viewBox: "0 0 36 36"
 			}), external_BdApi_React_default().createElement("circle", {
@@ -909,18 +865,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				cy: "18",
 				r: "18"
 			}));
-			function error_extends() {
-				error_extends = Object.assign ? Object.assign.bind() : function(target) {
-					for (var i = 1; i < arguments.length; i++) {
-						var source = arguments[i];
-						for (var key in source)
-							if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-					}
-					return target;
-				};
-				return error_extends.apply(this, arguments);
-			}
-			const error = props => external_BdApi_React_default().createElement("svg", error_extends({
+			const error = props => external_BdApi_React_default().createElement("svg", Object.assign({
 				xmlns: "http://www.w3.org/2000/svg",
 				viewBox: "0 0 24 24",
 				fill: "#ddd",
@@ -1035,18 +980,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					className: apis_connections.Z.loading
 				})))));
 			}
-			function cake_extends() {
-				cake_extends = Object.assign ? Object.assign.bind() : function(target) {
-					for (var i = 1; i < arguments.length; i++) {
-						var source = arguments[i];
-						for (var key in source)
-							if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-					}
-					return target;
-				};
-				return cake_extends.apply(this, arguments);
-			}
-			const cake = props => external_BdApi_React_default().createElement("svg", cake_extends({}, props, {
+			const cake = props => external_BdApi_React_default().createElement("svg", Object.assign({}, props, {
 				xmlns: "http://www.w3.org/2000/svg",
 				height: "24",
 				viewBox: "0 0 24 24",
@@ -1204,18 +1138,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					text
 				}, external_BdApi_React_default().createElement(cake, null)) : external_BdApi_React_default().createElement(TextScroller, null, text);
 			}
-			function calendar_extends() {
-				calendar_extends = Object.assign ? Object.assign.bind() : function(target) {
-					for (var i = 1; i < arguments.length; i++) {
-						var source = arguments[i];
-						for (var key in source)
-							if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-					}
-					return target;
-				};
-				return calendar_extends.apply(this, arguments);
-			}
-			const calendar = props => external_BdApi_React_default().createElement("svg", calendar_extends({}, props, {
+			const calendar = props => external_BdApi_React_default().createElement("svg", Object.assign({}, props, {
 				xmlns: "http://www.w3.org/2000/svg",
 				height: "24",
 				viewBox: "0 0 24 24",
@@ -1226,18 +1149,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			}), external_BdApi_React_default().createElement("path", {
 				d: "M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"
 			}));
-			function cube_extends() {
-				cube_extends = Object.assign ? Object.assign.bind() : function(target) {
-					for (var i = 1; i < arguments.length; i++) {
-						var source = arguments[i];
-						for (var key in source)
-							if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-					}
-					return target;
-				};
-				return cube_extends.apply(this, arguments);
-			}
-			const cube = props => external_BdApi_React_default().createElement("svg", cube_extends({}, props, {
+			const cube = props => external_BdApi_React_default().createElement("svg", Object.assign({}, props, {
 				xmlns: "http://www.w3.org/2000/svg",
 				viewBox: "0 0 36 36"
 			}), external_BdApi_React_default().createElement("path", {
@@ -1390,18 +1302,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					className: dates.Z.loading
 				}) : external_BdApi_React_default().createElement(LoadingText, null));
 			}
-			function textbubble_extends() {
-				textbubble_extends = Object.assign ? Object.assign.bind() : function(target) {
-					for (var i = 1; i < arguments.length; i++) {
-						var source = arguments[i];
-						for (var key in source)
-							if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-					}
-					return target;
-				};
-				return textbubble_extends.apply(this, arguments);
-			}
-			const textbubble = props => external_BdApi_React_default().createElement("svg", textbubble_extends({}, props, {
+			const textbubble = props => external_BdApi_React_default().createElement("svg", Object.assign({}, props, {
 				xmlns: "http://www.w3.org/2000/svg",
 				height: "24",
 				viewBox: "0 0 24 24",
@@ -1666,17 +1567,6 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				}, Strings.get("LOADING_MUTUAL_FRIENDS"));
 			}
 			var mutualServers = __webpack_require__(416);
-			function mutualServers_extends() {
-				mutualServers_extends = Object.assign ? Object.assign.bind() : function(target) {
-					for (var i = 1; i < arguments.length; i++) {
-						var source = arguments[i];
-						for (var key in source)
-							if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-					}
-					return target;
-				};
-				return mutualServers_extends.apply(this, arguments);
-			}
 			const FriendsStore = external_PluginApi_namespaceObject.WebpackModules.getByProps("getMutualGuilds");
 			const {
 				Heading: mutualServers_Heading
@@ -1739,7 +1629,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					muted: true
 				}, i18n_namespaceObject.Messages.MUTUAL_GUILDS), external_BdApi_React_default().createElement("div", {
 					className: (0, utils_namespaceObject.joinClassNames)(mutualServers.Z.guilds, settings.stackMutualServers && mutualServers.Z.stack)
-				}, mutualGuilds.map((props => external_BdApi_React_default().createElement(MutualServer, mutualServers_extends({}, props, {
+				}, mutualGuilds.map((props => external_BdApi_React_default().createElement(MutualServer, Object.assign({}, props, {
 					onClick: actions_namespaceObject.GuildActions.transitionToGuildSync
 				})))))) : settings.showEmptyMutualGuilds && external_BdApi_React_default().createElement(mutualServers_Heading, {
 					level: 3,
@@ -1759,18 +1649,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				}, external_BdApi_React_default().createElement(error, null)));
 			}
 			var React = __webpack_require__(113);
-			function spotify_extends() {
-				spotify_extends = Object.assign ? Object.assign.bind() : function(target) {
-					for (var i = 1; i < arguments.length; i++) {
-						var source = arguments[i];
-						for (var key in source)
-							if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-					}
-					return target;
-				};
-				return spotify_extends.apply(this, arguments);
-			}
-			const spotify = props => React.createElement("svg", spotify_extends({}, props, {
+			const spotify = props => React.createElement("svg", Object.assign({}, props, {
 				width: "20",
 				height: "20",
 				viewBox: "0 0 65 65"
@@ -1779,18 +1658,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				d: "M32.5,0.5 C14.826888,0.5 0.5,14.826888 0.5,32.5 C0.5,50.173112 14.826888,64.5 32.5,64.5 C50.173112,64.5 64.5,50.173112 64.5,32.5 C64.5,14.826888 50.173112,0.5 32.5,0.5 Z M47.18,46.66 C46.6031412,47.595466 45.3795381,47.8902025 44.44,47.32 C36.93,42.73 27.44,41.69 16.33,44.23 C15.6145818,44.4464575 14.8381683,44.245926 14.3170501,43.7100969 C13.7959319,43.1742677 13.6170868,42.3925738 13.8533716,41.6834571 C14.0896564,40.9743403 14.7016337,40.4561564 15.44,40.34 C27.63,37.55 38.09,38.75 46.52,43.91 C47.4615306,44.487221 47.7569974,45.7183323 47.18,46.66 Z M51.1,37.95 C50.3770773,39.1205793 48.8441907,39.487042 47.67,38.77 C39.07,33.48 25.96,31.95 15.78,35.04 C14.9279216,35.2990176 14.0023844,35.0837812 13.3520294,34.4753684 C12.7016744,33.8669556 12.425306,32.9577988 12.6270294,32.0903684 C12.8287528,31.2229381 13.4779216,30.5290176 14.33,30.27 C25.95,26.74 40.4,28.45 50.28,34.52 C51.445766,35.2424019 51.8079122,36.7714637 51.09,37.94 L51.1,37.95 Z M51.44,28.88 C41.13,22.75 24.11,22.19 14.26,25.18 C13.2140022,25.5702637 12.0378133,25.3474036 11.207084,24.6015444 C10.3763547,23.8556852 10.0285164,22.7102178 10.3042349,21.6283692 C10.5799535,20.5465206 11.4336155,19.707266 12.52,19.45 C23.82,16.02 42.61,16.68 54.52,23.73 C55.8401426,24.6185116 56.2368626,26.3831995 55.4240137,27.7512295 C54.6111649,29.1192595 52.8715856,29.6146124 51.46,28.88 L51.44,28.88 Z"
 			}));
 			var twitch_React = __webpack_require__(113);
-			function twitch_extends() {
-				twitch_extends = Object.assign ? Object.assign.bind() : function(target) {
-					for (var i = 1; i < arguments.length; i++) {
-						var source = arguments[i];
-						for (var key in source)
-							if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-					}
-					return target;
-				};
-				return twitch_extends.apply(this, arguments);
-			}
-			const twitch = props => twitch_React.createElement("svg", twitch_extends({
+			const twitch = props => twitch_React.createElement("svg", Object.assign({
 				width: "20",
 				height: "20",
 				viewBox: "0 0 128 128"
@@ -1816,18 +1684,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				xlinkHref: "#color-a"
 			})));
 			var youtube_React = __webpack_require__(113);
-			function youtube_extends() {
-				youtube_extends = Object.assign ? Object.assign.bind() : function(target) {
-					for (var i = 1; i < arguments.length; i++) {
-						var source = arguments[i];
-						for (var key in source)
-							if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-					}
-					return target;
-				};
-				return youtube_extends.apply(this, arguments);
-			}
-			const youtube = props => youtube_React.createElement("svg", youtube_extends({
+			const youtube = props => youtube_React.createElement("svg", Object.assign({
 				height: "20",
 				width: "20",
 				viewBox: "0 0 576 512"
@@ -1836,18 +1693,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				d: "M549.655 124.083c-6.281-23.65-24.787-42.276-48.284-48.597C458.781 64 288 64 288 64S117.22 64 74.629 75.486c-23.497 6.322-42.003 24.947-48.284 48.597-11.412 42.867-11.412 132.305-11.412 132.305s0 89.438 11.412 132.305c6.281 23.65 24.787 41.5 48.284 47.821C117.22 448 288 448 288 448s170.78 0 213.371-11.486c23.497-6.321 42.003-24.171 48.284-47.821 11.412-42.867 11.412-132.305 11.412-132.305s0-89.438-11.412-132.305zm-317.51 213.508V175.185l142.739 81.205-142.739 81.201z"
 			}));
 			var gamepad_React = __webpack_require__(113);
-			function gamepad_extends() {
-				gamepad_extends = Object.assign ? Object.assign.bind() : function(target) {
-					for (var i = 1; i < arguments.length; i++) {
-						var source = arguments[i];
-						for (var key in source)
-							if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-					}
-					return target;
-				};
-				return gamepad_extends.apply(this, arguments);
-			}
-			const gamepad = props => gamepad_React.createElement("svg", gamepad_extends({
+			const gamepad = props => gamepad_React.createElement("svg", Object.assign({
 				width: "20",
 				height: "20",
 				viewBox: "0 0 24 24"
@@ -1863,18 +1709,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			})));
 			var components_activity = __webpack_require__(755);
 			var googleChrome_React = __webpack_require__(113);
-			function googleChrome_extends() {
-				googleChrome_extends = Object.assign ? Object.assign.bind() : function(target) {
-					for (var i = 1; i < arguments.length; i++) {
-						var source = arguments[i];
-						for (var key in source)
-							if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-					}
-					return target;
-				};
-				return googleChrome_extends.apply(this, arguments);
-			}
-			const googleChrome = props => googleChrome_React.createElement("svg", googleChrome_extends({
+			const googleChrome = props => googleChrome_React.createElement("svg", Object.assign({
 				width: "20",
 				height: "20",
 				viewBox: "0 0 48 48"
@@ -2023,18 +1858,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				}
 			}
 			var headphones_React = __webpack_require__(113);
-			function headphones_extends() {
-				headphones_extends = Object.assign ? Object.assign.bind() : function(target) {
-					for (var i = 1; i < arguments.length; i++) {
-						var source = arguments[i];
-						for (var key in source)
-							if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-					}
-					return target;
-				};
-				return headphones_extends.apply(this, arguments);
-			}
-			const headphones = props => headphones_React.createElement("svg", headphones_extends({
+			const headphones = props => headphones_React.createElement("svg", Object.assign({
 				width: "20",
 				height: "20",
 				viewBox: "0 0 24 24"
@@ -2088,36 +1912,14 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			const pages_namespaceObject = JSON.parse('[{"name":"General","icon":"Wrench","items":[{"type":"switch","name":"Use Icons","note":"Defines if icons should be used to show any date.","id":"useIcons","value":true},{"type":"radio","name":"Time Format","value":1,"id":"12hour","options":[{"value":1,"name":"24 hour"},{"value":0,"name":"12 hour"}]},{"type":"divider"},{"type":"category","name":"Variables","items":[{"type":"replacement","prefix":"$timelabel","description":"Replaces the current time label. eg AM or PM."},{"type":"replacement","prefix":"$day","description":"Replaces the current day."},{"type":"replacement","prefix":"$daysago","description":"Replaces with a number of how many days it\'s ago."},{"type":"replacement","prefix":"$dayname","description":"Replaces the shorted dayname."},{"type":"replacement","prefix":"$weeksago","description":"Replaces with a number of how many weeks it\'s ago."},{"type":"replacement","prefix":"$month","description":"Replaces the month."},{"type":"replacement","prefix":"$monthname","description":"Replaces the shorted monthname."},{"type":"replacement","prefix":"$monthsago","description":"Replaces with a number of how many months it\'s ago."},{"type":"replacement","prefix":"$year","description":"Replaces the year."},{"type":"replacement","prefix":"$yearsago","description":"Replaces with a number of how many years it\'s ago."},{"type":"replacement","prefix":"$hour","description":"Replaces the hour(s)"},{"type":"replacement","prefix":"$minute","description":"Replaces the minute(s)"},{"type":"replacement","prefix":"$second","description":"Replaces the second(s)"}]}]},{"name":"Panel Popout","icon":"User","added":"2021-10-14T22:00:00.000Z","items":[{"type":"switch","name":"Enable","id":"showPanelPopout","value":true},{"type":"radio","name":"Open on","id":"panelPopoutType","value":"click","options":[{"name":"Right Click","value":"contextmenu"},{"name":"Left Click","value":"click"}]}]},{"name":"Created At","icon":"Cake","items":[{"type":"switch","name":"Show in UserPopout","id":"created_show_up","note":"Defines if the creation date should be shown in the UserPopout.","value":true},{"type":"switch","name":"Show in UserProfile","id":"created_show_profile","note":"Defines if the creation date should be shown in the UserProfile.","value":true},{"type":"text","name":"Created At","note":"Format of the Created at date. Read the variables section in the general settings to understand how it works.","id":"created_format","value":"Created At: $hour:$minute:$second, $day.$month.$year $daysago days"}]},{"name":"Joined At","icon":"Calendar","items":[{"type":"switch","name":"Show in UserPopout","id":"joined_show_up","note":"Defines if the joined date should be shown in the UserPopout.","value":true},{"type":"switch","name":"Show in UserProfile","id":"joined_show_profile","note":"Defines if the joined date should be shown in the UserProfile.","value":true},{"type":"text","name":"Joined At","note":"Format of the joined at date. Read the variables section in the general settings to understand how it works.","id":"joined_format","value":"Joined At: $hour:$minute:$second, $day.$month.$year $daysago days"}]},{"name":"Last Message At","icon":"TextBubble","items":[{"type":"switch","name":"Show in UserPopout","id":"lastmessage_show_up","note":"Defines if the last message date should be shown in the UserPopout.","value":true},{"type":"switch","name":"Show in UserProfile","id":"lastmessage_show_profile","note":"Defines if the last message date should be shown in the UserProfile.","value":true},{"type":"text","name":"Last Message","note":"Format of the LastMessage at date. Read the variables section in the general settings to understand how it works.","id":"lastmessage_format","value":"Last Message At: $hour:$minute:$second, $day.$month.$year $daysago days"}]},{"name":"Connections","icon":"Chain","items":[{"type":"switch","name":"Enable Section","note":"Enables this section in the user popout.","id":"showConnectionsSection","value":true},{"type":"switch","name":"Colored Icons","note":"Colored/White icons for the connections.","id":"coloredConnectionsIcons","value":true},{"type":"switch","name":"Show Empty","note":"Show a \\"NO CONNECTIONS\\" placeholder if the user has no connections.","id":"showEmptyConnections","value":true},{"type":"switch","name":"Show Verified","note":"Shows a little verified badge below the icon if the connection is verified.","id":"showVerifiedConnections","value":true},{"type":"icons"}]},{"name":"Activity Icons","icon":"GamePad","items":[{"type":"switch","name":"Enable Activity Icons","note":null,"id":"activityIcons","value":true},{"type":"switch","name":"Disable Bots","note":"Disables the icon for bots, since the most always have something with \'Playing: {...}\' in their statuses.","id":"disableIconsForBots","value":true},{"type":"radio","name":"Activity Icon State","note":"Replaces the activity icon in the activity text of the member list.","id":"activityIconState","value":0,"disabled":false,"options":[{"name":"Replace with associated icon","value":0},{"name":"Don\'t do anything","value":1},{"name":"Hide it","value":2}]},{"type":"switch","name":"Show Gamepad","note":"This shows a gamepad icon if an icon for the activity isn\'t available.","id":"showGamepad","value":true}]},{"name":"Profile Roles","icon":"Profile","added":"2021-10-05T22:00:00.000Z","items":[{"type":"switch","name":"Enable","note":"Adds the roles section (if available) to the profile modal.","id":"profileRoles","value":true}]},{"name":"Mutual Friends","icon":"Friends","added":"2021-10-15T18:59:12.897Z","items":[{"type":"switch","name":"Enable","note":"Adds the mutuals friends section to the user popout.","id":"showMutualFriends","value":true},{"type":"switch","name":"Disable for yourself","note":"Disables the mutual friends section for you.","id":"hideMutualFriendsCurrentUser","value":true},{"type":"switch","name":"Show empty message","note":"This defines if an empty message \'no mutual friends\' should be shown if the user has no mutual friends with you","id":"showEmptyMutualFriends","value":true},{"type":"switch","name":"Stack Icons","note":"Stacks the icons so it takes less space.","id":"stackMutualFriends","value":false}]},{"name":"Mutual Servers","icon":"Mutual","items":[{"type":"switch","name":"Enable Mutual Servers","note":"This enables/disables the mutual servers section in the user popout","id":"showMutualGuilds","value":true},{"type":"switch","name":"Disable for yourself","note":"Disables the mutual servers section for you. (it will just show all your guilds)","id":"hideMutualGuildsCurrentUser","value":true},{"type":"switch","name":"Show empty message","note":"This defines if an empty message \'no mutual servers\' should be shown if the user has no mutual servers with you","id":"showEmptyMutualGuilds","value":true},{"type":"switch","name":"Stack Icons","note":"Stacks the icons so it takes less space.","id":"stackMutualServers","value":false}]},{"name":"Translation Credits","icon":"Language","items":[{"type":"translation","name":"Turkish","id":"tr","note":"@IMaWeebツ#6931"},{"type":"translation","name":"English","id":"en-US","note":"@It\'s Rad, Not Red#0001"},{"type":"translation","name":"German","id":"de","note":"@l0c4lh057#9748, @SteffoSpieler#1868"},{"type":"translation","name":"Dutch","id":"nl","note":"@th0masterharambe#0001"},{"type":"translation","name":"Vietnamese","id":"vi","note":"@MH#5893"},{"type":"translation","name":"Spanish","id":"es-ES","note":"@DrPuc##2048"},{"type":"translation","name":"Swedish","id":"sv-SE","note":"@toatl#7460"},{"type":"translation","name":"Portuguese (Brazil)","id":"pt-BR","note":"@Dominic#1111"},{"type":"translation","name":"French","id":"fr","note":"@LemCent321#1663"}]}]');
 			var settings = __webpack_require__(128);
 			const forms_namespaceObject = Modules["@discord/forms"];
-			function chain_extends() {
-				chain_extends = Object.assign ? Object.assign.bind() : function(target) {
-					for (var i = 1; i < arguments.length; i++) {
-						var source = arguments[i];
-						for (var key in source)
-							if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-					}
-					return target;
-				};
-				return chain_extends.apply(this, arguments);
-			}
-			const chain = props => external_BdApi_React_default().createElement("svg", chain_extends({
+			const chain = props => external_BdApi_React_default().createElement("svg", Object.assign({
 				viewBox: "0 0 512 512",
 				width: "24",
 				height: "24"
 			}, props), external_BdApi_React_default().createElement("path", {
 				d: "M326.612 185.391c59.747 59.809 58.927 155.698.36 214.59-.11.12-.24.25-.36.37l-67.2 67.2c-59.27 59.27-155.699 59.262-214.96 0-59.27-59.26-59.27-155.7 0-214.96l37.106-37.106c9.84-9.84 26.786-3.3 27.294 10.606.648 17.722 3.826 35.527 9.69 52.721 1.986 5.822.567 12.262-3.783 16.612l-13.087 13.087c-28.026 28.026-28.905 73.66-1.155 101.96 28.024 28.579 74.086 28.749 102.325.51l67.2-67.19c28.191-28.191 28.073-73.757 0-101.83-3.701-3.694-7.429-6.564-10.341-8.569a16.037 16.037 0 0 1-6.947-12.606c-.396-10.567 3.348-21.456 11.698-29.806l21.054-21.055c5.521-5.521 14.182-6.199 20.584-1.731a152.482 152.482 0 0 1 20.522 17.197zM467.547 44.449c-59.261-59.262-155.69-59.27-214.96 0l-67.2 67.2c-.12.12-.25.25-.36.37-58.566 58.892-59.387 154.781.36 214.59a152.454 152.454 0 0 0 20.521 17.196c6.402 4.468 15.064 3.789 20.584-1.731l21.054-21.055c8.35-8.35 12.094-19.239 11.698-29.806a16.037 16.037 0 0 0-6.947-12.606c-2.912-2.005-6.64-4.875-10.341-8.569-28.073-28.073-28.191-73.639 0-101.83l67.2-67.19c28.239-28.239 74.3-28.069 102.325.51 27.75 28.3 26.872 73.934-1.155 101.96l-13.087 13.087c-4.35 4.35-5.769 10.79-3.783 16.612 5.864 17.194 9.042 34.999 9.69 52.721.509 13.906 17.454 20.446 27.294 10.606l37.106-37.106c59.271-59.259 59.271-155.699.001-214.959z"
 			}));
-			function wrench_extends() {
-				wrench_extends = Object.assign ? Object.assign.bind() : function(target) {
-					for (var i = 1; i < arguments.length; i++) {
-						var source = arguments[i];
-						for (var key in source)
-							if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-					}
-					return target;
-				};
-				return wrench_extends.apply(this, arguments);
-			}
-			const wrench = props => external_BdApi_React_default().createElement("svg", wrench_extends({}, props, {
+			const wrench = props => external_BdApi_React_default().createElement("svg", Object.assign({}, props, {
 				viewBox: "0 0 512 512",
 				height: "24",
 				width: "24"
@@ -2125,18 +1927,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				d: "M501.1 395.7L384 278.6c-23.1-23.1-57.6-27.6-85.4-13.9L192 158.1V96L64 0 0 64l96 128h62.1l106.6 106.6c-13.6 27.8-9.2 62.3 13.9 85.4l117.1 117.1c14.6 14.6 38.2 14.6 52.7 0l52.7-52.7c14.5-14.6 14.5-38.2 0-52.7zM331.7 225c28.3 0 54.9 11 74.9 31l19.4 19.4c15.8-6.9 30.8-16.5 43.8-29.5 37.1-37.1 49.7-89.3 37.9-136.7-2.2-9-13.5-12.1-20.1-5.5l-74.4 74.4-67.9-11.3L334 98.9l74.4-74.4c6.6-6.6 3.4-17.9-5.7-20.2-47.4-11.7-99.6.9-136.6 37.9-28.5 28.5-41.9 66.1-41.2 103.6l82.1 82.1c8.1-1.9 16.5-2.9 24.7-2.9zm-103.9 82l-56.7-56.7L18.7 402.8c-25 25-25 65.5 0 90.5s65.5 25 90.5 0l123.6-123.6c-7.6-19.9-9.9-41.6-5-62.7zM64 472c-13.2 0-24-10.8-24-24 0-13.3 10.7-24 24-24s24 10.7 24 24c0 13.2-10.7 24-24 24z"
 			}));
 			var valorant_React = __webpack_require__(113);
-			function valorant_extends() {
-				valorant_extends = Object.assign ? Object.assign.bind() : function(target) {
-					for (var i = 1; i < arguments.length; i++) {
-						var source = arguments[i];
-						for (var key in source)
-							if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-					}
-					return target;
-				};
-				return valorant_extends.apply(this, arguments);
-			}
-			const valorant = props => valorant_React.createElement("svg", valorant_extends({
+			const valorant = props => valorant_React.createElement("svg", Object.assign({
 				width: "20",
 				height: "20",
 				viewBox: "0 0 216.000000 216.000000"
@@ -2148,18 +1939,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				d: "M0 1080 l0 -1080 1080 0 1080 0 0 1080 0 1080 -1080 0 -1080 0 0-1080z"
 			})));
 			var language_React = __webpack_require__(113);
-			function language_extends() {
-				language_extends = Object.assign ? Object.assign.bind() : function(target) {
-					for (var i = 1; i < arguments.length; i++) {
-						var source = arguments[i];
-						for (var key in source)
-							if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-					}
-					return target;
-				};
-				return language_extends.apply(this, arguments);
-			}
-			const language = props => language_React.createElement("svg", language_extends({
+			const language = props => language_React.createElement("svg", Object.assign({
 				xmlns: "http://www.w3.org/2000/svg",
 				height: "24px",
 				viewBox: "0 0 24 24",
@@ -2172,18 +1952,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				fill: "none"
 			}));
 			var mutual_React = __webpack_require__(113);
-			function mutual_extends() {
-				mutual_extends = Object.assign ? Object.assign.bind() : function(target) {
-					for (var i = 1; i < arguments.length; i++) {
-						var source = arguments[i];
-						for (var key in source)
-							if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-					}
-					return target;
-				};
-				return mutual_extends.apply(this, arguments);
-			}
-			const mutual = props => mutual_React.createElement("svg", mutual_extends({
+			const mutual = props => mutual_React.createElement("svg", Object.assign({
 				xmlns: "http://www.w3.org/2000/svg",
 				height: "24px",
 				viewBox: "0 0 24 24",
@@ -2198,18 +1967,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				d: "M9.01,14H2v2h7.01v3L13,15l-3.99-4V14z M14.99,13v-3H22V8h-7.01V5L11,9L14.99,13z"
 			})))));
 			var user_React = __webpack_require__(113);
-			function user_extends() {
-				user_extends = Object.assign ? Object.assign.bind() : function(target) {
-					for (var i = 1; i < arguments.length; i++) {
-						var source = arguments[i];
-						for (var key in source)
-							if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-					}
-					return target;
-				};
-				return user_extends.apply(this, arguments);
-			}
-			const user = props => user_React.createElement("svg", user_extends({
+			const user = props => user_React.createElement("svg", Object.assign({
 				width: "24",
 				height: "24",
 				role: "img",
@@ -2220,18 +1978,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				d: "M224 256c70.7 0 128-57.3 128-128S294.7 0 224 0 96 57.3 96 128s57.3 128 128 128zm89.6 32h-16.7c-22.2 10.2-46.9 16-72.9 16s-50.6-5.8-72.9-16h-16.7C60.2 288 0 348.2 0 422.4V464c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48v-41.6c0-74.2-60.2-134.4-134.4-134.4z"
 			}));
 			var friends_React = __webpack_require__(113);
-			function friends_extends() {
-				friends_extends = Object.assign ? Object.assign.bind() : function(target) {
-					for (var i = 1; i < arguments.length; i++) {
-						var source = arguments[i];
-						for (var key in source)
-							if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-					}
-					return target;
-				};
-				return friends_extends.apply(this, arguments);
-			}
-			const friends = props => friends_React.createElement("svg", friends_extends({
+			const friends = props => friends_React.createElement("svg", Object.assign({
 				width: "24",
 				height: "24",
 				viewBox: "0 0 640 512"
@@ -2243,18 +1990,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				d: "M192 256A112 112 0 1 0 80 144a111.94 111.94 0 0 0 112 112zm76.8 32h-8.3a157.53 157.53 0 0 1-68.5 16c-24.6 0-47.6-6-68.5-16h-8.3A115.23 115.23 0 0 0 0 403.2V432a48 48 0 0 0 48 48h288a48 48 0 0 0 48-48v-28.8A115.23 115.23 0 0 0 268.8 288z"
 			})));
 			var profile_React = __webpack_require__(113);
-			function profile_extends() {
-				profile_extends = Object.assign ? Object.assign.bind() : function(target) {
-					for (var i = 1; i < arguments.length; i++) {
-						var source = arguments[i];
-						for (var key in source)
-							if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-					}
-					return target;
-				};
-				return profile_extends.apply(this, arguments);
-			}
-			const profile = props => profile_React.createElement("svg", profile_extends({
+			const profile = props => profile_React.createElement("svg", Object.assign({
 				width: "24",
 				height: "24",
 				viewBox: "0 0 384 512"
@@ -2293,17 +2029,6 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			}) {
 				const IconComponent = Icons[name] ?? noop;
 				return icons_React.createElement(IconComponent, props);
-			}
-			function settings_extends() {
-				settings_extends = Object.assign ? Object.assign.bind() : function(target) {
-					for (var i = 1; i < arguments.length; i++) {
-						var source = arguments[i];
-						for (var key in source)
-							if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-					}
-					return target;
-				};
-				return settings_extends.apply(this, arguments);
 			}
 			const RadioGroup = Utilities.createUpdateWrapper(external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("RadioGroup"));
 			const SwitchItem = Utilities.createUpdateWrapper(external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("SwitchItem"), false);
@@ -2409,7 +2134,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				setting = _.cloneDeep(setting);
 				switch (setting.type) {
 					case "switch":
-						return external_BdApi_React_default().createElement(SwitchItem, settings_extends({}, setting, {
+						return external_BdApi_React_default().createElement(SwitchItem, Object.assign({}, setting, {
 							value: modules_Settings.get(setting.id, setting.value),
 							onChange: modules_Settings.set.bind(modules_Settings, setting.id)
 						}), setting.name);
@@ -2429,12 +2154,12 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						}, note && external_BdApi_React_default().createElement(forms_namespaceObject.FormText, {
 							type: "description",
 							className: settings.Z.marginBottom8
-						}, note), external_BdApi_React_default().createElement(RadioGroup, settings_extends({}, setting, {
+						}, note), external_BdApi_React_default().createElement(RadioGroup, Object.assign({}, setting, {
 							value: modules_Settings.get(setting.id, setting.value),
 							onChange: modules_Settings.set.bind(modules_Settings, setting.id)
 						})));
 					case "text":
-						return external_BdApi_React_default().createElement(TextItem, settings_extends({}, setting, {
+						return external_BdApi_React_default().createElement(TextItem, Object.assign({}, setting, {
 							value: modules_Settings.get(setting.id, setting.value),
 							onChange: modules_Settings.set.bind(modules_Settings, setting.id)
 						}));
@@ -2501,17 +2226,6 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					color: constants_namespaceObject.Colors.STATUS_RED_500,
 					className: settings.Z.textBadge
 				})))) : pages_namespaceObject[activeItem].items.map(renderSetting)));
-			}
-			function UserDetails_extends() {
-				UserDetails_extends = Object.assign ? Object.assign.bind() : function(target) {
-					for (var i = 1; i < arguments.length; i++) {
-						var source = arguments[i];
-						for (var key in source)
-							if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-					}
-					return target;
-				};
-				return UserDetails_extends.apply(this, arguments);
 			}
 			function UserDetails_defineProperty(obj, key, value) {
 				if (key in obj) Object.defineProperty(obj, key, {
@@ -2789,7 +2503,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 							align: Popout.Align.CENTER,
 							renderPopout: props => external_BdApi_React_default().createElement(ErrorBoundary, {
 								id: "UserPopoutContainer"
-							}, external_BdApi_React_default().createElement(UserPopoutContainer, UserDetails_extends({}, props, {
+							}, external_BdApi_React_default().createElement(UserPopoutContainer, Object.assign({}, props, {
 								channelId: stores_namespaceObject.SelectedChannels.getChannelId(),
 								guildId: stores_namespaceObject.SelectedGuilds.getGuildId(),
 								userId: stores_namespaceObject.Users.getCurrentUser().id,
