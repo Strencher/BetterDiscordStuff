@@ -32,8 +32,8 @@ export default class VoiceChatNotifications extends BasePlugin {
 
 	get subscriptions() {
 		return [
-			[DiscordConstants.ActionTypes.VOICE_STATE_UPDATES, this.onVoiceStateChange],
-			[DiscordConstants.ActionTypes.VOICE_CHANNEL_SELECT, this.onSelect],
+			["VOICE_STATE_UPDATES", this.onVoiceStateChange],
+			["VOICE_CHANNEL_SELECT", this.onSelect],
 		];
 	}
 
