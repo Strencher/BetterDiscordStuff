@@ -144,7 +144,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					return ___createMemoize___(this, 'Flex', () => BdApi.findModuleByDisplayName('Flex'))
 				},
 				get 'Text'() {
-					return ___createMemoize___(this, 'Text', () => BdApi.findModuleByDisplayName('Text'))
+					return ___createMemoize___(this, 'Text', () => BdApi.findModuleByDisplayName('LegacyText'))
 				},
 				get 'Card'() {
 					return ___createMemoize___(this, 'Card', () => BdApi.findModuleByDisplayName('Card'))
@@ -152,7 +152,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			},
 			'@discord/modules': {
 				get 'Dispatcher'() {
-					return ___createMemoize___(this, 'Dispatcher', () => BdApi.findModuleByProps('dirtyDispatch', 'subscribe'))
+					return ___createMemoize___(this, 'Dispatcher', () => BdApi.findModuleByProps('dispatch', 'isDispatching'))
 				},
 				get 'ComponentDispatcher'() {
 					return ___createMemoize___(this, 'ComponentDispatcher', () => BdApi.findModuleByProps('ComponentDispatch')?.ComponentDispatch)
@@ -457,22 +457,11 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			const components_namespaceObject = Modules["@discord/components"];
 			var components_button = __webpack_require__(36);
 			var React = __webpack_require__(113);
-			function _extends() {
-				_extends = Object.assign ? Object.assign.bind() : function(target) {
-					for (var i = 1; i < arguments.length; i++) {
-						var source = arguments[i];
-						for (var key in source)
-							if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-					}
-					return target;
-				};
-				return _extends.apply(this, arguments);
-			}
 			function VoiceNotificationsButton(props) {
 				return React.createElement(components_namespaceObject.TooltipContainer, {
 					position: "bottom",
 					text: "Open VoiceLogs"
-				}, React.createElement("div", _extends({
+				}, React.createElement("div", Object.assign({
 					className: components_button.Z.icon
 				}, props), React.createElement("svg", {
 					fill: "currentColor",
@@ -677,20 +666,9 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				DEFAULT: category.Z["default"]
 			};
 			var createUpdateWrapper_React = __webpack_require__(113);
-			function createUpdateWrapper_extends() {
-				createUpdateWrapper_extends = Object.assign ? Object.assign.bind() : function(target) {
-					for (var i = 1; i < arguments.length; i++) {
-						var source = arguments[i];
-						for (var key in source)
-							if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-					}
-					return target;
-				};
-				return createUpdateWrapper_extends.apply(this, arguments);
-			}
 			const createUpdateWrapper = (Component, valueProp = "value", changeProp = "onChange", valueIndex = 0) => props => {
 				const [value, setValue] = createUpdateWrapper_React.useState(props[valueProp]);
-				return createUpdateWrapper_React.createElement(Component, createUpdateWrapper_extends({}, props, {
+				return createUpdateWrapper_React.createElement(Component, Object.assign({}, props, {
 					[valueProp]: value,
 					[changeProp]: (...args) => {
 						const value = args[valueIndex];
@@ -701,17 +679,6 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			};
 			const hooks_createUpdateWrapper = createUpdateWrapper;
 			const forms_namespaceObject = Modules["@discord/forms"];
-			function Settings_extends() {
-				Settings_extends = Object.assign ? Object.assign.bind() : function(target) {
-					for (var i = 1; i < arguments.length; i++) {
-						var source = arguments[i];
-						for (var key in source)
-							if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-					}
-					return target;
-				};
-				return Settings_extends.apply(this, arguments);
-			}
 			const SwitchItem = hooks_createUpdateWrapper(external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("SwitchItem"));
 			const NotificationSetting = hooks_createUpdateWrapper(external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("NotificationSettings"), "position", "onChange", 1);
 			const otherSettings = {
@@ -735,7 +702,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				return external_BdApi_React_default().createElement("div", null, external_BdApi_React_default().createElement(Category, {
 					label: "General",
 					look: Category.Looks.COMPACT
-				}, Object.keys(otherSettings).map((key => external_BdApi_React_default().createElement(SwitchItem, Settings_extends({}, otherSettings[key], {
+				}, Object.keys(otherSettings).map((key => external_BdApi_React_default().createElement(SwitchItem, Object.assign({}, otherSettings[key], {
 					value: settings.get(key, otherSettings[key].value),
 					onChange: value => {
 						settings.set(key, value);
@@ -763,18 +730,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			}
 			const external_Modules_react_spring_namespaceObject = Modules["react-spring"];
 			var notification_React = __webpack_require__(113);
-			function notification_extends() {
-				notification_extends = Object.assign ? Object.assign.bind() : function(target) {
-					for (var i = 1; i < arguments.length; i++) {
-						var source = arguments[i];
-						for (var key in source)
-							if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-					}
-					return target;
-				};
-				return notification_extends.apply(this, arguments);
-			}
-			const RemoveIcon = props => notification_React.createElement("svg", notification_extends({
+			const RemoveIcon = props => notification_React.createElement("svg", Object.assign({
 				width: "12",
 				height: "12",
 				viewBox: "0 0 24 24"
@@ -842,17 +798,6 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			const external_BdApi_ReactDOM_namespaceObject = BdApi.ReactDOM;
 			var external_BdApi_ReactDOM_default = __webpack_require__.n(external_BdApi_ReactDOM_namespaceObject);
 			var notifications_React = __webpack_require__(113);
-			function notifications_extends() {
-				notifications_extends = Object.assign ? Object.assign.bind() : function(target) {
-					for (var i = 1; i < arguments.length; i++) {
-						var source = arguments[i];
-						for (var key in source)
-							if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-					}
-					return target;
-				};
-				return notifications_extends.apply(this, arguments);
-			}
 			const [notifications_useStore, notifications_Api] = createStore({
 				notifications: {},
 				paused: false
@@ -900,7 +845,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			}));
 			function VoiceNotifications() {
 				const state = notifications_useStore((e => Object.entries(e.notifications)));
-				return state.map((([id, props]) => notifications_React.createElement(notification_Notification, notifications_extends({}, props, {
+				return state.map((([id, props]) => notifications_React.createElement(notification_Notification, Object.assign({}, props, {
 					key: id
 				}))));
 			}
@@ -1041,8 +986,8 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				}
 				get subscriptions() {
 					return [
-						[external_PluginApi_DiscordModules_namespaceObject.DiscordConstants.ActionTypes.VOICE_STATE_UPDATES, this.onVoiceStateChange],
-						[external_PluginApi_DiscordModules_namespaceObject.DiscordConstants.ActionTypes.VOICE_CHANNEL_SELECT, this.onSelect]
+						["VOICE_STATE_UPDATES", this.onVoiceStateChange],
+						["VOICE_CHANNEL_SELECT", this.onSelect]
 					];
 				}
 				getSettingsPanel() {
