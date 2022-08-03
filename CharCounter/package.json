@@ -9,7 +9,7 @@
 				"twitter_username": "Strencher3"
 			}
 		],
-		"version": "1.0.2",
+		"version": "1.0.3",
 		"description": "Counts your character length of the text area.",
 		"github": "https://github.com/Strencher/BetterDiscordStuff/blob/master/CharCounter/CharCounter.plugin.js",
 		"github_raw": "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/CharCounter/CharCounter.plugin.js"

@@ -9,7 +9,7 @@
 				"twitter_username": "Strencher3"
 			}
 		],
-		"version": "1.1.0",
+		"version": "1.1.1",
 		"description": "Shows you a lot information about channels, like: channel tooltip, channel accessibility etc.",
 		"github": "https://github.com/Strencher/BetterDiscordStuff/blob/master/ChannelDetails/ChannelDetails.plugin.js",
 		"github_raw": "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/ChannelDetails/ChannelDetails.plugin.js"
@@ -19,7 +19,7 @@
 			"type": "fixed",
 			"title": "Finally",
 			"items": [
-				"Fixes for the latest 3 quadrillion discord updates."
+				"Fixes for the latest 4.8 quadrillion discord updates."
 			]
 		}
 	],
