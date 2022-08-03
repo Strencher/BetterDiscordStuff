@@ -1,6 +1,6 @@
 /**
  * @name BetterBannedUsers
- * @version 1.2.2
+ * @version 1.2.3
  * @description Enhances the banned users page.
  * @author Strencher
  * @source https://github.com/Strencher/BetterDiscordStuff/BetterBannedUsers
@@ -32,7 +32,7 @@
 const config = {
 	"info": {
 		"name": "BetterBannedUsers",
-		"version": "1.2.2",
+		"version": "1.2.3",
 		"description": "Enhances the banned users page.",
 		"authors": [{
 			"name": "Strencher",
@@ -44,10 +44,9 @@ const config = {
 	},
 	"changelog": [{
 		"type": "fixed",
-		"title": "Fixed - 1.2.2",
+		"title": "Fixed - 1.2.3",
 		"items": [
-			"Fixes for the latest discord update.",
-			"Fixed search bar not allowing to search."
+			"Fixes for the latest discord update."
 		]
 	}],
 	"build": {
@@ -159,7 +158,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					return ___createMemoize___(this, 'Flex', () => BdApi.findModuleByDisplayName('Flex'))
 				},
 				get 'Text'() {
-					return ___createMemoize___(this, 'Text', () => BdApi.findModuleByDisplayName('Text'))
+					return ___createMemoize___(this, 'Text', () => BdApi.findModuleByDisplayName('LegacyText'))
 				},
 				get 'Card'() {
 					return ___createMemoize___(this, 'Card', () => BdApi.findModuleByDisplayName('Card'))
@@ -167,7 +166,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			},
 			'@discord/modules': {
 				get 'Dispatcher'() {
-					return ___createMemoize___(this, 'Dispatcher', () => BdApi.findModuleByProps('dirtyDispatch', 'subscribe'))
+					return ___createMemoize___(this, 'Dispatcher', () => BdApi.findModuleByProps('dispatch', 'isDispatching'))
 				},
 				get 'ComponentDispatcher'() {
 					return ___createMemoize___(this, 'ComponentDispatcher', () => BdApi.findModuleByProps('ComponentDispatch')?.ComponentDispatch)
@@ -461,17 +460,6 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			var components_select = __webpack_require__(894);
 			const utils_namespaceObject = Modules["@discord/utils"];
 			var React = __webpack_require__(113);
-			function _extends() {
-				_extends = Object.assign || function(target) {
-					for (var i = 1; i < arguments.length; i++) {
-						var source = arguments[i];
-						for (var key in source)
-							if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-					}
-					return target;
-				};
-				return _extends.apply(this, arguments);
-			}
 			const Popout = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("Popout");
 			const Caret = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("Caret");
 			const Text = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("LegacyText");
@@ -483,7 +471,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			}) {
 				const [selected, setSelected] = (0, external_BdApi_React_.useState)(value);
 				return React.createElement(Popout, {
-					renderPopout: props => React.createElement("div", _extends({}, props, {
+					renderPopout: props => React.createElement("div", Object.assign({}, props, {
 						className: components_select.Z.container
 					}), options.map(((option, index) => React.createElement("div", {
 						className: (0, utils_namespaceObject.joinClassNames)(components_select.Z.option, {
@@ -517,20 +505,9 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				}))));
 			}
 			var createUpdateWrapper_React = __webpack_require__(113);
-			function createUpdateWrapper_extends() {
-				createUpdateWrapper_extends = Object.assign || function(target) {
-					for (var i = 1; i < arguments.length; i++) {
-						var source = arguments[i];
-						for (var key in source)
-							if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-					}
-					return target;
-				};
-				return createUpdateWrapper_extends.apply(this, arguments);
-			}
 			const createUpdateWrapper = (Component, valueProp = "value", changeProp = "onChange", valueIndex = 0) => props => {
 				const [value, setValue] = createUpdateWrapper_React.useState(props[valueProp]);
-				return createUpdateWrapper_React.createElement(Component, createUpdateWrapper_extends({}, props, {
+				return createUpdateWrapper_React.createElement(Component, Object.assign({}, props, {
 					[valueProp]: value,
 					[changeProp]: (...args) => {
 						const value = args[valueIndex];

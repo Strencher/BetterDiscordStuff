@@ -1,6 +1,6 @@
 /**
  * @name VoiceChatNotifications
- * @version 1.2.2
+ * @version 1.2.3
  * @description Shows you certain events from voicechats in a logs panel or as desktop notification.
  * @author Strencher
  * @source https://github.com/Strencher/BetterDiscordStuff/tree/master/VoiceChatNotifications
@@ -32,7 +32,7 @@
 const config = {
 	"info": {
 		"name": "VoiceChatNotifications",
-		"version": "1.2.2",
+		"version": "1.2.3",
 		"description": "Shows you certain events from voicechats in a logs panel or as desktop notification.",
 		"authors": [{
 			"name": "Strencher",
@@ -46,7 +46,7 @@ const config = {
 		"type": "fixed",
 		"title": "Fixes",
 		"items": [
-			"Fixed showing icon in the header bar."
+			"Fixes for latest discord update."
 		]
 	}],
 	"build": {

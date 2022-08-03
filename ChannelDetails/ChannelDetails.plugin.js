@@ -1,7 +1,7 @@
 /**
  * @name ChannelDetails
  * @author Strencher
- * @version 1.1.0
+ * @version 1.1.1
  * @description Shows you a lot information about channels, like: channel tooltip, channel accessibility etc.
  * @source https://github.com/Strencher/BetterDiscordStuff/blob/master/ChannelDetails/ChannelDetails.plugin.js
  * @updateUrl https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/ChannelDetails/ChannelDetails.plugin.js
@@ -38,7 +38,7 @@ const config = {
 			"github_username": "Strencher",
 			"twitter_username": "Strencher3"
 		}],
-		"version": "1.1.0",
+		"version": "1.1.1",
 		"description": "Shows you a lot information about channels, like: channel tooltip, channel accessibility etc.",
 		"github": "https://github.com/Strencher/BetterDiscordStuff/blob/master/ChannelDetails/ChannelDetails.plugin.js",
 		"github_raw": "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/ChannelDetails/ChannelDetails.plugin.js"
@@ -47,7 +47,7 @@ const config = {
 		"type": "fixed",
 		"title": "Finally",
 		"items": [
-			"Fixes for the latest 3 quadrillion discord updates."
+			"Fixes for the latest 4.8 quadrillion discord updates."
 		]
 	}],
 	"build": {
@@ -142,7 +142,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					return ___createMemoize___(this, 'Flex', () => BdApi.findModuleByDisplayName('Flex'))
 				},
 				get 'Text'() {
-					return ___createMemoize___(this, 'Text', () => BdApi.findModuleByDisplayName('Text'))
+					return ___createMemoize___(this, 'Text', () => BdApi.findModuleByDisplayName('LegacyText'))
 				},
 				get 'Card'() {
 					return ___createMemoize___(this, 'Card', () => BdApi.findModuleByDisplayName('Card'))
@@ -150,7 +150,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			},
 			'@discord/modules': {
 				get 'Dispatcher'() {
-					return ___createMemoize___(this, 'Dispatcher', () => BdApi.findModuleByProps('dirtyDispatch', 'subscribe'))
+					return ___createMemoize___(this, 'Dispatcher', () => BdApi.findModuleByProps('dispatch', 'isDispatching'))
 				},
 				get 'ComponentDispatcher'() {
 					return ___createMemoize___(this, 'ComponentDispatcher', () => BdApi.findModuleByProps('ComponentDispatch')?.ComponentDispatch)
@@ -332,629 +332,6 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
 				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
 			},
-			878: (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-				__webpack_require__.r(__webpack_exports__);
-				__webpack_require__.d(__webpack_exports__, {
-					default: () => ChannelDetails
-				});
-				const stores_namespaceObject = Modules["@discord/stores"];
-				const external_PluginApi_namespaceObject = PluginApi;
-				const external_BasePlugin_namespaceObject = BasePlugin;
-				var external_BasePlugin_default = __webpack_require__.n(external_BasePlugin_namespaceObject);
-				var external_BdApi_React_ = __webpack_require__(113);
-				var external_BdApi_React_default = __webpack_require__.n(external_BdApi_React_);
-				const constants_namespaceObject = Modules["@discord/constants"];
-				const i18n_namespaceObject = Modules["@discord/i18n"];
-				var i18n_default = __webpack_require__.n(i18n_namespaceObject);
-				const modules_namespaceObject = Modules["@discord/modules"];
-				const en_US_namespaceObject = JSON.parse('{"ALLOWED_ROLES":"Allowed Roles","DENIED_ROLES":"Denied Roles","ALLOWED_USERS":"Allowed Users","DENIED_USERS":"Denied Users","CHANNEL_DETAILS":"Channel Details","CATEGORY_DETAILS":"Category Details","NOONE_PERMITTED":"No-one was permitted for this channel.","NOONE_DENIED":"No-one was denied from this channel","GENERAL":"General","PERMITTED":"Permitted","DENIED":"Denied","NAME":"Name","CREATED_AT":"Created At","ID":"Id","LAST_MESSAGE_AT":"Last Message At","NSFW":"Nsfw","CATEGORY":"Category","POSITION":"Position","TYPE":"Type","MENTION":"Mention","TOPIC":"Description","COPY":"Copy","COPIED":"Copied!","NOT_SPECIFIED":"Not Specified.","YES":"Yes","NO":"No","NOT_FOUND":"Not found.","COPY_COLOR":"Copy Color","MORE_OPTIONS":"More Options","COPY_NAME":"Copy Name"}');
-				const translations = {
-					"en-US": en_US_namespaceObject
-				};
-				function _defineProperty(obj, key, value) {
-					if (key in obj) Object.defineProperty(obj, key, {
-						value,
-						enumerable: true,
-						configurable: true,
-						writable: true
-					});
-					else obj[key] = value;
-					return obj;
-				}
-				class Strings {
-					static init() {
-						this.setLanguage(i18n_default().getLocale());
-						modules_namespaceObject.Dispatcher.subscribe(constants_namespaceObject.ActionTypes.USER_SETTINGS_UPDATE, this.handleLocaleChange);
-					}
-					static shutdown() {
-						modules_namespaceObject.Dispatcher.unsubscribe(constants_namespaceObject.ActionTypes.USER_SETTINGS_UPDATE, this.handleLocaleChange);
-					}
-					static setLanguage(lang) {
-						this._strings = translations[lang] ?? translations["en-US"];
-					}
-					static get(key) {
-						return this._strings[key] ?? translations["en-US"][key] ?? "String not found.";
-					}
-				}
-				_defineProperty(Strings, "_strings", void 0);
-				_defineProperty(Strings, "handleLocaleChange", (() => {
-					Strings.setLanguage(i18n_default().getLocale());
-				}));
-				var tooltip = __webpack_require__(921);
-				var React = __webpack_require__(113);
-				const AvatarUtils = external_PluginApi_namespaceObject.WebpackModules.getByProps("getUserAvatarURL");
-				function MemberRole({
-					name,
-					colorString,
-					id
-				}) {
-					const isSelf = ~stores_namespaceObject.Members.getMember(stores_namespaceObject.SelectedGuilds.getGuildId(), stores_namespaceObject.Users.getCurrentUser().id)?.roles.indexOf(id);
-					return React.createElement("div", {
-						className: external_PluginApi_namespaceObject.Utilities.className(tooltip.Z.role, isSelf && tooltip.Z.isSelf)
-					}, React.createElement("div", {
-						className: tooltip.Z.roleCircle,
-						style: {
-							"--color": colorString
-						}
-					}), React.createElement("div", {
-						className: tooltip.Z.roleName
-					}, name));
-				}
-				function MemberWithAvatar({
-					user
-				}) {
-					const isSelf = stores_namespaceObject.Users.getCurrentUser().id === user?.id;
-					return React.createElement("div", {
-						className: external_PluginApi_namespaceObject.Utilities.className(tooltip.Z.role, isSelf && tooltip.Z.isSelf)
-					}, React.createElement("img", {
-						className: tooltip.Z.avatar,
-						src: AvatarUtils.getUserAvatarURL(user ?? {})
-					}), React.createElement("div", {
-						className: tooltip.Z.roleName
-					}, user?.username ?? "Unknown", "#", user?.discriminator ?? "0000"));
-				}
-				const collectSections = function(section) {
-					return section.reduce((([allowed, denied], enemy) => {
-						if (enemy.can) allowed.push(enemy.id);
-						else denied.push(enemy.id);
-						return [allowed, denied];
-					}), [
-						[],
-						[]
-					]);
-				};
-				function ChannelTooltip({
-					overrides,
-					guild,
-					className
-				}) {
-					const [allowedUsers, deniedUsers] = (0, external_BdApi_React_.useMemo)((() => collectSections(overrides.users)), [overrides, guild]);
-					const [allowedRoles, deniedRoles] = (0, external_BdApi_React_.useMemo)((() => collectSections(overrides.roles)), [overrides, guild]);
-					const renderSection = function(section, type, string) {
-						const getProps = {
-							user: id => stores_namespaceObject.Users.getUser(id),
-							role: id => guild.getRole(id)
-						} [type];
-						if ("function" !== typeof getProps || 0 === section.length) return null;
-						return section.length ? React.createElement("div", {
-							className: tooltip.Z.section,
-							key: string
-						}, React.createElement("h3", {
-							className: tooltip.Z.header
-						}, Strings.get(string)), React.createElement("div", {
-							className: tooltip.Z.body
-						}, section.map((enemyId => "user" === type ? React.createElement(MemberWithAvatar, {
-							user: stores_namespaceObject.Users.getUser(enemyId)
-						}) : React.createElement(MemberRole, getProps(enemyId)))))) : null;
-					};
-					return React.createElement("div", {
-						className: external_PluginApi_namespaceObject.Utilities.className(tooltip.Z.tooltip, className)
-					}, renderSection(allowedRoles, "role", "ALLOWED_ROLES"), renderSection(deniedRoles, "role", "DENIED_ROLES"), renderSection(allowedUsers, "user", "ALLOWED_USERS"), renderSection(deniedUsers, "user", "DENIED_USERS"));
-				}
-				const PermissionTypes = {
-					1: "users",
-					0: "roles"
-				};
-				const BigIntUtils = external_PluginApi_namespaceObject.WebpackModules.getByProps("deserialize", "invert", "has");
-				const hasPermissionOverride = function(perms, permission) {
-					return BigIntUtils.has(perms.allow, constants_namespaceObject.Permissions[permission]) || BigIntUtils.has(perms.deny, constants_namespaceObject.Permissions[permission]);
-				};
-				const can = function(permissions, permission) {
-					return (permissions & constants_namespaceObject.Permissions[permission]) == constants_namespaceObject.Permissions[permission] == 1;
-				};
-				const isVoiceChannel = function(channel) {
-					return Boolean(~[constants_namespaceObject.ChannelTypes.GUILD_VOICE, constants_namespaceObject.ChannelTypes.GUILD_STAGE_VOICE].indexOf(channel.type));
-				};
-				const getPermissionOverrides = function(channel) {
-					const overrides = channel.permissionOverwrites;
-					return Object.keys(overrides).reduce(((map, id) => {
-						const override = overrides[id];
-						if (!hasPermissionOverride(override, "VIEW_CHANNEL")) return map;
-						map[PermissionTypes[override.type]].push({
-							id,
-							can: can(override.allow, isVoiceChannel(channel) ? "CONNECT" : "VIEW_CHANNEL"),
-							type: PermissionTypes[override.type].slice(0, -1)
-						});
-						return map;
-					}), Object.fromEntries(Object.values(PermissionTypes).map((e => [e, []]))));
-				};
-				const extractDate = function(id) {
-					return new Date(id / 4194304 + 14200704e5);
-				};
-				const getLastChannelMessageDate = function(channelId) {
-					return extractDate(Messages.getMessages(channelId)._array.slice(-1)[0]?.id);
-				};
-				const external_StyleLoader_namespaceObject = StyleLoader;
-				var external_StyleLoader_default = __webpack_require__.n(external_StyleLoader_namespaceObject);
-				const modal_namespaceObject = Modules["@discord/modal"];
-				const components_namespaceObject = Modules["@discord/components"];
-				const contextmenu_namespaceObject = Modules["@discord/contextmenu"];
-				const flux_namespaceObject = Modules["@discord/flux"];
-				const forms_namespaceObject = Modules["@discord/forms"];
-				const external_PluginApi_DiscordModules_namespaceObject = PluginApi.DiscordModules;
-				const external_window_namespaceObject = window._;
-				var external_window_default = __webpack_require__.n(external_window_namespaceObject);
-				var copy_React = __webpack_require__(113);
-				function _extends() {
-					_extends = Object.assign || function(target) {
-						for (var i = 1; i < arguments.length; i++) {
-							var source = arguments[i];
-							for (var key in source)
-								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-						}
-						return target;
-					};
-					return _extends.apply(this, arguments);
-				}
-				function Copy(props) {
-					return copy_React.createElement("svg", _extends({
-						xmlns: "http://www.w3.org/2000/svg",
-						height: "24px",
-						viewBox: "0 0 24 24",
-						width: "24px"
-					}, props), copy_React.createElement("path", {
-						d: "M0 0h24v24H0z",
-						fill: "none"
-					}), copy_React.createElement("path", {
-						d: "M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z",
-						fill: "currentColor"
-					}));
-				}
-				var dropper_React = __webpack_require__(113);
-				function dropper_extends() {
-					dropper_extends = Object.assign || function(target) {
-						for (var i = 1; i < arguments.length; i++) {
-							var source = arguments[i];
-							for (var key in source)
-								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-						}
-						return target;
-					};
-					return dropper_extends.apply(this, arguments);
-				}
-				function Dropper(props) {
-					return dropper_React.createElement("svg", dropper_extends({
-						width: "14",
-						height: "14",
-						viewBox: "0 0 16 16"
-					}, props), dropper_React.createElement("g", {
-						fill: "none"
-					}, dropper_React.createElement("path", {
-						d: "M-4-4h24v24H-4z"
-					}), dropper_React.createElement("path", {
-						fill: "currentColor",
-						d: "M14.994 1.006C13.858-.257 11.904-.3 10.72.89L8.637 2.975l-.696-.697-1.387 1.388 5.557 5.557 1.387-1.388-.697-.697 1.964-1.964c1.13-1.13 1.3-2.985.23-4.168zm-13.25 10.25c-.225.224-.408.48-.55.764L.02 14.37l1.39 1.39 2.35-1.174c.283-.14.54-.33.765-.55l4.808-4.808-2.776-2.776-4.813 4.803z"
-					})));
-				}
-				var overflowMenu_React = __webpack_require__(113);
-				function overflowMenu_extends() {
-					overflowMenu_extends = Object.assign || function(target) {
-						for (var i = 1; i < arguments.length; i++) {
-							var source = arguments[i];
-							for (var key in source)
-								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-						}
-						return target;
-					};
-					return overflowMenu_extends.apply(this, arguments);
-				}
-				function OverflowMenu(props) {
-					return overflowMenu_React.createElement("svg", overflowMenu_extends({
-						width: "24",
-						height: "24",
-						viewBox: "0 0 24 24"
-					}, props), overflowMenu_React.createElement("g", {
-						fill: "none",
-						"fill-rule": "evenodd"
-					}, overflowMenu_React.createElement("path", {
-						d: "M24 0v24H0V0z"
-					}), overflowMenu_React.createElement("path", {
-						fill: "currentColor",
-						d: "M12 16c1.1045695 0 2 .8954305 2 2s-.8954305 2-2 2-2-.8954305-2-2 .8954305-2 2-2zm0-6c1.1045695 0 2 .8954305 2 2s-.8954305 2-2 2-2-.8954305-2-2 .8954305-2 2-2zm0-6c1.1045695 0 2 .8954305 2 2s-.8954305 2-2 2-2-.8954305-2-2 .8954305-2 2-2z"
-					})));
-				}
-				var tick_React = __webpack_require__(113);
-				function tick_extends() {
-					tick_extends = Object.assign || function(target) {
-						for (var i = 1; i < arguments.length; i++) {
-							var source = arguments[i];
-							for (var key in source)
-								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-						}
-						return target;
-					};
-					return tick_extends.apply(this, arguments);
-				}
-				function Tick(props) {
-					return tick_React.createElement("svg", tick_extends({
-						width: "32",
-						height: "24",
-						viewBox: "0 0 24 24"
-					}, props), tick_React.createElement("path", {
-						fill: "currentColor",
-						"fill-rule": "evenodd",
-						"clip-rule": "evenodd",
-						d: "M8.99991 16.17L4.82991 12L3.40991 13.41L8.99991 19L20.9999 7.00003L19.5899 5.59003L8.99991 16.17Z"
-					}));
-				}
-				var modal = __webpack_require__(676);
-				function modal_extends() {
-					modal_extends = Object.assign || function(target) {
-						for (var i = 1; i < arguments.length; i++) {
-							var source = arguments[i];
-							for (var key in source)
-								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-						}
-						return target;
-					};
-					return modal_extends.apply(this, arguments);
-				}
-				const Markdown = external_PluginApi_namespaceObject.WebpackModules.getByProps("parseTopic");
-				const Popout = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("Popout");
-				const UnreadStore = external_PluginApi_namespaceObject.WebpackModules.getByProps("getUnreadCount");
-				function SpringButton({
-					children,
-					timeout = 1e3
-				}) {
-					const [active, setActive] = (0, external_BdApi_React_.useState)(false);
-					const timeoutRef = (0, external_BdApi_React_.useRef)(null);
-					(0, external_BdApi_React_.useEffect)((() => {
-						if (!active) return;
-						if (timeoutRef.current) clearTimeout(timeoutRef.current);
-						timeoutRef.current = setTimeout((() => {
-							setActive(false);
-						}), timeout);
-					}), [active, timeoutRef]);
-					return children({
-						active,
-						onClick: setActive.bind(null, true)
-					});
-				}
-				const renderPermissionItem = function(id, guild, type) {
-					const props = {
-						user: stores_namespaceObject.Users.getUser(id),
-						role: guild.getRole(id)
-					} [type];
-					if (!props) return null;
-					const isSelf = "role" === type ? ~stores_namespaceObject.Members.getMember(guild.id, stores_namespaceObject.Users.getCurrentUser().id)?.roles.indexOf(props.id) : stores_namespaceObject.Users.getCurrentUser().id === props.id;
-					return external_BdApi_React_default().createElement("div", {
-						className: external_PluginApi_namespaceObject.Utilities.className(modal.Z.permissionItem, isSelf && modal.Z.self),
-						"aria-type": type,
-						style: {
-							"--color": props.colorString
-						}
-					}, external_BdApi_React_default().createElement("div", {
-						className: modal.Z.iconContainer
-					}, "user" === type ? external_BdApi_React_default().createElement("img", {
-						src: props.getAvatarURL(true, true),
-						className: modal.Z.avatar
-					}) : external_BdApi_React_default().createElement("div", {
-						className: modal.Z.roleCircle
-					}), isSelf && external_BdApi_React_default().createElement(Tick, null)), external_BdApi_React_default().createElement("div", {
-						className: modal.Z.name
-					}, props["user" === type ? "username" : "name"], "user" === type && "#" + props.discriminator), "role" === type && external_BdApi_React_default().createElement(Popout, {
-						renderPopout: function(popoutProps) {
-							let ref = null;
-							const callback = function({
-								target
-							}) {
-								if (!ref || ref.contains(target)) return;
-								popoutProps.closePopout();
-								ref = null;
-							};
-							return external_BdApi_React_default().createElement("div", {
-								ref: element => {
-									if (!element) document.removeEventListener("click", callback);
-									else {
-										ref = element;
-										setTimeout((() => {
-											document.addEventListener("click", callback);
-										}), 100);
-									}
-								}
-							}, external_BdApi_React_default().createElement(contextmenu_namespaceObject.Menu, {
-								navId: "more-options",
-								onClose: popoutProps.closePopout,
-								style: "styleFlexible"
-							}, external_BdApi_React_default().createElement(contextmenu_namespaceObject.MenuGroup, null, "role" === type && props.colorString && external_BdApi_React_default().createElement(contextmenu_namespaceObject.MenuItem, {
-								icon: () => external_BdApi_React_default().createElement(Dropper, {
-									width: "14",
-									height: "14"
-								}),
-								label: Strings.get("COPY_COLOR"),
-								id: "copy-role-color",
-								action: () => external_PluginApi_DiscordModules_namespaceObject.ElectronModule.copy(props.colorString)
-							}), external_BdApi_React_default().createElement(contextmenu_namespaceObject.MenuItem, {
-								icon: () => external_BdApi_React_default().createElement(Copy, {
-									width: "18",
-									height: "18"
-								}),
-								label: Strings.get("COPY_NAME"),
-								id: "copy-name",
-								action: () => external_PluginApi_DiscordModules_namespaceObject.ElectronModule.copy(props["user" === type ? "username" : "name"])
-							}))));
-						},
-						align: "top",
-						spacing: 8,
-						position: "left",
-						animation: "2",
-						onRequestClose: () => true
-					}, (props => external_BdApi_React_default().createElement(components_namespaceObject.TooltipContainer, {
-						className: modal.Z.tooltip,
-						text: Strings.get("MORE_OPTIONS"),
-						position: "left"
-					}, external_BdApi_React_default().createElement(components_namespaceObject.Button, modal_extends({
-						size: components_namespaceObject.Button.Sizes.NONE,
-						look: components_namespaceObject.Button.Looks.BLANK,
-						className: modal.Z.colorCopy
-					}, props), external_BdApi_React_default().createElement(OverflowMenu, null))))));
-				};
-				const pages = [{
-					id: "GENERAL",
-					name: "GENERAL",
-					render: ({
-						channel,
-						type
-					}) => {
-						const renderItem = function(prop, value, copy) {
-							const title = [prop, null != copy && external_BdApi_React_default().createElement(SpringButton, null, (props => external_BdApi_React_default().createElement(components_namespaceObject.TooltipContainer, {
-								text: props.active ? Strings.get("COPIED") : Strings.get("COPY"),
-								className: modal.Z.tooltip,
-								hideOnClick: false,
-								color: props.active ? "green" : void 0
-							}, external_BdApi_React_default().createElement(components_namespaceObject.Button, {
-								className: modal.Z.copy,
-								size: components_namespaceObject.Button.Sizes.NONE,
-								look: components_namespaceObject.Button.Looks.BLANK,
-								onClick: external_window_default().flow(external_PluginApi_DiscordModules_namespaceObject.ElectronModule.copy.bind(external_PluginApi_DiscordModules_namespaceObject.ElectronModule, copy), props.onClick)
-							}, external_BdApi_React_default().createElement(Copy, null)))))];
-							return external_BdApi_React_default().createElement(forms_namespaceObject.FormItem, {
-								title,
-								className: modal.Z.item,
-								key: prop
-							}, external_BdApi_React_default().createElement(forms_namespaceObject.FormText, null, "string" === typeof value ? Markdown.parse(value) : value));
-						};
-						const channelType = constants_namespaceObject.ChannelTypes[channel.type].split("_").map(external_window_default().flow(external_window_default().lowerCase, external_window_default().upperFirst)).join(" ");
-						let lastMessage = extractDate(UnreadStore.lastMessageId(channel.id));
-						return [renderItem(Strings.get("NAME"), channel.name, channel.name), renderItem(Strings.get("ID"), channel.id, channel.id), "CATEGORY_DETAILS" !== type && renderItem(Strings.get("MENTION"), `<#${channel.id}>`, `<#${channel.id}>`), renderItem(Strings.get("CREATED_AT"), `<t:${Math.floor(extractDate(channel.id) / 1e3)}:R>`, extractDate(channel.id).toLocaleString()), renderItem(Strings.get("POSITION"), channel.position, channel.position), "CATEGORY_DETAILS" !== type && renderItem(Strings.get("CATEGORY"), channel.parent_id ? `<#${channel.parent_id}>` : Strings.get("NOT_SPECIFIED"), channel.parent_id && `<#${channel.parent_id}>`), renderItem(Strings.get("NSFW"), channel.nsfw ? Strings.get("YES") : Strings.get("NO"), null), "CATEGORY_DETAILS" !== type && channel.type !== constants_namespaceObject.ChannelTypes.GUILD_VOICE && renderItem(Strings.get("LAST_MESSAGE_AT"), lastMessage || isNaN(lastMessage) ? `<t:${Math.floor(lastMessage / 1e3)}:R>` : Strings.get("NOT_FOUND"), lastMessage && !isNaN(lastMessage) && lastMessage.toLocaleString()), renderItem(Strings.get("TYPE"), channelType, channelType), renderItem(Strings.get("TOPIC"), channel.topic || Strings.get("NOT_SPECIFIED"), channel.topic || null)].filter(Boolean);
-					}
-				}, {
-					id: "PERMITTED",
-					name: "PERMITTED",
-					render: ({
-						channel
-					}) => {
-						const overrides = getPermissionOverrides(channel);
-						const permitted = [...overrides.users, ...overrides.roles].filter((e => e.can)).sort((a => "user" == a.type ? 0 : -1));
-						const renderedEnemies = permitted.map((enemy => renderPermissionItem(enemy.id, stores_namespaceObject.Guilds.getGuild(channel.guild_id), enemy.type)));
-						return renderedEnemies.length ? renderedEnemies : external_BdApi_React_default().createElement("p", null, Strings.get("NOONE_PERMITTED"));
-					}
-				}, {
-					id: "DENIED",
-					name: "DENIED",
-					render: ({
-						channel
-					}) => {
-						const overrides = getPermissionOverrides(channel);
-						const permitted = [...overrides.users, ...overrides.roles].filter((e => !e.can)).sort((a => "user" == a.type ? 0 : -1));
-						const renderedEnemies = permitted.map((enemy => renderPermissionItem(enemy.id, stores_namespaceObject.Guilds.getGuild(channel.guild_id), enemy.type)));
-						return renderedEnemies.length ? renderedEnemies : external_BdApi_React_default().createElement("p", null, Strings.get("NOONE_DENIED"));
-					}
-				}];
-				function ChannelAccessibilityModal({
-					channelId,
-					onClose,
-					type
-				}) {
-					const channel = (0, flux_namespaceObject.useStateFromStores)([stores_namespaceObject.Channels], (() => stores_namespaceObject.Channels.getChannel(channelId)), [channelId]);
-					const [selected, setSelected] = (0, external_BdApi_React_.useState)(pages[0].id);
-					const handleChannelSelect = (0, external_BdApi_React_.useCallback)((id => {
-						setSelected(id);
-					}), [selected, channel, onClose]);
-					const element = (0, external_BdApi_React_.useMemo)((() => {
-						try {
-							return pages.find((e => e.id === selected)).render({
-								channel,
-								type
-							});
-						} catch (err) {
-							external_PluginApi_namespaceObject.Logger.stacktrace(`Failed to render page "${selected}":`, err);
-							return "Component Error";
-						}
-					}), [selected, channel, onClose]);
-					return external_BdApi_React_default().createElement("div", {
-						className: modal.Z.content
-					}, external_BdApi_React_default().createElement(modal_namespaceObject.ModalHeader, {
-						className: modal.Z.header
-					}, external_BdApi_React_default().createElement("div", {
-						className: modal.Z.title
-					}, external_BdApi_React_default().createElement("h2", null, Strings.get(type)), external_BdApi_React_default().createElement("div", {
-						className: modal.Z.channelName
-					}, channel.name), external_BdApi_React_default().createElement(modal_namespaceObject.ModalCloseButton, {
-						onClick: onClose,
-						className: modal.Z.closeButton
-					})), external_BdApi_React_default().createElement("div", {
-						className: modal.Z.tabItems
-					}, pages.map((page => external_BdApi_React_default().createElement("div", {
-						className: external_PluginApi_namespaceObject.Utilities.className(modal.Z.tabItem, page.id === selected && modal.Z.selected),
-						key: page.id,
-						onClick: handleChannelSelect.bind(null, page.id)
-					}, Strings.get(page.name)))))), external_BdApi_React_default().createElement(modal_namespaceObject.ModalContent, {
-						className: modal.Z.scroller
-					}, element));
-				}
-				var ChannelDetails_React = __webpack_require__(113);
-				function ChannelDetails_extends() {
-					ChannelDetails_extends = Object.assign || function(target) {
-						for (var i = 1; i < arguments.length; i++) {
-							var source = arguments[i];
-							for (var key in source)
-								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-						}
-						return target;
-					};
-					return ChannelDetails_extends.apply(this, arguments);
-				}
-				const GuildPermissions = external_PluginApi_namespaceObject.WebpackModules.getByProps("getGuildPermissions");
-				const shouldShowPermissions = function(channel) {
-					if (!channel) return false;
-					const overrides = getPermissionOverrides(channel);
-					return overrides?.roles?.length > 0 || overrides?.users?.length > 0;
-				};
-				class ChannelDetails extends(external_BasePlugin_default()) {
-					onStart() {
-						this.patchTextChannel();
-						this.patchChannelContextMenu();
-						this.patchActiveThreadsPopout();
-						this.patchVoiceChannel();
-						this.patchVoiceChannelActivities();
-						Strings.init();
-						external_StyleLoader_default().inject();
-					}
-					async patchVoiceChannelActivities() {
-						const Scroller = external_PluginApi_namespaceObject.WebpackModules.getByProps("thin", "scrollerBase");
-						const ActivityPopout = external_PluginApi_namespaceObject.WebpackModules.getByProps("partyMembers", "container", "activity");
-						const VoiceChannelActivities = external_PluginApi_namespaceObject.WebpackModules.getModule((m => "VoiceChannelActivities" === m?.default?.displayName));
-						external_PluginApi_namespaceObject.Patcher.after(VoiceChannelActivities, "default", ((_, [props], ret) => {
-							if (!props.channel) return;
-							const overrides = getPermissionOverrides(props.channel);
-							if (!Object.values(PermissionTypes).some((prop => overrides[prop]?.length > 0))) return ret;
-							if (ret) ret.props.children.unshift(ChannelDetails_React.createElement(ChannelTooltip, {
-								overrides,
-								guild: stores_namespaceObject.Guilds.getGuild(props.channel.guild_id),
-								className: "voiceActivities"
-							}), ChannelDetails_React.createElement("div", {
-								className: tooltip.Z.divider
-							}));
-							else return ChannelDetails_React.createElement("div", {
-								className: `${ActivityPopout.container} ${Scroller.thin}`
-							}, ChannelDetails_React.createElement(ChannelTooltip, {
-								overrides,
-								guild: stores_namespaceObject.Guilds.getGuild(props.channel.guild_id),
-								className: "voiceActivities"
-							}));
-						}));
-					}
-					async patchVoiceChannel() {
-						const selector = `.${external_PluginApi_namespaceObject.WebpackModules.getByProps("containerDefault", "containerDragAfter")?.containerDefault}`;
-						const VoiceChannel = await external_PluginApi_namespaceObject.ReactComponents.getComponentByName("VoiceChannel", selector);
-						external_PluginApi_namespaceObject.Patcher.after(VoiceChannel.component.prototype, "render", ((_this, _, returnValue) => {
-							const shouldShow = shouldShowPermissions(_this.props.channel);
-							const props = external_PluginApi_namespaceObject.Utilities.findInReactTree(returnValue, (e => e?.renderPopout));
-							if (shouldShow) {
-								returnValue.props.onMouseEnter = _this.handleMouseEnter;
-								returnValue.props.onMouseLeave = _this.handleMouseLeave;
-							}
-							if (_this.state.shouldShowActivities && shouldShow)
-								if (props) props.shouldShow = true;
-						}));
-						VoiceChannel.forceUpdateAll();
-					}
-					async patchTextChannel() {
-						const selector = `.${external_PluginApi_namespaceObject.WebpackModules.getByProps("containerDefault", "containerDragAfter")?.containerDefault}`;
-						const TextChannel = await external_PluginApi_namespaceObject.ReactComponents.getComponentByName("TextChannel", selector);
-						external_PluginApi_namespaceObject.Patcher.after(TextChannel.component.prototype, "render", ((_this, _, returnValue) => {
-							const shouldShow = shouldShowPermissions(_this.props.channel);
-							if (shouldShow) {
-								returnValue.props.onMouseEnter = _this.handleMouseEnter;
-								returnValue.props.onMouseLeave = _this.handleMouseLeave;
-							}
-							if (_this.state.shouldShowThreadsPopout && shouldShow) returnValue.props.children.props.shouldShow = true;
-						}));
-						TextChannel.forceUpdateAll();
-					}
-					async patchActiveThreadsPopout() {
-						const ActiveThreadsPopout = external_PluginApi_namespaceObject.WebpackModules.getModule((m => "ActiveThreadsPopout" === m?.default?.displayName));
-						const UnreadStore = external_PluginApi_namespaceObject.WebpackModules.getByProps("getUnreadCount");
-						const ThreadsStore = external_PluginApi_namespaceObject.WebpackModules.getByProps("getActiveUnjoinedThreadsForParent");
-						const SnowflakeUtils = external_PluginApi_namespaceObject.WebpackModules.getByProps("extractTimestamp");
-						function useActiveThreads(channel) {
-							if (channel.type === constants_namespaceObject.ChannelTypes.GUILD_VOICE) return [];
-							return (0, flux_namespaceObject.useStateFromStoresArray)([UnreadStore, ThreadsStore, GuildPermissions], (() => external_window_default()(ThreadsStore.getActiveUnjoinedThreadsForParent(channel.guild_id, channel.id)).values().filter((thread => GuildPermissions.can(constants_namespaceObject.Permissions.VIEW_CHANNEL, thread))).sort(((a, b) => {
-								const lastMessageInA = UnreadStore.lastMessageId(a.id);
-								const lastMessageInB = UnreadStore.lastMessageId(b.id);
-								return SnowflakeUtils.compare(lastMessageInA, lastMessageInB);
-							})).reverse().value()));
-						}
-						function PatchedThreadsPopout(props) {
-							const {
-								children,
-								className,
-								channel
-							} = props;
-							const threads = useActiveThreads(channel);
-							const ret = ChannelDetails_React.createElement("div", {
-								className
-							}, shouldShowPermissions(channel) && ChannelDetails_React.createElement(ChannelTooltip, {
-								overrides: getPermissionOverrides(channel),
-								guild: stores_namespaceObject.Guilds.getGuild(channel.guild_id),
-								className: "threads"
-							}), threads.length ? ChannelDetails_React.createElement(ChannelDetails_React.Fragment, null, children) : null);
-							return ret;
-						}
-						external_PluginApi_namespaceObject.Patcher.after(ActiveThreadsPopout, "default", ((_, [props], ret) => {
-							ret.type = PatchedThreadsPopout;
-							Object.assign(ret.props, props);
-						}));
-					}
-					openModal(channel, type) {
-						(0, modal_namespaceObject.openModal)((props => ChannelDetails_React.createElement(modal_namespaceObject.ModalRoot, ChannelDetails_extends({}, props, {
-							size: "medium"
-						}), ChannelDetails_React.createElement(ChannelAccessibilityModal, {
-							channelId: channel.id,
-							onClose: props.onClose,
-							type
-						}))));
-					}
-					async patchChannelContextMenu() {
-						const ChannelEditItem = await external_PluginApi_namespaceObject.DCM.getDiscordMenu("useChannelEditItem");
-						const getType = function(channel) {
-							switch (channel.type) {
-								case constants_namespaceObject.ChannelTypes.GUILD_CATEGORY:
-									return "CATEGORY_DETAILS";
-								default:
-									return "CHANNEL_DETAILS";
-							}
-						};
-						external_PluginApi_namespaceObject.Patcher.after(ChannelEditItem, "default", ((_, [channel], ret) => {
-							const type = getType(channel);
-							return [ChannelDetails_React.createElement(contextmenu_namespaceObject.MenuItem, {
-								key: type,
-								id: "channel-details",
-								label: Strings.get(type),
-								action: () => {
-									this.openModal(channel, type);
-								}
-							}), ret];
-						}));
-					}
-					onStop() {
-						Strings.shutdown();
-						external_StyleLoader_default().remove();
-						external_PluginApi_namespaceObject.Patcher.unpatchAll();
-					}
-				}
-			},
 			645: module => {
 				module.exports = function(cssWithMappingToString) {
 					var list = [];
@@ -1033,7 +410,564 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				});
 			};
 		})();
-		var __webpack_exports__ = __webpack_require__(878);
+		var __webpack_exports__ = {};
+		(() => {
+			__webpack_require__.r(__webpack_exports__);
+			__webpack_require__.d(__webpack_exports__, {
+				default: () => ChannelDetails
+			});
+			const stores_namespaceObject = Modules["@discord/stores"];
+			const external_PluginApi_namespaceObject = PluginApi;
+			const external_BasePlugin_namespaceObject = BasePlugin;
+			var external_BasePlugin_default = __webpack_require__.n(external_BasePlugin_namespaceObject);
+			var external_BdApi_React_ = __webpack_require__(113);
+			var external_BdApi_React_default = __webpack_require__.n(external_BdApi_React_);
+			const constants_namespaceObject = Modules["@discord/constants"];
+			const i18n_namespaceObject = Modules["@discord/i18n"];
+			var i18n_default = __webpack_require__.n(i18n_namespaceObject);
+			const modules_namespaceObject = Modules["@discord/modules"];
+			const en_US_namespaceObject = JSON.parse('{"ALLOWED_ROLES":"Allowed Roles","DENIED_ROLES":"Denied Roles","ALLOWED_USERS":"Allowed Users","DENIED_USERS":"Denied Users","CHANNEL_DETAILS":"Channel Details","CATEGORY_DETAILS":"Category Details","NOONE_PERMITTED":"No-one was permitted for this channel.","NOONE_DENIED":"No-one was denied from this channel","GENERAL":"General","PERMITTED":"Permitted","DENIED":"Denied","NAME":"Name","CREATED_AT":"Created At","ID":"Id","LAST_MESSAGE_AT":"Last Message At","NSFW":"Nsfw","CATEGORY":"Category","POSITION":"Position","TYPE":"Type","MENTION":"Mention","TOPIC":"Description","COPY":"Copy","COPIED":"Copied!","NOT_SPECIFIED":"Not Specified.","YES":"Yes","NO":"No","NOT_FOUND":"Not found.","COPY_COLOR":"Copy Color","MORE_OPTIONS":"More Options","COPY_NAME":"Copy Name"}');
+			const translations = {
+				"en-US": en_US_namespaceObject
+			};
+			function _defineProperty(obj, key, value) {
+				if (key in obj) Object.defineProperty(obj, key, {
+					value,
+					enumerable: true,
+					configurable: true,
+					writable: true
+				});
+				else obj[key] = value;
+				return obj;
+			}
+			class Strings {
+				static init() {
+					this.setLanguage(i18n_default().getLocale());
+					modules_namespaceObject.Dispatcher.subscribe(constants_namespaceObject.ActionTypes.USER_SETTINGS_UPDATE, this.handleLocaleChange);
+				}
+				static shutdown() {
+					modules_namespaceObject.Dispatcher.unsubscribe(constants_namespaceObject.ActionTypes.USER_SETTINGS_UPDATE, this.handleLocaleChange);
+				}
+				static setLanguage(lang) {
+					this._strings = translations[lang] ?? translations["en-US"];
+				}
+				static get(key) {
+					return this._strings[key] ?? translations["en-US"][key] ?? "String not found.";
+				}
+			}
+			_defineProperty(Strings, "_strings", void 0);
+			_defineProperty(Strings, "handleLocaleChange", (() => {
+				Strings.setLanguage(i18n_default().getLocale());
+			}));
+			var tooltip = __webpack_require__(921);
+			var React = __webpack_require__(113);
+			const AvatarUtils = external_PluginApi_namespaceObject.WebpackModules.getByProps("getUserAvatarURL");
+			function MemberRole({
+				name,
+				colorString,
+				id
+			}) {
+				const isSelf = ~stores_namespaceObject.Members.getMember(stores_namespaceObject.SelectedGuilds.getGuildId(), stores_namespaceObject.Users.getCurrentUser().id)?.roles.indexOf(id);
+				return React.createElement("div", {
+					className: external_PluginApi_namespaceObject.Utilities.className(tooltip.Z.role, isSelf && tooltip.Z.isSelf)
+				}, React.createElement("div", {
+					className: tooltip.Z.roleCircle,
+					style: {
+						"--color": colorString
+					}
+				}), React.createElement("div", {
+					className: tooltip.Z.roleName
+				}, name));
+			}
+			function MemberWithAvatar({
+				user
+			}) {
+				const isSelf = stores_namespaceObject.Users.getCurrentUser().id === user?.id;
+				return React.createElement("div", {
+					className: external_PluginApi_namespaceObject.Utilities.className(tooltip.Z.role, isSelf && tooltip.Z.isSelf)
+				}, React.createElement("img", {
+					className: tooltip.Z.avatar,
+					src: AvatarUtils.getUserAvatarURL(user ?? {})
+				}), React.createElement("div", {
+					className: tooltip.Z.roleName
+				}, user?.username ?? "Unknown", "#", user?.discriminator ?? "0000"));
+			}
+			const collectSections = function(section) {
+				return section.reduce((([allowed, denied], enemy) => {
+					if (enemy.can) allowed.push(enemy.id);
+					else denied.push(enemy.id);
+					return [allowed, denied];
+				}), [
+					[],
+					[]
+				]);
+			};
+			function ChannelTooltip({
+				overrides,
+				guild,
+				className
+			}) {
+				const [allowedUsers, deniedUsers] = (0, external_BdApi_React_.useMemo)((() => collectSections(overrides.users)), [overrides, guild]);
+				const [allowedRoles, deniedRoles] = (0, external_BdApi_React_.useMemo)((() => collectSections(overrides.roles)), [overrides, guild]);
+				const renderSection = function(section, type, string) {
+					const getProps = {
+						user: id => stores_namespaceObject.Users.getUser(id),
+						role: id => guild.getRole(id)
+					} [type];
+					if ("function" !== typeof getProps || 0 === section.length) return null;
+					return section.length ? React.createElement("div", {
+						className: tooltip.Z.section,
+						key: string
+					}, React.createElement("h3", {
+						className: tooltip.Z.header
+					}, Strings.get(string)), React.createElement("div", {
+						className: tooltip.Z.body
+					}, section.map((enemyId => "user" === type ? React.createElement(MemberWithAvatar, {
+						user: stores_namespaceObject.Users.getUser(enemyId)
+					}) : React.createElement(MemberRole, getProps(enemyId)))))) : null;
+				};
+				return React.createElement("div", {
+					className: external_PluginApi_namespaceObject.Utilities.className(tooltip.Z.tooltip, className)
+				}, renderSection(allowedRoles, "role", "ALLOWED_ROLES"), renderSection(deniedRoles, "role", "DENIED_ROLES"), renderSection(allowedUsers, "user", "ALLOWED_USERS"), renderSection(deniedUsers, "user", "DENIED_USERS"));
+			}
+			const PermissionTypes = {
+				1: "users",
+				0: "roles"
+			};
+			const BigIntUtils = external_PluginApi_namespaceObject.WebpackModules.getByProps("deserialize", "invert", "has");
+			const hasPermissionOverride = function(perms, permission) {
+				return BigIntUtils.has(perms.allow, constants_namespaceObject.Permissions[permission]) || BigIntUtils.has(perms.deny, constants_namespaceObject.Permissions[permission]);
+			};
+			const can = function(permissions, permission) {
+				return (permissions & constants_namespaceObject.Permissions[permission]) == constants_namespaceObject.Permissions[permission] == 1;
+			};
+			const isVoiceChannel = function(channel) {
+				return Boolean(~[constants_namespaceObject.ChannelTypes.GUILD_VOICE, constants_namespaceObject.ChannelTypes.GUILD_STAGE_VOICE].indexOf(channel.type));
+			};
+			const getPermissionOverrides = function(channel) {
+				const overrides = channel.permissionOverwrites;
+				return Object.keys(overrides).reduce(((map, id) => {
+					const override = overrides[id];
+					if (!hasPermissionOverride(override, "VIEW_CHANNEL")) return map;
+					map[PermissionTypes[override.type]].push({
+						id,
+						can: can(override.allow, isVoiceChannel(channel) ? "CONNECT" : "VIEW_CHANNEL"),
+						type: PermissionTypes[override.type].slice(0, -1)
+					});
+					return map;
+				}), Object.fromEntries(Object.values(PermissionTypes).map((e => [e, []]))));
+			};
+			const extractDate = function(id) {
+				return new Date(id / 4194304 + 14200704e5);
+			};
+			const getLastChannelMessageDate = function(channelId) {
+				return extractDate(Messages.getMessages(channelId)._array.slice(-1)[0]?.id);
+			};
+			const external_StyleLoader_namespaceObject = StyleLoader;
+			var external_StyleLoader_default = __webpack_require__.n(external_StyleLoader_namespaceObject);
+			const modal_namespaceObject = Modules["@discord/modal"];
+			const components_namespaceObject = Modules["@discord/components"];
+			const contextmenu_namespaceObject = Modules["@discord/contextmenu"];
+			const flux_namespaceObject = Modules["@discord/flux"];
+			const forms_namespaceObject = Modules["@discord/forms"];
+			const external_PluginApi_DiscordModules_namespaceObject = PluginApi.DiscordModules;
+			const external_window_namespaceObject = window._;
+			var external_window_default = __webpack_require__.n(external_window_namespaceObject);
+			var copy_React = __webpack_require__(113);
+			function Copy(props) {
+				return copy_React.createElement("svg", Object.assign({
+					xmlns: "http://www.w3.org/2000/svg",
+					height: "24px",
+					viewBox: "0 0 24 24",
+					width: "24px"
+				}, props), copy_React.createElement("path", {
+					d: "M0 0h24v24H0z",
+					fill: "none"
+				}), copy_React.createElement("path", {
+					d: "M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z",
+					fill: "currentColor"
+				}));
+			}
+			var dropper_React = __webpack_require__(113);
+			function Dropper(props) {
+				return dropper_React.createElement("svg", Object.assign({
+					width: "14",
+					height: "14",
+					viewBox: "0 0 16 16"
+				}, props), dropper_React.createElement("g", {
+					fill: "none"
+				}, dropper_React.createElement("path", {
+					d: "M-4-4h24v24H-4z"
+				}), dropper_React.createElement("path", {
+					fill: "currentColor",
+					d: "M14.994 1.006C13.858-.257 11.904-.3 10.72.89L8.637 2.975l-.696-.697-1.387 1.388 5.557 5.557 1.387-1.388-.697-.697 1.964-1.964c1.13-1.13 1.3-2.985.23-4.168zm-13.25 10.25c-.225.224-.408.48-.55.764L.02 14.37l1.39 1.39 2.35-1.174c.283-.14.54-.33.765-.55l4.808-4.808-2.776-2.776-4.813 4.803z"
+				})));
+			}
+			var overflowMenu_React = __webpack_require__(113);
+			function OverflowMenu(props) {
+				return overflowMenu_React.createElement("svg", Object.assign({
+					width: "24",
+					height: "24",
+					viewBox: "0 0 24 24"
+				}, props), overflowMenu_React.createElement("g", {
+					fill: "none",
+					"fill-rule": "evenodd"
+				}, overflowMenu_React.createElement("path", {
+					d: "M24 0v24H0V0z"
+				}), overflowMenu_React.createElement("path", {
+					fill: "currentColor",
+					d: "M12 16c1.1045695 0 2 .8954305 2 2s-.8954305 2-2 2-2-.8954305-2-2 .8954305-2 2-2zm0-6c1.1045695 0 2 .8954305 2 2s-.8954305 2-2 2-2-.8954305-2-2 .8954305-2 2-2zm0-6c1.1045695 0 2 .8954305 2 2s-.8954305 2-2 2-2-.8954305-2-2 .8954305-2 2-2z"
+				})));
+			}
+			var tick_React = __webpack_require__(113);
+			function Tick(props) {
+				return tick_React.createElement("svg", Object.assign({
+					width: "32",
+					height: "24",
+					viewBox: "0 0 24 24"
+				}, props), tick_React.createElement("path", {
+					fill: "currentColor",
+					"fill-rule": "evenodd",
+					"clip-rule": "evenodd",
+					d: "M8.99991 16.17L4.82991 12L3.40991 13.41L8.99991 19L20.9999 7.00003L19.5899 5.59003L8.99991 16.17Z"
+				}));
+			}
+			var modal = __webpack_require__(676);
+			const Markdown = external_PluginApi_namespaceObject.WebpackModules.getByProps("parseTopic");
+			const Popout = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("Popout");
+			const UnreadStore = external_PluginApi_namespaceObject.WebpackModules.getByProps("getUnreadCount");
+			function SpringButton({
+				children,
+				timeout = 1e3
+			}) {
+				const [active, setActive] = (0, external_BdApi_React_.useState)(false);
+				const timeoutRef = (0, external_BdApi_React_.useRef)(null);
+				(0, external_BdApi_React_.useEffect)((() => {
+					if (!active) return;
+					if (timeoutRef.current) clearTimeout(timeoutRef.current);
+					timeoutRef.current = setTimeout((() => {
+						setActive(false);
+					}), timeout);
+				}), [active, timeoutRef]);
+				return children({
+					active,
+					onClick: setActive.bind(null, true)
+				});
+			}
+			const renderPermissionItem = function(id, guild, type) {
+				const props = {
+					user: stores_namespaceObject.Users.getUser(id),
+					role: guild.getRole(id)
+				} [type];
+				if (!props) return null;
+				const isSelf = "role" === type ? ~stores_namespaceObject.Members.getMember(guild.id, stores_namespaceObject.Users.getCurrentUser().id)?.roles.indexOf(props.id) : stores_namespaceObject.Users.getCurrentUser().id === props.id;
+				return external_BdApi_React_default().createElement("div", {
+					className: external_PluginApi_namespaceObject.Utilities.className(modal.Z.permissionItem, isSelf && modal.Z.self),
+					"aria-type": type,
+					style: {
+						"--color": props.colorString
+					}
+				}, external_BdApi_React_default().createElement("div", {
+					className: modal.Z.iconContainer
+				}, "user" === type ? external_BdApi_React_default().createElement("img", {
+					src: props.getAvatarURL(true, true),
+					className: modal.Z.avatar
+				}) : external_BdApi_React_default().createElement("div", {
+					className: modal.Z.roleCircle
+				}), isSelf && external_BdApi_React_default().createElement(Tick, null)), external_BdApi_React_default().createElement("div", {
+					className: modal.Z.name
+				}, props["user" === type ? "username" : "name"], "user" === type && "#" + props.discriminator), "role" === type && external_BdApi_React_default().createElement(Popout, {
+					renderPopout: function(popoutProps) {
+						let ref = null;
+						const callback = function({
+							target
+						}) {
+							if (!ref || ref.contains(target)) return;
+							popoutProps.closePopout();
+							ref = null;
+						};
+						return external_BdApi_React_default().createElement("div", {
+							ref: element => {
+								if (!element) document.removeEventListener("click", callback);
+								else {
+									ref = element;
+									setTimeout((() => {
+										document.addEventListener("click", callback);
+									}), 100);
+								}
+							}
+						}, external_BdApi_React_default().createElement(contextmenu_namespaceObject.Menu, {
+							navId: "more-options",
+							onClose: popoutProps.closePopout,
+							style: "styleFlexible"
+						}, external_BdApi_React_default().createElement(contextmenu_namespaceObject.MenuGroup, null, "role" === type && props.colorString && external_BdApi_React_default().createElement(contextmenu_namespaceObject.MenuItem, {
+							icon: () => external_BdApi_React_default().createElement(Dropper, {
+								width: "14",
+								height: "14"
+							}),
+							label: Strings.get("COPY_COLOR"),
+							id: "copy-role-color",
+							action: () => external_PluginApi_DiscordModules_namespaceObject.ElectronModule.copy(props.colorString)
+						}), external_BdApi_React_default().createElement(contextmenu_namespaceObject.MenuItem, {
+							icon: () => external_BdApi_React_default().createElement(Copy, {
+								width: "18",
+								height: "18"
+							}),
+							label: Strings.get("COPY_NAME"),
+							id: "copy-name",
+							action: () => external_PluginApi_DiscordModules_namespaceObject.ElectronModule.copy(props["user" === type ? "username" : "name"])
+						}))));
+					},
+					align: "top",
+					spacing: 8,
+					position: "left",
+					animation: "2",
+					onRequestClose: () => true
+				}, (props => external_BdApi_React_default().createElement(components_namespaceObject.TooltipContainer, {
+					className: modal.Z.tooltip,
+					text: Strings.get("MORE_OPTIONS"),
+					position: "left"
+				}, external_BdApi_React_default().createElement(components_namespaceObject.Button, Object.assign({
+					size: components_namespaceObject.Button.Sizes.NONE,
+					look: components_namespaceObject.Button.Looks.BLANK,
+					className: modal.Z.colorCopy
+				}, props), external_BdApi_React_default().createElement(OverflowMenu, null))))));
+			};
+			const pages = [{
+				id: "GENERAL",
+				name: "GENERAL",
+				render: ({
+					channel,
+					type
+				}) => {
+					const renderItem = function(prop, value, copy) {
+						const title = [prop, null != copy && external_BdApi_React_default().createElement(SpringButton, null, (props => external_BdApi_React_default().createElement(components_namespaceObject.TooltipContainer, {
+							text: props.active ? Strings.get("COPIED") : Strings.get("COPY"),
+							className: modal.Z.tooltip,
+							hideOnClick: false,
+							color: props.active ? "green" : void 0
+						}, external_BdApi_React_default().createElement(components_namespaceObject.Button, {
+							className: modal.Z.copy,
+							size: components_namespaceObject.Button.Sizes.NONE,
+							look: components_namespaceObject.Button.Looks.BLANK,
+							onClick: external_window_default().flow(external_PluginApi_DiscordModules_namespaceObject.ElectronModule.copy.bind(external_PluginApi_DiscordModules_namespaceObject.ElectronModule, copy), props.onClick)
+						}, external_BdApi_React_default().createElement(Copy, null)))))];
+						return external_BdApi_React_default().createElement(forms_namespaceObject.FormItem, {
+							title,
+							className: modal.Z.item,
+							key: prop
+						}, external_BdApi_React_default().createElement(forms_namespaceObject.FormText, null, "string" === typeof value ? Markdown.parse(value) : value));
+					};
+					const channelType = constants_namespaceObject.ChannelTypes[channel.type].split("_").map(external_window_default().flow(external_window_default().lowerCase, external_window_default().upperFirst)).join(" ");
+					let lastMessage = extractDate(UnreadStore.lastMessageId(channel.id));
+					return [renderItem(Strings.get("NAME"), channel.name, channel.name), renderItem(Strings.get("ID"), channel.id, channel.id), "CATEGORY_DETAILS" !== type && renderItem(Strings.get("MENTION"), `<#${channel.id}>`, `<#${channel.id}>`), renderItem(Strings.get("CREATED_AT"), `<t:${Math.floor(extractDate(channel.id) / 1e3)}:R>`, extractDate(channel.id).toLocaleString()), renderItem(Strings.get("POSITION"), channel.position, channel.position), "CATEGORY_DETAILS" !== type && renderItem(Strings.get("CATEGORY"), channel.parent_id ? `<#${channel.parent_id}>` : Strings.get("NOT_SPECIFIED"), channel.parent_id && `<#${channel.parent_id}>`), renderItem(Strings.get("NSFW"), channel.nsfw ? Strings.get("YES") : Strings.get("NO"), null), "CATEGORY_DETAILS" !== type && channel.type !== constants_namespaceObject.ChannelTypes.GUILD_VOICE && renderItem(Strings.get("LAST_MESSAGE_AT"), lastMessage || isNaN(lastMessage) ? `<t:${Math.floor(lastMessage / 1e3)}:R>` : Strings.get("NOT_FOUND"), lastMessage && !isNaN(lastMessage) && lastMessage.toLocaleString()), renderItem(Strings.get("TYPE"), channelType, channelType), renderItem(Strings.get("TOPIC"), channel.topic || Strings.get("NOT_SPECIFIED"), channel.topic || null)].filter(Boolean);
+				}
+			}, {
+				id: "PERMITTED",
+				name: "PERMITTED",
+				render: ({
+					channel
+				}) => {
+					const overrides = getPermissionOverrides(channel);
+					const permitted = [...overrides.users, ...overrides.roles].filter((e => e.can)).sort((a => "user" == a.type ? 0 : -1));
+					const renderedEnemies = permitted.map((enemy => renderPermissionItem(enemy.id, stores_namespaceObject.Guilds.getGuild(channel.guild_id), enemy.type)));
+					return renderedEnemies.length ? renderedEnemies : external_BdApi_React_default().createElement("p", null, Strings.get("NOONE_PERMITTED"));
+				}
+			}, {
+				id: "DENIED",
+				name: "DENIED",
+				render: ({
+					channel
+				}) => {
+					const overrides = getPermissionOverrides(channel);
+					const permitted = [...overrides.users, ...overrides.roles].filter((e => !e.can)).sort((a => "user" == a.type ? 0 : -1));
+					const renderedEnemies = permitted.map((enemy => renderPermissionItem(enemy.id, stores_namespaceObject.Guilds.getGuild(channel.guild_id), enemy.type)));
+					return renderedEnemies.length ? renderedEnemies : external_BdApi_React_default().createElement("p", null, Strings.get("NOONE_DENIED"));
+				}
+			}];
+			function ChannelAccessibilityModal({
+				channelId,
+				onClose,
+				type
+			}) {
+				const channel = (0, flux_namespaceObject.useStateFromStores)([stores_namespaceObject.Channels], (() => stores_namespaceObject.Channels.getChannel(channelId)), [channelId]);
+				const [selected, setSelected] = (0, external_BdApi_React_.useState)(pages[0].id);
+				const handleChannelSelect = (0, external_BdApi_React_.useCallback)((id => {
+					setSelected(id);
+				}), [selected, channel, onClose]);
+				const element = (0, external_BdApi_React_.useMemo)((() => {
+					try {
+						return pages.find((e => e.id === selected)).render({
+							channel,
+							type
+						});
+					} catch (err) {
+						external_PluginApi_namespaceObject.Logger.stacktrace(`Failed to render page "${selected}":`, err);
+						return "Component Error";
+					}
+				}), [selected, channel, onClose]);
+				return external_BdApi_React_default().createElement("div", {
+					className: modal.Z.content
+				}, external_BdApi_React_default().createElement(modal_namespaceObject.ModalHeader, {
+					className: modal.Z.header
+				}, external_BdApi_React_default().createElement("div", {
+					className: modal.Z.title
+				}, external_BdApi_React_default().createElement("h2", null, Strings.get(type)), external_BdApi_React_default().createElement("div", {
+					className: modal.Z.channelName
+				}, channel.name), external_BdApi_React_default().createElement(modal_namespaceObject.ModalCloseButton, {
+					onClick: onClose,
+					className: modal.Z.closeButton
+				})), external_BdApi_React_default().createElement("div", {
+					className: modal.Z.tabItems
+				}, pages.map((page => external_BdApi_React_default().createElement("div", {
+					className: external_PluginApi_namespaceObject.Utilities.className(modal.Z.tabItem, page.id === selected && modal.Z.selected),
+					key: page.id,
+					onClick: handleChannelSelect.bind(null, page.id)
+				}, Strings.get(page.name)))))), external_BdApi_React_default().createElement(modal_namespaceObject.ModalContent, {
+					className: modal.Z.scroller
+				}, element));
+			}
+			var ChannelDetails_React = __webpack_require__(113);
+			const GuildPermissions = external_PluginApi_namespaceObject.WebpackModules.getByProps("getGuildPermissions");
+			const shouldShowPermissions = function(channel) {
+				if (!channel) return false;
+				const overrides = getPermissionOverrides(channel);
+				return overrides?.roles?.length > 0 || overrides?.users?.length > 0;
+			};
+			class ChannelDetails extends(external_BasePlugin_default()) {
+				onStart() {
+					this.patchTextChannel();
+					this.patchChannelContextMenu();
+					this.patchActiveThreadsPopout();
+					this.patchVoiceChannel();
+					this.patchVoiceChannelActivities();
+					Strings.init();
+					external_StyleLoader_default().inject();
+				}
+				async patchVoiceChannelActivities() {
+					const Scroller = external_PluginApi_namespaceObject.WebpackModules.getByProps("thin", "scrollerBase");
+					const ActivityPopout = external_PluginApi_namespaceObject.WebpackModules.getByProps("partyMembers", "container", "activity");
+					const VoiceChannelActivities = external_PluginApi_namespaceObject.WebpackModules.getModule((m => "VoiceChannelActivities" === m?.default?.displayName));
+					external_PluginApi_namespaceObject.Patcher.after(VoiceChannelActivities, "default", ((_, [props], ret) => {
+						if (!props.channel) return;
+						const overrides = getPermissionOverrides(props.channel);
+						if (!Object.values(PermissionTypes).some((prop => overrides[prop]?.length > 0))) return ret;
+						if (ret) ret.props.children.unshift(ChannelDetails_React.createElement(ChannelTooltip, {
+							overrides,
+							guild: stores_namespaceObject.Guilds.getGuild(props.channel.guild_id),
+							className: "voiceActivities"
+						}), ChannelDetails_React.createElement("div", {
+							className: tooltip.Z.divider
+						}));
+						else return ChannelDetails_React.createElement("div", {
+							className: `${ActivityPopout.container} ${Scroller.thin}`
+						}, ChannelDetails_React.createElement(ChannelTooltip, {
+							overrides,
+							guild: stores_namespaceObject.Guilds.getGuild(props.channel.guild_id),
+							className: "voiceActivities"
+						}));
+					}));
+				}
+				async patchVoiceChannel() {
+					const selector = `.${external_PluginApi_namespaceObject.WebpackModules.getByProps("containerDefault", "containerDragAfter")?.containerDefault}`;
+					const VoiceChannel = await external_PluginApi_namespaceObject.ReactComponents.getComponentByName("VoiceChannel", selector);
+					external_PluginApi_namespaceObject.Patcher.after(VoiceChannel.component.prototype, "render", ((_this, _, returnValue) => {
+						const shouldShow = shouldShowPermissions(_this.props.channel);
+						const props = external_PluginApi_namespaceObject.Utilities.findInReactTree(returnValue, (e => e?.renderPopout));
+						if (shouldShow) {
+							returnValue.props.onMouseEnter = _this.handleMouseEnter;
+							returnValue.props.onMouseLeave = _this.handleMouseLeave;
+						}
+						if (_this.state.shouldShowActivities && shouldShow)
+							if (props) props.shouldShow = true;
+					}));
+					VoiceChannel.forceUpdateAll();
+				}
+				async patchTextChannel() {
+					const selector = `.${external_PluginApi_namespaceObject.WebpackModules.getByProps("containerDefault", "containerDragAfter")?.containerDefault}`;
+					const TextChannel = await external_PluginApi_namespaceObject.ReactComponents.getComponentByName("TextChannel", selector);
+					external_PluginApi_namespaceObject.Patcher.after(TextChannel.component.prototype, "render", ((_this, _, returnValue) => {
+						const shouldShow = shouldShowPermissions(_this.props.channel);
+						if (shouldShow) {
+							returnValue.props.onMouseEnter = _this.handleMouseEnter;
+							returnValue.props.onMouseLeave = _this.handleMouseLeave;
+						}
+						if (_this.state.shouldShowThreadsPopout && shouldShow) returnValue.props.children.props.shouldShow = true;
+					}));
+					TextChannel.forceUpdateAll();
+				}
+				async patchActiveThreadsPopout() {
+					const ActiveThreadsPopout = external_PluginApi_namespaceObject.WebpackModules.getModule((m => "ActiveThreadsPopout" === m?.default?.displayName));
+					const UnreadStore = external_PluginApi_namespaceObject.WebpackModules.getByProps("getUnreadCount");
+					const ThreadsStore = external_PluginApi_namespaceObject.WebpackModules.getByProps("getActiveUnjoinedThreadsForParent");
+					const SnowflakeUtils = external_PluginApi_namespaceObject.WebpackModules.getByProps("extractTimestamp");
+					function useActiveThreads(channel) {
+						if (channel.type === constants_namespaceObject.ChannelTypes.GUILD_VOICE) return [];
+						return (0, flux_namespaceObject.useStateFromStoresArray)([UnreadStore, ThreadsStore, GuildPermissions], (() => external_window_default()(ThreadsStore.getActiveUnjoinedThreadsForParent(channel.guild_id, channel.id)).values().filter((thread => GuildPermissions.can(constants_namespaceObject.Permissions.VIEW_CHANNEL, thread))).sort(((a, b) => {
+							const lastMessageInA = UnreadStore.lastMessageId(a.id);
+							const lastMessageInB = UnreadStore.lastMessageId(b.id);
+							return SnowflakeUtils.compare(lastMessageInA, lastMessageInB);
+						})).reverse().value()));
+					}
+					function PatchedThreadsPopout(props) {
+						const {
+							children,
+							className,
+							channel
+						} = props;
+						const threads = useActiveThreads(channel);
+						const ret = ChannelDetails_React.createElement("div", {
+							className
+						}, shouldShowPermissions(channel) && ChannelDetails_React.createElement(ChannelTooltip, {
+							overrides: getPermissionOverrides(channel),
+							guild: stores_namespaceObject.Guilds.getGuild(channel.guild_id),
+							className: "threads"
+						}), threads.length ? ChannelDetails_React.createElement(ChannelDetails_React.Fragment, null, children) : null);
+						return ret;
+					}
+					external_PluginApi_namespaceObject.Patcher.after(ActiveThreadsPopout, "default", ((_, [props], ret) => {
+						ret.type = PatchedThreadsPopout;
+						Object.assign(ret.props, props);
+					}));
+				}
+				openModal(channel, type) {
+					(0, modal_namespaceObject.openModal)((props => ChannelDetails_React.createElement(modal_namespaceObject.ModalRoot, Object.assign({}, props, {
+						size: "medium"
+					}), ChannelDetails_React.createElement(ChannelAccessibilityModal, {
+						channelId: channel.id,
+						onClose: props.onClose,
+						type
+					}))));
+				}
+				async patchChannelContextMenu() {
+					const ChannelEditItem = await external_PluginApi_namespaceObject.DCM.getDiscordMenu("useChannelEditItem");
+					const getType = function(channel) {
+						switch (channel.type) {
+							case constants_namespaceObject.ChannelTypes.GUILD_CATEGORY:
+								return "CATEGORY_DETAILS";
+							default:
+								return "CHANNEL_DETAILS";
+						}
+					};
+					external_PluginApi_namespaceObject.Patcher.after(ChannelEditItem, "default", ((_, [channel], ret) => {
+						const type = getType(channel);
+						return [ChannelDetails_React.createElement(contextmenu_namespaceObject.MenuItem, {
+							key: type,
+							id: "channel-details",
+							label: Strings.get(type),
+							action: () => {
+								this.openModal(channel, type);
+							}
+						}), ret];
+					}));
+				}
+				onStop() {
+					Strings.shutdown();
+					external_StyleLoader_default().remove();
+					external_PluginApi_namespaceObject.Patcher.unpatchAll();
+				}
+			}
+		})();
 		module.exports.LibraryPluginHack = __webpack_exports__;
 	})();
 	const PluginExports = module.exports.LibraryPluginHack;

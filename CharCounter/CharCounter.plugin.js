@@ -1,7 +1,7 @@
 /**
  * @name CharCounter
  * @author Strencher
- * @version 1.0.2
+ * @version 1.0.3
  * @description Counts your character length of the text area.
  * @source https://github.com/Strencher/BetterDiscordStuff/blob/master/CharCounter/CharCounter.plugin.js
  * @updateUrl https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/CharCounter/CharCounter.plugin.js
@@ -38,7 +38,7 @@ const config = {
 			"github_username": "Strencher",
 			"twitter_username": "Strencher3"
 		}],
-		"version": "1.0.2",
+		"version": "1.0.3",
 		"description": "Counts your character length of the text area.",
 		"github": "https://github.com/Strencher/BetterDiscordStuff/blob/master/CharCounter/CharCounter.plugin.js",
 		"github_raw": "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/CharCounter/CharCounter.plugin.js"
@@ -94,7 +94,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			},
 			'@discord/utils': {
 				get 'joinClassNames'() {
-					return ___createMemoize___(this, 'joinClassNames', () => BdApi.findModule(m => typeof m?.default?.default === 'function')?.default)
+					return ___createMemoize___(this, 'joinClassNames', () => BdApi.findModule(e => e.toString().indexOf('return e.join(" ")') > 200))
 				},
 				get 'useForceUpdate'() {
 					return ___createMemoize___(this, 'useForceUpdate', () => BdApi.findModuleByProps('useForceUpdate')?.useForceUpdate)
@@ -103,7 +103,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					return ___createMemoize___(this, 'Logger', () => BdApi.findModuleByProps('setLogFn')?.default)
 				},
 				get 'Navigation'() {
-					return ___createMemoize___(this, 'Navigation', () => BdApi.findModuleByProps('replaceWith'))
+					return ___createMemoize___(this, 'Navigation', () => BdApi.findModuleByProps('replaceWith', 'currentRouteIsPeekView'))
 				}
 			},
 			'@discord/components': {
@@ -126,13 +126,16 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					return ___createMemoize___(this, 'TransitionGroup', () => BdApi.findModuleByDisplayName('TransitionGroup'))
 				},
 				get 'Button'() {
-					return ___createMemoize___(this, 'Button', () => BdApi.findModuleByProps('DropdownSizes'))
+					return ___createMemoize___(this, 'Button', () => BdApi.findModule(m => 'DropdownSizes' in m && typeof(m) === 'function'))
+				},
+				get 'Popout'() {
+					return ___createMemoize___(this, 'Popout', () => BdApi.findModuleByDisplayName('Popout'))
 				},
 				get 'Flex'() {
 					return ___createMemoize___(this, 'Flex', () => BdApi.findModuleByDisplayName('Flex'))
 				},
 				get 'Text'() {
-					return ___createMemoize___(this, 'Text', () => BdApi.findModuleByDisplayName('Text'))
+					return ___createMemoize___(this, 'Text', () => BdApi.findModuleByDisplayName('LegacyText'))
 				},
 				get 'Card'() {
 					return ___createMemoize___(this, 'Card', () => BdApi.findModuleByDisplayName('Card'))
@@ -140,13 +143,16 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			},
 			'@discord/modules': {
 				get 'Dispatcher'() {
-					return ___createMemoize___(this, 'Dispatcher', () => BdApi.findModuleByProps('dirtyDispatch', 'subscribe'))
+					return ___createMemoize___(this, 'Dispatcher', () => BdApi.findModuleByProps('dispatch', 'isDispatching'))
+				},
+				get 'ComponentDispatcher'() {
+					return ___createMemoize___(this, 'ComponentDispatcher', () => BdApi.findModuleByProps('ComponentDispatch')?.ComponentDispatch)
 				},
 				get 'EmojiUtils'() {
 					return ___createMemoize___(this, 'EmojiUtils', () => BdApi.findModuleByProps('uploadEmoji'))
 				},
 				get 'PermissionUtils'() {
-					return ___createMemoize___(this, 'PermissionUtils', () => BdApi.findModuleByProps('computePermissions'))
+					return ___createMemoize___(this, 'PermissionUtils', () => BdApi.findModuleByProps('computePermissions', 'canManageUser'))
 				},
 				get 'DMUtils'() {
 					return ___createMemoize___(this, 'DMUtils', () => BdApi.findModuleByProps('openPrivateChannel'))
@@ -157,7 +163,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					return ___createMemoize___(this, 'Messages', () => BdApi.findModuleByProps('getMessage', 'getMessages'))
 				},
 				get 'Channels'() {
-					return ___createMemoize___(this, 'Channels', () => BdApi.findModuleByProps('getChannel'))
+					return ___createMemoize___(this, 'Channels', () => BdApi.findModuleByProps('getChannel', 'getDMFromUserId'))
 				},
 				get 'Guilds'() {
 					return ___createMemoize___(this, 'Guilds', () => BdApi.findModuleByProps('getGuild'))
@@ -172,7 +178,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					return ___createMemoize___(this, 'Info', () => BdApi.findModuleByProps('getSessionId'))
 				},
 				get 'Status'() {
-					return ___createMemoize___(this, 'Status', () => BdApi.findModuleByProps('getStatus'))
+					return ___createMemoize___(this, 'Status', () => BdApi.findModuleByProps('getStatus', 'getActivities', 'getState'))
 				},
 				get 'Users'() {
 					return ___createMemoize___(this, 'Users', () => BdApi.findModuleByProps('getUser', 'getCurrentUser'))
@@ -190,7 +196,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					return ___createMemoize___(this, 'Activities', () => BdApi.findModuleByProps('getActivities'))
 				},
 				get 'Games'() {
-					return ___createMemoize___(this, 'Games', () => BdApi.findModuleByProps('getGame'))
+					return ___createMemoize___(this, 'Games', () => BdApi.findModuleByProps('getGame', 'games'))
 				},
 				get 'Auth'() {
 					return ___createMemoize___(this, 'Auth', () => BdApi.findModuleByProps('getId', 'isGuest'))
@@ -208,7 +214,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				}
 			},
 			get '@discord/i18n'() {
-				return ___createMemoize___(this, '@discord/i18n', () => BdApi.findModuleByProps('getLocale'))
+				return ___createMemoize___(this, '@discord/i18n', () => BdApi.findModule(m => m.Messages?.CLOSE && typeof(m.getLocale) === 'function'))
 			},
 			get '@discord/constants'() {
 				return ___createMemoize___(this, '@discord/constants', () => BdApi.findModuleByProps('API_HOST'))
@@ -233,7 +239,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				return ___createMemoize___(this, '@discord/flux', () => Object.assign({}, BdApi.findModuleByProps('useStateFromStores').default, BdApi.findModuleByProps('useStateFromStores')))
 			},
 			get '@discord/modal'() {
-				return ___createMemoize___(this, '@discord/modal', () => Object.assign({}, BdApi.findModuleByProps('ModalRoot'), BdApi.findModuleByProps('openModal')))
+				return ___createMemoize___(this, '@discord/modal', () => Object.assign({}, BdApi.findModuleByProps('ModalRoot'), BdApi.findModuleByProps('openModal', 'closeAllModals')))
 			},
 			get '@discord/connections'() {
 				return ___createMemoize___(this, '@discord/connections', () => BdApi.findModuleByProps('get', 'isSupported', 'map'))
@@ -260,7 +266,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			}
 		};
 		var __webpack_modules__ = {
-			984: (module, __webpack_exports__, __webpack_require__) => {
+			17: (module, __webpack_exports__, __webpack_require__) => {
 				__webpack_require__.d(__webpack_exports__, {
 					Z: () => __WEBPACK_DEFAULT_EXPORT__
 				});
@@ -269,9 +275,11 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
 					return i[1];
 				}));
-				___CSS_LOADER_EXPORT___.push([module.id, ".CharCounter-counter-counter{position:absolute;bottom:-30px;right:-10px;font-size:12px}.cooldownWrapper-3joyFc{margin-right:70px}", ""]);
+				___CSS_LOADER_EXPORT___.push([module.id, ".CharCounter-counter-counter{position:absolute;bottom:-30px;right:-10px;font-size:12px;white-space:nowrap}.CharCounter-counter-selection{color:var(--text-muted);margin-left:3px}.CharCounter-counter-oversize{color:#ed4245}.cooldownWrapper-3joyFc{margin-right:70px}", ""]);
 				___CSS_LOADER_EXPORT___.locals = {
-					counter: "CharCounter-counter-counter"
+					counter: "CharCounter-counter-counter",
+					selection: "CharCounter-counter-selection",
+					oversize: "CharCounter-counter-oversize"
 				};
 				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
 				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
@@ -308,7 +316,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					return list;
 				};
 			},
-			832: module => {
+			113: module => {
 				module.exports = BdApi.React;
 			}
 		};
@@ -358,42 +366,64 @@ function buildPlugin([BasePlugin, PluginApi]) {
 		(() => {
 			__webpack_require__.r(__webpack_exports__);
 			__webpack_require__.d(__webpack_exports__, {
-				default: () => index_coffee
+				default: () => CharCounter
 			});
 			const external_BasePlugin_namespaceObject = BasePlugin;
 			var external_BasePlugin_default = __webpack_require__.n(external_BasePlugin_namespaceObject);
 			const external_PluginApi_namespaceObject = PluginApi;
-			var counter = __webpack_require__(984);
 			const external_StyleLoader_namespaceObject = StyleLoader;
 			var external_StyleLoader_default = __webpack_require__.n(external_StyleLoader_namespaceObject);
-			var React = __webpack_require__(832);
-			var CharCounter;
-			const index_coffee = CharCounter = class extends(external_BasePlugin_default()) {
+			var external_BdApi_React_ = __webpack_require__(113);
+			var counter = __webpack_require__(17);
+			var React = __webpack_require__(113);
+			const {
+				default: EmitterContext
+			} = external_PluginApi_namespaceObject.WebpackModules.getByProps("EventEmitterProvider");
+			function CharCounterElement({
+				currentLength,
+				maxCharacterCount
+			}) {
+				const Dispatcher = (0, external_BdApi_React_.useContext)(EmitterContext);
+				const [selection, setSelection] = (0, external_BdApi_React_.useState)(0);
+				(0, external_BdApi_React_.useEffect)((() => {
+					if (!Dispatcher) return;
+					const callback = function(text) {
+						setSelection(text.length);
+					};
+					Dispatcher.on("selection-changed", callback);
+					return () => Dispatcher.off("selection-changed", callback);
+				}), [Dispatcher]);
+				return React.createElement("span", {
+					className: external_PluginApi_namespaceObject.Utilities.className(counter.Z.counter, currentLength >= maxCharacterCount && counter.Z.oversize)
+				}, currentLength, selection > 0 ? React.createElement("span", {
+					className: counter.Z.selection
+				}, "(", selection, ")") : null, "/", maxCharacterCount);
+			}
+			var CharCounter_React = __webpack_require__(113);
+			class CharCounter extends(external_BasePlugin_default()) {
 				onStart() {
 					external_StyleLoader_default().inject();
-					return this.patchSlateCharCount();
+					this.patchSlateCharCount();
 				}
 				patchSlateCharCount() {
-					var SlateCharacterCount = external_PluginApi_namespaceObject.WebpackModules.getModule((function(m) {
-						return "SlateCharacterCount" === m.default.displayName;
-					}));
-					return external_PluginApi_namespaceObject.Patcher.after(SlateCharacterCount, "default", ((_, [{
+					const SlateCharacterCount = external_PluginApi_namespaceObject.WebpackModules.getModule((m => "SlateCharacterCount" === m.default.displayName));
+					external_PluginApi_namespaceObject.Patcher.after(SlateCharacterCount, "default", ((_, [{
 						currentLength,
 						maxCharacterCount
 					}], res) => {
-						var ref;
-						if (!Array.isArray(null != res ? null != (ref = res.props) ? ref.children : void 0 : void 0)) return;
-						res.props.children.push(React.createElement("span", {
-							className: counter.Z.counter
-						}, currentLength, "/", maxCharacterCount));
+						if (!Array.isArray(res?.props?.children)) return;
+						res.props.children.push(CharCounter_React.createElement(CharCounterElement, {
+							currentLength,
+							maxCharacterCount
+						}));
 						return res;
 					}));
 				}
 				onStop() {
 					external_StyleLoader_default().remove();
-					return external_PluginApi_namespaceObject.Patcher.unpatchAll();
+					external_PluginApi_namespaceObject.Patcher.unpatchAll();
 				}
-			};
+			}
 		})();
 		module.exports.LibraryPluginHack = __webpack_exports__;
 	})();
