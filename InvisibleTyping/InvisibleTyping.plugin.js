@@ -1,7 +1,7 @@
 /**
  * @name InvisibleTyping
  * @author Strencher
- * @version 1.2.1
+ * @version 1.2.2
  * @description Enhanced version of silent typing.
  * @source https://github.com/Strencher/BetterDiscordStuff/blob/master/InvisibleTyping/InvisibleTyping.plugin.js
  * @updateUrl https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/InvisibleTyping/InvisibleTyping.plugin.js
@@ -38,7 +38,7 @@ const config = {
 			"github_username": "Strencher",
 			"twitter_username": "Strencher3"
 		}],
-		"version": "1.2.1",
+		"version": "1.2.2",
 		"description": "Enhanced version of silent typing.",
 		"github": "https://github.com/Strencher/BetterDiscordStuff/blob/master/InvisibleTyping/InvisibleTyping.plugin.js",
 		"github_raw": "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/InvisibleTyping/InvisibleTyping.plugin.js"
@@ -57,7 +57,7 @@ const config = {
 		"type": "fixed",
 		"title": "Fixed",
 		"items": [
-			"Hide inside the profile settings again."
+			"Fixed latest discord update."
 		]
 	}]
 };
@@ -142,7 +142,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					return ___createMemoize___(this, 'Flex', () => BdApi.findModuleByDisplayName('Flex'))
 				},
 				get 'Text'() {
-					return ___createMemoize___(this, 'Text', () => BdApi.findModuleByDisplayName('Text'))
+					return ___createMemoize___(this, 'Text', () => BdApi.findModuleByDisplayName('LegacyText'))
 				},
 				get 'Card'() {
 					return ___createMemoize___(this, 'Card', () => BdApi.findModuleByDisplayName('Card'))
@@ -150,7 +150,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			},
 			'@discord/modules': {
 				get 'Dispatcher'() {
-					return ___createMemoize___(this, 'Dispatcher', () => BdApi.findModuleByProps('dirtyDispatch', 'subscribe'))
+					return ___createMemoize___(this, 'Dispatcher', () => BdApi.findModuleByProps('dispatch', 'isDispatching'))
 				},
 				get 'ComponentDispatcher'() {
 					return ___createMemoize___(this, 'ComponentDispatcher', () => BdApi.findModuleByProps('ComponentDispatch')?.ComponentDispatch)
@@ -431,22 +431,11 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			const Settings = new SettingsManager(package_namespaceObject.um.u2);
 			const settings = Settings;
 			var typingButton = __webpack_require__(166);
-			function _extends() {
-				_extends = Object.assign ? Object.assign.bind() : function(target) {
-					for (var i = 1; i < arguments.length; i++) {
-						var source = arguments[i];
-						for (var key in source)
-							if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-					}
-					return target;
-				};
-				return _extends.apply(this, arguments);
-			}
 			function Keyboard({
 				disabled,
 				...props
 			}) {
-				return external_BdApi_React_default().createElement("svg", _extends({}, props, {
+				return external_BdApi_React_default().createElement("svg", Object.assign({}, props, {
 					width: "25",
 					height: "25",
 					viewBox: "0 0 576 512"
@@ -538,20 +527,9 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			const external_StyleLoader_namespaceObject = StyleLoader;
 			var external_StyleLoader_default = __webpack_require__.n(external_StyleLoader_namespaceObject);
 			var React = __webpack_require__(113);
-			function createUpdateWrapper_extends() {
-				createUpdateWrapper_extends = Object.assign ? Object.assign.bind() : function(target) {
-					for (var i = 1; i < arguments.length; i++) {
-						var source = arguments[i];
-						for (var key in source)
-							if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-					}
-					return target;
-				};
-				return createUpdateWrapper_extends.apply(this, arguments);
-			}
 			const createUpdateWrapper = (Component, valueProp = "value", changeProp = "onChange", valueIndex = 0) => props => {
 				const [value, setValue] = React.useState(props[valueProp]);
-				return React.createElement(Component, createUpdateWrapper_extends({}, props, {
+				return React.createElement(Component, Object.assign({}, props, {
 					[valueProp]: value,
 					[changeProp]: (...args) => {
 						const value = args[valueIndex];
@@ -587,17 +565,6 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			const constants_namespaceObject = Modules["@discord/constants"];
 			const stores_namespaceObject = Modules["@discord/stores"];
 			var InvisibleTyping_React = __webpack_require__(113);
-			function InvisibleTyping_extends() {
-				InvisibleTyping_extends = Object.assign ? Object.assign.bind() : function(target) {
-					for (var i = 1; i < arguments.length; i++) {
-						var source = arguments[i];
-						for (var key in source)
-							if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-					}
-					return target;
-				};
-				return InvisibleTyping_extends.apply(this, arguments);
-			}
 			function InvisibleTyping_defineProperty(obj, key, value) {
 				if (key in obj) Object.defineProperty(obj, key, {
 					value,
@@ -651,7 +618,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					} else external_PluginApi_namespaceObject.Patcher.after(ChannelTextAreaContainer, "render", ((_, [props], returnValue) => {
 						const tree = external_PluginApi_namespaceObject.Utilities.findInReactTree(returnValue, (e => e?.className?.indexOf("buttons-") > -1));
 						if (!tree || !shouldShow(tree.children, props)) return returnValue;
-						tree.children.unshift(InvisibleTyping_React.createElement(InvisibleTypingButton, InvisibleTyping_extends({}, props, {
+						tree.children.unshift(InvisibleTyping_React.createElement(InvisibleTypingButton, Object.assign({}, props, {
 							isEmpty: !!props.textValue
 						})));
 					}));
