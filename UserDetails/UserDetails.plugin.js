@@ -1116,6 +1116,10 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					const years_floored = Math.floor(years)
 					return `${years_floored}${(years - years_floored > .5) ? ' and a half' : ''} year${years > 1 ? 's' : ''}`;
 				}
+				else if (months >= 1) {
+					const months_floored = Math.floor(months);
+					return `${months_floored}${(months - months_floored > .5) ? ' and a half' : ''} month${months > 1 ? 's' : ''}`;
+				}
 				else {
 					const days = daysAgo(date1, date2);
 					if (days > 7) {
