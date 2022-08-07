@@ -1,6 +1,6 @@
 /**
  * @name StatusEverywhere
- * @version 2.3.5
+ * @version 2.3.4
  * @author Strencher, Zerebos
  * @description Adds user status everywhere Discord doesn't.
  * @source https://github.com/Strencher/BetterDiscordStuff/tree/master/StatusEverywhere
@@ -8,7 +8,7 @@
  */
 /*@cc_on
 @if (@_jscript)
-    
+
     // Offer to self-install for clueless users that try to run this directly.
     var shell = WScript.CreateObject("WScript.Shell");
     var fs = new ActiveXObject("Scripting.FileSystemObject");
@@ -51,10 +51,10 @@ const config = {
 		"github_raw": "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/StatusEverywhere/StatusEverywhere.plugin.js"
 	},
 	"changelog": [{
-		"title": "Bug fixes",
+		"title": "Bug Fixes",
 		"type": "fixed",
 		"items": [
-			"Fixed loading error."
+			"Fixed latest Discord update."
 		]
 	}],
 	"build": {
@@ -1076,7 +1076,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 								};
 							} catch (error) {
 								external_PluginApi_namespaceObject.Logger.error("Error in AccountSection patch:", error);
-							} else ret.props.children = external_BdApi_React_default().createElement(components_avatar, Object.assign({}, props, {
+								} else ret.props.children = external_BdApi_React_default().createElement(components_avatar, Object.assign({}, props, {
 								user: stores_namespaceObject.Users.getCurrentUser(),
 								shouldWatch: false,
 								radial: {
