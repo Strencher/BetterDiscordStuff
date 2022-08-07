@@ -1,6 +1,6 @@
 /**
  * @name ShowAllActivities
- * @version 1.0.0
+ * @version 1.0.1
  * @author Strencher, Juby210
  * @description See every status a user has enabled. Original made by Juby210#0577.
  * @source https://github.com/Strencher/BetterDiscordStuff/tree/master/ShowAllActivities
@@ -33,7 +33,7 @@
 const config = {
 	"info": {
 		"name": "ShowAllActivities",
-		"version": "1.0.0",
+		"version": "1.0.1",
 		"authors": [{
 				"name": "Strencher",
 				"discord_id": "415849376598982656",
@@ -55,7 +55,7 @@ const config = {
 		"title": "Rewrite",
 		"type": "improved",
 		"items": [
-			"The plugin was rewritting and works fine again."
+			"Fixes for the last discord update."
 		]
 	}],
 	"build": {
@@ -155,7 +155,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					return ___createMemoize___(this, 'Flex', () => BdApi.findModuleByDisplayName('Flex'))
 				},
 				get 'Text'() {
-					return ___createMemoize___(this, 'Text', () => BdApi.findModuleByDisplayName('Text'))
+					return ___createMemoize___(this, 'Text', () => BdApi.findModuleByDisplayName('LegacyText'))
 				},
 				get 'Card'() {
 					return ___createMemoize___(this, 'Card', () => BdApi.findModuleByDisplayName('Card'))
@@ -163,7 +163,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			},
 			'@discord/modules': {
 				get 'Dispatcher'() {
-					return ___createMemoize___(this, 'Dispatcher', () => BdApi.findModuleByProps('dirtyDispatch', 'subscribe'))
+					return ___createMemoize___(this, 'Dispatcher', () => BdApi.findModuleByProps('dispatch', 'isDispatching'))
 				},
 				get 'ComponentDispatcher'() {
 					return ___createMemoize___(this, 'ComponentDispatcher', () => BdApi.findModuleByProps('ComponentDispatch')?.ComponentDispatch)
@@ -309,245 +309,6 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
 				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
 			},
-			766: (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-				__webpack_require__.r(__webpack_exports__);
-				__webpack_require__.d(__webpack_exports__, {
-					default: () => ShowAllActivities
-				});
-				const external_PluginApi_namespaceObject = PluginApi;
-				const external_BasePlugin_namespaceObject = BasePlugin;
-				var external_BasePlugin_default = __webpack_require__.n(external_BasePlugin_namespaceObject);
-				const external_StyleLoader_namespaceObject = StyleLoader;
-				var external_StyleLoader_default = __webpack_require__.n(external_StyleLoader_namespaceObject);
-				var React = __webpack_require__(113);
-				function _extends() {
-					_extends = Object.assign || function(target) {
-						for (var i = 1; i < arguments.length; i++) {
-							var source = arguments[i];
-							for (var key in source)
-								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-						}
-						return target;
-					};
-					return _extends.apply(this, arguments);
-				}
-				const createUpdateWrapper = (Component, valueProp = "value", changeProp = "onChange", valueIndex = 0) => props => {
-					const [value, setValue] = React.useState(props[valueProp]);
-					return React.createElement(Component, _extends({}, props, {
-						[valueProp]: value,
-						[changeProp]: (...args) => {
-							const value = args[valueIndex];
-							if ("function" === typeof props[changeProp]) props[changeProp](value);
-							setValue(value);
-						}
-					}));
-				};
-				const hooks_createUpdateWrapper = createUpdateWrapper;
-				var external_BdApi_React_ = __webpack_require__(113);
-				var external_BdApi_React_default = __webpack_require__.n(external_BdApi_React_);
-				const flux_namespaceObject = Modules["@discord/flux"];
-				const modules_namespaceObject = Modules["@discord/modules"];
-				function _defineProperty(obj, key, value) {
-					if (key in obj) Object.defineProperty(obj, key, {
-						value,
-						enumerable: true,
-						configurable: true,
-						writable: true
-					});
-					else obj[key] = value;
-					return obj;
-				}
-				class SettingsManager extends flux_namespaceObject.Store {
-					constructor(pluginName, defaultSettings = {}) {
-						super(modules_namespaceObject.Dispatcher, {});
-						_defineProperty(this, "settings", void 0);
-						_defineProperty(this, "pluginName", void 0);
-						_defineProperty(this, "get", ((key, defaultValue) => this.settings[key] ?? defaultValue));
-						_defineProperty(this, "set", ((key, value) => {
-							this.settings[key] = value;
-							external_PluginApi_namespaceObject.PluginUtilities.saveSettings(this.pluginName, this.settings);
-							this.emitChange();
-							return value;
-						}));
-						this.pluginName = pluginName;
-						this.settings = external_PluginApi_namespaceObject.PluginUtilities.loadSettings(pluginName, defaultSettings);
-					}
-				}
-				const package_namespaceObject = JSON.parse('{"um":{"u2":"ShowAllActivities"}}');
-				const Settings = new SettingsManager(package_namespaceObject.um.u2);
-				const settings = Settings;
-				function settings_extends() {
-					settings_extends = Object.assign || function(target) {
-						for (var i = 1; i < arguments.length; i++) {
-							var source = arguments[i];
-							for (var key in source)
-								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-						}
-						return target;
-					};
-					return settings_extends.apply(this, arguments);
-				}
-				const SwitchItem = hooks_createUpdateWrapper(external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("SwitchItem"));
-				const Items = [{
-					id: "showAlways",
-					name: "Show Always",
-					note: "Shows the controls bar even if only one activity is present.",
-					value: false
-				}];
-				function SettingsPanel() {
-					return external_BdApi_React_default().createElement(external_BdApi_React_default().Fragment, null, Items.map((item => external_BdApi_React_default().createElement(SwitchItem, settings_extends({}, item, {
-						value: settings.get(item.id, item.value),
-						onChange: value => settings.set(item.id, value)
-					}), item.name))));
-				}
-				var wrapper = __webpack_require__(761);
-				const icons_namespaceObject = Modules["@discord/icons"];
-				const stores_namespaceObject = Modules["@discord/stores"];
-				const components_namespaceObject = Modules["@discord/components"];
-				const i18n_namespaceObject = Modules["@discord/i18n"];
-				const colors_namespaceObject = JSON.parse('{"spotify":"#1db954","363445589247131668":"#ff0000","463097721130188830":"#d9252a","802958789555781663":"#593695","STREAMING":"#593695","562286213059444737":"#3a004b","83226320970055681":"#889afb","782685898163617802":"#889afb","356869127241072640":"#112120","367827983903490050":"#e5649d"}');
-				const constants_namespaceObject = Modules["@discord/constants"];
-				var wrapper_React = __webpack_require__(113);
-				function wrapper_extends() {
-					wrapper_extends = Object.assign || function(target) {
-						for (var i = 1; i < arguments.length; i++) {
-							var source = arguments[i];
-							for (var key in source)
-								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-						}
-						return target;
-					};
-					return wrapper_extends.apply(this, arguments);
-				}
-				const {
-					default: UserActivity,
-					UserActivityTypes
-				} = external_PluginApi_namespaceObject.WebpackModules.getModule((m => "UserActivityContainer" === m?.default?.displayName));
-				const classes = external_PluginApi_namespaceObject.WebpackModules.getByProps("activity", "rolesList");
-				function ActivityWrapper({
-					user,
-					...props
-				}) {
-					const activities = (0, flux_namespaceObject.useStateFromStoresArray)([stores_namespaceObject.Status], (() => stores_namespaceObject.Status.getActivities(user.id).filter((ac => 4 !== ac.type))));
-					const [activityIndex, setActivityIndex] = (0, external_BdApi_React_.useState)(0);
-					const currentActivity = (0, external_BdApi_React_.useMemo)((() => activities[activityIndex]), [activityIndex, activities]);
-					const shouldShowControls = (0, flux_namespaceObject.useStateFromStores)([settings], (() => activities.length > 1 || settings.get("showAlways", false)), [activities]);
-					const canGo = type => {
-						if (-1 === activityIndex || 0 === activities.length || activityIndex > activities.length - 1) return false;
-						switch (type) {
-							case "backward":
-								return activityIndex > 0;
-							case "forward":
-								return activityIndex !== activities.length - 1 && activityIndex < activities.length - 1;
-						}
-					};
-					const handleSelectNext = type => (0, external_BdApi_React_.useCallback)((() => {
-						if (!canGo(type)) return;
-						switch (type) {
-							case "backward":
-								var index = activityIndex - 1;
-								break;
-							case "forward":
-								var index = activityIndex + 1;
-								break;
-						}
-						if (index < 0 || index > activities.length) return;
-						setActivityIndex(index);
-					}), [activities, activityIndex, user]);
-					const goForward = handleSelectNext("forward");
-					const goBackward = handleSelectNext("backward");
-					if (!activities.length) return null;
-					if (!currentActivity) {
-						setActivityIndex(0);
-						return null;
-					}
-					const style = {
-						"--dot-color": colors_namespaceObject[Object.keys(colors_namespaceObject).find((e => currentActivity.id?.includes(e) || currentActivity.application_id === e || currentActivity.type === constants_namespaceObject.ActivityTypes[e]))]
-					};
-					return wrapper_React.createElement("div", {
-						className: external_PluginApi_namespaceObject.Utilities.className(wrapper.Z.wrapper, {
-							[wrapper.Z.spotify]: currentActivity.id?.startsWith("spotify")
-						}),
-						style
-					}, wrapper_React.createElement(UserActivity, wrapper_extends({
-						__SAA: true
-					}, props, {
-						user,
-						activity: currentActivity,
-						type: UserActivityTypes.USER_POPOUT,
-						key: currentActivity.application_id,
-						className: external_PluginApi_namespaceObject.Utilities.className(classes.activity, "newPopoutActivityStyles")
-					})), shouldShowControls && wrapper_React.createElement("div", {
-						className: wrapper.Z.controls
-					}, wrapper_React.createElement(components_namespaceObject.Tooltip, {
-						key: "LEFT",
-						text: i18n_namespaceObject.Messages.PAGINATION_PREVIOUS,
-						tooltipClassName: wrapper.Z.tooltip,
-						spacing: 14
-					}, (props => wrapper_React.createElement("div", wrapper_extends({}, props, {
-						className: external_PluginApi_namespaceObject.Utilities.className(wrapper.Z.caret, {
-							[wrapper.Z.disabled]: !canGo("backward")
-						}),
-						onClick: goBackward
-					}), wrapper_React.createElement(icons_namespaceObject.Caret, {
-						direction: icons_namespaceObject.Caret.Directions.LEFT
-					})))), wrapper_React.createElement("div", {
-						className: wrapper.Z.carosell
-					}, activities.map(((_, i) => wrapper_React.createElement("div", {
-						key: "dot--" + i,
-						onClick: () => setActivityIndex(i),
-						className: external_PluginApi_namespaceObject.Utilities.className(wrapper.Z.dot, {
-							[wrapper.Z.selected]: i === activityIndex
-						})
-					})))), wrapper_React.createElement(components_namespaceObject.Tooltip, {
-						key: "RIGHT",
-						text: i18n_namespaceObject.Messages.PAGINATION_NEXT,
-						tooltipClassName: wrapper.Z.tooltip,
-						spacing: 14
-					}, (props => wrapper_React.createElement("div", wrapper_extends({}, props, {
-						className: external_PluginApi_namespaceObject.Utilities.className(wrapper.Z.caret, {
-							[wrapper.Z.disabled]: !canGo("forward")
-						}),
-						onClick: goForward
-					}), wrapper_React.createElement(icons_namespaceObject.Caret, {
-						direction: icons_namespaceObject.Caret.Directions.RIGHT
-					}))))));
-				}
-				var ShowAllActivities_React = __webpack_require__(113);
-				function ShowAllActivities_extends() {
-					ShowAllActivities_extends = Object.assign || function(target) {
-						for (var i = 1; i < arguments.length; i++) {
-							var source = arguments[i];
-							for (var key in source)
-								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-						}
-						return target;
-					};
-					return ShowAllActivities_extends.apply(this, arguments);
-				}
-				class ShowAllActivities extends(external_BasePlugin_default()) {
-					getSettingsPanel() {
-						return ShowAllActivities_React.createElement(SettingsPanel, null);
-					}
-					onStart() {
-						external_StyleLoader_default().inject();
-						this.patchUserActivityContainer();
-					}
-					patchUserActivityContainer() {
-						const UserActivityModule = external_PluginApi_namespaceObject.WebpackModules.getModule((m => "UserActivityContainer" === m?.default?.displayName));
-						external_PluginApi_namespaceObject.Patcher.after(UserActivityModule, "default", ((_, [props]) => {
-							if (props.type !== UserActivityModule.UserActivityTypes.USER_POPOUT || props.__SAA) return;
-							return ShowAllActivities_React.createElement(ActivityWrapper, ShowAllActivities_extends({
-								user: props.user
-							}, props));
-						}));
-					}
-					onStop() {
-						external_StyleLoader_default().remove();
-						external_PluginApi_namespaceObject.Patcher.unpatchAll();
-					}
-				}
-			},
 			645: module => {
 				module.exports = function(cssWithMappingToString) {
 					var list = [];
@@ -626,7 +387,202 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				});
 			};
 		})();
-		var __webpack_exports__ = __webpack_require__(766);
+		var __webpack_exports__ = {};
+		(() => {
+			__webpack_require__.r(__webpack_exports__);
+			__webpack_require__.d(__webpack_exports__, {
+				default: () => ShowAllActivities
+			});
+			const external_PluginApi_namespaceObject = PluginApi;
+			const external_BasePlugin_namespaceObject = BasePlugin;
+			var external_BasePlugin_default = __webpack_require__.n(external_BasePlugin_namespaceObject);
+			const external_StyleLoader_namespaceObject = StyleLoader;
+			var external_StyleLoader_default = __webpack_require__.n(external_StyleLoader_namespaceObject);
+			var React = __webpack_require__(113);
+			const createUpdateWrapper = (Component, valueProp = "value", changeProp = "onChange", valueIndex = 0) => props => {
+				const [value, setValue] = React.useState(props[valueProp]);
+				return React.createElement(Component, Object.assign({}, props, {
+					[valueProp]: value,
+					[changeProp]: (...args) => {
+						const value = args[valueIndex];
+						if ("function" === typeof props[changeProp]) props[changeProp](value);
+						setValue(value);
+					}
+				}));
+			};
+			const hooks_createUpdateWrapper = createUpdateWrapper;
+			var external_BdApi_React_ = __webpack_require__(113);
+			var external_BdApi_React_default = __webpack_require__.n(external_BdApi_React_);
+			const flux_namespaceObject = Modules["@discord/flux"];
+			const modules_namespaceObject = Modules["@discord/modules"];
+			function _defineProperty(obj, key, value) {
+				if (key in obj) Object.defineProperty(obj, key, {
+					value,
+					enumerable: true,
+					configurable: true,
+					writable: true
+				});
+				else obj[key] = value;
+				return obj;
+			}
+			class SettingsManager extends flux_namespaceObject.Store {
+				constructor(pluginName, defaultSettings = {}) {
+					super(modules_namespaceObject.Dispatcher, {});
+					_defineProperty(this, "settings", void 0);
+					_defineProperty(this, "pluginName", void 0);
+					_defineProperty(this, "get", ((key, defaultValue) => this.settings[key] ?? defaultValue));
+					_defineProperty(this, "set", ((key, value) => {
+						this.settings[key] = value;
+						external_PluginApi_namespaceObject.PluginUtilities.saveSettings(this.pluginName, this.settings);
+						this.emitChange();
+						return value;
+					}));
+					this.pluginName = pluginName;
+					this.settings = external_PluginApi_namespaceObject.PluginUtilities.loadSettings(pluginName, defaultSettings);
+				}
+			}
+			const package_namespaceObject = JSON.parse('{"um":{"u2":"ShowAllActivities"}}');
+			const Settings = new SettingsManager(package_namespaceObject.um.u2);
+			const settings = Settings;
+			const SwitchItem = hooks_createUpdateWrapper(external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("SwitchItem"));
+			const Items = [{
+				id: "showAlways",
+				name: "Show Always",
+				note: "Shows the controls bar even if only one activity is present.",
+				value: false
+			}];
+			function SettingsPanel() {
+				return external_BdApi_React_default().createElement(external_BdApi_React_default().Fragment, null, Items.map((item => external_BdApi_React_default().createElement(SwitchItem, Object.assign({}, item, {
+					value: settings.get(item.id, item.value),
+					onChange: value => settings.set(item.id, value)
+				}), item.name))));
+			}
+			var wrapper = __webpack_require__(761);
+			const icons_namespaceObject = Modules["@discord/icons"];
+			const stores_namespaceObject = Modules["@discord/stores"];
+			const components_namespaceObject = Modules["@discord/components"];
+			const i18n_namespaceObject = Modules["@discord/i18n"];
+			const colors_namespaceObject = JSON.parse('{"spotify":"#1db954","363445589247131668":"#ff0000","463097721130188830":"#d9252a","802958789555781663":"#593695","STREAMING":"#593695","562286213059444737":"#3a004b","83226320970055681":"#889afb","782685898163617802":"#889afb","356869127241072640":"#112120","367827983903490050":"#e5649d"}');
+			const constants_namespaceObject = Modules["@discord/constants"];
+			var wrapper_React = __webpack_require__(113);
+			const {
+				default: UserActivity,
+				UserActivityTypes
+			} = external_PluginApi_namespaceObject.WebpackModules.getModule((m => "UserActivityContainer" === m?.default?.displayName));
+			const classes = external_PluginApi_namespaceObject.WebpackModules.getByProps("activity", "rolesList");
+			function ActivityWrapper({
+				user,
+				...props
+			}) {
+				const activities = (0, flux_namespaceObject.useStateFromStoresArray)([stores_namespaceObject.Status], (() => stores_namespaceObject.Status.getActivities(user.id).filter((ac => 4 !== ac.type))));
+				const [activityIndex, setActivityIndex] = (0, external_BdApi_React_.useState)(0);
+				const currentActivity = (0, external_BdApi_React_.useMemo)((() => activities[activityIndex]), [activityIndex, activities]);
+				const shouldShowControls = (0, flux_namespaceObject.useStateFromStores)([settings], (() => activities.length > 1 || settings.get("showAlways", false)), [activities]);
+				const canGo = type => {
+					if (-1 === activityIndex || 0 === activities.length || activityIndex > activities.length - 1) return false;
+					switch (type) {
+						case "backward":
+							return activityIndex > 0;
+						case "forward":
+							return activityIndex !== activities.length - 1 && activityIndex < activities.length - 1;
+					}
+				};
+				const handleSelectNext = type => (0, external_BdApi_React_.useCallback)((() => {
+					if (!canGo(type)) return;
+					switch (type) {
+						case "backward":
+							var index = activityIndex - 1;
+							break;
+						case "forward":
+							var index = activityIndex + 1;
+							break;
+					}
+					if (index < 0 || index > activities.length) return;
+					setActivityIndex(index);
+				}), [activities, activityIndex, user]);
+				const goForward = handleSelectNext("forward");
+				const goBackward = handleSelectNext("backward");
+				if (!activities.length) return null;
+				if (!currentActivity) {
+					setActivityIndex(0);
+					return null;
+				}
+				const style = {
+					"--dot-color": colors_namespaceObject[Object.keys(colors_namespaceObject).find((e => currentActivity.id?.includes(e) || currentActivity.application_id === e || currentActivity.type === constants_namespaceObject.ActivityTypes[e]))]
+				};
+				return wrapper_React.createElement("div", {
+					className: external_PluginApi_namespaceObject.Utilities.className(wrapper.Z.wrapper, {
+						[wrapper.Z.spotify]: currentActivity.id?.startsWith("spotify")
+					}),
+					style
+				}, wrapper_React.createElement(UserActivity, Object.assign({
+					__SAA: true
+				}, props, {
+					user,
+					activity: currentActivity,
+					type: UserActivityTypes.USER_POPOUT,
+					key: currentActivity.application_id,
+					className: external_PluginApi_namespaceObject.Utilities.className(classes.activity, "newPopoutActivityStyles")
+				})), shouldShowControls && wrapper_React.createElement("div", {
+					className: wrapper.Z.controls
+				}, wrapper_React.createElement(components_namespaceObject.Tooltip, {
+					key: "LEFT",
+					text: i18n_namespaceObject.Messages.PAGINATION_PREVIOUS,
+					tooltipClassName: wrapper.Z.tooltip,
+					spacing: 14
+				}, (props => wrapper_React.createElement("div", Object.assign({}, props, {
+					className: external_PluginApi_namespaceObject.Utilities.className(wrapper.Z.caret, {
+						[wrapper.Z.disabled]: !canGo("backward")
+					}),
+					onClick: goBackward
+				}), wrapper_React.createElement(icons_namespaceObject.Caret, {
+					direction: icons_namespaceObject.Caret.Directions.LEFT
+				})))), wrapper_React.createElement("div", {
+					className: wrapper.Z.carosell
+				}, activities.map(((_, i) => wrapper_React.createElement("div", {
+					key: "dot--" + i,
+					onClick: () => setActivityIndex(i),
+					className: external_PluginApi_namespaceObject.Utilities.className(wrapper.Z.dot, {
+						[wrapper.Z.selected]: i === activityIndex
+					})
+				})))), wrapper_React.createElement(components_namespaceObject.Tooltip, {
+					key: "RIGHT",
+					text: i18n_namespaceObject.Messages.PAGINATION_NEXT,
+					tooltipClassName: wrapper.Z.tooltip,
+					spacing: 14
+				}, (props => wrapper_React.createElement("div", Object.assign({}, props, {
+					className: external_PluginApi_namespaceObject.Utilities.className(wrapper.Z.caret, {
+						[wrapper.Z.disabled]: !canGo("forward")
+					}),
+					onClick: goForward
+				}), wrapper_React.createElement(icons_namespaceObject.Caret, {
+					direction: icons_namespaceObject.Caret.Directions.RIGHT
+				}))))));
+			}
+			var ShowAllActivities_React = __webpack_require__(113);
+			class ShowAllActivities extends(external_BasePlugin_default()) {
+				getSettingsPanel() {
+					return ShowAllActivities_React.createElement(SettingsPanel, null);
+				}
+				onStart() {
+					external_StyleLoader_default().inject();
+					this.patchUserActivityContainer();
+				}
+				patchUserActivityContainer() {
+					const UserActivityModule = external_PluginApi_namespaceObject.WebpackModules.getModule((m => "UserActivityContainer" === m?.default?.displayName));
+					external_PluginApi_namespaceObject.Patcher.after(UserActivityModule, "default", ((_, [props]) => {
+						if (props.type !== UserActivityModule.UserActivityTypes.USER_POPOUT || props.__SAA) return;
+						return ShowAllActivities_React.createElement(ActivityWrapper, Object.assign({
+							user: props.user
+						}, props));
+					}));
+				}
+				onStop() {
+					external_StyleLoader_default().remove();
+					external_PluginApi_namespaceObject.Patcher.unpatchAll();
+				}
+			}
+		})();
 		module.exports.LibraryPluginHack = __webpack_exports__;
 	})();
 	const PluginExports = module.exports.LibraryPluginHack;
