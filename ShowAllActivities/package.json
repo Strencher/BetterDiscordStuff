@@ -1,7 +1,7 @@
 {
     "info": {
         "name": "ShowAllActivities",
-        "version": "1.0.0",
+        "version": "1.0.1",
         "authors": [
             {
                 "name": "Strencher",
@@ -26,7 +26,7 @@
             "title": "Rewrite",
             "type": "improved",
             "items": [
-                "The plugin was rewritting and works fine again."
+                "Fixes for the last discord update."
             ]
         }
     ],
