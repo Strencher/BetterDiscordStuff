@@ -1,7 +1,7 @@
 {
     "info": {
         "name": "StatusEverywhere",
-        "version": "2.3.4",
+        "version": "2.3.5",
         "authors": [
             {
                 "name": "Strencher",
@@ -22,10 +22,10 @@
     },
     "changelog": [
         {
-            "title": "fixes",
+            "title": "Bug fixes",
             "type": "fixed",
             "items": [
-                "Fixed patching MemberList."
+                "Fixed loading error."
             ]
         }
     ],
