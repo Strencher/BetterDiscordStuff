@@ -1,6 +1,6 @@
 /**
  * @name StatusEverywhere
- * @version 2.3.4
+ * @version 2.3.5
  * @author Strencher, Zerebos
  * @description Adds user status everywhere Discord doesn't.
  * @source https://github.com/Strencher/BetterDiscordStuff/tree/master/StatusEverywhere
@@ -32,7 +32,7 @@
 const config = {
 	"info": {
 		"name": "StatusEverywhere",
-		"version": "2.3.4",
+		"version": "2.3.5",
 		"authors": [{
 				"name": "Strencher",
 				"discord_id": "415849376598982656",
@@ -51,10 +51,10 @@ const config = {
 		"github_raw": "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/StatusEverywhere/StatusEverywhere.plugin.js"
 	},
 	"changelog": [{
-		"title": "fixes",
+		"title": "Bug fixes",
 		"type": "fixed",
 		"items": [
-			"Fixed patching MemberList."
+			"Fixed loading error."
 		]
 	}],
 	"build": {
@@ -171,7 +171,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					return ___createMemoize___(this, 'Flex', () => BdApi.findModuleByDisplayName('Flex'))
 				},
 				get 'Text'() {
-					return ___createMemoize___(this, 'Text', () => BdApi.findModuleByDisplayName('Text'))
+					return ___createMemoize___(this, 'Text', () => BdApi.findModuleByDisplayName('LegacyText'))
 				},
 				get 'Card'() {
 					return ___createMemoize___(this, 'Card', () => BdApi.findModuleByDisplayName('Card'))
@@ -179,7 +179,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			},
 			'@discord/modules': {
 				get 'Dispatcher'() {
-					return ___createMemoize___(this, 'Dispatcher', () => BdApi.findModuleByProps('dirtyDispatch', 'subscribe'))
+					return ___createMemoize___(this, 'Dispatcher', () => BdApi.findModuleByProps('dispatch', 'isDispatching'))
 				},
 				get 'ComponentDispatcher'() {
 					return ___createMemoize___(this, 'ComponentDispatcher', () => BdApi.findModuleByProps('ComponentDispatch')?.ComponentDispatch)
@@ -581,17 +581,6 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				}
 			}
 			const components_namespaceObject = Modules["@discord/components"];
-			function _extends() {
-				_extends = Object.assign || function(target) {
-					for (var i = 1; i < arguments.length; i++) {
-						var source = arguments[i];
-						for (var key in source)
-							if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-					}
-					return target;
-				};
-				return _extends.apply(this, arguments);
-			}
 			const {
 				ComponentDispatch
 			} = external_PluginApi_namespaceObject.WebpackModules.getByProps("ComponentDispatch");
@@ -706,7 +695,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						"--status-color": statusColor
 					}
 				}, external_BdApi_React_default().createElement(Popout, {
-					renderPopout: props => external_BdApi_React_default().createElement(UserPopoutContainer, _extends({}, props, {
+					renderPopout: props => external_BdApi_React_default().createElement(UserPopoutContainer, Object.assign({}, props, {
 						userId: user.id,
 						channelId: channel_id,
 						guildId: stores_namespaceObject.SelectedGuilds.getGuildId()
@@ -716,7 +705,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					shouldShow: hasUserPopout && shouldShowUserPopout,
 					onRequestOpen: () => setUserPopout(true),
 					onRequestClose: () => setUserPopout(false)
-				}, (popoutProps => external_BdApi_React_default().createElement(AvatarComponent, _extends({}, popoutProps, {
+				}, (popoutProps => external_BdApi_React_default().createElement(AvatarComponent, Object.assign({}, popoutProps, {
 					onClick: setUserPopout.bind(null, !hasUserPopout),
 					statusTooltip: true,
 					statusColor,
@@ -741,20 +730,9 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			const external_StyleLoader_namespaceObject = StyleLoader;
 			var external_StyleLoader_default = __webpack_require__.n(external_StyleLoader_namespaceObject);
 			var createUpdateWrapper_React = __webpack_require__(113);
-			function createUpdateWrapper_extends() {
-				createUpdateWrapper_extends = Object.assign || function(target) {
-					for (var i = 1; i < arguments.length; i++) {
-						var source = arguments[i];
-						for (var key in source)
-							if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-					}
-					return target;
-				};
-				return createUpdateWrapper_extends.apply(this, arguments);
-			}
 			const createUpdateWrapper = (Component, valueProp = "value", changeProp = "onChange", valueIndex = 0) => props => {
 				const [value, setValue] = createUpdateWrapper_React.useState(props[valueProp]);
-				return createUpdateWrapper_React.createElement(Component, createUpdateWrapper_extends({}, props, {
+				return createUpdateWrapper_React.createElement(Component, Object.assign({}, props, {
 					[valueProp]: value,
 					[changeProp]: (...args) => {
 						const value = args[valueIndex];
@@ -799,18 +777,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				DEFAULT: category.Z["default"]
 			};
 			var colorPicker = __webpack_require__(89);
-			function colorPicker_extends() {
-				colorPicker_extends = Object.assign || function(target) {
-					for (var i = 1; i < arguments.length; i++) {
-						var source = arguments[i];
-						for (var key in source)
-							if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-					}
-					return target;
-				};
-				return colorPicker_extends.apply(this, arguments);
-			}
-			const Checkmark = external_BdApi_React_default().memo((props => external_BdApi_React_default().createElement("svg", colorPicker_extends({
+			const Checkmark = external_BdApi_React_default().memo((props => external_BdApi_React_default().createElement("svg", Object.assign({
 				width: "16",
 				height: "16",
 				viewBox: "0 0 24 24"
@@ -820,7 +787,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				fill: props.color ?? "#ddd",
 				d: "M8.99991 16.17L4.82991 12L3.40991 13.41L8.99991 19L20.9999 7.00003L19.5899 5.59003L8.99991 16.17Z"
 			}))));
-			const Dropper = external_BdApi_React_default().memo((props => external_BdApi_React_default().createElement("svg", colorPicker_extends({
+			const Dropper = external_BdApi_React_default().memo((props => external_BdApi_React_default().createElement("svg", Object.assign({
 				width: "14",
 				height: "14",
 				viewBox: "0 0 16 16"
@@ -870,7 +837,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				}, React.createElement(Tooltip, {
 					text: "Default",
 					position: "bottom"
-				}, (props => React.createElement("div", colorPicker_extends({}, props, {
+				}, (props => React.createElement("div", Object.assign({}, props, {
 					className: styles.defaultColor,
 					style: {
 						backgroundColor: resolveColor(defaultValue)
@@ -888,7 +855,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					position: "bottom"
 				}, (props => React.createElement("div", {
 					className: styles.inputContainer
-				}, React.createElement(Dropper, null), React.createElement("input", colorPicker_extends({}, props, {
+				}, React.createElement(Dropper, null), React.createElement("input", Object.assign({}, props, {
 					style: {
 						backgroundColor: resolveColor(color)
 					},
@@ -947,17 +914,6 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			const forms_namespaceObject = Modules["@discord/forms"];
 			var components_settings = __webpack_require__(530);
 			const components_settings_namespaceObject = JSON.parse('{"performance":{"forceLoadStatus":{"name":"Force Load Status","note":"This setting force-loads the status\'s of users from the WebSocket. Be aware, this can cause high usage of resources because of the amount of users in the cache. I can try to work on something that improves this but for now, if you don\'t want it, simply disable.","value":true,"type":"switch"}},"colors":{"dndColor":{"name":"Do Not Disturb Color","note":"Color for \\"Do Not Disturb\\" status indicator.","value":"#ED4245","type":"color"},"idleColor":{"name":"Idle Color","note":"Color for \\"Idle\\" status indicator.","value":"#FAA81A","type":"color"},"onlineColor":{"name":"Online Color","note":"Color for \\"Online\\" status indicator.","value":"#3BA55D","type":"color"},"streamingColor":{"name":"Streaming Color","note":"Color for \\"Streaming\\" status indicator.","value":"#593695","type":"color"},"offlineColor":{"name":"Offline Color","note":"Color for \\"Offline\\" status indicator.","value":"#747F8D","type":"color"}},"chat":{"chatAvatarResolution":{"name":"Resolution","note":"The avatar url size will be eg, url?size=128","value":40,"type":"slider","sticky":true,"markers":[16,32,40,56,80,128,256]},"showChatTyping":{"name":"Typing","note":"Show typing state in the chat.","value":true,"type":"switch"},"chatRadialStatus":{"name":"Radial Status","note":"Shows the status as border instead of pointer.","value":false,"type":"switch"}},"member_list":{"memberListAvatarResolution":{"name":"Resolution","note":"The avatar url size will be eg, url?size=128","value":32,"type":"slider","sticky":true,"markers":[16,32,28,40,56,80,128,256]},"showMemberlistTyping":{"name":"Typing","note":"Show typing state in the member list.","value":true,"type":"switch"},"memberlistRadialStatus":{"name":"Radial Status","note":"Shows the status as border instead of pointer.","value":false,"type":"switch"}},"friends_page":{"friendsPageAvatarResolution":{"name":"Resolution","note":"The avatar url size will be eg, url?size=128","value":56,"type":"slider","sticky":true,"markers":[16,32,40,56,80,128,256]},"showFriendsPageTyping":{"name":"Typing","note":"Show typing state in the friends page.","value":true,"type":"switch"},"friendsPageRadialStatus":{"name":"Radial Status","note":"Shows the status as border instead of pointer.","value":false,"type":"switch"}},"user_popout":{"userPopoutAvatarResolution":{"name":"Resolution","note":"The avatar url size will be eg, url?size=128","value":80,"type":"slider","sticky":true,"markers":[16,32,40,56,80,128,256]},"showUserPopoutTyping":{"name":"Typing","note":"Show typing state in user popout.","value":true,"type":"switch"},"userPopoutRadialStatus":{"name":"Radial Status","note":"Shows the status as border instead of pointer.","value":false,"type":"switch"}},"direct_messages":{"dmAvatarResolution":{"name":"Resolution","note":"The avatar url size will be eg, url?size=128","value":32,"type":"slider","sticky":true,"markers":[16,28,32,40,56,80,128,256]},"showDirectMessagesTyping":{"name":"Typing","note":"Show typing state in direct messages.","value":true,"type":"switch"},"directMessagesRadialStatus":{"name":"Radial Status","note":"Shows the status as border instead of pointer.","value":false,"type":"switch"}},"user_profile":{"userProfileAvatarResolution":{"name":"Resolution","note":"The avatar url size will be eg, url?size=128","value":128,"type":"slider","sticky":true,"markers":[16,32,40,56,80,128,256]},"showUserProfileTyping":{"name":"Typing","note":"Show typing state in user profile modal.","value":true,"type":"switch"},"userProfileRadialStatus":{"name":"Radial Status","note":"Shows the status as border instead of pointer.","value":false,"type":"switch"}},"guild_settings":{"guildSettingsAvatarResolution":{"name":"Resolution","note":"The avatar url size will be eg, url?size=128","value":32,"type":"slider","sticky":true,"markers":[16,32,40,56,80,128,256]},"showGuildSettingsTyping":{"name":"Typing","note":"Show typing state in the guild settings","value":true,"type":"switch"},"guildSettingsRadialStatus":{"name":"Radial Status","note":"Shows the status as border instead of pointer.","value":false,"type":"switch"}},"voice_chat":{"voiceChatAvatarResolution":{"name":"Resolution","note":"The avatar url size will be eg, url?size=128","value":24,"type":"slider","sticky":true,"markers":[16,24,32,40,56,80,128,256]},"showVoiceChatTyping":{"name":"Typing","note":"Show typing state in the voice chat.","value":true,"type":"switch"}},"accounts":{"accountSectionAvatarResolution":{"name":"Resolution","note":"The avatar url size will be eg, url?size=128","value":32,"type":"slider","sticky":true,"markers":[16,32,40,56,80,128,256]},"accountSettingsAvatarResolution":{"name":"Resolution","note":"The avatar url size will be eg, url?size=128","value":128,"type":"slider","sticky":true,"markers":[16,32,40,56,80,128,256]},"accountSettingsRadialStatus":{"name":"Radial Status","note":"Shows the status as border instead of pointer.","value":false,"type":"switch"}}}');
-			function settings_extends() {
-				settings_extends = Object.assign || function(target) {
-					for (var i = 1; i < arguments.length; i++) {
-						var source = arguments[i];
-						for (var key in source)
-							if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-					}
-					return target;
-				};
-				return settings_extends.apply(this, arguments);
-			}
 			const SwitchItem = hooks_createUpdateWrapper(external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("SwitchItem"));
 			const Slider = hooks_createUpdateWrapper(external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("Slider"), "initialValue", "onValueChange");
 			function SwitchSetting({
@@ -1011,7 +967,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					className: components_settings.Z.settingContainer
 				}, external_BdApi_React_default().createElement(forms_namespaceObject.FormTitle, {
 					tag: "h3"
-				}, name), external_BdApi_React_default().createElement(Slider, settings_extends({
+				}, name), external_BdApi_React_default().createElement(Slider, Object.assign({
 					onValueChange: value => settings.set(id, valueMap ? valueMap.replace(/%s/g, value) : value),
 					defaultValue: value,
 					initialValue: Number(currentValue),
@@ -1030,17 +986,17 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				}, Object.entries(items).map((([id, props]) => {
 					switch (props.type) {
 						case "switch":
-							return external_BdApi_React_default().createElement(SwitchSetting, settings_extends({}, props, {
+							return external_BdApi_React_default().createElement(SwitchSetting, Object.assign({}, props, {
 								id,
 								key: id
 							}));
 						case "color":
-							return external_BdApi_React_default().createElement(ColorSetting, settings_extends({}, props, {
+							return external_BdApi_React_default().createElement(ColorSetting, Object.assign({}, props, {
 								id,
 								key: id
 							}));
 						case "slider":
-							return external_BdApi_React_default().createElement(SliderSetting, settings_extends({}, props, {
+							return external_BdApi_React_default().createElement(SliderSetting, Object.assign({}, props, {
 								id,
 								key: id
 							}));
@@ -1086,17 +1042,6 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					}));
 				}));
 			};
-			function account_extends() {
-				account_extends = Object.assign || function(target) {
-					for (var i = 1; i < arguments.length; i++) {
-						var source = arguments[i];
-						for (var key in source)
-							if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-					}
-					return target;
-				};
-				return account_extends.apply(this, arguments);
-			}
 			async function patchAccountSection() {
 				getLazy(external_PluginApi_namespaceObject.Filters.byProperties(["container", "avatar", "redIcon"])).then((classes => external_PluginApi_namespaceObject.ReactComponents.getComponentByName("Account", `.${classes.container} > div`))).then((Account => {
 					external_PluginApi_namespaceObject.Patcher.after(Account.component.prototype, "render", ((_, __, res) => {
@@ -1113,7 +1058,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 								tree.children = props => {
 									const ret = original(props);
 									const isSpeaking = !!ret.props.children?.props?.isSpeaking;
-									ret.props.children = external_BdApi_React_default().createElement(components_avatar, account_extends({}, props, {
+									ret.props.children = external_BdApi_React_default().createElement(components_avatar, Object.assign({}, props, {
 										user: stores_namespaceObject.Users.getCurrentUser(),
 										shouldWatch: false,
 										radial: {
@@ -1131,7 +1076,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 								};
 							} catch (error) {
 								external_PluginApi_namespaceObject.Logger.error("Error in AccountSection patch:", error);
-							} else ret.props.children = external_BdApi_React_default().createElement(components_avatar, account_extends({}, props, {
+							} else ret.props.children = external_BdApi_React_default().createElement(components_avatar, Object.assign({}, props, {
 								user: stores_namespaceObject.Users.getCurrentUser(),
 								shouldWatch: false,
 								radial: {
@@ -1193,17 +1138,6 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					UserSettingsAccount.forceUpdateAll();
 				}));
 			}
-			function auditlog_extends() {
-				auditlog_extends = Object.assign || function(target) {
-					for (var i = 1; i < arguments.length; i++) {
-						var source = arguments[i];
-						for (var key in source)
-							if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-					}
-					return target;
-				};
-				return auditlog_extends.apply(this, arguments);
-			}
 			async function patchAuditLog() {
 				const AuditLog = await getLazy(external_PluginApi_namespaceObject.Filters.byDisplayName("GuildSettingsAuditLogEntry"));
 				const classes = external_PluginApi_namespaceObject.WebpackModules.getByProps("desaturate", "auditLog", "avatar");
@@ -1214,7 +1148,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					lazyPatch(res?.props, "children", ((_, ret) => {
 						const popout = external_PluginApi_namespaceObject.Utilities.findInReactTree(ret, (e => e?.renderPopout));
 						if (!popout) return;
-						lazyPatch(popout, "children", (props => external_BdApi_React_default().createElement(components_avatar, auditlog_extends({}, props[0], {
+						lazyPatch(popout, "children", (props => external_BdApi_React_default().createElement(components_avatar, Object.assign({}, props[0], {
 							user: _this.props.log.user,
 							showTyping: {
 								id: "showGuildSettingsShowTyping",
@@ -1233,17 +1167,6 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					}));
 				}));
 			}
-			function channelmessage_extends() {
-				channelmessage_extends = Object.assign || function(target) {
-					for (var i = 1; i < arguments.length; i++) {
-						var source = arguments[i];
-						for (var key in source)
-							if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-					}
-					return target;
-				};
-				return channelmessage_extends.apply(this, arguments);
-			}
 			function patchChannelMessage() {
 				const Patched = Symbol("__StatusEverywhere_patched__");
 				const ChannelMessage = external_PluginApi_namespaceObject.WebpackModules.getModule((m => "ChannelMessage" === m.type.displayName));
@@ -1253,7 +1176,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					external_PluginApi_namespaceObject.Patcher.after(tree.childrenHeader.type, "type", ((_, [props], res) => {
 						const user = props?.message?.author;
 						const channel_id = props?.message?.channel_id;
-						res.props.avatar = external_BdApi_React_default().createElement(components_avatar, channelmessage_extends({}, props, {
+						res.props.avatar = external_BdApi_React_default().createElement(components_avatar, Object.assign({}, props, {
 							type: "chat",
 							user,
 							channel_id,
@@ -1276,17 +1199,6 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					this.unpatch();
 				}));
 			}
-			function chatavatar_extends() {
-				chatavatar_extends = Object.assign || function(target) {
-					for (var i = 1; i < arguments.length; i++) {
-						var source = arguments[i];
-						for (var key in source)
-							if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-					}
-					return target;
-				};
-				return chatavatar_extends.apply(this, arguments);
-			}
 			function patchChatAvatar() {
 				const Patched = Symbol("__StatusEverywhere_patched__");
 				const ChatMessage = external_PluginApi_namespaceObject.WebpackModules.getModule((m => m?.default?.toString?.().indexOf("ANIMATE_CHAT_AVATAR") > -1));
@@ -1295,7 +1207,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					const user = props?.message?.author;
 					const channel_id = props?.message?.channel_id;
 					if (!user || !tree?.children || Patched in tree.children || user.bot && "0000" === user.discriminator) return;
-					tree.children = () => external_BdApi_React_default().createElement(components_avatar, chatavatar_extends({}, props, {
+					tree.children = () => external_BdApi_React_default().createElement(components_avatar, Object.assign({}, props, {
 						type: "chat",
 						user,
 						channel_id,
@@ -1336,17 +1248,6 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					}
 				}));
 			}
-			function guildsettingsmembers_extends() {
-				guildsettingsmembers_extends = Object.assign || function(target) {
-					for (var i = 1; i < arguments.length; i++) {
-						var source = arguments[i];
-						for (var key in source)
-							if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-					}
-					return target;
-				};
-				return guildsettingsmembers_extends.apply(this, arguments);
-			}
 			async function patchGuildSettingsMembers() {
 				const classes = await getLazy(external_PluginApi_namespaceObject.Filters.byProperties(["member", "avatar"]));
 				const Member = await external_PluginApi_namespaceObject.ReactComponents.getComponentByName("Member", `.${classes.member}`);
@@ -1356,7 +1257,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					Object.assign(avatar.props, {
 						user: _this.props.user
 					});
-					lazyPatch(avatar, "type", (props => external_BdApi_React_default().createElement(components_avatar, guildsettingsmembers_extends({}, props[0], {
+					lazyPatch(avatar, "type", (props => external_BdApi_React_default().createElement(components_avatar, Object.assign({}, props[0], {
 						showTyping: {
 							id: "showGuildSettingsShowTyping",
 							value: true
@@ -1412,22 +1313,11 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					};
 				}));
 			}
-			function memberlist_extends() {
-				memberlist_extends = Object.assign || function(target) {
-					for (var i = 1; i < arguments.length; i++) {
-						var source = arguments[i];
-						for (var key in source)
-							if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-					}
-					return target;
-				};
-				return memberlist_extends.apply(this, arguments);
-			}
 			async function patchMemberListItem(_, promises) {
 				const classes = external_PluginApi_namespaceObject.WebpackModules.getByProps("avatarDecorationPadding", "member");
 				const MemberListItem = await external_PluginApi_namespaceObject.ReactComponents.getComponentByName("MemberListItem", `.${classes.member}`);
 				if (promises.cancelled) return;
-				external_PluginApi_namespaceObject.Patcher.after(MemberListItem.component.prototype, "renderAvatar", (_this => external_BdApi_React_default().createElement(components_avatar, memberlist_extends({}, _this.props, {
+				external_PluginApi_namespaceObject.Patcher.after(MemberListItem.component.prototype, "renderAvatar", (_this => external_BdApi_React_default().createElement(components_avatar, Object.assign({}, _this.props, {
 					type: "member-list",
 					shouldWatch: false,
 					animated: _this.state?.hovered || _this.props.selected,
@@ -1448,17 +1338,6 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				MemberListItem.forceUpdateAll();
 			}
 			var partymembers_React = __webpack_require__(113);
-			function partymembers_extends() {
-				partymembers_extends = Object.assign || function(target) {
-					for (var i = 1; i < arguments.length; i++) {
-						var source = arguments[i];
-						for (var key in source)
-							if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-					}
-					return target;
-				};
-				return partymembers_extends.apply(this, arguments);
-			}
 			async function patchPartyMembers() {
 				const classes = {
 					...Object(external_PluginApi_namespaceObject.WebpackModules.getByProps("partyMember")),
@@ -1476,7 +1355,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						const user = props?.user ?? props;
 						const ret = original ? original.apply(null, [props].concat(args)) : null;
 						if (!user) return ret;
-						return partymembers_React.createElement(components_avatar, partymembers_extends({}, props, {
+						return partymembers_React.createElement(components_avatar, Object.assign({}, props, {
 							user,
 							shouldWatch: false,
 							size: _this.props.size ?? components_avatar.Sizes.SIZE_16,
@@ -1498,7 +1377,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 							user
 						}
 					} = _this.props;
-					ret.props.children = props => partymembers_React.createElement(components_avatar, partymembers_extends({}, props, {
+					ret.props.children = props => partymembers_React.createElement(components_avatar, Object.assign({}, props, {
 						user,
 						shouldWatch: false,
 						size: components_avatar.Sizes.SIZE_16,
@@ -1555,17 +1434,6 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					});
 				}));
 			}
-			function userpopout_extends() {
-				userpopout_extends = Object.assign || function(target) {
-					for (var i = 1; i < arguments.length; i++) {
-						var source = arguments[i];
-						for (var key in source)
-							if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-					}
-					return target;
-				};
-				return userpopout_extends.apply(this, arguments);
-			}
 			function patchUserPopout() {
 				const UserPopoutComponents = external_PluginApi_namespaceObject.WebpackModules.getByProps("UserPopoutAvatar");
 				external_PluginApi_namespaceObject.Patcher.after(UserPopoutComponents, "UserPopoutAvatar", ((_, [props], res) => {
@@ -1575,7 +1443,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						props: props2,
 						type: Component
 					} = tree.children;
-					tree.children = external_BdApi_React_default().createElement(components_avatar, userpopout_extends({}, props, props2, {
+					tree.children = external_BdApi_React_default().createElement(components_avatar, Object.assign({}, props, props2, {
 						shouldWatch: false,
 						type: "user-popout",
 						animated: true,
@@ -1583,7 +1451,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						AvatarComponent: ({
 							className,
 							...props
-						}) => external_BdApi_React_default().createElement(Component, userpopout_extends({
+						}) => external_BdApi_React_default().createElement(Component, Object.assign({
 							className: external_PluginApi_namespaceObject.Utilities.className(className, tree?.props?.className)
 						}, props, props2)),
 						radial: {
@@ -1643,22 +1511,11 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				}));
 			}
 			var voice_React = __webpack_require__(113);
-			function voice_extends() {
-				voice_extends = Object.assign || function(target) {
-					for (var i = 1; i < arguments.length; i++) {
-						var source = arguments[i];
-						for (var key in source)
-							if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-					}
-					return target;
-				};
-				return voice_extends.apply(this, arguments);
-			}
 			function patchVoiceUser() {
 				const VoiceUser = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("VoiceUser");
 				const classes = external_PluginApi_namespaceObject.WebpackModules.getByProps("avatarContainer", "avatarSmall");
 				const classNames = ["avatarContainer", "avatarSmall", "avatar"].map((cl => classes[cl])).join(" ");
-				external_PluginApi_namespaceObject.Patcher.after(VoiceUser.prototype, "renderAvatar", (_this => voice_React.createElement(components_avatar, voice_extends({}, _this.props, {
+				external_PluginApi_namespaceObject.Patcher.after(VoiceUser.prototype, "renderAvatar", (_this => voice_React.createElement(components_avatar, Object.assign({}, _this.props, {
 					className: classNames,
 					isSpeaking: _this.props.speaking,
 					type: "voice-user",
