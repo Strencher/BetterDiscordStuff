@@ -179,19 +179,56 @@ export default class PronounDB extends BasePlugin {
         }
 
         const patched = new WeakSet();
-        const REGEX = /user.*contextmenu/i;
-        const filter = ContextMenu.filterContext(REGEX);
+        const Regex = /displayName="\S+?usercontextmenu./i;
+        const originalSymbol = Symbol("PronounDB Original");
         const loop = async () => {
-            const UserContextMenu = await DCM.getDiscordMenu(m => {
-                if (patched.has(m)) return false;
-                if (m.displayName != null) return REGEX.test(m.displayName);
-
-                return filter(m);
-            });
+            const UserContextMenu = await ContextMenu.findContextMenu(Regex, m => !patched.has(m));
 
             if (this.promises.cancelled) return;
-            if (UserContextMenu.default.displayName) {
-                Patcher.after(UserContextMenu, "default", (_, [props], ret) => {
+
+            const patch = (rendered, props) => {
+                const childs = Utilities.findInReactTree(rendered, Array.isArray);
+                const user = props.user || UserStore.getUser(props.channel?.getRecipientId?.());
+                if (!childs || !user) return rendered;
+                childs.push(buildUserContextMenu(user));
+            };
+
+            function DeepWrapperForDiscordsCoolAnalyticsWrappers(props) {
+                const rendered = props[originalSymbol].call(this, props);
+
+                try {
+                    patch(rendered, props);
+                } catch (error) {
+                    Logger.error("Error in context menu patch:", error);
+                }
+
+                return rendered;
+            }
+
+            let original = null;
+            function ContextMenuWrapper(props, _, rendered) {
+                rendered ??= original.call(this, props);
+
+                try {
+                    if (rendered?.props?.children?.type?.displayName.indexOf("ContextMenu") > 0) {
+                        const child = rendered.props.children;
+                        child.props[originalSymbol] = child.type;
+                        DeepWrapperForDiscordsCoolAnalyticsWrappers.displayName = child.type.displayName;
+                        child.type = DeepWrapperForDiscordsCoolAnalyticsWrappers;
+                        return rendered;
+                    }
+
+                    patch(rendered, props);
+                } catch (error) {
+                    cancel();
+                    Logger.error("Error in context menu patch:", error);
+                }
+
+                return rendered;
+            }
+
+            Patcher.after(UserContextMenu.module, "default", (_, [props], ret) => {
+                if (UserContextMenu.type === "normal") {
                     const children = Utilities.findInReactTree(ret, Array.isArray)
                     if (!Array.isArray(children)) return;
     
@@ -202,37 +239,17 @@ export default class PronounDB extends BasePlugin {
                         0,
                         buildUserContextMenu(user)
                     );
-                });
-            } else {
-                let original = null;
-                function wrapper(props) {
-                    const rendered = original.call(this, props);
-
-                    try {
-                        const childs = Utilities.findInReactTree(rendered, Array.isArray);
-                        const user = props.user || UserStore.getUser(props.channel?.getRecipientId?.());
-                        if (!childs || !user || childs.some(c => c && c.key === "copy-user")) return rendered;
-                        childs.push(buildUserContextMenu(user)); 
-                    } catch (error) {
-                        cancel();
-                        Logger.error("Error in context menu patch:", error);
-                    }
-
-                    return rendered;
-                }
-
-                const cancel = Patcher.after(UserContextMenu, "default", (...args) => {
-                    const [, , ret] = args;
+                } else {
                     const contextMenu = Utilities.getNestedProp(ret, "props.children");
                     if (!contextMenu || typeof contextMenu.type !== "function") return;
 
                     original ??= contextMenu.type;
-                    wrapper.displayName ??= original.displayName;
-                    contextMenu.type = wrapper;
-                });
-            }
+                    ContextMenuWrapper.displayName ??= original.displayName;
+                    contextMenu.type = ContextMenuWrapper;
+                }
+            });
 
-            patched.add(UserContextMenu.default);
+            patched.add(UserContextMenu.module.default);
             loop();
         };
 
