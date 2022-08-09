@@ -158,7 +158,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			},
 			'@discord/modules': {
 				get 'Dispatcher'() {
-					return ___createMemoize___(this, 'Dispatcher', () => BdApi.findModuleByProps('dirtyDispatch', 'subscribe'))
+					return ___createMemoize___(this, 'Dispatcher', () => BdApi.findModuleByProps('dispatch', 'isDispatching'))
 				},
 				get 'ComponentDispatcher'() {
 					return ___createMemoize___(this, 'ComponentDispatcher', () => BdApi.findModuleByProps('ComponentDispatch')?.ComponentDispatch)
@@ -720,17 +720,6 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				}, api];
 			}
 			var modal = __webpack_require__(602);
-			function _extends() {
-				_extends = Object.assign ? Object.assign.bind() : function(target) {
-					for (var i = 1; i < arguments.length; i++) {
-						var source = arguments[i];
-						for (var key in source)
-							if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-					}
-					return target;
-				};
-				return _extends.apply(this, arguments);
-			}
 			const [useStore, Api] = createStore({
 				recent: []
 			});
@@ -837,7 +826,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						});
 					};
 				}), []);
-				return external_BdApi_React_default().createElement(modal_namespaceObject.ModalRoot, _extends({}, props, {
+				return external_BdApi_React_default().createElement(modal_namespaceObject.ModalRoot, Object.assign({}, props, {
 					size: !!newest ? "medium" : "small"
 				}), external_BdApi_React_default().createElement(modal_namespaceObject.ModalHeader, {
 					separator: false
@@ -849,11 +838,11 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					className: modal.Z.closeButton
 				})), external_BdApi_React_default().createElement(modal_namespaceObject.ModalContent, null, !newest ? external_BdApi_React_default().createElement("div", {
 					className: modal.Z.center
-				}, external_BdApi_React_default().createElement("p", null, "Nothing happened yet!")) : external_BdApi_React_default().createElement(external_BdApi_React_default().Fragment, null, external_BdApi_React_default().createElement(CardItem, _extends({}, newest, {
+				}, external_BdApi_React_default().createElement("p", null, "Nothing happened yet!")) : external_BdApi_React_default().createElement(external_BdApi_React_default().Fragment, null, external_BdApi_React_default().createElement(CardItem, Object.assign({}, newest, {
 					key: newest.session?.sessionId
 				})), entries.length > 0 && external_BdApi_React_default().createElement(forms_namespaceObject.FormDivider, {
 					className: modal.Z.newDivider
-				}), entries.map((props => external_BdApi_React_default().createElement(CardItem, _extends({}, props, {
+				}), entries.map((props => external_BdApi_React_default().createElement(CardItem, Object.assign({}, props, {
 					key: props.session?.sessionId
 				})))))), external_BdApi_React_default().createElement(modal_namespaceObject.ModalFooter, null, external_BdApi_React_default().createElement(components_namespaceObject.Flex, {
 					justify: components_namespaceObject.Flex.Justify.END
@@ -927,17 +916,6 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				DEFAULT: category.Z["default"]
 			};
 			var components_settings = __webpack_require__(354);
-			function Settings_extends() {
-				Settings_extends = Object.assign ? Object.assign.bind() : function(target) {
-					for (var i = 1; i < arguments.length; i++) {
-						var source = arguments[i];
-						for (var key in source)
-							if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-					}
-					return target;
-				};
-				return Settings_extends.apply(this, arguments);
-			}
 			const SwitchItem = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("SwitchItem");
 			const RadioGroup = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("RadioGroup");
 			const SettingsOptions = [{
@@ -995,7 +973,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			function renderSetting(setting, forceUpdate) {
 				switch (setting.type) {
 					case "switch":
-						return external_BdApi_React_default().createElement(SwitchItem, Settings_extends({}, setting, {
+						return external_BdApi_React_default().createElement(SwitchItem, SettingsObject.assign({}, setting, {
 							children: setting.name,
 							value: settings.get(setting.id, setting.value),
 							disabled: setting.requires ? !setting.requires.every((id => settings.get(id, true))) : false,
@@ -1016,7 +994,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						}, external_BdApi_React_default().createElement(forms_namespaceObject.FormText, {
 							type: "description",
 							className: components_settings.Z.marginBottom8
-						}, setting.note), external_BdApi_React_default().createElement(RadioGroup, Settings_extends({}, setting, {
+						}, setting.note), external_BdApi_React_default().createElement(RadioGroup, SettingsObject.assign({}, setting, {
 							value: settings.get(setting.id, setting.value),
 							disabled: setting.requires ? !setting.requires.every((id => settings.get(id, true))) : false,
 							onChange: ({
@@ -1078,17 +1056,6 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				}));
 			};
 			var React = __webpack_require__(113);
-			function ShowSessions_extends() {
-				ShowSessions_extends = Object.assign ? Object.assign.bind() : function(target) {
-					for (var i = 1; i < arguments.length; i++) {
-						var source = arguments[i];
-						for (var key in source)
-							if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-					}
-					return target;
-				};
-				return ShowSessions_extends.apply(this, arguments);
-			}
 			function ShowSessions_defineProperty(obj, key, value) {
 				if (key in obj) Object.defineProperty(obj, key, {
 					value,
@@ -1280,7 +1247,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 							text: "Open Session logs",
 							key: "show-sessions",
 							position: "bottom"
-						}, (props => React.createElement(Button, ShowSessions_extends({}, props, {
+						}, (props => React.createElement(Button, ShowSessionsObject.assign({}, props, {
 							size: Button.Sizes.NONE,
 							look: Button.Looks.BLANK,
 							innerClassName: `${headerBarClasses.iconWrapper} ${headerBarClasses.clickable}`,
