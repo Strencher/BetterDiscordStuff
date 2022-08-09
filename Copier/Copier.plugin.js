@@ -40,7 +40,7 @@ const config = {
                 twitter_username: "Strencher3"
             }
         ],
-        version: "1.5.0",
+        version: "1.5.1",
         description: "Allows you to copy certain stuff with custom options.",
         github: "https://github.com/Strencher/BetterDiscordStuff/blob/master/Copier/Copier.plugin.js",
         github_raw: "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/Copier/Copier.plugin.js"
@@ -50,19 +50,13 @@ const config = {
             type: "fixed",
             title: "Bug Fixes",
             items: [
-                "Fixed context menus again #4. Thanks discord.",
-                "Fixed copy icon in about me."
+                "Fixed replacements",
             ]
         }
     ]
 };
 
 const MessageCopyOptions = [
-    {
-        name: "author",
-        getValue: ({message}) => message.author.username,
-        description: "Will be replaced with the message author's username."
-    },
     {
         name: "authorId",
         getValue: ({message}) => message.author.id,
@@ -77,6 +71,11 @@ const MessageCopyOptions = [
         name: "authorMention",
         getValue: ({message}) => `<@!${message.author.id}>`,
         description: "Will be replaced with the mention of the message author. (<@!userId>)"
+    },
+    {
+        name: "author",
+        getValue: ({message}) => message.author.username,
+        description: "Will be replaced with the message author's username."
     },
     {
         name: "message",
@@ -122,14 +121,14 @@ const ChannelCopyOptions = [
         description: "Will be replaced with the type of the channel."
     },
     {
-        name: "server",
-        getValue: ({guild}) => guild.name,
-        description: "Will be replaced with the server name."
-    },
-    {
         name: "serverId",
         getValue: ({guild}) => guild.id,
         description: "Will be replaced with the server id."
+    },
+    {
+        name: "server",
+        getValue: ({guild}) => guild.name,
+        description: "Will be replaced with the server name."
     },
     {
         name: "creation",
@@ -160,14 +159,14 @@ const VoiceChannelCopyOptions = [
         description: "Will be replaced with the type of the voice channel."
     },
     {
-        name: "server",
-        getValue: ({guild}) => guild.name,
-        description: "Will be replaced with the server name."
-    },
-    {
         name: "serverId",
         getValue: ({guild}) => guild.id,
         description: "Will be replaced with the server id."
+    },
+    {
+        name: "server",
+        getValue: ({guild}) => guild.name,
+        description: "Will be replaced with the server name."
     },
     {
         name: "creation",
@@ -302,14 +301,14 @@ const ChannelCategoryCopyOptions = [
         description: "Will be replaced with the type of the category."
     },
     {
-        name: "server",
-        getValue: ({guild}) => guild.name,
-        description: "Will be replaced with the server name."
-    },
-    {
         name: "serverId",
         getValue: ({guild}) => guild.id,
         description: "Will be replaced with the server id."
+    },
+    {
+        name: "server",
+        getValue: ({guild}) => guild.name,
+        description: "Will be replaced with the server name."
     },
     {
         name: "creation",
