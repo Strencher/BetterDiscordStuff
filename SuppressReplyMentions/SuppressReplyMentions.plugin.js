@@ -40,16 +40,16 @@ module.exports = (() => {
                     twitter_username: "Strencher3"
                 }
             ],
-            version: "0.0.2",
+            version: "0.0.3",
             description: "Suppresses mentions from Replied messages and when replying to someone else.",
             github: "https://github.com/Strencher/BetterDiscordStuff/blob/master/SuppressReplyMentions/SuppressReplyMentions.plugin.js",
             github_raw: "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/SuppressReplyMentions/SuppressReplyMentions.plugin.js"
         },
         changelog: [
             {
-                title: "Release",
-                type: "added",
-                items: ["The got released. Enjoy!"]
+                title: "Fixed",
+                type: "fixed",
+                items: ["Fixed ActionTypes"]
             }
         ],
         defaultConfig: [
@@ -87,7 +87,7 @@ module.exports = (() => {
     } : (([Plugin, Api]) => {
         const plugin = (Plugin, Api) => {
 
-            const {PluginUtilities, Utilities, WebpackModules, DiscordModules, Patcher, DiscordModules: {React, DiscordConstants: {ActionTypes}}} = Api;
+            const {PluginUtilities, Utilities, WebpackModules, DiscordModules, Patcher, DiscordModules: {React}} = Api;
             const suppressed = [];
             const UserUtils = WebpackModules.getByProps("getCurrentUser");
             const Tooltip = WebpackModules.getByDisplayName("Tooltip");
@@ -110,7 +110,7 @@ module.exports = (() => {
 
                 patchMessageCreate() {
                     Patcher.before(DiscordModules.Dispatcher, "_dispatch", (_, [{message, type}]) => {
-                        if (type != ActionTypes.MESSAGE_CREATE) return;
+                        if (type != "MESSAGE_CREATE") return;
                         const currentUser = UserUtils.getCurrentUser();
                         if (!currentUser || !Array.isArray(message.mentions) || !message.referenced_message) return;
 
