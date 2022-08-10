@@ -276,7 +276,7 @@ export default class ShowSessions extends BasePlugin {
 
 	async patchAccountSection() {
 		const ConnectedUserAccountSettings = await getLazy(Filters.byDisplayName("ConnectedUserAccountSettings"));
-		const UserSettingsAccount = wrapInHooks(() => ConnectedUserAccountSettings({})?.type);
+		const UserSettingsAccount = wrapInHooks(() => ConnectedUserAccountSettings({currentUser: DiscordModules.UserStore.getCurrentUser()})?.type);
 		
 		Patcher.after(UserSettingsAccount.prototype, "render", (_this, _, res) => {
 			if (!Array.isArray(res?.props?.children)) return;
