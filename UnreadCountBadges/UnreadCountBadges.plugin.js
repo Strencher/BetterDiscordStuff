@@ -1,6 +1,6 @@
 /**
  * @name UnreadCountBadges
- * @version 1.3.0
+ * @version 1.3.1
  * @author Strencher, Metalloriff
  * @description Adds unread badges to guilds, channels & more.
  * @source https://github.com/Strencher/BetterDiscordStuff/tree/master/UnreadCountBadges
@@ -54,8 +54,7 @@ const config = {
 		"type": "fixed",
 		"title": "Fixes",
 		"items": [
-			"Fixed unread count on guilds 2.0",
-			"Fixed crashing."
+			"Fixed not loading."
 		]
 	}],
 	"build": {
@@ -155,7 +154,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					return ___createMemoize___(this, 'Flex', () => BdApi.findModuleByDisplayName('Flex'))
 				},
 				get 'Text'() {
-					return ___createMemoize___(this, 'Text', () => BdApi.findModuleByDisplayName('Text'))
+					return ___createMemoize___(this, 'Text', () => BdApi.findModuleByDisplayName('LegacyText'))
 				},
 				get 'Card'() {
 					return ___createMemoize___(this, 'Card', () => BdApi.findModuleByDisplayName('Card'))
@@ -163,7 +162,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			},
 			'@discord/modules': {
 				get 'Dispatcher'() {
-					return ___createMemoize___(this, 'Dispatcher', () => BdApi.findModuleByProps('dirtyDispatch', 'subscribe'))
+					return ___createMemoize___(this, 'Dispatcher', () => BdApi.findModuleByProps('dispatch', 'isDispatching'))
 				},
 				get 'ComponentDispatcher'() {
 					return ___createMemoize___(this, 'ComponentDispatcher', () => BdApi.findModuleByProps('ComponentDispatch')?.ComponentDispatch)
@@ -491,17 +490,6 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			const settings = Settings;
 			const constants_namespaceObject = Modules["@discord/constants"];
 			var React = __webpack_require__(113);
-			function _extends() {
-				_extends = Object.assign || function(target) {
-					for (var i = 1; i < arguments.length; i++) {
-						var source = arguments[i];
-						for (var key in source)
-							if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-					}
-					return target;
-				};
-				return _extends.apply(this, arguments);
-			}
 			const Badges = external_PluginApi_namespaceObject.WebpackModules.getByProps("NumberBadge");
 			const UnreadStore = external_PluginApi_namespaceObject.WebpackModules.getByProps("getUnreadCount");
 			const MutedStore = external_PluginApi_namespaceObject.WebpackModules.getByProps("getMutedChannels");
@@ -510,7 +498,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			};
 			function ConnectedUnreadBadge(props) {
 				const color = (0, flux_namespaceObject.useStateFromStores)([settings], (() => settings.get(props.color, "#5865F2")));
-				return React.createElement(Badges.NumberBadge, _extends({}, props, {
+				return React.createElement(Badges.NumberBadge, Object.assign({}, props, {
 					color
 				}));
 			}
@@ -577,18 +565,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			const forms_namespaceObject = Modules["@discord/forms"];
 			const components_namespaceObject = Modules["@discord/components"];
 			var colorPicker = __webpack_require__(605);
-			function colorPicker_extends() {
-				colorPicker_extends = Object.assign || function(target) {
-					for (var i = 1; i < arguments.length; i++) {
-						var source = arguments[i];
-						for (var key in source)
-							if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-					}
-					return target;
-				};
-				return colorPicker_extends.apply(this, arguments);
-			}
-			const Checkmark = external_BdApi_React_default().memo((props => external_BdApi_React_default().createElement("svg", colorPicker_extends({
+			const Checkmark = external_BdApi_React_default().memo((props => external_BdApi_React_default().createElement("svg", Object.assign({
 				width: "16",
 				height: "16",
 				viewBox: "0 0 24 24"
@@ -598,7 +575,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				fill: props.color ?? "#ddd",
 				d: "M8.99991 16.17L4.82991 12L3.40991 13.41L8.99991 19L20.9999 7.00003L19.5899 5.59003L8.99991 16.17Z"
 			}))));
-			const Dropper = external_BdApi_React_default().memo((props => external_BdApi_React_default().createElement("svg", colorPicker_extends({
+			const Dropper = external_BdApi_React_default().memo((props => external_BdApi_React_default().createElement("svg", Object.assign({
 				width: "14",
 				height: "14",
 				viewBox: "0 0 16 16"
@@ -648,7 +625,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				}, external_BdApi_React_default().createElement(components_namespaceObject.Tooltip, {
 					text: "Default",
 					position: "bottom"
-				}, (props => external_BdApi_React_default().createElement("div", colorPicker_extends({}, props, {
+				}, (props => external_BdApi_React_default().createElement("div", Object.assign({}, props, {
 					className: colorPicker.Z.defaultColor,
 					style: {
 						backgroundColor: resolveColor(defaultValue)
@@ -666,7 +643,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					position: "bottom"
 				}, (props => external_BdApi_React_default().createElement("div", {
 					className: colorPicker.Z.inputContainer
-				}, external_BdApi_React_default().createElement(Dropper, null), external_BdApi_React_default().createElement("input", colorPicker_extends({}, props, {
+				}, external_BdApi_React_default().createElement(Dropper, null), external_BdApi_React_default().createElement("input", Object.assign({}, props, {
 					style: {
 						backgroundColor: resolveColor(color)
 					},
@@ -729,20 +706,9 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				DEFAULT: category.Z["default"]
 			};
 			var createUpdateWrapper_React = __webpack_require__(113);
-			function createUpdateWrapper_extends() {
-				createUpdateWrapper_extends = Object.assign || function(target) {
-					for (var i = 1; i < arguments.length; i++) {
-						var source = arguments[i];
-						for (var key in source)
-							if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-					}
-					return target;
-				};
-				return createUpdateWrapper_extends.apply(this, arguments);
-			}
 			const createUpdateWrapper = (Component, valueProp = "value", changeProp = "onChange", valueIndex = 0) => props => {
 				const [value, setValue] = createUpdateWrapper_React.useState(props[valueProp]);
-				return createUpdateWrapper_React.createElement(Component, createUpdateWrapper_extends({}, props, {
+				return createUpdateWrapper_React.createElement(Component, Object.assign({}, props, {
 					[valueProp]: value,
 					[changeProp]: (...args) => {
 						const value = args[valueIndex];
@@ -753,17 +719,6 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			};
 			const hooks_createUpdateWrapper = createUpdateWrapper;
 			var components_Settings = __webpack_require__(927);
-			function Settings_extends() {
-				Settings_extends = Object.assign || function(target) {
-					for (var i = 1; i < arguments.length; i++) {
-						var source = arguments[i];
-						for (var key in source)
-							if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-					}
-					return target;
-				};
-				return Settings_extends.apply(this, arguments);
-			}
 			const SwitchItem = hooks_createUpdateWrapper(external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("SwitchItem"));
 			function SwitchSetting({
 				id,
@@ -934,12 +889,12 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				}, Object.entries(items).map((([id, props]) => {
 					switch (props.type) {
 						case "switch":
-							return external_BdApi_React_default().createElement(SwitchSetting, Settings_extends({}, props, {
+							return external_BdApi_React_default().createElement(SwitchSetting, Object.assign({}, props, {
 								id,
 								key: id
 							}));
 						case "color":
-							return external_BdApi_React_default().createElement(ColorSetting, Settings_extends({}, props, {
+							return external_BdApi_React_default().createElement(ColorSetting, Object.assign({}, props, {
 								id,
 								key: id
 							}));
