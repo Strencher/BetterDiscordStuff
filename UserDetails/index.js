@@ -226,9 +226,8 @@ export default class Plugin extends BasePlugin {
             if (this.promises.cancelled) return;
             if (!Settings.get("activityIcon", true)) return;
 
-            res.props.children = (
-                <ConnectedActivity user={that.props.user} />
-            );
+            if (Array.isArray(res.props.children)) res.props.children.push(<ConnectedActivity user={that.props.user} />);
+            else res.props.children = [<ConnectedActivity user={that.props.user} />];
         });
 
         Patcher.after(ActivityStatus, "default", (_, [{activities}], res) => {
