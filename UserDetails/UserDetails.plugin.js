@@ -2441,9 +2441,12 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					external_PluginApi_namespaceObject.Patcher.after(MemberListItem.component.prototype, "render", ((that, _, res) => {
 						if (this.promises.cancelled) return;
 						if (!modules_Settings.get("activityIcon", true)) return;
-						res.props.children = external_BdApi_React_default().createElement(ConnectedActivity, {
+						if (Array.isArray(res.props.children)) res.props.children.push(external_BdApi_React_default().createElement(ConnectedActivity, {
 							user: that.props.user
-						});
+						}));
+						else res.props.children = [external_BdApi_React_default().createElement(ConnectedActivity, {
+							user: that.props.user
+						})];
 					}));
 					external_PluginApi_namespaceObject.Patcher.after(ActivityStatus, "default", ((_, [{
 						activities
