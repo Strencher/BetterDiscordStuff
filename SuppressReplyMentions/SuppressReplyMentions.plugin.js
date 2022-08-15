@@ -40,43 +40,25 @@ module.exports = (() => {
                     twitter_username: "Strencher3"
                 }
             ],
-            version: "0.0.4",
+            version: "0.0.3",
             description: "Suppresses mentions from Replied messages and when replying to someone else.",
             github: "https://github.com/Strencher/BetterDiscordStuff/blob/master/SuppressReplyMentions/SuppressReplyMentions.plugin.js",
             github_raw: "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/SuppressReplyMentions/SuppressReplyMentions.plugin.js"
         },
         changelog: [
             {
-                title: "Release",
-                type: "added",
-                items: ["The got released. Enjoy!"]
+                title: "Fixed",
+                type: "fixed",
+                items: ["Fixed ActionTypes"]
             }
         ],
         defaultConfig: [
-            {
-                type: "dropdown",
-                id: "mentionSettings",
-                name: "Mention Settings for Replies",
-                value: 1,
-                options: [
-                    { label: "Default", value: 0 },
-                    { label: "Suppress Mentions", value: 1 },
-                    { label: "Force Mentions", value: 2 },
-                ]
-            },
             {
                 type: "switch",
                 id: "autoDisableMention",
                 name: "Disable Mention",
                 note: "Automatically disables the 'Mention' option when replying to someone else.",
                 value: true
-            },
-            {
-                type: "switch",
-                id: "allowManualPing",
-                name: "Allow Manual Ping",
-                note: "Allow manual pings to mention even if they are in replies.",
-                value: false
             }
         ]
     };
@@ -105,7 +87,7 @@ module.exports = (() => {
     } : (([Plugin, Api]) => {
         const plugin = (Plugin, Api) => {
 
-            const {PluginUtilities, Utilities, WebpackModules, DiscordModules, Patcher, DiscordModules: {React, DiscordConstants: {ActionTypes}}} = Api;
+            const {PluginUtilities, Utilities, WebpackModules, DiscordModules, Patcher, DiscordModules: {React}} = Api;
             const suppressed = [];
             const UserUtils = WebpackModules.getByProps("getCurrentUser");
             const Tooltip = WebpackModules.getByDisplayName("Tooltip");
@@ -128,27 +110,14 @@ module.exports = (() => {
 
                 patchMessageCreate() {
                     Patcher.before(DiscordModules.Dispatcher, "_dispatch", (_, [{message, type}]) => {
-                        if (type != ActionTypes.MESSAGE_CREATE || this.settings.mentionSettings == 0) return;
+                        if (type != "MESSAGE_CREATE") return;
                         const currentUser = UserUtils.getCurrentUser();
                         if (!currentUser || !Array.isArray(message.mentions) || !message.referenced_message) return;
 
-                        if(this.settings.allowManualPing) {
-                            const manualPing = "<@!" + currentUser.id + ">";
-                            if(message.content.includes(manualPing)) return;
-                        }
-
                         const mentionIndex = message.mentions.findIndex(e => e.id === currentUser.id);
-
-                        if (this.settings.mentionSettings == 1) {
-                            if (message.referenced_message.author.id === currentUser.id && mentionIndex > -1) {
-                                message.mentions.splice(mentionIndex, 1);
-                                suppressed.push(message.id);
-                            }
-    
-                        } else if (this.settings.mentionSettings == 2) {
-                            if (message.referenced_message.author.id === currentUser.id && mentionIndex === -1) {
-                                message.mentions.push(currentUser);
-                            }
+                        if (message.referenced_message.author.id === currentUser.id && mentionIndex > -1) {
+                            message.mentions.splice(mentionIndex, 1);
+                            suppressed.push(message.id);
                         }
                     });
                 }
