@@ -1,6 +1,6 @@
 /**
  * @name ChannelDms
- * @version 1.2.2
+ * @version 1.2.3
  * @author Strencher
  * @description Allows you to open popout chats of direct messages inside servers.
  * @source https://github.com/Strencher/BetterDiscordStuff/tree/master/ChannelDms
@@ -32,7 +32,7 @@
 const config = {
 	"info": {
 		"name": "ChannelDms",
-		"version": "1.2.2",
+		"version": "1.2.3",
 		"authors": [{
 			"name": "Strencher",
 			"discord_id": "415849376598982656",
@@ -143,7 +143,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					return ___createMemoize___(this, 'Flex', () => BdApi.findModuleByDisplayName('Flex'))
 				},
 				get 'Text'() {
-					return ___createMemoize___(this, 'Text', () => BdApi.findModuleByDisplayName('Text'))
+					return ___createMemoize___(this, 'Text', () => BdApi.findModuleByDisplayName('LegacyText'))
 				},
 				get 'Card'() {
 					return ___createMemoize___(this, 'Card', () => BdApi.findModuleByDisplayName('Card'))
@@ -151,7 +151,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			},
 			'@discord/modules': {
 				get 'Dispatcher'() {
-					return ___createMemoize___(this, 'Dispatcher', () => BdApi.findModuleByProps('dirtyDispatch', 'subscribe'))
+					return ___createMemoize___(this, 'Dispatcher', () => BdApi.findModuleByProps('dispatch', 'isDispatching'))
 				},
 				get 'ComponentDispatcher'() {
 					return ___createMemoize___(this, 'ComponentDispatcher', () => BdApi.findModuleByProps('ComponentDispatch')?.ComponentDispatch)
@@ -486,17 +486,6 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					return collector(api.getState());
 				}, api];
 			}
-			function _extends() {
-				_extends = Object.assign ? Object.assign.bind() : function(target) {
-					for (var i = 1; i < arguments.length; i++) {
-						var source = arguments[i];
-						for (var key in source)
-							if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-					}
-					return target;
-				};
-				return _extends.apply(this, arguments);
-			}
 			const classes = external_PluginApi_namespaceObject.WebpackModules.getByProps("chatContent");
 			const ChannelChat = external_PluginApi_namespaceObject.WebpackModules.getModule((m => m?.type?.toString().indexOf("communicationDisabledUntil") > -1));
 			const ChannelContext = external_BdApi_React_default().createContext(null);
@@ -543,7 +532,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				return external_BdApi_React_default().createElement(components_namespaceObject.Tooltip, {
 					text: state ? "Expand" : "Collapse",
 					position: "top"
-				}, (props => external_BdApi_React_default().createElement(Button, _extends({}, props, {
+				}, (props => external_BdApi_React_default().createElement(Button, Object.assign({}, props, {
 					look: Button.Looks.BLANK,
 					size: Button.Sizes.ICON,
 					className: channelpopout.Z.collapseButton,
@@ -607,20 +596,9 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				}))));
 			}
 			var React = __webpack_require__(113);
-			function createUpdateWrapper_extends() {
-				createUpdateWrapper_extends = Object.assign ? Object.assign.bind() : function(target) {
-					for (var i = 1; i < arguments.length; i++) {
-						var source = arguments[i];
-						for (var key in source)
-							if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-					}
-					return target;
-				};
-				return createUpdateWrapper_extends.apply(this, arguments);
-			}
 			const createUpdateWrapper = (Component, valueProp = "value", changeProp = "onChange", valueIndex = 0) => props => {
 				const [value, setValue] = React.useState(props[valueProp]);
-				return React.createElement(Component, createUpdateWrapper_extends({}, props, {
+				return React.createElement(Component, Object.assign({}, props, {
 					[valueProp]: value,
 					[changeProp]: (...args) => {
 						const value = args[valueIndex];
@@ -750,17 +728,6 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				}, external_BdApi_React_default().createElement(PrivateChannelsPatched, null)));
 			}
 			var channelmembers_React = __webpack_require__(113);
-			function channelmembers_extends() {
-				channelmembers_extends = Object.assign ? Object.assign.bind() : function(target) {
-					for (var i = 1; i < arguments.length; i++) {
-						var source = arguments[i];
-						for (var key in source)
-							if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-					}
-					return target;
-				};
-				return channelmembers_extends.apply(this, arguments);
-			}
 			const TabBar = external_PluginApi_namespaceObject.WebpackModules.getByProps("Item", "Header");
 			var Tabs;
 			(function(Tabs) {
@@ -791,7 +758,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			}) {
 				switch (tab) {
 					case Tabs.MEMBERS:
-						return channelmembers_React.createElement(MemberList, channelmembers_extends({}, memberListProps, {
+						return channelmembers_React.createElement(MemberList, Object.assign({}, memberListProps, {
 							__IS_PLUGIN: true,
 							key: "MEMBERS"
 						}));
@@ -834,17 +801,6 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					memberListProps,
 					MemberList
 				}));
-			}
-			function ChannelDms_extends() {
-				ChannelDms_extends = Object.assign ? Object.assign.bind() : function(target) {
-					for (var i = 1; i < arguments.length; i++) {
-						var source = arguments[i];
-						for (var key in source)
-							if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-					}
-					return target;
-				};
-				return ChannelDms_extends.apply(this, arguments);
 			}
 			class ChannelDms extends(external_BasePlugin_default()) {
 				onStart() {
@@ -970,7 +926,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 							spacing: 25,
 							position: components_namespaceObject.Popout.Positions.LEFT,
 							animation: components_namespaceObject.Popout.Animation.TRANSLATE,
-							renderPopout: props => external_BdApi_React_default().createElement(ChannelPopout, ChannelDms_extends({
+							renderPopout: props => external_BdApi_React_default().createElement(ChannelPopout, Object.assign({
 								channel
 							}, props, {
 								onClose: () => setSelectedChannelId("")
@@ -979,7 +935,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					}
 					external_PluginApi_namespaceObject.Patcher.after(ListItem, "render", ((_, [props], ret) => {
 						if (!Reflect.has(props, "channel")) return;
-						return external_BdApi_React_default().createElement(PatchedListItem, ChannelDms_extends({}, props, {
+						return external_BdApi_React_default().createElement(PatchedListItem, Object.assign({}, props, {
 							children: ret
 						}));
 					}));
