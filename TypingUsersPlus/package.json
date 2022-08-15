@@ -1,7 +1,7 @@
 {
     "info": {
         "name": "TypingUsersPlus",
-        "version": "1.0.0",
+        "version": "1.0.1",
         "authors": [
             {
                 "name": "Strencher",
@@ -16,10 +16,10 @@
     },
     "changelog": [
         {
-            "title": "added",
-            "type": "added",
+            "title": "Fixed",
+            "type": "fixed",
             "items": [
-                "This thing does now exist."
+                "Fixed for latest Discord Update."
             ]
         }
     ],
