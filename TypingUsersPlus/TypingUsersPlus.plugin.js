@@ -1,6 +1,6 @@
 /**
  * @name TypingUsersPlus
- * @version 1.0.0
+ * @version 1.0.1
  * @author Strencher
  * @description Enhances the typing users bar in discord. Adds avatar + status, colorized username, role icons and clickable name.
  * @source https://github.com/Strencher/BetterDiscordStuff/tree/master/TypingUsersPlus
@@ -32,7 +32,7 @@
 const config = {
 	"info": {
 		"name": "TypingUsersPlus",
-		"version": "1.0.0",
+		"version": "1.0.1",
 		"authors": [{
 			"name": "Strencher",
 			"discord_id": "415849376598982656",
@@ -44,10 +44,10 @@ const config = {
 		"github_raw": "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/TypingUsersPlus/TypingUsersPlus.plugin.js"
 	},
 	"changelog": [{
-		"title": "added",
-		"type": "added",
+		"title": "Fixed",
+		"type": "fixed",
 		"items": [
-			"This thing does now exist."
+			"Fixed for latest Discord Update."
 		]
 	}],
 	"build": {
@@ -143,7 +143,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					return ___createMemoize___(this, 'Flex', () => BdApi.findModuleByDisplayName('Flex'))
 				},
 				get 'Text'() {
-					return ___createMemoize___(this, 'Text', () => BdApi.findModuleByDisplayName('Text'))
+					return ___createMemoize___(this, 'Text', () => BdApi.findModuleByDisplayName('LegacyText'))
 				},
 				get 'Card'() {
 					return ___createMemoize___(this, 'Card', () => BdApi.findModuleByDisplayName('Card'))
@@ -151,7 +151,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			},
 			'@discord/modules': {
 				get 'Dispatcher'() {
-					return ___createMemoize___(this, 'Dispatcher', () => BdApi.findModuleByProps('dirtyDispatch', 'subscribe'))
+					return ___createMemoize___(this, 'Dispatcher', () => BdApi.findModuleByProps('dispatch', 'isDispatching'))
 				},
 				get 'ComponentDispatcher'() {
 					return ___createMemoize___(this, 'ComponentDispatcher', () => BdApi.findModuleByProps('ComponentDispatch')?.ComponentDispatch)
@@ -416,17 +416,6 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			const Settings = new SettingsManager(package_namespaceObject.um.u2);
 			const settings = Settings;
 			var React = __webpack_require__(113);
-			function _extends() {
-				_extends = Object.assign || function(target) {
-					for (var i = 1; i < arguments.length; i++) {
-						var source = arguments[i];
-						for (var key in source)
-							if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-					}
-					return target;
-				};
-				return _extends.apply(this, arguments);
-			}
 			const UserUtils = external_PluginApi_namespaceObject.WebpackModules.getByProps("useUserNickAndColor");
 			const {
 				AnimatedAvatar,
@@ -448,7 +437,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					size: 16
 				});
 				if (!roleIcon || !shouldShow) return null;
-				return React.createElement(DiscordRoleIcon, _extends({}, roleIcon, {
+				return React.createElement(DiscordRoleIcon, Object.assign({}, roleIcon, {
 					className
 				}));
 			}
@@ -464,13 +453,13 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					animation: components_namespaceObject.Popout.Animation.TRANSLATE,
 					position: components_namespaceObject.Popout.Positions.TOP,
 					align: components_namespaceObject.Popout.Align.CENTER,
-					renderPopout: props => React.createElement(UserPopoutContainer, _extends({}, props, {
+					renderPopout: props => React.createElement(UserPopoutContainer, Object.assign({}, props, {
 						channelId: channel.id,
 						guildId: channel.guild_id,
 						userId: user.id,
 						position: "top"
 					}))
-				}, (props => React.createElement("div", _extends({}, props, {
+				}, (props => React.createElement("div", Object.assign({}, props, {
 					className: components_user.Z.user
 				}), showAvatar && React.createElement(AnimatedAvatar, {
 					className: components_user.Z.avatar,
@@ -493,20 +482,9 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			var external_BdApi_React_ = __webpack_require__(113);
 			var external_BdApi_React_default = __webpack_require__.n(external_BdApi_React_);
 			var createUpdateWrapper_React = __webpack_require__(113);
-			function createUpdateWrapper_extends() {
-				createUpdateWrapper_extends = Object.assign || function(target) {
-					for (var i = 1; i < arguments.length; i++) {
-						var source = arguments[i];
-						for (var key in source)
-							if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-					}
-					return target;
-				};
-				return createUpdateWrapper_extends.apply(this, arguments);
-			}
 			const createUpdateWrapper = (Component, valueProp = "value", changeProp = "onChange", valueIndex = 0) => props => {
 				const [value, setValue] = createUpdateWrapper_React.useState(props[valueProp]);
-				return createUpdateWrapper_React.createElement(Component, createUpdateWrapper_extends({}, props, {
+				return createUpdateWrapper_React.createElement(Component, Object.assign({}, props, {
 					[valueProp]: value,
 					[changeProp]: (...args) => {
 						const value = args[valueIndex];
@@ -516,17 +494,6 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				}));
 			};
 			const hooks_createUpdateWrapper = createUpdateWrapper;
-			function settings_extends() {
-				settings_extends = Object.assign || function(target) {
-					for (var i = 1; i < arguments.length; i++) {
-						var source = arguments[i];
-						for (var key in source)
-							if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
-					}
-					return target;
-				};
-				return settings_extends.apply(this, arguments);
-			}
 			const SwitchItem = hooks_createUpdateWrapper(external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("SwitchItem"));
 			const SettingsOptions = [{
 				id: "showRoleIcon",
@@ -545,7 +512,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				value: true
 			}];
 			function SettingsPanel() {
-				return external_BdApi_React_default().createElement(external_BdApi_React_default().Fragment, null, SettingsOptions.map((setting => external_BdApi_React_default().createElement(SwitchItem, settings_extends({}, setting, {
+				return external_BdApi_React_default().createElement(external_BdApi_React_default().Fragment, null, SettingsOptions.map((setting => external_BdApi_React_default().createElement(SwitchItem, Object.assign({}, setting, {
 					children: setting.name,
 					value: settings.get(setting.id, setting.value),
 					onChange: value => settings.set(setting.id, value)
