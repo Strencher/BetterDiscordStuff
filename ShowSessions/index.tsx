@@ -1,5 +1,5 @@
 /// <reference path="../types/main.d.ts" />
-import {Filters, Logger, Patcher, ReactComponents, Toasts, Utilities, WebpackModules} from "@zlibrary";
+import {Filters, Logger, Patcher, ReactComponents, Toasts, Utilities, WebpackModules, DiscordModules} from "@zlibrary";
 import BasePlugin from "@zlibrary/plugin";
 import Clyde from "common/apis/clyde";
 import Commands from "common/apis/commands";

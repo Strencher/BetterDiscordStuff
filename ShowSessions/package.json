@@ -1,7 +1,7 @@
 {
 	"info": {
 		"name": "ShowSessions",
-		"version": "1.3.3",
+		"version": "1.3.4",
 		"description": "Shows your current sessions with a chat command '/sessions' or in the accounts panel.",
 		"authors": [
 			{
@@ -18,7 +18,7 @@
 			"type": "fixed",
 			"title": "Fixes",
 			"items": [
-				"Fixed not loading."
+				"Fixed showing section inside the accounts panel."
 			]
 		}
 	],
