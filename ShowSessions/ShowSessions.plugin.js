@@ -1,6 +1,6 @@
 /**
  * @name ShowSessions
- * @version 1.3.3
+ * @version 1.3.4
  * @description Shows your current sessions with a chat command '/sessions' or in the accounts panel.
  * @author Strencher
  * @source https://github.com/Strencher/BetterDiscordStuff/tree/master/ShowSessions
@@ -32,7 +32,7 @@
 const config = {
 	"info": {
 		"name": "ShowSessions",
-		"version": "1.3.3",
+		"version": "1.3.4",
 		"description": "Shows your current sessions with a chat command '/sessions' or in the accounts panel.",
 		"authors": [{
 			"name": "Strencher",
@@ -46,7 +46,7 @@ const config = {
 		"type": "fixed",
 		"title": "Fixes",
 		"items": [
-			"Fixed not loading."
+			"Fixed showing section inside the accounts panel."
 		]
 	}],
 	"build": {
@@ -1268,7 +1268,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				async patchAccountSection() {
 					const ConnectedUserAccountSettings = await getLazy(external_PluginApi_namespaceObject.Filters.byDisplayName("ConnectedUserAccountSettings"));
 					const UserSettingsAccount = wrapInHooks((() => ConnectedUserAccountSettings({
-						currentUser: DiscordModules.UserStore.getCurrentUser()
+						currentUser: external_PluginApi_namespaceObject.DiscordModules.UserStore.getCurrentUser()
 					})?.type));
 					external_PluginApi_namespaceObject.Patcher.after(UserSettingsAccount.prototype, "render", ((_this, _, res) => {
 						if (!Array.isArray(res?.props?.children)) return;
