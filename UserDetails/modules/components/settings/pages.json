@@ -43,6 +43,11 @@
                     },
                     {
                         "type": "replacement",
+                        "prefix": "$ago",
+                        "description": "Replaces with a dynamic \"ago\" string. Example: \"3 and a half years\""
+                    },
+                    {
+                        "type": "replacement",
                         "prefix": "$daysago",
                         "description": "Replaces with a number of how many days it's ago."
                     },
