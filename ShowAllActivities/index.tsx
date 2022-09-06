@@ -23,7 +23,7 @@ export default class ShowAllActivities extends BasePlugin {
         const UserActivityModule = WebpackModules.getModule(m => m?.default?.displayName === "UserActivityContainer");
 
         Patcher.after(UserActivityModule, "default", (_, [props]) => {
-            if (props.type !== UserActivityModule.UserActivityTypes.USER_POPOUT || props.__SAA) return;
+            if ((props.type !== UserActivityModule.UserActivityTypes.USER_POPOUT && props.type !== UserActivityModule.UserActivityTypes.USER_POPOUT_V2) || props.__SAA) return;
 
             return (
                 <ActivityWrapper user={props.user} {...props} />

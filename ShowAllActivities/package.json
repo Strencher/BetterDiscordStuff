@@ -1,7 +1,7 @@
 {
     "info": {
         "name": "ShowAllActivities",
-        "version": "1.0.1",
+        "version": "1.0.2",
         "authors": [
             {
                 "name": "Strencher",
@@ -23,10 +23,10 @@
     },
     "changelog": [
         {
-            "title": "Rewrite",
+            "title": "Fixed",
             "type": "improved",
             "items": [
-                "Fixes for the last discord update."
+                "Works with UserPopout V1 and V2"
             ]
         }
     ],
