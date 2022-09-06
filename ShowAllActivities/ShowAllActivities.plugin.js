@@ -1,6 +1,6 @@
 /**
  * @name ShowAllActivities
- * @version 1.0.1
+ * @version 1.0.2
  * @author Strencher, Juby210
  * @description See every status a user has enabled. Original made by Juby210#0577.
  * @source https://github.com/Strencher/BetterDiscordStuff/tree/master/ShowAllActivities
@@ -33,7 +33,7 @@
 const config = {
 	"info": {
 		"name": "ShowAllActivities",
-		"version": "1.0.1",
+		"version": "1.0.2",
 		"authors": [{
 				"name": "Strencher",
 				"discord_id": "415849376598982656",
@@ -52,10 +52,10 @@ const config = {
 		"invite": "gvA2ree"
 	},
 	"changelog": [{
-		"title": "Rewrite",
+		"title": "Fixed",
 		"type": "improved",
 		"items": [
-			"Fixes for the last discord update."
+			"Works with UserPopout V1 and V2"
 		]
 	}],
 	"build": {
@@ -295,7 +295,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
 					return i[1];
 				}));
-				___CSS_LOADER_EXPORT___.push([module.id, ".ShowAllActivities-wrapper-wrapper{display:flex;flex-direction:column}.ShowAllActivities-wrapper-wrapper .ShowAllActivities-wrapper-controls{margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;padding:5px;background:var(--background-secondary-alt);border-radius:3px;flex:1 0;margin-top:-5px}.ShowAllActivities-wrapper-wrapper .ShowAllActivities-wrapper-controls .ShowAllActivities-wrapper-caret{display:inline-flex;align-items:center;justify-content:center;cursor:pointer;border-radius:3px}.ShowAllActivities-wrapper-wrapper .ShowAllActivities-wrapper-controls .ShowAllActivities-wrapper-caret.ShowAllActivities-wrapper-disabled{cursor:not-allowed;opacity:.3}.ShowAllActivities-wrapper-wrapper .ShowAllActivities-wrapper-controls .ShowAllActivities-wrapper-caret:hover:not(.ShowAllActivities-wrapper-disabled){background:var(--background-modifier-accent)}.ShowAllActivities-wrapper-wrapper .ShowAllActivities-wrapper-controls .ShowAllActivities-wrapper-carosell{display:flex;align-items:center}.ShowAllActivities-wrapper-wrapper .ShowAllActivities-wrapper-controls .ShowAllActivities-wrapper-carosell .ShowAllActivities-wrapper-dot{margin:0 4px;width:10px;cursor:pointer;height:10px;border-radius:100px;background:var(--interactive-muted);transition:background .3s;opacity:.6}.ShowAllActivities-wrapper-wrapper .ShowAllActivities-wrapper-controls .ShowAllActivities-wrapper-carosell .ShowAllActivities-wrapper-dot:hover:not(.ShowAllActivities-wrapper-selected){opacity:1}.ShowAllActivities-wrapper-wrapper .ShowAllActivities-wrapper-controls .ShowAllActivities-wrapper-carosell .ShowAllActivities-wrapper-dot.ShowAllActivities-wrapper-selected{opacity:1;background:var(--dot-color, var(--brand-experiment))}.ShowAllActivities-wrapper-tooltip{--background-floating: var(--background-secondary)}", ""]);
+				___CSS_LOADER_EXPORT___.push([module.id, ".ShowAllActivities-wrapper-wrapper{display:flex;flex-direction:column}.ShowAllActivities-wrapper-wrapper .ShowAllActivities-wrapper-controls{margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;padding:5px;background:var(--background-secondary-alt);border-radius:3px;flex:1 0;margin-top:-5px}.ShowAllActivities-wrapper-wrapper .ShowAllActivities-wrapper-controls .ShowAllActivities-wrapper-caret{display:inline-flex;align-items:center;justify-content:center;cursor:pointer;border-radius:3px;background-color:rgba(255,255,255,.3)}.ShowAllActivities-wrapper-wrapper .ShowAllActivities-wrapper-controls .ShowAllActivities-wrapper-caret.ShowAllActivities-wrapper-disabled{cursor:not-allowed;opacity:.3}.ShowAllActivities-wrapper-wrapper .ShowAllActivities-wrapper-controls .ShowAllActivities-wrapper-caret:hover:not(.ShowAllActivities-wrapper-disabled){background:var(--background-modifier-accent)}.ShowAllActivities-wrapper-wrapper .ShowAllActivities-wrapper-controls .ShowAllActivities-wrapper-carosell{display:flex;align-items:center}.ShowAllActivities-wrapper-wrapper .ShowAllActivities-wrapper-controls .ShowAllActivities-wrapper-carosell .ShowAllActivities-wrapper-dot{margin:0 4px;width:10px;cursor:pointer;height:10px;border-radius:100px;background:var(--interactive-muted);transition:background .3s;opacity:.6}.ShowAllActivities-wrapper-wrapper .ShowAllActivities-wrapper-controls .ShowAllActivities-wrapper-carosell .ShowAllActivities-wrapper-dot:hover:not(.ShowAllActivities-wrapper-selected){opacity:1}.ShowAllActivities-wrapper-wrapper .ShowAllActivities-wrapper-controls .ShowAllActivities-wrapper-carosell .ShowAllActivities-wrapper-dot.ShowAllActivities-wrapper-selected{opacity:1;background:var(--dot-color, var(--brand-experiment))}.ShowAllActivities-wrapper-tooltip{--background-floating: var(--background-secondary)}", ""]);
 				___CSS_LOADER_EXPORT___.locals = {
 					wrapper: "ShowAllActivities-wrapper-wrapper",
 					controls: "ShowAllActivities-wrapper-controls",
@@ -571,7 +571,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				patchUserActivityContainer() {
 					const UserActivityModule = external_PluginApi_namespaceObject.WebpackModules.getModule((m => "UserActivityContainer" === m?.default?.displayName));
 					external_PluginApi_namespaceObject.Patcher.after(UserActivityModule, "default", ((_, [props]) => {
-						if (props.type !== UserActivityModule.UserActivityTypes.USER_POPOUT || props.__SAA) return;
+						if (props.type !== UserActivityModule.UserActivityTypes.USER_POPOUT && props.type !== UserActivityModule.UserActivityTypes.USER_POPOUT_V2 || props.__SAA) return;
 						return ShowAllActivities_React.createElement(ActivityWrapper, Object.assign({
 							user: props.user
 						}, props));
