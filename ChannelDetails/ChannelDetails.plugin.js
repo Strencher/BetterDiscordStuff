@@ -1,7 +1,7 @@
 /**
  * @name ChannelDetails
  * @author Strencher
- * @version 1.1.1
+ * @version 1.1.2
  * @description Shows you a lot information about channels, like: channel tooltip, channel accessibility etc.
  * @source https://github.com/Strencher/BetterDiscordStuff/blob/master/ChannelDetails/ChannelDetails.plugin.js
  * @updateUrl https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/ChannelDetails/ChannelDetails.plugin.js
@@ -38,7 +38,7 @@ const config = {
 			"github_username": "Strencher",
 			"twitter_username": "Strencher3"
 		}],
-		"version": "1.1.1",
+		"version": "1.1.2",
 		"description": "Shows you a lot information about channels, like: channel tooltip, channel accessibility etc.",
 		"github": "https://github.com/Strencher/BetterDiscordStuff/blob/master/ChannelDetails/ChannelDetails.plugin.js",
 		"github_raw": "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/ChannelDetails/ChannelDetails.plugin.js"
@@ -47,7 +47,7 @@ const config = {
 		"type": "fixed",
 		"title": "Finally",
 		"items": [
-			"Fixes for the latest 4.8 quadrillion discord updates."
+			"Fixes for the latest 4.9 quadrillion discord updates."
 		]
 	}],
 	"build": {
@@ -422,7 +422,6 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			var external_BasePlugin_default = __webpack_require__.n(external_BasePlugin_namespaceObject);
 			var external_BdApi_React_ = __webpack_require__(113);
 			var external_BdApi_React_default = __webpack_require__.n(external_BdApi_React_);
-			const constants_namespaceObject = Modules["@discord/constants"];
 			const i18n_namespaceObject = Modules["@discord/i18n"];
 			var i18n_default = __webpack_require__.n(i18n_namespaceObject);
 			const modules_namespaceObject = Modules["@discord/modules"];
@@ -443,10 +442,10 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			class Strings {
 				static init() {
 					this.setLanguage(i18n_default().getLocale());
-					modules_namespaceObject.Dispatcher.subscribe(constants_namespaceObject.ActionTypes.USER_SETTINGS_UPDATE, this.handleLocaleChange);
+					modules_namespaceObject.Dispatcher.subscribe("USER_SETTINGS_UPDATE", this.handleLocaleChange);
 				}
 				static shutdown() {
-					modules_namespaceObject.Dispatcher.unsubscribe(constants_namespaceObject.ActionTypes.USER_SETTINGS_UPDATE, this.handleLocaleChange);
+					modules_namespaceObject.Dispatcher.unsubscribe("USER_SETTINGS_UPDATE", this.handleLocaleChange);
 				}
 				static setLanguage(lang) {
 					this._strings = translations[lang] ?? translations["en-US"];
@@ -530,6 +529,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					className: external_PluginApi_namespaceObject.Utilities.className(tooltip.Z.tooltip, className)
 				}, renderSection(allowedRoles, "role", "ALLOWED_ROLES"), renderSection(deniedRoles, "role", "DENIED_ROLES"), renderSection(allowedUsers, "user", "ALLOWED_USERS"), renderSection(deniedUsers, "user", "DENIED_USERS"));
 			}
+			const constants_namespaceObject = Modules["@discord/constants"];
 			const PermissionTypes = {
 				1: "users",
 				0: "roles"
