@@ -40,16 +40,16 @@ module.exports = (() => {
                     twitter_username: "Strencher3"
                 }
             ],
-            version: "0.0.3",
+            version: "0.0.4",
             description: "Suppresses mentions from Replied messages and when replying to someone else.",
             github: "https://github.com/Strencher/BetterDiscordStuff/blob/master/SuppressReplyMentions/SuppressReplyMentions.plugin.js",
             github_raw: "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/SuppressReplyMentions/SuppressReplyMentions.plugin.js"
         },
         changelog: [
             {
-                title: "Fixed",
-                type: "fixed",
-                items: ["Fixed ActionTypes"]
+                title: "New Features",
+                type: "added",
+                items: ["Added option to change the appearance of the Replies", "Added option to allow manual Pings"]
             }
         ],
         defaultConfig: [
@@ -59,6 +59,24 @@ module.exports = (() => {
                 name: "Disable Mention",
                 note: "Automatically disables the 'Mention' option when replying to someone else.",
                 value: true
+            },
+            {
+                type: "dropdown",
+                id: "mentionSettings",
+                name: "Mention Settings for Replies",
+                value: 1,
+                options: [
+                    { label: "Default", value: 0 },
+                    { label: "Suppress Mentions", value: 1 },
+                    { label: "Force Mentions", value: 2 },
+                ]
+            },
+            {
+                type: "switch",
+                id: "allowManualPing",
+                name: "Allow Manual Ping",
+                note: "Allow manual pings to mention even if they are in replies.",
+                value: false
             }
         ]
     };
@@ -114,10 +132,23 @@ module.exports = (() => {
                         const currentUser = UserUtils.getCurrentUser();
                         if (!currentUser || !Array.isArray(message.mentions) || !message.referenced_message) return;
 
+                        if(this.settings.allowManualPing) {
+                            const manualPing = "<@!" + currentUser.id + ">";
+                            if(message.content.includes(manualPing)) return;
+                        }
+
                         const mentionIndex = message.mentions.findIndex(e => e.id === currentUser.id);
-                        if (message.referenced_message.author.id === currentUser.id && mentionIndex > -1) {
-                            message.mentions.splice(mentionIndex, 1);
-                            suppressed.push(message.id);
+
+                        if (this.settings.mentionSettings == 1) {
+                            if (message.referenced_message.author.id === currentUser.id && mentionIndex > -1) {
+                                message.mentions.splice(mentionIndex, 1);
+                                suppressed.push(message.id);
+                            }
+
+                        } else if (this.settings.mentionSettings == 2) {
+                            if (message.referenced_message.author.id === currentUser.id && mentionIndex === -1) {
+                                message.mentions.push(currentUser);
+                            }
                         }
                     });
                 }
