@@ -133,7 +133,7 @@ module.exports = (() => {
                         if (!currentUser || !Array.isArray(message.mentions) || !message.referenced_message) return;
 
                         if(this.settings.allowManualPing) {
-                            const manualPing = "<@!" + currentUser.id + ">";
+                            const manualPing = "<@" + currentUser.id + ">";
                             if(message.content.includes(manualPing)) return;
                         }
 
