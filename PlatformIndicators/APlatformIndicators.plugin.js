@@ -3,7 +3,7 @@
 * @displayName PlatformIndicators
 * @authorId 415849376598982656
 * @invite gvA2ree
-* @version 1.2.3
+* @version 1.3.0
 */
 /*@cc_on
 @if (@_jscript)
