@@ -40,17 +40,17 @@ module.exports = (() => {
                     twitter_username: "Strencher3"
                 }
             ],
-            version: "1.2.0",
+            version: "1.2.1",
             description: "Adds an Icon to channels that copies <#channelId>. Shift + Click to insert the channel in the textarea.",
             github: "https://github.com/Strencher/BetterDiscordStuff/blob/master/LinkChannels/LinkChannels.plugin.js",
             github_raw: "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/LinkChannels/LinkChannels.plugin.js"
         },
         changelog: [
             {
-                title: "fixed",
+                title: "Fixed",
                 type: "fixed",
                 items: [
-                    "Fixed inserting text."
+                    "Fixed locale."
                 ]
             }
         ],
@@ -116,6 +116,7 @@ module.exports = (() => {
             const insertText = (text) => ComponentDispatcher.dispatchToLastSubscribed("INSERT_TEXT", {plainText: text, addSpace: true});
             const classes = Object(WebpackModules.getByProps("iconItem"));
             const joinClass = (...classNames) => classNames.filter(Boolean).join(" ");
+            const i18n = BdApi.findModule(m => m.Messages?.CLOSE && typeof(m.getLocale) === 'function');
 
             class Strings {
                 static format(string, variables) {
@@ -125,7 +126,7 @@ module.exports = (() => {
                 }
 
                 static get(key, variables) {
-                    const string = config.strings[UserSettingsStore.locale.split("-")[0]]?.[key] ?? config.strings["en"][key] ?? "String not found.";
+                    const string = config.strings[i18n.getLocale().split("-")[0]]?.[key] ?? config.strings["en"][key] ?? "String not found.";
 
                     return this.format(string, variables ?? {});
                 }
