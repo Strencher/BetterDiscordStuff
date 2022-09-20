@@ -50,7 +50,7 @@ module.exports = (() => {
                 title: "Fixed",
                 type: "fixed",
                 items: [
-                    "Fixed locale."
+                    "Fixed Localemanager."
                 ]
             }
         ],
@@ -110,13 +110,12 @@ module.exports = (() => {
         stop() { }
     } : (([Plugin, Api]) => {
         const plugin = (Plugin, Api) => {
-            const {Components, DiscordModules: {React, UserSettingsStore}, WebpackModules, PluginUtilities, DiscordModules, Patcher, Utilities, Toasts} = Api;
+            const {Components, DiscordModules: {React, LocaleManager}, WebpackModules, PluginUtilities, DiscordModules, Patcher, Utilities, Toasts} = Api;
             const {TooltipContainer} = WebpackModules.getByProps("TooltipContainer") ?? {};
             const {ComponentDispatch: ComponentDispatcher} = WebpackModules.getByProps("ComponentDispatch") ?? {};
             const insertText = (text) => ComponentDispatcher.dispatchToLastSubscribed("INSERT_TEXT", {plainText: text, addSpace: true});
             const classes = Object(WebpackModules.getByProps("iconItem"));
             const joinClass = (...classNames) => classNames.filter(Boolean).join(" ");
-            const i18n = BdApi.findModule(m => m.Messages?.CLOSE && typeof(m.getLocale) === 'function');
 
             class Strings {
                 static format(string, variables) {
@@ -126,7 +125,7 @@ module.exports = (() => {
                 }
 
                 static get(key, variables) {
-                    const string = config.strings[i18n.getLocale().split("-")[0]]?.[key] ?? config.strings["en"][key] ?? "String not found.";
+                    const string = config.strings[LocaleManager.getLocale().split("-")[0]]?.[key] ?? config.strings["en"][key] ?? "String not found.";
 
                     return this.format(string, variables ?? {});
                 }
