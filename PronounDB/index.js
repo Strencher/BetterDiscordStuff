@@ -1,23 +1,30 @@
 /// <reference path="../types/main.d.ts" />
 
-import {DCM, Patcher, Utilities, WebpackModules, Modals, ReactComponents, Components} from "@zlibrary";
+import {DCM, Patcher, Utilities, WebpackModules, Modals, Components} from "@zlibrary";
 import BasePlugin from "@zlibrary/plugin";
 import PronounTag from "./components/pronouns";
 import Settings from "./modules/settings";
 import PronounsDB from "./modules/database";
 import style from "styles";
 import styles from "./style.scss";
-import React, {useState} from "react";
+import React from "react";
 import {FormItem, FormText} from "@discord/forms";
 import {Pronouns} from "./data/constants";
 import SettingsPanel from "./components/Settings";
 import createUpdateWrapper from "common/hooks/createUpdateWrapper";
-import {Users} from "@discord/stores";
 import ContextMenu from "./modules/contextmenu";
 
 const SelectInput = createUpdateWrapper(WebpackModules.getByProps("SingleSelect").SingleSelect);
 const TextInput = createUpdateWrapper(WebpackModules.getByDisplayName("TextInput"));
 const {Heading} = WebpackModules.getByProps("Heading") ?? {Heading: () => null};
+
+export class Utils extends Utilities {
+    static combine(...filters) {
+        return (...args) => filters.every(filter => filter(...args));
+    }
+}
+
+export const flush = new Set;
 
 export default class PronounDB extends BasePlugin {
     patches = [];
@@ -179,19 +186,56 @@ export default class PronounDB extends BasePlugin {
         }
 
         const patched = new WeakSet();
-        const REGEX = /user.*contextmenu/i;
-        const filter = ContextMenu.filterContext(REGEX);
+        const Regex = /displayName="\S+?usercontextmenu./i;
+        const originalSymbol = Symbol("PronounDB Original");
         const loop = async () => {
-            const UserContextMenu = await DCM.getDiscordMenu(m => {
-                if (patched.has(m)) return false;
-                if (m.displayName != null) return REGEX.test(m.displayName);
-
-                return filter(m);
-            });
+            const UserContextMenu = await ContextMenu.findContextMenu(Regex, m => !patched.has(m));
 
             if (this.promises.cancelled) return;
-            if (UserContextMenu.default.displayName) {
-                Patcher.after(UserContextMenu, "default", (_, [props], ret) => {
+
+            const patch = (rendered, props) => {
+                const childs = Utilities.findInReactTree(rendered, Array.isArray);
+                const user = props.user || UserStore.getUser(props.channel?.getRecipientId?.());
+                if (!childs || !user || childs.some(c => c && c.key === "pronoun-db")) return rendered;
+                childs.push(buildUserContextMenu(user, original.displayName === "DMUserContextMenu", true));
+            };
+
+            function PronounDBDeepWrapperForDiscordsCoolAnalyticsWrappers(props) {
+                const rendered = props[originalSymbol].call(this, props);
+
+                try {
+                    patch(rendered, props);
+                } catch (error) {
+                    Logger.error("Error in context menu patch:", error);
+                }
+
+                return rendered;
+            }
+
+            let original = null;
+            function PronounDBContextMenuWrapper(props, _, rendered) {
+                rendered ??= original.call(this, props);
+
+                try {
+                    if (rendered?.props?.children?.type?.displayName.indexOf("ContextMenu") > 0) {
+                        const child = rendered.props.children;
+                        child.props[originalSymbol] = child.type;
+                        PronounDBDeepWrapperForDiscordsCoolAnalyticsWrappers.displayName = child.type.displayName;
+                        child.type = PronounDBDeepWrapperForDiscordsCoolAnalyticsWrappers;
+                        return rendered;
+                    }
+
+                    patch(rendered, props);
+                } catch (error) {
+                    cancel();
+                    Logger.error("Error in context menu patch:", error);
+                }
+
+                return rendered;
+            }
+
+            Patcher.after(UserContextMenu.module, "default", (_, [props], ret) => {
+                if (UserContextMenu.type === "normal") {
                     const children = Utilities.findInReactTree(ret, Array.isArray)
                     if (!Array.isArray(children)) return;
     
@@ -202,40 +246,19 @@ export default class PronounDB extends BasePlugin {
                         0,
                         buildUserContextMenu(user)
                     );
-                });
-            } else {
-                let original = null;
-                function wrapper(props) {
-                    const rendered = original.call(this, props);
-
-                    try {
-                        const childs = Utilities.findInReactTree(rendered, Array.isArray);
-                        const user = props.user || UserStore.getUser(props.channel?.getRecipientId?.());
-                        if (!childs || !user || childs.some(c => c && c.key === "copy-user")) return rendered;
-                        childs.push(buildUserContextMenu(user)); 
-                    } catch (error) {
-                        cancel();
-                        Logger.error("Error in context menu patch:", error);
-                    }
-
-                    return rendered;
-                }
-
-                const cancel = Patcher.after(UserContextMenu, "default", (...args) => {
-                    const [, , ret] = args;
+                } else {
                     const contextMenu = Utilities.getNestedProp(ret, "props.children");
                     if (!contextMenu || typeof contextMenu.type !== "function") return;
 
                     original ??= contextMenu.type;
-                    wrapper.displayName ??= original.displayName;
-                    contextMenu.type = wrapper;
-                });
-            }
+                    PronounDBContextMenuWrapper.displayName ??= original.displayName;
+                    contextMenu.type = PronounDBContextMenuWrapper;
+                }
+            });
 
-            patched.add(UserContextMenu.default);
+            patched.add(UserContextMenu.module.default);
             loop();
         };
-
         loop();
     }
 
@@ -244,5 +267,6 @@ export default class PronounDB extends BasePlugin {
         Patcher.unpatchAll();
         style.remove();
         this.promises.cancel();
+        flush.forEach(f => f())
     }
 }
