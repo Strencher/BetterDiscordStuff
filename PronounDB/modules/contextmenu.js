@@ -1,5 +1,5 @@
-import {ContextMenuActions, WebpackModules} from "@zlibrary";
-import {flush, Utils} from "..";
+import {ContextMenuActions, Filters, WebpackModules} from "@zlibrary";
+import {flush} from "..";
 
 export default class ContextMenu {
     static buildItem(item) {
@@ -40,7 +40,7 @@ export default class ContextMenu {
         const nestedFilter = (module) => regex.test(module.toString());
 
         {
-            const normalCache = WebpackModules.getModule(Utils.combine(normalFilter, (e) => filter(e.default)));
+            const normalCache = WebpackModules.getModule(Filters.combine(normalFilter, (e) => filter(e.default)));
             if (normalCache) return {type: "normal", module: normalCache};
         }
 

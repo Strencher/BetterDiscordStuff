@@ -18,12 +18,6 @@ const SelectInput = createUpdateWrapper(WebpackModules.getByProps("SingleSelect"
 const TextInput = createUpdateWrapper(WebpackModules.getByDisplayName("TextInput"));
 const {Heading} = WebpackModules.getByProps("Heading") ?? {Heading: () => null};
 
-export class Utils extends Utilities {
-    static combine(...filters) {
-        return (...args) => filters.every(filter => filter(...args));
-    }
-}
-
 export const flush = new Set;
 
 export default class PronounDB extends BasePlugin {
