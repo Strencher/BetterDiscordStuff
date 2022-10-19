@@ -1,444 +1,521 @@
 /**
  * @name InvisibleTyping
- * @version 1.2.3
- * @description Enhanced version of silent typing.
+ * @version 1.3.0
+ * @description Makes your typing invisible to other people.
  * @author Strencher
+ * @invite gvA2ree
+ * @changelog [added] The plugin has been rewritten from the ground up. 
+ * @changelogDate 2022-10-18T22:00:00.000Z
+ * @changelogImage https://cdn.discordapp.com/attachments/939319506428391495/1032360180303790163/Untitled-1.jpg
  */
 
-module.exports = meta => {
-    const {React, Webpack, Patcher, Webpack: {Filters}} = BdApi;
+var meta;
 
-    const ContextMenuActions = {};
+const {React, DOM, Patcher, UI, Data, Utils, ReactUtils, ContextMenu, Webpack: _Webpack} = new BdApi("InvisibleTyping");
 
-    BdApi.Webpack.getModule((_, m) => {
-        let matched = false;
-        for (const func of Object.values(m.exports)) {
-            if (typeof func !== "function") continue;
-    
-            if (func.toString().indexOf("CONTEXT_MENU_CLOSE") > -1) {
-                ContextMenuActions.closeContextMenu = func;
-                matched = true;
-            }
-            else if (matched && func.toString().indexOf("renderLazy") > -1) {
-                ContextMenuActions.openContextMenu = func;
-                matched = true;
-            }
+const Webpack = {
+    ..._Webpack,
+    getByProps(...props) {return this.getModule(this.Filters.byProps(...props));},
+    getStore(name) {return this.getModule(m => m?._dispatchToken && m?.getName() === name);},
+    getBulk(...queries) {return _Webpack.getBulk(...queries.map(q => typeof q === "function" ? {filter: q} : q));}
+};
+
+Utilities: {
+    var removeItem = function (array, item) {
+        while (array.includes(item)) {
+            array.splice(array.indexOf(item), 1);
         }
+    
+        return array;
+    };
+    
+    var onAdded = (selector, callback) => {
+        let directMatch;
+        if (directMatch = document.querySelector(selector)) {
+            callback(directMatch);
+            return () => null;
+        }
+    
+        const observer = new MutationObserver(changes => {
+            for (const change of changes) {
+                if (!change.addedNodes.length) continue;
+    
+                for (const node of change.addedNodes) {
+                    const match = (node.matches(selector) && node) || node.querySelector(selector);
 
-        return matched;
-    });
+                    if (!match) continue;
+    
+                    observer.disconnect();
+                    callback(match);
+                }
+            }
+        });
 
-    const ReactWrapper = (props) => {
-        return React.createElement("div", {
-            style: {display: "contents"},
-            ref: el => {
-                if (!el) return;
-                el.appendChild(props.element);
+        observer.observe(document.body, {childList: true, subtree: true});
+    
+        return () => observer.disconnect();
+    };
+    
+    var Fluxify = (component, stores, getter) => {
+        Object.assign(component.prototype, {
+            componentDidMount() {
+                this._handleStoreChange = this._handleStoreChange.bind(this);
+                this._handleStoreChange();
+    
+                for (const store of stores) store.addChangeListener(this._handleStoreChange);
+            },
+            _handleStoreChange() {
+                if (this._gone) return;
+                this.setState(getter(this.props));
+            },
+            componentWillUnmount() {
+                this._gone = true;
+                for (const store of stores) store.removeChangeListener(this._handleStoreChange);
             }
         });
     };
 
-    const Utilities = {
-        getReactProps: (el, filter = _ => _) => {
-            const instance = BdApi.getInternalInstance(el);
-    
-            for (let current = instance.return, i = 0; i > 10000 || current !== null; current = current?.return, i++) {
-                if (current?.pendingProps && filter(current.pendingProps)) return current.pendingProps;
-            }
-    
-            return null;
-        },
-        // Taken from SolidJS' template function.
-        template(html, check, isSVG) {
-            const t = document.createElement("template");
-            t.innerHTML = html;
-            let node = t.content.firstChild;
-            if (isSVG)
-                node = node.firstChild;
-            return node;
-        },
-        createElement: (type, props, ...children) => {
-            if (typeof type === "function") return type({...props, children: [].concat()})
-    
-            const node = document.createElement(type);
-    
-            for (const key of Object.keys(props)) {
-                if (key.indexOf("on") === 0) node.addEventListener(key.slice(2).toLowerCase(), props[key]);
-                else if (key === "children") {
-                    node.append(...(Array.isArray(props[key]) ? props[key] : [].concat(props[key])));
-                } else {
-                    node.setAttribute(key === "className" ? "class" : key, props[key]);
-                }
-            }
-    
-            if (children.length) node.append(...children);
-    
-            return node;
-        },
-        joinClassNames: (...classNames) => classNames.filter(Boolean).join(" ")
-    };
-
-    const Settings = {
+    var Settings = {
         _listeners: new Set,
-        getSetting(key, defValue) {return BdApi.loadData(meta.name, key) ?? defValue;},
-        updateSetting(key, value) {BdApi.saveData(meta.name, key, value), this._alertListeners();},
-        _alertListeners() {this._listeners.forEach(l => l());},
-        onChange(callback) {this._listeners.add(callback);},
-        offChange(callback) {return this._listeners.delete(callback);}
+        settings: Data.load("settings") ?? {},
+        getSetting(id, defValue) {return this.settings[id] ?? defValue;},
+        updateSetting(id, value) {return this.settings[id] = value, this.saveSettings();},
+        saveSettings() {Data.save("settings", this.settings), this.emitChange();},
+
+        emitChange() {this._listeners.forEach(callback => callback());},
+        addChangeListener(listener) {this._listeners.add(listener);},
+        removeChangeListener(listener) {this._listeners.delete(listener);}
     };
+};
 
-    const wrapIcon = Icon => props => {
-        const element = Icon.cloneNode(true);
-
-        for (const prop in props) {
-            element.setAttribute(prop, props[prop]);
-        }
-
-        return element;
-    };
-
-    const EnabledIcon = wrapIcon(Utilities.template(
-        `<svg width="25" height="25" viewBox="0 0 576 512">
-            <path fill="currentColor" d="M528 448H48c-26.51 0-48-21.49-48-48V112c0-26.51 21.49-48 48-48h480c26.51 0 48 21.49 48 48v288c0 26.51-21.49 48-48 48zM128 180v-40c0-6.627-5.373-12-12-12H76c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12zm96 0v-40c0-6.627-5.373-12-12-12h-40c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12zm96 0v-40c0-6.627-5.373-12-12-12h-40c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12zm96 0v-40c0-6.627-5.373-12-12-12h-40c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12zm96 0v-40c0-6.627-5.373-12-12-12h-40c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12zm-336 96v-40c0-6.627-5.373-12-12-12h-40c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12zm96 0v-40c0-6.627-5.373-12-12-12h-40c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12zm96 0v-40c0-6.627-5.373-12-12-12h-40c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12zm96 0v-40c0-6.627-5.373-12-12-12h-40c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12zm-336 96v-40c0-6.627-5.373-12-12-12H76c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12zm288 0v-40c0-6.627-5.373-12-12-12H172c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h232c6.627 0 12-5.373 12-12zm96 0v-40c0-6.627-5.373-12-12-12h-40c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12z"></path>
-        </svg>`
-    ));
-
-    const DisabledIcon = wrapIcon(Utilities.template(
-        `<svg width="25" height="25" viewBox="0 0 576 512">
-            <path fill="currentColor" d="M528 448H48c-26.51 0-48-21.49-48-48V112c0-26.51 21.49-48 48-48h480c26.51 0 48 21.49 48 48v288c0 26.51-21.49 48-48 48zM128 180v-40c0-6.627-5.373-12-12-12H76c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12zm96 0v-40c0-6.627-5.373-12-12-12h-40c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12zm96 0v-40c0-6.627-5.373-12-12-12h-40c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12zm96 0v-40c0-6.627-5.373-12-12-12h-40c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12zm96 0v-40c0-6.627-5.373-12-12-12h-40c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12zm-336 96v-40c0-6.627-5.373-12-12-12h-40c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12zm96 0v-40c0-6.627-5.373-12-12-12h-40c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12zm96 0v-40c0-6.627-5.373-12-12-12h-40c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12zm96 0v-40c0-6.627-5.373-12-12-12h-40c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12zm-336 96v-40c0-6.627-5.373-12-12-12H76c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12zm288 0v-40c0-6.627-5.373-12-12-12H172c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h232c6.627 0 12-5.373 12-12zm96 0v-40c0-6.627-5.373-12-12-12h-40c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12z"></path>
-            <rect class="IT-disabledStrokeThrough" x="10" y="10" width="600pt" height="70px" fill="#f04747" /> 
-        </svg>
-    `));
-
-    const [TypingModule, Tooltips, TextArea, ContextMenuClasses, ScrollerClasses] = Webpack.getBulk.apply(null, [
-        Filters.byProps("startTyping", "stopTyping"),
-        Filters.byProps("tooltipContent"),
-        Filters.byProps("textAreaThreadCreation"),
-        Filters.byProps("menu", "styleFlexible"),
-        Filters.byProps("scrollerBase", "scrolling")
-    ].map(filter => ({filter})));
-
-    class ContextMenu {
-        constructor(target, items) {
-            this.target = target;
-            this.items = items;
-
-            BdApi.onRemoved(target, () => {
-                this.ref?.remove();
-                this.unlisten();
-            });
-
-            target.addEventListener("contextmenu", (e) => {
-                this.open(e);
-            });
-        }
-
-        handleClick = (e) => {
-            if (e.target === this.ref || e.target.contains(this.ref)) return;
-            
-            ContextMenuActions.closeContextMenu();
-        }
-
-        listen() {
-            document.addEventListener("click", this.handleClick);
-        }
-
-        unlisten() {
-            document.removeEventListener("click", this.handleClick);
-        }
-
-        open(e) {
-            const res = this.ref = this.render();
-            ContextMenuActions.openContextMenu(e, () => React.createElement(ReactWrapper, {element: res}));
-
-            this.listen();
-        }
-
-        renderItem({label, action}) {
-            const element = Utilities.createElement("div", {
-                className: ContextMenuClasses.label
-            }, label);
-
-            return Utilities.createElement("div", {
-                className: Utilities.joinClassNames("IT-menu-item", ContextMenuClasses.item, ContextMenuClasses.labelContainer, ContextMenuClasses.colorDefault),
-                onClick: event => {
-                    action(event, {
-                        updateLabel(label) {
-                            label.innerText = label;
-                        }
-                    });
-
-                    this.unlisten();
-                    ContextMenuActions.closeContextMenu();
-                },
-                children: element
-            });
-        }
-
-        render() {
-            return Utilities.createElement("div", {
-                className: Utilities.joinClassNames("IT-context-menu", ContextMenuClasses.scroller, ScrollerClasses.thin, ContextMenuClasses.menu, ContextMenuClasses.styleFlexible),
-                children: this.items.map(item => this.renderItem(item))
-            });
-        }
-    }
-
-    class Tooltip {
-        containerClassName = Utilities.joinClassNames("IT-tooltip", ...["tooltip", "tooltipTop", "tooltipPrimary"].map(c => Tooltips?.[c]));
-        pointerClassName = Tooltips?.tooltipPointer;
-        contentClassName = Tooltips?.tooltipContent;
-
-        constructor(target, {text, spacing}) {
-            this.target = target;
-            this.ref = null;
-            this.text = text;
-            this.spacing = spacing;
-            this.tooltip = Utilities.createElement("div", {
-                className: this.containerClassName,
-                style: "visibility: hidden;",
-                children: [
-                    Utilities.createElement("div", {className: this.pointerClassName, style: "left: calc(50% + 0px)"}),
-                    Utilities.createElement("div", {className: this.contentClassName}, text)
-                ]
-            });
-
-            this.target.addEventListener("mouseenter", () => {
-                this.show();    
-            });
-
-            this.target.addEventListener("mouseleave", () => {
-                this.hide();
-            });
-
-            BdApi.onRemoved(this.target, () => {
-                this.hide();
-            });
-        }
-
-        get container() {return document.querySelector(".layerContainer-2v_Sit ~ .layerContainer-2v_Sit");}
-
-        checkOffset(x, y) {
-            if (y < 0) {
-                y = 0;
-            } else if (y > window.innerHeight) {
-                y = window.innerHeight;
+Components: {
+    var InvisibleTypingButton = class InvisibleTypingButton extends React.Component {
+        state = {enabled: false};
+        static DMChannels = new Set([1, 3]);
+        static canViewChannel(channel) {
+            if (!channel) return false;
+            if (this.DMChannels.has(channel.type)) return true;
+        
+            try {
+                return this.defaultProps.PermissionUtils.can({
+                    context: channel,
+                    user: this.defaultProps.UserStore.getCurrentUser(),
+                    permission: /*SEND_MESSAGES*/ 2048n
+                });
+            } catch (error) {
+                console.error("Failed to request permissions:", error);
+                return true;
             }
+        }
     
-            if (x > window.innerWidth) {
-                x = window.innerWidth;
-            } else if (x < 0) {
-                x = 0;
-            }
+        static shouldShow(children, props) {
+            if (!Array.isArray(children)) return false;
+            if (props.type?.analyticsName === "profile_bio_input") return false;
+            if (children.some(child => child && child.type === InvisibleTypingButton)) return false;
+            if (!this.canViewChannel(props.channel)) return false;
     
-            return {x, y};
+            return true;
         }
-
-        show() {
-            const tooltip = this.ref = this.tooltip.cloneNode(true);
-            this.container.appendChild(tooltip);
-
-            const targetRect = this.target.getBoundingClientRect();
-            const tooltipRect = tooltip.getBoundingClientRect();
-
-            let top = (targetRect.y - tooltipRect.height) - this.spacing;
-            let left = targetRect.x + (targetRect.width / 2) - (tooltipRect.width / 2);    
-
-            const position = this.checkOffset(left, top);
-
-            tooltip.style = `top: ${position.y}px; left: ${position.x}px;`;
-        }
-
-        hide() {
-            this.ref?.remove();
-        }
-    }
-
-    class InvisibleTypingButton {
-        constructor(target, channelId) {
-            this._destroyed = false;
-            this.target = target;
-            this.channelId = channelId;
-            target._patched = true;
-
-            Settings.onChange(this.handleChange);
-        }
-
-        unmount() {
-            this.target._patched = true;
-            Settings.offChange(this.handleChange);
-        }
-
-        handleChange = () => {
-            if (this._destroyed) return;
-
-            if (this.state && _.isEqual(this.state, InvisibleTypingButton.getState(this.channelId))) return;
-
-            this.mount();
-        }
-
+    
         static getState(channelId) {
             const isGlobal = Settings.getSetting("autoEnable", true);
             const isExcluded = Settings.getSetting("exclude", []).includes(channelId);
-
-            return {
-                isGlobal,
-                enabled: isGlobal ? !isExcluded : isExcluded,
-            };
+    
+            if (isGlobal && isExcluded) return false;
+            if (isExcluded && !isGlobal) return true;
+    
+            return isGlobal;
         }
-
-        mount() {
-            if (this._destroyed) return false;
-
-            const res = this.render();
-            if (!res) this.ref?.remove();
-            else {
-                if (this.ref) {
-                    this.ref.replaceWith(res);
-                } else {
-                    this.target.insertBefore(res, this.target.firstChild);
-                }
-                
-                this.ref = res;
-                res._unmount = this.unmount.bind(this);
-            }
-        }
-
-        removeItem(array, item) {
-            while (array.includes(item)) {
-                array.splice(array.indexOf(item), 1);
-            }
-        
-            return array;
-        }
-
-        get isEmpty() {return this.target.parentElement.getElementsByClassName(TextArea.textArea)[0]?.textContent?.length === 0}
-
+    
         handleClick = () => {
+            const {channel, isEmpty, TypingModule} = this.props;
             const excludeList = Settings.getSetting("exclude", []).concat();
-
-            if (excludeList.includes(this.channelId)) {
-                this.removeItem(excludeList, this.channelId);
-                TypingModule.stopTyping(this.channelId);
+    
+            if (excludeList.includes(channel.id)) {
+                removeItem(excludeList, channel.id);
+                TypingModule.stopTyping(channel.id);
             } else {
-                excludeList.push(this.channelId);
-                if (!this.isEmpty) TypingModule.startTyping(this.channelId);
+                excludeList.push(channel.id);
+                if (!isEmpty) TypingModule.startTyping(channel.id);
             }
-
+    
             Settings.updateSetting("exclude", excludeList);
         }
-
-        render() {
-            const {isGlobal, enabled} = this.state = InvisibleTypingButton.getState(this.channelId);
-
-            const container = Utilities.createElement("button", {
-                className: Utilities.joinClassNames("IT-button", enabled && "IT-disabled"),
-                onClick: this.handleClick
-            });
-
-            const Icon = enabled ? EnabledIcon() : DisabledIcon();
-
-            container.appendChild(Icon);
-
-            new Tooltip(container, {
-                text: enabled ? "Typing Enabled" : "Typing Disabled",
-                spacing: 8
-            });
-
-            new ContextMenu(container, [
+    
+        renderContextMenu() {
+            return ContextMenu.buildMenu([
                 {
-                    label: isGlobal ? "Disable Globally" : "Enable Globally",
-                    action() {
-                        Settings.updateSetting("autoEnable", !isGlobal);
-                    }
+                    id: "globally-disable-or-enable-typing",
+                    label: this.state.enabled ? "Disable Globally" : "Enable Globally",
+                    onClick: () => {Settings.updateSetting("autoEnable", !this.state.enabled);}
                 },
                 {
+                    id: "reset-config",
+                    color: "colorDanger",
+                    disabled: !!Settings.getSetting("exclude", []).length,
                     label: "Reset Config",
-                    action() {
+                    onClick() {
                         Settings.updateSetting("exclude", []);
-                        BdApi.showToast("Successfully reset config for all channels.", {type: "success"});
+                        UI.showToast("Successfully reset config for all channels.", {type: "success"});
                     }
                 }
             ]);
-
-            return container;
+        }
+    
+        renderButton = props => {
+            return React.createElement("button", {
+                ...props,
+                ref: e => e && (e.unmount = () => {
+                    this.render = () => null;
+                    this.forceUpdate();
+                }),
+                onClick: this.handleClick,
+                onContextMenu: e => ContextMenu.open(e, this.renderContextMenu()),
+                className: Utils.className("invisible-typing-button", {enabled: this.state.enabled, disabled: !this.state.disabled}),
+                children: React.createElement("svg", {
+                    width: "25",
+                    height: "25",
+                    viewBox: "0 0 576 512"
+                }, React.createElement("path", {
+                    fill: "currentColor",
+                    d: "M528 448H48c-26.51 0-48-21.49-48-48V112c0-26.51 21.49-48 48-48h480c26.51 0 48 21.49 48 48v288c0 26.51-21.49 48-48 48zM128 180v-40c0-6.627-5.373-12-12-12H76c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12zm96 0v-40c0-6.627-5.373-12-12-12h-40c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12zm96 0v-40c0-6.627-5.373-12-12-12h-40c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12zm96 0v-40c0-6.627-5.373-12-12-12h-40c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12zm96 0v-40c0-6.627-5.373-12-12-12h-40c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12zm-336 96v-40c0-6.627-5.373-12-12-12h-40c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12zm96 0v-40c0-6.627-5.373-12-12-12h-40c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12zm96 0v-40c0-6.627-5.373-12-12-12h-40c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12zm96 0v-40c0-6.627-5.373-12-12-12h-40c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12zm-336 96v-40c0-6.627-5.373-12-12-12H76c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12zm288 0v-40c0-6.627-5.373-12-12-12H172c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h232c6.627 0 12-5.373 12-12zm96 0v-40c0-6.627-5.373-12-12-12h-40c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12z"
+                }), !this.state.enabled ? React.createElement("rect", {
+                    className: "disabled-stroke-through",
+                    x: "10",
+                    y: "10",
+                    width: "600pt",
+                    height: "70px",
+                    fill: "#f04747"
+                }) : null)
+            });
+        }
+    
+        render() {
+            const {Tooltip} = this.props;
+    
+            return React.createElement(Tooltip, {
+                text: this.state.enabled ? "Disable Typing" : "Enable Typing",
+                children: this.renderButton
+            });
         }
     }
+    
+    Fluxify(InvisibleTypingButton, [Settings], (props) => ({enabled: InvisibleTypingButton.getState(props.channel.id)}));
 
-    return {
-        start() {
-            BdApi.injectCSS(meta.name, /*css*/`
-                .IT-context-menu {
-                    flex-direction: column;
-                }
+    Settings: {
+        var SimpleSwitch = ({state = false, name = "", note = "", onChange}) => {
+            const [currState, toggle] = React.useReducer(n => !n, state);
 
-                .IT-menu-item:hover {
-                    background-color: var(--brand-experiment-560);
-                    color: #fff;
-                }
+            const handleChange = () => (onChange(!currState), toggle());
 
-                .IT-tooltip {
-                    position: fixed;
-                }
-
-                .IT-button svg {
-                    color: var(--interactive-normal);
-                    overflow: visible;
-                }
-                
-                .IT-button .IT-disabledStrokeThrough {
-                    position: absolute;
-                    transform: translateX(-15px) translateY(530px) rotate(-45deg);
-                }
-                
-                .IT-button {
-                    margin-top: 3px;
-                    background: transparent;
-                }
-
-                .IT-button:hover:not(.IT-disabled) svg {
-                    color: var(--interactive-hover);
-                }
-            `);
-
-            Patcher.instead(meta.name, TypingModule, "startTyping", (_, [channelId], originalMethod) => {
-                if (InvisibleTypingButton.getState(channelId).enabled) originalMethod(channelId);
-            });
-
-            const elements = document.getElementsByClassName(TextArea.textArea);
-
-            if (!elements.length) return;
-
-            for (const element of elements) {
-                const props = Utilities.getReactProps(element, e => e?.channel);
-                const [buttons] = element.parentElement.getElementsByClassName(TextArea.buttons);
-                
-                if (!props || !buttons || buttons._patched) continue;
-
-                new InvisibleTypingButton(buttons, props.channel.id).mount();
-            }
-        },
-        stop() {
-            BdApi.clearCSS(meta.name);
-            document.querySelectorAll(".TI-button").forEach(el => el._unmount?.());
-            Patcher.unpatchAll(meta.name);
-        },
-        observer({addedNodes}) {
-            for (const node of addedNodes) {
-                if (node.nodeType === Node.TEXT_NODE) continue;
-                
-                const elements = node.getElementsByClassName(TextArea.textArea);
-
-                if (!elements.length) continue;
-
-                for (const element of elements) {
-                    const props = Utilities.getReactProps(element, e => e?.channel);
-                    const [buttons] = element.parentElement.getElementsByClassName(TextArea.buttons);
-
-                    if (!props || !buttons || buttons._patched) continue;
-
-                    new InvisibleTypingButton(buttons, props.channel.id).mount();
-                }
-            }
+            return React.createElement("div", {className: "it-switch-wrapper"},
+                React.createElement("div", {className: "it-switch-header"},
+                    React.createElement("h5", {className: "it-switch-name"}, name),
+                    React.createElement("div", {
+                        className: Utils.className("it-switch-item", currState && "it-switch-checked"),
+                        onClick: handleChange,
+                    }, React.createElement("div", {className: "it-switch-dot"}))
+                ),  
+                React.createElement("span", {className: "it-switch-note"}, note)
+            );
         }
-    };
+    }
+}
+
+
+module.exports = class InvisibleTyping {
+    constructor(metaObject) {meta = this.meta = metaObject;}
+
+    cleanup = new Set([
+        () => Patcher.unpatchAll(),
+        () => DOM.removeStyle(),
+        () => new Set(document.getElementsByClassName("invisible-typing-button")).forEach(el => el.unmount?.())
+    ]);
+
+    start() {
+        DOM.addStyle(`
+            .it-title-wrap {
+                font-size: 18px;
+            }
+            
+            .it-title-wrap span {
+                font-size: 12px;
+                color: var(--text-muted);
+                font-family: var(--font-primary);
+            }
+
+            .invisible-typing-button svg {
+                color: var(--interactive-normal);
+                overflow: visible;
+            }
+            
+            .invisible-typing-button .disabled-stroke-through {
+                position: absolute;
+                transform: translateX(-15px) translateY(530px) rotate(-45deg);
+            }
+            
+            .invisible-typing-button {
+                margin-top: 3px;
+                background: transparent;
+            }
+
+            .invisible-typing-button:hover:not(.disabled) svg {
+                color: var(--interactive-hover);
+            }
+
+            .it-switch-wrapper {
+                color: #fff;
+                margin-bottom: 10px;
+            }
+            
+            .it-switch-header {
+                margin-bottom: 15px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+            
+            .it-switch-name {
+                font-size: 18px;
+                font-weight: 500;
+            }
+            
+            .it-switch-note {
+                font-size: 14px;
+                color: var(--text-muted);
+            }
+            
+            .it-switch-item.it-switch-checked {
+                background: var(--brand-experiment);
+            }
+            
+            .it-switch-item {
+                width: 40px;
+                height: 24px;
+                background: rgb(114, 118, 125);
+                border-radius: 100px;
+                cursor: pointer;
+            }
+            
+            .it-switch-dot {
+                width: 18px;
+                height: 18px;
+                background: #fff;
+                border-radius: 100px;
+                top: 3px;
+                left: 3px;
+                position: relative;
+                transition: transform .3s ease-in-out;
+            }
+            
+            .it-switch-checked .it-switch-dot {
+                transform: translateX(16px);
+            }
+
+            .it-switch-wrapper {
+                color: #fff;
+                margin-bottom: 10px;
+            }
+            
+            .it-switch-header {
+                margin-bottom: 15px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+            
+            .it-switch-name {
+                font-size: 18px;
+                font-weight: 500;
+            }
+            
+            .it-switch-note {
+                font-size: 14px;
+                color: var(--text-muted);
+            }
+            
+            .it-switch-item.it-switch-checked {
+                background: var(--brand-experiment);
+            }
+            
+            .it-switch-item {
+                width: 40px;
+                height: 24px;
+                background: rgb(114, 118, 125);
+                border-radius: 100px;
+                cursor: pointer;
+            }
+            
+            .it-switch-dot {
+                width: 18px;
+                height: 18px;
+                background: #fff;
+                border-radius: 100px;
+                top: 3px;
+                left: 3px;
+                position: relative;
+                transition: transform .3s ease-in-out;
+            }
+            
+            .it-switch-checked .it-switch-dot {
+                transform: translateX(16px);
+            }
+            
+            .it-changelog-item {
+                color: #fff;
+            }
+            
+            .it-changelog-header {
+                text-transform: uppercase;
+                font-weight: 700;
+                display: flex;
+                align-items: center;
+                margin-bottom: 10px;
+            }
+            
+            .item-changelog-added .it-changelog-header {
+                color: #45BA6A;
+            }
+
+            .item-changelog-fixed .it-changelog-header {
+                color: #EC4245;
+            }
+
+            .item-changelog-improved .it-changelog-header {
+                color: #5865F2;
+            }
+            
+            .it-changelog-header::after {
+                content: "";
+                flex-grow: 1;
+                height: 1px;
+                background: currentColor;
+                margin-left: 7px;
+            }
+            
+            .it-changelog-item span {
+                display: list-item;
+                margin-left: 5px;
+                list-style: inside;
+            }
+            
+            .it-changelog-item span::marker {
+                color: var(--background-accent);
+            }
+
+            .it-changelog-banner {
+                width: 405px;
+                border-radius: 8px;
+                margin-bottom: 20px;
+            }
+        `);
+
+        InvisibleTypingButton.defaultProps ??= {};
+
+        [
+            InvisibleTypingButton.defaultProps.PermissionUtils,
+            InvisibleTypingButton.defaultProps.UserStore,
+            InvisibleTypingButton.defaultProps.Tooltip
+        ] = Webpack.getBulk(
+            {searchExports: true, filter: Webpack.Filters.byProps("can", "areChannelsLocked")},
+            m => m?._dispatchToken && m.getName() === "UserStore",
+            {searchExports: true, filter: Webpack.Filters.byPrototypeFields("renderTooltip")}
+        );
+
+        this.patchTextAreaButtons();
+        this.patchStartTyping();
+        this.maybeShowChangelog();
+    }
+
+    maybeShowChangelog() {
+        if (this.meta.version === Settings.getSetting("latestUsedVersion")) return;
+
+        const items = Array.from(meta.changelog.matchAll(/\[(\w+)\]\s?([^\n]+)/g), ([, type, content]) => {
+            let className = "it-changelog-item";
+            switch (type) {
+                case "fixed":
+                case "improved":
+                case "added": {
+                    className += " item-changelog-" + type;
+
+                    break;
+                };
+            }
+
+            return React.createElement("div", {
+                className,
+                children: [
+                    React.createElement("h4", {className: "it-changelog-header"}, type),
+                    React.createElement("span", null, content)
+                ]
+            });
+        });
+
+        "changelogImage" in meta && items.unshift(
+            React.createElement("img", {
+                className: "it-changelog-banner",
+                src: meta.changelogImage
+            })
+        );
+
+        Settings.updateSetting("latestUsedVersion", meta.version);
+        const formatter = new Intl.DateTimeFormat(document.documentElement.lang, {month: "long", day: "numeric", year: "numeric"});
+        UI.alert(React.createElement("div", {
+            className: "it-title-wrap",
+            children: [
+                React.createElement("h1", null, "What's New - InvisibleTyping"),
+                React.createElement("span", null, formatter.format(new Date(meta.changelogDate)))
+            ]
+        }), items);
+    }
+
+    async patchTextAreaButtons() {
+        const buttonsClassName = Webpack.getByProps("profileBioInput", "buttons")?.buttons
+
+        if (!buttonsClassName) return UI.showToast(`[${this.meta.name}] Could not add button to textarea.`, {type: "error"});
+
+        const instance = await new Promise(res => {
+            this.cleanup.add(onAdded("." + buttonsClassName, e => {
+                const vnode = ReactUtils.getInternalInstance(e);
+
+                if (!vnode) return;
+
+                for (let curr = vnode, max = 100; curr !== null && max--; curr = curr.return) {
+                    const tree = curr?.pendingProps?.children;
+                    let buttons;
+                    if (Array.isArray(tree) && (buttons = tree.find(s => s?.props?.type && s.props.channel && s.type?.$$typeof))) {
+                        res(buttons.type);
+                        break;
+                    }
+                }
+            }));
+        });
+
+        Patcher.after(instance, "type", (_, [props], res) => {
+            if (!InvisibleTypingButton.shouldShow(res?.props?.children, props)) return;
+
+            res.props.children.unshift(React.createElement(InvisibleTypingButton, props));
+        });
+    }
+
+    patchStartTyping() {
+        const TypingModule = InvisibleTypingButton.TypingModule = Webpack.getByProps("startTyping");
+
+        Patcher.instead(TypingModule, "startTyping", (_, [channelId], originalMethod) => {
+            if (InvisibleTypingButton.getState(channelId)) originalMethod(channelId);
+        });
+    }
+
+    stop() {
+        this.cleanup.forEach(clean => clean());
+    }
+
+    getSettingsPanel() {
+        return React.createElement(SimpleSwitch, {
+            get state() {return Settings.getSetting("autoEnable", false);},
+            name: "Globally Toggle",
+            note: "Enable/Disable your typing information globally and use excluded channels as white-/blacklist.",
+            onChange: value => Settings.updateSetting("autoEnable", value)
+        });
+    }
 };
