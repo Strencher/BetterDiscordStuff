@@ -1,6 +1,6 @@
 /**
  * @name InvisibleTyping
- * @version 1.3.0
+ * @version 1.3.1
  * @description Makes your typing invisible to other people.
  * @author Strencher
  * @invite gvA2ree
@@ -499,7 +499,7 @@ module.exports = class InvisibleTyping {
     }
 
     patchStartTyping() {
-        const TypingModule = InvisibleTypingButton.TypingModule = Webpack.getByProps("startTyping");
+        const TypingModule = InvisibleTypingButton.defaultProps.TypingModule = Webpack.getByProps("startTyping");
 
         Patcher.instead(TypingModule, "startTyping", (_, [channelId], originalMethod) => {
             if (InvisibleTypingButton.getState(channelId)) originalMethod(channelId);
