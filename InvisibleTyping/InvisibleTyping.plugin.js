@@ -1,11 +1,11 @@
 /**
  * @name InvisibleTyping
- * @version 1.3.1
+ * @version 1.3.2
  * @description Makes your typing invisible to other people.
  * @author Strencher
  * @invite gvA2ree
- * @changelog [added] The plugin has been rewritten from the ground up. 
- * @changelogDate 2022-10-18T22:00:00.000Z
+ * @changelog [fix] fixed globally default disabling. 
+ * @changelogDate 2022-10-20T08:00:00.000Z
  * @changelogImage https://cdn.discordapp.com/attachments/939319506428391495/1032360180303790163/Untitled-1.jpg
  */
 
@@ -121,10 +121,8 @@ Components: {
             const isGlobal = Settings.getSetting("autoEnable", true);
             const isExcluded = Settings.getSetting("exclude", []).includes(channelId);
     
-            if (isGlobal && isExcluded) return false;
-            if (isExcluded && !isGlobal) return true;
-    
-            return isGlobal;
+            if (isExcluded) return isGlobal;
+            return !isGlobal;
         }
     
         handleClick = () => {
