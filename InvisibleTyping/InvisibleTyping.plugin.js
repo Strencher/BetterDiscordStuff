@@ -1,10 +1,10 @@
 /**
  * @name InvisibleTyping
- * @version 1.3.1
+ * @version 1.3.2
  * @description Makes your typing invisible to other people.
  * @author Strencher
  * @invite gvA2ree
- * @changelog [added] The plugin has been rewritten from the ground up. 
+ * @changelog [fixed] Fixed a bug with globally toggling the typing indicator visibility.
  * @changelogDate 2022-10-18T22:00:00.000Z
  * @changelogImage https://cdn.discordapp.com/attachments/939319506428391495/1032360180303790163/Untitled-1.jpg
  */
@@ -121,10 +121,8 @@ Components: {
             const isGlobal = Settings.getSetting("autoEnable", true);
             const isExcluded = Settings.getSetting("exclude", []).includes(channelId);
     
-            if (isGlobal && isExcluded) return false;
-            if (isExcluded && !isGlobal) return true;
-    
-            return isGlobal;
+            if (isExcluded) return isGlobal;
+            return !isGlobal;
         }
     
         handleClick = () => {
@@ -143,16 +141,18 @@ Components: {
         }
     
         renderContextMenu() {
+            const globalState = Settings.getSetting("autoEnable", false);
+
             return ContextMenu.buildMenu([
                 {
                     id: "globally-disable-or-enable-typing",
-                    label: this.state.enabled ? "Disable Globally" : "Enable Globally",
-                    onClick: () => {Settings.updateSetting("autoEnable", !this.state.enabled);}
+                    label: !globalState ? "Disable Globally" : "Enable Globally",
+                    onClick: () => {Settings.updateSetting("autoEnable", !globalState);}
                 },
                 {
                     id: "reset-config",
                     color: "colorDanger",
-                    disabled: !!Settings.getSetting("exclude", []).length,
+                    disabled: !Settings.getSetting("exclude", []).length,
                     label: "Reset Config",
                     onClick() {
                         Settings.updateSetting("exclude", []);
@@ -221,7 +221,6 @@ Components: {
         }
     }
 }
-
 
 module.exports = class InvisibleTyping {
     constructor(metaObject) {meta = this.meta = metaObject;}
