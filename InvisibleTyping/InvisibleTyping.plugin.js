@@ -1,11 +1,11 @@
 /**
  * @name InvisibleTyping
- * @version 1.3.2
+ * @version 1.3.3
  * @description Makes your typing invisible to other people.
  * @author Strencher
  * @invite gvA2ree
- * @changelog [fixed] Fixed a bug with globally toggling the typing indicator visibility.
- * @changelogDate 2022-10-18T22:00:00.000Z
+ * @changelog [fixed] Fixed cleanup of observer. 
+ * @changelogDate 2022-10-22T22:00:00.000Z
  * @changelogImage https://cdn.discordapp.com/attachments/939319506428391495/1032360180303790163/Untitled-1.jpg
  */
 
@@ -29,7 +29,7 @@ Utilities: {
         return array;
     };
     
-    var onAdded = (selector, callback) => {
+    var onceAdded = (selector, callback) => {
         let directMatch;
         if (directMatch = document.querySelector(selector)) {
             callback(directMatch);
@@ -421,7 +421,7 @@ module.exports = class InvisibleTyping {
             {searchExports: true, filter: Webpack.Filters.byPrototypeFields("renderTooltip")}
         );
 
-        this.patchTextAreaButtons();
+        this.patchTextAreaButtons().catch(() => {});
         this.patchStartTyping();
         this.maybeShowChangelog();
     }
@@ -473,8 +473,8 @@ module.exports = class InvisibleTyping {
 
         if (!buttonsClassName) return UI.showToast(`[${this.meta.name}] Could not add button to textarea.`, {type: "error"});
 
-        const instance = await new Promise(res => {
-            this.cleanup.add(onAdded("." + buttonsClassName, e => {
+        const instance = await new Promise((resolve, reject) => {
+            const cancel = onceAdded("." + buttonsClassName, e => {
                 const vnode = ReactUtils.getInternalInstance(e);
 
                 if (!vnode) return;
@@ -483,11 +483,20 @@ module.exports = class InvisibleTyping {
                     const tree = curr?.pendingProps?.children;
                     let buttons;
                     if (Array.isArray(tree) && (buttons = tree.find(s => s?.props?.type && s.props.channel && s.type?.$$typeof))) {
-                        res(buttons.type);
+                        resolve(buttons.type);
                         break;
                     }
                 }
-            }));
+
+                this.cleanup.delete(bulkClean);
+            });
+
+            const bulkClean = () => {
+                cancel();
+                reject();
+            };
+
+            this.cleanup.add(bulkClean);
         });
 
         Patcher.after(instance, "type", (_, [props], res) => {
@@ -507,6 +516,7 @@ module.exports = class InvisibleTyping {
 
     stop() {
         this.cleanup.forEach(clean => clean());
+        this.cleanup.clear();
     }
 
     getSettingsPanel() {
