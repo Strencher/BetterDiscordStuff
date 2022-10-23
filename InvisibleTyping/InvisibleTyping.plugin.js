@@ -29,12 +29,14 @@ Utilities: {
         return array;
     };
     
-    var onceAdded = (selector, callback) => {
+    var onceAdded = (selector, callback, signal) => {
         let directMatch;
         if (directMatch = document.querySelector(selector)) {
             callback(directMatch);
             return () => null;
         }
+
+        const cancel = () => observer.disconnect();
     
         const observer = new MutationObserver(changes => {
             for (const change of changes) {
@@ -45,7 +47,9 @@ Utilities: {
 
                     if (!match) continue;
     
-                    observer.disconnect();
+                    cancel();
+                    signal.removeEventListener("abort", cancel);
+
                     callback(match);
                 }
             }
@@ -53,7 +57,7 @@ Utilities: {
 
         observer.observe(document.body, {childList: true, subtree: true});
     
-        return () => observer.disconnect();
+        signal.addEventListener("abort", cancel);
     };
     
     var Fluxify = (component, stores, getter) => {
@@ -472,9 +476,10 @@ module.exports = class InvisibleTyping {
         const buttonsClassName = Webpack.getByProps("profileBioInput", "buttons")?.buttons
 
         if (!buttonsClassName) return UI.showToast(`[${this.meta.name}] Could not add button to textarea.`, {type: "error"});
-
+ 
+        const controller = new AbortController();
         const instance = await new Promise((resolve, reject) => {
-            const cancel = onceAdded("." + buttonsClassName, e => {
+            onceAdded("." + buttonsClassName, e => {
                 const vnode = ReactUtils.getInternalInstance(e);
 
                 if (!vnode) return;
@@ -487,17 +492,17 @@ module.exports = class InvisibleTyping {
                         break;
                     }
                 }
+            }, controller.signal);
 
-                this.cleanup.delete(bulkClean);
+            const abort = controller.abort.bind(controller);
+
+            controller.signal.addEventListener("abort", () => {
+                this.cleanup.delete(abort);
+                reject();
             });
 
-            const bulkClean = () => {
-                cancel();
-                reject();
-            };
-
-            this.cleanup.add(bulkClean);
-        });
+            this.cleanup.add(abort);
+        }); 
 
         Patcher.after(instance, "type", (_, [props], res) => {
             if (!InvisibleTypingButton.shouldShow(res?.props?.children, props)) return;
@@ -516,7 +521,6 @@ module.exports = class InvisibleTyping {
 
     stop() {
         this.cleanup.forEach(clean => clean());
-        this.cleanup.clear();
     }
 
     getSettingsPanel() {
