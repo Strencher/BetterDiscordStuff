@@ -11,6 +11,11 @@ const changedFilesIgnore = [
   "bdbuilder",
   "scripts"
 ];
+
+const newPlugins = [
+  "ShowAllActivities"
+];
+
 const releaseExtensions = [".md", ".plugin.js"];
 
 const argv = process.argv.slice(2);
@@ -58,15 +63,22 @@ function actuallyDoSomething() {
 function buildPlugin(pluginName) {
   console.log(`Building ${pluginName}...`);
 
-  _cp.execSync("npm i", {
-    cwd: pluginName,
-    stdio: ["ignore", "inherit", "inherit"]
-  });
+  if (newPlugins.includes(pluginName)) {
+    const loc = _path.resolve(process.cwd(), `builds/${pluginName}.plugin.js`);
+    _cp.execSync("node scripts/new-builder.js --input " + pluginName);
 
-  _cp.execSync(`npx bdbuilder --plugin="${pluginName}" --build --config=bdbuilder.prod.config.json`, {
-    cwd: ".",
-    stdio: ["ignore", "inherit", "inherit"]
-  });
+    _fs.renameSync(loc, loc.replace("builds", pluginName));
+  } else {
+    _cp.execSync("npm i", {
+      cwd: pluginName,
+      stdio: ["ignore", "inherit", "inherit"]
+    });
+  
+    _cp.execSync(`npx bdbuilder --plugin="${pluginName}" --build --config=bdbuilder.prod.config.json`, {
+      cwd: ".",
+      stdio: ["ignore", "inherit", "inherit"]
+    });
+  }
 }
 
 /**
@@ -80,6 +92,7 @@ function cleanup() {
 
   for (const pluginName of changedPlugins) {
     _fs.readdirSync(pluginName).filter(filename =>
+      filename !== "assets",
       !releaseExtensions.some(extension => filename.endsWith(extension))
     ).forEach(filename => {
       _fs.rmSync(_path.resolve(pluginName, filename), { force: true, recursive: true });

@@ -1,0 +1,11 @@
+.SAA-caret {
+    color: #ddd;
+    
+    &.right {
+        transform: rotate(-90deg);
+    }
+
+    &.left {
+        transform: rotate(90deg);
+    }
+}

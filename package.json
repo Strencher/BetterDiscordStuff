@@ -16,6 +16,17 @@
     "url": "https://github.com/shitcord-plugins/BetterDiscordStuffTest/issues"
   },
   "homepage": "https://github.com/shitcord-plugins/BetterDiscordStuffTest#readme",
-  "dependencies": {},
-  "devDependencies": {}
+  "devDependencies": {
+    "@rollup/plugin-json": "^5.0.2",
+    "@rollup/plugin-node-resolve": "^15.0.1",
+    "@types/betterdiscord": "github:zerthox/betterdiscord-types",
+    "@types/react": "^17.0.34",
+    "@types/redux": "^3.6.0",
+    "cssom": "^0.5.0",
+    "esbuild": "^0.15.17",
+    "js-beautify": "^1.14.7",
+    "rollup": "^3.7.4",
+    "rollup-plugin-esbuild": "^5.0.0",
+    "sass": "^1.56.2"
+  }
 }
