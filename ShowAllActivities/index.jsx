@@ -1,5 +1,3 @@
-/// <reference path="../types/main.d.ts" />
-
 import {UI, Patcher} from "@api";
 import Webpack from "./modules/webpack";
 import Styles from "@styles";
