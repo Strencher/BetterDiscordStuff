@@ -214,6 +214,14 @@ watcher.on("event", async event => {
 
             const contents = makeMeta(manifest) + code;
 
+            $ensureBuildsDir: {
+                const folder = path.resolve(process.cwd(), "builds");
+
+                if (fs.existsSync(folder)) break $ensureBuildsDir;
+
+                fs.mkdirSync(folder);
+            }
+
             const outfile = path.resolve(process.cwd(), "builds", `${manifest.name}.plugin.js`);
 
             fs.writeFileSync(outfile, contents, "utf8");

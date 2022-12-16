@@ -65,7 +65,10 @@ function buildPlugin(pluginName) {
 
   if (newPlugins.includes(pluginName)) {
     const loc = _path.resolve(process.cwd(), `builds/${pluginName}.plugin.js`);
-    _cp.execSync("node scripts/new-builder.js --input " + pluginName);
+    _cp.execSync("node scripts/new-builder.js --input " + pluginName, {
+      cwd: ".",
+      stdio: ["ignore", "inherit", "inherit"]
+    });
 
     _fs.renameSync(loc, loc.replace("builds", pluginName));
   } else {
