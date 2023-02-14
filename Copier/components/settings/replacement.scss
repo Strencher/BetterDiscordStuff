@@ -1,0 +1,17 @@
+.copier-variable {
+    display: flex;
+    align-items: center;
+    margin-top: 5px;
+
+    .copier-variable-name {
+        background: var(--primary-dark-560);
+        font-weight: 700;
+        padding: 3px;
+        border-radius: 4px;
+        margin-right: 5px;
+    }
+
+    .copier-variable-description {
+        color: var(--header-secondary)
+    }
+}

@@ -13,7 +13,8 @@ const changedFilesIgnore = [
 ];
 
 const newPlugins = [
-  "ShowAllActivities"
+  "ShowAllActivities",
+  "Copier"
 ];
 
 const releaseExtensions = [".md", ".plugin.js"];

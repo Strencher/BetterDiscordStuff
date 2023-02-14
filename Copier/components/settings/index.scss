@@ -1,0 +1,27 @@
+.copier-settings-container {
+    display: flex;
+    flex-direction: column;
+
+}
+
+.copier-key {
+    box-shadow: inset 0 -4px 0 var(--primary-dark-660);
+    color: var(--primary-dark-100);
+    background-color: var(--background-accent);
+    border: 1px solid var(--background-primary);
+    display: inline-flex;
+    padding: 3px 6px 4px;
+    border-radius: 4px;
+    cursor: default;
+    min-width: 10px;
+    text-align: center;
+    vertical-align: middle;
+    font-size: 10px;
+    height: 11px;
+}
+
+.copier-header {
+    font-weight: 500;
+    font-size: 18px;
+    font-family: var(--font-display);
+}

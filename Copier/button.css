@@ -1,0 +1,14 @@
+.copier-button {
+    background: transparent;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    color: #0870f3;
+}
+
+.copier-tooltip {
+    --background-floating: var(--background-secondary);
+}

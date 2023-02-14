@@ -1,0 +1,11 @@
+.copier-roleColoredItem {
+    display: flex;
+    align-items: center;
+}
+.copier-roleColoredItem span {
+    border: 1px solid var(--interactive-muted);
+    border-radius: 50%;
+    width: 12px;
+    height: 12px;
+    margin-right: 8px;
+}

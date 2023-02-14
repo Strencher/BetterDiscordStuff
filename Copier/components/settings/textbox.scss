@@ -1,0 +1,21 @@
+.copier-textbox {
+    .copier-textbox-note {
+        font-size: 14px;
+        color: var(--text-muted);
+    }
+    
+    .copier-text-input {
+        background: var(--background-secondary-alt);
+        border: thin solid var(--background-modifier-hover);
+        border-radius: 4px;
+        width: -webkit-fill-available;
+        margin: 8px 0;
+        color: #ddd;
+        font-size: 16px;
+        padding: 8px;
+
+        &:focus {
+            border-color: var(--brand-experiment);
+        }
+    }
+}

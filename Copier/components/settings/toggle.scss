@@ -1,0 +1,36 @@
+.copier-toggle {
+    position: relative;
+
+    .copier-toggle-name {
+        font-size: 16px;
+        font-weight: 500;
+    }
+
+    .copier-toggle-value {
+        position: absolute;
+        right: 0;
+        top: 0;
+        width: 30px;
+        height: 30px;
+        border-radius: 100px;
+        border: thin solid var(--background-modifier-accent);
+
+        svg {
+            fill: #fff;
+            transform: scale(0.5);
+            left: -8px;
+            top: -7px;
+            position: relative;
+        }
+
+        &.copier-checked {
+            background: var(--status-positive);
+        }
+    }
+
+    .copier-toggle-note {
+        margin-top: 10px;
+        font-size: 14px;
+        color: var(--text-muted);
+    }
+}

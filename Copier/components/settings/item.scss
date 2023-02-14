@@ -1,0 +1,41 @@
+.copier-settings-item {
+    padding: 15px;
+    border-radius: 8px;
+    background: var(--background-tertiary);
+    cursor: pointer;
+    color: #fff;
+    border: thin solid var(--background-modifier-hover);
+
+    .copier-settings-item-header {
+        .copier-settings-name {
+            display: flex;
+            align-items: center;
+            font-weight: 500;
+            font-size: 20px;
+            color: var(--header-primary);
+
+            .copier-settings-icon-box {
+                color: vaR(--header-secondary);
+                margin-right: 5px;
+            }
+        }
+    }
+
+    &.item-opened .copier-settings-item-header {
+        border-bottom: thin solid var(--background-modifier-accent);
+        margin-bottom: 7px;
+        padding-bottom: 7px;
+    }
+
+    & + .copier-settings-item {
+        margin-top: 10px;
+    }
+
+    .copier-settings-note {
+        color: var(--header-secondary);
+    }
+
+    &.item-opened .copier-settings-children {
+        margin-top: 10px;
+    }
+}
