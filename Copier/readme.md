@@ -1,7 +1,7 @@
 # Copier
 - Allows you to copy certain stuff with custom options.
-## Download [**🔽Copier**](https://strencher.github.io/download/?plugin=Copier) Plugin<hr>
-## [Support-Server](https://discord.gg/gvA2ree)<hr>
+- ### Download [**🔽Copier**](https://betterdiscord.app/Download?id=176) Plugin<br>
+- ### [Support-Server](https://discord.gg/gvA2ree)
 ### Roles<br>
 ![image](https://i.imgur.com/nQnI3C1.png)<hr>
 ### Messages
