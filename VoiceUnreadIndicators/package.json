@@ -1,0 +1,27 @@
+{
+    "name": "VoiceUnreadIndicators",
+    "version": "1.0.0",
+    "authors": [
+        {
+            "name": "Strencher",
+            "discord_id": "415849376598982656",
+            "github_username": "Strencher",
+            "twitter_username": "Strencher3"
+        }
+    ],
+    "description": "Shows unread indicators on voice channels for their chats.",
+    "github": "https://github.com/Strencher/BetterDiscordStuff/tree/development/VoiceUnreadIndicators",
+    "github_raw": "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/VoiceUnreadIndicators/VoiceUnreadIndicators.plugin.js",
+    "invite": "gvA2ree",
+    "changelogImage": "https://cdn.discordapp.com/attachments/631074312828485652/1075901308701265960/face-with-party-horn-and-party-hat_1f973.png",
+    "changelogDate": "2023-02-16T22:08:18.958Z",
+    "changelog": [
+        {
+            "title": "Release",
+            "type": "added",
+            "items": [
+                "The Plugin was released!"
+            ]
+        }
+    ]
+}

@@ -14,7 +14,8 @@ const changedFilesIgnore = [
 
 const newPlugins = [
   "ShowAllActivities",
-  "Copier"
+  "Copier",
+  "VoiceUnreadIndicators"
 ];
 
 const releaseExtensions = [".md", ".plugin.js"];
