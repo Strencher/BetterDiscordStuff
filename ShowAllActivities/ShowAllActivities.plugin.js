@@ -1,6 +1,6 @@
 /**
  * @name ShowAllActivities
- * @version 1.1.0
+ * @version 1.1.1
  * @description See every status a user has enabled. Original made by Juby210#0577.
  * @github https://github.com/Strencher/BetterDiscordStuff/tree/master/ShowAllActivities
  * @github_raw https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/ShowAllActivities/ShowAllActivities.plugin.js
@@ -15,7 +15,7 @@
 /* @module @manifest */
 const config = {
     "name": "ShowAllActivities",
-    "version": "1.1.0",
+    "version": "1.1.1",
     "authors": [{
             "name": "Strencher",
             "discord_id": "415849376598982656",
@@ -298,7 +298,7 @@ const useStateFromStores = Webpack$1.getModule((m) => m?.toString?.().includes("
 const useStateFromStoresArray = useStateFromStores;
 const { Messages } = Webpack$1.getModule((m) => m?.Messages?.MEMBER_LIST_SHOWN);
 const PresenceStore = Webpack$1.getStore("PresenceStore");
-const Tooltip = Webpack$1.getByPrototypeFields("renderTooltip");
+const Tooltip = BdApi.Components.Tooltip;
 const [UserActivity, UserActivityTypes] = (() => {
     const module = Webpack$1.getModule((m) => Object.values(m).some((e) => e?.USER_POPOUT_V2));
     return [
