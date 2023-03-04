@@ -4,7 +4,8 @@
   "description": "Some useful Discord-Addons for BetterDiscord.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "node scripts/new-builder.js"
   },
   "repository": {
     "type": "git",
