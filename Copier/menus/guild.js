@@ -23,11 +23,6 @@ export const GuildCopyOptions = [
         description: "will be replaced with the server icon url."
     },
     {
-        name: "region",
-        getValue: guild => guild.region,
-        description: "Will be replaced with the server region."
-    },
-    {
         name: "members",
         getValue: guild => GuildMemberCountStore.getMemberCount(guild.id),
         description: "Will be replaced with the member count of the server."
@@ -71,7 +66,7 @@ export default function () {
                                 Formatter.formatString(
                                     Settings.get("guildCustom"),
                                     GuildCopyOptions.reduce((options, option) => {
-                                        options[option.name] = option.getValue(guild, Modules);
+                                        options[option.name] = option.getValue(guild);
                                         return options;
                                     }, {})
                                 )

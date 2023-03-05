@@ -27,7 +27,7 @@ const useStateFromStores = Webpack.getModule(m => m?.toString?.().includes("useS
 const useStateFromStoresArray = useStateFromStores;
 const {Messages} = Webpack.getModule(m => m?.Messages?.MEMBER_LIST_SHOWN);
 const PresenceStore = Webpack.getStore("PresenceStore");
-const Tooltip = Webpack.getByPrototypeFields("renderTooltip");
+const Tooltip = Webpack.BdApi.Components.Tooltip
 
 
 export const [UserActivity, UserActivityTypes] = (() => {
