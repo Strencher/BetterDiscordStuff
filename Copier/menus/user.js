@@ -27,7 +27,7 @@ export const UserCopyOptions = [
     },
     {
         name: "creation",
-        getValue: (user, {Formatter}) => Formatter.parseSnowFlake(user.id).toLocaleString(),
+        getValue: user => Formatter.parseSnowFlake(user.id).toLocaleString(),
         description: "Will be replaced with creation date of the user."
     },
     {

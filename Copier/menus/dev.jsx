@@ -2,6 +2,7 @@ import {UI, ContextMenu} from "@api";
 import Webpack, {GuildStore} from "../modules/webpack";
 import {copy, int2hex, int2rgb} from "../modules/utils";
 import React from "react";
+import Formatter from "../modules/formatter";
 
 import "./label.css";
 

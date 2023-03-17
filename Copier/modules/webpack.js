@@ -39,4 +39,4 @@ export {Filters};
 // Common Modules
 export const ChannelStore = getStore("ChannelStore");
 export const GuildStore = getStore("GuildStore");
-export const Tooltip = getByPrototypeFields("renderTooltip");
+export const Tooltip = BdApi.Components.Tooltip
