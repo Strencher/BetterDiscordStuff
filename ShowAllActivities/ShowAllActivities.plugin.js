@@ -52,14 +52,14 @@ const { Data, Patcher, DOM, ReactUtils, Utils, Webpack: Webpack$2, UI, ContextMe
 
 var Api = /*#__PURE__*/ Object.freeze({
     __proto__: null,
+    ContextMenu: ContextMenu,
+    DOM: DOM,
     Data: Data,
     Patcher: Patcher,
-    DOM: DOM,
     ReactUtils: ReactUtils,
-    Utils: Utils,
-    Webpack: Webpack$2,
     UI: UI,
-    ContextMenu: ContextMenu
+    Utils: Utils,
+    Webpack: Webpack$2
 });
 
 /* @module webpack.js */
@@ -298,7 +298,7 @@ const useStateFromStores = Webpack$1.getModule((m) => m?.toString?.().includes("
 const useStateFromStoresArray = useStateFromStores;
 const { Messages } = Webpack$1.getModule((m) => m?.Messages?.MEMBER_LIST_SHOWN);
 const PresenceStore = Webpack$1.getStore("PresenceStore");
-const Tooltip = Webpack$1.getByPrototypeFields("renderTooltip");
+const Tooltip = Webpack$1.BdApi.Components.Tooltip;
 const [UserActivity, UserActivityTypes] = (() => {
     const module = Webpack$1.getModule((m) => Object.values(m).some((e) => e?.USER_POPOUT_V2));
     return [

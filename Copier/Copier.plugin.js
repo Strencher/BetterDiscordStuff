@@ -174,7 +174,7 @@ const ChannelTypes = {
 /*@end */
 
 /* @module formatter.js */
-let Formatter$1 = class Formatter {
+class Formatter {
     static formatString(string, options) {
         for (const option in options) {
             string = string.replace(new RegExp(`\\$${option}`, "g"), options[option]);
@@ -195,7 +195,7 @@ let Formatter$1 = class Formatter {
         const string = ChannelTypes[type] ?? "";
         return string.split("_").map((e) => e[0].toUpperCase() + e.slice(1)).join(" ");
     }
-};
+}
 
 /*@end */
 
@@ -259,7 +259,7 @@ var Webpack$1 = {
 };
 const ChannelStore = getStore("ChannelStore");
 const GuildStore = getStore("GuildStore");
-const Tooltip = getByPrototypeFields("renderTooltip");
+const Tooltip = BdApi.Components.Tooltip;
 
 /*@end */
 
@@ -286,7 +286,7 @@ const UserCopyOptions = [{
     },
     {
         name: "creation",
-        getValue: (user, { Formatter: Formatter2 }) => Formatter2.parseSnowFlake(user.id).toLocaleString(),
+        getValue: (user) => Formatter.parseSnowFlake(user.id).toLocaleString(),
         description: "Will be replaced with creation date of the user."
     },
     {
@@ -324,7 +324,7 @@ function user() {
                             return options2;
                         }, {});
                         copy(
-                            Formatter$1.formatString(Settings$1.get("userCustom"), options)
+                            Formatter.formatString(Settings$1.get("userCustom"), options)
                         );
                         UI.showToast("Copied user with custom format.", { type: "success" });
                     }
@@ -382,7 +382,7 @@ const ChannelCopyOptions = [{
     },
     {
         name: "type",
-        getValue: ({ channel }) => Formatter$1.formatChannelType(channel.type),
+        getValue: ({ channel }) => Formatter.formatChannelType(channel.type),
         description: "Will be replaced with the type of the channel."
     },
     {
@@ -397,7 +397,7 @@ const ChannelCopyOptions = [{
     },
     {
         name: "creation",
-        getValue: ({ channel }) => Formatter$1.parseSnowFlake(channel.id).toLocaleString(),
+        getValue: ({ channel }) => Formatter.parseSnowFlake(channel.id).toLocaleString(),
         description: "Will be replaced with the creation date of the channel."
     },
     {
@@ -418,7 +418,7 @@ const VoiceChannelCopyOptions = [{
     },
     {
         name: "type",
-        getValue: ({ channel }) => Formatter$1.formatChannelType(channel.type),
+        getValue: ({ channel }) => Formatter.formatChannelType(channel.type),
         description: "Will be replaced with the type of the voice channel."
     },
     {
@@ -433,7 +433,7 @@ const VoiceChannelCopyOptions = [{
     },
     {
         name: "creation",
-        getValue: ({ channel }) => Formatter$1.parseSnowFlake(channel.id).toLocaleString(),
+        getValue: ({ channel }) => Formatter.parseSnowFlake(channel.id).toLocaleString(),
         description: "Will be replaced with the creation date of the channel."
     },
     {
@@ -459,7 +459,7 @@ const ChannelCategoryCopyOptions = [{
     },
     {
         name: "type",
-        getValue: ({ channel }) => Formatter$1.formatChannelType(channel.type),
+        getValue: ({ channel }) => Formatter.formatChannelType(channel.type),
         description: "Will be replaced with the type of the category."
     },
     {
@@ -474,7 +474,7 @@ const ChannelCategoryCopyOptions = [{
     },
     {
         name: "creation",
-        getValue: ({ channel }) => Formatter$1.parseSnowFlake(channel.id).toLocaleString(),
+        getValue: ({ channel }) => Formatter.parseSnowFlake(channel.id).toLocaleString(),
         description: "Will be replaced with the creation date of the category."
     },
     {
@@ -515,7 +515,7 @@ const buildTextChannelMenu = function(channel) {
                     id: "copy-channel-custom",
                     action: () => {
                         copy(
-                            Formatter$1.formatString(
+                            Formatter.formatString(
                                 Settings$1.get("channelCustom"),
                                 ChannelCopyOptions.reduce((options, option) => {
                                     options[option.name] = option.getValue({ channel, guild });
@@ -586,7 +586,7 @@ const buildVoiceChannelMenu = function(channel) {
                     id: "copy-voice-channel-custom",
                     action: () => {
                         copy(
-                            Formatter$1.formatString(
+                            Formatter.formatString(
                                 Settings$1.get("voiceCustom"),
                                 VoiceChannelCopyOptions.reduce((options, option) => {
                                     options[option.name] = option.getValue({ guild, channel });
@@ -625,7 +625,7 @@ const buildCategoryMenu = function(channel) {
                     id: "copy-category-custom",
                     action: () => {
                         copy(
-                            Formatter$1.formatString(
+                            Formatter.formatString(
                                 Settings$1.get("categoryCustom"),
                                 ChannelCategoryCopyOptions.reduce((options, option) => {
                                     options[option.name] = option.getValue({ channel, guild });
@@ -685,18 +685,13 @@ const GuildCopyOptions = [{
         description: "will be replaced with the server icon url."
     },
     {
-        name: "region",
-        getValue: (guild) => guild.region,
-        description: "Will be replaced with the server region."
-    },
-    {
         name: "members",
         getValue: (guild) => GuildMemberCountStore.getMemberCount(guild.id),
         description: "Will be replaced with the member count of the server."
     },
     {
         name: "creation",
-        getValue: (guild) => Formatter$1.parseSnowFlake(guild.id).toLocaleString(),
+        getValue: (guild) => Formatter.parseSnowFlake(guild.id).toLocaleString(),
         description: "Will be replaced with the creation date of the server."
     }
 ];
@@ -728,10 +723,10 @@ function guild() {
                         id: "copy-guild-custom",
                         action: () => {
                             copy(
-                                Formatter$1.formatString(
+                                Formatter.formatString(
                                     Settings$1.get("guildCustom"),
                                     GuildCopyOptions.reduce((options, option) => {
-                                        options[option.name] = option.getValue(guild, Modules);
+                                        options[option.name] = option.getValue(guild);
                                         return options;
                                     }, {})
                                 )
@@ -981,7 +976,7 @@ const MessageCopyOptions = [{
     },
     {
         name: "timestamp",
-        getValue: ({ message }) => Formatter$1.formatDate(message.timestamp),
+        getValue: ({ message }) => Formatter.formatDate(message.timestamp),
         description: "Will be replaced with the creation timestamp of the message."
     },
     {
@@ -1026,7 +1021,7 @@ function message() {
                             id: "copy-message-custom-format",
                             action: () => {
                                 copy(
-                                    Formatter$1.formatString(
+                                    Formatter.formatString(
                                         Settings$1.get("messageCustom"),
                                         MessageCopyOptions.reduce((options, option) => {
                                             options[option.name] = option.getValue({ message });
@@ -1179,7 +1174,7 @@ function CopyButton(props) {
             case "ctrl":
             case "both":
                 copy(
-                    Formatter$1.formatString(
+                    Formatter.formatString(
                         Settings$1.get("messageCustom"),
                         MessageCopyOptions.reduce((options, option) => {
                             options[option.name] = option.getValue({ message });
