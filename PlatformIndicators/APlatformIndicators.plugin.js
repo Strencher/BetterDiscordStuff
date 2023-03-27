@@ -288,6 +288,9 @@ module.exports = (() => {
                     this.target.addEventListener("mouseleave", () => {
                         this.hide();
                     });
+                     this.target.addEventListener("mousedown", () =>{
+                        this.hide();
+                    });
                 }
 
                 get container() {return document.querySelector(".layerContainer-2v_Sit ~ .layerContainer-2v_Sit");}
