@@ -2,7 +2,7 @@ import React from "react";
 import Webpack from "../modules/webpack";
 import Settings from "../settings";
 
-const SwitchItemComponent = Webpack.getModule(m => typeof m === "function" && m.toString().includes("helpdeskArticleId"), {searchExports: true});
+const SwitchItemComponent = Webpack.getModule(m => typeof m === "function" && m.toString().includes("tooltipNote"), {searchExports: true});
 const SwitchItem = props => {
     const [value, setValue] = React.useState(props.value);
 
