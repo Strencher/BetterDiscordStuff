@@ -3,7 +3,7 @@
 * @displayName PlatformIndicators
 * @authorId 415849376598982656
 * @invite gvA2ree
-* @version 1.4.0
+* @version 1.4.1
 */
 /*@cc_on
 @if (@_jscript)
@@ -40,17 +40,19 @@ module.exports = (() => {
                     twitter_username: "Strencher3"
                 }
             ],
-            version: "1.4.0",
+            version: "1.4.1",
             description: "Adds indicators for every platform that the user is using. Source code available on the repo in the 'src' folder.",
             github: "https://github.com/Strencher/BetterDiscordStuff/blob/master/PlatformIndicators/APlatformIndicators.plugin.js",
             github_raw: "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/PlatformIndicators/APlatformIndicators.plugin.js"
         },
         changelog: [
             {
-                title: "v1.4.0",
+                title: "v1.4.1",
                 type: "fixed",
                 items: [
-                    "The plugin was rewritten from the ground up to be compatible with discord's newest changes. It now uses DOM Manipulation instead of react patching."
+                    "Fixed indicators showing in chat.",
+                    "Fixed indicators showing in dms list.",
+                    "(hopefully) fixed tooltips not disappearing"
                 ]
             },
         ],
@@ -161,11 +163,12 @@ module.exports = (() => {
             const friendsRowClasses = WebpackModules.getByProps("hovered", "discriminator");
  
             const {Webpack, Webpack: {Filters}} = BdApi;
-            const [ChatHeader, NameTag, MemberListItem, DirectMessage] = Webpack.getBulk.apply(null, [
+            const [ChatHeader, NameTag, MemberListItem, DirectMessage, {LayerClassName = ""} = {}] = Webpack.getBulk.apply(null, [
                 Filters.byProps("replyAvatar", "sizeEmoji"),
                 Filters.byProps("bot", "nameTag"),
                 Filters.byProps("wrappedName", "nameAndDecorators"),
-                Filters.byProps("wrappedName", "nameAndDecorators", "selected"),
+                Filters.combine(Filters.byProps("wrappedName", "nameAndDecorators"), m => !m.container),
+                Filters.byProps("LayerClassName")
             ].map(fn => ({filter: fn})));
 
             class StringUtils {
@@ -288,9 +291,13 @@ module.exports = (() => {
                     this.target.addEventListener("mouseleave", () => {
                         this.hide();
                     });
+
+                    this.target.addEventListener("mousedown", () => {
+                        this.hide();
+                    });
                 }
 
-                get container() {return document.querySelector(".layerContainer-2v_Sit ~ .layerContainer-2v_Sit");}
+                get container() {return document.querySelector(`.${LayerClassName} ~ .${LayerClassName}`);}
 
                 checkOffset(x, y) {
                     if (y < 0) {
@@ -464,7 +471,7 @@ module.exports = (() => {
                     for (const el of elements) {
                         if (el.getElementsByClassName("PI-indicatorContainer").length || el._patched) continue;
 
-                        const user = getReactProps(el.parentElement)?.message?.author;
+                        const user = getReactProps(el.parentElement, e => e?.message)?.message?.author;
 
                         if (user) {
                             new StatusIndicators(el, user.id, "Chat").mount();
@@ -476,7 +483,6 @@ module.exports = (() => {
                         if (el.getElementsByClassName("PI-indicatorContainer").length || el._patched) continue;
 
                         const user = getReactProps(el, e => e?.user)?.user;
-
                         if (user) {
                             new StatusIndicators(el, user.id, "Tags").mount();
                         }
