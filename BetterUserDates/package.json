@@ -1,0 +1,27 @@
+{
+    "name": "BetterUserDates",
+    "authors": [
+        {
+            "name": "Strencher",
+            "discord_id": "415849376598982656",
+            "github_username": "Strencher",
+            "twitter_username": "Strencher3"
+        }
+    ],
+    "donate": "https://paypal.me/RealStrencher",
+    "version": "1.0.0",
+    "description": "Makes member dates show up as real discord timestamps.",
+    "github": "https://github.com/Strencher/BetterDiscordStuff/blob/master/BetterUserDates/BetterUserDates.plugin.js",
+    "github_raw": "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/BetterUserDates/BetterUserDates.plugin.js",
+    "changelogImage": "https://cdn.discordapp.com/attachments/672786846018961418/1053059354552696932/20th-century-fox-intro.png",
+    "changelogDate": "2023-08-14T19:12:56.405Z",
+    "changelog": [
+        {
+            "type": "added",
+            "title": "Release",
+            "items": [
+                "The plugin was released."
+            ]
+        }
+    ]
+}
