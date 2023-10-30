@@ -3,7 +3,7 @@
 * @displayName PlatformIndicators
 * @authorId 415849376598982656
 * @invite gvA2ree
-* @version 1.4.2
+* @version 1.4.3
 */
 /*@cc_on
 @if (@_jscript)
@@ -40,17 +40,17 @@ module.exports = (() => {
                     twitter_username: "Strencher3"
                 }
             ],
-            version: "1.4.2",
+            version: "1.4.3",
             description: "Adds indicators for every platform that the user is using. Source code available on the repo in the 'src' folder.",
             github: "https://github.com/Strencher/BetterDiscordStuff/blob/master/PlatformIndicators/APlatformIndicators.plugin.js",
             github_raw: "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/PlatformIndicators/APlatformIndicators.plugin.js"
         },
         changelog: [
             {
-                title: "v1.4.2",
+                title: "v1.4.3",
                 type: "fixed",
                 items: [
-                    "Fixed indicators not showing in user popout for new usernames.",
+                    "Fixed Loading Screen Loop.",
                 ]
             },
         ],
@@ -159,6 +159,7 @@ module.exports = (() => {
             const Flux = Object.assign({}, WebpackModules.getByProps("Store", "connectStores"), WebpackModules.getByProps("useStateFromStores"));
             const SessionsStore = WebpackModules.getByProps("getSessions", "_dispatchToken");
             const friendsRowClasses = WebpackModules.getByProps("hovered", "discriminator");
+            const isEqual = WebpackModules.getByProps("isEqual", "add");
  
             const {DOM, Webpack, Webpack: {Filters}} = BdApi;
             const [ChatHeader, NameTag, MemberListItem, DirectMessage, NewUserName, {LayerClassName = ""} = {}] = Webpack.getBulk.apply(null, [
@@ -379,7 +380,7 @@ module.exports = (() => {
                 handleChange = () => {
                     if (this._destroyed) return false;
 
-                    if (this.state && _.isEqual(this.state, this.getState())) return;
+                    if (this.state && isEqual(this.state, this.getState())) return;
 
                     this.mount();
                 }
