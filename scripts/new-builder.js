@@ -226,6 +226,11 @@ watcher.on("event", async event => {
 
             fs.writeFileSync(outfile, contents, "utf8");
 
+            if ("install" in argv) {
+                const bdFolder = path.resolve(process.env.APPDATA, "BetterDiscord", "plugins", `${manifest.name}.plugin.js`);
+                fs.writeFileSync(bdFolder, contents, "utf8");
+            }
+
             console.timeEnd(`Build in`);
 
             event.result.close();

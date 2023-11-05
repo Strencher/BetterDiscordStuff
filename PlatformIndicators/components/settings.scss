@@ -1,0 +1,32 @@
+.PIsettingsSmartDisable {
+    color: #fff;
+    
+    .body {
+        display: grid;
+        grid-template-columns: 160px 160px;
+        grid-template-rows: auto auto;
+        column-gap: 15px;
+        row-gap: 15px;
+
+        .item {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            border-radius: 8px;
+            background: var(--primary-630);
+            padding: 10px 15px;
+
+            &:hover {
+                background: var(--primary-500);
+            }
+        }
+    }
+
+}
+
+.PIsettingsTitle {
+    color: #fff;
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 20px;
+}

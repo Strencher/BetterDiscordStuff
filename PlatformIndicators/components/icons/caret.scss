@@ -1,0 +1,12 @@
+.PI-caret {
+    color: #ddd;
+    transition: transform .2s linear;
+    
+    &.right {
+        transform: rotate(-90deg);
+    }
+
+    &.bottom {
+        transform: rotate(0deg);
+    }
+}

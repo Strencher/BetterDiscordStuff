@@ -1,0 +1,35 @@
+.indicatorContainer {
+    display: inline-flex;
+    vertical-align: bottom;
+    margin-bottom: 2px;
+    margin-left: 5px;
+
+    svg {
+        margin-left: -2px;
+    }
+
+    div:first-child svg {
+        margin-left: 2px;
+    }
+
+    &.type_Chat {
+        margin-right: -6px;
+        vertical-align: top;
+    }
+
+    &.type_Tags {
+        gap: 2px;
+    }
+}
+
+.PI-icon_mobile {
+    position: relative;
+    top: 1px;
+}
+
+.badge_separator {
+    margin-right: 2px;
+    padding-right: 2px;
+    border-right: thin solid var(--background-modifier-hover);
+    height: 22px;
+}

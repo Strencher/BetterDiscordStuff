@@ -16,7 +16,8 @@ const newPlugins = [
   "ShowAllActivities",
   "Copier",
   "VoiceUnreadIndicators",
-  "BetterUserDates"
+  "BetterUserDates",
+  "PlatformIndicators"
 ];
 
 const releaseExtensions = [".md", ".plugin.js"];

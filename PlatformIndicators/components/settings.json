@@ -1,0 +1,64 @@
+[
+    {
+        "type": "switch",
+        "name": "Show in MemberList",
+        "note": "Shows the platform indicators in the memberlist",
+        "id": "showInMemberList",
+        "value": true
+    },
+    {
+        "type": "switch",
+        "name": "Show next to username",
+        "note": "Shows the platform indicators next the username in messages.",
+        "id": "showInChat",
+        "value": true
+    },
+    {
+        "type": "switch",
+        "name": "Show in DMs List",
+        "note": "Shows the platform indicators in the dm list.",
+        "id": "showInDmsList",
+        "value": true
+    },
+    {
+        "type": "switch",
+        "name": "Show next to discord tags",
+        "note": "Shows the platform indicators right next to the discord tag.",
+        "id": "showInTags",
+        "value": true
+    },
+    {
+        "type": "switch",
+        "name": "Ignore Bots",
+        "note": "Ignores the status of bots which is always web anyways.",
+        "id": "ignoreBots",
+        "value": true
+    },
+    {
+        "type": "smart-disable",
+        "name": "Disable individual icons",
+        "id": "icons",
+        "items": [
+            {
+                "id": "web",
+                "value": true,
+                "icon": "web"
+            },
+            {
+                "id": "desktop",
+                "value": true,
+                "icon": "desktop"
+            },
+            {
+                "id": "mobile",
+                "value": true,
+                "icon": "mobile"
+            },
+            {
+                "id": "embedded",
+                "value": true,
+                "icon": "embedded"
+            }
+        ]
+    }
+]
