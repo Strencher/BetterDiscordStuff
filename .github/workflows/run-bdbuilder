@@ -26,7 +26,7 @@ const argv = process.argv.slice(2);
 
 // supported: `trigger`, `plugin`.
 const cliSwitches = Object.assign(...argv.filter(arg => arg.startsWith("--")).map(arg =>
-  ({ [arg.slice(2, arg.indexOf("="))]: arg.slice(1 + arg.indexOf("=")) })
+  ({[arg.slice(2, arg.indexOf("="))]: arg.slice(1 + arg.indexOf("="))})
 ));
 
 const isManualRun = "workflow_dispatch" === cliSwitches.trigger;
@@ -68,7 +68,8 @@ function buildPlugin(pluginName) {
   console.log(`Building ${pluginName}...`);
 
   if (newPlugins.includes(pluginName)) {
-    const loc = _path.resolve(process.cwd(), `builds/${pluginName}.plugin.js`);
+    const config = require(_path.resolve(process.cwd(), pluginName, "package.json"));
+    const loc = _path.resolve(process.cwd(), `builds/${config.name}.plugin.js`);
     _cp.execSync("node scripts/new-builder.js --input " + pluginName, {
       cwd: ".",
       stdio: ["ignore", "inherit", "inherit"]
@@ -81,7 +82,7 @@ function buildPlugin(pluginName) {
       cwd: pluginName,
       stdio: ["ignore", "inherit", "inherit"]
     });
-  
+
     _cp.execSync(`npx bdbuilder --plugin="${pluginName}" --build --config=bdbuilder.prod.config.json`, {
       cwd: ".",
       stdio: ["ignore", "inherit", "inherit"]
@@ -95,7 +96,7 @@ function buildPlugin(pluginName) {
  */
 function cleanup() {
   _fs.readdirSync(".").filter(dirname => !changedPlugins.includes(dirname)).forEach(dirname => {
-    _fs.rmSync(dirname, { force: true, recursive: true });
+    _fs.rmSync(dirname, {force: true, recursive: true});
   });
 
   for (const pluginName of changedPlugins) {
@@ -103,7 +104,7 @@ function cleanup() {
       filename !== "assets" &&
       !releaseExtensions.some(extension => filename.endsWith(extension))
     ).forEach(filename => {
-      _fs.rmSync(_path.resolve(pluginName, filename), { force: true, recursive: true });
+      _fs.rmSync(_path.resolve(pluginName, filename), {force: true, recursive: true});
     });
   }
 }
