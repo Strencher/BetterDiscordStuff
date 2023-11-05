@@ -46,7 +46,7 @@ export default class PlatformIndicators {
                     }
 
                     return ret;
-                };
+                }
             } catch (error) {
                 console.error(error);
             }
