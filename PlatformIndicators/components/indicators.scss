@@ -1,7 +1,6 @@
 .indicatorContainer {
     display: inline-flex;
     vertical-align: bottom;
-    margin-bottom: 2px;
     margin-left: 5px;
 
     svg {
@@ -32,4 +31,9 @@
     padding-right: 2px;
     border-right: thin solid var(--background-modifier-hover);
     height: 22px;
+}
+
+div[id*=message-reply] .indicatorContainer.type_Chat {
+    margin-left: 0;
+    margin-right: 2px;
 }

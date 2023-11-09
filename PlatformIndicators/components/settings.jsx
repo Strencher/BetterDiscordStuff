@@ -18,7 +18,7 @@ function SwitchItem(props) {
             value={value}
             children={props.name}
             onChange={value => {
-                Settings.set(props.id, !value);
+                Settings.set(props.id, value);
             }}
         />
     );

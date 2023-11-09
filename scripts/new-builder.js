@@ -56,21 +56,15 @@ function makeMeta(manifest) {
 }
 
 const styleLoader = `
-import manifest from "@manifest";
+import {DOM} from "@api";
 export default {
     sheets: [],
     _element: null,
     load() {
-        if (this._element) return;
-        this._element = Object.assign(document.createElement("style"), {
-            textContent: this.sheets.join("\\n"),
-            id: manifest.name
-        });
-        document.head.appendChild(this._element);
+        DOM.addStyle(this.sheets.join("\\n"));
     },
     unload() {
-        this._element?.remove();
-        this._element = null;
+        DOM.removeStyle();
     }
 }`;
 
@@ -141,7 +135,7 @@ const watcher = watch({
             get "@manifest"() {return "export default " + fs.readFileSync(manifestPath, "utf8");},
             "@api":
                 "import manifest from \"@manifest\";" +
-                "export const {Data, Patcher, DOM, ReactUtils, Utils, Webpack, UI, ContextMenu} = new BdApi(manifest.name);",
+                "export const {Net, Data, Patcher, ReactUtils, Utils, Webpack, UI, ContextMenu, DOM} = new BdApi(manifest.name);",
         }),
         {
 
@@ -205,12 +199,8 @@ watcher.on("event", async event => {
             let {output: [{code}]} = await bundle.generate({format: "cjs", exports: "auto"});
             
             code = code.replace(/var (\w+) =/, "const $1 =");
-            code = jsBeautify(code, {
-                indent_size: 4,
-                indent_char: " ",
-                end_with_newline: true,
-                brace_style: "preserve-inline"
-            });
+            code = code.replaceAll("/* @__PURE__ */ ", "");
+            code = jsBeautify(code, {});
 
             const contents = makeMeta(manifest) + code;
 
