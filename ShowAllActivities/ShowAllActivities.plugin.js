@@ -294,10 +294,8 @@ const ActivityTypes = {
     WATCHING: 3
 };
 const { useCallback, useMemo, useState } = React;
-const useStateFromStores = Webpack$1.getModule((m) => m?.toString?.().includes("useStateFromStores"), { searchExports: true });
-const useStateFromStoresArray = useStateFromStores;
 const { Messages } = Webpack$1.getModule((m) => m?.Messages?.MEMBER_LIST_SHOWN);
-const PresenceStore = Webpack$1.getStore("PresenceStore");
+const PresenceStore = BdApi.Webpack.getStore("PresenceStore");
 const Tooltip = BdApi.Components.Tooltip;
 const [UserActivity, UserActivityTypes] = (() => {
     const module = Webpack$1.getModule((m) => Object.values(m).some((e) => e?.USER_POPOUT_V2));
@@ -309,14 +307,10 @@ const [UserActivity, UserActivityTypes] = (() => {
 const classes = Webpack$1.getByProps("activity", "buttonColor") ?? {};
 
 function ActivityWrapper({ user, activityType: ActivityType = UserActivity, whatever: WhateverWrapper, ...props }) {
-    const activities = useStateFromStoresArray([PresenceStore], () => {
-        return PresenceStore.getActivities(user.id).filter((ac) => ac.type !== 4);
-    });
+    const activities = PresenceStore.getActivities(user?.id)?.filter((ac) => ac.type !== 4)
     const [activityIndex, setActivityIndex] = useState(0);
     const currentActivity = useMemo(() => activities[activityIndex], [activityIndex, activities]);
-    const shouldShowControls = useStateFromStores([Settings], () => {
-        return activities.length > 1 || Settings.get("showAlways", false);
-    }, [activities]);
+    const shouldShowControls = activities.length > 1 || Settings.get("showAlways", false);
     const canGo = (type) => {
         if (activityIndex === -1 || activities.length === 0 || activityIndex > activities.length - 1)
             return false;
