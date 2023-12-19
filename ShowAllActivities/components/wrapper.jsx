@@ -1,7 +1,7 @@
 import styles from "./wrapper.scss";
 import Caret from "./icons/caret";
 import React from "react";
-import {Utils} from "@api";
+import { Utils } from "@api";
 import ActivityColors from "./colors.json";
 import Settings from "../settings";
 import Webpack from "../modules/webpack";
@@ -23,8 +23,8 @@ const ActivityTypes = {
 
 const {useCallback, useMemo, useState} = React;
 
-const useStateFromStores = Webpack.getModule(m => m?.toString?.().includes("useStateFromStores"), {searchExports: true});
-const useStateFromStoresArray = useStateFromStores;
+const useStateFromStores = Webpack.getModule(m => m.useStateFromStores).useStateFromStores;
+const useStateFromStoresArray = Webpack.getModule(m => m.useStateFromStores).useStateFromStoresArray;
 const {Messages} = Webpack.getModule(m => m?.Messages?.MEMBER_LIST_SHOWN);
 const PresenceStore = Webpack.getStore("PresenceStore");
 const Tooltip = BdApi.Components.Tooltip
