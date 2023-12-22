@@ -5,7 +5,7 @@ import usePlatformStores from "../modules/usePlatformStores";
 import * as Icons from "./icons/Icons";
 import {getStatusText} from "../modules/utils";
 
-function getStatusColor(status) {
+export function getStatusColor(status) {
     const {StatusTypes} = ModulesLibrary;
 
     switch (status) {
