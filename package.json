@@ -29,5 +29,8 @@
     "rollup": "^3.7.4",
     "rollup-plugin-esbuild": "^5.0.0",
     "sass": "^1.56.2"
+  },
+  "dependencies": {
+    "webpack": "^5.89.0"
   }
 }

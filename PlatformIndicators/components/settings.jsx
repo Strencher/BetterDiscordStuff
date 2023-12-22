@@ -6,6 +6,7 @@ import {Webpack} from "@api";
 import React from "react";
 import SettingsItems from "./settings.json";
 import {Checkbox} from "./icons/checkbox";
+import {getStatusColor} from "../modules/utils";
 
 const {FormSwitch} = Webpack.getByKeys("FormSwitch");
 
@@ -43,7 +44,7 @@ function SmartDisable(props) {
                     <div key={item.id} className={Styles.item} onClick={() => handleClick(item.id)}>
                         {["online", "dnd", "idle", "offline"].map(status => 
                             React.createElement(Icons[item.icon], {
-                                style: {color: Colors.ColorDetails[ModulesLibrary.getStatusColor(status)]?.hex},
+                                style: {color: Colors.ColorDetails[getStatusColor(status)]?.hex},
                                 width: iconSize,
                                 height: iconSize
                             })
