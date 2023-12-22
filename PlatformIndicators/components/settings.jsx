@@ -9,6 +9,26 @@ import {Checkbox} from "./icons/checkbox";
 
 const {FormSwitch} = Webpack.getByKeys("FormSwitch");
 
+function getStatusColor(status) {
+    const {StatusTypes} = ModulesLibrary;
+
+    switch (status) {
+        case StatusTypes.ONLINE:
+            return Colors.Color.GREEN_360;
+        case StatusTypes.IDLE:
+            return Colors.Color.YELLOW_300;
+        case StatusTypes.DND:
+            return Colors.Color.RED_400;
+        case StatusTypes.STREAMING:
+            return Colors.Color.TWITCH;
+        case StatusTypes.INVISIBLE:
+        case StatusTypes.UNKNOWN:
+        case StatusTypes.OFFLINE:
+        default:
+            return Colors.Color.PRIMARY_400
+    }
+}
+
 function SwitchItem(props) {
     const value = Flux.useStateFromStores([Settings], () => Settings.get(props.id, props.value));
 
@@ -43,7 +63,7 @@ function SmartDisable(props) {
                     <div key={item.id} className={Styles.item} onClick={() => handleClick(item.id)}>
                         {["online", "dnd", "idle", "offline"].map(status => 
                             React.createElement(Icons[item.icon], {
-                                style: {color: Colors.ColorDetails[ModulesLibrary.getStatusColor(status)]?.hex},
+                                style: {color: Colors.ColorDetails[getStatusColor(status)]?.hex},
                                 width: iconSize,
                                 height: iconSize
                             })
