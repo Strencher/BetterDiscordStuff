@@ -1,7 +1,7 @@
 import styles from "./wrapper.scss";
 import Caret from "./icons/caret";
 import React from "react";
-import { Utils } from "@api";
+import {Utils} from "@api";
 import ActivityColors from "./colors.json";
 import Settings from "../settings";
 import Webpack from "../modules/webpack";
