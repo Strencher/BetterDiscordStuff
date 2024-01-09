@@ -23,8 +23,8 @@ const ActivityTypes = {
 
 const {useCallback, useMemo, useState} = React;
 
-const useStateFromStores = Webpack.getModule(m => m?.toString?.().includes("useStateFromStores"), {searchExports: true});
-const useStateFromStoresArray = useStateFromStores;
+const useStateFromStores = Webpack.getModule(m => m.useStateFromStores).useStateFromStores;
+const useStateFromStoresArray = Webpack.getModule(m => m.useStateFromStores).useStateFromStoresArray;
 const {Messages} = Webpack.getModule(m => m?.Messages?.MEMBER_LIST_SHOWN);
 const PresenceStore = Webpack.getStore("PresenceStore");
 const Tooltip = BdApi.Components.Tooltip
