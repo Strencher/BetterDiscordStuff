@@ -1,6 +1,6 @@
 /**
  * @name ShowAllActivities
- * @version 1.1.1
+ * @version 1.1.2
  * @description See every status a user has enabled. Original made by Juby210#0577.
  * @github https://github.com/Strencher/BetterDiscordStuff/tree/master/ShowAllActivities
  * @github_raw https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/ShowAllActivities/ShowAllActivities.plugin.js
@@ -15,7 +15,7 @@
 /* @module @manifest */
 const config = {
     "name": "ShowAllActivities",
-    "version": "1.1.1",
+    "version": "1.1.2",
     "authors": [{
             "name": "Strencher",
             "discord_id": "415849376598982656",
@@ -47,7 +47,17 @@ const config = {
 /*@end */
 
 /* @module @api */
-const { Data, Patcher, DOM, ReactUtils, Utils, Webpack: Webpack$2, UI, ContextMenu } = new BdApi(config.name);
+const {
+    Net,
+    Data,
+    Patcher,
+    ReactUtils,
+    Utils,
+    Webpack: Webpack$2,
+    UI,
+    ContextMenu,
+    DOM
+} = new BdApi(config.name);
 /*@end */
 
 var Api = /*#__PURE__*/ Object.freeze({
@@ -55,6 +65,7 @@ var Api = /*#__PURE__*/ Object.freeze({
     ContextMenu: ContextMenu,
     DOM: DOM,
     Data: Data,
+    Net: Net,
     Patcher: Patcher,
     ReactUtils: ReactUtils,
     UI: UI,
@@ -63,12 +74,19 @@ var Api = /*#__PURE__*/ Object.freeze({
 });
 
 /* @module webpack.js */
-const { Webpack, Webpack: { Filters } } = Api;
+const {
+    Webpack,
+    Webpack: {
+        Filters
+    }
+} = Api;
 const getByProps = (...props) => {
     return Webpack.getModule(Filters.byProps(...props));
 };
 const getBulk = (...queries) => {
-    return Webpack.getBulk.apply(null, queries.map((q) => typeof q === "function" ? { filter: q } : q));
+    return Webpack.getBulk.apply(null, queries.map((q) => typeof q === "function" ? {
+        filter: q
+    } : q));
 };
 const getByPrototypeFields = (...fields) => {
     return Webpack.getModule(Filters.byPrototypeFields(...fields));
@@ -77,7 +95,9 @@ const getStore = (name) => {
     return Webpack.getModule((m) => m?._dispatchToken && m.getName?.() === name);
 };
 const getMangled = function*(filter, target = null) {
-    yield target = getModule((m) => Object.values(m).some(filter), { searchExports: false });
+    yield target = getModule((m) => Object.values(m).some(filter), {
+        searchExports: false
+    });
     yield target && Object.keys(target).find((k) => filter(target[k]));
 };
 const getModule = Webpack.getModule;
@@ -93,20 +113,15 @@ var Webpack$1 = {
 /*@end */
 
 /* @module @styles */
+
 var Styles = {
     sheets: [],
     _element: null,
     load() {
-        if (this._element) return;
-        this._element = Object.assign(document.createElement("style"), {
-            textContent: this.sheets.join("\n"),
-            id: config.name
-        });
-        document.head.appendChild(this._element);
+        DOM.addStyle(this.sheets.join("\n"));
     },
     unload() {
-        this._element?.remove();
-        this._element = null;
+        DOM.removeStyle();
     }
 };
 /*@end */
@@ -117,7 +132,7 @@ var React = BdApi.React;
 
 /* @module settings.js */
 const Settings = {
-    _listeners: /* @__PURE__ */ new Set(),
+    _listeners: new Set(),
     _settings: Data.load("settings") ?? {},
     addReactChangeListener(listener) {
         Settings._listeners.add(listener);
@@ -137,10 +152,12 @@ const Settings = {
 /*@end */
 
 /* @module settings.jsx */
-const SwitchItemComponent = Webpack$1.getModule((m) => typeof m === "function" && m.toString().includes("tooltipNote"), { searchExports: true });
+const SwitchItemComponent = Webpack$1.getModule((m) => typeof m === "function" && m.toString().includes("tooltipNote"), {
+    searchExports: true
+});
 const SwitchItem = (props) => {
     const [value, setValue] = React.useState(props.value);
-    return /* @__PURE__ */ React.createElement(
+    return React.createElement(
         SwitchItemComponent, {
             ...props,
             value,
@@ -156,7 +173,7 @@ const Items = [{
 }];
 
 function SettingsPanel() {
-    return /* @__PURE__ */ React.createElement(React.Fragment, null, Items.map((item) => /* @__PURE__ */ React.createElement(
+    return React.createElement(React.Fragment, null, Items.map((item) => React.createElement(
         SwitchItem, {
             ...item,
             value: Settings.get(item.id, item.value),
@@ -254,8 +271,22 @@ var styles = {
 /*@end */
 
 /* @module caret.jsx */
-function Caret({ direction, ...props }) {
-    return /* @__PURE__ */ React.createElement("svg", { className: "SAA-caret " + styles[direction.toLowerCase()], width: "24", height: "24", viewBox: "0 0 24 24", ...props }, /* @__PURE__ */ React.createElement("path", { fill: "currentColor", fillRule: "evenodd", clipRule: "evenodd", d: "M16.59 8.59004L12 13.17L7.41 8.59004L6 10L12 16L18 10L16.59 8.59004Z" }));
+function Caret({
+    direction,
+    ...props
+}) {
+    return React.createElement("svg", {
+        className: "SAA-caret " + styles[direction.toLowerCase()],
+        width: "24",
+        height: "24",
+        viewBox: "0 0 24 24",
+        ...props
+    }, React.createElement("path", {
+        fill: "currentColor",
+        fillRule: "evenodd",
+        clipRule: "evenodd",
+        d: "M16.59 8.59004L12 13.17L7.41 8.59004L6 10L12 16L18 10L16.59 8.59004Z"
+    }));
 }
 
 /*@end */
@@ -293,10 +324,16 @@ const ActivityTypes = {
     STREAMING: 1,
     WATCHING: 3
 };
-const { useCallback, useMemo, useState } = React;
-const useStateFromStores = Webpack$1.getModule((m) => m?.toString?.().includes("useStateFromStores"), { searchExports: true });
-const useStateFromStoresArray = useStateFromStores;
-const { Messages } = Webpack$1.getModule((m) => m?.Messages?.MEMBER_LIST_SHOWN);
+const {
+    useCallback,
+    useMemo,
+    useState
+} = React;
+const useStateFromStores = Webpack$1.getModule((m) => m.useStateFromStores).useStateFromStores;
+const useStateFromStoresArray = Webpack$1.getModule((m) => m.useStateFromStores).useStateFromStoresArray;
+const {
+    Messages
+} = Webpack$1.getModule((m) => m?.Messages?.MEMBER_LIST_SHOWN);
 const PresenceStore = Webpack$1.getStore("PresenceStore");
 const Tooltip = BdApi.Components.Tooltip;
 const [UserActivity, UserActivityTypes] = (() => {
@@ -308,7 +345,12 @@ const [UserActivity, UserActivityTypes] = (() => {
 })();
 const classes = Webpack$1.getByProps("activity", "buttonColor") ?? {};
 
-function ActivityWrapper({ user, activityType: ActivityType = UserActivity, whatever: WhateverWrapper, ...props }) {
+function ActivityWrapper({
+    user,
+    activityType: ActivityType = UserActivity,
+    whatever: WhateverWrapper,
+    ...props
+}) {
     const activities = useStateFromStoresArray([PresenceStore], () => {
         return PresenceStore.getActivities(user.id).filter((ac) => ac.type !== 4);
     });
@@ -356,12 +398,12 @@ function ActivityWrapper({ user, activityType: ActivityType = UserActivity, what
     const style = {
         "--dot-color": ActivityColors[Object.keys(ActivityColors).find((e) => currentActivity.id?.includes(e) || currentActivity.application_id === e || currentActivity.type === ActivityTypes[e])]
     };
-    return /* @__PURE__ */ React.createElement(WhateverWrapper, null, /* @__PURE__ */ React.createElement("div", {
+    return React.createElement(WhateverWrapper, null, React.createElement("div", {
         className: Utils.className(styles$1.wrapper, {
             [styles$1.spotify]: currentActivity.id?.startsWith("spotify")
         }),
         style
-    }, /* @__PURE__ */ React.createElement(
+    }, React.createElement(
         ActivityType, {
             __SAA: true,
             ...props,
@@ -375,14 +417,16 @@ function ActivityWrapper({ user, activityType: ActivityType = UserActivity, what
             openAction: props.onClose,
             onOpenGameProfile: props.onClose
         }
-    ), shouldShowControls && /* @__PURE__ */ React.createElement("div", { className: styles$1.controls }, /* @__PURE__ */ React.createElement(
+    ), shouldShowControls && React.createElement("div", {
+        className: styles$1.controls
+    }, React.createElement(
         Tooltip, {
             key: "LEFT",
             text: Messages.PAGINATION_PREVIOUS,
             tooltipClassName: styles$1.tooltip,
             spacing: 14
         },
-        (props2) => /* @__PURE__ */ React.createElement(
+        (props2) => React.createElement(
             "div", {
                 ...props2,
                 className: Utils.className(styles$1.caret, {
@@ -390,10 +434,13 @@ function ActivityWrapper({ user, activityType: ActivityType = UserActivity, what
                 }),
                 onClick: goBackward
             },
-            /* @__PURE__ */
-            React.createElement(Caret, { direction: "left" })
+            React.createElement(Caret, {
+                direction: "left"
+            })
         )
-    ), /* @__PURE__ */ React.createElement("div", { className: styles$1.carosell }, activities.map((_, i) => /* @__PURE__ */ React.createElement(
+    ), React.createElement("div", {
+        className: styles$1.carosell
+    }, activities.map((_, i) => React.createElement(
         "div", {
             key: "dot--" + i,
             onClick: () => setActivityIndex(i),
@@ -401,14 +448,14 @@ function ActivityWrapper({ user, activityType: ActivityType = UserActivity, what
                 [styles$1.selected]: i === activityIndex
             })
         }
-    ))), /* @__PURE__ */ React.createElement(
+    ))), React.createElement(
         Tooltip, {
             key: "RIGHT",
             text: Messages.PAGINATION_NEXT,
             tooltipClassName: styles$1.tooltip,
             spacing: 14
         },
-        (props2) => /* @__PURE__ */ React.createElement(
+        (props2) => React.createElement(
             "div", {
                 ...props2,
                 className: Utils.className(styles$1.caret, {
@@ -416,8 +463,9 @@ function ActivityWrapper({ user, activityType: ActivityType = UserActivity, what
                 }),
                 onClick: goForward
             },
-            /* @__PURE__ */
-            React.createElement(Caret, { direction: "right" })
+            React.createElement(Caret, {
+                direction: "right"
+            })
         )
     ))));
 }
@@ -486,17 +534,29 @@ class ShowAllActivities {
     maybeShowChangelog() {
         if (config.version === Settings.get("latestUsedVersion"))
             return;
-        const items = config.changelog.map((item) => /* @__PURE__ */ React.createElement("div", { className: "SAA-changelog-item item-changelog-" + item.type }, /* @__PURE__ */ React.createElement("h4", { className: "SAA-changelog-header" }, item.type), /* @__PURE__ */ React.createElement("span", null, item.items)));
+        const items = config.changelog.map((item) => React.createElement("div", {
+            className: "SAA-changelog-item item-changelog-" + item.type
+        }, React.createElement("h4", {
+            className: "SAA-changelog-header"
+        }, item.type), React.createElement("span", null, item.items)));
         "changelogImage" in config && items.unshift(
-            /* @__PURE__ */
-            React.createElement("img", { className: "SAA-changelog-banner", src: config.changelogImage })
+            React.createElement("img", {
+                className: "SAA-changelog-banner",
+                src: config.changelogImage
+            })
         );
         Settings.set("latestUsedVersion", config.version);
-        const formatter = new Intl.DateTimeFormat(document.documentElement.lang, { month: "long", day: "numeric", year: "numeric" });
-        UI.alert( /* @__PURE__ */ React.createElement("div", { className: "SAA-title-wrap" }, /* @__PURE__ */ React.createElement("h1", null, "What's New - ", config.name), /* @__PURE__ */ React.createElement("span", null, formatter.format(new Date(config.changelogDate)))), items);
+        const formatter = new Intl.DateTimeFormat(document.documentElement.lang, {
+            month: "long",
+            day: "numeric",
+            year: "numeric"
+        });
+        UI.alert(React.createElement("div", {
+            className: "SAA-title-wrap"
+        }, React.createElement("h1", null, "What's New - ", config.name), React.createElement("span", null, formatter.format(new Date(config.changelogDate)))), items);
     }
     getSettingsPanel() {
-        return /* @__PURE__ */ React.createElement(SettingsPanel, null);
+        return React.createElement(SettingsPanel, null);
     }
     start() {
         Styles.load();
@@ -512,7 +572,12 @@ class ShowAllActivities {
             const ActivityType = res?.props?.children?.type;
             if (typeof youTellMe !== "function" || typeof ActivityType !== "function")
                 return;
-            return /* @__PURE__ */ React.createElement(ActivityWrapper, { activityType: ActivityType, whatever: youTellMe, user: props.user, ...props });
+            return React.createElement(ActivityWrapper, {
+                activityType: ActivityType,
+                whatever: youTellMe,
+                user: props.user,
+                ...props
+            });
         });
     }
     stop() {
