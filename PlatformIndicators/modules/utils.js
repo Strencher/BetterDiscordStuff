@@ -1,5 +1,7 @@
 import {Utils} from "@api";
 import {Messages} from "./shared";
+import {Webpack} from "@api";
+const ModulesLibrary = Webpack.getByKeys("Tooltip");
 
 export const findInReactTree = (tree, filter) => Utils.findInTree(tree, filter, {walkable: ["props", "children", "type"]});
 
