@@ -1,12 +1,12 @@
 /**
  * @name APlatformIndicators
- * @version 1.5.2
+ * @version 1.5.3
  * @description Adds indicators for every platform that the user is using.
  * @github https://github.com/Strencher/BetterDiscordStuff/blob/master/PlatformIndicators/APlatformIndicators.plugin.js
  * @github_raw https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/PlatformIndicators/APlatformIndicators.plugin.js
  * @invite gvA2ree
  * @changelogImage https://cdn.discordapp.com/attachments/672786846018961418/1053059354552696932/20th-century-fox-intro.png
- * @changelogDate 2023-12-22T09:25:34.788Z
+ * @changelogDate 2024-02-04T16:25:00.000Z
  * @author Strencher
  */
 
@@ -15,7 +15,7 @@
 /* @module @manifest */
 const manifest = {
     "name": "APlatformIndicators",
-    "version": "1.5.2",
+    "version": "1.5.3",
     "authors": [{
         "name": "Strencher",
         "discord_id": "415849376598982656",
@@ -27,13 +27,12 @@ const manifest = {
     "github_raw": "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/PlatformIndicators/APlatformIndicators.plugin.js",
     "invite": "gvA2ree",
     "changelogImage": "https://cdn.discordapp.com/attachments/672786846018961418/1053059354552696932/20th-century-fox-intro.png",
-    "changelogDate": "2023-12-22T09:25:34.788Z",
+    "changelogDate": "2024-02-04T16:25:00.000Z",
     "changelog": [{
         "title": "Fixes",
         "type": "fixed",
         "items": [
-            "Crashing discord",
-            "I'm sorry for the delay of the fix, will work on improving this in the future."
+            "Settings work again (Thanks zrodevkaan)"
         ]
     }]
 };
@@ -99,6 +98,27 @@ function upperFirst(string) {
 
 function getStatusText(key, status) {
     return upperFirst(key) + ": " + Messages[`STATUS_${(status == "mobile" ? "mobile_online" : status).toUpperCase()}`];
+}
+
+function getStatusColor(status) {
+    const {
+        StatusTypes
+    } = ModulesLibrary;
+    switch (status) {
+        case StatusTypes.ONLINE:
+            return Colors.Color.GREEN_360;
+        case StatusTypes.IDLE:
+            return Colors.Color.YELLOW_300;
+        case StatusTypes.DND:
+            return Colors.Color.RED_400;
+        case StatusTypes.STREAMING:
+            return Colors.Color.TWITCH;
+        case StatusTypes.INVISIBLE:
+        case StatusTypes.UNKNOWN:
+        case StatusTypes.OFFLINE:
+        default:
+            return Colors.Color.PRIMARY_400;
+    }
 }
 
 /*@end */
@@ -271,27 +291,6 @@ var Icons = /*#__PURE__*/ Object.freeze({
 });
 
 /* @module indicators.jsx */
-function getStatusColor(status) {
-    const {
-        StatusTypes
-    } = ModulesLibrary;
-    switch (status) {
-        case StatusTypes.ONLINE:
-            return Colors.Color.GREEN_360;
-        case StatusTypes.IDLE:
-            return Colors.Color.YELLOW_300;
-        case StatusTypes.DND:
-            return Colors.Color.RED_400;
-        case StatusTypes.STREAMING:
-            return Colors.Color.TWITCH;
-        case StatusTypes.INVISIBLE:
-        case StatusTypes.UNKNOWN:
-        case StatusTypes.OFFLINE:
-        default:
-            return Colors.Color.PRIMARY_400;
-    }
-}
-
 function StatusIndicators({
     type,
     userId,
@@ -514,7 +513,7 @@ function SmartDisable(props) {
     }, ["online", "dnd", "idle", "offline"].map(
         (status) => React.createElement(Icons[item.icon], {
             style: {
-                color: Colors.ColorDetails[ModulesLibrary.getStatusColor(status)]?.hex
+                color: Colors.ColorDetails[getStatusColor(status)]?.hex
             },
             width: iconSize,
             height: iconSize
