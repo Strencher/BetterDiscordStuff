@@ -3,27 +3,7 @@ import Styles from "./indicators.scss";
 import {Colors, ModulesLibrary, buildClassName} from "../modules/shared";
 import usePlatformStores from "../modules/usePlatformStores";
 import * as Icons from "./icons/Icons";
-import {getStatusText} from "../modules/utils";
-
-function getStatusColor(status) {
-    const {StatusTypes} = ModulesLibrary;
-
-    switch (status) {
-        case StatusTypes.ONLINE:
-            return Colors.Color.GREEN_360;
-        case StatusTypes.IDLE:
-            return Colors.Color.YELLOW_300;
-        case StatusTypes.DND:
-            return Colors.Color.RED_400;
-        case StatusTypes.STREAMING:
-            return Colors.Color.TWITCH;
-        case StatusTypes.INVISIBLE:
-        case StatusTypes.UNKNOWN:
-        case StatusTypes.OFFLINE:
-        default:
-            return Colors.Color.PRIMARY_400
-    }
-}
+import {getStatusText, getStatusColor} from "../modules/utils";
 
 export default function StatusIndicators({type, userId, size = 18, separator = false}) {
     const state = usePlatformStores(userId, type);
