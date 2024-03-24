@@ -77,7 +77,7 @@ const SessionsStore = Webpack.getStore("SessionsStore");
 const UserStore = Webpack.getStore("UserStore");
 const PresenceStore = Webpack.getStore("PresenceStore");
 const Dispatcher = UserStore._dispatcher;
-const Flux = Webpack.getByKeys("useStateFromStores");
+const Flux = Webpack.getByKeys("useStateFromStoresObject", "Store");
 const ModulesLibrary = Webpack.getByKeys("Tooltip");
 const Colors = Webpack.getByKeys("ColorDetails");
 const {
