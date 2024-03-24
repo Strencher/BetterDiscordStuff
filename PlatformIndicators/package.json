@@ -1,6 +1,6 @@
 {
     "name": "APlatformIndicators",
-    "version": "1.5.3",
+    "version": "1.5.4",
     "authors": [
         {
             "name": "Strencher",
@@ -20,7 +20,7 @@
             "title": "Fixes",
             "type": "fixed",
             "items": [
-                "Settings work again (Thanks zrodevkaan)"
+                "Plugin works again (Thanks zrodevkaan)"
             ]
         }
     ]
