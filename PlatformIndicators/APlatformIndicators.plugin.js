@@ -1,6 +1,6 @@
 /**
  * @name APlatformIndicators
- * @version 1.5.3
+ * @version 1.5.4
  * @description Adds indicators for every platform that the user is using.
  * @github https://github.com/Strencher/BetterDiscordStuff/blob/master/PlatformIndicators/APlatformIndicators.plugin.js
  * @github_raw https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/PlatformIndicators/APlatformIndicators.plugin.js
@@ -15,7 +15,7 @@
 /* @module @manifest */
 const manifest = {
     "name": "APlatformIndicators",
-    "version": "1.5.3",
+    "version": "1.5.4",
     "authors": [{
         "name": "Strencher",
         "discord_id": "415849376598982656",
@@ -32,7 +32,7 @@ const manifest = {
         "title": "Fixes",
         "type": "fixed",
         "items": [
-            "Settings work again (Thanks zrodevkaan)"
+            "Plugin works again (Thanks zrodevkaan)"
         ]
     }]
 };
