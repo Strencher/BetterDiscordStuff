@@ -8,7 +8,7 @@ export const PresenceStore = Webpack.getStore("PresenceStore");
 
 // Other modules
 export const Dispatcher = UserStore._dispatcher;
-export const Flux = Webpack.getByKeys("useStateFromStores");
+export const Flux = Webpack.getByKeys("useStateFromStoresObject","Store");
 export const ModulesLibrary = Webpack.getByKeys("Tooltip");
 export const Colors = Webpack.getByKeys("ColorDetails");
 export const {Messages} = Webpack.getModule(m => m?.Messages?.STATUS_DND);
