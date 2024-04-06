@@ -1,6 +1,6 @@
 /**
  * @name APlatformIndicators
- * @version 1.5.4
+ * @version 1.5.5
  * @description Adds indicators for every platform that the user is using.
  * @github https://github.com/Strencher/BetterDiscordStuff/blob/master/PlatformIndicators/APlatformIndicators.plugin.js
  * @github_raw https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/PlatformIndicators/APlatformIndicators.plugin.js
@@ -15,7 +15,7 @@
 /* @module @manifest */
 const manifest = {
     "name": "APlatformIndicators",
-    "version": "1.5.4",
+    "version": "1.5.5",
     "authors": [{
         "name": "Strencher",
         "discord_id": "415849376598982656",
@@ -583,7 +583,7 @@ class PlatformIndicators {
                             obj.decorators,
                             React.createElement(
                                 StatusIndicators, {
-                                    userId: props.user.id,
+                                    userId: props.user?.id,
                                     type: "MemberList"
                                 }
                             )
@@ -608,29 +608,33 @@ class PlatformIndicators {
     patchMemberList() {
         const MemberItem = Webpack.getByKeys("AVATAR_DECORATION_PADDING");
         Patcher.after(MemberItem, "default", (_, [props], ret) => {
-            const obj = findInReactTree(ret, (e) => e?.avatar && e?.name);
+            const children = ret.props.children();
+            const obj = findInReactTree(children, (e) => e?.avatar && e?.name);
             if (obj) {
-                obj.decorators = [
-                    obj.decorators,
+                children.props.decorators?.props?.children.push(
                     React.createElement(
                         StatusIndicators, {
                             userId: props.user.id,
                             type: "MemberList"
                         }
                     )
-                ];
+                );
             }
+            ret.props.children = () => {
+                return children;
+            };
         });
     }
     patchUsername() {
         const ChatUsername = Webpack.getByKeys("UsernameDecorationTypes");
-        Patcher.before(ChatUsername, "default", (_, [props]) => {
-            if (!Array.isArray(props.decorations[1]))
-                props.decorations[1] = [];
-            props.decorations[1].unshift(
+        Patcher.before(ChatUsername, "default", (_, props) => {
+            const mainProps = props[0];
+            if (!Array.isArray(mainProps.decorations[1]))
+                mainProps.decorations[1] = [];
+            mainProps.decorations[1].unshift(
                 React.createElement(
                     StatusIndicators, {
-                        userId: props.message.author.id,
+                        userId: mainProps.message.author.id,
                         type: "Chat"
                     }
                 )
