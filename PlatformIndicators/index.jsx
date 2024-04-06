@@ -37,7 +37,7 @@ export default class PlatformIndicators {
                         obj.decorators = [
                             obj.decorators,
                             <StatusIndicators
-                                userId={props.user.id}
+                                userId={props.user?.id}
                                 type="MemberList"
                             />
                         ];
@@ -66,28 +66,32 @@ export default class PlatformIndicators {
         const MemberItem = Webpack.getByKeys("AVATAR_DECORATION_PADDING");
 
         Patcher.after(MemberItem, "default", (_, [props], ret) => {
-            const obj = findInReactTree(ret, e => e?.avatar && e?.name);
-
+            const children = ret.props.children();
+            const obj = findInReactTree(children, e => e?.avatar && e?.name);
             if (obj) {
-                obj.decorators = [
-                    obj.decorators,
+                children.props.decorators?.props?.children.push(
                     <StatusIndicators
                         userId={props.user.id}
                         type="MemberList"
                     />
-                ];
+                )
             }
+            // discord made it a method to return the children :(
+            ret.props.children = () => {
+                return children;
+            };
         });
     }
 
     patchUsername() {
         const ChatUsername = Webpack.getByKeys("UsernameDecorationTypes");
 
-        Patcher.before(ChatUsername, "default", (_, [props]) => {
-            if (!Array.isArray(props.decorations[1])) props.decorations[1] = [];
-            props.decorations[1].unshift(
+        Patcher.before(ChatUsername, "default", (_, props) => {
+            const mainProps = props[0];
+            if (!Array.isArray(mainProps.decorations[1])) mainProps.decorations[1] = [];
+            mainProps.decorations[1].unshift(
                 <StatusIndicators
-                    userId={props.message.author.id}
+                    userId={mainProps.message.author.id}
                     type="Chat"
                 />
             );
