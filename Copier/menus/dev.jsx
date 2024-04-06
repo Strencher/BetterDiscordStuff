@@ -57,10 +57,13 @@ export default function () {
         };
         
         const role = props.role || (() => {
-            const guild = GuildStore.getGuild(SelectedGuildStore.getGuildId());
+            // store it so we don't have to reuse 'SelectedGuildStore.getGuildId();' each time
+            const selectedGuild = SelectedGuildStore.getGuildId();
+            const guild = GuildStore.getGuild(selectedGuild);
             if (!guild) return handleClose();
 
-            const role = guild.getRole(props.id);
+            // getROle is now stored on the GuildStore wanting the guild.id and the role.id
+            const role = GuildStore.getRole(selectedGuild, props.id);
 
             if (!role) return handleClose();
 
