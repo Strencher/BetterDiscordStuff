@@ -52,19 +52,13 @@ export default function () {
     const patches = new Set([]);
 
     const patch = (res, props) => {
-        const handleClose = () => {
-            res?.props?.onClose();
-        };
+        const handleClose = () => res?.props?.onClose();
         
         const role = props.role || (() => {
-            const guild = GuildStore.getGuild(SelectedGuildStore.getGuildId());
-            if (!guild) return handleClose();
-
-            const role = guild.getRole(props.id);
-
-            if (!role) return handleClose();
-
-            return role;
+            const selectedGuild = SelectedGuildStore.getGuildId();
+            if (!GuildStore.getGuild(selectedGuild)) return handleClose();
+            const role = GuildStore.getRole(selectedGuild, props.id);
+            return role || handleClose();
         })();
 
         const colors = {
@@ -72,8 +66,6 @@ export default function () {
             int: role.color,
             rgb: int2rgb(role.color)
         };
-
-        console.log(colors);
 
         if (!Array.isArray(res.props.children)) {
             res.props.children = [res.props.children];
