@@ -52,22 +52,13 @@ export default function () {
     const patches = new Set([]);
 
     const patch = (res, props) => {
-        const handleClose = () => {
-            res?.props?.onClose();
-        };
+        const handleClose = () => res?.props?.onClose();
         
         const role = props.role || (() => {
-            // store it so we don't have to reuse 'SelectedGuildStore.getGuildId();' each time
             const selectedGuild = SelectedGuildStore.getGuildId();
-            const guild = GuildStore.getGuild(selectedGuild);
-            if (!guild) return handleClose();
-
-            // getROle is now stored on the GuildStore wanting the guild.id and the role.id
+            if (!GuildStore.getGuild(selectedGuild)) return handleClose();
             const role = GuildStore.getRole(selectedGuild, props.id);
-
-            if (!role) return handleClose();
-
-            return role;
+            return role || handleClose();
         })();
 
         const colors = {
@@ -75,8 +66,6 @@ export default function () {
             int: role.color,
             rgb: int2rgb(role.color)
         };
-
-        console.log(colors);
 
         if (!Array.isArray(res.props.children)) {
             res.props.children = [res.props.children];
