@@ -1,6 +1,6 @@
 /**
  * @name APlatformIndicators
- * @version 1.5.5
+ * @version 1.5.6
  * @description Adds indicators for every platform that the user is using.
  * @github https://github.com/Strencher/BetterDiscordStuff/blob/master/PlatformIndicators/APlatformIndicators.plugin.js
  * @github_raw https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/PlatformIndicators/APlatformIndicators.plugin.js
@@ -15,7 +15,7 @@
 /* @module @manifest */
 const manifest = {
     "name": "APlatformIndicators",
-    "version": "1.5.5",
+    "version": "1.5.6",
     "authors": [{
         "name": "Strencher",
         "discord_id": "415849376598982656",
@@ -78,7 +78,7 @@ const UserStore = Webpack.getStore("UserStore");
 const PresenceStore = Webpack.getStore("PresenceStore");
 const Dispatcher = UserStore._dispatcher;
 const Flux = Webpack.getByKeys("useStateFromStoresObject", "Store");
-const ModulesLibrary = Webpack.getByKeys("Tooltip");
+const ModulesLibrary = Webpack.getByKeys("Anchor");
 const Colors = Webpack.getByKeys("ColorDetails");
 const {
     Messages
