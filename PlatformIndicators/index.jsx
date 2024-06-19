@@ -11,16 +11,16 @@ export default class PlatformIndicators {
     }
 
     start() {
-        this.patchDMs();
+        //this.patchDMs();
         this.patchMemberList();
         this.patchUsername();
-        this.patchUserPopout();
+        //this.patchUserPopout();
 
         Styles.load();
     }
 
     patchDMs() {
-        const HomeComponents = Webpack.getByKeys("CloseButton", "LinkButton");
+        const [HomeComponents, key] = BdApi.Webpack.getWithKey(BdApi.Webpack.Filters.byStrings('.nameAndDecorators'))
 
         function PatchedDMs({__PI_ORIGINAL, ...props}) {
             const res = __PI_ORIGINAL(props);
@@ -54,18 +54,14 @@ export default class PlatformIndicators {
             return res;
         }
 
-        Patcher.after(HomeComponents, "default", (_, __, res) => {
-            if (res.type === PatchedDMs) return;
-            res.props.__PI_ORIGINAL = res.type;
-
-            res.type = PatchedDMs;
+        Patcher.after(HomeComponents, "Z", (_, __, res) => {
         });
     }
 
     patchMemberList() {
-        const MemberItem = Webpack.getByKeys("AVATAR_DECORATION_PADDING");
-
-        Patcher.after(MemberItem, "default", (_, [props], ret) => {
+        const [MemberItem, key] = BdApi.Webpack.getWithKey(BdApi.Webpack.Filters.byStrings('.jXE.MEMBER_LIST'))
+        
+        Patcher.after(MemberItem, "Z", (_, [props], ret) => {
             const children = ret.props.children();
             const obj = findInReactTree(children, e => e?.avatar && e?.name);
             if (obj) {
@@ -84,12 +80,12 @@ export default class PlatformIndicators {
     }
 
     patchUsername() {
-        const ChatUsername = Webpack.getByKeys("UsernameDecorationTypes");
-
-        Patcher.before(ChatUsername, "default", (_, props) => {
+        const [ChatUsername, key] = BdApi.Webpack.getWithKey(BdApi.Webpack.Filters.byStrings('.guildMemberAvatar&&null!='))
+        Patcher.before(ChatUsername, "Z", (_, props) => {
             const mainProps = props[0];
-            if (!Array.isArray(mainProps.decorations[1])) mainProps.decorations[1] = [];
-            mainProps.decorations[1].unshift(
+            if (!Array.isArray(mainProps?.decorations[1]) && mainProps && mainProps?.decorations) mainProps.decorations[1] = [];
+            // for some reason props just won't exist.
+            mainProps?.decorations[1]?.unshift(
                 <StatusIndicators
                     userId={mainProps.message.author.id}
                     type="Chat"
@@ -98,7 +94,7 @@ export default class PlatformIndicators {
         })
     }
 
-    patchUserPopout() {
+    /*patchUserPopout() {
         const UserPopoutModule = Webpack.getByKeys("UserPopoutBadgeList");
 
         function PatchedBadgesList({__PI_ORIGINAL, ...props}) {
@@ -136,7 +132,7 @@ export default class PlatformIndicators {
 
             vnode.type = PatchedBadgesList;
         });
-    }
+    }*/
 
     stop() {
         Patcher.unpatchAll();

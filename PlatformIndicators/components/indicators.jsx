@@ -24,7 +24,7 @@ export default function StatusIndicators({type, userId, size = 18, separator = f
                                 {props => (
                                     <Icon
                                         text={getStatusText(key, status)}
-                                        style={{color: Colors.ColorDetails[getStatusColor(status)]?.hex}}
+                                        style={{color: getStatusColor(status)}}
                                         width={size}
                                         height={size}
                                         data-status={status}

@@ -44,7 +44,7 @@ function SmartDisable(props) {
                     <div key={item.id} className={Styles.item} onClick={() => handleClick(item.id)}>
                         {["online", "dnd", "idle", "offline"].map(status => 
                             React.createElement(Icons[item.icon], {
-                                style: {color: Colors.ColorDetails[getStatusColor(status)]?.hex},
+                                style: {color: getStatusColor(status)},
                                 width: iconSize,
                                 height: iconSize
                             })
