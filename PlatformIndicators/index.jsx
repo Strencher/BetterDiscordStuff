@@ -1,4 +1,4 @@
-import {Patcher, ReactUtils, Webpack, Utils} from "@api";
+import {DOM, Patcher, ReactUtils, Webpack, Utils} from "@api";
 import Styles from "@styles";
 import React from "react";
 import {findInReactTree} from "./modules/utils";
@@ -15,7 +15,7 @@ export default class PlatformIndicators {
         this.patchMemberList();
         this.patchUsername();
         this.patchBadges();
-
+        this.patchFriendList();
         Styles.load();
     }
 
@@ -120,8 +120,32 @@ export default class PlatformIndicators {
         });
     }
 
+    patchFriendList() {
+        const [UserInfo, key] = Webpack.getWithKey(Webpack.Filters.byStrings("user", "subText", "showAccountIdentifier"));
+        const FriendListClasses = Webpack.getByKeys("userInfo", "hovered");
+
+        DOM.addStyle("PlatformIndicators", `
+            .${FriendListClasses.discriminator} { display: none; }
+            .${FriendListClasses.hovered} .${FriendListClasses.discriminator} { display: unset; }
+        `);
+
+        Patcher.after(UserInfo, key, (_, __, res) => {
+            Patcher.after(res.props.children[1].props.children[0], "type", (_, [props], res) => {
+                Patcher.after(res, "type", (_, __, res) => {
+                    res.props.children.push(
+                        <StatusIndicators
+                            userId={props.user.id}
+                            type="FriendList"
+                        />
+                    );
+                });
+            });
+        });
+    }
+
     stop() {
         Patcher.unpatchAll();
+        DOM.removeStyle("PlatformIndicators");
         Styles.unload();
     }
 }
