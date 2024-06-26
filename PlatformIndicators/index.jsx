@@ -14,7 +14,7 @@ export default class PlatformIndicators {
         this.patchDMs();
         this.patchMemberList();
         this.patchUsername();
-        //this.patchUserPopout();
+        this.patchBadges();
 
         Styles.load();
     }
@@ -35,9 +35,10 @@ export default class PlatformIndicators {
             });
         });
 
-        const ChannelWrapperElement = document.querySelector(`h2 + .${ChannelClasses.channel}`);
-        const ChannelWrapperInstance = ReactUtils.getOwnerInstance(ChannelWrapperElement);
-        if (ChannelWrapperInstance) ChannelWrapperInstance.forceUpdate();
+        // TODO: Fix when youre not in the DMs List Screen while starting
+        // const ChannelWrapperElement = document.querySelector(`h2 + .${ChannelClasses.channel}`);
+        // const ChannelWrapperInstance = ReactUtils.getOwnerInstance(ChannelWrapperElement);
+        // if (ChannelWrapperInstance) ChannelWrapperInstance.forceUpdate();
 
         Patcher.after(NameWrapper, Key_NW, (_, __, res) => {
             const user = React.useContext(UserContext);
@@ -86,47 +87,30 @@ export default class PlatformIndicators {
         })
     }
 
-    /*
-    patchUserPopout() {
-        const UserPopoutModule = Webpack.getByKeys("UserPopoutBadgeList");
-
-        function PatchedBadgesList({__PI_ORIGINAL, ...props}) {
-            const res = __PI_ORIGINAL(props);
-
-            try {
-                if (Array.isArray(res?.props?.children)) {
-                    res.props.children.push(
-                        <StatusIndicators
-                            userId={props.user.id}
-                            type="Tags"
-                            size="22"
-                            separator={!!res.props.children.length}
-                        />
-                    );
-                }
-            } catch (error) {
-                console.error(error);
-            }
-
-            return res;
-        }
-
-        Patcher.after(UserPopoutModule, "default", (_, [props], ret) => {
-            const vnode = findInReactTree(ret, e => e?.type === UserPopoutModule.UserPopoutBadgeList.__originalFunction);
-
-            if (vnode) {
-                vnode.type = UserPopoutModule.UserPopoutBadgeList;
-            }
+    patchBadges() {
+        const UserContext = React.createContext(null);
+        const [ProfileInfoRow, KEY_PIR] = Webpack.getWithKey(Webpack.Filters.byStrings("user", "profileType"));
+        const [BadgeList, Key_BL] = Webpack.getWithKey(Webpack.Filters.byStrings(".PROFILE_USER_BADGES"));
+        
+        Patcher.after(ProfileInfoRow, KEY_PIR, (_, [props], res) => {
+            return (
+                <UserContext.Provider value={props.user}>
+                    {res}
+                </UserContext.Provider>
+              );
         });
 
-        Patcher.after(UserPopoutModule, "UserPopoutBadgeList", (_, [props], ret) => {
-            const vnode = ret.props.children[1];
-            vnode.props.__PI_ORIGINAL = vnode.type;
-
-            vnode.type = PatchedBadgesList;
+        Patcher.after(BadgeList, Key_BL, (_, __, res) => {
+            const user = React.useContext(UserContext);
+            if (!user) return;
+            res.props.children.push(
+                <StatusIndicators
+                    userId={user.id}
+                    type="Badge"
+                />
+            );
         });
     }
-    */
 
     stop() {
         Patcher.unpatchAll();
