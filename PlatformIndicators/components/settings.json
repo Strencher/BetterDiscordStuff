@@ -1,7 +1,14 @@
 [
     {
         "type": "switch",
-        "name": "Show in MemberList",
+        "name": "Show in Friendslist",
+        "note": "Shows the platform indicators in the friendslist",
+        "id": "showInFriendsList",
+        "value": true
+    },
+    {
+        "type": "switch",
+        "name": "Show in Memberlist",
         "note": "Shows the platform indicators in the memberlist",
         "id": "showInMemberList",
         "value": true
@@ -15,16 +22,16 @@
     },
     {
         "type": "switch",
-        "name": "Show in DMs List",
+        "name": "Show in DMs list",
         "note": "Shows the platform indicators in the dm list.",
         "id": "showInDmsList",
         "value": true
     },
     {
         "type": "switch",
-        "name": "Show next to discord tags",
-        "note": "Shows the platform indicators right next to the discord tag.",
-        "id": "showInTags",
+        "name": "Show in Discord Badges",
+        "note": "Shows the platform indicators right next to the discord badges.",
+        "id": "showInBadges",
         "value": true
     },
     {

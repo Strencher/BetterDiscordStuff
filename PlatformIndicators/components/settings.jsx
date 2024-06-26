@@ -1,5 +1,5 @@
 import Settings from "../modules/settings";
-import {Colors, Flux, ModulesLibrary, buildClassName} from "../modules/shared";
+import {useStateFromStores} from "../modules/shared";
 import * as Icons from "./icons/Icons";
 import Styles from "./settings.scss";
 import {Webpack} from "@api";
@@ -11,7 +11,7 @@ import {getStatusColor} from "../modules/utils";
 const {FormSwitch} = Webpack.getByKeys("FormSwitch");
 
 function SwitchItem(props) {
-    const value = Flux.useStateFromStores([Settings], () => Settings.get(props.id, props.value));
+    const value = useStateFromStores([Settings], () => Settings.get(props.id, props.value));
 
     return (
         <FormSwitch

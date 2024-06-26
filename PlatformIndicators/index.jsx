@@ -1,6 +1,8 @@
 import {DOM, Patcher, ReactUtils, Webpack, Utils} from "@api";
 import Styles from "@styles";
 import React from "react";
+import Settings from "./modules/settings";
+import {useStateFromStores} from "./modules/shared";
 import {findInReactTree} from "./modules/utils";
 import StatusIndicators from "./components/indicators";
 import SettingsPanel from "./components/settings";
@@ -26,7 +28,9 @@ export default class PlatformIndicators {
         const ChannelClasses = Webpack.getByKeys("channel", "decorator");
 
         Patcher.after(ChannelWrapper, Key_CW, (_, __, res) => {
+            if (!Settings.get("showInDmsList", true)) return;
             Patcher.after(res, "type", (_, [props], res) => {
+                if (Settings.get("ignoreBots", true) && props.user.bot) return;
                 return (
                     <UserContext.Provider value={props.user}>
                         {res}
@@ -42,6 +46,7 @@ export default class PlatformIndicators {
         }
 
         Patcher.after(NameWrapper, Key_NW, (_, __, res) => {
+            if (!Settings.get("showInDmsList", true)) return;
             const user = React.useContext(UserContext);
             if (!user) return;
             const child = Utils.findInTree(res, e => e?.className?.includes("nameAndDecorators"));
@@ -60,6 +65,8 @@ export default class PlatformIndicators {
         const MemberListClasses = Webpack.getByKeys("member", "memberInner");
 
         Patcher.after(MemberItem, key, (_, [props], ret) => {
+            if (!Settings.get("showInMemberList", true)) return;
+            if (Settings.get("ignoreBots", true) && props.user.bot) return;
             const children = ret.props.children();
             const obj = findInReactTree(children, e => e?.avatar && e?.name);
             if (obj)
@@ -84,6 +91,8 @@ export default class PlatformIndicators {
         const [ChatUsername, key] = Webpack.getWithKey(Webpack.Filters.byStrings(".guildMemberAvatar&&null!="));
         Patcher.before(ChatUsername, key, (_, props) => {
             const mainProps = props[0];
+            if (!Settings.get("showInChat", true)) return;
+            if (Settings.get("ignoreBots", true) && mainProps.message.author.bot) return;
             if (!Array.isArray(mainProps?.decorations[1]) && mainProps && mainProps?.decorations) mainProps.decorations[1] = [];
             // for some reason props just won't exist.
             mainProps?.decorations[1]?.unshift(
@@ -101,6 +110,8 @@ export default class PlatformIndicators {
         const [BadgeList, Key_BL] = Webpack.getWithKey(Webpack.Filters.byStrings(".PROFILE_USER_BADGES"));
         
         Patcher.after(ProfileInfoRow, KEY_PIR, (_, [props], res) => {
+            if (!Settings.get("showInBadges", true)) return;
+            if (Settings.get("ignoreBots", true) && props.user.bot) return;
             return (
                 <UserContext.Provider value={props.user}>
                     {res}
@@ -111,6 +122,7 @@ export default class PlatformIndicators {
         Patcher.after(BadgeList, Key_BL, (_, __, res) => {
             const user = React.useContext(UserContext);
             if (!user) return;
+            if (Settings.get("ignoreBots", true) && user.bot) return;
             res.props.children.push(
                 <StatusIndicators
                     userId={user.id}
@@ -130,6 +142,7 @@ export default class PlatformIndicators {
         `);
 
         Patcher.after(UserInfo, key, (_, __, res) => {
+            if (!Settings.get("showInFriendsList", true)) return;
             Patcher.after(res.props.children[1].props.children[0], "type", (_, [props], res) => {
                 Patcher.after(res, "type", (_, __, res) => {
                     res.props.children.push(

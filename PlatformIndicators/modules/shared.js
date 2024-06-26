@@ -8,6 +8,7 @@ export const PresenceStore = Webpack.getStore("PresenceStore");
 
 // Other modules
 export const {useSyncExternalStore: useStateFromStoresObject} = Webpack.getByKeys("useSyncExternalStore");
+export const useStateFromStores = Webpack.getByStrings("useStateFromStores", {searchExports: true});
 export const Dispatcher = UserStore._dispatcher;
 
 export const Flux = Webpack.getByKeys("Store");
