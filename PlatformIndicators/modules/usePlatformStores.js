@@ -1,5 +1,5 @@
 import Settings from "./settings";
-import {Flux, useStateFromStoresObject, LocalActivityStore, PresenceStore, SessionsStore, UserStore} from "./shared";
+import {LocalActivityStore, PresenceStore, SessionsStore, UserStore} from "./shared";
 
 const isStreaming = () => LocalActivityStore.getActivities().some(e => e.type === 1);
 

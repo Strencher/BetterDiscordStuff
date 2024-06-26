@@ -1,6 +1,6 @@
 import React from "react";
 import Styles from "./indicators.scss";
-import {Colors, ModulesLibrary, buildClassName} from "../modules/shared";
+import {ModulesLibrary, buildClassName} from "../modules/shared";
 import usePlatformStores from "../modules/usePlatformStores";
 import * as Icons from "./icons/Icons";
 import {getStatusText, getStatusColor} from "../modules/utils";

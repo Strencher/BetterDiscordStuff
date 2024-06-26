@@ -1,5 +1,4 @@
 import {Dispatcher, Flux} from "./shared";
-import config from "@manifest";
 import {Data} from "@api";
 
 const Settings = new class Settings extends Flux.Store {
