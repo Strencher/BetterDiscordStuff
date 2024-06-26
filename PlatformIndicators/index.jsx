@@ -1,4 +1,4 @@
-import {Patcher, Webpack, Utils} from "@api";
+import {Patcher, ReactUtils, Webpack, Utils} from "@api";
 import Styles from "@styles";
 import React from "react";
 import {findInReactTree} from "./modules/utils";
@@ -23,6 +23,7 @@ export default class PlatformIndicators {
         const UserContext = React.createContext(null);
         const [ChannelWrapper, Key_CW] = Webpack.getWithKey(Webpack.Filters.byStrings("isGDMFacepileEnabled"));
         const [NameWrapper, Key_NW] = Webpack.getWithKey(Webpack.Filters.byStrings(".nameAndDecorators"));
+        const ChannelClasses = Webpack.getByKeys("channel", "decorator");
 
         Patcher.after(ChannelWrapper, Key_CW, (_, __, res) => {
             Patcher.after(res, "type", (_, [props], res) => {
@@ -33,6 +34,10 @@ export default class PlatformIndicators {
                   );
             });
         });
+
+        const ChannelWrapperElement = document.querySelector(`h2 + .${ChannelClasses.channel}`);
+        const ChannelWrapperInstance = ReactUtils.getOwnerInstance(ChannelWrapperElement);
+        if (ChannelWrapperInstance) ChannelWrapperInstance.forceUpdate();
 
         Patcher.after(NameWrapper, Key_NW, (_, __, res) => {
             const user = React.useContext(UserContext);
