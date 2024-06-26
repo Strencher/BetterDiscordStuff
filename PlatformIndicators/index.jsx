@@ -50,7 +50,7 @@ export default class PlatformIndicators {
 
     patchMemberList() {
         const [MemberItem, key] = Webpack.getWithKey(Webpack.Filters.byStrings(".jXE.MEMBER_LIST"));
-        
+
         Patcher.after(MemberItem, key, (_, [props], ret) => {
             const children = ret.props.children();
             const obj = findInReactTree(children, e => e?.avatar && e?.name);
@@ -81,7 +81,8 @@ export default class PlatformIndicators {
         })
     }
 
-    /*patchUserPopout() {
+    /*
+    patchUserPopout() {
         const UserPopoutModule = Webpack.getByKeys("UserPopoutBadgeList");
 
         function PatchedBadgesList({__PI_ORIGINAL, ...props}) {
@@ -119,7 +120,8 @@ export default class PlatformIndicators {
 
             vnode.type = PatchedBadgesList;
         });
-    }*/
+    }
+    */
 
     stop() {
         Patcher.unpatchAll();
