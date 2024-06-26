@@ -1,4 +1,4 @@
-import {Patcher, Webpack} from "@api";
+import {Patcher, Webpack, Utils} from "@api";
 import Styles from "@styles";
 import React from "react";
 import {findInReactTree} from "./modules/utils";
@@ -11,7 +11,7 @@ export default class PlatformIndicators {
     }
 
     start() {
-        //this.patchDMs();
+        this.patchDMs();
         this.patchMemberList();
         this.patchUsername();
         //this.patchUserPopout();
@@ -20,68 +20,55 @@ export default class PlatformIndicators {
     }
 
     patchDMs() {
-        const [HomeComponents, key] = BdApi.Webpack.getWithKey(BdApi.Webpack.Filters.byStrings('.nameAndDecorators'))
+        const UserContext = React.createContext(null);
+        const [ChannelWrapper, Key_CW] = Webpack.getWithKey(Webpack.Filters.byStrings("isGDMFacepileEnabled"));
+        const [NameWrapper, Key_NW] = Webpack.getWithKey(Webpack.Filters.byStrings(".nameAndDecorators"));
 
-        function PatchedDMs({__PI_ORIGINAL, ...props}) {
-            const res = __PI_ORIGINAL(props);
-            try {
-                const originalChildren = res.props.children;
+        Patcher.after(ChannelWrapper, Key_CW, (_, __, res) => {
+            Patcher.after(res, "type", (_, [props], res) => {
+                return (
+                    <UserContext.Provider value={props.user}>
+                        {res}
+                    </UserContext.Provider>
+                  );
+            });
+        });
 
-                res.props.children = e => {
-                    const ret = originalChildren(e);
-
-                    try {
-                        const obj = findInReactTree(ret, e => e?.avatar && e?.name);
-                        if (!obj) return ret;
-
-                        obj.decorators = [
-                            obj.decorators,
-                            <StatusIndicators
-                                userId={props.user?.id}
-                                type="MemberList"
-                            />
-                        ];
-                    } catch (error) {
-                        console.error(error);
-                    }
-
-                    return ret;
-                }
-            } catch (error) {
-                console.error(error);
-            }
-
-            return res;
-        }
-
-        Patcher.after(HomeComponents, "Z", (_, __, res) => {
+        Patcher.after(NameWrapper, Key_NW, (_, __, res) => {
+            const user = React.useContext(UserContext);
+            if (!user) return;
+            const child = Utils.findInTree(res, e => e?.className?.includes("nameAndDecorators"));
+            if (!child) return;
+            child.children.push(
+                <StatusIndicators
+                    userId={user.id}
+                    type="MemberList"
+                />
+            );
         });
     }
 
     patchMemberList() {
-        const [MemberItem, key] = BdApi.Webpack.getWithKey(BdApi.Webpack.Filters.byStrings('.jXE.MEMBER_LIST'))
+        const [MemberItem, key] = Webpack.getWithKey(Webpack.Filters.byStrings(".jXE.MEMBER_LIST"));
         
-        Patcher.after(MemberItem, "Z", (_, [props], ret) => {
+        Patcher.after(MemberItem, key, (_, [props], ret) => {
             const children = ret.props.children();
             const obj = findInReactTree(children, e => e?.avatar && e?.name);
-            if (obj) {
+            if (obj)
                 children.props.decorators?.props?.children.push(
                     <StatusIndicators
                         userId={props.user.id}
                         type="MemberList"
                     />
-                )
-            }
+                );
             // discord made it a method to return the children :(
-            ret.props.children = () => {
-                return children;
-            };
+            ret.props.children = () => children;
         });
     }
 
     patchUsername() {
-        const [ChatUsername, key] = BdApi.Webpack.getWithKey(BdApi.Webpack.Filters.byStrings('.guildMemberAvatar&&null!='))
-        Patcher.before(ChatUsername, "Z", (_, props) => {
+        const [ChatUsername, key] = Webpack.getWithKey(Webpack.Filters.byStrings(".guildMemberAvatar&&null!="));
+        Patcher.before(ChatUsername, key, (_, props) => {
             const mainProps = props[0];
             if (!Array.isArray(mainProps?.decorations[1]) && mainProps && mainProps?.decorations) mainProps.decorations[1] = [];
             // for some reason props just won't exist.

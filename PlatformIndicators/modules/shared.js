@@ -8,12 +8,12 @@ export const PresenceStore = Webpack.getStore("PresenceStore");
 
 // Other modules
 
-export const {useSyncExternalStore: useStateFromStoresObject} = Webpack.getByKeys('useSyncExternalStore')
+export const {useSyncExternalStore: useStateFromStoresObject} = Webpack.getByKeys("useSyncExternalStore");
 export const Dispatcher = UserStore._dispatcher;
 
 export const Flux = Webpack.getByKeys("Store");
 export const ModulesLibrary = Webpack.getByKeys("Anchor");
-export const Colors = Webpack.getByKeys('RED_400')
+export const Colors = Webpack.getByKeys("RED_400");
 
 export const {Messages} = Webpack.getModule(m => m?.Messages?.STATUS_DND);
 export const buildClassName = (...args) => { // yeah, yk... I couldnt find a working string for this so I just remade it ;-;
