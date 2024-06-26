@@ -1,13 +1,11 @@
 /**
  * @name APlatformIndicators
- * @version 1.5.6
- * @description Adds indicators for every platform that the user is using.
- * @github https://github.com/Strencher/BetterDiscordStuff/blob/master/PlatformIndicators/APlatformIndicators.plugin.js
- * @github_raw https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/PlatformIndicators/APlatformIndicators.plugin.js
- * @invite gvA2ree
- * @changelogImage https://cdn.discordapp.com/attachments/672786846018961418/1053059354552696932/20th-century-fox-intro.png
- * @changelogDate 2024-02-04T16:25:00.000Z
+ * @version 1.5.7
  * @author Strencher
+ * @authorId 415849376598982656
+ * @description Adds indicators for every platform that the user is using.
+ * @source https://github.com/Strencher/BetterDiscordStuff/blob/master/PlatformIndicators/APlatformIndicators.plugin.js
+ * @invite gvA2ree
  */
 
 'use strict';
@@ -15,26 +13,12 @@
 /* @module @manifest */
 const manifest = {
     "name": "APlatformIndicators",
-    "version": "1.5.6",
-    "authors": [{
-        "name": "Strencher",
-        "discord_id": "415849376598982656",
-        "github_username": "Strencher",
-        "twitter_username": "Strencher3"
-    }],
+    "version": "1.5.7",
+    "author": "Strencher",
+    "authorId": "415849376598982656",
     "description": "Adds indicators for every platform that the user is using.",
-    "github": "https://github.com/Strencher/BetterDiscordStuff/blob/master/PlatformIndicators/APlatformIndicators.plugin.js",
-    "github_raw": "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/PlatformIndicators/APlatformIndicators.plugin.js",
-    "invite": "gvA2ree",
-    "changelogImage": "https://cdn.discordapp.com/attachments/672786846018961418/1053059354552696932/20th-century-fox-intro.png",
-    "changelogDate": "2024-02-04T16:25:00.000Z",
-    "changelog": [{
-        "title": "Fixes",
-        "type": "fixed",
-        "items": [
-            "Plugin works again (Thanks zrodevkaan)"
-        ]
-    }]
+    "source": "https://github.com/Strencher/BetterDiscordStuff/blob/master/PlatformIndicators/APlatformIndicators.plugin.js",
+    "invite": "gvA2ree"
 };
 
 /*@end */
@@ -76,14 +60,54 @@ const LocalActivityStore = Webpack.getStore("LocalActivityStore");
 const SessionsStore = Webpack.getStore("SessionsStore");
 const UserStore = Webpack.getStore("UserStore");
 const PresenceStore = Webpack.getStore("PresenceStore");
+Webpack.getByKeys("useSyncExternalStore");
+const useStateFromStores = Webpack.getByStrings("useStateFromStores", {
+    searchExports: true
+});
 const Dispatcher = UserStore._dispatcher;
-const Flux = Webpack.getByKeys("useStateFromStoresObject", "Store");
+const Flux = Webpack.getByKeys("Store");
 const ModulesLibrary = Webpack.getByKeys("Anchor");
-const Colors = Webpack.getByKeys("ColorDetails");
+const Colors = Webpack.getByKeys("RED_400");
 const {
     Messages
 } = Webpack.getModule((m) => m?.Messages?.STATUS_DND);
-const buildClassName = Webpack.getModule((_, __, i) => Webpack.modules[i].toString().includes(`define("classnames"`));
+const buildClassName = (...args) => {
+    return args.reduce((classNames, arg) => {
+        if (!arg)
+            return classNames;
+        if (typeof arg === "string" || typeof arg === "number") {
+            classNames.push(arg);
+        } else if (Array.isArray(arg)) {
+            const nestedClassNames = buildClassName(...arg);
+            if (nestedClassNames)
+                classNames.push(nestedClassNames);
+        } else if (typeof arg === "object") {
+            Object.keys(arg).forEach((key) => {
+                if (arg[key])
+                    classNames.push(key);
+            });
+        }
+        return classNames;
+    }, []).join(" ");
+};
+
+/*@end */
+
+/* @module settings.js */
+const Settings = new class Settings2 extends Flux.Store {
+    constructor() {
+        super(Dispatcher, {});
+    }
+    _settings = Data.load("settings") ?? {};
+    get(key, def) {
+        return this._settings[key] ?? def;
+    }
+    set(key, value) {
+        this._settings[key] = value;
+        Data.save("settings", this._settings);
+        this.emitChange();
+    }
+}();
 
 /*@end */
 
@@ -97,7 +121,7 @@ function upperFirst(string) {
 }
 
 function getStatusText(key, status) {
-    return upperFirst(key) + ": " + Messages[`STATUS_${(status == "mobile" ? "mobile_online" : status).toUpperCase()}`];
+    return upperFirst(key) + ": " + Messages[`STATUS_${(status === "mobile" ? "mobile_online" : status).toUpperCase()}`];
 }
 
 function getStatusColor(status) {
@@ -106,18 +130,18 @@ function getStatusColor(status) {
     } = ModulesLibrary;
     switch (status) {
         case StatusTypes.ONLINE:
-            return Colors.Color.GREEN_360;
+            return Colors.GREEN_360;
         case StatusTypes.IDLE:
-            return Colors.Color.YELLOW_300;
+            return Colors.YELLOW_300;
         case StatusTypes.DND:
-            return Colors.Color.RED_400;
+            return Colors.RED_400;
         case StatusTypes.STREAMING:
-            return Colors.Color.TWITCH;
+            return Colors.TWITCH;
         case StatusTypes.INVISIBLE:
         case StatusTypes.UNKNOWN:
         case StatusTypes.OFFLINE:
         default:
-            return Colors.Color.PRIMARY_400;
+            return Colors.PRIMARY_400;
     }
 }
 
@@ -139,9 +163,6 @@ Styles$2.sheets.push("/* indicators.scss */", `.indicatorContainer {
   margin-right: -6px;
   vertical-align: top;
 }
-.indicatorContainer.type_Tags {
-  gap: 2px;
-}
 
 .PI-icon_mobile {
   position: relative;
@@ -162,53 +183,38 @@ div[id*=message-reply] .indicatorContainer.type_Chat {
 var Styles$1 = {
     "indicatorContainer": "indicatorContainer",
     "type_Chat": "type_Chat",
-    "type_Tags": "type_Tags",
     "PIIcon_mobile": "PI-icon_mobile",
     "badge_separator": "badge_separator"
 };
-/*@end */
-
-/* @module settings.js */
-const Settings = new class Settings2 extends Flux.Store {
-    constructor() {
-        super(Dispatcher, {});
-    }
-    _settings = Data.load("settings") ?? {};
-    get(key, def) {
-        return this._settings[key] ?? def;
-    }
-    set(key, value) {
-        this._settings[key] = value;
-        Data.save("settings", this._settings);
-        this.emitChange();
-    }
-}();
-
 /*@end */
 
 /* @module usePlatformStores.js */
 const isStreaming = () => LocalActivityStore.getActivities().some((e) => e.type === 1);
 
 function usePlatformStores(userId, type) {
-    return Flux.useStateFromStoresObject([Settings, PresenceStore, UserStore, SessionsStore], () => {
-        const user = UserStore.getUser(userId);
-        return {
-            iconStates: Settings.get("icons", {}),
-            shouldShow: (() => {
-                const shownInArea = Settings.get("showIn" + type, true);
-                const isBot = Settings.get("ignoreBots", true) && (user?.bot ?? false);
-                return shownInArea && !isBot;
-            })(),
-            clients: (() => {
-                if (user?.id === UserStore.getCurrentUser()?.id)
-                    return SessionsStore.getSession() ? {
-                        [SessionsStore.getSession().clientInfo.client]: isStreaming() ? "streaming" : SessionsStore.getSession().status
-                    } : {};
-                return PresenceStore.getState().clientStatuses[user?.id] ?? {};
-            })(),
-            user
-        };
-    });
+    const user = UserStore.getUser(userId);
+    const iconStates = Settings.get("icons", {});
+    const shownInArea = Settings.get("showIn" + type, true);
+    const isBot = Settings.get("ignoreBots", true) && (user?.bot ?? false);
+    const shouldShow = shownInArea && !isBot;
+    const clients = (() => {
+        if (user?.id === UserStore.getCurrentUser()?.id) {
+            const session = SessionsStore.getSession();
+            if (session) {
+                return {
+                    [session.clientInfo.client]: isStreaming() ? "streaming" : session.status
+                };
+            }
+            return {};
+        }
+        return PresenceStore.getState().clientStatuses[user?.id] ?? {};
+    })();
+    return {
+        iconStates,
+        shouldShow,
+        clients,
+        user
+    };
 }
 
 /*@end */
@@ -313,7 +319,7 @@ function StatusIndicators({
             Icon, {
                 text: getStatusText(key, status),
                 style: {
-                    color: Colors.ColorDetails[getStatusColor(status)]?.hex
+                    color: getStatusColor(status)
                 },
                 width: size,
                 height: size,
@@ -366,7 +372,14 @@ var Styles = {
 /* @module settings.json */
 var SettingsItems = [{
         type: "switch",
-        name: "Show in MemberList",
+        name: "Show in Friendslist",
+        note: "Shows the platform indicators in the friendslist",
+        id: "showInFriendsList",
+        value: true
+    },
+    {
+        type: "switch",
+        name: "Show in Memberlist",
         note: "Shows the platform indicators in the memberlist",
         id: "showInMemberList",
         value: true
@@ -380,16 +393,16 @@ var SettingsItems = [{
     },
     {
         type: "switch",
-        name: "Show in DMs List",
+        name: "Show in DMs list",
         note: "Shows the platform indicators in the dm list.",
         id: "showInDmsList",
         value: true
     },
     {
         type: "switch",
-        name: "Show next to discord tags",
-        note: "Shows the platform indicators right next to the discord tag.",
-        id: "showInTags",
+        name: "Show in Discord Badges",
+        note: "Shows the platform indicators right next to the discord badges.",
+        id: "showInBadges",
         value: true
     },
     {
@@ -479,7 +492,7 @@ const {
 } = Webpack.getByKeys("FormSwitch");
 
 function SwitchItem(props) {
-    const value = Flux.useStateFromStores([Settings], () => Settings.get(props.id, props.value));
+    const value = useStateFromStores([Settings], () => Settings.get(props.id, props.value));
     return React.createElement(
         FormSwitch, {
             ...props,
@@ -513,7 +526,7 @@ function SmartDisable(props) {
     }, ["online", "dnd", "idle", "offline"].map(
         (status) => React.createElement(Icons[item.icon], {
             style: {
-                color: Colors.ColorDetails[getStatusColor(status)]?.hex
+                color: getStatusColor(status)
             },
             width: iconSize,
             height: iconSize
@@ -560,57 +573,62 @@ class PlatformIndicators {
         this.patchDMs();
         this.patchMemberList();
         this.patchUsername();
-        this.patchUserPopout();
+        this.patchBadges();
+        this.patchFriendList();
         Styles$2.load();
     }
     patchDMs() {
-        const HomeComponents = Webpack.getByKeys("CloseButton", "LinkButton");
-
-        function PatchedDMs({
-            __PI_ORIGINAL,
-            ...props
-        }) {
-            const res = __PI_ORIGINAL(props);
-            try {
-                const originalChildren = res.props.children;
-                res.props.children = (e) => {
-                    const ret = originalChildren(e);
-                    try {
-                        const obj = findInReactTree(ret, (e2) => e2?.avatar && e2?.name);
-                        if (!obj)
-                            return ret;
-                        obj.decorators = [
-                            obj.decorators,
-                            React.createElement(
-                                StatusIndicators, {
-                                    userId: props.user?.id,
-                                    type: "MemberList"
-                                }
-                            )
-                        ];
-                    } catch (error) {
-                        console.error(error);
-                    }
-                    return ret;
-                };
-            } catch (error) {
-                console.error(error);
-            }
-            return res;
-        }
-        Patcher.after(HomeComponents, "default", (_, __, res) => {
-            if (res.type === PatchedDMs)
+        const UserContext = React.createContext(null);
+        const [ChannelWrapper, Key_CW] = Webpack.getWithKey(Webpack.Filters.byStrings("isGDMFacepileEnabled"));
+        const [NameWrapper, Key_NW] = Webpack.getWithKey(Webpack.Filters.byStrings(".nameAndDecorators"));
+        const ChannelClasses = Webpack.getByKeys("channel", "decorator");
+        Patcher.after(ChannelWrapper, Key_CW, (_, __, res) => {
+            if (!Settings.get("showInDmsList", true))
                 return;
-            res.props.__PI_ORIGINAL = res.type;
-            res.type = PatchedDMs;
+            Patcher.after(res, "type", (_2, [props], res2) => {
+                if (Settings.get("ignoreBots", true) && props.user.bot)
+                    return;
+                return React.createElement(UserContext.Provider, {
+                    value: props.user
+                }, res2);
+            });
+        });
+        const ChannelWrapperElement = document.querySelector(`h2 + .${ChannelClasses.channel}`);
+        if (ChannelWrapperElement) {
+            const ChannelWrapperInstance = ReactUtils.getOwnerInstance(ChannelWrapperElement);
+            if (ChannelWrapperInstance)
+                ChannelWrapperInstance.forceUpdate();
+        }
+        Patcher.after(NameWrapper, Key_NW, (_, __, res) => {
+            if (!Settings.get("showInDmsList", true))
+                return;
+            const user = React.useContext(UserContext);
+            if (!user)
+                return;
+            const child = Utils.findInTree(res, (e) => e?.className?.includes("nameAndDecorators"));
+            if (!child)
+                return;
+            child.children.push(
+                React.createElement(
+                    StatusIndicators, {
+                        userId: user.id,
+                        type: "DMs"
+                    }
+                )
+            );
         });
     }
     patchMemberList() {
-        const MemberItem = Webpack.getByKeys("AVATAR_DECORATION_PADDING");
-        Patcher.after(MemberItem, "default", (_, [props], ret) => {
+        const [MemberItem, key] = Webpack.getWithKey(Webpack.Filters.byStrings(".jXE.MEMBER_LIST"));
+        const MemberListClasses = Webpack.getByKeys("member", "memberInner");
+        Patcher.after(MemberItem, key, (_, [props], ret) => {
+            if (!Settings.get("showInMemberList", true))
+                return;
+            if (Settings.get("ignoreBots", true) && props.user.bot)
+                return;
             const children = ret.props.children();
             const obj = findInReactTree(children, (e) => e?.avatar && e?.name);
-            if (obj) {
+            if (obj)
                 children.props.decorators?.props?.children.push(
                     React.createElement(
                         StatusIndicators, {
@@ -619,19 +637,26 @@ class PlatformIndicators {
                         }
                     )
                 );
-            }
-            ret.props.children = () => {
-                return children;
-            };
+            ret.props.children = () => children;
         });
+        const MemberListUserElement = document.querySelector(`.${MemberListClasses.member}`);
+        if (MemberListUserElement) {
+            const MemberListUserInstance = ReactUtils.getOwnerInstance(MemberListUserElement);
+            if (MemberListUserInstance)
+                MemberListUserInstance.forceUpdate();
+        }
     }
     patchUsername() {
-        const ChatUsername = Webpack.getByKeys("UsernameDecorationTypes");
-        Patcher.before(ChatUsername, "default", (_, props) => {
+        const [ChatUsername, key] = Webpack.getWithKey(Webpack.Filters.byStrings(".guildMemberAvatar&&null!="));
+        Patcher.before(ChatUsername, key, (_, props) => {
             const mainProps = props[0];
-            if (!Array.isArray(mainProps.decorations[1]))
+            if (!Settings.get("showInChat", true))
+                return;
+            if (Settings.get("ignoreBots", true) && mainProps.message.author.bot)
+                return;
+            if (!Array.isArray(mainProps?.decorations[1]) && mainProps && mainProps?.decorations)
                 mainProps.decorations[1] = [];
-            mainProps.decorations[1].unshift(
+            mainProps?.decorations[1]?.unshift(
                 React.createElement(
                     StatusIndicators, {
                         userId: mainProps.message.author.id,
@@ -641,46 +666,62 @@ class PlatformIndicators {
             );
         });
     }
-    patchUserPopout() {
-        const UserPopoutModule = Webpack.getByKeys("UserPopoutBadgeList");
-
-        function PatchedBadgesList({
-            __PI_ORIGINAL,
-            ...props
-        }) {
-            const res = __PI_ORIGINAL(props);
-            try {
-                if (Array.isArray(res?.props?.children)) {
-                    res.props.children.push(
+    patchBadges() {
+        const UserContext = React.createContext(null);
+        const [ProfileInfoRow, KEY_PIR] = Webpack.getWithKey(Webpack.Filters.byStrings("user", "profileType"));
+        const [BadgeList, Key_BL] = Webpack.getWithKey(Webpack.Filters.byStrings(".PROFILE_USER_BADGES"));
+        Patcher.after(ProfileInfoRow, KEY_PIR, (_, [props], res) => {
+            if (!Settings.get("showInBadges", true))
+                return;
+            if (Settings.get("ignoreBots", true) && props.user.bot)
+                return;
+            return React.createElement(UserContext.Provider, {
+                value: props.user
+            }, res);
+        });
+        Patcher.after(BadgeList, Key_BL, (_, __, res) => {
+            const user = React.useContext(UserContext);
+            if (!user)
+                return;
+            if (Settings.get("ignoreBots", true) && user.bot)
+                return;
+            res.props.children.push(
+                React.createElement(
+                    StatusIndicators, {
+                        userId: user.id,
+                        type: "Badge"
+                    }
+                )
+            );
+        });
+    }
+    patchFriendList() {
+        const [UserInfo, key] = Webpack.getWithKey(Webpack.Filters.byStrings("user", "subText", "showAccountIdentifier"));
+        const FriendListClasses = Webpack.getByKeys("userInfo", "hovered");
+        DOM.addStyle("PlatformIndicators", `
+            .${FriendListClasses.discriminator} { display: none; }
+            .${FriendListClasses.hovered} .${FriendListClasses.discriminator} { display: unset; }
+        `);
+        Patcher.after(UserInfo, key, (_, __, res) => {
+            if (!Settings.get("showInFriendsList", true))
+                return;
+            Patcher.after(res.props.children[1].props.children[0], "type", (_2, [props], res2) => {
+                Patcher.after(res2, "type", (_3, __2, res3) => {
+                    res3.props.children.push(
                         React.createElement(
                             StatusIndicators, {
                                 userId: props.user.id,
-                                type: "Tags",
-                                size: "22",
-                                separator: !!res.props.children.length
+                                type: "FriendList"
                             }
                         )
                     );
-                }
-            } catch (error) {
-                console.error(error);
-            }
-            return res;
-        }
-        Patcher.after(UserPopoutModule, "default", (_, [props], ret) => {
-            const vnode = findInReactTree(ret, (e) => e?.type === UserPopoutModule.UserPopoutBadgeList.__originalFunction);
-            if (vnode) {
-                vnode.type = UserPopoutModule.UserPopoutBadgeList;
-            }
-        });
-        Patcher.after(UserPopoutModule, "UserPopoutBadgeList", (_, [props], ret) => {
-            const vnode = ret.props.children[1];
-            vnode.props.__PI_ORIGINAL = vnode.type;
-            vnode.type = PatchedBadgesList;
+                });
+            });
         });
     }
     stop() {
         Patcher.unpatchAll();
+        DOM.removeStyle("PlatformIndicators");
         Styles$2.unload();
     }
 }
