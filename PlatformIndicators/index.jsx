@@ -35,10 +35,11 @@ export default class PlatformIndicators {
             });
         });
 
-        // TODO: Fix when youre not in the DMs List Screen while starting
-        // const ChannelWrapperElement = document.querySelector(`h2 + .${ChannelClasses.channel}`);
-        // const ChannelWrapperInstance = ReactUtils.getOwnerInstance(ChannelWrapperElement);
-        // if (ChannelWrapperInstance) ChannelWrapperInstance.forceUpdate();
+        const ChannelWrapperElement = document.querySelector(`h2 + .${ChannelClasses.channel}`);
+        if (ChannelWrapperElement) {
+            const ChannelWrapperInstance = ReactUtils.getOwnerInstance(ChannelWrapperElement);
+            if (ChannelWrapperInstance) ChannelWrapperInstance.forceUpdate();
+        }
 
         Patcher.after(NameWrapper, Key_NW, (_, __, res) => {
             const user = React.useContext(UserContext);
@@ -48,7 +49,7 @@ export default class PlatformIndicators {
             child.children.push(
                 <StatusIndicators
                     userId={user.id}
-                    type="MemberList"
+                    type="DMs"
                 />
             );
         });
@@ -56,6 +57,7 @@ export default class PlatformIndicators {
 
     patchMemberList() {
         const [MemberItem, key] = Webpack.getWithKey(Webpack.Filters.byStrings(".jXE.MEMBER_LIST"));
+        const MemberListClasses = Webpack.getByKeys("member", "memberInner");
 
         Patcher.after(MemberItem, key, (_, [props], ret) => {
             const children = ret.props.children();
@@ -70,6 +72,12 @@ export default class PlatformIndicators {
             // discord made it a method to return the children :(
             ret.props.children = () => children;
         });
+
+        const MemberListUserElement = document.querySelector(`.${MemberListClasses.member}`);
+        if (MemberListUserElement) {
+            const MemberListUserInstance = ReactUtils.getOwnerInstance(MemberListUserElement);
+            if (MemberListUserInstance) MemberListUserInstance.forceUpdate();
+        }
     }
 
     patchUsername() {
