@@ -1,6 +1,6 @@
 {
     "name": "APlatformIndicators",
-    "version": "1.5.6",
+    "version": "1.5.7",
     "authors": [
         {
             "name": "Strencher",
@@ -13,14 +13,14 @@
     "github": "https://github.com/Strencher/BetterDiscordStuff/blob/master/PlatformIndicators/APlatformIndicators.plugin.js",
     "github_raw": "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/PlatformIndicators/APlatformIndicators.plugin.js",
     "invite": "gvA2ree",
-    "changelogImage": "https://cdn.discordapp.com/attachments/672786846018961418/1053059354552696932/20th-century-fox-intro.png",
-    "changelogDate": "2024-02-04T16:25:00.000Z",
+    "changelogImage": "",
+    "changelogDate": "2024-06-26T00:00:00.000Z",
     "changelog": [
         {
             "title": "Fixes",
             "type": "fixed",
             "items": [
-                "Plugin works again (Thanks zrodevkaan)"
+                "Fixed the plugin not working due to the recent SWC update"
             ]
         }
     ]
