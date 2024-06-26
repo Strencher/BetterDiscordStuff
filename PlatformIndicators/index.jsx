@@ -1,6 +1,8 @@
-import {Patcher, Webpack} from "@api";
+import {DOM, Patcher, ReactUtils, Webpack, Utils} from "@api";
 import Styles from "@styles";
 import React from "react";
+import Settings from "./modules/settings";
+import {useStateFromStores} from "./modules/shared";
 import {findInReactTree} from "./modules/utils";
 import StatusIndicators from "./components/indicators";
 import SettingsPanel from "./components/settings";
@@ -14,82 +16,86 @@ export default class PlatformIndicators {
         this.patchDMs();
         this.patchMemberList();
         this.patchUsername();
-        this.patchUserPopout();
-
+        this.patchBadges();
+        this.patchFriendList();
         Styles.load();
     }
 
     patchDMs() {
-        const HomeComponents = Webpack.getByKeys("CloseButton", "LinkButton");
+        const UserContext = React.createContext(null);
+        const [ChannelWrapper, Key_CW] = Webpack.getWithKey(Webpack.Filters.byStrings("isGDMFacepileEnabled"));
+        const [NameWrapper, Key_NW] = Webpack.getWithKey(Webpack.Filters.byStrings(".nameAndDecorators"));
+        const ChannelClasses = Webpack.getByKeys("channel", "decorator");
 
-        function PatchedDMs({__PI_ORIGINAL, ...props}) {
-            const res = __PI_ORIGINAL(props);
-            try {
-                const originalChildren = res.props.children;
+        Patcher.after(ChannelWrapper, Key_CW, (_, __, res) => {
+            if (!Settings.get("showInDmsList", true)) return;
+            Patcher.after(res, "type", (_, [props], res) => {
+                if (Settings.get("ignoreBots", true) && props.user.bot) return;
+                return (
+                    <UserContext.Provider value={props.user}>
+                        {res}
+                    </UserContext.Provider>
+                  );
+            });
+        });
 
-                res.props.children = e => {
-                    const ret = originalChildren(e);
-
-                    try {
-                        const obj = findInReactTree(ret, e => e?.avatar && e?.name);
-                        if (!obj) return ret;
-
-                        obj.decorators = [
-                            obj.decorators,
-                            <StatusIndicators
-                                userId={props.user?.id}
-                                type="MemberList"
-                            />
-                        ];
-                    } catch (error) {
-                        console.error(error);
-                    }
-
-                    return ret;
-                }
-            } catch (error) {
-                console.error(error);
-            }
-
-            return res;
+        const ChannelWrapperElement = document.querySelector(`h2 + .${ChannelClasses.channel}`);
+        if (ChannelWrapperElement) {
+            const ChannelWrapperInstance = ReactUtils.getOwnerInstance(ChannelWrapperElement);
+            if (ChannelWrapperInstance) ChannelWrapperInstance.forceUpdate();
         }
 
-        Patcher.after(HomeComponents, "default", (_, __, res) => {
-            if (res.type === PatchedDMs) return;
-            res.props.__PI_ORIGINAL = res.type;
-
-            res.type = PatchedDMs;
+        Patcher.after(NameWrapper, Key_NW, (_, __, res) => {
+            if (!Settings.get("showInDmsList", true)) return;
+            const user = React.useContext(UserContext);
+            if (!user) return;
+            const child = Utils.findInTree(res, e => e?.className?.includes("nameAndDecorators"));
+            if (!child) return;
+            child.children.push(
+                <StatusIndicators
+                    userId={user.id}
+                    type="DMs"
+                />
+            );
         });
     }
 
     patchMemberList() {
-        const MemberItem = Webpack.getByKeys("AVATAR_DECORATION_PADDING");
+        const [MemberItem, key] = Webpack.getWithKey(Webpack.Filters.byStrings(".jXE.MEMBER_LIST"));
+        const MemberListClasses = Webpack.getByKeys("member", "memberInner");
 
-        Patcher.after(MemberItem, "default", (_, [props], ret) => {
+        Patcher.after(MemberItem, key, (_, [props], ret) => {
+            if (!Settings.get("showInMemberList", true)) return;
+            if (Settings.get("ignoreBots", true) && props.user.bot) return;
             const children = ret.props.children();
             const obj = findInReactTree(children, e => e?.avatar && e?.name);
-            if (obj) {
+            if (obj)
                 children.props.decorators?.props?.children.push(
                     <StatusIndicators
                         userId={props.user.id}
                         type="MemberList"
                     />
-                )
-            }
+                );
             // discord made it a method to return the children :(
-            ret.props.children = () => {
-                return children;
-            };
+            ret.props.children = () => children;
         });
+
+        const MemberListUserElement = document.querySelector(`.${MemberListClasses.member}`);
+        if (MemberListUserElement) {
+            const MemberListUserInstance = ReactUtils.getOwnerInstance(MemberListUserElement);
+            if (MemberListUserInstance) MemberListUserInstance.forceUpdate();
+        }
     }
 
     patchUsername() {
-        const ChatUsername = Webpack.getByKeys("UsernameDecorationTypes");
-
-        Patcher.before(ChatUsername, "default", (_, props) => {
+        const [ChatUsername, key] = Webpack.getWithKey(Webpack.Filters.byStrings(".guildMemberAvatar&&null!="));
+        Patcher.before(ChatUsername, key, (_, props) => {
             const mainProps = props[0];
-            if (!Array.isArray(mainProps.decorations[1])) mainProps.decorations[1] = [];
-            mainProps.decorations[1].unshift(
+            if (!Settings.get("showInChat", true)) return;
+            if (Settings.get("ignoreBots", true) && mainProps.message.author.bot) return;
+            if (!Array.isArray(mainProps?.decorations[1]) && mainProps && mainProps?.decorations) mainProps.decorations[1] = [];
+            // for some reason props just won't exist.
+            mainProps?.decorations[1]?.unshift(
                 <StatusIndicators
                     userId={mainProps.message.author.id}
                     type="Chat"
@@ -98,48 +104,61 @@ export default class PlatformIndicators {
         })
     }
 
-    patchUserPopout() {
-        const UserPopoutModule = Webpack.getByKeys("UserPopoutBadgeList");
+    patchBadges() {
+        const UserContext = React.createContext(null);
+        const [ProfileInfoRow, KEY_PIR] = Webpack.getWithKey(Webpack.Filters.byStrings("user", "profileType"));
+        const [BadgeList, Key_BL] = Webpack.getWithKey(Webpack.Filters.byStrings(".PROFILE_USER_BADGES"));
+        
+        Patcher.after(ProfileInfoRow, KEY_PIR, (_, [props], res) => {
+            if (!Settings.get("showInBadges", true)) return;
+            if (Settings.get("ignoreBots", true) && props.user.bot) return;
+            return (
+                <UserContext.Provider value={props.user}>
+                    {res}
+                </UserContext.Provider>
+              );
+        });
 
-        function PatchedBadgesList({__PI_ORIGINAL, ...props}) {
-            const res = __PI_ORIGINAL(props);
+        Patcher.after(BadgeList, Key_BL, (_, __, res) => {
+            const user = React.useContext(UserContext);
+            if (!user) return;
+            if (Settings.get("ignoreBots", true) && user.bot) return;
+            res.props.children.push(
+                <StatusIndicators
+                    userId={user.id}
+                    type="Badge"
+                />
+            );
+        });
+    }
 
-            try {
-                if (Array.isArray(res?.props?.children)) {
+    patchFriendList() {
+        const [UserInfo, key] = Webpack.getWithKey(Webpack.Filters.byStrings("user", "subText", "showAccountIdentifier"));
+        const FriendListClasses = Webpack.getByKeys("userInfo", "hovered");
+
+        DOM.addStyle("PlatformIndicators", `
+            .${FriendListClasses.discriminator} { display: none; }
+            .${FriendListClasses.hovered} .${FriendListClasses.discriminator} { display: unset; }
+        `);
+
+        Patcher.after(UserInfo, key, (_, __, res) => {
+            if (!Settings.get("showInFriendsList", true)) return;
+            Patcher.after(res.props.children[1].props.children[0], "type", (_, [props], res) => {
+                Patcher.after(res, "type", (_, __, res) => {
                     res.props.children.push(
                         <StatusIndicators
                             userId={props.user.id}
-                            type="Tags"
-                            size="22"
-                            separator={!!res.props.children.length}
+                            type="FriendList"
                         />
                     );
-                }
-            } catch (error) {
-                console.error(error);
-            }
-
-            return res;
-        }
-
-        Patcher.after(UserPopoutModule, "default", (_, [props], ret) => {
-            const vnode = findInReactTree(ret, e => e?.type === UserPopoutModule.UserPopoutBadgeList.__originalFunction);
-
-            if (vnode) {
-                vnode.type = UserPopoutModule.UserPopoutBadgeList;
-            }
-        });
-
-        Patcher.after(UserPopoutModule, "UserPopoutBadgeList", (_, [props], ret) => {
-            const vnode = ret.props.children[1];
-            vnode.props.__PI_ORIGINAL = vnode.type;
-
-            vnode.type = PatchedBadgesList;
+                });
+            });
         });
     }
 
     stop() {
         Patcher.unpatchAll();
+        DOM.removeStyle("PlatformIndicators");
         Styles.unload();
     }
 }

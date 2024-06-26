@@ -1,6 +1,6 @@
 import React from "react";
 import Styles from "./indicators.scss";
-import {Colors, ModulesLibrary, buildClassName} from "../modules/shared";
+import {ModulesLibrary, buildClassName} from "../modules/shared";
 import usePlatformStores from "../modules/usePlatformStores";
 import * as Icons from "./icons/Icons";
 import {getStatusText, getStatusColor} from "../modules/utils";
@@ -24,7 +24,7 @@ export default function StatusIndicators({type, userId, size = 18, separator = f
                                 {props => (
                                     <Icon
                                         text={getStatusText(key, status)}
-                                        style={{color: Colors.ColorDetails[getStatusColor(status)]?.hex}}
+                                        style={{color: getStatusColor(status)}}
                                         width={size}
                                         height={size}
                                         data-status={status}
