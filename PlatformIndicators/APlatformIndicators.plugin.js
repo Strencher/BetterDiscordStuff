@@ -199,11 +199,15 @@ function usePlatformStores(userId, type) {
     const shouldShow = shownInArea && !isBot;
     const clients = (() => {
         if (user?.id === UserStore.getCurrentUser()?.id) {
-            const session = SessionsStore.getSession();
-            if (session) {
-                return {
-                    [session.clientInfo.client]: isStreaming() ? "streaming" : session.status
-                };
+            const sessions = SessionsStore.getSessions();
+            if (sessions) {
+                const clientStatuses = Object.entries(sessions).reduce((acc, [, sessionData]) => {
+                    const client = sessionData.clientInfo.client;
+                    const status = isStreaming() ? "streaming" : sessionData.status;
+                    acc[client] = status;
+                    return acc;
+                }, {});
+                return clientStatuses;
             }
             return {};
         }
@@ -572,7 +576,7 @@ class PlatformIndicators {
     start() {
         this.patchDMs();
         this.patchMemberList();
-        this.patchUsername();
+        this.patchChat();
         this.patchBadges();
         this.patchFriendList();
         Styles$2.load();
@@ -646,13 +650,13 @@ class PlatformIndicators {
                 MemberListUserInstance.forceUpdate();
         }
     }
-    patchUsername() {
+    patchChat() {
         const [ChatUsername, key] = Webpack.getWithKey(Webpack.Filters.byStrings(".guildMemberAvatar&&null!="));
         Patcher.before(ChatUsername, key, (_, props) => {
             const mainProps = props[0];
             if (!Settings.get("showInChat", true))
                 return;
-            if (Settings.get("ignoreBots", true) && mainProps.message.author.bot)
+            if (Settings.get("ignoreBots", true) && mainProps?.author?.bot)
                 return;
             if (!Array.isArray(mainProps?.decorations[1]) && mainProps && mainProps?.decorations)
                 mainProps.decorations[1] = [];
