@@ -15,11 +15,15 @@ export default function usePlatformStores(userId, type) {
 
     const clients = (() => {
         if (user?.id === UserStore.getCurrentUser()?.id) {
-            const session = SessionsStore.getSession();
-            if (session) {
-                return {
-                    [session.clientInfo.client]: isStreaming() ? "streaming" : session.status
-                };
+            const sessions = SessionsStore.getSessions();
+            if (sessions) {
+                const clientStatuses = Object.entries(sessions).reduce((acc, [, sessionData]) => {
+                    const client = sessionData.clientInfo.client;
+                    const status = isStreaming() ? "streaming" : sessionData.status;
+                    acc[client] = status;
+                    return acc;
+                }, {});
+                return clientStatuses;
             }
             return {};
         }
