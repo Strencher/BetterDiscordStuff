@@ -1,6 +1,6 @@
 /**
  * @name APlatformIndicators
- * @version 1.5.7
+ * @version 1.5.8
  * @author Strencher
  * @authorId 415849376598982656
  * @description Adds indicators for every platform that the user is using.
@@ -13,7 +13,7 @@
 /* @module @manifest */
 const manifest = {
     "name": "APlatformIndicators",
-    "version": "1.5.7",
+    "version": "1.5.8",
     "author": "Strencher",
     "authorId": "415849376598982656",
     "description": "Adds indicators for every platform that the user is using.",
@@ -590,6 +590,8 @@ class PlatformIndicators {
             if (!Settings.get("showInDmsList", true))
                 return;
             Patcher.after(res, "type", (_2, [props], res2) => {
+                if (!props.user)
+                    return;
                 if (Settings.get("ignoreBots", true) && props.user.bot)
                     return;
                 return React.createElement(UserContext.Provider, {
@@ -687,8 +689,6 @@ class PlatformIndicators {
             const user = React.useContext(UserContext);
             if (!user)
                 return;
-            if (Settings.get("ignoreBots", true) && user.bot)
-                return;
             res.props.children.push(
                 React.createElement(
                     StatusIndicators, {
@@ -709,7 +709,8 @@ class PlatformIndicators {
         Patcher.after(UserInfo, key, (_, __, res) => {
             if (!Settings.get("showInFriendsList", true))
                 return;
-            Patcher.after(res.props.children[1].props.children[0], "type", (_2, [props], res2) => {
+            const unpatch = Patcher.after(res.props.children[1].props.children[0], "type", (_2, [props], res2) => {
+                unpatch();
                 Patcher.after(res2, "type", (_3, __2, res3) => {
                     res3.props.children.push(
                         React.createElement(
