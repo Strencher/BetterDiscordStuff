@@ -30,6 +30,7 @@ export default class PlatformIndicators {
         Patcher.after(ChannelWrapper, Key_CW, (_, __, res) => {
             if (!Settings.get("showInDmsList", true)) return;
             Patcher.after(res, "type", (_, [props], res) => {
+                if (!props.user) return; // Its a group DM
                 if (Settings.get("ignoreBots", true) && props.user.bot) return;
                 return (
                     <UserContext.Provider value={props.user}>
@@ -123,7 +124,6 @@ export default class PlatformIndicators {
         Patcher.after(BadgeList, Key_BL, (_, __, res) => {
             const user = React.useContext(UserContext);
             if (!user) return;
-            if (Settings.get("ignoreBots", true) && user.bot) return;
             res.props.children.push(
                 <StatusIndicators
                     userId={user.id}
@@ -144,7 +144,8 @@ export default class PlatformIndicators {
 
         Patcher.after(UserInfo, key, (_, __, res) => {
             if (!Settings.get("showInFriendsList", true)) return;
-            Patcher.after(res.props.children[1].props.children[0], "type", (_, [props], res) => {
+            const unpatch = Patcher.after(res.props.children[1].props.children[0], "type", (_, [props], res) => {
+                unpatch();
                 Patcher.after(res, "type", (_, __, res) => {
                     res.props.children.push(
                         <StatusIndicators
