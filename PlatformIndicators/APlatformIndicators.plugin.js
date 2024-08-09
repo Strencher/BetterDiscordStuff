@@ -1,6 +1,6 @@
 /**
  * @name APlatformIndicators
- * @version 1.5.8
+ * @version 1.5.9
  * @author Strencher
  * @authorId 415849376598982656
  * @description Adds indicators for every platform that the user is using.
@@ -13,7 +13,7 @@
 /* @module @manifest */
 const manifest = {
     "name": "APlatformIndicators",
-    "version": "1.5.8",
+    "version": "1.5.9",
     "author": "Strencher",
     "authorId": "415849376598982656",
     "description": "Adds indicators for every platform that the user is using.",
@@ -584,7 +584,7 @@ class PlatformIndicators {
     patchDMs() {
         const UserContext = React.createContext(null);
         const [ChannelWrapper, Key_CW] = Webpack.getWithKey(Webpack.Filters.byStrings("isGDMFacepileEnabled"));
-        const [NameWrapper, Key_NW] = Webpack.getWithKey(Webpack.Filters.byStrings(".nameAndDecorators"));
+        const [NameWrapper, Key_NW] = Webpack.getWithKey((x) => x.toString().includes(".nameAndDecorators") && !x.toString().includes("FocusRing"));
         const ChannelClasses = Webpack.getByKeys("channel", "decorator");
         Patcher.after(ChannelWrapper, Key_CW, (_, __, res) => {
             if (!Settings.get("showInDmsList", true))
