@@ -135,7 +135,7 @@ const watcher = watch({
             get "@manifest"() {return "export default " + fs.readFileSync(manifestPath, "utf8");},
             "@api":
                 "import manifest from \"@manifest\";" +
-                "export const {Net, Data, Patcher, ReactUtils, Utils, Webpack, UI, ContextMenu, DOM} = new BdApi(manifest.name);",
+                "export const { Components, ContextMenu, Data, DOM, Net, Patcher, Plugins, ReactUtils, Themes, UI, Utils, Webpack } = new BdApi(manifest.name);",
         }),
         {
 

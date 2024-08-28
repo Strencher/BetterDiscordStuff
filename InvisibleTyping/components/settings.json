@@ -1,0 +1,9 @@
+[
+    {
+        "type": "switch",
+        "name": "Automatically enable",
+        "note": "Automatically enables the typing indicator for each channel that isn't manually disabled",
+        "id": "autoEnable",
+        "value": true
+    }
+]

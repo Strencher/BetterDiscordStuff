@@ -1,110 +1,88 @@
-import {Patcher, WebpackModules, Utilities, Logger} from "@zlibrary";
-import BasePlugin from "@zlibrary/plugin";
-import InvisibleTypingButton from "./components/typingbutton";
-import styles from "styles";
-import SettingsPanel from "./components/Settings";
-import {PermissionUtils} from "@discord/modules";
-import {ChannelTypes, Permissions} from "@discord/constants";
-import {Users} from "@discord/stores";
+import React from "react";
+import { Patcher, UI, Utils, Webpack } from "@api";
+import manifest from "@manifest";
+import Styles from "@styles";
 
-const ChannelTextAreaContainer = WebpackModules.find(m => m?.type?.render?.displayName === "ChannelTextAreaContainer")?.type;
-const ChannelTextAreaButtons = WebpackModules.find(m => m.type && m.type.displayName === "ChannelTextAreaButtons");
+import InvisibleTypingButton from "./components/typingButton";
+import SettingsPanel from "./components/settings";
+import Settings from "./modules/settings";
+import { TypingModule } from "./modules/shared";
 
-const DMChannels = [ChannelTypes.DM, ChannelTypes.GROUP_DM];
-const canViewChannel = function (channel: ChannelObject): boolean {
-    if (!channel) return false;
-    if (DMChannels.includes(channel.type as (1 | 3))) return true;
+import "./changelog.scss";
 
-    try {
-        return PermissionUtils.can(Permissions.SEND_MESSAGES, channel, Users.getCurrentUser());
-    } catch (error) {
-        Logger.error("Failed to request permissions:", error);
-        return true;
+export default class InvisibleTyping {
+    start() {
+        Styles.load();
+        this.showChangelog();
+        this.patchTyping();
+        this.patchChannelTextArea();
     }
-};
-
-export default class InvisibleTyping extends BasePlugin {
-    static _updating = false;
-
-    static setUpdating(state: boolean) {
-        this._updating = state;
+    stop() {
+        Styles.unload();
+        Patcher.unpatchAll();
     }
 
-    onStart() {
-        styles.inject();
+    showChangelog() {
+        if (
+            !manifest?.changelog?.length ||
+            Settings.get("lastVersion") === manifest.version
+        ) return;
 
-        Utilities.suppressErrors(this.patchTextAreaButtons.bind(this), "textarea buttons patch")();
-        Utilities.suppressErrors(this.patchStartTyping.bind(this), "start typing patch")();
+        const i18n = Webpack.getByKeys("getLocale");
+        const formatter = new Intl.DateTimeFormat(i18n.getLocale(), {
+            month: "long",
+            day: "numeric",
+            year: "numeric"
+        });
+
+        const title = (
+            <div className="Changelog-Title-Wrapper">
+                <h1>What's New - {manifest.name}</h1>
+                <div>{formatter.format(new Date(manifest.changelogDate))} - v{manifest.version}</div>
+            </div>
+        )
+
+        const items = manifest?.changelog?.map(item => (
+            <div className="Changelog-Item">
+                <h4 className={`Changelog-Header ${item.type}`}>{item.title}</h4>
+                {item.items.map(item => (
+                    <span>{item}</span>
+                ))}
+            </div>
+        ));
+
+        "changelogImage" in manifest && items.unshift(
+            <img className="Changelog-Banner" src={manifest.changelogImage} />
+        );
+
+        Settings.set("lastVersion", manifest.version);
+
+        UI.alert(title, items);
+    }
+
+    patchTyping() {
+        Patcher.instead(TypingModule, "startTyping", (_, [channelId]: [string], originalMethod) => {
+            const excludeList: string[] = Settings.get("exclude", []);
+            if (excludeList.includes(channelId)) return;
+            return originalMethod(channelId);
+        });
+    }
+
+    patchChannelTextArea() {
+        const ChannelTextArea = Webpack.getModule(m => m?.type?.render?.toString?.()?.includes?.("CHANNEL_TEXT_AREA"))
+
+        Patcher.after(ChannelTextArea.type, "render", (_, __, res) => {
+            const chatBar = Utils.findInTree(res, e => Array.isArray(e?.children) && e.children.some(c => c?.props?.className?.startsWith("attachButton")), { walkable: ["children", "props"] });
+            if (!chatBar) return console.error("[InvisibleTyping] Failed to find ChatBar");
+
+            const textAreaState = Utils.findInTree(chatBar, e => e?.props?.channel, { walkable: ["children"] });
+            if (!textAreaState) return console.error("[InvisibleTyping] Failed to find textAreaState");
+
+            chatBar.children.splice(-1, 0, <InvisibleTypingButton channel={textAreaState?.props?.channel} isEmpty={!Boolean(textAreaState?.props?.editorTextContent)} />);
+        });
     }
 
     getSettingsPanel() {
         return <SettingsPanel />;
-    }
-
-    async patchTextAreaButtons() {
-        type TextAreaButtonsProps = {type: string, channel: ChannelObject, disabled: boolean, handleSubmit: Function, isEmpty: boolean};
-
-        const shouldShow = function (children: any[], props: TextAreaButtonsProps) {
-            if (props.type?.analyticsName === "profile_bio_input") return false;
-            if (!Array.isArray(children)) return false;
-            if (children.some(child => child && child.type === InvisibleTyping)) return false;
-            if (!canViewChannel(props.channel)) return false;
-
-            return true;
-        };
-
-        if (ChannelTextAreaButtons) {
-            Patcher.after(ChannelTextAreaButtons, "type", (_, [props]: TextAreaButtonsProps[], returnValue) => {
-                const children: any[] = returnValue && returnValue.props && returnValue.props.children;
-                if (!shouldShow(children, props)) return;
-
-                children.unshift(
-                    <InvisibleTypingButton {...props} />
-                );
-            });
-
-            this.forceUpdate();
-        } else {
-            Patcher.after(ChannelTextAreaContainer, "render", (_, [props], returnValue) => {
-                    const tree = Utilities.findInReactTree(returnValue, e => e?.className?.indexOf("buttons-") > -1);
-                if (!tree || !shouldShow(tree.children, props)) return returnValue;
-    
-                tree.children.unshift(
-                    <InvisibleTypingButton {...props} isEmpty={!!props.textValue} />
-                );
-            });
-        }
-    }
-
-    forceUpdate() {
-        if (InvisibleTyping._updating) return;
-        InvisibleTyping.setUpdating(true);
-
-        Patcher.after(ChannelTextAreaContainer, "render", function () {
-            const [, , returnValue] = arguments;
-            
-            this.unpatch();
-            InvisibleTyping.setUpdating(false);
-            const buttons = Utilities.findInReactTree(returnValue, e => e && e.type === ChannelTextAreaButtons);
-            if (!buttons) return;
-            
-            // Make react forceUpdate it.
-            buttons.key = Math.random().toString();
-        });
-    }
-
-    async patchStartTyping() {
-        const TypingModule = WebpackModules.getByProps("startTyping");
-
-        Patcher.instead(TypingModule, "startTyping", (_, [channelId], originalMethod) => {
-            if (InvisibleTypingButton.getState(channelId)) originalMethod(channelId);
-        });
-    }
-
-    onStop() {
-        Patcher.unpatchAll();
-        styles.remove();
-
-        if (ChannelTextAreaButtons) this.forceUpdate();
     }
 }
