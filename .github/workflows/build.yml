@@ -1,0 +1,90 @@
+name: Autobuild Plugins
+
+on:
+  push:
+    branches:
+      - development
+  workflow_dispatch:
+    inputs:
+      plugin:
+        description: What plugin to build. Omit for all.
+        required: false
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Compile Plugins
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Clean working directory
+        run: rm -rf /home/runner/work/${{ github.repository }}
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+
+      - name: Detect changed files
+        id: files
+        if: "github.event_name == 'push'"
+        uses: jitterbit/get-changed-files@v1
+        continue-on-error: true
+
+      - name: Build plugins
+        run: >-
+          npm run build --
+          --publish
+          --plugins ${{ github.event.inputs.plugin }}
+          ${{ steps.files.outputs.all }}
+          && if [ ! -d builds ]; then echo "noBuildFolder=true" >> $GITHUB_ENV; fi
+
+      - name: Cancel Job when no Artifact
+        if: "env.noBuildFolder == 'true'"
+        uses: andymckay/cancel-action@0.4
+
+      - name: Stage build
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-artifact
+          path: builds
+          retention-days: 1
+
+  publish:
+    name: Publish plugins
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - name: Restore repo
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Apply build
+        uses: actions/download-artifact@v4
+        with:
+          name: build-artifact
+
+      - name: Commit
+        run: |
+          git config advice.addIgnoredFile false
+          git add --no-all ./**
+          git config --local user.email "actions@github.com"
+          git config --local user.name "PluginBuilder"
+          git commit -m "Publish build" || true
+
+      - name: Push
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ github.token }}
+          branch: master
