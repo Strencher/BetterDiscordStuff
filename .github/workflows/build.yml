@@ -68,7 +68,7 @@ jobs:
       - name: Restore repo
         uses: actions/checkout@v4
         with:
-          ref: main
+          ref: master
 
       - name: Apply build
         uses: actions/download-artifact@v4
