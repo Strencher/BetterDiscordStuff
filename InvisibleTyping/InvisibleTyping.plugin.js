@@ -68,6 +68,8 @@ var Styles = {
 Styles.sheets.push("/* typingButton.scss */", `.invisibleTypingButton svg {
   color: var(--interactive-normal);
   overflow: visible;
+  padding: 4px;
+  margin-top: 5px;
 }
 
 .invisibleTypingButton .disabledStrokeThrough {
@@ -76,8 +78,10 @@ Styles.sheets.push("/* typingButton.scss */", `.invisibleTypingButton svg {
 }
 
 .invisibleTypingButton {
-  margin-top: 3px;
   background: transparent;
+  align-self: flex-end;
+  position: sticky;
+  height: var(--custom-channel-textarea-text-area-height);
 }
 .invisibleTypingButton:hover:not(.disabled) svg {
   color: var(--interactive-hover);
