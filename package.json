@@ -1,32 +1,18 @@
 {
-  "name": "betterdiscordaddons",
-  "version": "1.0.0",
-  "description": "Some useful Discord-Addons for BetterDiscord.",
-  "main": "index.js",
   "scripts": {
     "build": "node scripts/build.js"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/shitcord-plugins/BetterDiscordStuffTest.git"
-  },
-  "author": "Strencher",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/shitcord-plugins/BetterDiscordStuffTest/issues"
-  },
-  "homepage": "https://github.com/shitcord-plugins/BetterDiscordStuffTest#readme",
   "devDependencies": {
-    "@rollup/plugin-json": "^5.0.2",
-    "@rollup/plugin-node-resolve": "^15.0.1",
+    "@rollup/plugin-json": "^6.1.0",
+    "@rollup/plugin-node-resolve": "^15.2.3",
     "@types/betterdiscord": "github:zerthox/betterdiscord-types",
-    "@types/react": "^17.0.34",
+    "@types/react": "^18.3.3",
     "@types/redux": "^3.6.0",
     "cssom": "^0.5.0",
-    "esbuild": "^0.15.17",
-    "js-beautify": "^1.14.7",
-    "rollup": "^3.7.4",
-    "rollup-plugin-esbuild": "^5.0.0",
-    "sass": "^1.56.2"
+    "esbuild": "^0.21.5",
+    "js-beautify": "^1.15.1",
+    "rollup": "^4.18.0",
+    "rollup-plugin-esbuild": "^6.1.1",
+    "sass": "^1.77.6"
   }
 }
