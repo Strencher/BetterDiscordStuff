@@ -244,8 +244,7 @@ class InvisibleTyping {
         Patcher.unpatchAll();
     }
     showChangelog() {
-        if (!manifest?.changelog?.length || Settings.get("lastVersion") === manifest.version)
-            return;
+        if (!manifest?.changelog?.length || Settings.get("lastVersion") === manifest.version) return;
         const i18n = Webpack.getByKeys("getLocale");
         const formatter = new Intl.DateTimeFormat(i18n.getLocale(), {
             month: "long",
@@ -272,8 +271,7 @@ class InvisibleTyping {
     patchTyping() {
         Patcher.instead(TypingModule, "startTyping", (_, [channelId], originalMethod) => {
             const excludeList = Settings.get("exclude", []);
-            if (excludeList.includes(channelId))
-                return;
+            if (excludeList.includes(channelId)) return;
             return originalMethod(channelId);
         });
     }
@@ -283,13 +281,11 @@ class InvisibleTyping {
             const chatBar = Utils.findInTree(res, (e) => Array.isArray(e?.children) && e.children.some((c) => c?.props?.className?.startsWith("attachButton")), {
                 walkable: ["children", "props"]
             });
-            if (!chatBar)
-                return console.error("[InvisibleTyping] Failed to find ChatBar");
+            if (!chatBar) return console.error("[InvisibleTyping] Failed to find ChatBar");
             const textAreaState = Utils.findInTree(chatBar, (e) => e?.props?.channel, {
                 walkable: ["children"]
             });
-            if (!textAreaState)
-                return console.error("[InvisibleTyping] Failed to find textAreaState");
+            if (!textAreaState) return console.error("[InvisibleTyping] Failed to find textAreaState");
             chatBar.children.splice(-1, 0, React.createElement(InvisibleTypingButton, {
                 channel: textAreaState?.props?.channel,
                 isEmpty: !Boolean(textAreaState?.props?.editorTextContent)
