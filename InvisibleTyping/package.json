@@ -10,9 +10,7 @@
 		{
 			"title": "Fixed",
 			"type": "fixed",
-			"items": [
-				"The Plugin works again"
-			]
+			"items": ["The Plugin works again"]
 		}
 	],
 	"changelogDate": "2024-08-29"
