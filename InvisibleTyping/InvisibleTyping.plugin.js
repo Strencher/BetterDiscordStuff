@@ -90,12 +90,37 @@ Styles.sheets.push("/* typingButton.scss */", `.invisibleTypingButton svg {
 .invisibleTypingTooltip {
   display: inline-flex;
 }`);
-var InvisibleTypingButton = {
+var styles = {
     "invisibleTypingButton": "invisibleTypingButton",
     "disabledStrokeThrough": "disabledStrokeThrough",
     "disabled": "disabled",
     "invisibleTypingTooltip": "invisibleTypingTooltip"
 };
+/*@end */
+
+/* @module keyboard.tsx */
+function Keyboard({
+    disabled,
+    ...props
+}) {
+    return React.createElement("svg", {
+        ...props,
+        width: "25",
+        height: "25",
+        viewBox: "0 0 576 512"
+    }, React.createElement("path", {
+        fill: "currentColor",
+        d: "M528 448H48c-26.51 0-48-21.49-48-48V112c0-26.51 21.49-48 48-48h480c26.51 0 48 21.49 48 48v288c0 26.51-21.49 48-48 48zM128 180v-40c0-6.627-5.373-12-12-12H76c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12zm96 0v-40c0-6.627-5.373-12-12-12h-40c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12zm96 0v-40c0-6.627-5.373-12-12-12h-40c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12zm96 0v-40c0-6.627-5.373-12-12-12h-40c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12zm96 0v-40c0-6.627-5.373-12-12-12h-40c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12zm-336 96v-40c0-6.627-5.373-12-12-12h-40c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12zm96 0v-40c0-6.627-5.373-12-12-12h-40c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12zm96 0v-40c0-6.627-5.373-12-12-12h-40c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12zm96 0v-40c0-6.627-5.373-12-12-12h-40c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12zm-336 96v-40c0-6.627-5.373-12-12-12H76c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12zm288 0v-40c0-6.627-5.373-12-12-12H172c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h232c6.627 0 12-5.373 12-12zm96 0v-40c0-6.627-5.373-12-12-12h-40c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12z"
+    }), disabled ? React.createElement("rect", {
+        className: styles.disabledStrokeThrough,
+        x: "10",
+        y: "10",
+        width: "600pt",
+        height: "70px",
+        fill: "#f04747"
+    }) : null);
+}
+
 /*@end */
 
 /* @module shared.js */
@@ -105,6 +130,22 @@ const TypingModule = Webpack.getByKeys("startTyping");
 const useStateFromStores = Webpack.getByStrings("useStateFromStores", {
     searchExports: true
 });
+const buildClassName = (...args) => {
+    return args.reduce((classNames, arg) => {
+        if (!arg) return classNames;
+        if (typeof arg === "string" || typeof arg === "number") {
+            classNames.push(arg);
+        } else if (Array.isArray(arg)) {
+            const nestedClassNames = buildClassName(...arg);
+            if (nestedClassNames) classNames.push(nestedClassNames);
+        } else if (typeof arg === "object") {
+            Object.keys(arg).forEach((key) => {
+                if (arg[key]) classNames.push(key);
+            });
+        }
+        return classNames;
+    }, []).join(" ");
+};
 
 /*@end */
 
@@ -123,6 +164,104 @@ const Settings = new class Settings2 extends Flux.Store {
         this.emitChange();
     }
 }();
+
+/*@end */
+
+/* @module typingButton.tsx */
+const ChatBarClasses = Webpack.getByKeys("channelTextArea", "button");
+const removeItem = function(array, item) {
+    while (array.includes(item)) {
+        array.splice(array.indexOf(item), 1);
+    }
+    return array;
+};
+
+function InvisibleTypingContextMenu() {
+    const enabled = useStateFromStores([Settings], () => Settings.get("autoEnable", true));
+    return React.createElement(
+        ContextMenu.Menu, {
+            navId: "invisible-typing-context-menu",
+            onClose: ContextMenu.close
+        },
+        React.createElement(
+            ContextMenu.Item, {
+                id: "globally-disable-or-enable-typing",
+                label: enabled ? "Disable Globally" : "Enable Globally",
+                action: () => {
+                    Settings.set("autoEnable", !enabled);
+                }
+            }
+        ),
+        React.createElement(
+            ContextMenu.Item, {
+                color: "danger",
+                label: "Reset Config",
+                disabled: !Settings.get("exclude", []).length,
+                id: "reset-config",
+                action: () => {
+                    Settings.set("exclude", []);
+                    UI.showToast("Successfully reset config for all channels.", {
+                        type: "success"
+                    });
+                }
+            }
+        )
+    );
+}
+
+function InvisibleTypingButton({
+    channel,
+    isEmpty
+}) {
+    const enabled = useStateFromStores([Settings], InvisibleTypingButton.getState.bind(this, channel.id));
+    const handleClick = React.useCallback(() => {
+        const excludeList = [...Settings.get("exclude", [])];
+        if (excludeList.includes(channel.id)) {
+            removeItem(excludeList, channel.id);
+            TypingModule.stopTyping(channel.id);
+        } else {
+            excludeList.push(channel.id);
+            if (!isEmpty) TypingModule.startTyping(channel.id);
+        }
+        Settings.set("exclude", excludeList);
+    }, [enabled]);
+    const handleContextMenu = React.useCallback((event) => {
+        ContextMenu.open(event, () => {
+            return React.createElement(InvisibleTypingContextMenu, null);
+        });
+    }, [enabled]);
+    return React.createElement(
+        "div", {
+            style: {
+                marginRight: "2.5px"
+            },
+            className: ChatBarClasses.buttons
+        },
+        React.createElement(Components.Tooltip, {
+            text: enabled ? "Typing Enabled" : "Typing Disabled"
+        }, (props) => React.createElement(
+            "button", {
+                ...props,
+                className: buildClassName(styles.invisibleTypingButton, {
+                    enabled,
+                    disabled: !enabled
+                }),
+                onClick: handleClick,
+                onContextMenu: handleContextMenu
+            },
+            React.createElement(Keyboard, {
+                disabled: !enabled
+            })
+        ))
+    );
+}
+InvisibleTypingButton.getState = function(channelId) {
+    const isGlobal = Settings.get("autoEnable", true);
+    const isExcluded = Settings.get("exclude", []).includes(channelId);
+    if (isGlobal && isExcluded) return false;
+    if (isExcluded && !isGlobal) return true;
+    return isGlobal;
+};
 
 /*@end */
 
