@@ -1,8 +1,7 @@
 .invisibleTypingButton svg {
     color: var(--interactive-normal);
     overflow: visible;
-    padding: 4px;
-    margin-top: 5px;
+    margin-top: 2.5px;
 }
 
 .invisibleTypingButton .disabledStrokeThrough {
@@ -12,10 +11,6 @@
 
 .invisibleTypingButton {
     background: transparent;
-    
-    align-self: flex-end;
-    position: sticky;
-    height: var(--custom-channel-textarea-text-area-height);
     
     &:hover:not(.disabled) svg {
         color: var(--interactive-hover);

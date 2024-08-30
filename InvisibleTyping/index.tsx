@@ -62,9 +62,11 @@ export default class InvisibleTyping {
 
     patchTyping() {
         Patcher.instead(TypingModule, "startTyping", (_, [channelId]: [string], originalMethod) => {
+            const globalTypingEnabled = Settings.get("autoEnable", true);
             const excludeList: string[] = Settings.get("exclude", []);
-            if (excludeList.includes(channelId)) return;
-            return originalMethod(channelId);
+            const shouldType = globalTypingEnabled ? !excludeList.includes(channelId) : excludeList.includes(channelId);
+            if (!shouldType) return;
+            originalMethod(channelId);
         });
     }
 

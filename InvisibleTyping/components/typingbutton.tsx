@@ -1,9 +1,11 @@
 import React from "react";
-import { Components, ContextMenu, UI } from "@api";
+import { Components, ContextMenu, UI, Webpack } from "@api";
 import Keyboard from "./icons/keyboard";
 import styles from "./typingButton.scss";
 import Settings from "../modules/settings";
 import { buildClassName, TypingModule, useStateFromStores } from "../modules/shared";
+
+const ChatBarClasses = Webpack.getByKeys("channelTextArea", "button");
 
 const removeItem = function (array: any[], item: any) {
     while (array.includes(item)) {
@@ -67,23 +69,29 @@ export default function InvisibleTypingButton({ channel, isEmpty }) {
     }, [enabled]);
 
     return (
-        <Components.Tooltip text={enabled ? "Typing Enabled" : "Typing Disabled"}>
-            {props => (
-                <button
-                    {...props}
-                    className={
-                        buildClassName(styles.invisibleTypingButton, {
-                            enabled,
-                            disabled: !enabled
-                        })
-                    }
-                    onClick={handleClick}
-                    onContextMenu={handleContextMenu}
-                >
-                    <Keyboard disabled={!enabled} />
-                </button>
-            )}
-        </Components.Tooltip>
+        <div
+            style={{ marginRight: "2.5px" }}
+            className={ChatBarClasses.buttons}
+        >
+            <Components.Tooltip text={enabled ? "Typing Enabled" : "Typing Disabled"}>
+                {props => (
+                    <button
+                        {...props}
+                        className={
+                            buildClassName(styles.invisibleTypingButton, {
+                                enabled,
+                                disabled: !enabled
+                            })
+
+                        }
+                        onClick={handleClick}
+                        onContextMenu={handleContextMenu}
+                    >
+                        <Keyboard disabled={!enabled} />
+                    </button>
+                )}
+            </Components.Tooltip>
+        </div>
     );
 }
 
