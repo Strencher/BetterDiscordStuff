@@ -10,7 +10,11 @@
 		{
 			"title": "Fixed",
 			"type": "fixed",
-			"items": ["The Plugin works again", "Fixed some logic issues", "Fixed sticky button"]
+			"items": [
+				"The Plugin works again",
+				"Fixed some logic issues",
+				"Fixed sticky button"
+			]
 		}
 	],
 	"changelogDate": "2024-08-29"
