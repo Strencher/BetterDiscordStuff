@@ -1,0 +1,42 @@
+name: Bug report
+description: Report a bug in one of my plugins
+title: "[Bug]: "
+labels:
+  - bug
+body:
+  - type: input
+    id: plugin
+    attributes:
+      label: Plugin
+      description: Which plugin is this bug report about?
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Bug Description
+      description: >-
+        Please describe the bug in detail. If possible, include screenshots or
+        videos to help illustrate the issue.
+    validations:
+      required: true
+
+  - type: textarea
+    id: stacktrace
+    attributes:
+      label: Stacktrace
+      description: >-
+        If there is an error message in your console, please copy and paste
+        the stacktrace here
+      render: code
+
+  - type: checkboxes
+    id: confirmation
+    attributes:
+      label: Confirmation
+      options:
+        - label: I am using the latest version of the plugin
+          required: true
+        - label: This issue has not already been reported
+          required: true
