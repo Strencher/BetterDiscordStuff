@@ -1,8 +1,9 @@
 .text {
-    font-size: 0.75rem;
-    line-height: 1.375rem;
     cursor: default;
     font-weight: 500;
-    color: var(--text-muted);
+    font-size: 0.75rem;
+    margin-left: .25rem;
+    line-height: 1.375rem;
     vertical-align: baseline;
+    color: var(--text-muted);
 }

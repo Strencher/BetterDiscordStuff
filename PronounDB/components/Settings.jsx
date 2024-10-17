@@ -1,37 +1,41 @@
-import {WebpackModules} from "@zlibrary";
 import React from "react";
+import { Webpack } from "@api";
 import Settings from "../modules/settings";
+import { useStateFromStores } from "../modules/shared";
+import SettingsItems from "./settings.json";
 
-const createUpdateWrapper = (Component, valueProp = "value", changeProp = "onChange") => props => {
-    const [value, setValue] = React.useState(props[valueProp]);
+const { FormSwitch } = Webpack.getByKeys("FormSwitch");
 
-    return <Component 
-        {...{
-            ...props,
-            [valueProp]: value,
-            [changeProp]: value => {
-                if (typeof props[changeProp] === "function") props[changeProp](value);
-                setValue(value);
-            }
-        }}
-    />;
-};
+function SwitchItem(props) {
+    const value = useStateFromStores([Settings], () => Settings.get(props.id, props.value));
 
-const SwitchItem = createUpdateWrapper(WebpackModules.getByDisplayName("SwitchItem"));
+    return (
+        <FormSwitch
+            {...props}
+            value={value}
+            children={props.name}
+            onChange={value => {
+                Settings.set(props.id, value);
+            }}
+        />
+    );
+}
+
+function renderItems(items) {
+    return items.map(item => {
+        switch (item.type) {
+            case "switch":
+                return <SwitchItem {...item} />;
+            default:
+                return null;
+        }
+    });
+}
 
 export default function SettingsPanel() {
     return (
         <div>
-            <SwitchItem
-                note="Shows the pronoun right next to the message timestamp."
-                value={Settings.get("showOnTimestamp")}
-                onChange={value => Settings.set("showOnTimestamp", value)}
-            >Message Timestamp</SwitchItem>
-            <SwitchItem
-                note="Shows the pronoun in the user popout body."
-                value={Settings.get("showInUserPopout")}
-                onChange={value => Settings.set("showInUserPopout", value)}
-            >User Popout</SwitchItem>
+            {renderItems(SettingsItems)}
         </div>
-    )
+    );
 }
