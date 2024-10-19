@@ -16,6 +16,7 @@ export default class PronounDB {
         Styles.load();
         this.showChangelog();
         this.patchMessageTimestamp();
+        this.patchUserProfile();
         this.patchContextMenu()
     }
     stop() {
@@ -75,26 +76,35 @@ export default class PronounDB {
         })
     }
 
+    patchUserProfile() {
+        const [Module, Key] = Webpack.getWithKey(Webpack.Filters.byStrings("UserProfileUsername"))
+        Patcher.after(Module, Key, (_, [{ user }], res) => {
+            // TODO: Patch Tooltip Text and change Pronouns to our
+        })
+    }
+
     patchContextMenu() {
         ContextMenu.patch("user-context", (res, props) => {
-            const SetCustomPronouns = ContextMenu.buildItem({
-                type: "button",
-                label: "Set Custom Pronouns",
-                onClick: () => {
-                    const oldPronouns = Settings.get("customPronouns")[props.user.id] || "";
-                    UI.showConfirmationModal(
-                        `Set Pronouns for ${props.user.username}`,
-                        <PronounInputModal
-                            userId={props.user.id}
-                        />, {
+            res.props.children.push(
+                ContextMenu.buildItem({ type: "separator" })
+            );
+            res.props.children.push(
+                ContextMenu.buildItem({
+                    type: "button",
+                    label: "Set Custom Pronouns",
+                    onClick: () => {
+                        const oldPronouns = Settings.get("customPronouns")[props.user.id] || "";
+                        UI.showConfirmationModal(
+                            `Set Pronouns for ${props.user.username}`,
+                            <PronounInputModal
+                                userId={props.user.id}
+                            />, {
                             onCancel: () => PronounsDB.setPronouns(props.user.id, oldPronouns)
                         }
-                    );
-                }
-            });
-            const Separator = ContextMenu.buildItem({ type: "separator" });
-            res.props.children.push(Separator);
-            res.props.children.push(SetCustomPronouns);
+                        );
+                    }
+                })
+            );
         });
     }
 
