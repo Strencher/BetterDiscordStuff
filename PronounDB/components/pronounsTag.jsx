@@ -13,7 +13,7 @@ export default PronounsDB.connect(function Pronoun({ data, render, type }) {
     if (!pronoun) return null;
 
     return (
-        <span className={Styles.text}>
+        <span className={Styles.timestamp}>
             <span className="pronoun-db-dot">•</span> {pronoun}
         </span>
     );

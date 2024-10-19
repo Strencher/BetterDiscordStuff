@@ -1,17 +1,15 @@
-import {ContextMenu, Patcher, UI, Webpack} from "@api";
+import React from "react";
+import { ContextMenu, Patcher, UI, Webpack } from "@api";
 import manifest from "@manifest";
 import Styles from "@styles";
 
-import PronounsTag from "./components/pronouns";
+import PronounInputModal from "./components/pronounsModal";
+import PronounsTag from "./components/pronounsTag";
 import SettingsPanel from "./components/settings";
 import Settings from "./modules/settings";
 
 import "./changelog.scss";
-import {FlexModule, ModalComponents, ModalsModule, Pronouns} from "./data/constants";
-import {db} from "./modules/database";
-
-const React = BdApi.React
-const {useState} = React
+import PronounsDB from "./modules/database";
 
 export default class PronounDB {
     start() {
@@ -64,9 +62,9 @@ export default class PronounDB {
     }
 
     patchMessageTimestamp() {
-        const [Module, Key] = Webpack.getWithKey(Webpack.Filters.byStrings("isInteractionPlaceholder",".application.id"))
+        const [Module, Key] = Webpack.getWithKey(Webpack.Filters.byStrings("isInteractionPlaceholder", ".application.id"))
         Patcher.after(Module, Key, (_, __, res) => {
-            const unpatch = Patcher.after(res, "type", (_, [{ message: { author }}], res) => {
+            const unpatch = Patcher.after(res, "type", (_, [{ message: { author } }], res) => {
                 unpatch();
                 const children = res.props.children[1].props.children;
 
@@ -83,7 +81,15 @@ export default class PronounDB {
                 type: "button",
                 label: "Set Custom Pronouns",
                 onClick: () => {
-                    this.openPronounModal(props.user.id);
+                    const oldPronouns = Settings.get("customPronouns")[props.user.id] || "";
+                    UI.showConfirmationModal(
+                        `Set Pronouns for ${props.user.username}`,
+                        <PronounInputModal
+                            userId={props.user.id}
+                        />, {
+                            onCancel: () => PronounsDB.setPronouns(props.user.id, oldPronouns)
+                        }
+                    );
                 }
             });
             const Separator = ContextMenu.buildItem({ type: "separator" });
@@ -92,65 +98,7 @@ export default class PronounDB {
         });
     }
 
-    openPronounModal(userId) {
-        ModalsModule.openModal((props) => (
-            <PronounInputModal userId={userId} props={props} />
-        ));
-    }
-
     getSettingsPanel() {
         return <SettingsPanel />;
     }
 }
-
-const PronounInputModal = ({ userId, props }) => {
-    const [pronouns, setPronouns] = useState("");
-
-    const savePronouns = () => {
-        db.pronouns.put({ id: userId, pronouns });
-        UI.alert("Success", `Pronouns for user ${userId} have been set to "${pronouns}".`);
-        ModalComponents.closeAll();
-    };
-
-    const clearPronouns = () => {
-        setPronouns("");
-        db.pronouns.delete(userId);
-        UI.alert("Pronouns removed", `Pronouns for user ${userId} have been removed.`);
-        ModalComponents.closeAll();
-    };
-
-    return (
-        <ModalComponents.ModalRoot {...props} size={ModalComponents.ModalSize.MEDIUM}>
-            <ModalComponents.ModalHeader>
-                <h2 style={{ color: "white" }}>Set Pronouns for User</h2>
-            </ModalComponents.ModalHeader>
-
-            <ModalComponents.ModalContent>
-                <div>
-                    <ModalComponents.TextInput
-                        type="text"
-                        placeholder="Enter pronouns (e.g., they/them)"
-                        value={pronouns}
-                        onChange={(e) => setPronouns(e.target.value)}
-                    />
-                </div>
-
-                <div style={{display: "flex", justifyContent: "flex-end", marginTop: "16px"}}>
-                    <ModalComponents.Button
-                        onClick={savePronouns}
-                        style={{backgroundColor: '#7289da', color: 'white', marginRight: '8px'}}
-                    >
-                        Save Pronouns
-                    </ModalComponents.Button>
-
-                    <ModalComponents.Button
-                        onClick={clearPronouns}
-                        style={{backgroundColor: '#dc3545', color: 'white'}}
-                    >
-                        Clear Pronouns
-                    </ModalComponents.Button>
-                </div>
-            </ModalComponents.ModalContent>
-        </ModalComponents.ModalRoot>
-    );
-};

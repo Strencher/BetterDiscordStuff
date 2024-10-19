@@ -1,5 +1,3 @@
-import {Webpack} from "@api";
-
 export const API_URL = "https://pronoundb.org/api/v2";
 
 export const Endpoints = {
@@ -18,7 +16,3 @@ export const Pronouns = {
     avoid: "Avoid pronouns, use my name",
     unspecified: "No pronouns specified."
 };
-
-export const ModalsModule = Webpack.getModule(x=>x.openModal)
-export const ModalComponents = Webpack.getModule(x=>x.ModalRoot)
-export const FlexModule = Webpack.getByKeys( "Align", "Child", "Wrap" );

@@ -7,7 +7,7 @@ import pkg from "../package.json";
 import Settings from "./settings";
 import { formatString } from "./shared";
 
-export const db = new Dexie("Pronouns");
+const db = new Dexie("Pronouns");
 const dispatcher = Dexie.Events(null, "update");
 
 const UserProfileStore = Webpack.getStore("UserProfileStore");
