@@ -132,7 +132,7 @@ export default class PronounsDB {
             }
 
             console.debug(`[${pkg.name}] Pronouns for ${userId}:`, pronouns, type);
-            return { pronouns, type };
+            return { pronouns, type, userId };
         } catch (error) {
             console.error(`[${pkg.name}] An error occured while trying to get the Pronouns: `, error);
         }

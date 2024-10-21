@@ -1,5 +1,5 @@
 import React from "react";
-import { ContextMenu, Patcher, UI, Webpack } from "@api";
+import { ContextMenu, Patcher, UI, Utils, Webpack } from "@api";
 import manifest from "@manifest";
 import Styles from "@styles";
 
@@ -10,6 +10,7 @@ import Settings from "./modules/settings";
 
 import "./changelog.scss";
 import PronounsDB from "./modules/database";
+import { Pronouns } from "./data/constants";
 
 export default class PronounDB {
     start() {
@@ -79,7 +80,16 @@ export default class PronounDB {
     patchUserProfile() {
         const [Module, Key] = Webpack.getWithKey(Webpack.Filters.byStrings("UserProfileUsername"))
         Patcher.after(Module, Key, (_, [{ user }], res) => {
-            // TODO: Patch Tooltip Text and change Pronouns to our
+            const [pronouns, setPronouns] = React.useState({ type: "", pronouns: "" });
+            const tooltip = Utils.findInTree(res, x => x.className?.includes("pronounsTooltip"), { walkable: ["children", "props"] });
+            const children = Utils.findInTree(res, x => x.className?.includes("pronounsText_"), { walkable: ["children", "props"] });
+            
+            PronounsDB.getPronouns(user.id)
+                .then(pronouns => setPronouns(pronouns));
+            
+            if (!tooltip && !children) return; 
+            tooltip.text = pronouns.type;
+            children.children = pronouns.pronouns;
         })
     }
 
