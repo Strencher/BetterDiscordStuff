@@ -10,7 +10,6 @@ import Settings from "./modules/settings";
 
 import "./changelog.scss";
 import PronounsDB from "./modules/database";
-import { Pronouns } from "./data/constants";
 
 export default class PronounDB {
     start() {
@@ -83,11 +82,11 @@ export default class PronounDB {
             const [pronouns, setPronouns] = React.useState({ type: "", pronouns: "" });
             const tooltip = Utils.findInTree(res, x => x.className?.includes("pronounsTooltip"), { walkable: ["children", "props"] });
             const children = Utils.findInTree(res, x => x.className?.includes("pronounsText_"), { walkable: ["children", "props"] });
-            
+
             PronounsDB.getPronouns(user.id)
                 .then(pronouns => setPronouns(pronouns));
-            
-            if (!tooltip && !children) return; 
+
+            if (!tooltip && !children) return;
             tooltip.text = pronouns.type;
             children.children = pronouns.pronouns;
         })
@@ -103,13 +102,16 @@ export default class PronounDB {
                     type: "button",
                     label: "Set Custom Pronouns",
                     onClick: () => {
-                        const oldPronouns = Settings.get("customPronouns")[props.user.id] || "";
+                        const oldPronouns = Settings.get("customPronouns")?.[props.user.id];
                         UI.showConfirmationModal(
                             `Set Pronouns for ${props.user.username}`,
                             <PronounInputModal
                                 userId={props.user.id}
                             />, {
-                            onCancel: () => PronounsDB.setPronouns(props.user.id, oldPronouns)
+                            onCancel: () => {
+                                if (!oldPronouns) PronounsDB.removePronoun(props.user.id);
+                                else PronounsDB.setPronouns(props.user.id, oldPronouns);
+                            }
                         }
                         );
                     }

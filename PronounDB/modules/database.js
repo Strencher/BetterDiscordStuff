@@ -113,7 +113,7 @@ export default class PronounsDB {
     static async getPronouns(userId) {
         try {
             const UserProfile = UserProfileStore.getUserProfile(userId);
-            const localPronouns = Settings.get("customPronouns")[userId];
+            const localPronouns = Settings.get("customPronouns")?.[userId];
             const discordPronouns = UserProfile?.pronouns;
             const pronounDB_Pronouns = await this.getPronounsFromDB(userId);
 
@@ -149,6 +149,8 @@ export default class PronounsDB {
     }
 
     static async removePronoun(userId) {
+        const { [userId]: _, ...customPronouns } = Settings.get("customPronouns");
+        Settings.set("customPronouns", customPronouns);
         await db.pronouns.delete(userId);
         dispatcher.update.fire(userId);
     }

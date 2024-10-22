@@ -7,7 +7,7 @@ import PronounsDB from "../modules/database";
 const { TextInput } = Webpack.getByKeys("ModalContent");
 
 export default function PronounInputModal({ userId }) {
-    const initialPronouns = Settings.get("customPronouns")[userId] || "";
+    const initialPronouns = Settings.get("customPronouns")?.[userId] || "";
     const [pronouns, setPronouns] = React.useState(initialPronouns);
 
     React.useEffect(() => {
