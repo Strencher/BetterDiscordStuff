@@ -1,63 +1,24 @@
 {
-    "zlib": true,
-    "info": {
-        "name": "PronounDB",
-        "authors": [
-            {
-                "name": "Strencher",
-                "discord_id": "415849376598982656",
-                "github_username": "Strencher",
-                "twitter_username": "Strencher3"
-            },
-            {
-                "name": "Kyza",
-                "discord_id": "220584715265114113",
-                "github_username": "Kyza"
-            },
-            {
-                "name": "MinekPo1",
-                "discord_id": "349810624273842176",
-                "github_username": "MinekPo1"
-            }
-        ],
-        "description": "Shows you the pronoun of a user right next to their name. Pronouns by https://pronoundb.org. Source code can be found in the ./src folder of the github repo.",
-        "github": "https://github.com/Strencher/BetterDiscordStuff/tree/master/PronounDB",
-        "github_raw": "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/PronounDB/PronounDB.plugin.js",
-        "version": "1.3.0"
-    },
-    "build": {
-        "zlibrary": true,
-        "copy": true,
-        "production": false,
-        "alias": {},
-        "release": {
-            "public": true,
-            "source": true,
-            "readme": true,
-            "contributors": [
-                {
-                    "name": "Kyza",
-                    "github": "https://github.com/Kyza"
-                },
-                {
-                    "name": "MinekPo1",
-                    "github": "https://github.com/MinekPo1"
-                }
-            ]
-        }
-    },
-    "changelog": [
-        {
-            "type": "fixed",
-            "title": "v1.3.0",
-            "items": [
-                "Fixed crashing.",
-                "Fixed showing up in ContextMenu.",
-                "Fixed styles in UserPopout."
-            ]
-        }
-    ],
-    "dependencies": {
-        "dexie": "^3.0.3"
-    }
+	"name": "PronounDB",
+	"version": "1.4.0",
+	"author": "Strencher",
+	"authorId": "415849376598982656",
+	"description": "Shows you the pronoun of a user right next to their name. Pronouns by https://pronoundb.org",
+	"source": "https://github.com/Strencher/BetterDiscordStuff/blob/master/PronounDB/PronounDB.plugin.js",
+	"invite": "gvA2ree",
+	"changelog": [
+		{
+			"title": "Fixed",
+			"type": "fixed",
+			"items": [
+				"The Plugin works again",
+				"Complete rewrite of the Plugin"
+			]
+		}
+	],
+	"changelogImage": "https://media1.tenor.com/m/4B2j48N2jMUAAAAC/20th-century-fox-logo.gif",
+	"changelogDate": "2024-10-22",
+	"devDependencies": {
+		"dexie": "^4.0.8"
+	}
 }

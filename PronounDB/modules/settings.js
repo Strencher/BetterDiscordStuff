@@ -1,49 +1,19 @@
-import {PluginUtilities} from "@zlibrary"
-import EventEmitter from "events";
-import pkg from "../package.json";
-import React, {useReducer, useEffect} from "react";
+import { Data } from "@api";
+import { Dispatcher, Flux } from "./shared";
 
-const useForceUpdate = () => useReducer(n => n + 1, 0)[1];
+const Settings = new class Settings extends Flux.Store {
+    constructor() { super(Dispatcher, {}); }
+    _settings = Data.load("settings") ?? {};
 
-export default class Settings {
-    static updater = new EventEmitter();
-
-    static settings = PluginUtilities.loadSettings(pkg.info.name, {customPronouns: {}, showOnTimestamp: true, showInUserPopout: true});
-
-    static get(id) {
-        return this.settings[id];
+    get(key, def) {
+        return this._settings[key] ?? def;
     }
 
-    static set(id, value) {
-        this.settings[id] = value;
-        this.saveState();
+    set(key, value) {
+        this._settings[key] = value;
+        Data.save("settings", this._settings);
+        this.emitChange();
     }
+};
 
-    static saveState() {
-        PluginUtilities.saveSettings(pkg.info.name, this.settings);
-        this.updater.emit("update");
-    }
-
-    static connectStore(Component) {
-        return props => {
-
-            if (!props.getSetting) Object.assign(props, {
-                getSetting: this.get,
-                updateSetting: this.set,
-                toggleSetting: id => {
-                    this.set(!this.get(id));
-                }
-            })
-
-            const forceUpdate = useForceUpdate();
-
-            useEffect(() => {
-                this.updater.on("update", forceUpdate);
-
-                return () => this.updater.off("update", forceUpdate);
-            }, []);
-
-            return <Component {...props}/>;
-        }
-    }
-}
+export default Settings;

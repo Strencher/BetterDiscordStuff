@@ -1,0 +1,16 @@
+[
+    {
+        "type": "switch",
+        "name": "Prefer Discord Pronouns",
+        "note": "Use Discords pronouns if they are set regardless of the pronouns in PronounDB",
+        "id": "preferDiscordPronouns",
+        "value": true
+    },
+    {
+        "type": "switch",
+        "name": "Show on Message Timestamp",
+        "note": "Shows the pronoun right next to the message timestamp",
+        "id": "showOnTimestamp",
+        "value": true
+    }
+]
