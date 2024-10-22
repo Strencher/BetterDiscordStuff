@@ -9,12 +9,14 @@ export default PronounsDB.connect(function Pronoun({ data, render, type }) {
     if (!Settings.get(type, true)) return null;
     const pronoun = Pronouns.hasOwnProperty(data) ? Pronouns[data] : data;
     if (typeof render === "function") return render(pronoun);
-
-    if (!pronoun) return null;
+    if (!pronoun || !pronoun.pronouns) return null;
 
     return (
-        <span className={Styles.text}>
-            <span className="pronoun-db-dot">•</span> {pronoun}
+        <span
+            key={pronoun.userId}
+            className={Styles.timestamp}
+        >
+            <span className="pronoun-db-dot">•</span> {pronoun.pronouns}
         </span>
     );
 });

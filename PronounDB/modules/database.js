@@ -97,7 +97,7 @@ export default class PronounsDB {
         return null;
     }
 
-    static async getPronouns(userId, request = true) {
+    static async getPronounsFromDB(userId, request = true) {
         const user = await db.pronouns.get(userId);
         if (!user && request) {
             return this.fetchPronouns(userId);
@@ -108,6 +108,34 @@ export default class PronounsDB {
             return this.fetchPronouns(userId);
         }
         return user.pronouns;
+    }
+
+    static async getPronouns(userId) {
+        try {
+            const UserProfile = UserProfileStore.getUserProfile(userId);
+            const localPronouns = Settings.get("customPronouns")?.[userId];
+            const discordPronouns = UserProfile?.pronouns;
+            const pronounDB_Pronouns = await this.getPronounsFromDB(userId);
+
+            const preferDiscordPronouns = Settings.get("preferDiscordPronouns", true);
+            let pronouns, type;
+
+            if (localPronouns) {
+                pronouns = localPronouns;
+                type = "Local Pronouns";
+            } else if (preferDiscordPronouns) {
+                pronouns = discordPronouns || pronounDB_Pronouns;
+                type = discordPronouns ? "Discord Pronouns" : "PronounDB Pronouns";
+            } else {
+                pronouns = pronounDB_Pronouns || discordPronouns;
+                type = pronounDB_Pronouns ? "PronounDB Pronouns" : "Discord Pronouns";
+            }
+
+            console.debug(`[${pkg.name}] Pronouns for ${userId}:`, pronouns, type);
+            return { pronouns, type, userId };
+        } catch (error) {
+            console.error(`[${pkg.name}] An error occured while trying to get the Pronouns: `, error);
+        }
     }
 
     static async setPronouns(userId, pronouns) {
@@ -121,6 +149,8 @@ export default class PronounsDB {
     }
 
     static async removePronoun(userId) {
+        const { [userId]: _, ...customPronouns } = Settings.get("customPronouns");
+        Settings.set("customPronouns", customPronouns);
         await db.pronouns.delete(userId);
         dispatcher.update.fire(userId);
     }
@@ -132,20 +162,8 @@ export default class PronounsDB {
             React.useEffect(() => {
                 const handler = async userId => {
                     if (userId !== props.userId) return;
-
-                    try {
-                        const UserProfile = UserProfileStore.getUserProfile(userId);
-                        const discordPronouns = UserProfile?.pronouns;
-                        const pronounDB_Pronouns = await this.getPronouns(userId);
-
-                        const preferDiscordPronouns = Settings.get("preferDiscordPronouns", true);
-                        const pronouns = preferDiscordPronouns ?
-                            discordPronouns || pronounDB_Pronouns : pronounDB_Pronouns || discordPronouns;
-                        console.debug(`[${pkg.name}] Pronouns for ${userId}:`, pronouns);
-                        setData(pronouns);
-                    } catch (error) {
-                        console.error(error);
-                    }
+                    const pronouns = await PronounsDB.getPronouns(userId);
+                    setData(pronouns);
                 };
 
                 handler(props.userId);
