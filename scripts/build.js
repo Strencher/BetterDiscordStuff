@@ -1,13 +1,14 @@
-const { watch } = require("rollup");
-const path = require("path");
+const { execSync } = require("child_process");
 const fs = require("fs");
 const os = require("os");
-const nodeResolve = require("@rollup/plugin-node-resolve");
+const path = require("path");
+const { watch } = require("rollup");
 const commonjs = require("@rollup/plugin-commonjs");
-const cssom = require("cssom");
-const { js: jsBeautify } = require("js-beautify");
 const { default: esBuild } = require("rollup-plugin-esbuild");
 const { default: json } = require("@rollup/plugin-json");
+const nodeResolve = require("@rollup/plugin-node-resolve");
+const cssom = require("cssom");
+const { js: jsBeautify } = require("js-beautify");
 
 const NO_PLUGIN_FOLDERS = [".github", "scripts", "Themes"];
 
@@ -112,6 +113,12 @@ const buildPlugin = (pluginFolder, makeFolder) => {
     if (!fs.existsSync(manifestPath)) {
         console.error(`Can't find a package.json file in "${pluginFolder}"`);
         process.exit(1);
+    }
+
+    const manifest = require(manifestPath);
+    if (manifest.dependencies || manifest.devDependencies) {
+        console.log(`Installing dependencies for ${pluginFolder}...`);
+        execSync('npm install', { cwd: pluginFolder, stdio: 'inherit' });
     }
 
     const watcher = watch({
