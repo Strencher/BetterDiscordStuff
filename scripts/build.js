@@ -224,8 +224,8 @@ const buildPlugin = (pluginFolder, makeFolder) => {
                     fs.mkdirSync(folder);
                 }
 
+                const folderName = manifest.name === "APlatformIndicators" ? "PlatformIndicators" : manifest.name;
                 if (makeFolder) {
-                    const folderName = manifest.name === "APlatformIndicators" ? "PlatformIndicators" : manifest.name;
                     const folder = path.resolve(process.cwd(), "builds", folderName);
                     if (!fs.existsSync(folder)) fs.mkdirSync(folder);
                     if (fs.existsSync(path.resolve(folderName, "README.md")))
