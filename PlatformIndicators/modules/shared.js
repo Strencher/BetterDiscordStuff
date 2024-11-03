@@ -15,7 +15,7 @@ export const Flux = Webpack.getByKeys("Store");
 export const ModulesLibrary = Webpack.getByKeys("Anchor");
 export const Colors = Webpack.getByKeys("RED_400");
 
-export const {Messages} = Webpack.getModule(m => m?.Messages?.STATUS_DND);
+export const Messages = {"STATUS_DND": "Do Not Disturb", "STATUS_OFFLINE": "Offline", "STATUS_ONLINE": "Online", "STATUS_STEAMING": "Streaming", "STATUS_IDLE": "IDLE", "STATUS_MOBILE": "Mobile"};
 export const buildClassName = (...args) => { // yeah, yk... I couldnt find a working string for this so I just remade it ;-;
     return args.reduce((classNames, arg) => {
         if (!arg) return classNames;

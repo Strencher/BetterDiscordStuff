@@ -1,4 +1,5 @@
-import {DOM, Patcher, ReactUtils, Webpack, Utils} from "@api";
+import {DOM, Patcher, ReactUtils, Webpack, UI, Utils} from "@api";
+import manifest from "@manifest";
 import Styles from "@styles";
 import React from "react";
 import Settings from "./modules/settings";
@@ -12,12 +13,51 @@ export default class PlatformIndicators {
     }
 
     start() {
+        this.showChangelog();
         this.patchDMs();
         this.patchMemberList();
         this.patchChat();
         this.patchBadges();
         this.patchFriendList();
         Styles.load();
+    }
+
+    showChangelog() {
+        if (
+            !manifest?.changelog?.length ||
+            Settings.get("lastVersion") === manifest.version
+        ) return;
+
+        const i18n = Webpack.getByKeys("getLocale");
+        const formatter = new Intl.DateTimeFormat(i18n.getLocale(), {
+            month: "long",
+            day: "numeric",
+            year: "numeric"
+        });
+
+        const title = (
+            <div className="Changelog-Title-Wrapper">
+                <h1>What's New - {manifest.name}</h1>
+                <div>{formatter.format(new Date(manifest.changelogDate))} - v{manifest.version}</div>
+            </div>
+        )
+
+        const items = manifest?.changelog?.map(item => (
+            <div className="Changelog-Item">
+                <h4 className={`Changelog-Header ${item.type}`}>{item.title}</h4>
+                {item.items.map(item => (
+                    <span>{item}</span>
+                ))}
+            </div>
+        ));
+
+        "changelogImage" in manifest && items.unshift(
+            <img className="Changelog-Banner" src={manifest.changelogImage} />
+        );
+
+        Settings.set("lastVersion", manifest.version);
+
+        UI.alert(title, items);
     }
 
     patchDMs() {
@@ -108,7 +148,7 @@ export default class PlatformIndicators {
     patchBadges() {
         const UserContext = React.createContext(null);
         const [ProfileInfoRow, KEY_PIR] = Webpack.getWithKey(Webpack.Filters.byStrings("user", "profileType"));
-        const [BadgeList, Key_BL] = Webpack.getWithKey(Webpack.Filters.byStrings(".PROFILE_USER_BADGES"));
+        const [BadgeList, Key_BL] = Webpack.getWithKey(Webpack.Filters.byStrings("badges", "badgeClassName"));
         
         Patcher.after(ProfileInfoRow, KEY_PIR, (_, [props], res) => {
             if (!Settings.get("showInBadges", true)) return;
@@ -127,6 +167,7 @@ export default class PlatformIndicators {
                 <StatusIndicators
                     userId={user.id}
                     type="Badge"
+                    separator
                 />
             );
         });

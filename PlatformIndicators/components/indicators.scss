@@ -13,6 +13,7 @@
 
     &.type_Chat {
         margin-right: -6px;
+        margin-top: 2px;
         vertical-align: top;
     }
 }
@@ -26,7 +27,7 @@
     margin-right: 2px;
     padding-right: 2px;
     border-right: thin solid var(--background-modifier-hover);
-    height: 22px;
+    height: 14px;
 }
 
 div[id*=message-reply] .indicatorContainer.type_Chat {

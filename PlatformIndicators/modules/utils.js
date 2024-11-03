@@ -1,6 +1,6 @@
 import {Utils} from "@api";
 import {Messages} from "./shared";
-import {Colors, ModulesLibrary, buildClassName} from "./shared";
+import {Colors, ModulesLibrary} from "./shared";
 
 export const findInReactTree = (tree, filter) => Utils.findInTree(tree, filter, {walkable: ["props", "children", "type"]});
 
