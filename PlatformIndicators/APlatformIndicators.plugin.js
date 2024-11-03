@@ -1,11 +1,12 @@
 /**
  * @name APlatformIndicators
- * @version 1.5.9
+ * @version 1.5.10
  * @author Strencher
  * @authorId 415849376598982656
  * @description Adds indicators for every platform that the user is using.
  * @source https://github.com/Strencher/BetterDiscordStuff/blob/master/PlatformIndicators/APlatformIndicators.plugin.js
  * @invite gvA2ree
+ * @changelogDate 2024-11-03
  */
 
 'use strict';
@@ -13,27 +14,39 @@
 /* @module @manifest */
 const manifest = {
     "name": "APlatformIndicators",
-    "version": "1.5.9",
+    "version": "1.5.10",
     "author": "Strencher",
     "authorId": "415849376598982656",
     "description": "Adds indicators for every platform that the user is using.",
     "source": "https://github.com/Strencher/BetterDiscordStuff/blob/master/PlatformIndicators/APlatformIndicators.plugin.js",
-    "invite": "gvA2ree"
+    "invite": "gvA2ree",
+    "changelog": [{
+        "title": "Fixed",
+        "type": "fixed",
+        "items": [
+            "Fixed Tooltip Messages",
+            "Fixed Badges not showing up"
+        ]
+    }],
+    "changelogDate": "2024-11-03"
 };
 
 /*@end */
 
 /* @module @api */
 const {
-    Net,
-    Data,
-    Patcher,
-    ReactUtils,
-    Utils,
-    Webpack,
-    UI,
+    Components,
     ContextMenu,
-    DOM
+    Data,
+    DOM,
+    Net,
+    Patcher,
+    Plugins,
+    ReactUtils,
+    Themes,
+    UI,
+    Utils,
+    Webpack
 } = new BdApi(manifest.name);
 /*@end */
 
@@ -68,23 +81,25 @@ const Dispatcher = UserStore._dispatcher;
 const Flux = Webpack.getByKeys("Store");
 const ModulesLibrary = Webpack.getByKeys("Anchor");
 const Colors = Webpack.getByKeys("RED_400");
-const {
-    Messages
-} = Webpack.getModule((m) => m?.Messages?.STATUS_DND);
+const Messages = {
+    "STATUS_DND": "Do Not Disturb",
+    "STATUS_OFFLINE": "Offline",
+    "STATUS_ONLINE": "Online",
+    "STATUS_STEAMING": "Streaming",
+    "STATUS_IDLE": "IDLE",
+    "STATUS_MOBILE": "Mobile"
+};
 const buildClassName = (...args) => {
     return args.reduce((classNames, arg) => {
-        if (!arg)
-            return classNames;
+        if (!arg) return classNames;
         if (typeof arg === "string" || typeof arg === "number") {
             classNames.push(arg);
         } else if (Array.isArray(arg)) {
             const nestedClassNames = buildClassName(...arg);
-            if (nestedClassNames)
-                classNames.push(nestedClassNames);
+            if (nestedClassNames) classNames.push(nestedClassNames);
         } else if (typeof arg === "object") {
             Object.keys(arg).forEach((key) => {
-                if (arg[key])
-                    classNames.push(key);
+                if (arg[key]) classNames.push(key);
             });
         }
         return classNames;
@@ -161,6 +176,7 @@ Styles$2.sheets.push("/* indicators.scss */", `.indicatorContainer {
 }
 .indicatorContainer.type_Chat {
   margin-right: -6px;
+  margin-top: 2px;
   vertical-align: top;
 }
 
@@ -173,7 +189,7 @@ Styles$2.sheets.push("/* indicators.scss */", `.indicatorContainer {
   margin-right: 2px;
   padding-right: 2px;
   border-right: thin solid var(--background-modifier-hover);
-  height: 22px;
+  height: 14px;
 }
 
 div[id*=message-reply] .indicatorContainer.type_Chat {
@@ -308,8 +324,7 @@ function StatusIndicators({
     separator = false
 }) {
     const state = usePlatformStores(userId, type);
-    if (!Object.keys(state.clients).length || !state.shouldShow)
-        return null;
+    if (!Object.keys(state.clients).length || !state.shouldShow) return null;
     return React.createElement(React.Fragment, null, separator && React.createElement("span", {
         className: Styles$1.badge_separator
     }), React.createElement("div", {
@@ -574,6 +589,7 @@ class PlatformIndicators {
         return React.createElement(SettingsPanel, null);
     }
     start() {
+        this.showChangelog();
         this.patchDMs();
         this.patchMemberList();
         this.patchChat();
@@ -581,19 +597,41 @@ class PlatformIndicators {
         this.patchFriendList();
         Styles$2.load();
     }
+    showChangelog() {
+        if (!manifest?.changelog?.length || Settings.get("lastVersion") === manifest.version) return;
+        const i18n = Webpack.getByKeys("getLocale");
+        const formatter = new Intl.DateTimeFormat(i18n.getLocale(), {
+            month: "long",
+            day: "numeric",
+            year: "numeric"
+        });
+        const title = React.createElement("div", {
+            className: "Changelog-Title-Wrapper"
+        }, React.createElement("h1", null, "What's New - ", manifest.name), React.createElement("div", null, formatter.format(new Date(manifest.changelogDate)), " - v", manifest.version));
+        const items = manifest?.changelog?.map((item) => React.createElement("div", {
+            className: "Changelog-Item"
+        }, React.createElement("h4", {
+            className: `Changelog-Header ${item.type}`
+        }, item.title), item.items.map((item2) => React.createElement("span", null, item2))));
+        "changelogImage" in manifest && items.unshift(
+            React.createElement("img", {
+                className: "Changelog-Banner",
+                src: manifest.changelogImage
+            })
+        );
+        Settings.set("lastVersion", manifest.version);
+        UI.alert(title, items);
+    }
     patchDMs() {
         const UserContext = React.createContext(null);
         const [ChannelWrapper, Key_CW] = Webpack.getWithKey(Webpack.Filters.byStrings("isGDMFacepileEnabled"));
         const [NameWrapper, Key_NW] = Webpack.getWithKey((x) => x.toString().includes(".nameAndDecorators") && !x.toString().includes("FocusRing"));
         const ChannelClasses = Webpack.getByKeys("channel", "decorator");
         Patcher.after(ChannelWrapper, Key_CW, (_, __, res) => {
-            if (!Settings.get("showInDmsList", true))
-                return;
+            if (!Settings.get("showInDmsList", true)) return;
             Patcher.after(res, "type", (_2, [props], res2) => {
-                if (!props.user)
-                    return;
-                if (Settings.get("ignoreBots", true) && props.user.bot)
-                    return;
+                if (!props.user) return;
+                if (Settings.get("ignoreBots", true) && props.user.bot) return;
                 return React.createElement(UserContext.Provider, {
                     value: props.user
                 }, res2);
@@ -602,18 +640,14 @@ class PlatformIndicators {
         const ChannelWrapperElement = document.querySelector(`h2 + .${ChannelClasses.channel}`);
         if (ChannelWrapperElement) {
             const ChannelWrapperInstance = ReactUtils.getOwnerInstance(ChannelWrapperElement);
-            if (ChannelWrapperInstance)
-                ChannelWrapperInstance.forceUpdate();
+            if (ChannelWrapperInstance) ChannelWrapperInstance.forceUpdate();
         }
         Patcher.after(NameWrapper, Key_NW, (_, __, res) => {
-            if (!Settings.get("showInDmsList", true))
-                return;
+            if (!Settings.get("showInDmsList", true)) return;
             const user = React.useContext(UserContext);
-            if (!user)
-                return;
+            if (!user) return;
             const child = Utils.findInTree(res, (e) => e?.className?.includes("nameAndDecorators"));
-            if (!child)
-                return;
+            if (!child) return;
             child.children.push(
                 React.createElement(
                     StatusIndicators, {
@@ -628,10 +662,8 @@ class PlatformIndicators {
         const [MemberItem, key] = Webpack.getWithKey(Webpack.Filters.byStrings(".jXE.MEMBER_LIST"));
         const MemberListClasses = Webpack.getByKeys("member", "memberInner");
         Patcher.after(MemberItem, key, (_, [props], ret) => {
-            if (!Settings.get("showInMemberList", true))
-                return;
-            if (Settings.get("ignoreBots", true) && props.user.bot)
-                return;
+            if (!Settings.get("showInMemberList", true)) return;
+            if (Settings.get("ignoreBots", true) && props.user.bot) return;
             const children = ret.props.children();
             const obj = findInReactTree(children, (e) => e?.avatar && e?.name);
             if (obj)
@@ -648,20 +680,16 @@ class PlatformIndicators {
         const MemberListUserElement = document.querySelector(`.${MemberListClasses.member}`);
         if (MemberListUserElement) {
             const MemberListUserInstance = ReactUtils.getOwnerInstance(MemberListUserElement);
-            if (MemberListUserInstance)
-                MemberListUserInstance.forceUpdate();
+            if (MemberListUserInstance) MemberListUserInstance.forceUpdate();
         }
     }
     patchChat() {
         const [ChatUsername, key] = Webpack.getWithKey(Webpack.Filters.byStrings(".guildMemberAvatar&&null!="));
         Patcher.before(ChatUsername, key, (_, props) => {
             const mainProps = props[0];
-            if (!Settings.get("showInChat", true))
-                return;
-            if (Settings.get("ignoreBots", true) && mainProps?.author?.bot)
-                return;
-            if (!Array.isArray(mainProps?.decorations[1]) && mainProps && mainProps?.decorations)
-                mainProps.decorations[1] = [];
+            if (!Settings.get("showInChat", true)) return;
+            if (Settings.get("ignoreBots", true) && mainProps?.author?.bot) return;
+            if (!Array.isArray(mainProps?.decorations[1]) && mainProps && mainProps?.decorations) mainProps.decorations[1] = [];
             mainProps?.decorations[1]?.unshift(
                 React.createElement(
                     StatusIndicators, {
@@ -675,25 +703,23 @@ class PlatformIndicators {
     patchBadges() {
         const UserContext = React.createContext(null);
         const [ProfileInfoRow, KEY_PIR] = Webpack.getWithKey(Webpack.Filters.byStrings("user", "profileType"));
-        const [BadgeList, Key_BL] = Webpack.getWithKey(Webpack.Filters.byStrings(".PROFILE_USER_BADGES"));
+        const [BadgeList, Key_BL] = Webpack.getWithKey(Webpack.Filters.byStrings("badges", "badgeClassName"));
         Patcher.after(ProfileInfoRow, KEY_PIR, (_, [props], res) => {
-            if (!Settings.get("showInBadges", true))
-                return;
-            if (Settings.get("ignoreBots", true) && props.user.bot)
-                return;
+            if (!Settings.get("showInBadges", true)) return;
+            if (Settings.get("ignoreBots", true) && props.user.bot) return;
             return React.createElement(UserContext.Provider, {
                 value: props.user
             }, res);
         });
         Patcher.after(BadgeList, Key_BL, (_, __, res) => {
             const user = React.useContext(UserContext);
-            if (!user)
-                return;
+            if (!user) return;
             res.props.children.push(
                 React.createElement(
                     StatusIndicators, {
                         userId: user.id,
-                        type: "Badge"
+                        type: "Badge",
+                        separator: true
                     }
                 )
             );
@@ -707,8 +733,7 @@ class PlatformIndicators {
             .${FriendListClasses.hovered} .${FriendListClasses.discriminator} { display: unset; }
         `);
         Patcher.after(UserInfo, key, (_, __, res) => {
-            if (!Settings.get("showInFriendsList", true))
-                return;
+            if (!Settings.get("showInFriendsList", true)) return;
             const unpatch = Patcher.after(res.props.children[1].props.children[0], "type", (_2, [props], res2) => {
                 unpatch();
                 Patcher.after(res2, "type", (_3, __2, res3) => {
