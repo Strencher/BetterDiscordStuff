@@ -225,12 +225,13 @@ const buildPlugin = (pluginFolder, makeFolder) => {
                 }
 
                 if (makeFolder) {
-                    const folder = path.resolve(process.cwd(), "builds", manifest.name);
+                    const folderName = manifest.name === "APlatformIndicators" ? "PlatformIndicators" : manifest.name;
+                    const folder = path.resolve(process.cwd(), "builds", folderName);
                     if (!fs.existsSync(folder)) fs.mkdirSync(folder);
-                    if (fs.existsSync(path.resolve(manifest.name, "README.md")))
-                        fs.copyFileSync(path.resolve(manifest.name, "README.md"), path.resolve(folder, "README.md"));
+                    if (fs.existsSync(path.resolve(folderName, "README.md")))
+                        fs.copyFileSync(path.resolve(folderName, "README.md"), path.resolve(folder, "README.md"));
                 }
-                const outfile = makeFolder ? path.resolve(process.cwd(), "builds", manifest.name, `${manifest.name}.plugin.js`) : path.resolve(process.cwd(), "builds", `${manifest.name}.plugin.js`);
+                const outfile = makeFolder ? path.resolve(process.cwd(), "builds", folderName, `${manifest.name}.plugin.js`) : path.resolve(process.cwd(), "builds", `${manifest.name}.plugin.js`);
 
                 fs.writeFileSync(outfile, contents, "utf8");
 
