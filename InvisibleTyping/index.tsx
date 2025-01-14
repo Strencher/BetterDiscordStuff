@@ -1,5 +1,5 @@
 import React from "react";
-import { Patcher, UI, Utils, Webpack } from "@api";
+import { Logger, Patcher, UI, Utils, Webpack } from "@api";
 import manifest from "@manifest";
 import Styles from "@styles";
 
@@ -57,7 +57,7 @@ export default class InvisibleTyping {
 
         Settings.set("lastVersion", manifest.version);
 
-        UI.alert(title, items);
+        UI.alert(title as unknown as string, items);
     }
 
     patchTyping() {
@@ -75,10 +75,10 @@ export default class InvisibleTyping {
 
         Patcher.after(ChannelTextArea.type, "render", (_, __, res) => {
             const chatBar = Utils.findInTree(res, e => Array.isArray(e?.children) && e.children.some(c => c?.props?.className?.startsWith("attachButton")), { walkable: ["children", "props"] });
-            if (!chatBar) return console.error("[InvisibleTyping] Failed to find ChatBar");
+            if (!chatBar) return Logger.error("[InvisibleTyping] Failed to find ChatBar");
 
             const textAreaState = Utils.findInTree(chatBar, e => e?.props?.channel, { walkable: ["children"] });
-            if (!textAreaState) return console.error("[InvisibleTyping] Failed to find textAreaState");
+            if (!textAreaState) return Logger.error("[InvisibleTyping] Failed to find textAreaState");
 
             chatBar.children.splice(-1, 0, <InvisibleTypingButton channel={textAreaState?.props?.channel} isEmpty={!Boolean(textAreaState?.props?.editorTextContent)} />);
         });

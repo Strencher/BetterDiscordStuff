@@ -1,37 +1,58 @@
-const { execSync } = require("child_process");
-const fs = require("fs");
-const os = require("os");
-const path = require("path");
-const { watch } = require("rollup");
+const { execSync } = require("node:child_process");
+const fs = require("node:fs");
+const os = require("node:os");
+const path = require("node:path");
+const { parseArgs } = require("node:util");
+
 const commonjs = require("@rollup/plugin-commonjs");
-const { default: esBuild } = require("rollup-plugin-esbuild");
 const { default: json } = require("@rollup/plugin-json");
+const { default: esBuild } = require("rollup-plugin-esbuild");
+const { watch } = require("rollup");
 const nodeResolve = require("@rollup/plugin-node-resolve");
 const cssom = require("cssom");
 const { js: jsBeautify } = require("js-beautify");
 
-const NO_PLUGIN_FOLDERS = [".github", "scripts", "Themes"];
+const NO_PLUGIN_FOLDERS = [".github", "common", "scripts"];
 
-const argv = process.argv.slice(2).reduce((args, arg, index, array) => {
-    if (arg.startsWith("--")) {
-        let key = arg.slice(2);
-        let value = true;
-        if (key === "plugins") {
-            value = new Set();
-            for (let i = index + 1; i < array.length; i++) {
-                if (array[i].startsWith("--")) break;
-                const folder = array[i].split("/")[0];
-                if (!fs.statSync(folder).isDirectory()) continue;
-                value.add(folder);
-            }
-            value = [...value];
+let argv = parseArgs({
+    args: process.argv.slice(2),
+    allowPositionals: true,
+    options: {
+        install: {
+            type: "boolean",
+            default: false
+        },
+        plugins: {
+            type: "string",
+            multiple: true,
+            default: []
+        },
+        publish: {
+            type: "boolean",
+            default: false
+        },
+        watch: {
+            type: "boolean",
+            default: false
         }
-        args[key] = value;
     }
-    return args;
-}, {});
+});
+argv.values.plugins = [...argv.values.plugins, ...argv.positionals];
+argv = argv.values;
+argv.plugins = [...new Set(
+    argv.plugins
+        .map(p => path.normalize(p).split(path.sep)[0])
+        .filter(p => {
+            if (
+                fs.statSync(p).isDirectory() &&
+                !NO_PLUGIN_FOLDERS.includes(p)
+            ) {
+                return true;
+            }
+        })
+)];
 
-if (!argv.plugins || argv.plugins.filter(e => !NO_PLUGIN_FOLDERS.includes(e)).length === 0) {
+if (!argv.plugins.length) {
     console.error("No Plugins provided!");
     process.exit(0);
 }
@@ -49,7 +70,7 @@ function makeMeta(manifest) {
 }
 
 const styleLoader = `
-import {DOM} from "@api";
+import { DOM } from "@api";
 export default {
     sheets: [],
     _element: null,
@@ -149,7 +170,7 @@ const buildPlugin = (pluginFolder, makeFolder) => {
                 get "@manifest"() { return "export default " + fs.readFileSync(manifestPath, "utf8"); },
                 "@api":
                     "import manifest from \"@manifest\";" +
-                    "export const { Components, ContextMenu, Data, DOM, Net, Patcher, Plugins, ReactUtils, Themes, UI, Utils, Webpack } = new BdApi(manifest.name);",
+                    "export const { Components, ContextMenu, Data, DOM, Logger, Net, Patcher, Plugins, ReactUtils, Themes, UI, Utils, Webpack } = new BdApi(manifest.name);",
             }),
             {
                 name: "StyleSheet Loader",
@@ -180,8 +201,13 @@ const buildPlugin = (pluginFolder, makeFolder) => {
                         return classNames;
                     }, {});
 
+                    const filePath = path.normalize(
+                        path.relative(pluginFolder, id)
+                        .replaceAll("\\", "\\\\")
+                    );
+
                     return "import Styles from \"@styles\";" +
-                        `Styles.sheets.push("/* ${id.split(path.sep).pop()} */",` +
+                        `Styles.sheets.push("/* ${filePath} */",` +
                         `\`${content.replaceAll("`", "\\`")}\`);` +
                         "export default " + JSON.stringify(names, null, 4);
                 }
@@ -189,9 +215,10 @@ const buildPlugin = (pluginFolder, makeFolder) => {
             {
                 name: "Code Regions",
                 transform(code, id) {
-                    id = path.basename(id);
-
-                    return `/* @module ${id} */\n${code}\n/*@end */`;
+                    const isRealPath = fs.existsSync(id);
+                    const relativePath = isRealPath ? path.relative(pluginFolder, id) : id;
+            
+                    return `/* ${relativePath} */\n${code}\n\n\n`;
                 }
             }
         ],
@@ -235,7 +262,7 @@ const buildPlugin = (pluginFolder, makeFolder) => {
 
                 fs.writeFileSync(outfile, contents, "utf8");
 
-                if ("install" in argv) {
+                if (argv.install) {
                     let bdFolder;
                     switch (os.platform()) {
                         case "win32": {
@@ -266,5 +293,4 @@ const buildPlugin = (pluginFolder, makeFolder) => {
 }
 
 argv.plugins
-    .filter(e => !NO_PLUGIN_FOLDERS.includes(e))
-    .forEach(e => buildPlugin(e, argv.publish));
+    .forEach(p => buildPlugin(p, argv.publish));

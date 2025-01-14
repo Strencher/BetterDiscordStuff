@@ -1,26 +1,30 @@
 declare module "@api" {
     import {
-        Tooltip,
-        ContextMenu,
-        Data,
-        DOM,
-        Net,
+        AddonAPI,
+        BoundData,
+        BoundDOM,
+        BoundLogger,
         BoundPatcher,
+        Components,
+        ContextMenu,
+        Net,
+        Plugin,
         ReactUtils,
         UI,
         Utils,
         Webpack
     } from "betterdiscord";
 
-    export const Components: { Tooltip: Tooltip; };
+    export const Components: Components;
     export const ContextMenu: ContextMenu;
-    export const Data: Data;
-    export const DOM: DOM;
+    export const Data: BoundData;
+    export const DOM: BoundDOM;
+    export const Logger: BoundLogger;
     export const Net: Net;
     export const Patcher: BoundPatcher;
-    export const Plugins: any;
+    export const Plugins: AddonAPI<Plugin>;
     export const ReactUtils: ReactUtils;
-    export const Themes: any;
+    export const Themes: AddonAPI<Plugin>; // Has the same methods as Plugins
     export const UI: UI;
     export const Utils: Utils;
     export const Webpack: Webpack;
@@ -39,11 +43,11 @@ declare module "@styles" {
 declare module "@manifest" {
     interface ChangelogItem {
         title: string;
-        type: "added" | "fixed" | "improved";
+        type: "added" | "changed" | "fixed" | "improved";
         items: string[];
     }
 
-    interface Manifest {
+    export interface Manifest {
         name: string;
         version: string;
         description: string;
