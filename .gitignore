@@ -7,17 +7,3 @@ node_modules
 ./**/node_modules
 builds
 ./*.plugin.js
-
-# unreleased plugins
-ChatAliases
-CoffeeTest
-CustomActions
-PcCompat
-ServerLookup
-Test
-TestPlugin
-TopRolesEverywhere
-UserBirthdays
-WeatherDisplay
-ChannelDms/components/avatars.scss
-ChannelDms/components/avatars.tsx
