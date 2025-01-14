@@ -11,11 +11,10 @@
 
 'use strict';
 
-/* @module react */
+/* react */
 const React = BdApi.React;
-/*@end */
 
-/* @module @manifest */
+/* @manifest */
 var manifest = {
     "name": "InvisibleTyping",
     "version": "1.3.5",
@@ -35,14 +34,14 @@ var manifest = {
     }],
     "changelogDate": "2024-08-29"
 };
-/*@end */
 
-/* @module @api */
+/* @api */
 const {
     Components,
     ContextMenu,
     Data,
     DOM,
+    Logger,
     Net,
     Patcher,
     Plugins,
@@ -52,9 +51,8 @@ const {
     Utils,
     Webpack
 } = new BdApi(manifest.name);
-/*@end */
 
-/* @module @styles */
+/* @styles */
 
 var Styles = {
     sheets: [],
@@ -66,10 +64,9 @@ var Styles = {
         DOM.removeStyle();
     }
 };
-/*@end */
 
-/* @module typingButton.scss */
-Styles.sheets.push("/* typingButton.scss */", `.invisibleTypingButton svg {
+/* components/typingButton.scss */
+Styles.sheets.push("/* components/typingButton.scss */", `.invisibleTypingButton svg {
   color: var(--interactive-normal);
   overflow: visible;
   margin-top: 2.5px;
@@ -96,9 +93,8 @@ var styles = {
     "disabled": "disabled",
     "invisibleTypingTooltip": "invisibleTypingTooltip"
 };
-/*@end */
 
-/* @module keyboard.tsx */
+/* components/icons/keyboard.tsx */
 function Keyboard({
     disabled,
     ...props
@@ -121,9 +117,7 @@ function Keyboard({
     }) : null);
 }
 
-/*@end */
-
-/* @module shared.js */
+/* modules/shared.js */
 const Dispatcher = Webpack.getByKeys("_dispatch");
 const Flux = Webpack.getByKeys("Store");
 const TypingModule = Webpack.getByKeys("startTyping");
@@ -147,9 +141,7 @@ const buildClassName = (...args) => {
     }, []).join(" ");
 };
 
-/*@end */
-
-/* @module settings.js */
+/* modules/settings.js */
 const Settings = new class Settings2 extends Flux.Store {
     constructor() {
         super(Dispatcher, {});
@@ -165,9 +157,7 @@ const Settings = new class Settings2 extends Flux.Store {
     }
 }();
 
-/*@end */
-
-/* @module typingButton.tsx */
+/* components/typingButton.tsx */
 const ChatBarClasses = Webpack.getByKeys("channelTextArea", "button");
 const removeItem = function(array, item) {
     while (array.includes(item)) {
@@ -263,9 +253,7 @@ InvisibleTypingButton.getState = function(channelId) {
     return isGlobal;
 };
 
-/*@end */
-
-/* @module settings.json */
+/* components/settings.json */
 var SettingsItems = [{
     type: "switch",
     name: "Automatically enable",
@@ -273,9 +261,8 @@ var SettingsItems = [{
     id: "autoEnable",
     value: true
 }];
-/*@end */
 
-/* @module settings.jsx */
+/* components/settings.jsx */
 const {
     FormSwitch
 } = Webpack.getByKeys("FormSwitch");
@@ -311,9 +298,7 @@ function SettingsPanel() {
     return React.createElement("div", null, renderItems(SettingsItems));
 }
 
-/*@end */
-
-/* @module changelog.scss */
+/* changelog.scss */
 Styles.sheets.push("/* changelog.scss */", `.Changelog-Title-Wrapper {
   font-size: 20px;
   font-weight: 600;
@@ -368,9 +353,9 @@ Styles.sheets.push("/* changelog.scss */", `.Changelog-Title-Wrapper {
 }
 .Changelog-Item span::marker {
   color: var(--background-accent);
-}`); /*@end */
+}`);
 
-/* @module index.tsx */
+/* index.tsx */
 class InvisibleTyping {
     start() {
         Styles.load();
@@ -422,11 +407,11 @@ class InvisibleTyping {
             const chatBar = Utils.findInTree(res, (e) => Array.isArray(e?.children) && e.children.some((c) => c?.props?.className?.startsWith("attachButton")), {
                 walkable: ["children", "props"]
             });
-            if (!chatBar) return console.error("[InvisibleTyping] Failed to find ChatBar");
+            if (!chatBar) return Logger.error("[InvisibleTyping] Failed to find ChatBar");
             const textAreaState = Utils.findInTree(chatBar, (e) => e?.props?.channel, {
                 walkable: ["children"]
             });
-            if (!textAreaState) return console.error("[InvisibleTyping] Failed to find textAreaState");
+            if (!textAreaState) return Logger.error("[InvisibleTyping] Failed to find textAreaState");
             chatBar.children.splice(-1, 0, React.createElement(InvisibleTypingButton, {
                 channel: textAreaState?.props?.channel,
                 isEmpty: !Boolean(textAreaState?.props?.editorTextContent)
@@ -437,7 +422,5 @@ class InvisibleTyping {
         return React.createElement(SettingsPanel, null);
     }
 }
-
-/*@end */
 
 module.exports = InvisibleTyping;
