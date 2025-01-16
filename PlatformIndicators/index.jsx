@@ -113,7 +113,7 @@ export default class PlatformIndicators {
     patchBadges() {
         const UserContext = React.createContext(null);
         const [ProfileInfoRow, KEY_PIR] = Webpack.getWithKey(Webpack.Filters.byStrings("user", "profileType"));
-        const [BadgeList, Key_BL] = Webpack.getWithKey(Webpack.Filters.byStrings("badges", "badgeClassName"));
+        const [BadgeList, Key_BL] = Webpack.getWithKey(Webpack.Filters.byStrings("badges", "badgeClassName", ".BADGE"));
 
         Patcher.after(ProfileInfoRow, KEY_PIR, (_, [props], res) => {
             if (!Settings.get("showInBadges", true)) return;

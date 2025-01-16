@@ -1,4 +1,4 @@
-import {Webpack} from "@api";
+import { Webpack } from "@api";
 
 // Stores
 export const LocalActivityStore = Webpack.getStore("LocalActivityStore");
@@ -7,15 +7,15 @@ export const UserStore = Webpack.getStore("UserStore");
 export const PresenceStore = Webpack.getStore("PresenceStore");
 
 // Other modules
-export const {useSyncExternalStore: useStateFromStoresObject} = Webpack.getByKeys("useSyncExternalStore");
-export const useStateFromStores = Webpack.getByStrings("useStateFromStores", {searchExports: true});
+export const { useSyncExternalStore: useStateFromStoresObject } = Webpack.getByKeys("useSyncExternalStore");
+export const useStateFromStores = Webpack.getByStrings("useStateFromStores", { searchExports: true });
 export const Dispatcher = UserStore._dispatcher;
 
 export const Flux = Webpack.getByKeys("Store");
 export const ModulesLibrary = Webpack.getByKeys("Anchor");
 export const Colors = Webpack.getByKeys("RED_400");
 
-export const Messages = {"STATUS_DND": "Do Not Disturb", "STATUS_OFFLINE": "Offline", "STATUS_ONLINE": "Online", "STATUS_STEAMING": "Streaming", "STATUS_IDLE": "IDLE", "STATUS_MOBILE": "Mobile"};
+export const Messages = { "STATUS_DND": "Do Not Disturb", "STATUS_OFFLINE": "Offline", "STATUS_ONLINE": "Online", "STATUS_STEAMING": "Streaming", "STATUS_IDLE": "Idle", "STATUS_MOBILE": "Mobile" };
 export const buildClassName = (...args) => { // yeah, yk... I couldnt find a working string for this so I just remade it ;-;
     return args.reduce((classNames, arg) => {
         if (!arg) return classNames;
