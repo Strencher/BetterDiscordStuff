@@ -1,20 +1,23 @@
 /**
  * @name APlatformIndicators
- * @version 1.5.10
+ * @version 1.5.11
  * @author Strencher
  * @authorId 415849376598982656
  * @description Adds indicators for every platform that the user is using.
  * @source https://github.com/Strencher/BetterDiscordStuff/blob/master/PlatformIndicators/APlatformIndicators.plugin.js
  * @invite gvA2ree
- * @changelogDate 2024-11-03
+ * @changelogDate 2025-01-16
  */
 
 'use strict';
 
-/* @module @manifest */
-const manifest = {
+/* react */
+const React = BdApi.React;
+
+/* @manifest */
+var manifest = {
     "name": "APlatformIndicators",
-    "version": "1.5.10",
+    "version": "1.5.11",
     "author": "Strencher",
     "authorId": "415849376598982656",
     "description": "Adds indicators for every platform that the user is using.",
@@ -24,21 +27,19 @@ const manifest = {
         "title": "Fixed",
         "type": "fixed",
         "items": [
-            "Fixed Tooltip Messages",
             "Fixed Badges not showing up"
         ]
     }],
-    "changelogDate": "2024-11-03"
+    "changelogDate": "2025-01-16"
 };
 
-/*@end */
-
-/* @module @api */
+/* @api */
 const {
     Components,
     ContextMenu,
     Data,
     DOM,
+    Logger,
     Net,
     Patcher,
     Plugins,
@@ -48,9 +49,8 @@ const {
     Utils,
     Webpack
 } = new BdApi(manifest.name);
-/*@end */
 
-/* @module @styles */
+/* @styles */
 
 var Styles$2 = {
     sheets: [],
@@ -62,108 +62,96 @@ var Styles$2 = {
         DOM.removeStyle();
     }
 };
-/*@end */
 
-/* @module react */
-var React = BdApi.React;
-/*@end */
-
-/* @module shared.js */
-const LocalActivityStore = Webpack.getStore("LocalActivityStore");
-const SessionsStore = Webpack.getStore("SessionsStore");
-const UserStore = Webpack.getStore("UserStore");
-const PresenceStore = Webpack.getStore("PresenceStore");
-Webpack.getByKeys("useSyncExternalStore");
-const useStateFromStores = Webpack.getByStrings("useStateFromStores", {
-    searchExports: true
-});
-const Dispatcher = UserStore._dispatcher;
-const Flux = Webpack.getByKeys("Store");
-const ModulesLibrary = Webpack.getByKeys("Anchor");
-const Colors = Webpack.getByKeys("RED_400");
-const Messages = {
-    "STATUS_DND": "Do Not Disturb",
-    "STATUS_OFFLINE": "Offline",
-    "STATUS_ONLINE": "Online",
-    "STATUS_STEAMING": "Streaming",
-    "STATUS_IDLE": "IDLE",
-    "STATUS_MOBILE": "Mobile"
-};
-const buildClassName = (...args) => {
-    return args.reduce((classNames, arg) => {
-        if (!arg) return classNames;
-        if (typeof arg === "string" || typeof arg === "number") {
-            classNames.push(arg);
-        } else if (Array.isArray(arg)) {
-            const nestedClassNames = buildClassName(...arg);
-            if (nestedClassNames) classNames.push(nestedClassNames);
-        } else if (typeof arg === "object") {
-            Object.keys(arg).forEach((key) => {
-                if (arg[key]) classNames.push(key);
-            });
-        }
-        return classNames;
-    }, []).join(" ");
-};
-
-/*@end */
-
-/* @module settings.js */
-const Settings = new class Settings2 extends Flux.Store {
-    constructor() {
-        super(Dispatcher, {});
-    }
-    _settings = Data.load("settings") ?? {};
-    get(key, def) {
-        return this._settings[key] ?? def;
-    }
-    set(key, value) {
-        this._settings[key] = value;
-        Data.save("settings", this._settings);
-        this.emitChange();
-    }
-}();
-
-/*@end */
-
-/* @module utils.js */
-const findInReactTree = (tree, filter) => Utils.findInTree(tree, filter, {
-    walkable: ["props", "children", "type"]
-});
-
-function upperFirst(string) {
-    return string.charAt(0).toUpperCase() + string.slice(1);
+/* ../common/Changelog/style.scss */
+Styles$2.sheets.push("/* ../common/Changelog/style.scss */", `.Changelog-Title-Wrapper {
+  font-size: 20px;
+  font-weight: 600;
+  font-family: var(--font-display);
+  color: var(--header-primary);
+  line-height: 1.2;
+}
+.Changelog-Title-Wrapper div {
+  font-size: 12px;
+  font-weight: 400;
+  font-family: var(--font-primary);
+  color: var(--primary-300);
+  line-height: 1.3333333333;
 }
 
-function getStatusText(key, status) {
-    return upperFirst(key) + ": " + Messages[`STATUS_${(status === "mobile" ? "mobile_online" : status).toUpperCase()}`];
+.Changelog-Banner {
+  width: 405px;
+  border-radius: 8px;
+  margin-bottom: 20px;
 }
 
-function getStatusColor(status) {
-    const {
-        StatusTypes
-    } = ModulesLibrary;
-    switch (status) {
-        case StatusTypes.ONLINE:
-            return Colors.GREEN_360;
-        case StatusTypes.IDLE:
-            return Colors.YELLOW_300;
-        case StatusTypes.DND:
-            return Colors.RED_400;
-        case StatusTypes.STREAMING:
-            return Colors.TWITCH;
-        case StatusTypes.INVISIBLE:
-        case StatusTypes.UNKNOWN:
-        case StatusTypes.OFFLINE:
-        default:
-            return Colors.PRIMARY_400;
-    }
+.Changelog-Item {
+  color: #c4c9ce;
+}
+.Changelog-Item .Changelog-Header {
+  display: flex;
+  text-transform: uppercase;
+  font-weight: 700;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.Changelog-Item .Changelog-Header.added {
+  color: #45BA6A;
+}
+.Changelog-Item .Changelog-Header.changed {
+  color: #F0B232;
+}
+.Changelog-Item .Changelog-Header.fixed {
+  color: #EC4245;
+}
+.Changelog-Item .Changelog-Header.improved {
+  color: #5865F2;
+}
+.Changelog-Item .Changelog-Header::after {
+  content: "";
+  flex-grow: 1;
+  height: 1px;
+  margin-left: 7px;
+  background: currentColor;
+}
+.Changelog-Item span {
+  display: list-item;
+  list-style: inside;
+  margin-left: 5px;
+}
+.Changelog-Item span::marker {
+  color: var(--background-accent);
+}`);
+
+/* ../common/Changelog/index.tsx */
+function showChangelog(manifest) {
+    if (Data.load("lastVersion") === manifest.version) return;
+    const i18n = Webpack.getByKeys("getLocale");
+    const formatter = new Intl.DateTimeFormat(i18n.getLocale(), {
+        month: "long",
+        day: "numeric",
+        year: "numeric"
+    });
+    const title = React.createElement("div", {
+        className: "Changelog-Title-Wrapper"
+    }, React.createElement("h1", null, "What's New - ", manifest.name), React.createElement("div", null, formatter.format(new Date(manifest.changelogDate)), " - v", manifest.version));
+    const items = manifest.changelog.map((item) => React.createElement("div", {
+        className: "Changelog-Item"
+    }, React.createElement("h4", {
+        className: `Changelog-Header ${item.type}`
+    }, item.title), item.items.map((item2) => React.createElement("span", null, item2))));
+    "changelogImage" in manifest && items.unshift(
+        React.createElement("img", {
+            className: "Changelog-Banner",
+            src: manifest.changelogImage
+        })
+    );
+    UI.alert(title, items);
+    Data.save("lastVersion", manifest.version);
 }
 
-/*@end */
-
-/* @module indicators.scss */
-Styles$2.sheets.push("/* indicators.scss */", `.indicatorContainer {
+/* components/indicators.scss */
+Styles$2.sheets.push("/* components/indicators.scss */", `.indicatorContainer {
   display: inline-flex;
   vertical-align: bottom;
   margin-left: 5px;
@@ -202,9 +190,62 @@ var Styles$1 = {
     "PIIcon_mobile": "PI-icon_mobile",
     "badge_separator": "badge_separator"
 };
-/*@end */
 
-/* @module usePlatformStores.js */
+/* modules/shared.js */
+const LocalActivityStore = Webpack.getStore("LocalActivityStore");
+const SessionsStore = Webpack.getStore("SessionsStore");
+const UserStore = Webpack.getStore("UserStore");
+const PresenceStore = Webpack.getStore("PresenceStore");
+Webpack.getByKeys("useSyncExternalStore");
+const useStateFromStores = Webpack.getByStrings("useStateFromStores", {
+    searchExports: true
+});
+const Dispatcher = UserStore._dispatcher;
+const Flux = Webpack.getByKeys("Store");
+const ModulesLibrary = Webpack.getByKeys("Anchor");
+const Colors = Webpack.getByKeys("RED_400");
+const Messages = {
+    "STATUS_DND": "Do Not Disturb",
+    "STATUS_OFFLINE": "Offline",
+    "STATUS_ONLINE": "Online",
+    "STATUS_STEAMING": "Streaming",
+    "STATUS_IDLE": "Idle",
+    "STATUS_MOBILE": "Mobile"
+};
+const buildClassName = (...args) => {
+    return args.reduce((classNames, arg) => {
+        if (!arg) return classNames;
+        if (typeof arg === "string" || typeof arg === "number") {
+            classNames.push(arg);
+        } else if (Array.isArray(arg)) {
+            const nestedClassNames = buildClassName(...arg);
+            if (nestedClassNames) classNames.push(nestedClassNames);
+        } else if (typeof arg === "object") {
+            Object.keys(arg).forEach((key) => {
+                if (arg[key]) classNames.push(key);
+            });
+        }
+        return classNames;
+    }, []).join(" ");
+};
+
+/* modules/settings.js */
+const Settings = new class Settings2 extends Flux.Store {
+    constructor() {
+        super(Dispatcher, {});
+    }
+    _settings = Data.load("settings") ?? {};
+    get(key, def) {
+        return this._settings[key] ?? def;
+    }
+    set(key, value) {
+        this._settings[key] = value;
+        Data.save("settings", this._settings);
+        this.emitChange();
+    }
+}();
+
+/* modules/usePlatformStores.js */
 const isStreaming = () => LocalActivityStore.getActivities().some((e) => e.type === 1);
 
 function usePlatformStores(userId, type) {
@@ -237,9 +278,7 @@ function usePlatformStores(userId, type) {
     };
 }
 
-/*@end */
-
-/* @module desktop.jsx */
+/* components/icons/desktop.jsx */
 function Desktop(props) {
     return React.createElement("svg", {
         class: "PI-icon_desktop",
@@ -253,9 +292,7 @@ function Desktop(props) {
     }));
 }
 
-/*@end */
-
-/* @module mobile.jsx */
+/* components/icons/mobile.jsx */
 function Mobile(props) {
     return React.createElement("svg", {
         class: "PI-icon_mobile",
@@ -270,9 +307,7 @@ function Mobile(props) {
     }));
 }
 
-/*@end */
-
-/* @module embedded.jsx */
+/* components/icons/embedded.jsx */
 function Embedded(props) {
     return React.createElement("svg", {
         class: "PI-icon_embedded",
@@ -286,9 +321,7 @@ function Embedded(props) {
     }));
 }
 
-/*@end */
-
-/* @module web.jsx */
+/* components/icons/web.jsx */
 function Web(props) {
     return React.createElement("svg", {
         class: "PI-icon_web",
@@ -302,11 +335,7 @@ function Web(props) {
     }));
 }
 
-/*@end */
-
-/* @module Icons.js */
-
-/*@end */
+/* components/icons/Icons.js */
 
 var Icons = /*#__PURE__*/ Object.freeze({
     __proto__: null,
@@ -316,7 +345,41 @@ var Icons = /*#__PURE__*/ Object.freeze({
     web: Web
 });
 
-/* @module indicators.jsx */
+/* modules/utils.js */
+const findInReactTree = (tree, filter) => Utils.findInTree(tree, filter, {
+    walkable: ["props", "children", "type"]
+});
+
+function upperFirst(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+function getStatusText(key, status) {
+    return upperFirst(key) + ": " + Messages[`STATUS_${(status === "mobile" ? "mobile_online" : status).toUpperCase()}`];
+}
+
+function getStatusColor(status) {
+    const {
+        StatusTypes
+    } = ModulesLibrary;
+    switch (status) {
+        case StatusTypes.ONLINE:
+            return Colors.GREEN_360;
+        case StatusTypes.IDLE:
+            return Colors.YELLOW_300;
+        case StatusTypes.DND:
+            return Colors.RED_400;
+        case StatusTypes.STREAMING:
+            return Colors.TWITCH;
+        case StatusTypes.INVISIBLE:
+        case StatusTypes.UNKNOWN:
+        case StatusTypes.OFFLINE:
+        default:
+            return Colors.PRIMARY_400;
+    }
+}
+
+/* components/indicators.jsx */
 function StatusIndicators({
     type,
     userId,
@@ -349,10 +412,8 @@ function StatusIndicators({
     })));
 }
 
-/*@end */
-
-/* @module settings.scss */
-Styles$2.sheets.push("/* settings.scss */", `.PIsettingsSmartDisable {
+/* components/settings.scss */
+Styles$2.sheets.push("/* components/settings.scss */", `.PIsettingsSmartDisable {
   color: #fff;
 }
 .PIsettingsSmartDisable .body {
@@ -386,9 +447,8 @@ var Styles = {
     "item": "item",
     "PIsettingsTitle": "PIsettingsTitle"
 };
-/*@end */
 
-/* @module settings.json */
+/* components/settings.json */
 var SettingsItems = [{
         type: "switch",
         name: "Show in Friendslist",
@@ -458,9 +518,8 @@ var SettingsItems = [{
         ]
     }
 ];
-/*@end */
 
-/* @module checkbox.jsx */
+/* components/icons/checkbox.jsx */
 function CheckboxEnabled(props) {
     return React.createElement("svg", {
         width: "24",
@@ -503,9 +562,7 @@ function Checkbox({
     });
 }
 
-/*@end */
-
-/* @module settings.jsx */
+/* components/settings.jsx */
 const {
     FormSwitch
 } = Webpack.getByKeys("FormSwitch");
@@ -581,46 +638,19 @@ function SettingsPanel() {
     }, "General Settings"), renderItems(SettingsItems));
 }
 
-/*@end */
-
-/* @module index.jsx */
+/* index.jsx */
 class PlatformIndicators {
     getSettingsPanel() {
         return React.createElement(SettingsPanel, null);
     }
     start() {
-        this.showChangelog();
+        Styles$2.load();
+        showChangelog(manifest);
         this.patchDMs();
         this.patchMemberList();
         this.patchChat();
         this.patchBadges();
         this.patchFriendList();
-        Styles$2.load();
-    }
-    showChangelog() {
-        if (!manifest?.changelog?.length || Settings.get("lastVersion") === manifest.version) return;
-        const i18n = Webpack.getByKeys("getLocale");
-        const formatter = new Intl.DateTimeFormat(i18n.getLocale(), {
-            month: "long",
-            day: "numeric",
-            year: "numeric"
-        });
-        const title = React.createElement("div", {
-            className: "Changelog-Title-Wrapper"
-        }, React.createElement("h1", null, "What's New - ", manifest.name), React.createElement("div", null, formatter.format(new Date(manifest.changelogDate)), " - v", manifest.version));
-        const items = manifest?.changelog?.map((item) => React.createElement("div", {
-            className: "Changelog-Item"
-        }, React.createElement("h4", {
-            className: `Changelog-Header ${item.type}`
-        }, item.title), item.items.map((item2) => React.createElement("span", null, item2))));
-        "changelogImage" in manifest && items.unshift(
-            React.createElement("img", {
-                className: "Changelog-Banner",
-                src: manifest.changelogImage
-            })
-        );
-        Settings.set("lastVersion", manifest.version);
-        UI.alert(title, items);
     }
     patchDMs() {
         const UserContext = React.createContext(null);
@@ -703,7 +733,7 @@ class PlatformIndicators {
     patchBadges() {
         const UserContext = React.createContext(null);
         const [ProfileInfoRow, KEY_PIR] = Webpack.getWithKey(Webpack.Filters.byStrings("user", "profileType"));
-        const [BadgeList, Key_BL] = Webpack.getWithKey(Webpack.Filters.byStrings("badges", "badgeClassName"));
+        const [BadgeList, Key_BL] = Webpack.getWithKey(Webpack.Filters.byStrings("badges", "badgeClassName", ".BADGE"));
         Patcher.after(ProfileInfoRow, KEY_PIR, (_, [props], res) => {
             if (!Settings.get("showInBadges", true)) return;
             if (Settings.get("ignoreBots", true) && props.user.bot) return;
@@ -755,7 +785,5 @@ class PlatformIndicators {
         Styles$2.unload();
     }
 }
-
-/*@end */
 
 module.exports = PlatformIndicators;
