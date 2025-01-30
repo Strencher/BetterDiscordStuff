@@ -4,7 +4,7 @@ import Settings from "../modules/settings";
 import { useStateFromStores } from "../modules/shared";
 import SettingsItems from "./settings.json";
 
-const { FormSwitch } = Webpack.getByKeys("FormSwitch");
+const FormSwitch = Webpack.getByStrings('.labelRow', 'useId', 'DESCRIPTION', { searchExports: true }) 
 
 function SwitchItem(props) {
     const value = useStateFromStores([Settings], () => Settings.get(props.id, props.value));
