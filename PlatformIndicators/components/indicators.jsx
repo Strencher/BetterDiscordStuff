@@ -5,6 +5,8 @@ import usePlatformStores from "../modules/usePlatformStores";
 import * as Icons from "./icons/Icons";
 import {getStatusText, getStatusColor} from "../modules/utils";
 
+const Tooltip = Webpack.getByStrings('.props.clickableOnMobile&&this.show()',{searchExports:true})
+
 export default function StatusIndicators({type, userId, size = 18, separator = false}) {
     const state = usePlatformStores(userId, type);
 
@@ -20,7 +22,7 @@ export default function StatusIndicators({type, userId, size = 18, separator = f
                         const Icon = Icons[key];
 
                         return (
-                            <ModulesLibrary.Tooltip text={getStatusText(key, status)}>
+                            <Tooltip text={getStatusText(key, status)}>
                                 {props => (
                                     <Icon
                                         text={getStatusText(key, status)}
@@ -31,7 +33,7 @@ export default function StatusIndicators({type, userId, size = 18, separator = f
                                         {...props}
                                     />
                                 )}
-                            </ModulesLibrary.Tooltip>
+                            </Tooltip>
                         );
                     })
                 }

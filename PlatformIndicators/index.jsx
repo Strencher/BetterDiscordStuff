@@ -151,7 +151,8 @@ export default class PlatformIndicators {
             if (!Settings.get("showInFriendsList", true)) return;
             const unpatch = Patcher.after(res.props.children[1].props.children[0], "type", (_, [props], res) => {
                 unpatch();
-                Patcher.after(res, "type", (_, __, res) => {
+                const unpatch_ = Patcher.after(res, "type", (_, __, res) => {
+                    unpatch_();
                     res.props.children.push(
                         <StatusIndicators
                             userId={props.user.id}

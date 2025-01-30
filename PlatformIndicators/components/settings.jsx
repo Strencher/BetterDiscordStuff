@@ -8,7 +8,7 @@ import SettingsItems from "./settings.json";
 import {Checkbox} from "./icons/checkbox";
 import {getStatusColor} from "../modules/utils";
 
-const {FormSwitch} = Webpack.getByKeys("FormSwitch");
+const FormSwitch = Webpack.getByStrings('ERROR','tooltipNote',{searchExports:true})
 
 function SwitchItem(props) {
     const value = useStateFromStores([Settings], () => Settings.get(props.id, props.value));

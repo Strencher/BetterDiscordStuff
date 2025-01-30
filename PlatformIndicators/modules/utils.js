@@ -1,6 +1,6 @@
 import {Utils} from "@api";
 import {Messages} from "./shared";
-import {Colors, ModulesLibrary} from "./shared";
+import {Colors, StatusTypes} from "./shared";
 
 export const findInReactTree = (tree, filter) => Utils.findInTree(tree, filter, {walkable: ["props", "children", "type"]});
 
@@ -11,9 +11,6 @@ export function getStatusText(key, status) {
 }
 
 export function getStatusColor(status) {
-    const {
-        StatusTypes
-    } = ModulesLibrary;
     switch (status) {
         case StatusTypes.ONLINE:
             return Colors.GREEN_360;
