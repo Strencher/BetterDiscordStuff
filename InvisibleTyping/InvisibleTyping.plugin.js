@@ -1,12 +1,12 @@
 /**
  * @name InvisibleTyping
- * @version 1.3.5
+ * @version 1.3.6
  * @author Strencher
  * @authorId 415849376598982656
  * @description Enhanced version of silent typing.
  * @source https://github.com/Strencher/BetterDiscordStuff/blob/master/InvisibleTyping/InvisibleTyping.plugin.js
  * @invite gvA2ree
- * @changelogDate 2024-08-29
+ * @changelogDate 2025-01-30
  */
 
 'use strict';
@@ -17,7 +17,7 @@ const React = BdApi.React;
 /* @manifest */
 var manifest = {
     "name": "InvisibleTyping",
-    "version": "1.3.5",
+    "version": "1.3.6",
     "author": "Strencher",
     "authorId": "415849376598982656",
     "description": "Enhanced version of silent typing.",
@@ -27,12 +27,10 @@ var manifest = {
         "title": "Fixed",
         "type": "fixed",
         "items": [
-            "The Plugin works again",
-            "Fixed some logic issues",
-            "Fixed sticky button"
+            "The Plugin works again"
         ]
     }],
-    "changelogDate": "2024-08-29"
+    "changelogDate": "2025-01-30"
 };
 
 /* @api */
