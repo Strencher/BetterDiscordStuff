@@ -65,6 +65,93 @@ var Styles = {
     }
 };
 
+/* ../common/Changelog/style.scss */
+Styles.sheets.push("/* ../common/Changelog/style.scss */", `.Changelog-Title-Wrapper {
+  font-size: 20px;
+  font-weight: 600;
+  font-family: var(--font-display);
+  color: var(--header-primary);
+  line-height: 1.2;
+}
+.Changelog-Title-Wrapper div {
+  font-size: 12px;
+  font-weight: 400;
+  font-family: var(--font-primary);
+  color: var(--primary-300);
+  line-height: 1.3333333333;
+}
+
+.Changelog-Banner {
+  width: 405px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.Changelog-Item {
+  color: #c4c9ce;
+}
+.Changelog-Item .Changelog-Header {
+  display: flex;
+  text-transform: uppercase;
+  font-weight: 700;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.Changelog-Item .Changelog-Header.added {
+  color: #45BA6A;
+}
+.Changelog-Item .Changelog-Header.changed {
+  color: #F0B232;
+}
+.Changelog-Item .Changelog-Header.fixed {
+  color: #EC4245;
+}
+.Changelog-Item .Changelog-Header.improved {
+  color: #5865F2;
+}
+.Changelog-Item .Changelog-Header::after {
+  content: "";
+  flex-grow: 1;
+  height: 1px;
+  margin-left: 7px;
+  background: currentColor;
+}
+.Changelog-Item span {
+  display: list-item;
+  list-style: inside;
+  margin-left: 5px;
+}
+.Changelog-Item span::marker {
+  color: var(--background-accent);
+}`);
+
+/* ../common/Changelog/index.tsx */
+function showChangelog(manifest) {
+    if (Data.load("lastVersion") === manifest.version) return;
+    const i18n = Webpack.getByKeys("getLocale");
+    const formatter = new Intl.DateTimeFormat(i18n.getLocale(), {
+        month: "long",
+        day: "numeric",
+        year: "numeric"
+    });
+    const title = React.createElement("div", {
+        className: "Changelog-Title-Wrapper"
+    }, React.createElement("h1", null, "What's New - ", manifest.name), React.createElement("div", null, formatter.format(new Date(manifest.changelogDate)), " - v", manifest.version));
+    const items = manifest.changelog.map((item) => React.createElement("div", {
+        className: "Changelog-Item"
+    }, React.createElement("h4", {
+        className: `Changelog-Header ${item.type}`
+    }, item.title), item.items.map((item2) => React.createElement("span", null, item2))));
+    "changelogImage" in manifest && items.unshift(
+        React.createElement("img", {
+            className: "Changelog-Banner",
+            src: manifest.changelogImage
+        })
+    );
+    UI.alert(title, items);
+    Data.save("lastVersion", manifest.version);
+}
+
 /* components/typingButton.scss */
 Styles.sheets.push("/* components/typingButton.scss */", `.invisibleTypingButton svg {
   color: var(--interactive-normal);
@@ -263,9 +350,9 @@ var SettingsItems = [{
 }];
 
 /* components/settings.jsx */
-const {
-    FormSwitch
-} = Webpack.getByKeys("FormSwitch");
+const FormSwitch = Webpack.getByStrings(".labelRow", "useId", "DESCRIPTION", {
+    searchExports: true
+});
 
 function SwitchItem(props) {
     const value = useStateFromStores([Settings], () => Settings.get(props.id, props.value));
@@ -298,99 +385,17 @@ function SettingsPanel() {
     return React.createElement("div", null, renderItems(SettingsItems));
 }
 
-/* changelog.scss */
-Styles.sheets.push("/* changelog.scss */", `.Changelog-Title-Wrapper {
-  font-size: 20px;
-  font-weight: 600;
-  font-family: var(--font-display);
-  color: var(--header-primary);
-  line-height: 1.2;
-}
-.Changelog-Title-Wrapper div {
-  font-size: 12px;
-  font-weight: 400;
-  font-family: var(--font-primary);
-  color: var(--primary-300);
-  line-height: 1.3333333333;
-}
-
-.Changelog-Banner {
-  width: 405px;
-  border-radius: 8px;
-  margin-bottom: 20px;
-}
-
-.Changelog-Item {
-  color: #c4c9ce;
-}
-.Changelog-Item .Changelog-Header {
-  display: flex;
-  text-transform: uppercase;
-  font-weight: 700;
-  align-items: center;
-  margin-bottom: 10px;
-}
-.Changelog-Item .Changelog-Header.added {
-  color: #45BA6A;
-}
-.Changelog-Item .Changelog-Header.fixed {
-  color: #EC4245;
-}
-.Changelog-Item .Changelog-Header.improved {
-  color: #5865F2;
-}
-.Changelog-Item .Changelog-Header::after {
-  content: "";
-  flex-grow: 1;
-  height: 1px;
-  margin-left: 7px;
-  background: currentColor;
-}
-.Changelog-Item span {
-  display: list-item;
-  list-style: inside;
-  margin-left: 5px;
-}
-.Changelog-Item span::marker {
-  color: var(--background-accent);
-}`);
-
 /* index.tsx */
 class InvisibleTyping {
     start() {
         Styles.load();
-        this.showChangelog();
+        showChangelog(manifest);
         this.patchTyping();
         this.patchChannelTextArea();
     }
     stop() {
         Styles.unload();
         Patcher.unpatchAll();
-    }
-    showChangelog() {
-        if (!manifest?.changelog?.length || Settings.get("lastVersion") === manifest.version) return;
-        const i18n = Webpack.getByKeys("getLocale");
-        const formatter = new Intl.DateTimeFormat(i18n.getLocale(), {
-            month: "long",
-            day: "numeric",
-            year: "numeric"
-        });
-        const title = React.createElement("div", {
-            className: "Changelog-Title-Wrapper"
-        }, React.createElement("h1", null, "What's New - ", manifest.name), React.createElement("div", null, formatter.format(new Date(manifest.changelogDate)), " - v", manifest.version));
-        const items = manifest?.changelog?.map((item) => React.createElement("div", {
-            className: "Changelog-Item"
-        }, React.createElement("h4", {
-            className: `Changelog-Header ${item.type}`
-        }, item.title), item.items.map((item2) => React.createElement("span", null, item2))));
-        "changelogImage" in manifest && items.unshift(
-            React.createElement("img", {
-                className: "Changelog-Banner",
-                src: manifest.changelogImage
-            })
-        );
-        Settings.set("lastVersion", manifest.version);
-        UI.alert(title, items);
     }
     patchTyping() {
         Patcher.instead(TypingModule, "startTyping", (_, [channelId], originalMethod) => {
@@ -404,14 +409,18 @@ class InvisibleTyping {
     patchChannelTextArea() {
         const ChannelTextArea = Webpack.getModule((m) => m?.type?.render?.toString?.()?.includes?.("CHANNEL_TEXT_AREA"));
         Patcher.after(ChannelTextArea.type, "render", (_, __, res) => {
+            const isProfilePopout = Utils.findInTree(res, (e) => Array.isArray(e?.value) && e.value.some((v) => v === "bite size profile popout"), {
+                walkable: ["children", "props"]
+            });
+            if (isProfilePopout) return;
             const chatBar = Utils.findInTree(res, (e) => Array.isArray(e?.children) && e.children.some((c) => c?.props?.className?.startsWith("attachButton")), {
                 walkable: ["children", "props"]
             });
-            if (!chatBar) return Logger.error("[InvisibleTyping] Failed to find ChatBar");
+            if (!chatBar) return Logger.error("Failed to find ChatBar");
             const textAreaState = Utils.findInTree(chatBar, (e) => e?.props?.channel, {
                 walkable: ["children"]
             });
-            if (!textAreaState) return Logger.error("[InvisibleTyping] Failed to find textAreaState");
+            if (!textAreaState) return Logger.error("Failed to find textAreaState");
             chatBar.children.splice(-1, 0, React.createElement(InvisibleTypingButton, {
                 channel: textAreaState?.props?.channel,
                 isEmpty: !Boolean(textAreaState?.props?.editorTextContent)
