@@ -1,6 +1,6 @@
 {
 	"name": "InvisibleTyping",
-	"version": "1.3.5",
+	"version": "1.3.6",
 	"author": "Strencher",
 	"authorId": "415849376598982656",
 	"description": "Enhanced version of silent typing.",
@@ -12,10 +12,8 @@
 			"type": "fixed",
 			"items": [
 				"The Plugin works again",
-				"Fixed some logic issues",
-				"Fixed sticky button"
 			]
 		}
 	],
-	"changelogDate": "2024-08-29"
+	"changelogDate": "2025-01-30"
 }
