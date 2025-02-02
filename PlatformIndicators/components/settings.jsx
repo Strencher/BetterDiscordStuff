@@ -1,27 +1,31 @@
-import Settings from "../modules/settings";
-import {useStateFromStores} from "../modules/shared";
-import * as Icons from "./icons/Icons";
-import Styles from "./settings.scss";
-import {Webpack} from "@api";
 import React from "react";
-import SettingsItems from "./settings.json";
-import {Checkbox} from "./icons/checkbox";
-import {getStatusColor} from "../modules/utils";
+import { Components } from "@api";
 
-const {FormSwitch} = Webpack.getByKeys("FormSwitch");
+import Settings from "../modules/settings";
+import { useStateFromStores } from "../modules/shared";
+import { getStatusColor } from "../modules/utils";
+
+import * as Icons from "./icons/Icons";
+import { Checkbox } from "./icons/checkbox";
+import SettingsItems from "./settings.json";
+import Styles from "./settings.scss";
+
+const { SettingItem, SwitchInput } = Components;
 
 function SwitchItem(props) {
     const value = useStateFromStores([Settings], () => Settings.get(props.id, props.value));
-
     return (
-        <FormSwitch
+        <SettingItem
             {...props}
-            value={value}
-            children={props.name}
-            onChange={value => {
-                Settings.set(props.id, value);
-            }}
-        />
+            inline={true}
+        >
+            <SwitchInput
+                value={value}
+                onChange={v => {
+                    Settings.set(props.id, v);
+                }}
+            />
+        </SettingItem>
     );
 }
 
@@ -42,9 +46,9 @@ function SmartDisable(props) {
             <div className={Styles.body}>
                 {props.items.map(item => (
                     <div key={item.id} className={Styles.item} onClick={() => handleClick(item.id)}>
-                        {["online", "dnd", "idle", "offline"].map(status => 
+                        {["online", "dnd", "idle", "offline"].map(status =>
                             React.createElement(Icons[item.icon], {
-                                style: {color: getStatusColor(status)},
+                                style: { color: getStatusColor(status) },
                                 width: iconSize,
                                 height: iconSize
                             })

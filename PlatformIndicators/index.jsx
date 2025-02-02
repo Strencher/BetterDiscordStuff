@@ -1,5 +1,5 @@
 import React from "react";
-import { DOM, Patcher, ReactUtils, Webpack, Utils } from "@api";
+import {DOM, Patcher, ReactUtils, Webpack, Utils} from "@api";
 import manifest from "@manifest";
 import Styles from "@styles";
 
@@ -8,7 +8,7 @@ import showChangelog from "../common/Changelog";
 import StatusIndicators from "./components/indicators";
 import SettingsPanel from "./components/settings";
 import Settings from "./modules/settings";
-import { findInReactTree } from "./modules/utils";
+import {findInReactTree} from "./modules/utils";
 
 export default class PlatformIndicators {
     getSettingsPanel() {
@@ -18,17 +18,17 @@ export default class PlatformIndicators {
     start() {
         Styles.load();
         showChangelog(manifest);
-        this.patchDMs();
+        this.patchDMList();
         this.patchMemberList();
         this.patchChat();
         this.patchBadges();
         this.patchFriendList();
     }
 
-    patchDMs() {
+    patchDMList() {
         const UserContext = React.createContext(null);
         const [ChannelWrapper, Key_CW] = Webpack.getWithKey(Webpack.Filters.byStrings("isGDMFacepileEnabled"));
-        const [NameWrapper, Key_NW] = Webpack.getWithKey(x => x.toString().includes(".nameAndDecorators") && !x.toString().includes("FocusRing"));
+        const [NameWrapper, Key_NW] = Webpack.getWithKey(x => x.toString().includes(".nameAndDecorators") && !x.toString().includes('"listitem"'));
         const ChannelClasses = Webpack.getByKeys("channel", "decorator");
 
         Patcher.after(ChannelWrapper, Key_CW, (_, __, res) => {
@@ -36,6 +36,7 @@ export default class PlatformIndicators {
             Patcher.after(res, "type", (_, [props], res) => {
                 if (!props.user) return; // Its a group DM
                 if (Settings.get("ignoreBots", true) && props.user.bot) return;
+
                 return (
                     <UserContext.Provider value={props.user}>
                         {res}
@@ -52,10 +53,13 @@ export default class PlatformIndicators {
 
         Patcher.after(NameWrapper, Key_NW, (_, __, res) => {
             if (!Settings.get("showInDmsList", true)) return;
+            
             const user = React.useContext(UserContext);
             if (!user) return;
+            
             const child = Utils.findInTree(res, e => e?.className?.includes("nameAndDecorators"));
             if (!child) return;
+
             child.children.push(
                 <StatusIndicators
                     userId={user.id}
@@ -74,8 +78,9 @@ export default class PlatformIndicators {
             if (Settings.get("ignoreBots", true) && props.user.bot) return;
             const children = ret.props.children();
             const obj = findInReactTree(children, e => e?.avatar && e?.name);
+
             if (obj)
-                children.props.decorators?.props?.children.push(
+                children?.props?.children?.props?.decorators?.props?.children.push(
                     <StatusIndicators
                         userId={props.user.id}
                         type="MemberList"
@@ -151,7 +156,8 @@ export default class PlatformIndicators {
             if (!Settings.get("showInFriendsList", true)) return;
             const unpatch = Patcher.after(res.props.children[1].props.children[0], "type", (_, [props], res) => {
                 unpatch();
-                Patcher.after(res, "type", (_, __, res) => {
+                const unpatch_ = Patcher.after(res, "type", (_, __, res) => {
+                    unpatch_();
                     res.props.children.push(
                         <StatusIndicators
                             userId={props.user.id}
