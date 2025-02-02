@@ -1,7 +1,9 @@
 import React from "react";
 import { Components, ContextMenu, UI, Webpack } from "@api";
+
 import Keyboard from "./icons/keyboard";
 import styles from "./typingButton.scss";
+
 import Settings from "../modules/settings";
 import { buildClassName, TypingModule, useStateFromStores } from "../modules/shared";
 

@@ -1,23 +1,27 @@
 import React from "react";
-import { Webpack } from "@api";
-import Settings from "../modules/settings";
-import { useStateFromStores } from "../modules/shared";
+import { Components } from "@api";
+
 import SettingsItems from "./settings.json";
 
-const FormSwitch = Webpack.getByStrings('.labelRow', 'useId', 'DESCRIPTION', { searchExports: true });
+import Settings from "../modules/settings";
+import { useStateFromStores } from "../modules/shared";
+
+const { SettingItem, SwitchInput } = Components;
 
 function SwitchItem(props) {
     const value = useStateFromStores([Settings], () => Settings.get(props.id, props.value));
-
     return (
-        <FormSwitch
+        <SettingItem
             {...props}
-            value={value}
-            children={props.name}
-            onChange={value => {
-                Settings.set(props.id, value);
-            }}
-        />
+            inline={true}
+        >
+            <SwitchInput
+                value={value}
+                onChange={v => {
+                    Settings.set(props.id, v);
+                }}
+            />
+        </SettingItem>
     );
 }
 
