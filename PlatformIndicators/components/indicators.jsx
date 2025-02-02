@@ -1,9 +1,10 @@
 import React from "react";
 import Styles from "./indicators.scss";
-import {ModulesLibrary, buildClassName} from "../modules/shared";
+import {StatusTypes, buildClassName} from "../modules/shared";
 import usePlatformStores from "../modules/usePlatformStores";
 import * as Icons from "./icons/Icons";
 import {getStatusText, getStatusColor} from "../modules/utils";
+import { Webpack } from "@api";
 
 const Tooltip = Webpack.getByStrings('.props.clickableOnMobile&&this.show()',{searchExports:true})
 
