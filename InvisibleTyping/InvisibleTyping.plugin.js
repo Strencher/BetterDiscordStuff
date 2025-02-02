@@ -1,12 +1,12 @@
 /**
  * @name InvisibleTyping
- * @version 1.3.6
+ * @version 1.3.7
  * @author Strencher
  * @authorId 415849376598982656
  * @description Enhanced version of silent typing.
  * @source https://github.com/Strencher/BetterDiscordStuff/blob/master/InvisibleTyping/InvisibleTyping.plugin.js
  * @invite gvA2ree
- * @changelogDate 2025-01-30
+ * @changelogDate 2025-02-02
  */
 
 'use strict';
@@ -17,20 +17,28 @@ const React = BdApi.React;
 /* @manifest */
 var manifest = {
     "name": "InvisibleTyping",
-    "version": "1.3.6",
+    "version": "1.3.7",
     "author": "Strencher",
     "authorId": "415849376598982656",
     "description": "Enhanced version of silent typing.",
     "source": "https://github.com/Strencher/BetterDiscordStuff/blob/master/InvisibleTyping/InvisibleTyping.plugin.js",
     "invite": "gvA2ree",
     "changelog": [{
-        "title": "Fixed",
-        "type": "fixed",
-        "items": [
-            "The Plugin works again"
-        ]
-    }],
-    "changelogDate": "2025-01-30"
+            "title": "Improved Settings",
+            "type": "improved",
+            "items": [
+                "Settings use BD Components now"
+            ]
+        },
+        {
+            "title": "Fixed",
+            "type": "fixed",
+            "items": [
+                "The Plugin works again"
+            ]
+        }
+    ],
+    "changelogDate": "2025-02-02"
 };
 
 /* @api */
@@ -174,9 +182,7 @@ Styles.sheets.push("/* components/typingButton.scss */", `.invisibleTypingButton
 }`);
 var styles = {
     "invisibleTypingButton": "invisibleTypingButton",
-    "disabledStrokeThrough": "disabledStrokeThrough",
-    "disabled": "disabled",
-    "invisibleTypingTooltip": "invisibleTypingTooltip"
+    "disabledStrokeThrough": "disabledStrokeThrough"
 };
 
 /* components/icons/keyboard.tsx */
@@ -348,21 +354,26 @@ var SettingsItems = [{
 }];
 
 /* components/settings.jsx */
-const FormSwitch = Webpack.getByStrings(".labelRow", "useId", "DESCRIPTION", {
-    searchExports: true
-});
+const {
+    SettingItem,
+    SwitchInput
+} = Components;
 
 function SwitchItem(props) {
     const value = useStateFromStores([Settings], () => Settings.get(props.id, props.value));
     return React.createElement(
-        FormSwitch, {
+        SettingItem, {
             ...props,
-            value,
-            children: props.name,
-            onChange: (value2) => {
-                Settings.set(props.id, value2);
+            inline: true
+        },
+        React.createElement(
+            SwitchInput, {
+                value,
+                onChange: (v) => {
+                    Settings.set(props.id, v);
+                }
             }
-        }
+        )
     );
 }
 
