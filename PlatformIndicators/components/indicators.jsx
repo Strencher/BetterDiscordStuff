@@ -1,18 +1,18 @@
 import React from "react";
-import Styles from "./indicators.scss";
-import {StatusTypes, buildClassName} from "../modules/shared";
-import usePlatformStores from "../modules/usePlatformStores";
+import { Components } from "@api";
+
 import * as Icons from "./icons/Icons";
-import {getStatusText, getStatusColor} from "../modules/utils";
-import { Webpack } from "@api";
+import Styles from "./indicators.scss";
 
-const Tooltip = Webpack.getByStrings('.props.clickableOnMobile&&this.show()',{searchExports:true})
+import { buildClassName } from "../modules/shared";
+import usePlatformStores from "../modules/usePlatformStores";
+import { getStatusText, getStatusColor } from "../modules/utils";
 
-export default function StatusIndicators({type, userId, size = 18, separator = false}) {
+export default function StatusIndicators({ type, userId, size = 18, separator = false }) {
     const state = usePlatformStores(userId, type);
 
     if (!Object.keys(state.clients).length || !state.shouldShow) return null;
-    
+
     return (
         <React.Fragment>
             {separator && <span className={Styles.badge_separator} />}
@@ -23,18 +23,18 @@ export default function StatusIndicators({type, userId, size = 18, separator = f
                         const Icon = Icons[key];
 
                         return (
-                            <Tooltip text={getStatusText(key, status)}>
+                            <Components.Tooltip text={getStatusText(key, status)}>
                                 {props => (
                                     <Icon
                                         text={getStatusText(key, status)}
-                                        style={{color: getStatusColor(status)}}
+                                        style={{ color: getStatusColor(status) }}
                                         width={size}
                                         height={size}
                                         data-status={status}
                                         {...props}
                                     />
                                 )}
-                            </Tooltip>
+                            </Components.Tooltip>
                         );
                     })
                 }
