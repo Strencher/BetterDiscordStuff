@@ -38,5 +38,7 @@ body:
       options:
         - label: I am using the latest version of the plugin
           required: true
-        - label: This issue has not already been reported
+        - label: I have checked existing issues to ensure this issue hasn't been reported before
+          required: true
+        - label: I have reviewed the pinned issue regarding known broken plugins
           required: true
