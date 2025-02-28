@@ -1,12 +1,12 @@
 /**
  * @name APlatformIndicators
- * @version 1.5.12
+ * @version 1.5.13
  * @author Strencher
  * @authorId 415849376598982656
  * @description Adds indicators for every platform that the user is using.
  * @source https://github.com/Strencher/BetterDiscordStuff/blob/master/PlatformIndicators/APlatformIndicators.plugin.js
  * @invite gvA2ree
- * @changelogDate 2025-02-02
+ * @changelogDate 2025-02-28
  */
 
 'use strict';
@@ -17,7 +17,7 @@ const React = BdApi.React;
 /* @manifest */
 var manifest = {
     "name": "APlatformIndicators",
-    "version": "1.5.12",
+    "version": "1.5.13",
     "author": "Strencher",
     "authorId": "415849376598982656",
     "description": "Adds indicators for every platform that the user is using.",
@@ -27,10 +27,10 @@ var manifest = {
         "title": "Fixed",
         "type": "fixed",
         "items": [
-            "Plugin fixed for the latest Discord update"
+            "DM List and Member List work again"
         ]
     }],
-    "changelogDate": "2025-02-02"
+    "changelogDate": "2025-02-28"
 };
 
 /* @api */
@@ -663,7 +663,7 @@ class PlatformIndicators {
         const [ChannelWrapper, Key_CW] = Webpack.getWithKey(Webpack.Filters.byStrings("isGDMFacepileEnabled"));
         const [NameWrapper, Key_NW] = Webpack.getWithKey((x) => x.toString().includes(".nameAndDecorators") && !x.toString().includes('"listitem"'));
         const ChannelClasses = Webpack.getByKeys("channel", "decorator");
-        Patcher.after(ChannelWrapper, Key_CW, (_, __, res) => {
+        Patcher.after(ChannelWrapper, "ZP", (_, __, res) => {
             if (!Settings.get("showInDmsList", true)) return;
             Patcher.after(res, "type", (_2, [props], res2) => {
                 if (!props.user) return;
@@ -682,7 +682,9 @@ class PlatformIndicators {
             if (!Settings.get("showInDmsList", true)) return;
             const user = React.useContext(UserContext);
             if (!user) return;
-            const child = Utils.findInTree(res, (e) => e?.className?.includes("nameAndDecorators"));
+            const child = Utils.findInTree(res, (e) => e?.className?.includes("nameAndDecorators"), {
+                walkable: ["children", "props"]
+            });
             if (!child) return;
             child.children.push(
                 React.createElement(
@@ -703,7 +705,7 @@ class PlatformIndicators {
             const children = ret.props.children();
             const obj = findInReactTree(children, (e) => e?.avatar && e?.name);
             if (obj)
-                children?.props?.children?.props?.decorators?.props?.children.push(
+                children?.props?.name?.props?.children?.props?.children?.push(
                     React.createElement(
                         StatusIndicators, {
                             userId: props.user.id,
