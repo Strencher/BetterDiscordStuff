@@ -1,6 +1,6 @@
 {
   "name": "APlatformIndicators",
-  "version": "1.5.12",
+  "version": "1.5.13",
   "author": "Strencher",
   "authorId": "415849376598982656",
   "description": "Adds indicators for every platform that the user is using.",
@@ -11,9 +11,9 @@
       "title": "Fixed",
       "type": "fixed",
       "items": [
-        "Plugin fixed for the latest Discord update"
+        "DM List and Member List work again"
       ]
     }
   ],
-  "changelogDate": "2025-02-02"
+  "changelogDate": "2025-02-28"
 }

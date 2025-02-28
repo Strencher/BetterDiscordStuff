@@ -1,5 +1,5 @@
 import React from "react";
-import {DOM, Patcher, ReactUtils, Webpack, Utils} from "@api";
+import { DOM, Patcher, ReactUtils, Webpack, Utils } from "@api";
 import manifest from "@manifest";
 import Styles from "@styles";
 
@@ -8,7 +8,7 @@ import showChangelog from "../common/Changelog";
 import StatusIndicators from "./components/indicators";
 import SettingsPanel from "./components/settings";
 import Settings from "./modules/settings";
-import {findInReactTree} from "./modules/utils";
+import { findInReactTree } from "./modules/utils";
 
 export default class PlatformIndicators {
     getSettingsPanel() {
@@ -31,7 +31,7 @@ export default class PlatformIndicators {
         const [NameWrapper, Key_NW] = Webpack.getWithKey(x => x.toString().includes(".nameAndDecorators") && !x.toString().includes('"listitem"'));
         const ChannelClasses = Webpack.getByKeys("channel", "decorator");
 
-        Patcher.after(ChannelWrapper, Key_CW, (_, __, res) => {
+        Patcher.after(ChannelWrapper, "ZP", (_, __, res) => {
             if (!Settings.get("showInDmsList", true)) return;
             Patcher.after(res, "type", (_, [props], res) => {
                 if (!props.user) return; // Its a group DM
@@ -53,11 +53,11 @@ export default class PlatformIndicators {
 
         Patcher.after(NameWrapper, Key_NW, (_, __, res) => {
             if (!Settings.get("showInDmsList", true)) return;
-            
+
             const user = React.useContext(UserContext);
             if (!user) return;
-            
-            const child = Utils.findInTree(res, e => e?.className?.includes("nameAndDecorators"));
+
+            const child = Utils.findInTree(res, e => e?.className?.includes("nameAndDecorators"), { walkable: ["children", "props"] });
             if (!child) return;
 
             child.children.push(
@@ -80,7 +80,7 @@ export default class PlatformIndicators {
             const obj = findInReactTree(children, e => e?.avatar && e?.name);
 
             if (obj)
-                children?.props?.children?.props?.decorators?.props?.children.push(
+                children?.props?.name?.props?.children?.props?.children?.push(
                     <StatusIndicators
                         userId={props.user.id}
                         type="MemberList"
