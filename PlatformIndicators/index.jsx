@@ -104,9 +104,10 @@ export default class PlatformIndicators {
             const mainProps = props[0];
             if (!Settings.get("showInChat", true)) return;
             if (Settings.get("ignoreBots", true) && mainProps?.author?.bot) return;
-            if (!Array.isArray(mainProps?.decorations[1]) && mainProps && mainProps?.decorations) mainProps.decorations[1] = [];
-            // for some reason props just won't exist.
-            mainProps?.decorations[1]?.unshift(
+            if (!mainProps?.decorations) return;
+            const target = mainProps.decorations?.[1];
+            if (!Array.isArray(target)) mainProps.decorations[1] = target ? [target] : [];
+            mainProps.decorations[1].unshift(
                 <StatusIndicators
                     userId={mainProps.message.author.id}
                     type="Chat"
