@@ -1,12 +1,12 @@
 /**
  * @name APlatformIndicators
- * @version 1.5.13
+ * @version 1.5.14
  * @author Strencher
  * @authorId 415849376598982656
  * @description Adds indicators for every platform that the user is using.
  * @source https://github.com/Strencher/BetterDiscordStuff/blob/master/PlatformIndicators/APlatformIndicators.plugin.js
  * @invite gvA2ree
- * @changelogDate 2025-02-28
+ * @changelogDate 2025-03-07
  */
 
 'use strict';
@@ -17,7 +17,7 @@ const React = BdApi.React;
 /* @manifest */
 var manifest = {
     "name": "APlatformIndicators",
-    "version": "1.5.13",
+    "version": "1.5.14",
     "author": "Strencher",
     "authorId": "415849376598982656",
     "description": "Adds indicators for every platform that the user is using.",
@@ -27,10 +27,10 @@ var manifest = {
         "title": "Fixed",
         "type": "fixed",
         "items": [
-            "DM List and Member List work again"
+            "Fix Chat Patch (Thanks to nicola02nb)"
         ]
     }],
-    "changelogDate": "2025-02-28"
+    "changelogDate": "2025-03-07"
 };
 
 /* @api */
@@ -727,8 +727,10 @@ class PlatformIndicators {
             const mainProps = props[0];
             if (!Settings.get("showInChat", true)) return;
             if (Settings.get("ignoreBots", true) && mainProps?.author?.bot) return;
-            if (!Array.isArray(mainProps?.decorations[1]) && mainProps && mainProps?.decorations) mainProps.decorations[1] = [];
-            mainProps?.decorations[1]?.unshift(
+            if (!mainProps?.decorations) return;
+            const target = mainProps.decorations?.[1];
+            if (!Array.isArray(target)) mainProps.decorations[1] = target ? [target] : [];
+            mainProps.decorations[1].unshift(
                 React.createElement(
                     StatusIndicators, {
                         userId: mainProps.message.author.id,
