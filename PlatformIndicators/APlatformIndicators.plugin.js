@@ -727,7 +727,7 @@ class PlatformIndicators {
             const mainProps = props[0];
             if (!Settings.get("showInChat", true)) return;
             if (Settings.get("ignoreBots", true) && mainProps?.author?.bot) return;
-            if (!Array.isArray(mainProps?.decorations[1]) && mainProps && mainProps?.decorations) mainProps.decorations[1] = [];
+            if (!Array.isArray(mainProps?.decorations && mainProps?.decorations[1]) && mainProps && mainProps?.decorations) mainProps.decorations[1] = [];
             mainProps?.decorations[1]?.unshift(
                 React.createElement(
                     StatusIndicators, {
