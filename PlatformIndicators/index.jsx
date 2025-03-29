@@ -70,7 +70,7 @@ export default class PlatformIndicators {
     }
 
     patchMemberList() {
-        const [MemberItem, key] = Webpack.getWithKey(Webpack.Filters.byStrings(".jXE.MEMBER_LIST"));
+        const [MemberItem, key] = Webpack.getWithKey(Webpack.Filters.byStrings("location:\"MemberListItem\""));
         const MemberListClasses = Webpack.getByKeys("member", "memberInner");
 
         Patcher.after(MemberItem, key, (_, [props], ret) => {
