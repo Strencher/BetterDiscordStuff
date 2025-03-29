@@ -1,12 +1,12 @@
 /**
  * @name APlatformIndicators
- * @version 1.5.14
+ * @version 1.5.15
  * @author Strencher
  * @authorId 415849376598982656
  * @description Adds indicators for every platform that the user is using.
  * @source https://github.com/Strencher/BetterDiscordStuff/blob/master/PlatformIndicators/APlatformIndicators.plugin.js
  * @invite gvA2ree
- * @changelogDate 2025-03-07
+ * @changelogDate 2025-03-29
  */
 
 'use strict';
@@ -17,7 +17,7 @@ const React = BdApi.React;
 /* @manifest */
 var manifest = {
     "name": "APlatformIndicators",
-    "version": "1.5.14",
+    "version": "1.5.15",
     "author": "Strencher",
     "authorId": "415849376598982656",
     "description": "Adds indicators for every platform that the user is using.",
@@ -27,10 +27,10 @@ var manifest = {
         "title": "Fixed",
         "type": "fixed",
         "items": [
-            "Fix Chat Patch (Thanks to nicola02nb)"
+            "Fix Member list Patch"
         ]
     }],
-    "changelogDate": "2025-03-07"
+    "changelogDate": "2025-03-29"
 };
 
 /* @api */
@@ -697,7 +697,7 @@ class PlatformIndicators {
         });
     }
     patchMemberList() {
-        const [MemberItem, key] = Webpack.getWithKey(Webpack.Filters.byStrings(".jXE.MEMBER_LIST"));
+        const [MemberItem, key] = Webpack.getWithKey(Webpack.Filters.byStrings('location:"MemberListItem"'));
         const MemberListClasses = Webpack.getByKeys("member", "memberInner");
         Patcher.after(MemberItem, key, (_, [props], ret) => {
             if (!Settings.get("showInMemberList", true)) return;
