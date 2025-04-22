@@ -1,6 +1,6 @@
 {
   "name": "APlatformIndicators",
-  "version": "1.5.15",
+  "version": "1.5.16",
   "author": "Strencher",
   "authorId": "415849376598982656",
   "description": "Adds indicators for every platform that the user is using.",
@@ -15,5 +15,5 @@
       ]
     }
   ],
-  "changelogDate": "2025-03-29"
+  "changelogDate": "2025-04-22"
 }

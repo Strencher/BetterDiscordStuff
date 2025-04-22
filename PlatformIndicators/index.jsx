@@ -77,15 +77,17 @@ export default class PlatformIndicators {
             if (!Settings.get("showInMemberList", true)) return;
             if (Settings.get("ignoreBots", true) && props.user.bot) return;
             const children = ret.props.children();
-            const obj = findInReactTree(children, e => e?.avatar && e?.name);
-
-            if (obj)
-                children?.props?.name?.props?.children?.props?.children?.push(
+            const usr = findInReactTree(children, e => e?.avatar && e?.name);
+            let childs = children?.props?.name?.props?.children;
+            if (usr && childs) {
+                children.props.name.props.children = [
+                    childs,
                     <StatusIndicators
                         userId={props.user.id}
                         type="MemberList"
                     />
-                );
+                ];
+            }
             // discord made it a method to return the children :(
             ret.props.children = () => children;
         });
