@@ -1,12 +1,12 @@
 /**
  * @name APlatformIndicators
- * @version 1.5.16
+ * @version 1.5.17
  * @author Strencher
  * @authorId 415849376598982656
  * @description Adds indicators for every platform that the user is using.
  * @source https://github.com/Strencher/BetterDiscordStuff/blob/master/PlatformIndicators/APlatformIndicators.plugin.js
  * @invite gvA2ree
- * @changelogDate 2025-04-22
+ * @changelogDate 2025-04-27
  */
 
 'use strict';
@@ -17,7 +17,7 @@ const React = BdApi.React;
 /* @manifest */
 var manifest = {
     "name": "APlatformIndicators",
-    "version": "1.5.16",
+    "version": "1.5.17",
     "author": "Strencher",
     "authorId": "415849376598982656",
     "description": "Adds indicators for every platform that the user is using.",
@@ -27,10 +27,10 @@ var manifest = {
         "title": "Fixed",
         "type": "fixed",
         "items": [
-            "Fix Member list Patch"
+            "Fix Badges"
         ]
     }],
-    "changelogDate": "2025-04-22"
+    "changelogDate": "2025-04-27"
 };
 
 /* @api */
@@ -744,23 +744,17 @@ class PlatformIndicators {
         });
     }
     patchBadges() {
-        const UserContext = React.createContext(null);
-        const [ProfileInfoRow, KEY_PIR] = Webpack.getWithKey(Webpack.Filters.byStrings("user", "profileType"));
         const [BadgeList, Key_BL] = Webpack.getWithKey(Webpack.Filters.byStrings("badges", "badgeClassName", ".BADGE"));
-        Patcher.after(ProfileInfoRow, KEY_PIR, (_, [props], res) => {
+        Patcher.after(BadgeList, Key_BL, (_, [{
+            displayProfile
+        }], res) => {
             if (!Settings.get("showInBadges", true)) return;
-            if (Settings.get("ignoreBots", true) && props.user.bot) return;
-            return React.createElement(UserContext.Provider, {
-                value: props.user
-            }, res);
-        });
-        Patcher.after(BadgeList, Key_BL, (_, __, res) => {
-            const user = React.useContext(UserContext);
-            if (!user) return;
+            if (Settings.get("ignoreBots", true) && displayProfile?.application) return;
+            if (!displayProfile?.userId) return;
             res.props.children.push(
                 React.createElement(
                     StatusIndicators, {
-                        userId: user.id,
+                        userId: displayProfile.userId,
                         type: "Badge",
                         separator: true
                     }
