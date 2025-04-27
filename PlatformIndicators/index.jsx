@@ -119,26 +119,15 @@ export default class PlatformIndicators {
     }
 
     patchBadges() {
-        const UserContext = React.createContext(null);
-        const [ProfileInfoRow, KEY_PIR] = Webpack.getWithKey(Webpack.Filters.byStrings("user", "profileType"));
         const [BadgeList, Key_BL] = Webpack.getWithKey(Webpack.Filters.byStrings("badges", "badgeClassName", ".BADGE"));
 
-        Patcher.after(ProfileInfoRow, KEY_PIR, (_, [props], res) => {
+        Patcher.after(BadgeList, Key_BL, (_, [{ displayProfile }], res) => {
             if (!Settings.get("showInBadges", true)) return;
-            if (Settings.get("ignoreBots", true) && props.user.bot) return;
-            return (
-                <UserContext.Provider value={props.user}>
-                    {res}
-                </UserContext.Provider>
-            );
-        });
-
-        Patcher.after(BadgeList, Key_BL, (_, __, res) => {
-            const user = React.useContext(UserContext);
-            if (!user) return;
+            if (Settings.get("ignoreBots", true) && displayProfile?.application) return;
+            if (!displayProfile?.userId) return;
             res.props.children.push(
                 <StatusIndicators
-                    userId={user.id}
+                    userId={displayProfile.userId}
                     type="Badge"
                     separator
                 />

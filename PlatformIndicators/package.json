@@ -1,6 +1,6 @@
 {
   "name": "APlatformIndicators",
-  "version": "1.5.16",
+  "version": "1.5.17",
   "author": "Strencher",
   "authorId": "415849376598982656",
   "description": "Adds indicators for every platform that the user is using.",
@@ -11,9 +11,9 @@
       "title": "Fixed",
       "type": "fixed",
       "items": [
-        "Fix Member list Patch"
+        "Fix Badges"
       ]
     }
   ],
-  "changelogDate": "2025-04-22"
+  "changelogDate": "2025-04-27"
 }
