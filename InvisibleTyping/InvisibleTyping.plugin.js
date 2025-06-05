@@ -1,12 +1,12 @@
 /**
  * @name InvisibleTyping
- * @version 1.3.7
+ * @version 1.4.0
  * @author Strencher
  * @authorId 415849376598982656
  * @description Enhanced version of silent typing.
  * @source https://github.com/Strencher/BetterDiscordStuff/blob/master/InvisibleTyping/InvisibleTyping.plugin.js
  * @invite gvA2ree
- * @changelogDate 2025-02-02
+ * @changelogDate 2025-06-05
  */
 
 'use strict';
@@ -17,28 +17,20 @@ const React = BdApi.React;
 /* @manifest */
 var manifest = {
     "name": "InvisibleTyping",
-    "version": "1.3.7",
+    "version": "1.4.0",
     "author": "Strencher",
     "authorId": "415849376598982656",
     "description": "Enhanced version of silent typing.",
     "source": "https://github.com/Strencher/BetterDiscordStuff/blob/master/InvisibleTyping/InvisibleTyping.plugin.js",
     "invite": "gvA2ree",
     "changelog": [{
-            "title": "Improved Settings",
-            "type": "improved",
-            "items": [
-                "Settings use BD Components now"
-            ]
-        },
-        {
-            "title": "Fixed",
-            "type": "fixed",
-            "items": [
-                "The Plugin works again"
-            ]
-        }
-    ],
-    "changelogDate": "2025-02-02"
+        "title": "Added Developer API",
+        "type": "added",
+        "items": [
+            "Added `getState` and `setState` methods to the plugin for other plugins to use"
+        ]
+    }],
+    "changelogDate": "2025-06-05"
 };
 
 /* @api */
@@ -405,6 +397,20 @@ class InvisibleTyping {
     stop() {
         Styles.unload();
         Patcher.unpatchAll();
+    }
+    getState(channelId) {
+        return InvisibleTypingButton.getState(channelId);
+    }
+    setState(channelId, value) {
+        const excludeList = [...Settings.get("exclude", [])];
+        if (value) {
+            if (!excludeList.includes(channelId))
+                excludeList.push(channelId);
+        } else {
+            excludeList.splice(excludeList.indexOf(channelId), 1);
+            TypingModule.stopTyping(channelId);
+        }
+        Settings.set("exclude", excludeList);
     }
     patchTyping() {
         Patcher.instead(TypingModule, "startTyping", (_, [channelId], originalMethod) => {
