@@ -1,6 +1,6 @@
 {
 	"name": "InvisibleTyping",
-	"version": "1.3.7",
+	"version": "1.4.0",
 	"author": "Strencher",
 	"authorId": "415849376598982656",
 	"description": "Enhanced version of silent typing.",
@@ -8,19 +8,12 @@
 	"invite": "gvA2ree",
 	"changelog": [
 		{
-			"title": "Improved Settings",
-			"type": "improved",
+			"title": "Added Developer API",
+			"type": "added",
 			"items": [
-				"Settings use BD Components now"
-			]
-		},
-		{
-			"title": "Fixed",
-			"type": "fixed",
-			"items": [
-				"The Plugin works again"
+				"Added `getState` and `setState` methods to the plugin for other plugins to use"
 			]
 		}
 	],
-	"changelogDate": "2025-02-02"
+	"changelogDate": "2025-06-05"
 }

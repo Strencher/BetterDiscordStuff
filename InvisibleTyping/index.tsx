@@ -17,11 +17,28 @@ export default class InvisibleTyping {
         this.patchTyping();
         this.patchChannelTextArea();
     }
+
     stop() {
         Styles.unload();
         Patcher.unpatchAll();
     }
 
+    getState(channelId: string) {
+        return InvisibleTypingButton.getState(channelId);
+    }
+
+    setState(channelId: string, value: boolean) {
+        const excludeList = [...Settings.get<string[]>("exclude", [])];
+
+        if (value) {
+            if (!excludeList.includes(channelId))
+                excludeList.push(channelId);
+        } else {
+            excludeList.splice(excludeList.indexOf(channelId), 1);
+            TypingModule.stopTyping(channelId);
+        }
+        Settings.set("exclude", excludeList);
+    }
 
     patchTyping() {
         Patcher.instead(TypingModule, "startTyping", (_, [channelId]: [string], originalMethod) => {
