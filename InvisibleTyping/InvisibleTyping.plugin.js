@@ -1,12 +1,12 @@
 /**
  * @name InvisibleTyping
- * @version 1.4.0
+ * @version 1.4.1
  * @author Strencher
  * @authorId 415849376598982656
  * @description Enhanced version of silent typing.
  * @source https://github.com/Strencher/BetterDiscordStuff/blob/master/InvisibleTyping/InvisibleTyping.plugin.js
  * @invite gvA2ree
- * @changelogDate 2025-06-05
+ * @changelogDate 2025-06-17
  */
 
 'use strict';
@@ -17,20 +17,21 @@ const React = BdApi.React;
 /* @manifest */
 var manifest = {
     "name": "InvisibleTyping",
-    "version": "1.4.0",
+    "version": "1.4.1",
     "author": "Strencher",
     "authorId": "415849376598982656",
     "description": "Enhanced version of silent typing.",
     "source": "https://github.com/Strencher/BetterDiscordStuff/blob/master/InvisibleTyping/InvisibleTyping.plugin.js",
     "invite": "gvA2ree",
     "changelog": [{
-        "title": "Added Developer API",
-        "type": "added",
+        "title": "Improved Button Placement",
+        "type": "improved",
         "items": [
-            "Added `getState` and `setState` methods to the plugin for other plugins to use"
+            "Updated the button to be in the correct button group",
+            "Thanks to nicola02nb for the contribution"
         ]
     }],
-    "changelogDate": "2025-06-05"
+    "changelogDate": "2025-06-17"
 };
 
 /* @api */
@@ -154,7 +155,6 @@ function showChangelog(manifest) {
 Styles.sheets.push("/* components/typingButton.scss */", `.invisibleTypingButton svg {
   color: var(--interactive-normal);
   overflow: visible;
-  margin-top: 2.5px;
 }
 
 .invisibleTypingButton .disabledStrokeThrough {
@@ -241,7 +241,7 @@ const Settings = new class Settings2 extends Flux.Store {
 }();
 
 /* components/typingButton.tsx */
-const ChatBarClasses = Webpack.getByKeys("channelTextArea", "button");
+const ChatButton = Webpack.getBySource("CHAT_INPUT_BUTTON_NOTIFICATION").Z;
 const removeItem = function(array, item) {
     while (array.includes(item)) {
         array.splice(array.indexOf(item), 1);
@@ -303,30 +303,28 @@ function InvisibleTypingButton({
             return React.createElement(InvisibleTypingContextMenu, null);
         });
     }, [enabled]);
-    return React.createElement(
+    return React.createElement(Components.Tooltip, {
+        text: enabled ? "Typing Enabled" : "Typing Disabled"
+    }, (props) => React.createElement(
         "div", {
-            style: {
-                marginRight: "2.5px"
-            },
-            className: ChatBarClasses.buttons
+            ...props,
+            onClick: handleClick,
+            onContextMenu: handleContextMenu
         },
-        React.createElement(Components.Tooltip, {
-            text: enabled ? "Typing Enabled" : "Typing Disabled"
-        }, (props) => React.createElement(
-            "button", {
-                ...props,
-                className: buildClassName(styles.invisibleTypingButton, {
-                    enabled,
-                    disabled: !enabled
-                }),
-                onClick: handleClick,
-                onContextMenu: handleContextMenu
+        React.createElement(
+            ChatButton, {
+                className: buildClassName(
+                    styles.invisibleTypingButton, {
+                        enabled,
+                        disabled: !enabled
+                    }
+                )
             },
             React.createElement(Keyboard, {
                 disabled: !enabled
             })
-        ))
-    );
+        )
+    ));
 }
 InvisibleTypingButton.getState = function(channelId) {
     const isGlobal = Settings.get("autoEnable", true);
@@ -422,24 +420,14 @@ class InvisibleTyping {
         });
     }
     patchChannelTextArea() {
-        const ChannelTextArea = Webpack.getModule((m) => m?.type?.render?.toString?.()?.includes?.("CHANNEL_TEXT_AREA"));
-        Patcher.after(ChannelTextArea.type, "render", (_, __, res) => {
-            const isProfilePopout = Utils.findInTree(res, (e) => Array.isArray(e?.value) && e.value.some((v) => v === "bite size profile popout"), {
-                walkable: ["children", "props"]
-            });
-            if (isProfilePopout) return;
-            const chatBar = Utils.findInTree(res, (e) => Array.isArray(e?.children) && e.children.some((c) => c?.props?.className?.startsWith("attachButton")), {
-                walkable: ["children", "props"]
-            });
-            if (!chatBar) return Logger.error("Failed to find ChatBar");
-            const textAreaState = Utils.findInTree(chatBar, (e) => e?.props?.channel, {
-                walkable: ["children"]
-            });
-            if (!textAreaState) return Logger.error("Failed to find textAreaState");
-            chatBar.children.splice(-1, 0, React.createElement(InvisibleTypingButton, {
-                channel: textAreaState?.props?.channel,
-                isEmpty: !Boolean(textAreaState?.props?.editorTextContent)
-            }));
+        const ChatButtonsGroup = Webpack.getBySource('"ChannelTextAreaButtons"').Z;
+        Patcher.after(ChatButtonsGroup, "type", (_, args, res) => {
+            if (args.length == 2 && res.props.children && Array.isArray(res.props.children)) {
+                res.props.children.unshift(React.createElement(InvisibleTypingButton, {
+                    channel: args[0].channel,
+                    isEmpty: !Boolean(args[0].textValue)
+                }));
+            }
         });
     }
     getSettingsPanel() {
