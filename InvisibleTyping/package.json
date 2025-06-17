@@ -1,6 +1,6 @@
 {
 	"name": "InvisibleTyping",
-	"version": "1.4.0",
+	"version": "1.4.1",
 	"author": "Strencher",
 	"authorId": "415849376598982656",
 	"description": "Enhanced version of silent typing.",
@@ -8,12 +8,13 @@
 	"invite": "gvA2ree",
 	"changelog": [
 		{
-			"title": "Added Developer API",
-			"type": "added",
+			"title": "Improved Button Placement",
+			"type": "improved",
 			"items": [
-				"Added `getState` and `setState` methods to the plugin for other plugins to use"
+				"Updated the button to be in the correct button group",
+				"Thanks to nicola02nb for the contribution"
 			]
 		}
 	],
-	"changelogDate": "2025-06-05"
+	"changelogDate": "2025-06-17"
 }

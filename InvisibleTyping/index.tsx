@@ -1,5 +1,5 @@
 import React from "react";
-import { Logger, Patcher, Utils, Webpack } from "@api";
+import { Patcher, Webpack } from "@api";
 import manifest from "@manifest";
 import Styles from "@styles";
 
@@ -51,19 +51,12 @@ export default class InvisibleTyping {
     }
 
     patchChannelTextArea() {
-        const ChannelTextArea = Webpack.getModule(m => m?.type?.render?.toString?.()?.includes?.("CHANNEL_TEXT_AREA"))
+        const ChatButtonsGroup = Webpack.getBySource("\"ChannelTextAreaButtons\"").Z;
 
-        Patcher.after(ChannelTextArea.type, "render", (_, __, res) => {
-            const isProfilePopout = Utils.findInTree(res, e => Array.isArray(e?.value) && e.value.some(v => v === "bite size profile popout"), { walkable: ["children", "props"] });
-            if (isProfilePopout) return;
-
-            const chatBar = Utils.findInTree(res, e => Array.isArray(e?.children) && e.children.some(c => c?.props?.className?.startsWith("attachButton")), { walkable: ["children", "props"] });
-            if (!chatBar) return Logger.error("Failed to find ChatBar");
-
-            const textAreaState = Utils.findInTree(chatBar, e => e?.props?.channel, { walkable: ["children"] });
-            if (!textAreaState) return Logger.error("Failed to find textAreaState");
-
-            chatBar.children.splice(-1, 0, <InvisibleTypingButton channel={textAreaState?.props?.channel} isEmpty={!Boolean(textAreaState?.props?.editorTextContent)} />);
+        Patcher.after(ChatButtonsGroup, "type", (_, args, res) => {
+            if (args.length == 2 && res.props.children && Array.isArray(res.props.children) ) {
+                res.props.children.unshift(<InvisibleTypingButton channel={args[0].channel} isEmpty={!Boolean(args[0].textValue)} />);
+            }
         });
     }
 
