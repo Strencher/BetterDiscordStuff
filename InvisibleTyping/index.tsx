@@ -1,5 +1,5 @@
 import React from "react";
-import { Logger, Patcher, Webpack } from "@api";
+import { Patcher, Webpack } from "@api";
 import manifest from "@manifest";
 import Styles from "@styles";
 
@@ -54,7 +54,7 @@ export default class InvisibleTyping {
         const ChatButtonsGroup = Webpack.getBySource("\"ChannelTextAreaButtons\"").Z;
 
         Patcher.after(ChatButtonsGroup, "type", (_, args, res) => {
-            if (args.length == 2 &&res.props.children && Array.isArray(res.props.children) ) {
+            if (args.length == 2 && res.props.children && Array.isArray(res.props.children) ) {
                 res.props.children.unshift(<InvisibleTypingButton channel={args[0].channel} isEmpty={!Boolean(args[0].textValue)} />);
             }
         });

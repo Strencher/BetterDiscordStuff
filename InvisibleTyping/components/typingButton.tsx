@@ -1,5 +1,5 @@
 import React from "react";
-import { ContextMenu, UI, Webpack } from "@api";
+import { Components, ContextMenu, UI, Webpack } from "@api";
 
 import Keyboard from "./icons/keyboard";
 import styles from "./typingButton.scss";
@@ -49,14 +49,6 @@ function InvisibleTypingContextMenu() {
 export default function InvisibleTypingButton({ channel, isEmpty }) {
     const enabled = useStateFromStores([Settings], InvisibleTypingButton.getState.bind(this, channel.id));
 
-    const handleMouseEvent = React.useCallback((e: MouseEvent) => {
-        if (!e.shiftKey) {
-            handleClick();
-        } else{ // If shift is pressed, open context menu
-            handleContextMenu(e);
-        }
-    }, [enabled]);
-
     const handleClick = React.useCallback(() => {
         const excludeList = [...Settings.get<string[]>("exclude", [])];
 
@@ -78,16 +70,26 @@ export default function InvisibleTypingButton({ channel, isEmpty }) {
     }, [enabled]);
 
     return (
-        <ChatButton onClick={handleMouseEvent} aria-label={enabled ? "Typing Enabled" : "Typing Disabled"}
-         className={
-                            buildClassName(styles.invisibleTypingButton, {
-                                enabled,
-                                disabled: !enabled
-                            })
+        <Components.Tooltip text={enabled ? "Typing Enabled" : "Typing Disabled"}>
+            {props => (
+                <div
+                    {...props}
+                    onClick={handleClick}
+                    onContextMenu={handleContextMenu}
+                >
+                    <ChatButton
+                        className={
+                            buildClassName(
+                                styles.invisibleTypingButton,
+                                { enabled, disabled: !enabled }
+                            )
+                        }>
+                        <Keyboard disabled={!enabled} />
+                    </ChatButton>
+                </div>
 
-                        }   >
-            <Keyboard disabled={!enabled}/>
-        </ChatButton>
+            )}
+        </Components.Tooltip>
     );
 }
 
