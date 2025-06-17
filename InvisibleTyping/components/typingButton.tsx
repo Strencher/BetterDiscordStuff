@@ -1,5 +1,5 @@
 import React from "react";
-import { Components, ContextMenu, UI, Webpack } from "@api";
+import { ContextMenu, UI, Webpack } from "@api";
 
 import Keyboard from "./icons/keyboard";
 import styles from "./typingButton.scss";
@@ -7,7 +7,7 @@ import styles from "./typingButton.scss";
 import Settings from "../modules/settings";
 import { buildClassName, TypingModule, useStateFromStores } from "../modules/shared";
 
-const ChatBarClasses = Webpack.getByKeys("channelTextArea", "button");
+const ChatButton = Webpack.getBySource("CHAT_INPUT_BUTTON_NOTIFICATION").Z;
 
 const removeItem = function (array: any[], item: any) {
     while (array.includes(item)) {
@@ -42,13 +42,20 @@ function InvisibleTypingContextMenu() {
                     UI.showToast("Successfully reset config for all channels.", { type: "success" });
                 }}
             />
-
         </ContextMenu.Menu>
     );
 }
 
 export default function InvisibleTypingButton({ channel, isEmpty }) {
     const enabled = useStateFromStores([Settings], InvisibleTypingButton.getState.bind(this, channel.id));
+
+    const handleMouseEvent = React.useCallback((e: MouseEvent) => {
+        if (!e.shiftKey) {
+            handleClick();
+        } else{ // If shift is pressed, open context menu
+            handleContextMenu(e);
+        }
+    }, [enabled]);
 
     const handleClick = React.useCallback(() => {
         const excludeList = [...Settings.get<string[]>("exclude", [])];
@@ -71,29 +78,16 @@ export default function InvisibleTypingButton({ channel, isEmpty }) {
     }, [enabled]);
 
     return (
-        <div
-            style={{ marginRight: "2.5px" }}
-            className={ChatBarClasses.buttons}
-        >
-            <Components.Tooltip text={enabled ? "Typing Enabled" : "Typing Disabled"}>
-                {props => (
-                    <button
-                        {...props}
-                        className={
+        <ChatButton onClick={handleMouseEvent} aria-label={enabled ? "Typing Enabled" : "Typing Disabled"}
+         className={
                             buildClassName(styles.invisibleTypingButton, {
                                 enabled,
                                 disabled: !enabled
                             })
 
-                        }
-                        onClick={handleClick}
-                        onContextMenu={handleContextMenu}
-                    >
-                        <Keyboard disabled={!enabled} />
-                    </button>
-                )}
-            </Components.Tooltip>
-        </div>
+                        }   >
+            <Keyboard disabled={!enabled}/>
+        </ChatButton>
     );
 }
 
