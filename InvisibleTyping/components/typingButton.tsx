@@ -76,6 +76,7 @@ export default function InvisibleTypingButton({ channel, isEmpty }) {
                     {...props}
                     onClick={handleClick}
                     onContextMenu={handleContextMenu}
+                    style={{ padding: "5px" }}
                 >
                     <ChatButton
                         className={
