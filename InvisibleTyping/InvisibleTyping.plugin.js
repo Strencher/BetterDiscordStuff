@@ -309,7 +309,10 @@ function InvisibleTypingButton({
         "div", {
             ...props,
             onClick: handleClick,
-            onContextMenu: handleContextMenu
+            onContextMenu: handleContextMenu,
+            style: {
+                padding: "5px"
+            }
         },
         React.createElement(
             ChatButton, {
