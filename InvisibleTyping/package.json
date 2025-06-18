@@ -1,12 +1,19 @@
 {
 	"name": "InvisibleTyping",
-	"version": "1.4.1",
+	"version": "1.4.2",
 	"author": "Strencher",
 	"authorId": "415849376598982656",
 	"description": "Enhanced version of silent typing.",
 	"source": "https://github.com/Strencher/BetterDiscordStuff/blob/master/InvisibleTyping/InvisibleTyping.plugin.js",
 	"invite": "gvA2ree",
 	"changelog": [
+		{
+			"title": "Whoops",
+			"type": "fixed",
+			"items": [
+				"Only show button in the Chatbar"
+			]
+		},
 		{
 			"title": "Improved Button Placement",
 			"type": "improved",
@@ -16,5 +23,5 @@
 			]
 		}
 	],
-	"changelogDate": "2025-06-17"
+	"changelogDate": "2025-06-19"
 }
