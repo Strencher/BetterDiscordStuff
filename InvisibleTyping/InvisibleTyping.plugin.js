@@ -1,12 +1,12 @@
 /**
  * @name InvisibleTyping
- * @version 1.4.1
+ * @version 1.4.2
  * @author Strencher
  * @authorId 415849376598982656
  * @description Enhanced version of silent typing.
  * @source https://github.com/Strencher/BetterDiscordStuff/blob/master/InvisibleTyping/InvisibleTyping.plugin.js
  * @invite gvA2ree
- * @changelogDate 2025-06-17
+ * @changelogDate 2025-06-19
  */
 
 'use strict';
@@ -17,21 +17,29 @@ const React = BdApi.React;
 /* @manifest */
 var manifest = {
     "name": "InvisibleTyping",
-    "version": "1.4.1",
+    "version": "1.4.2",
     "author": "Strencher",
     "authorId": "415849376598982656",
     "description": "Enhanced version of silent typing.",
     "source": "https://github.com/Strencher/BetterDiscordStuff/blob/master/InvisibleTyping/InvisibleTyping.plugin.js",
     "invite": "gvA2ree",
     "changelog": [{
-        "title": "Improved Button Placement",
-        "type": "improved",
-        "items": [
-            "Updated the button to be in the correct button group",
-            "Thanks to nicola02nb for the contribution"
-        ]
-    }],
-    "changelogDate": "2025-06-17"
+            "title": "Whoops",
+            "type": "fixed",
+            "items": [
+                "Only show button in the Chatbar"
+            ]
+        },
+        {
+            "title": "Improved Button Placement",
+            "type": "improved",
+            "items": [
+                "Updated the button to be in the correct button group",
+                "Thanks to nicola02nb for the contribution"
+            ]
+        }
+    ],
+    "changelogDate": "2025-06-19"
 };
 
 /* @api */
@@ -425,7 +433,7 @@ class InvisibleTyping {
     patchChannelTextArea() {
         const ChatButtonsGroup = Webpack.getBySource('"ChannelTextAreaButtons"').Z;
         Patcher.after(ChatButtonsGroup, "type", (_, args, res) => {
-            if (args.length == 2 && !args[0].disabled && res.props.children && Array.isArray(res.props.children)) {
+            if (args.length == 2 && !args[0].disabled && args[0].type.analyticsName == "normal" && res.props.children && Array.isArray(res.props.children)) {
                 res.props.children.unshift(React.createElement(InvisibleTypingButton, {
                     channel: args[0].channel,
                     isEmpty: !Boolean(args[0].textValue)
