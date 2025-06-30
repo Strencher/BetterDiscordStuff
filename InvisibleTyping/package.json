@@ -1,6 +1,6 @@
 {
 	"name": "InvisibleTyping",
-	"version": "1.4.2",
+	"version": "1.4.3",
 	"author": "Strencher",
 	"authorId": "415849376598982656",
 	"description": "Enhanced version of silent typing.",
@@ -8,20 +8,13 @@
 	"invite": "gvA2ree",
 	"changelog": [
 		{
-			"title": "Whoops",
+			"title": "It works again!",
 			"type": "fixed",
 			"items": [
-				"Only show button in the Chatbar"
-			]
-		},
-		{
-			"title": "Improved Button Placement",
-			"type": "improved",
-			"items": [
-				"Updated the button to be in the correct button group",
-				"Thanks to nicola02nb for the contribution"
+				"Fixed for the latest Discord update",
+				"Thanks to nicola02nb for the fix"
 			]
 		}
 	],
-	"changelogDate": "2025-06-19"
+	"changelogDate": "2025-06-30"
 }

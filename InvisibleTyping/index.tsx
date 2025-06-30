@@ -51,7 +51,7 @@ export default class InvisibleTyping {
     }
 
     patchChannelTextArea() {
-        const ChatButtonsGroup = Webpack.getBySource("\"ChannelTextAreaButtons\"").Z;
+        const ChatButtonsGroup = Webpack.getBySource("type","channel","showAllButtons")?.Z;
 
         Patcher.after(ChatButtonsGroup, "type", (_, args, res) => {
             if (args.length == 2 && !args[0].disabled && args[0].type.analyticsName == "normal" && res.props.children && Array.isArray(res.props.children)) {
