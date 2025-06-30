@@ -7,7 +7,7 @@ import styles from "./typingButton.scss";
 import Settings from "../modules/settings";
 import { buildClassName, TypingModule, useStateFromStores } from "../modules/shared";
 
-const ChatButton = Webpack.getBySource("CHAT_INPUT_BUTTON_NOTIFICATION").Z;
+const ChatButton = Webpack.getBySource("CHAT_INPUT_BUTTON_NOTIFICATION")?.Z;
 
 const removeItem = function (array: any[], item: any) {
     while (array.includes(item)) {
