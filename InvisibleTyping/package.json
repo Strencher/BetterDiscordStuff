@@ -1,6 +1,6 @@
 {
 	"name": "InvisibleTyping",
-	"version": "1.4.3",
+	"version": "1.4.4",
 	"author": "Strencher",
 	"authorId": "415849376598982656",
 	"description": "Enhanced version of silent typing.",
@@ -11,10 +11,9 @@
 			"title": "It works again!",
 			"type": "fixed",
 			"items": [
-				"Fixed for the latest Discord update",
-				"Thanks to nicola02nb for the fix"
+				"Fixed for the latest Discord update"
 			]
 		}
 	],
-	"changelogDate": "2025-06-30"
+	"changelogDate": "2025-08-02"
 }
