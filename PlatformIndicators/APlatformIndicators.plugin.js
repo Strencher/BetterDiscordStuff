@@ -1,12 +1,12 @@
 /**
  * @name APlatformIndicators
- * @version 1.5.17
+ * @version 1.5.18
  * @author Strencher
  * @authorId 415849376598982656
  * @description Adds indicators for every platform that the user is using.
  * @source https://github.com/Strencher/BetterDiscordStuff/blob/master/PlatformIndicators/APlatformIndicators.plugin.js
  * @invite gvA2ree
- * @changelogDate 2025-04-27
+ * @changelogDate 2025-09-28
  */
 
 'use strict';
@@ -17,7 +17,7 @@ const React = BdApi.React;
 /* @manifest */
 var manifest = {
     "name": "APlatformIndicators",
-    "version": "1.5.17",
+    "version": "1.5.18",
     "author": "Strencher",
     "authorId": "415849376598982656",
     "description": "Adds indicators for every platform that the user is using.",
@@ -27,10 +27,10 @@ var manifest = {
         "title": "Fixed",
         "type": "fixed",
         "items": [
-            "Fix Badges"
+            "Fix console spamming"
         ]
     }],
-    "changelogDate": "2025-04-27"
+    "changelogDate": "2025-09-28"
 };
 
 /* @api */
@@ -263,9 +263,7 @@ const LocalActivityStore = Webpack.getStore("LocalActivityStore");
 const SessionsStore = Webpack.getStore("SessionsStore");
 const UserStore = Webpack.getStore("UserStore");
 const PresenceStore = Webpack.getStore("PresenceStore");
-const {
-    useSyncExternalStore: useStateFromStoresObject
-} = Webpack.getByKeys("useSyncExternalStore");
+Webpack.getByKeys("useSyncExternalStore");
 const useStateFromStores = Webpack.getByStrings("useStateFromStores", {
     searchExports: true
 });
@@ -660,7 +658,7 @@ class PlatformIndicators {
     }
     patchDMList() {
         const UserContext = React.createContext(null);
-        const [ChannelWrapper, Key_CW] = Webpack.getWithKey(Webpack.Filters.byStrings("isGDMFacepileEnabled"));
+        const ChannelWrapper = Webpack.getBySource("isGDMFacepileEnabled");
         const [NameWrapper, Key_NW] = Webpack.getWithKey((x) => x.toString().includes(".nameAndDecorators") && !x.toString().includes('"listitem"'));
         const ChannelClasses = Webpack.getByKeys("channel", "decorator");
         Patcher.after(ChannelWrapper, "ZP", (_, __, res) => {
@@ -701,11 +699,11 @@ class PlatformIndicators {
         const MemberListClasses = Webpack.getByKeys("member", "memberInner");
         Patcher.after(MemberItem, key, (_, [props], ret) => {
             if (!Settings.get("showInMemberList", true)) return;
-            if (Settings.get("ignoreBots", true) && props.user.bot) return;
+            if (Settings.get("ignoreBots", true) && props?.user.bot) return;
             const children = ret.props.children();
-            const usr = findInReactTree(children, (e) => e?.avatar && e?.name);
+            const user = findInReactTree(children, (e) => e?.avatar && e?.name);
             let childs = children?.props?.name?.props?.children;
-            if (usr && childs) {
+            if (user && childs) {
                 children.props.name.props.children = [
                     childs,
                     React.createElement(
