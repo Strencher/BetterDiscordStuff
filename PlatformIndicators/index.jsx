@@ -27,7 +27,7 @@ export default class PlatformIndicators {
 
     patchDMList() {
         const UserContext = React.createContext(null);
-        const [ChannelWrapper, Key_CW] = Webpack.getWithKey(Webpack.Filters.byStrings("isGDMFacepileEnabled"));
+        const ChannelWrapper = Webpack.getBySource("isGDMFacepileEnabled");
         const [NameWrapper, Key_NW] = Webpack.getWithKey(x => x.toString().includes(".nameAndDecorators") && !x.toString().includes('"listitem"'));
         const ChannelClasses = Webpack.getByKeys("channel", "decorator");
 
@@ -75,11 +75,11 @@ export default class PlatformIndicators {
 
         Patcher.after(MemberItem, key, (_, [props], ret) => {
             if (!Settings.get("showInMemberList", true)) return;
-            if (Settings.get("ignoreBots", true) && props.user.bot) return;
+            if (Settings.get("ignoreBots", true) && props?.user.bot) return;
             const children = ret.props.children();
-            const usr = findInReactTree(children, e => e?.avatar && e?.name);
+            const user = findInReactTree(children, e => e?.avatar && e?.name);
             let childs = children?.props?.name?.props?.children;
-            if (usr && childs) {
+            if (user && childs) {
                 children.props.name.props.children = [
                     childs,
                     <StatusIndicators
@@ -88,7 +88,6 @@ export default class PlatformIndicators {
                     />
                 ];
             }
-            // discord made it a method to return the children :(
             ret.props.children = () => children;
         });
 
