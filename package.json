@@ -3,16 +3,15 @@
     "build": "node scripts/build.js"
   },
   "devDependencies": {
-    "@rollup/plugin-commonjs": "^28.0.2",
+    "@rollup/plugin-commonjs": "^28.0.9",
     "@rollup/plugin-json": "^6.1.0",
     "@rollup/plugin-node-resolve": "^15.3.1",
-    "@types/react": "^18.3.18",
     "@vencord/discord-types": "^1.0.0",
     "cssom": "^0.5.0",
     "esbuild": "^0.21.5",
-    "js-beautify": "^1.15.1",
-    "rollup": "^4.30.1",
-    "rollup-plugin-esbuild": "^6.1.1",
-    "sass": "^1.83.4"
+    "js-beautify": "^1.15.4",
+    "rollup": "^4.53.2",
+    "rollup-plugin-esbuild": "^6.2.1",
+    "sass": "^1.94.0"
   }
 }
