@@ -1,6 +1,6 @@
 {
   "name": "APlatformIndicators",
-  "version": "1.5.18",
+  "version": "1.5.19",
   "author": "Strencher",
   "authorId": "415849376598982656",
   "description": "Adds indicators for every platform that the user is using.",
@@ -11,9 +11,16 @@
       "title": "Fixed",
       "type": "fixed",
       "items": [
-        "Fix console spamming"
+        "Indicators show in DMs again"
+      ]
+    },
+    {
+      "title": "Known Issues",
+      "type": "changed",
+      "items": [
+        "Sometimes indicators may not show up. If thats the case, open the Users profile. That loads the needed data."
       ]
     }
   ],
-  "changelogDate": "2025-09-28"
+  "changelogDate": "2025-11-14"
 }

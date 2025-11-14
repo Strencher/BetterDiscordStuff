@@ -27,7 +27,7 @@ export default class PlatformIndicators {
 
     patchDMList() {
         const UserContext = React.createContext(null);
-        const ChannelWrapper = Webpack.getBySource("isGDMFacepileEnabled");
+        const ChannelWrapper = Webpack.getBySource("activities", "isMultiUserDM", "isMobile");
         const [NameWrapper, Key_NW] = Webpack.getWithKey(x => x.toString().includes(".nameAndDecorators") && !x.toString().includes('"listitem"'));
         const ChannelClasses = Webpack.getByKeys("channel", "decorator");
 
@@ -74,6 +74,7 @@ export default class PlatformIndicators {
         const MemberListClasses = Webpack.getByKeys("member", "memberInner");
 
         Patcher.after(MemberItem, key, (_, [props], ret) => {
+            if (ret?.props?.className?.includes("placeholder")) return;
             if (!Settings.get("showInMemberList", true)) return;
             if (Settings.get("ignoreBots", true) && props?.user.bot) return;
             const children = ret.props.children();

@@ -9,9 +9,9 @@ export default function usePlatformStores(userId, type) {
 
     const iconStates = Settings.get("icons", {});
     const shownInArea = Settings.get("showIn" + type, true);
-    const isBot = Settings.get("ignoreBots", true) && (user?.bot ?? false);
+    const ignoreBots = Settings.get("ignoreBots", true) && (user?.bot ?? false);
 
-    const shouldShow = shownInArea && !isBot;
+    const shouldShow = shownInArea && !ignoreBots;
 
     const clients = (() => {
         if (user?.id === UserStore.getCurrentUser()?.id) {
