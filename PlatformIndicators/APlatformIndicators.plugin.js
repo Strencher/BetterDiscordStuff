@@ -1,12 +1,12 @@
 /**
  * @name APlatformIndicators
- * @version 1.5.18
+ * @version 1.5.19
  * @author Strencher
  * @authorId 415849376598982656
  * @description Adds indicators for every platform that the user is using.
  * @source https://github.com/Strencher/BetterDiscordStuff/blob/master/PlatformIndicators/APlatformIndicators.plugin.js
  * @invite gvA2ree
- * @changelogDate 2025-09-28
+ * @changelogDate 2025-11-14
  */
 
 'use strict';
@@ -17,20 +17,28 @@ const React = BdApi.React;
 /* @manifest */
 var manifest = {
     "name": "APlatformIndicators",
-    "version": "1.5.18",
+    "version": "1.5.19",
     "author": "Strencher",
     "authorId": "415849376598982656",
     "description": "Adds indicators for every platform that the user is using.",
     "source": "https://github.com/Strencher/BetterDiscordStuff/blob/master/PlatformIndicators/APlatformIndicators.plugin.js",
     "invite": "gvA2ree",
     "changelog": [{
-        "title": "Fixed",
-        "type": "fixed",
-        "items": [
-            "Fix console spamming"
-        ]
-    }],
-    "changelogDate": "2025-09-28"
+            "title": "Fixed",
+            "type": "fixed",
+            "items": [
+                "Indicators show in DMs again"
+            ]
+        },
+        {
+            "title": "Known Issues",
+            "type": "changed",
+            "items": [
+                "Sometimes indicators may not show up. If thats the case, open the Users profile. That loads the needed data."
+            ]
+        }
+    ],
+    "changelogDate": "2025-11-14"
 };
 
 /* @api */
@@ -263,7 +271,9 @@ const LocalActivityStore = Webpack.getStore("LocalActivityStore");
 const SessionsStore = Webpack.getStore("SessionsStore");
 const UserStore = Webpack.getStore("UserStore");
 const PresenceStore = Webpack.getStore("PresenceStore");
-Webpack.getByKeys("useSyncExternalStore");
+const {
+    useSyncExternalStore: useStateFromStoresObject
+} = Webpack.getByKeys("useSyncExternalStore");
 const useStateFromStores = Webpack.getByStrings("useStateFromStores", {
     searchExports: true
 });
@@ -321,8 +331,8 @@ function usePlatformStores(userId, type) {
     const user = UserStore.getUser(userId);
     const iconStates = Settings.get("icons", {});
     const shownInArea = Settings.get("showIn" + type, true);
-    const isBot = Settings.get("ignoreBots", true) && (user?.bot ?? false);
-    const shouldShow = shownInArea && !isBot;
+    const ignoreBots = Settings.get("ignoreBots", true) && (user?.bot ?? false);
+    const shouldShow = shownInArea && !ignoreBots;
     const clients = (() => {
         if (user?.id === UserStore.getCurrentUser()?.id) {
             const sessions = SessionsStore.getSessions();
@@ -658,7 +668,7 @@ class PlatformIndicators {
     }
     patchDMList() {
         const UserContext = React.createContext(null);
-        const ChannelWrapper = Webpack.getBySource("isGDMFacepileEnabled");
+        const ChannelWrapper = Webpack.getBySource("activities", "isMultiUserDM", "isMobile");
         const [NameWrapper, Key_NW] = Webpack.getWithKey((x) => x.toString().includes(".nameAndDecorators") && !x.toString().includes('"listitem"'));
         const ChannelClasses = Webpack.getByKeys("channel", "decorator");
         Patcher.after(ChannelWrapper, "ZP", (_, __, res) => {
@@ -698,6 +708,7 @@ class PlatformIndicators {
         const [MemberItem, key] = Webpack.getWithKey(Webpack.Filters.byStrings('location:"MemberListItem"'));
         const MemberListClasses = Webpack.getByKeys("member", "memberInner");
         Patcher.after(MemberItem, key, (_, [props], ret) => {
+            if (ret?.props?.className?.includes("placeholder")) return;
             if (!Settings.get("showInMemberList", true)) return;
             if (Settings.get("ignoreBots", true) && props?.user.bot) return;
             const children = ret.props.children();
