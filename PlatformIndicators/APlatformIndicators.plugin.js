@@ -1,12 +1,12 @@
 /**
  * @name APlatformIndicators
- * @version 1.5.19
+ * @version 1.5.20
  * @author Strencher
  * @authorId 415849376598982656
  * @description Adds indicators for every platform that the user is using.
  * @source https://github.com/Strencher/BetterDiscordStuff/blob/master/PlatformIndicators/APlatformIndicators.plugin.js
  * @invite gvA2ree
- * @changelogDate 2025-11-14
+ * @changelogDate 2025-12-02
  */
 
 'use strict';
@@ -17,28 +17,20 @@ const React = BdApi.React;
 /* @manifest */
 var manifest = {
     "name": "APlatformIndicators",
-    "version": "1.5.19",
+    "version": "1.5.20",
     "author": "Strencher",
     "authorId": "415849376598982656",
     "description": "Adds indicators for every platform that the user is using.",
     "source": "https://github.com/Strencher/BetterDiscordStuff/blob/master/PlatformIndicators/APlatformIndicators.plugin.js",
     "invite": "gvA2ree",
     "changelog": [{
-            "title": "Fixed",
-            "type": "fixed",
-            "items": [
-                "Indicators show in DMs again"
-            ]
-        },
-        {
-            "title": "Known Issues",
-            "type": "changed",
-            "items": [
-                "Sometimes indicators may not show up. If thats the case, open the Users profile. That loads the needed data."
-            ]
-        }
-    ],
-    "changelogDate": "2025-11-14"
+        "title": "Fixed",
+        "type": "fixed",
+        "items": [
+            "Fixed crashing"
+        ]
+    }],
+    "changelogDate": "2025-12-02"
 };
 
 /* @api */
@@ -282,7 +274,7 @@ const Flux = Webpack.getByKeys("Store");
 const StatusTypes = Webpack.getModule((x) => x.DND && x.OFFLINE, {
     searchExports: true
 });
-const Colors = Webpack.getByKeys("RED_400");
+const Colors = Webpack.getByKeys("unsafe_rawColors")?.unsafe_rawColors;
 const Messages = {
     "STATUS_DND": "Do Not Disturb",
     "STATUS_OFFLINE": "Offline",
