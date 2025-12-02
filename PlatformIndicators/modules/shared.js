@@ -13,7 +13,7 @@ export const Dispatcher = UserStore._dispatcher;
 
 export const Flux = Webpack.getByKeys("Store");
 export const StatusTypes = Webpack.getModule(x => x.DND && x.OFFLINE, { searchExports: true })
-export const Colors = Webpack.getByKeys("RED_400");
+export const Colors = Webpack.getByKeys("unsafe_rawColors")?.unsafe_rawColors;
 
 export const Messages = { "STATUS_DND": "Do Not Disturb", "STATUS_OFFLINE": "Offline", "STATUS_ONLINE": "Online", "STATUS_STEAMING": "Streaming", "STATUS_IDLE": "Idle", "STATUS_MOBILE": "Mobile" };
 export const buildClassName = (...args) => { // yeah, yk... I couldnt find a working string for this so I just remade it ;-;
