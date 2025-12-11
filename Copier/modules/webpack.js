@@ -3,7 +3,7 @@ import * as Api from "@api";
 const {Webpack, Webpack: {Filters}} = Api;
 
 export const getByProps = (...props) => {
-    return Webpack.getModule(Filters.byProps(...props));
+    return Webpack.getModule((m) => m && props.every((p) => m[p] !== undefined), { searchExports: true });
 };
 
 export const getBulk = (...queries) => {
@@ -11,7 +11,7 @@ export const getBulk = (...queries) => {
 };
 
 export const getByPrototypeFields = (...fields) => {
-    return Webpack.getModule(Filters.byPrototypeFields(...fields));
+    return Webpack.getModule((m) => m?.prototype && fields.every((f) => m.prototype[f] !== undefined), { searchExports: true });
 };
 
 export const getStore = name => {

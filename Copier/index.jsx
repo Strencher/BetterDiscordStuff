@@ -65,6 +65,7 @@ export default class Copier {
 
     patchAboutMe() {
         const [module, key] = Webpack.getMangled(m => m?.toString?.().includes("USER_POPOUT_ABOUT_ME"));
+        if (!module || !key) return;
 
         const CopyButton = React.memo(({onClick}) => (
             <Tooltip text="Copy About Me" tooltipClassName="copier-tooltip" position="top">
