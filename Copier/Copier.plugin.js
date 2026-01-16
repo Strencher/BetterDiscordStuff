@@ -1,75 +1,378 @@
 /**
  * @name Copier
- * @version 1.6.1
- * @description Allows you to copy certain stuff with custom options.
- * @github https://github.com/Strencher/BetterDiscordStuff/blob/master/Copier/Copier.plugin.js
- * @github_raw https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/Copier/Copier.plugin.js
- * @changelogImage https://cdn.discordapp.com/attachments/672786846018961418/1053059354552696932/20th-century-fox-intro.png
- * @changelogDate 2023-02-11T17:25:37.796Z
+ * @version 1.6.2
  * @author Strencher
+ * @authorId 415849376598982656
+ * @description Allows you to copy certain stuff with custom options.
+ * @source https://github.com/Strencher/BetterDiscordStuff/blob/master/Copier/Copier.plugin.js
+ * @invite gvA2ree
+ * @changelogDate 2026-01-16
  */
 
 'use strict';
 
-/* @module @manifest */
-const config = {
+/* @manifest */
+const manifest = {
     "name": "Copier",
-    "authors": [{
-        "name": "Strencher",
-        "discord_id": "415849376598982656",
-        "github_username": "Strencher",
-        "twitter_username": "Strencher3"
-    }],
-    "version": "1.6.1",
+    "version": "1.6.2",
+    "author": "Strencher",
+    "authorId": "415849376598982656",
     "description": "Allows you to copy certain stuff with custom options.",
-    "github": "https://github.com/Strencher/BetterDiscordStuff/blob/master/Copier/Copier.plugin.js",
-    "github_raw": "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/Copier/Copier.plugin.js",
-    "changelogImage": "https://cdn.discordapp.com/attachments/672786846018961418/1053059354552696932/20th-century-fox-intro.png",
-    "changelogDate": "2023-02-11T17:25:37.796Z",
+    "source": "https://github.com/Strencher/BetterDiscordStuff/blob/master/Copier/Copier.plugin.js",
+    "invite": "gvA2ree",
     "changelog": [{
         "type": "fixed",
         "title": "Bug Fixes",
         "items": [
             "The plugin has returned."
         ]
-    }]
+    }],
+    "changelogDate": "2026-01-16"
 };
 
-/*@end */
-
-/* @module @api */
+/* @api */
 const {
-    Net,
-    Data,
-    Patcher,
-    ReactUtils,
-    Utils,
-    Webpack: Webpack$2,
-    UI,
+    Components,
     ContextMenu,
-    DOM
-} = new BdApi(config.name);
-/*@end */
+    Data,
+    DOM,
+    Logger,
+    Net,
+    Patcher,
+    Plugins,
+    ReactUtils,
+    Themes,
+    UI,
+    Utils,
+    Webpack: Webpack$2
+} = new BdApi(manifest.name);
 
 var Api = /*#__PURE__*/ Object.freeze({
     __proto__: null,
+    Components: Components,
     ContextMenu: ContextMenu,
     DOM: DOM,
     Data: Data,
+    Logger: Logger,
     Net: Net,
     Patcher: Patcher,
+    Plugins: Plugins,
     ReactUtils: ReactUtils,
+    Themes: Themes,
     UI: UI,
     Utils: Utils,
     Webpack: Webpack$2
 });
 
-/* @module react */
-var React = BdApi.React;
-/*@end */
+/* @styles */
 
-/* @module utils.js */
-function copy(text) {
+var Styles = {
+    sheets: [],
+    _element: null,
+    load() {
+        DOM.addStyle(this.sheets.join("\n"));
+    },
+    unload() {
+        DOM.removeStyle();
+    }
+};
+
+/* button.css */
+Styles.sheets.push("/* button.css */", `.copier-button {
+    background: transparent;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    color: #0870f3;
+}
+
+.copier-tooltip {
+    --background-floating: var(--background-secondary);
+}
+`);
+
+/* changelog.css */
+Styles.sheets.push("/* changelog.css */", `.copier-changelog-item {
+    color: #ddd;
+}
+
+.copier-changelog-header {
+    text-transform: uppercase;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.item-changelog-added .copier-changelog-header {
+    color: #45BA6A;
+}
+.item-changelog-fixed .copier-changelog-header {
+    color: #EC4245;
+}
+.item-changelog-improved .copier-changelog-header {
+    color: #5865F2;
+}
+
+.copier-changelog-header::after {
+    content: "";
+    flex-grow: 1;
+    height: 1px;
+    background: currentColor;
+    margin-left: 7px;
+}
+
+.copier-changelog-item span {
+    display: list-item;
+    margin-left: 5px;
+    list-style: inside;
+}
+
+.copier-changelog-item span::marker {
+    color: var(--background-accent);
+}
+.copier-changelog-banner {
+    width: 405px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.copier-title-wrap {
+    font-size: 18px;
+}
+
+.copier-title-wrap span {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-family: var(--font-primary);
+}
+`);
+
+/* react */
+var React = BdApi.React;
+
+/* ../common/Changelog/style.scss */
+Styles.sheets.push("/* ../common/Changelog/style.scss */", `.Changelog-Title-Wrapper {
+  font-size: 20px;
+  font-weight: 600;
+  font-family: var(--font-display);
+  color: var(--header-primary);
+  line-height: 1.2;
+}
+.Changelog-Title-Wrapper div {
+  font-size: 12px;
+  font-weight: 400;
+  font-family: var(--font-primary);
+  color: var(--primary-300);
+  line-height: 1.3333333333;
+}
+
+.Changelog-Banner {
+  width: 405px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.Changelog-Item {
+  color: #c4c9ce;
+}
+.Changelog-Item .Changelog-Header {
+  display: flex;
+  text-transform: uppercase;
+  font-weight: 700;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.Changelog-Item .Changelog-Header.added {
+  color: #45BA6A;
+}
+.Changelog-Item .Changelog-Header.changed {
+  color: #F0B232;
+}
+.Changelog-Item .Changelog-Header.fixed {
+  color: #EC4245;
+}
+.Changelog-Item .Changelog-Header.improved {
+  color: #5865F2;
+}
+.Changelog-Item .Changelog-Header::after {
+  content: "";
+  flex-grow: 1;
+  height: 1px;
+  margin-left: 7px;
+  background: currentColor;
+}
+.Changelog-Item span {
+  display: list-item;
+  list-style: inside;
+  margin-left: 5px;
+}
+.Changelog-Item span::marker {
+  color: var(--background-accent);
+}`);
+
+/* ../common/Changelog/index.tsx */
+function showChangelog(manifest) {
+    if (Data.load("lastVersion") === manifest.version) return;
+    const i18n = Webpack$2.getByKeys("getLocale");
+    const formatter = new Intl.DateTimeFormat(i18n.getLocale(), {
+        month: "long",
+        day: "numeric",
+        year: "numeric"
+    });
+    const title = React.createElement("div", {
+        className: "Changelog-Title-Wrapper"
+    }, React.createElement("h1", null, "What's New - ", manifest.name), React.createElement("div", null, formatter.format(new Date(manifest.changelogDate)), " - v", manifest.version));
+    const items = manifest.changelog.map((item) => React.createElement("div", {
+        className: "Changelog-Item"
+    }, React.createElement("h4", {
+        className: `Changelog-Header ${item.type}`
+    }, item.title), item.items.map((item2) => React.createElement("span", null, item2))));
+    "changelogImage" in manifest && items.unshift(
+        React.createElement("img", {
+            className: "Changelog-Banner",
+            src: manifest.changelogImage
+        })
+    );
+    UI.alert(title, items);
+    Data.save("lastVersion", manifest.version);
+}
+
+/* data/channeltypes.js */
+const ChannelTypes = {
+    0: "GUILD_TEXT",
+    1: "DM",
+    2: "GUILD_VOICE",
+    3: "GROUP_DM",
+    4: "GUILD_CATEGORY",
+    5: "GUILD_ANNOUNCEMENT",
+    6: "GUILD_STORE",
+    10: "ANNOUNCEMENT_THREAD",
+    11: "PUBLIC_THREAD",
+    12: "PRIVATE_THREAD",
+    13: "GUILD_STAGE_VOICE",
+    14: "GUILD_DIRECTORY",
+    15: "GUILD_FORUM",
+    1e4: "UNKNOWN",
+    ANNOUNCEMENT_THREAD: 10,
+    DM: 1,
+    GROUP_DM: 3,
+    GUILD_ANNOUNCEMENT: 5,
+    GUILD_CATEGORY: 4,
+    GUILD_DIRECTORY: 14,
+    GUILD_FORUM: 15,
+    GUILD_STAGE_VOICE: 13,
+    GUILD_STORE: 6,
+    GUILD_TEXT: 0,
+    GUILD_VOICE: 2,
+    PRIVATE_THREAD: 12,
+    PUBLIC_THREAD: 11,
+    UNKNOWN: 1e4
+};
+
+/* modules/formatter.js */
+class Formatter {
+    static formatString(string, options) {
+        for (const option in options) {
+            string = string.replace(new RegExp(`\\$${option}`, "g"), options[option]);
+        }
+        return string;
+    }
+    static formatDate(date) {
+        const formatter = new Intl.DateTimeFormat(document.documentElement.lang, {
+            dateStyle: "full",
+            timeStyle: "short"
+        });
+        return formatter.format(date);
+    }
+    static parseSnowFlake(id) {
+        return new Date(id / 4194304 + 14200704e5);
+    }
+    static formatChannelType(type) {
+        const string = ChannelTypes[type] ?? "";
+        return string.split("_").map((e) => e[0].toUpperCase() + e.slice(1)).join(" ");
+    }
+}
+
+/* modules/settings.js */
+const Settings$1 = {
+    _listeners: new Set(),
+    _settings: Object.assign({}, {
+        messageCustom: "`$author` **$timestamp**\n> $message",
+        channelCustom: "#$name in **$server**",
+        categoryCustom: "$name with $channelsCount channels",
+        voiceCustom: "**#$name** in **$server** with `$usersConnected` connected users.",
+        guildCustom: "**$name** with `$members`",
+        userCustom: "**$name** - Created at: `$creation`",
+        roleCustom: "**$name** - `$colorHEX`",
+        showButton: true
+    }, Data.load("settings")),
+    addReactChangeListener(listener) {
+        Settings$1._listeners.add(listener);
+    },
+    removeReactChangeListener(listener) {
+        Settings$1._listeners.delete(listener);
+    },
+    get(key, def) {
+        return Settings$1._settings[key] ?? def;
+    },
+    set(key, value) {
+        Settings$1._settings[key] = value;
+        Data.save("settings", Settings$1._settings);
+        this._listeners.forEach((l) => l());
+    }
+};
+
+/* modules/webpack.js */
+const {
+    Webpack,
+    Webpack: {
+        Filters
+    }
+} = Api;
+const getByProps = (...props) => {
+    return Webpack.getModule(Filters.byKeys(...props));
+};
+const getBulk = (...queries) => {
+    return Webpack.getBulk.apply(null, queries.map((q) => typeof q === "function" ? {
+        filter: q
+    } : q));
+};
+const getByPrototypeFields = (...fields) => {
+    return Webpack.getModule(Filters.byPrototypeFields(...fields));
+};
+const getStore = (name) => {
+    return Webpack.getModule((m) => m?._dispatchToken && m.getName?.() === name);
+};
+const getMangled = function*(filter, target = null) {
+    yield target = getModule((m) => Object.values(m).some(filter), {
+        searchExports: false
+    });
+    yield target && Object.keys(target).find((k) => filter(target[k]));
+};
+const getBySource = function(sources) {
+    const filters = Filters.combine(...sources.map((x) => Filters.bySource(x)));
+    return Webpack.getModule(filters);
+};
+const getModule = Webpack.getModule;
+var Webpack$1 = {
+    ...Webpack,
+    getByPrototypeFields,
+    getMangled,
+    getByProps,
+    getStore,
+    getBulk,
+    getBySource
+};
+const ChannelStore = getStore("ChannelStore");
+const GuildStore = getStore("GuildStore");
+const Tooltip = BdApi.Components.Tooltip;
+
+/* modules/utils.js */
+function copy$1(text) {
     DiscordNative.clipboard.copy(text);
 }
 
@@ -99,14 +402,11 @@ const onceAdded = (selector, callback, signal) => {
     const cancel = () => observer.disconnect();
     const observer = new MutationObserver((changes) => {
         for (const change of changes) {
-            if (!change.addedNodes.length)
-                continue;
+            if (!change.addedNodes.length) continue;
             for (const node of change.addedNodes) {
-                if (node.nodeType === Node.TEXT_NODE)
-                    continue;
+                if (node.nodeType === Node.TEXT_NODE) continue;
                 const match = node.matches(selector) && node || node.querySelector(selector);
-                if (!match)
-                    continue;
+                if (!match) continue;
                 cancel();
                 signal.removeEventListener("abort", cancel);
                 callback(match);
@@ -153,142 +453,512 @@ const fmt = (str, ...strings) => {
     return str.replaceAll("{s}", () => strings[i++]);
 };
 
-/*@end */
+/* menus/message.js */
+const getMessageLink = (guildId, channelId, messageId, isDM = !!guildId) => isDM ? `https://${GLOBAL_ENV.RELEASE_CHANNEL}.discord.com/channels/@me/${channelId}/${messageId}` : `https://${GLOBAL_ENV.RELEASE_CHANNEL}.discord.com/channels/${guildId}/${channelId}/${messageId}`;
+const MessageCopyOptions = [{
+        name: "authorId",
+        getValue: ({
+            message
+        }) => message.author.id,
+        description: "Will be replaced with the message author's userId."
+    },
+    {
+        name: "authorTag",
+        getValue: ({
+            message
+        }) => message.author.tag,
+        description: "Will be replace with the message author's tag. (Username#1234)"
+    },
+    {
+        name: "authorMention",
+        getValue: ({
+            message
+        }) => `<@!${message.author.id}>`,
+        description: "Will be replaced with the mention of the message author. (<@!userId>)"
+    },
+    {
+        name: "author",
+        getValue: ({
+            message
+        }) => message.author.username,
+        description: "Will be replaced with the message author's username."
+    },
+    {
+        name: "message",
+        getValue: ({
+            message
+        }) => message.content,
+        description: "Will be replaced with the message content."
+    },
+    {
+        name: "id",
+        getValue: ({
+            message
+        }) => message.id,
+        description: "Will be replaced with the message id."
+    },
+    {
+        name: "timestamp",
+        getValue: ({
+            message
+        }) => Formatter.formatDate(message.timestamp),
+        description: "Will be replaced with the creation timestamp of the message."
+    },
+    {
+        name: "channelId",
+        getValue: ({
+            message
+        }) => message.channel_id,
+        description: "Will be replaced with the channel id where the message was sent."
+    },
+    {
+        name: "channelMention",
+        getValue: ({
+            message
+        }) => `<#${message.channel_id}>`,
+        description: "Will be replaced with the mention of the channel where the message was sent."
+    }
+];
 
-/* @module channeltypes.js */
-const ChannelTypes = {
-    0: "GUILD_TEXT",
-    1: "DM",
-    2: "GUILD_VOICE",
-    3: "GROUP_DM",
-    4: "GUILD_CATEGORY",
-    5: "GUILD_ANNOUNCEMENT",
-    6: "GUILD_STORE",
-    10: "ANNOUNCEMENT_THREAD",
-    11: "PUBLIC_THREAD",
-    12: "PRIVATE_THREAD",
-    13: "GUILD_STAGE_VOICE",
-    14: "GUILD_DIRECTORY",
-    15: "GUILD_FORUM",
-    1e4: "UNKNOWN",
-    ANNOUNCEMENT_THREAD: 10,
-    DM: 1,
-    GROUP_DM: 3,
-    GUILD_ANNOUNCEMENT: 5,
-    GUILD_CATEGORY: 4,
-    GUILD_DIRECTORY: 14,
-    GUILD_FORUM: 15,
-    GUILD_STAGE_VOICE: 13,
-    GUILD_STORE: 6,
-    GUILD_TEXT: 0,
-    GUILD_VOICE: 2,
-    PRIVATE_THREAD: 12,
-    PUBLIC_THREAD: 11,
-    UNKNOWN: 1e4
-};
-
-/*@end */
-
-/* @module formatter.js */
-class Formatter {
-    static formatString(string, options) {
-        for (const option in options) {
-            string = string.replace(new RegExp(`\\$${option}`, "g"), options[option]);
-        }
-        return string;
-    }
-    static formatDate(date) {
-        const formatter = new Intl.DateTimeFormat(document.documentElement.lang, {
-            dateStyle: "full",
-            timeStyle: "short"
-        });
-        return formatter.format(date);
-    }
-    static parseSnowFlake(id) {
-        return new Date(id / 4194304 + 14200704e5);
-    }
-    static formatChannelType(type) {
-        const string = ChannelTypes[type] ?? "";
-        return string.split("_").map((e) => e[0].toUpperCase() + e.slice(1)).join(" ");
-    }
+function message() {
+    return ContextMenu.patch("message", (res, props) => {
+        const {
+            message
+        } = props;
+        if (!message || !Array.isArray(res?.props?.children)) return res;
+        res.props.children.splice(
+            4,
+            0,
+            ContextMenu.buildMenuChildren([{
+                    type: "separator"
+                },
+                {
+                    id: "copy-message",
+                    label: "Copy",
+                    type: "submenu",
+                    action: () => {
+                        copy$1(message.id);
+                    },
+                    items: [
+                        // embed && {
+                        //     label: "Copy RAW Embed",
+                        //     id: "copy-embed-raw",
+                        //     action: () => {
+                        //         copy(JSON.stringify(embed, null, "\t"));
+                        //         UI.showToast("Copied raw embed.", {type: "success"});
+                        //     }
+                        // },
+                        {
+                            label: "RAW Content",
+                            id: "copy-message-raw",
+                            action: () => {
+                                copy$1(message.content);
+                                UI.showToast("Copied raw message content.", {
+                                    type: "success"
+                                });
+                            }
+                        },
+                        {
+                            label: "Custom Format",
+                            id: "copy-message-custom-format",
+                            action: () => {
+                                copy$1(
+                                    Formatter.formatString(
+                                        Settings$1.get("messageCustom"),
+                                        MessageCopyOptions.reduce((options, option) => {
+                                            options[option.name] = option.getValue({
+                                                message
+                                            });
+                                            return options;
+                                        }, {})
+                                    )
+                                );
+                                UI.showToast("Copied message with custom format.", {
+                                    type: "success"
+                                });
+                            }
+                        },
+                        {
+                            label: "Message Link",
+                            id: "copy-message-link",
+                            action: () => {
+                                const channel = ChannelStore.getChannel(message.channel_id);
+                                if (!channel) {
+                                    console.error("Failed to copy message link!\n", "Message channel cannot be found!");
+                                    return UI.showToast("Failed to copy message link!", {
+                                        type: "error"
+                                    });
+                                }
+                                copy$1(getMessageLink(channel.guild_id, channel.id, message.id));
+                                UI.showToast("Copied message link.", {
+                                    type: "success"
+                                });
+                            }
+                        },
+                        {
+                            label: "MessageId",
+                            id: "copy-message-id",
+                            action: () => {
+                                copy$1(message.id);
+                                UI.showToast("Copied message id.", {
+                                    type: "success"
+                                });
+                            }
+                        }
+                    ].filter(Boolean)
+                }
+            ])
+        );
+    });
 }
 
-/*@end */
+/* components/icons/copy.jsx */
+function CopyIcon(props) {
+    return React.createElement("svg", {
+        height: "24",
+        width: "24",
+        viewBox: "0 0 24 24",
+        ...props
+    }, React.createElement("path", {
+        fill: props.fill ?? "currentColor",
+        d: "M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"
+    }));
+}
 
-/* @module settings.js */
-const Settings$1 = {
-    _listeners: new Set(),
-    _settings: Object.assign({}, {
-        messageCustom: "`$author` **$timestamp**\n> $message",
-        channelCustom: "#$name in **$server**",
-        categoryCustom: "$name with $channelsCount channels",
-        voiceCustom: "**#$name** in **$server** with `$usersConnected` connected users.",
-        guildCustom: "**$name** with `$members`",
-        userCustom: "**$name** - Created at: `$creation`",
-        roleCustom: "**$name** - `$colorHEX`",
-        showButton: true
-    }, Data.load("settings")),
-    addReactChangeListener(listener) {
-        Settings$1._listeners.add(listener);
-    },
-    removeReactChangeListener(listener) {
-        Settings$1._listeners.delete(listener);
-    },
-    get(key, def) {
-        return Settings$1._settings[key] ?? def;
-    },
-    set(key, value) {
-        Settings$1._settings[key] = value;
-        Data.save("settings", Settings$1._settings);
-        this._listeners.forEach((l) => l());
-    }
-};
+/* components/copybutton.jsx */
+const className = Webpack$1.getByProps("dangerous", "button")?.button ?? "buttonUndefined";
 
-/*@end */
+function CopyButton(props) {
+    const shouldShow = useStateFromStores([Settings$1], () => Settings$1.get("showButton", true));
+    const active = useKeyState();
+    const {
+        message
+    } = props;
+    if (!shouldShow) return null;
+    const handleClick = () => {
+        switch (active) {
+            case "none":
+                copy$1(message.content);
+                break;
+            case "shift":
+            case "ctrl":
+            case "both":
+                copy$1(
+                    Formatter.formatString(
+                        Settings$1.get("messageCustom"),
+                        MessageCopyOptions.reduce((options, option) => {
+                            options[option.name] = option.getValue({
+                                message
+                            });
+                            return options;
+                        }, {})
+                    )
+                );
+                break;
+        }
+    };
+    return React.createElement(Tooltip, {
+        text: active === "none" ? "Copy RAW Message" : "Copy Message (Custom)"
+    }, (props2) => React.createElement("div", {
+        ...props2,
+        className,
+        onClick: handleClick
+    }, React.createElement(CopyIcon, {
+        fill: active === "none" ? "currentColor" : "#0870f3"
+    })));
+}
 
-/* @module webpack.js */
-const {
-    Webpack,
-    Webpack: {
-        Filters
-    }
-} = Api;
-const getByProps = (...props) => {
-    return Webpack.getModule(Filters.byProps(...props));
-};
-const getBulk = (...queries) => {
-    return Webpack.getBulk.apply(null, queries.map((q) => typeof q === "function" ? {
-        filter: q
-    } : q));
-};
-const getByPrototypeFields = (...fields) => {
-    return Webpack.getModule(Filters.byPrototypeFields(...fields));
-};
-const getStore = (name) => {
-    return Webpack.getModule((m) => m?._dispatchToken && m.getName?.() === name);
-};
-const getMangled = function*(filter, target = null) {
-    yield target = getModule((m) => Object.values(m).some(filter), {
-        searchExports: false
-    });
-    yield target && Object.keys(target).find((k) => filter(target[k]));
-};
-const getModule = Webpack.getModule;
-var Webpack$1 = {
-    ...Webpack,
-    getByPrototypeFields,
-    getMangled,
-    getByProps,
-    getStore,
-    getBulk
-};
-const ChannelStore = getStore("ChannelStore");
-const GuildStore = getStore("GuildStore");
-const Tooltip = BdApi.Components.Tooltip;
+/* components/settings/item.scss */
+Styles.sheets.push("/* components/settings/item.scss */", `.copier-settings-item {
+  padding: 15px;
+  border-radius: 8px;
+  background: var(--background-tertiary);
+  cursor: pointer;
+  color: #fff;
+  border: thin solid var(--background-modifier-hover);
+}
+.copier-settings-item .copier-settings-item-header .copier-settings-name {
+  display: flex;
+  align-items: center;
+  font-weight: 500;
+  font-size: 20px;
+  color: var(--header-primary);
+}
+.copier-settings-item .copier-settings-item-header .copier-settings-name .copier-settings-icon-box {
+  color: vaR(--header-secondary);
+  margin-right: 5px;
+}
+.copier-settings-item.item-opened .copier-settings-item-header {
+  border-bottom: thin solid var(--background-modifier-accent);
+  margin-bottom: 7px;
+  padding-bottom: 7px;
+}
+.copier-settings-item + .copier-settings-item {
+  margin-top: 10px;
+}
+.copier-settings-item .copier-settings-note {
+  color: var(--header-secondary);
+}
+.copier-settings-item.item-opened .copier-settings-children {
+  margin-top: 10px;
+}`);
 
-/*@end */
+/* components/icons/tune.jsx */
+function Tune(props) {
+    return React.createElement("svg", {
+        xmlns: "http://www.w3.org/2000/svg",
+        height: "24",
+        viewBox: "0 0 24 24",
+        width: "24",
+        ...props
+    }, React.createElement("path", {
+        d: "M3 17v2h6v-2H3zM3 5v2h10V5H3zm10 16v-2h8v-2h-8v-2h-2v6h2zM7 9v2H3v2h4v2h2V9H7zm14 4v-2H11v2h10zm-6-4h2V7h4V5h-4V3h-2v6z",
+        fill: "currentColor"
+    }));
+}
 
-/* @module user.js */
+/* components/settings/item.jsx */
+function SettingsItem({
+    name,
+    note,
+    children,
+    icon,
+    opened = false,
+    onSelect
+}) {
+    return React.createElement("div", {
+        className: Utils.className("copier-settings-item", opened && "item-opened"),
+        onClick: onSelect
+    }, React.createElement("div", {
+        className: "copier-settings-item-header"
+    }, React.createElement("div", {
+        className: "copier-settings-name"
+    }, React.createElement("div", {
+        className: "copier-settings-icon-box"
+    }, React.createElement(Tune, null)), name), !opened && React.createElement("div", {
+        className: "copier-settings-note"
+    }, note)), React.createElement("div", {
+        className: "copier-settings-children"
+    }, opened && children));
+}
+
+/* components/icons/tick.jsx */
+function Tick(props) {
+    return React.createElement("svg", {
+        xmlns: "http://www.w3.org/2000/svg",
+        height: "48",
+        width: "48",
+        ...props
+    }, React.createElement("path", {
+        fill: "currentColor",
+        d: "M18.9 35.7 7.7 24.5l2.15-2.15 9.05 9.05 19.2-19.2 2.15 2.15Z"
+    }));
+}
+
+/* components/settings/toggle.scss */
+Styles.sheets.push("/* components/settings/toggle.scss */", `.copier-toggle {
+  position: relative;
+}
+.copier-toggle .copier-toggle-name {
+  font-size: 16px;
+  font-weight: 500;
+}
+.copier-toggle .copier-toggle-value {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 30px;
+  height: 30px;
+  border-radius: 100px;
+  border: thin solid var(--background-modifier-accent);
+}
+.copier-toggle .copier-toggle-value svg {
+  fill: #fff;
+  transform: scale(0.5);
+  left: -8px;
+  top: -7px;
+  position: relative;
+}
+.copier-toggle .copier-toggle-value.copier-checked {
+  background: var(--status-positive);
+}
+.copier-toggle .copier-toggle-note {
+  margin-top: 10px;
+  font-size: 14px;
+  color: var(--text-muted);
+}`);
+
+/* components/settings/toggle.jsx */
+function ToggleItem({
+    name,
+    note,
+    value,
+    onChange
+}) {
+    const [checked, toggle] = React.useReducer((n) => !n, value);
+    return React.createElement("div", {
+        className: "copier-toggle"
+    }, React.createElement("div", {
+        className: "copier-header copier-toggle-name"
+    }, name), React.createElement(
+        "div", {
+            onClick: (e) => {
+                onChange(!checked);
+                toggle();
+                e.stopPropagation();
+            },
+            className: Utils.className("copier-toggle-value", {
+                "copier-checked": checked
+            })
+        },
+        checked && React.createElement(Tick, null)
+    ), note && React.createElement("div", {
+        className: "copier-toggle-note"
+    }, note));
+}
+
+/* components/settings/textbox.scss */
+Styles.sheets.push("/* components/settings/textbox.scss */", `.copier-textbox .copier-textbox-note {
+  font-size: 14px;
+  color: var(--text-muted);
+}
+.copier-textbox .copier-text-input {
+  background: var(--background-secondary-alt);
+  border: thin solid var(--background-modifier-hover);
+  border-radius: 4px;
+  width: -webkit-fill-available;
+  margin: 8px 0;
+  color: #ddd;
+  font-size: 16px;
+  padding: 8px;
+}
+.copier-textbox .copier-text-input:focus {
+  border-color: var(--brand-experiment);
+}`);
+
+/* components/settings/textbox.jsx */
+function TextBox({
+    name,
+    note,
+    value,
+    onChange,
+    placeholder
+}) {
+    const [currentValue, setValue] = React.useState(value);
+    return React.createElement("div", {
+        className: "copier-textbox"
+    }, React.createElement("div", {
+        className: "copier-header copier-textbox-name"
+    }, name), React.createElement(
+        "input", {
+            className: "copier-text-input",
+            defaultValue: currentValue,
+            onInput: ({
+                target
+            }) => (onChange(target.value), setValue(target.value)),
+            placeholder,
+            onClick: (e) => e.stopPropagation()
+        }
+    ), note && React.createElement("div", {
+        className: "copier-textbox-note"
+    }, note));
+}
+
+/* components/protip.css */
+Styles.sheets.push("/* components/protip.css */", `.copier-pro-tip {
+    color: var(--text-positive);
+    font-weight: 700;
+    font-size: 12px;
+    display: inline;
+}
+`);
+
+/* components/protip.jsx */
+function ProTip() {
+    return React.createElement("span", {
+        className: "copier-pro-tip"
+    }, "PROTIP:");
+}
+
+/* components/settings/index.scss */
+Styles.sheets.push("/* components/settings/index.scss */", `.copier-settings-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.copier-key {
+  box-shadow: inset 0 -4px 0 var(--primary-dark-660);
+  color: var(--primary-dark-100);
+  background-color: var(--background-accent);
+  border: 1px solid var(--background-primary);
+  display: inline-flex;
+  padding: 3px 6px 4px;
+  border-radius: 4px;
+  cursor: default;
+  min-width: 10px;
+  text-align: center;
+  vertical-align: middle;
+  font-size: 10px;
+  height: 11px;
+}
+
+.copier-header {
+  font-weight: 500;
+  font-size: 18px;
+  font-family: var(--font-display);
+}`);
+
+/* components/settings/replacement.scss */
+Styles.sheets.push("/* components/settings/replacement.scss */", `.copier-variable {
+  display: flex;
+  align-items: center;
+  margin-top: 5px;
+}
+.copier-variable .copier-variable-name {
+  background: var(--primary-dark-560);
+  font-weight: 700;
+  padding: 3px;
+  border-radius: 4px;
+  margin-right: 5px;
+}
+.copier-variable .copier-variable-description {
+  color: var(--header-secondary);
+}`);
+
+/* components/settings/replacement.jsx */
+function Variable({
+    name,
+    description
+}) {
+    return React.createElement("div", {
+        className: "copier-variable"
+    }, React.createElement("span", {
+        className: "copier-variable-name"
+    }, "$", name), React.createElement("div", {
+        className: "copier-variable-description"
+    }, description));
+}
+
+function Replacement({
+    options,
+    id,
+    name
+}) {
+    return React.createElement(React.Fragment, null, React.createElement(TextBox, {
+        name: "Configure",
+        onChange: (value) => Settings$1.set(id, value),
+        placeholder: name,
+        value: Settings$1.get(id)
+    }), React.createElement("div", {
+        className: "copier-header copier-settings-name"
+    }, "Available Variables:"), options.map((option) => React.createElement(Variable, {
+        key: option.name,
+        name: option.name,
+        description: option.description
+    })));
+}
+
+/* menus/user.js */
 const UserCopyOptions = [{
         name: "id",
         getValue: (user) => user.id,
@@ -331,13 +1001,13 @@ function user() {
             id: "copier",
             label: "Copy",
             action() {
-                copy(user.id);
+                copy$1(user.id);
             },
             items: [{
                     label: "Username",
                     id: "copy-user-name",
                     action() {
-                        copy(user.username);
+                        copy$1(user.username);
                         UI.showToast("Copied Username.", {
                             type: "success"
                         });
@@ -351,7 +1021,7 @@ function user() {
                             options2[option.name] = option.getValue(user);
                             return options2;
                         }, {});
-                        copy(
+                        copy$1(
                             Formatter.formatString(Settings$1.get("userCustom"), options)
                         );
                         UI.showToast("Copied user with custom format.", {
@@ -363,7 +1033,7 @@ function user() {
                     label: "UserId",
                     id: "copy-user-id",
                     action: () => {
-                        copy(user.id);
+                        copy$1(user.id);
                         UI.showToast("Copied user id.", {
                             type: "success"
                         });
@@ -373,7 +1043,7 @@ function user() {
                     label: "Avatar Url",
                     id: "copy-user-avatar",
                     action: () => {
-                        copy(user.getAvatarURL("gif"));
+                        copy$1(user.getAvatarURL("gif"));
                         UI.showToast("Copied user avatar url.", {
                             type: "success"
                         });
@@ -383,7 +1053,7 @@ function user() {
                     label: "DM Id",
                     id: "copy-dm-id",
                     action: () => {
-                        copy(ChannelStore.getDMFromUserId(user.id));
+                        copy$1(ChannelStore.getDMFromUserId(user.id));
                         UI.showToast("Copied dm channelId of user.", {
                             type: "success"
                         });
@@ -394,16 +1064,113 @@ function user() {
     ]);
     patches.add(ContextMenu.patch("user-context", (res, props) => {
         const tree = res?.props?.children;
-        if (!Array.isArray(tree))
-            return console.log("Not an array.", tree);
+        if (!Array.isArray(tree)) return console.log("Not an array.", tree);
         tree.splice(-1, 0, buildMenu(props.user, !!props.channel));
     }));
     return () => patches.forEach((p) => p());
 }
 
-/*@end */
+/* menus/guild.js */
+const GuildMemberCountStore = Webpack$1.getStore("GuildMemberCountStore");
+const GuildCopyOptions = [{
+        name: "id",
+        getValue: (guild) => guild.id,
+        description: "Will be replaced with the server id."
+    },
+    {
+        name: "name",
+        getValue: (guild) => guild.name,
+        description: "Will be replaced with the server name."
+    },
+    {
+        name: "icon",
+        getValue: (guild) => guild.getIconURL(),
+        description: "will be replaced with the server icon url."
+    },
+    {
+        name: "members",
+        getValue: (guild) => GuildMemberCountStore.getMemberCount(guild.id),
+        description: "Will be replaced with the member count of the server."
+    },
+    {
+        name: "creation",
+        getValue: (guild) => Formatter.parseSnowFlake(guild.id).toLocaleString(),
+        description: "Will be replaced with the creation date of the server."
+    }
+];
 
-/* @module channel.js */
+function guild() {
+    return ContextMenu.patch("guild-context", (res, props) => {
+        const {
+            guild
+        } = props;
+        if (!guild || !Array.isArray(res?.props?.children)) return res;
+        const menu = ContextMenu.buildMenuChildren([{
+                type: "separator"
+            },
+            {
+                label: "Copy",
+                id: "copy-guild",
+                type: "submenu",
+                action: () => {
+                    copy$1(guild.id);
+                },
+                items: [{
+                        label: "Name",
+                        id: "copy-guild-name",
+                        action: () => {
+                            copy$1(guild.name);
+                            UI.showToast("Copied server name.", {
+                                type: "success"
+                            });
+                        }
+                    },
+                    {
+                        label: "Custom Format",
+                        id: "copy-guild-custom",
+                        action: () => {
+                            copy$1(
+                                Formatter.formatString(
+                                    Settings$1.get("guildCustom"),
+                                    GuildCopyOptions.reduce((options, option) => {
+                                        options[option.name] = option.getValue(guild);
+                                        return options;
+                                    }, {})
+                                )
+                            );
+                            UI.showToast("Copied server with custom format.", {
+                                type: "success"
+                            });
+                        }
+                    },
+                    {
+                        label: "GuildId",
+                        id: "copy-guild-id",
+                        action: () => {
+                            copy$1(guild.id);
+                            UI.showToast("Copied server id.", {
+                                type: "success"
+                            });
+                        }
+                    },
+                    {
+                        label: "Icon",
+                        id: "copy-guild-icon",
+                        action: () => {
+                            copy$1(guild.getIconURL());
+                            UI.showToast("Copied server icon url.", {
+                                type: "success"
+                            });
+                        }
+                    }
+                ]
+            }
+        ]);
+        res.props.children.splice(5, 0, menu);
+    });
+}
+
+/* menus/channel.js */
 const SortedVoiceStateStore = Webpack$1.getStore("SortedVoiceStateStore");
 const GuildChannelStore = Webpack$1.getStore("GuildChannelStore");
 const ChannelCopyOptions = [{
@@ -582,14 +1349,14 @@ const buildTextChannelMenu = function(channel) {
             label: "Copy",
             id: "copy-channel",
             action: () => {
-                copy(channel.id);
+                copy$1(channel.id);
             },
             type: "submenu",
             items: [{
                     label: "Name",
                     id: "copy-channel-name",
                     action: () => {
-                        copy(channel.name);
+                        copy$1(channel.name);
                         UI.showToast("Copied channel name.", {
                             type: "success"
                         });
@@ -599,7 +1366,7 @@ const buildTextChannelMenu = function(channel) {
                     label: "Custom Format",
                     id: "copy-channel-custom",
                     action: () => {
-                        copy(
+                        copy$1(
                             Formatter.formatString(
                                 Settings$1.get("channelCustom"),
                                 ChannelCopyOptions.reduce((options, option) => {
@@ -620,7 +1387,7 @@ const buildTextChannelMenu = function(channel) {
                     label: "ChannelId",
                     id: "copy-channel-id",
                     action: () => {
-                        copy(channel.id);
+                        copy$1(channel.id);
                         UI.showToast("Copied channel id.", {
                             type: "success"
                         });
@@ -630,7 +1397,7 @@ const buildTextChannelMenu = function(channel) {
                     label: "Mention",
                     id: "copy-channel-mention",
                     action: () => {
-                        copy(`<#${channel.id}>`);
+                        copy$1(`<#${channel.id}>`);
                         UI.showToast("Copied channel mention. (<#channelId>)", {
                             type: "success"
                         });
@@ -649,14 +1416,14 @@ const buildVoiceChannelMenu = function(channel) {
             label: "Copy",
             id: "copy-voice-channel",
             action: () => {
-                copy(channel.id);
+                copy$1(channel.id);
             },
             type: "submenu",
             items: [{
                     label: "Name",
                     id: "copy-voice-channel-name",
                     action: () => {
-                        copy(channel.name);
+                        copy$1(channel.name);
                         UI.showToast("Copied voice channel name.", {
                             type: "success"
                         });
@@ -666,7 +1433,7 @@ const buildVoiceChannelMenu = function(channel) {
                     label: "ChannelId",
                     id: "copy-voice-channel-id",
                     action: () => {
-                        copy(channel.id);
+                        copy$1(channel.id);
                         UI.showToast("Copied voice channel id.", {
                             type: "success"
                         });
@@ -676,7 +1443,7 @@ const buildVoiceChannelMenu = function(channel) {
                     label: "Mention",
                     id: "copy-voice-channel-mention",
                     action: () => {
-                        copy(`<#${channel.id}>`);
+                        copy$1(`<#${channel.id}>`);
                         UI.showToast("Copied voice channel mention. (<#channelId>)", {
                             type: "success"
                         });
@@ -686,7 +1453,7 @@ const buildVoiceChannelMenu = function(channel) {
                     label: "Custom Format",
                     id: "copy-voice-channel-custom",
                     action: () => {
-                        copy(
+                        copy$1(
                             Formatter.formatString(
                                 Settings$1.get("voiceCustom"),
                                 VoiceChannelCopyOptions.reduce((options, option) => {
@@ -716,14 +1483,14 @@ const buildCategoryMenu = function(channel) {
             label: "Copy",
             id: "copy-category",
             action: () => {
-                copy(channel.id);
+                copy$1(channel.id);
             },
             type: "submenu",
             items: [{
                     label: "Name",
                     id: "copy-category-name",
                     action: () => {
-                        copy(channel.name);
+                        copy$1(channel.name);
                         UI.showToast("Copied category name.", {
                             type: "success"
                         });
@@ -733,7 +1500,7 @@ const buildCategoryMenu = function(channel) {
                     label: "Custom Format",
                     id: "copy-category-custom",
                     action: () => {
-                        copy(
+                        copy$1(
                             Formatter.formatString(
                                 Settings$1.get("categoryCustom"),
                                 ChannelCategoryCopyOptions.reduce((options, option) => {
@@ -754,7 +1521,7 @@ const buildCategoryMenu = function(channel) {
                     label: "CategoryId",
                     id: "copy-category-id",
                     action: () => {
-                        copy(channel.id);
+                        copy$1(channel.id);
                         UI.showToast("Copied channel id.", {
                             type: "success"
                         });
@@ -776,134 +1543,14 @@ function channel() {
         const {
             channel
         } = props;
-        if (!channel || !Array.isArray(res?.props?.children))
-            return res;
+        if (!channel || !Array.isArray(res?.props?.children)) return res;
         const menu = (builders[channel.type] ?? buildTextChannelMenu)(channel);
         res.props.children.splice(-1, 0, menu);
     });
 }
 
-/*@end */
-
-/* @module guild.js */
-const GuildMemberCountStore = Webpack$1.getStore("GuildMemberCountStore");
-const GuildCopyOptions = [{
-        name: "id",
-        getValue: (guild) => guild.id,
-        description: "Will be replaced with the server id."
-    },
-    {
-        name: "name",
-        getValue: (guild) => guild.name,
-        description: "Will be replaced with the server name."
-    },
-    {
-        name: "icon",
-        getValue: (guild) => guild.getIconURL(),
-        description: "will be replaced with the server icon url."
-    },
-    {
-        name: "members",
-        getValue: (guild) => GuildMemberCountStore.getMemberCount(guild.id),
-        description: "Will be replaced with the member count of the server."
-    },
-    {
-        name: "creation",
-        getValue: (guild) => Formatter.parseSnowFlake(guild.id).toLocaleString(),
-        description: "Will be replaced with the creation date of the server."
-    }
-];
-
-function guild() {
-    return ContextMenu.patch("guild-context", (res, props) => {
-        const {
-            guild
-        } = props;
-        if (!guild || !Array.isArray(res?.props?.children))
-            return res;
-        const menu = ContextMenu.buildMenuChildren([{
-                type: "separator"
-            },
-            {
-                label: "Copy",
-                id: "copy-guild",
-                type: "submenu",
-                action: () => {
-                    copy(guild.id);
-                },
-                items: [{
-                        label: "Name",
-                        id: "copy-guild-name",
-                        action: () => {
-                            copy(guild.name);
-                            UI.showToast("Copied server name.", {
-                                type: "success"
-                            });
-                        }
-                    },
-                    {
-                        label: "Custom Format",
-                        id: "copy-guild-custom",
-                        action: () => {
-                            copy(
-                                Formatter.formatString(
-                                    Settings$1.get("guildCustom"),
-                                    GuildCopyOptions.reduce((options, option) => {
-                                        options[option.name] = option.getValue(guild);
-                                        return options;
-                                    }, {})
-                                )
-                            );
-                            UI.showToast("Copied server with custom format.", {
-                                type: "success"
-                            });
-                        }
-                    },
-                    {
-                        label: "GuildId",
-                        id: "copy-guild-id",
-                        action: () => {
-                            copy(guild.id);
-                            UI.showToast("Copied server id.", {
-                                type: "success"
-                            });
-                        }
-                    },
-                    {
-                        label: "Icon",
-                        id: "copy-guild-icon",
-                        action: () => {
-                            copy(guild.getIconURL());
-                            UI.showToast("Copied server icon url.", {
-                                type: "success"
-                            });
-                        }
-                    }
-                ]
-            }
-        ]);
-        res.props.children.splice(5, 0, menu);
-    });
-}
-
-/*@end */
-
-/* @module @styles */
-
-var Styles = {
-    sheets: [],
-    _element: null,
-    load() {
-        DOM.addStyle(this.sheets.join("\n"));
-    },
-    unload() {
-        DOM.removeStyle();
-    }
-};
-/*@end */
-
-/* @module label.css */
-Styles.sheets.push("/* label.css */", `.copier-roleColoredItem {
+/* menus/label.css */
+Styles.sheets.push("/* menus/label.css */", `.copier-roleColoredItem {
     display: flex;
     align-items: center;
 }
@@ -914,9 +1561,9 @@ Styles.sheets.push("/* label.css */", `.copier-roleColoredItem {
     height: 12px;
     margin-right: 8px;
 }
-`); /*@end */
+`);
 
-/* @module dev.jsx */
+/* menus/dev.jsx */
 const SelectedGuildStore = Webpack$1.getStore("SelectedGuildStore");
 const RoleColoredLabel = ({
     color,
@@ -966,8 +1613,7 @@ function dev() {
         const handleClose = () => res?.props?.onClose();
         const role = props.role || (() => {
             const selectedGuild = SelectedGuildStore.getGuildId();
-            if (!GuildStore.getGuild(selectedGuild))
-                return handleClose();
+            if (!GuildStore.getGuild(selectedGuild)) return handleClose();
             const role2 = GuildStore.getRole(selectedGuild, props.id);
             return role2 || handleClose();
         })();
@@ -986,13 +1632,13 @@ function dev() {
                 id: "copy-role",
                 type: "submenu",
                 action: () => {
-                    copy(props.id);
+                    copy$1(props.id);
                 },
                 items: [{
                         label: "RoleId",
                         id: "copy-role-id",
                         action: () => {
-                            copy(role.id);
+                            copy$1(role.id);
                             UI.showToast("Copied role id.", {
                                 type: "success"
                             });
@@ -1002,7 +1648,7 @@ function dev() {
                         label: "Name",
                         id: "copy-role-name",
                         action: () => {
-                            copy(role.name);
+                            copy$1(role.name);
                             UI.showToast("Copied role name.", {
                                 type: "success"
                             });
@@ -1012,7 +1658,7 @@ function dev() {
                         label: "Custom Format",
                         id: "copy-role-custom-format",
                         action: () => {
-                            copy(
+                            copy$1(
                                 Formatter.formatString(
                                     Settings.get("roleCustom"),
                                     RoleCopyOptions.reduce((options, option) => {
@@ -1030,7 +1676,7 @@ function dev() {
                         label: "Mention",
                         id: "copy-role-mention",
                         action: () => {
-                            copy(`<@&${role.id}>`);
+                            copy$1(`<@&${role.id}>`);
                             UI.showToast("Copied role mention. (<&roleId>)", {
                                 type: "success"
                             });
@@ -1048,7 +1694,7 @@ function dev() {
                                 }),
                                 id: "copy-role-color-rgb",
                                 action: () => {
-                                    copy(colors.rgb);
+                                    copy$1(colors.rgb);
                                     UI.showToast(`Copied role color in RGB format.`, {
                                         type: "success"
                                     });
@@ -1061,7 +1707,7 @@ function dev() {
                                 }),
                                 id: "copy-role-color-hex",
                                 action: () => {
-                                    copy(colors.hex);
+                                    copy$1(colors.hex);
                                     UI.showToast(`Copied role color in HEX format.`, {
                                         type: "success"
                                     });
@@ -1074,7 +1720,7 @@ function dev() {
                                 }),
                                 id: "copy-role-color-int",
                                 action: () => {
-                                    copy(colors.int.toString());
+                                    copy$1(colors.int.toString());
                                     UI.showToast(`Copied role color in INT format.`, {
                                         type: "success"
                                     });
@@ -1091,614 +1737,7 @@ function dev() {
     return () => patches.forEach((p) => p());
 }
 
-/*@end */
-
-/* @module message.js */
-const getMessageLink = (guildId, channelId, messageId, isDM = !!guildId) => isDM ? `https://${GLOBAL_ENV.RELEASE_CHANNEL}.discord.com/channels/@me/${channelId}/${messageId}` : `https://${GLOBAL_ENV.RELEASE_CHANNEL}.discord.com/channels/${guildId}/${channelId}/${messageId}`;
-const MessageCopyOptions = [{
-        name: "authorId",
-        getValue: ({
-            message
-        }) => message.author.id,
-        description: "Will be replaced with the message author's userId."
-    },
-    {
-        name: "authorTag",
-        getValue: ({
-            message
-        }) => message.author.tag,
-        description: "Will be replace with the message author's tag. (Username#1234)"
-    },
-    {
-        name: "authorMention",
-        getValue: ({
-            message
-        }) => `<@!${message.author.id}>`,
-        description: "Will be replaced with the mention of the message author. (<@!userId>)"
-    },
-    {
-        name: "author",
-        getValue: ({
-            message
-        }) => message.author.username,
-        description: "Will be replaced with the message author's username."
-    },
-    {
-        name: "message",
-        getValue: ({
-            message
-        }) => message.content,
-        description: "Will be replaced with the message content."
-    },
-    {
-        name: "id",
-        getValue: ({
-            message
-        }) => message.id,
-        description: "Will be replaced with the message id."
-    },
-    {
-        name: "timestamp",
-        getValue: ({
-            message
-        }) => Formatter.formatDate(message.timestamp),
-        description: "Will be replaced with the creation timestamp of the message."
-    },
-    {
-        name: "channelId",
-        getValue: ({
-            message
-        }) => message.channel_id,
-        description: "Will be replaced with the channel id where the message was sent."
-    },
-    {
-        name: "channelMention",
-        getValue: ({
-            message
-        }) => `<#${message.channel_id}>`,
-        description: "Will be replaced with the mention of the channel where the message was sent."
-    }
-];
-
-function message() {
-    return ContextMenu.patch("message", (res, props) => {
-        const {
-            message
-        } = props;
-        if (!message || !Array.isArray(res?.props?.children))
-            return res;
-        res.props.children.splice(
-            4,
-            0,
-            ContextMenu.buildMenuChildren([{
-                    type: "separator"
-                },
-                {
-                    id: "copy-message",
-                    label: "Copy",
-                    type: "submenu",
-                    action: () => {
-                        copy(message.id);
-                    },
-                    items: [{
-                            label: "RAW Content",
-                            id: "copy-message-raw",
-                            action: () => {
-                                copy(message.content);
-                                UI.showToast("Copied raw message content.", {
-                                    type: "success"
-                                });
-                            }
-                        },
-                        {
-                            label: "Custom Format",
-                            id: "copy-message-custom-format",
-                            action: () => {
-                                copy(
-                                    Formatter.formatString(
-                                        Settings$1.get("messageCustom"),
-                                        MessageCopyOptions.reduce((options, option) => {
-                                            options[option.name] = option.getValue({
-                                                message
-                                            });
-                                            return options;
-                                        }, {})
-                                    )
-                                );
-                                UI.showToast("Copied message with custom format.", {
-                                    type: "success"
-                                });
-                            }
-                        },
-                        {
-                            label: "Message Link",
-                            id: "copy-message-link",
-                            action: () => {
-                                const channel = ChannelStore.getChannel(message.channel_id);
-                                if (!channel) {
-                                    console.error("Failed to copy message link!\n", "Message channel cannot be found!");
-                                    return UI.showToast("Failed to copy message link!", {
-                                        type: "error"
-                                    });
-                                }
-                                copy(getMessageLink(channel.guild_id, channel.id, message.id));
-                                UI.showToast("Copied message link.", {
-                                    type: "success"
-                                });
-                            }
-                        },
-                        {
-                            label: "MessageId",
-                            id: "copy-message-id",
-                            action: () => {
-                                copy(message.id);
-                                UI.showToast("Copied message id.", {
-                                    type: "success"
-                                });
-                            }
-                        }
-                    ].filter(Boolean)
-                }
-            ])
-        );
-    });
-}
-
-/*@end */
-
-/* @module index.js */
-
-/*@end */
-
-var ContextMenus = /*#__PURE__*/ Object.freeze({
-    __proto__: null,
-    ChannelContextMenu: channel,
-    DeveloperContextMenu: dev,
-    GuildContextMenu: guild,
-    MessageContextMenu: message,
-    UserContextMenu: user
-});
-
-/* @module copy.jsx */
-function CopyIcon(props) {
-    return React.createElement("svg", {
-        height: "24",
-        width: "24",
-        viewBox: "0 0 24 24",
-        ...props
-    }, React.createElement("path", {
-        fill: props.fill ?? "currentColor",
-        d: "M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"
-    }));
-}
-
-/*@end */
-
-/* @module button.css */
-Styles.sheets.push("/* button.css */", `.copier-button {
-    background: transparent;
-    border: none;
-    outline: none;
-    cursor: pointer;
-    justify-content: center;
-    align-items: center;
-    display: flex;
-    color: #0870f3;
-}
-
-.copier-tooltip {
-    --background-floating: var(--background-secondary);
-}
-`); /*@end */
-
-/* @module changelog.css */
-Styles.sheets.push("/* changelog.css */", `.copier-changelog-item {
-    color: #ddd;
-}
-
-.copier-changelog-header {
-    text-transform: uppercase;
-    font-weight: 700;
-    display: flex;
-    align-items: center;
-    margin-bottom: 10px;
-}
-
-.item-changelog-added .copier-changelog-header {
-    color: #45BA6A;
-}
-.item-changelog-fixed .copier-changelog-header {
-    color: #EC4245;
-}
-.item-changelog-improved .copier-changelog-header {
-    color: #5865F2;
-}
-
-.copier-changelog-header::after {
-    content: "";
-    flex-grow: 1;
-    height: 1px;
-    background: currentColor;
-    margin-left: 7px;
-}
-
-.copier-changelog-item span {
-    display: list-item;
-    margin-left: 5px;
-    list-style: inside;
-}
-
-.copier-changelog-item span::marker {
-    color: var(--background-accent);
-}
-.copier-changelog-banner {
-    width: 405px;
-    border-radius: 8px;
-    margin-bottom: 20px;
-}
-
-.copier-title-wrap {
-    font-size: 18px;
-}
-
-.copier-title-wrap span {
-    font-size: 12px;
-    color: var(--text-muted);
-    font-family: var(--font-primary);
-}
-`); /*@end */
-
-/* @module copybutton.jsx */
-const className = Webpack$1.getByProps("dangerous", "button")?.button ?? "buttonUndefined";
-
-function CopyButton(props) {
-    const shouldShow = useStateFromStores([Settings$1], () => Settings$1.get("showButton", true));
-    const active = useKeyState();
-    const {
-        message
-    } = props;
-    if (!shouldShow)
-        return null;
-    const handleClick = () => {
-        switch (active) {
-            case "none":
-                copy(message.content);
-                break;
-            case "shift":
-            case "ctrl":
-            case "both":
-                copy(
-                    Formatter.formatString(
-                        Settings$1.get("messageCustom"),
-                        MessageCopyOptions.reduce((options, option) => {
-                            options[option.name] = option.getValue({
-                                message
-                            });
-                            return options;
-                        }, {})
-                    )
-                );
-                break;
-        }
-    };
-    return React.createElement(Tooltip, {
-        text: active === "none" ? "Copy RAW Message" : "Copy Message (Custom)"
-    }, (props2) => React.createElement("div", {
-        ...props2,
-        className,
-        onClick: handleClick
-    }, React.createElement(CopyIcon, {
-        fill: active === "none" ? "currentColor" : "#0870f3"
-    })));
-}
-
-/*@end */
-
-/* @module item.scss */
-Styles.sheets.push("/* item.scss */", `.copier-settings-item {
-  padding: 15px;
-  border-radius: 8px;
-  background: var(--background-tertiary);
-  cursor: pointer;
-  color: #fff;
-  border: thin solid var(--background-modifier-hover);
-}
-.copier-settings-item .copier-settings-item-header .copier-settings-name {
-  display: flex;
-  align-items: center;
-  font-weight: 500;
-  font-size: 20px;
-  color: var(--header-primary);
-}
-.copier-settings-item .copier-settings-item-header .copier-settings-name .copier-settings-icon-box {
-  color: vaR(--header-secondary);
-  margin-right: 5px;
-}
-.copier-settings-item.item-opened .copier-settings-item-header {
-  border-bottom: thin solid var(--background-modifier-accent);
-  margin-bottom: 7px;
-  padding-bottom: 7px;
-}
-.copier-settings-item + .copier-settings-item {
-  margin-top: 10px;
-}
-.copier-settings-item .copier-settings-note {
-  color: var(--header-secondary);
-}
-.copier-settings-item.item-opened .copier-settings-children {
-  margin-top: 10px;
-}`); /*@end */
-
-/* @module tune.jsx */
-function Tune(props) {
-    return React.createElement("svg", {
-        xmlns: "http://www.w3.org/2000/svg",
-        height: "24",
-        viewBox: "0 0 24 24",
-        width: "24",
-        ...props
-    }, React.createElement("path", {
-        d: "M3 17v2h6v-2H3zM3 5v2h10V5H3zm10 16v-2h8v-2h-8v-2h-2v6h2zM7 9v2H3v2h4v2h2V9H7zm14 4v-2H11v2h10zm-6-4h2V7h4V5h-4V3h-2v6z",
-        fill: "currentColor"
-    }));
-}
-
-/*@end */
-
-/* @module item.jsx */
-function SettingsItem({
-    name,
-    note,
-    children,
-    icon,
-    opened = false,
-    onSelect
-}) {
-    return React.createElement("div", {
-        className: Utils.className("copier-settings-item", opened && "item-opened"),
-        onClick: onSelect
-    }, React.createElement("div", {
-        className: "copier-settings-item-header"
-    }, React.createElement("div", {
-        className: "copier-settings-name"
-    }, React.createElement("div", {
-        className: "copier-settings-icon-box"
-    }, React.createElement(Tune, null)), name), !opened && React.createElement("div", {
-        className: "copier-settings-note"
-    }, note)), React.createElement("div", {
-        className: "copier-settings-children"
-    }, opened && children));
-}
-
-/*@end */
-
-/* @module tick.jsx */
-function Tick(props) {
-    return React.createElement("svg", {
-        xmlns: "http://www.w3.org/2000/svg",
-        height: "48",
-        width: "48",
-        ...props
-    }, React.createElement("path", {
-        fill: "currentColor",
-        d: "M18.9 35.7 7.7 24.5l2.15-2.15 9.05 9.05 19.2-19.2 2.15 2.15Z"
-    }));
-}
-
-/*@end */
-
-/* @module toggle.scss */
-Styles.sheets.push("/* toggle.scss */", `.copier-toggle {
-  position: relative;
-}
-.copier-toggle .copier-toggle-name {
-  font-size: 16px;
-  font-weight: 500;
-}
-.copier-toggle .copier-toggle-value {
-  position: absolute;
-  right: 0;
-  top: 0;
-  width: 30px;
-  height: 30px;
-  border-radius: 100px;
-  border: thin solid var(--background-modifier-accent);
-}
-.copier-toggle .copier-toggle-value svg {
-  fill: #fff;
-  transform: scale(0.5);
-  left: -8px;
-  top: -7px;
-  position: relative;
-}
-.copier-toggle .copier-toggle-value.copier-checked {
-  background: var(--status-positive);
-}
-.copier-toggle .copier-toggle-note {
-  margin-top: 10px;
-  font-size: 14px;
-  color: var(--text-muted);
-}`); /*@end */
-
-/* @module toggle.jsx */
-function ToggleItem({
-    name,
-    note,
-    value,
-    onChange
-}) {
-    const [checked, toggle] = React.useReducer((n) => !n, value);
-    return React.createElement("div", {
-        className: "copier-toggle"
-    }, React.createElement("div", {
-        className: "copier-header copier-toggle-name"
-    }, name), React.createElement(
-        "div", {
-            onClick: (e) => {
-                onChange(!checked);
-                toggle();
-                e.stopPropagation();
-            },
-            className: Utils.className("copier-toggle-value", {
-                "copier-checked": checked
-            })
-        },
-        checked && React.createElement(Tick, null)
-    ), note && React.createElement("div", {
-        className: "copier-toggle-note"
-    }, note));
-}
-
-/*@end */
-
-/* @module textbox.scss */
-Styles.sheets.push("/* textbox.scss */", `.copier-textbox .copier-textbox-note {
-  font-size: 14px;
-  color: var(--text-muted);
-}
-.copier-textbox .copier-text-input {
-  background: var(--background-secondary-alt);
-  border: thin solid var(--background-modifier-hover);
-  border-radius: 4px;
-  width: -webkit-fill-available;
-  margin: 8px 0;
-  color: #ddd;
-  font-size: 16px;
-  padding: 8px;
-}
-.copier-textbox .copier-text-input:focus {
-  border-color: var(--brand-experiment);
-}`); /*@end */
-
-/* @module textbox.jsx */
-function TextBox({
-    name,
-    note,
-    value,
-    onChange,
-    placeholder
-}) {
-    const [currentValue, setValue] = React.useState(value);
-    return React.createElement("div", {
-        className: "copier-textbox"
-    }, React.createElement("div", {
-        className: "copier-header copier-textbox-name"
-    }, name), React.createElement(
-        "input", {
-            className: "copier-text-input",
-            defaultValue: currentValue,
-            onInput: ({
-                target
-            }) => (onChange(target.value), setValue(target.value)),
-            placeholder,
-            onClick: (e) => e.stopPropagation()
-        }
-    ), note && React.createElement("div", {
-        className: "copier-textbox-note"
-    }, note));
-}
-
-/*@end */
-
-/* @module protip.css */
-Styles.sheets.push("/* protip.css */", `.copier-pro-tip {
-    color: var(--text-positive);
-    font-weight: 700;
-    font-size: 12px;
-    display: inline;
-}
-`); /*@end */
-
-/* @module protip.jsx */
-function ProTip() {
-    return React.createElement("span", {
-        className: "copier-pro-tip"
-    }, "PROTIP:");
-}
-
-/*@end */
-
-/* @module index.scss */
-Styles.sheets.push("/* index.scss */", `.copier-settings-container {
-  display: flex;
-  flex-direction: column;
-}
-
-.copier-key {
-  box-shadow: inset 0 -4px 0 var(--primary-dark-660);
-  color: var(--primary-dark-100);
-  background-color: var(--background-accent);
-  border: 1px solid var(--background-primary);
-  display: inline-flex;
-  padding: 3px 6px 4px;
-  border-radius: 4px;
-  cursor: default;
-  min-width: 10px;
-  text-align: center;
-  vertical-align: middle;
-  font-size: 10px;
-  height: 11px;
-}
-
-.copier-header {
-  font-weight: 500;
-  font-size: 18px;
-  font-family: var(--font-display);
-}`); /*@end */
-
-/* @module replacement.scss */
-Styles.sheets.push("/* replacement.scss */", `.copier-variable {
-  display: flex;
-  align-items: center;
-  margin-top: 5px;
-}
-.copier-variable .copier-variable-name {
-  background: var(--primary-dark-560);
-  font-weight: 700;
-  padding: 3px;
-  border-radius: 4px;
-  margin-right: 5px;
-}
-.copier-variable .copier-variable-description {
-  color: var(--header-secondary);
-}`); /*@end */
-
-/* @module replacement.jsx */
-function Variable({
-    name,
-    description
-}) {
-    return React.createElement("div", {
-        className: "copier-variable"
-    }, React.createElement("span", {
-        className: "copier-variable-name"
-    }, "$", name), React.createElement("div", {
-        className: "copier-variable-description"
-    }, description));
-}
-
-function Replacement({
-    options,
-    id,
-    name
-}) {
-    return React.createElement(React.Fragment, null, React.createElement(TextBox, {
-        name: "Configure",
-        onChange: (value) => Settings$1.set(id, value),
-        placeholder: name,
-        value: Settings$1.get(id)
-    }), React.createElement("div", {
-        className: "copier-header copier-settings-name"
-    }, "Available Variables:"), options.map((option) => React.createElement(Variable, {
-        key: option.name,
-        name: option.name,
-        description: option.description
-    })));
-}
-
-/*@end */
-
-/* @module index.jsx */
+/* components/settings/index.jsx */
 const Dynamic = ({
     component: Type,
     ...props
@@ -1784,41 +1823,27 @@ function SettingsPanel() {
     ))));
 }
 
-/*@end */
+/* menus/index.js */
 
-/* @module index.jsx */
+var ContextMenus = /*#__PURE__*/ Object.freeze({
+    __proto__: null,
+    ChannelContextMenu: channel,
+    DeveloperContextMenu: dev,
+    GuildContextMenu: guild,
+    MessageContextMenu: message,
+    UserContextMenu: user
+});
+
+/* index.jsx */
 class Copier {
     flush = new Set();
-    maybeShowChangelog() {
-        if (config.version === Settings$1.get("latestUsedVersion"))
-            return;
-        const items = config.changelog.map((item) => React.createElement("div", {
-            className: "copier-changelog-item item-changelog-" + item.type
-        }, React.createElement("h4", {
-            className: "copier-changelog-header"
-        }, item.type), item.items.map((i) => React.createElement("span", null, i))));
-        "changelogImage" in config && items.unshift(
-            React.createElement("img", {
-                className: "copier-changelog-banner",
-                src: config.changelogImage
-            })
-        );
-        Settings$1.set("latestUsedVersion", config.version);
-        const formatter = new Intl.DateTimeFormat(document.documentElement.lang, {
-            month: "long",
-            day: "numeric",
-            year: "numeric"
-        });
-        UI.alert(React.createElement("div", {
-            className: "copier-title-wrap"
-        }, React.createElement("h1", null, "What's New - ", config.name), React.createElement("span", null, formatter.format(new Date(config.changelogDate)))), items);
-    }
     getSettingsPanel() {
         return React.createElement(SettingsPanel, null);
     }
     start() {
-        this.controller = new AbortController();
         Styles.load();
+        showChangelog(manifest);
+        this.controller = new AbortController();
         for (const id in ContextMenus) {
             try {
                 const unpatch = ContextMenus[id]();
@@ -1827,12 +1852,10 @@ class Copier {
                 console.error("[Copier] Could not initialize patch for", id, ":", error);
             }
         }
-        this.patchAboutMe();
         this.patchToolbar();
-        this.maybeShowChangelog();
     }
     patchAboutMe() {
-        const [module, key] = Webpack$1.getMangled((m) => m?.toString?.().includes("USER_POPOUT_ABOUT_ME"));
+        const module = Webpack$1.getBySource(["animUserProfileSidebarateOnHoverOrFocusOnly", "61W33d"]);
         const CopyButton2 = React.memo(({
             onClick
         }) => React.createElement(Tooltip, {
@@ -1847,12 +1870,12 @@ class Copier {
             width: "14",
             height: "14"
         }))));
-        Patcher.after(module, key, (_, [{
+        Patcher.after(module, "Z", (_, [{
             bio
         }], res) => {
+            console.log(res);
             const title = findInTree(res, (e) => e?.variant && Array.isArray(e.children));
-            if (!title)
-                return res;
+            if (!title) return res;
             title.children.push(
                 React.createElement(CopyButton2, {
                     onClick: () => copy(bio)
@@ -1867,8 +1890,7 @@ class Copier {
         const buttonsContainer = await new Promise((resolve) => {
             onceAdded("." + buttons, (node) => {
                 const instance = ReactUtils.getInternalInstance(node);
-                if (!instance)
-                    return;
+                if (!instance) return;
                 for (let curr = instance, max = 100; curr != null && max--; curr = curr?.return) {
                     max < 5 && console.log(curr);
                     if ((node = curr?.memoizedProps?.children?.type) && node?.$$typeof) {
@@ -1878,14 +1900,12 @@ class Copier {
                 }
             }, this.controller.signal);
         });
-        if (!buttonsContainer)
-            return;
+        if (!buttonsContainer) return;
         const ToolbarButtonPatch = ({
             __COP_ORIGINAL,
             ...props
         }) => {
-            if (!__COP_ORIGINAL)
-                return null;
+            if (!__COP_ORIGINAL) return null;
             const res = __COP_ORIGINAL.call(null, props);
             try {
                 res?.props?.children?.unshift?.(
@@ -1900,8 +1920,7 @@ class Copier {
         };
         Patcher.after(buttonsContainer, "type", (_, __, res) => {
             const el = findInTree(res, (e) => e?.props?.message);
-            if (!el)
-                return;
+            if (!el) return;
             el.props.__COP_ORIGINAL = el.type;
             el.type = ToolbarButtonPatch;
         });
@@ -1914,7 +1933,5 @@ class Copier {
         this.controller.abort();
     }
 }
-
-/*@end */
 
 module.exports = Copier;
