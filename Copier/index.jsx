@@ -1,44 +1,22 @@
-import {Patcher, ReactUtils, UI} from "@api";
-import * as ContextMenus from "./menus";
-import Styles from "@styles";
-import Webpack, {getBySource, Tooltip} from "./modules/webpack";
-import {copy, findInTree, onceAdded} from "./modules/utils";
-import config from "@manifest";
-import React from "react";
-import CopyIcon from "./components/icons/copy";
-
 import "./button.css";
 import "./changelog.css";
+
+import React from "react";
+
+import {Patcher, ReactUtils} from "@api";
+import manifest from "@manifest";
+import Styles from "@styles";
+
+import showChangelog from "../common/Changelog";
 import CopyButton from "./components/copybutton";
 import SettingsPanel from "./components/settings";
-import Settings from "./modules/settings";
+import * as ContextMenus from "./menus";
+import Webpack, { Tooltip } from "./modules/webpack";
+import {findInTree, onceAdded} from "./modules/utils";
+import CopyIcon from "./components/icons/copy";
 
 export default class Copier {
     flush = new Set();
-
-    maybeShowChangelog() {
-        if (config.version === Settings.get("latestUsedVersion")) return;
-
-        const items = config.changelog.map(item => (
-            <div className={"copier-changelog-item " + "item-changelog-" + item.type}>
-                <h4 className="copier-changelog-header">{item.type}</h4>
-                {item.items.map(i => <span>{i}</span>)}
-            </div>
-        ));
-
-        "changelogImage" in config && items.unshift(
-            <img className="copier-changelog-banner" src={config.changelogImage} />
-        );
-
-        Settings.set("latestUsedVersion", config.version);
-
-        const formatter = new Intl.DateTimeFormat(document.documentElement.lang, {month: "long", day: "numeric", year: "numeric"});
-        UI.alert(<div className="copier-title-wrap">
-            <h1>What's New - {config.name}</h1>
-            <span>{formatter.format(new Date(config.changelogDate))}</span>
-        </div>, items);
-    }
-
     getSettingsPanel() {
         return (
             <SettingsPanel />
@@ -46,8 +24,9 @@ export default class Copier {
     }
 
     start() {
-        this.controller = new AbortController();
         Styles.load();
+        showChangelog(manifest);
+        this.controller = new AbortController();
 
         for (const id in ContextMenus) {
             try {
@@ -59,11 +38,10 @@ export default class Copier {
         }
 
         // this.patchAboutMe();
-        // this.patchToolbar();
-        this.maybeShowChangelog();
+        this.patchToolbar();
     }
 
-    /*patchAboutMe() {
+    patchAboutMe() {
         const module = Webpack.getBySource(['animUserProfileSidebarateOnHoverOrFocusOnly','61W33d'])
 
         const CopyButton = React.memo(({onClick}) => (
@@ -86,7 +64,7 @@ export default class Copier {
                 <CopyButton onClick={() => copy(bio)} />
             );
         });
-    }*/
+    }
 
     async patchToolbar() {
         const {buttons} = Webpack.getByProps("messageListItem", "buttons") ?? {};

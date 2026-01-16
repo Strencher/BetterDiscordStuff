@@ -1,19 +1,11 @@
 {
     "name": "Copier",
-    "authors": [
-        {
-            "name": "Strencher",
-            "discord_id": "415849376598982656",
-            "github_username": "Strencher",
-            "twitter_username": "Strencher3"
-        }
-    ],
     "version": "1.6.2",
+    "author": "Strencher",
+    "authorId": "415849376598982656",
     "description": "Allows you to copy certain stuff with custom options.",
-    "github": "https://github.com/Strencher/BetterDiscordStuff/blob/master/Copier/Copier.plugin.js",
-    "github_raw": "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/Copier/Copier.plugin.js",
-    "changelogImage": "https://cdn.discordapp.com/attachments/672786846018961418/1053059354552696932/20th-century-fox-intro.png",
-    "changelogDate": "2023-02-11T17:25:37.796Z",
+    "source": "https://github.com/Strencher/BetterDiscordStuff/blob/master/Copier/Copier.plugin.js",
+    "invite": "gvA2ree",
     "changelog": [
         {
             "type": "fixed",
@@ -22,5 +14,6 @@
                 "The plugin has returned."
             ]
         }
-    ]
+    ],
+    "changelogDate": "2026-01-16"
 }
