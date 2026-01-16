@@ -1,6 +1,6 @@
 {
   "name": "APlatformIndicators",
-  "version": "1.5.20",
+  "version": "1.5.21",
   "author": "Strencher",
   "authorId": "415849376598982656",
   "description": "Adds indicators for every platform that the user is using.",
@@ -8,13 +8,16 @@
   "invite": "gvA2ree",
   "changelog": [
     {
-      "title": "Fixed",
+      "title": "Fixed some small issues",
       "type": "fixed",
       "items": [
-        "Fixed crashing"
+        "Fixed strings for multi language",
+        "Fixed \"usePlatformStores\" to automatically update on session store changes",
+        "Fixed user not updating",
+        "Fixed potential memory leak"
       ]
     }
   ],
-  "changelogDate": "2025-12-02"
+  "changelogDate": "2026-01-16"
 }
 
