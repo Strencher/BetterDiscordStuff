@@ -1,12 +1,12 @@
 /**
  * @name APlatformIndicators
- * @version 1.5.20
+ * @version 1.5.21
  * @author Strencher
  * @authorId 415849376598982656
  * @description Adds indicators for every platform that the user is using.
  * @source https://github.com/Strencher/BetterDiscordStuff/blob/master/PlatformIndicators/APlatformIndicators.plugin.js
  * @invite gvA2ree
- * @changelogDate 2025-12-02
+ * @changelogDate 2026-01-16
  */
 
 'use strict';
@@ -17,20 +17,23 @@ const React = BdApi.React;
 /* @manifest */
 var manifest = {
     "name": "APlatformIndicators",
-    "version": "1.5.20",
+    "version": "1.5.21",
     "author": "Strencher",
     "authorId": "415849376598982656",
     "description": "Adds indicators for every platform that the user is using.",
     "source": "https://github.com/Strencher/BetterDiscordStuff/blob/master/PlatformIndicators/APlatformIndicators.plugin.js",
     "invite": "gvA2ree",
     "changelog": [{
-        "title": "Fixed",
+        "title": "Fixed some small issues",
         "type": "fixed",
         "items": [
-            "Fixed crashing"
+            "Fixed strings for multi language",
+            "Fixed \"usePlatformStores\" to automatically update on session store changes",
+            "Fixed user not updating",
+            "Fixed potential memory leak"
         ]
     }],
-    "changelogDate": "2025-12-02"
+    "changelogDate": "2026-01-16"
 };
 
 /* @api */
@@ -266,22 +269,22 @@ const PresenceStore = Webpack.getStore("PresenceStore");
 const {
     useSyncExternalStore: useStateFromStoresObject
 } = Webpack.getByKeys("useSyncExternalStore");
-const useStateFromStores = Webpack.getByStrings("useStateFromStores", {
-    searchExports: true
-});
+const useStateFromStores = BdApi.Hooks.useStateFromStores;
 const Dispatcher = UserStore._dispatcher;
 const Flux = Webpack.getByKeys("Store");
 const StatusTypes = Webpack.getModule((x) => x.DND && x.OFFLINE, {
     searchExports: true
 });
 const Colors = Webpack.getByKeys("unsafe_rawColors")?.unsafe_rawColors;
+const Intl$1 = Webpack.getModule((x) => x.intl);
+const formatMessage = (key) => Intl$1.intl.formatToMarkdownString(Intl$1.t[key]);
 const Messages = {
-    "STATUS_DND": "Do Not Disturb",
-    "STATUS_OFFLINE": "Offline",
-    "STATUS_ONLINE": "Online",
-    "STATUS_STEAMING": "Streaming",
-    "STATUS_IDLE": "Idle",
-    "STATUS_MOBILE": "Mobile"
+    "STATUS_DND": formatMessage("jaNpQH"),
+    "STATUS_OFFLINE": formatMessage("Vv0abJ"),
+    "STATUS_ONLINE": formatMessage("WbGtnH"),
+    "STATUS_STREAMING": formatMessage("XKYej5"),
+    "STATUS_IDLE": formatMessage("qWbtVU"),
+    "STATUS_MOBILE": formatMessage("5LMZtY")
 };
 const buildClassName = (...args) => {
     return args.reduce((classNames, arg) => {
@@ -320,19 +323,18 @@ const Settings = new class Settings2 extends Flux.Store {
 const isStreaming = () => LocalActivityStore.getActivities().some((e) => e.type === 1);
 
 function usePlatformStores(userId, type) {
-    const user = UserStore.getUser(userId);
+    const user = useStateFromStores([UserStore], () => UserStore.getUser(userId));
+    const sessions = useStateFromStores([SessionsStore], () => SessionsStore.getSessions());
     const iconStates = Settings.get("icons", {});
     const shownInArea = Settings.get("showIn" + type, true);
     const ignoreBots = Settings.get("ignoreBots", true) && (user?.bot ?? false);
     const shouldShow = shownInArea && !ignoreBots;
     const clients = (() => {
         if (user?.id === UserStore.getCurrentUser()?.id) {
-            const sessions = SessionsStore.getSessions();
             if (sessions) {
                 const clientStatuses = Object.entries(sessions).reduce((acc, [, sessionData]) => {
                     const client = sessionData.clientInfo.client;
-                    const status = isStreaming() ? "streaming" : sessionData.status;
-                    acc[client] = status;
+                    acc[client] = isStreaming() ? "streaming" : sessionData.status;
                     return acc;
                 }, {});
                 return clientStatuses;
@@ -665,7 +667,8 @@ class PlatformIndicators {
         const ChannelClasses = Webpack.getByKeys("channel", "decorator");
         Patcher.after(ChannelWrapper, "ZP", (_, __, res) => {
             if (!Settings.get("showInDmsList", true)) return;
-            Patcher.after(res, "type", (_2, [props], res2) => {
+            const unpatch = Patcher.after(res, "type", (_2, [props], res2) => {
+                unpatch();
                 if (!props.user) return;
                 if (Settings.get("ignoreBots", true) && props.user.bot) return;
                 return React.createElement(UserContext.Provider, {
