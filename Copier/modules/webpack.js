@@ -3,7 +3,7 @@ import * as Api from "@api";
 const {Webpack, Webpack: {Filters}} = Api;
 
 export const getByProps = (...props) => {
-    return Webpack.getModule(Filters.byProps(...props));
+    return Webpack.getModule(Filters.byKeys(...props));
 };
 
 export const getBulk = (...queries) => {
@@ -23,6 +23,11 @@ export const getMangled = function* (filter, target = null) {
     yield target && Object.keys(target).find(k => filter(target[k]));
 };
 
+export const getBySource = function(sources) {
+    const filters = Filters.combine(...sources.map(x => Filters.bySource(x)))
+    return Webpack.getModule(filters);
+};
+
 export const getModule = Webpack.getModule;
 
 export default {
@@ -31,7 +36,8 @@ export default {
     getMangled,
     getByProps,
     getStore,
-    getBulk
+    getBulk,
+    getBySource
 };
 
 export {Filters};

@@ -1,7 +1,7 @@
 import {Patcher, ReactUtils, UI} from "@api";
 import * as ContextMenus from "./menus";
 import Styles from "@styles";
-import Webpack, {Tooltip} from "./modules/webpack";
+import Webpack, {getBySource, Tooltip} from "./modules/webpack";
 import {copy, findInTree, onceAdded} from "./modules/utils";
 import config from "@manifest";
 import React from "react";
@@ -58,13 +58,13 @@ export default class Copier {
             }
         }
 
-        this.patchAboutMe();
-        this.patchToolbar();
+        // this.patchAboutMe();
+        // this.patchToolbar();
         this.maybeShowChangelog();
     }
 
-    patchAboutMe() {
-        const [module, key] = Webpack.getMangled(m => m?.toString?.().includes("USER_POPOUT_ABOUT_ME"));
+    /*patchAboutMe() {
+        const module = Webpack.getBySource(['animUserProfileSidebarateOnHoverOrFocusOnly','61W33d'])
 
         const CopyButton = React.memo(({onClick}) => (
             <Tooltip text="Copy About Me" tooltipClassName="copier-tooltip" position="top">
@@ -76,7 +76,8 @@ export default class Copier {
             </Tooltip>
         ));
 
-        Patcher.after(module, key, (_, [{bio}], res) => {
+        Patcher.after(module, "Z", (_, [{bio}], res) => {
+            console.log(res)
             const title = findInTree(res, e => e?.variant && Array.isArray(e.children));
 
             if (!title) return res;;
@@ -85,7 +86,7 @@ export default class Copier {
                 <CopyButton onClick={() => copy(bio)} />
             );
         });
-    }
+    }*/
 
     async patchToolbar() {
         const {buttons} = Webpack.getByProps("messageListItem", "buttons") ?? {};
