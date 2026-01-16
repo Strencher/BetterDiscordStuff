@@ -33,7 +33,8 @@ export default class PlatformIndicators {
 
         Patcher.after(ChannelWrapper, "ZP", (_, __, res) => {
             if (!Settings.get("showInDmsList", true)) return;
-            Patcher.after(res, "type", (_, [props], res) => {
+            const unpatch = Patcher.after(res, "type", (_, [props], res) => {
+                unpatch();
                 if (!props.user) return; // Its a group DM
                 if (Settings.get("ignoreBots", true) && props.user.bot) return;
 
