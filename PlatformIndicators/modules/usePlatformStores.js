@@ -1,5 +1,5 @@
 import Settings from "./settings";
-import {LocalActivityStore, PresenceStore, SessionsStore, UserStore, useStateFromStores} from "./shared";
+import { LocalActivityStore, PresenceStore, SessionsStore, UserStore, useStateFromStores } from "./shared";
 
 const isStreaming = () => LocalActivityStore.getActivities().some(e => e.type === 1);
 

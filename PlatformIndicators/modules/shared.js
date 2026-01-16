@@ -1,4 +1,4 @@
-import {Webpack} from "@api";
+import { Webpack } from "@api";
 
 // Stores
 export const LocalActivityStore = Webpack.getStore("LocalActivityStore");
@@ -7,12 +7,12 @@ export const UserStore = Webpack.getStore("UserStore");
 export const PresenceStore = Webpack.getStore("PresenceStore");
 
 // Other modules
-export const {useSyncExternalStore: useStateFromStoresObject} = Webpack.getByKeys("useSyncExternalStore");
+export const { useSyncExternalStore: useStateFromStoresObject } = Webpack.getByKeys("useSyncExternalStore");
 export const useStateFromStores = BdApi.Hooks.useStateFromStores
 export const Dispatcher = UserStore._dispatcher;
 
 export const Flux = Webpack.getByKeys("Store");
-export const StatusTypes = Webpack.getModule(x => x.DND && x.OFFLINE, {searchExports: true})
+export const StatusTypes = Webpack.getModule(x => x.DND && x.OFFLINE, { searchExports: true })
 export const Colors = Webpack.getByKeys("unsafe_rawColors")?.unsafe_rawColors;
 export const Intl = Webpack.getModule(x => x.intl)
 
