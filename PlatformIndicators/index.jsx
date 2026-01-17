@@ -33,8 +33,7 @@ export default class PlatformIndicators {
 
         Patcher.after(ChannelWrapper, "ZP", (_, __, res) => {
             if (!Settings.get("showInDmsList", true)) return;
-            const unpatch = Patcher.after(res, "type", (_, [props], res) => {
-                unpatch();
+            Patcher.after(res, "type", (_, [props], res) => {
                 if (!props.user) return; // Its a group DM
                 if (Settings.get("ignoreBots", true) && props.user.bot) return;
 
@@ -61,6 +60,7 @@ export default class PlatformIndicators {
             const child = Utils.findInTree(res, e => e?.className?.includes("nameAndDecorators"), { walkable: ["children", "props"] });
             if (!child) return;
 
+            child.style = { justifyContent: "unset" };
             child.children.push(
                 <StatusIndicators
                     userId={user.id}
