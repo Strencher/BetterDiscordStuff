@@ -1,12 +1,12 @@
 /**
  * @name APlatformIndicators
- * @version 1.5.21
+ * @version 1.5.22
  * @author Strencher
  * @authorId 415849376598982656
  * @description Adds indicators for every platform that the user is using.
  * @source https://github.com/Strencher/BetterDiscordStuff/blob/master/PlatformIndicators/APlatformIndicators.plugin.js
  * @invite gvA2ree
- * @changelogDate 2026-01-16
+ * @changelogDate 2026-01-17
  */
 
 'use strict';
@@ -17,7 +17,7 @@ const React = BdApi.React;
 /* @manifest */
 var manifest = {
     "name": "APlatformIndicators",
-    "version": "1.5.21",
+    "version": "1.5.22",
     "author": "Strencher",
     "authorId": "415849376598982656",
     "description": "Adds indicators for every platform that the user is using.",
@@ -27,13 +27,13 @@ var manifest = {
         "title": "Fixed some small issues",
         "type": "fixed",
         "items": [
+            "Fixed DMs not showing indicators",
             "Fixed strings for multi language",
             "Fixed \"usePlatformStores\" to automatically update on session store changes",
-            "Fixed user not updating",
-            "Fixed potential memory leak"
+            "Fixed user not updating"
         ]
     }],
-    "changelogDate": "2026-01-16"
+    "changelogDate": "2026-01-17"
 };
 
 /* @api */
@@ -667,8 +667,7 @@ class PlatformIndicators {
         const ChannelClasses = Webpack.getByKeys("channel", "decorator");
         Patcher.after(ChannelWrapper, "ZP", (_, __, res) => {
             if (!Settings.get("showInDmsList", true)) return;
-            const unpatch = Patcher.after(res, "type", (_2, [props], res2) => {
-                unpatch();
+            Patcher.after(res, "type", (_2, [props], res2) => {
                 if (!props.user) return;
                 if (Settings.get("ignoreBots", true) && props.user.bot) return;
                 return React.createElement(UserContext.Provider, {
@@ -689,6 +688,9 @@ class PlatformIndicators {
                 walkable: ["children", "props"]
             });
             if (!child) return;
+            child.style = {
+                justifyContent: "unset"
+            };
             child.children.push(
                 React.createElement(
                     StatusIndicators, {
