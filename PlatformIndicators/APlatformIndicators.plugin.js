@@ -1,6 +1,6 @@
 /**
  * @name APlatformIndicators
- * @version 1.5.22
+ * @version 1.5.23
  * @author Strencher
  * @authorId 415849376598982656
  * @description Adds indicators for every platform that the user is using.
@@ -17,7 +17,7 @@ const React = BdApi.React;
 /* @manifest */
 var manifest = {
     "name": "APlatformIndicators",
-    "version": "1.5.22",
+    "version": "1.5.23",
     "author": "Strencher",
     "authorId": "415849376598982656",
     "description": "Adds indicators for every platform that the user is using.",
@@ -663,9 +663,12 @@ class PlatformIndicators {
     patchDMList() {
         const UserContext = React.createContext(null);
         const ChannelWrapper = Webpack.getBySource("activities", "isMultiUserDM", "isMobile");
-        const [NameWrapper, Key_NW] = Webpack.getWithKey((x) => x.toString().includes(".nameAndDecorators") && !x.toString().includes('"listitem"'));
+        const [NameWrapper, Key_NW] = Webpack.getWithKey(
+            Webpack.Filters.byStrings("MEMBER_LIST", "listitem", "avatar", "decorators")
+        );
         const ChannelClasses = Webpack.getByKeys("channel", "decorator");
-        Patcher.after(ChannelWrapper, "ZP", (_, __, res) => {
+        const nameAndDecoratorsClass = Webpack.getByKeys("nameAndDecorators").nameAndDecorators;
+        Patcher.after(ChannelWrapper, "Ay", (_, __, res) => {
             if (!Settings.get("showInDmsList", true)) return;
             Patcher.after(res, "type", (_2, [props], res2) => {
                 if (!props.user) return;
@@ -684,7 +687,7 @@ class PlatformIndicators {
             if (!Settings.get("showInDmsList", true)) return;
             const user = React.useContext(UserContext);
             if (!user) return;
-            const child = Utils.findInTree(res, (e) => e?.className?.includes("nameAndDecorators"), {
+            const child = Utils.findInTree(res, (e) => e?.className?.includes(nameAndDecoratorsClass), {
                 walkable: ["children", "props"]
             });
             if (!child) return;
