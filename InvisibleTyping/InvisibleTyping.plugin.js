@@ -1,6 +1,6 @@
 /**
  * @name InvisibleTyping
- * @version 1.4.4
+ * @version 1.4.5
  * @author Strencher
  * @authorId 415849376598982656
  * @description Enhanced version of silent typing.
@@ -17,7 +17,7 @@ const React = BdApi.React;
 /* @manifest */
 var manifest = {
     "name": "InvisibleTyping",
-    "version": "1.4.4",
+    "version": "1.4.5",
     "author": "Strencher",
     "authorId": "415849376598982656",
     "description": "Enhanced version of silent typing.",
@@ -200,7 +200,9 @@ function Keyboard({
 }
 
 /* modules/shared.js */
-const Dispatcher = Webpack.getByKeys("_dispatch");
+const Dispatcher = Webpack.getByKeys("dispatch", "register", {
+    searchExports: true
+});
 const Flux = Webpack.getByKeys("Store");
 const TypingModule = Webpack.getByKeys("startTyping");
 const useStateFromStores = Webpack.getByStrings("useStateFromStores", {
@@ -240,7 +242,7 @@ const Settings = new class Settings2 extends Flux.Store {
 }();
 
 /* components/typingButton.tsx */
-const ChatButton = Webpack.getBySource("CHAT_INPUT_BUTTON_NOTIFICATION")?.Z;
+const ChatButton = Webpack.getBySource("CHAT_INPUT_BUTTON_NOTIFICATION")?.A;
 const removeItem = function(array, item) {
     while (array.includes(item)) {
         array.splice(array.indexOf(item), 1);
@@ -422,7 +424,7 @@ class InvisibleTyping {
         });
     }
     patchChannelTextArea() {
-        const ChatButtonsGroup = Webpack.getBySource("type", "showAllButtons", "paymentsBlocked")?.Z;
+        const ChatButtonsGroup = Webpack.getBySource("type", "showAllButtons", "paymentsBlocked")?.A;
         Patcher.after(ChatButtonsGroup, "type", (_, args, res) => {
             if (args.length == 2 && !args[0].disabled && args[0].type.analyticsName == "normal" && res.props.children && Array.isArray(res.props.children)) {
                 res.props.children.unshift(React.createElement(InvisibleTypingButton, {
