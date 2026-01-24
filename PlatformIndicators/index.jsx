@@ -28,14 +28,17 @@ export default class PlatformIndicators {
     patchDMList() {
         const UserContext = React.createContext(null);
         const ChannelWrapper = Webpack.getBySource("activities", "isMultiUserDM", "isMobile");
-        const [NameWrapper, Key_NW] = Webpack.getWithKey(x => x.toString().includes(".nameAndDecorators") && !x.toString().includes('"listitem"'));
+        const [NameWrapper, Key_NW] = Webpack.getWithKey(
+            Webpack.Filters.byStrings("MEMBER_LIST", "listitem", "avatar", "decorators")
+        );
         const ChannelClasses = Webpack.getByKeys("channel", "decorator");
+        const nameAndDecoratorsClass = Webpack.getByKeys('nameAndDecorators').nameAndDecorators;
 
-        Patcher.after(ChannelWrapper, "ZP", (_, __, res) => {
-            if (!Settings.get("showInDmsList", true)) return;
+        Patcher.after(ChannelWrapper, "Ay", (_, __, res) => {
+            if(!Settings.get("showInDmsList", true)) return;
             Patcher.after(res, "type", (_, [props], res) => {
-                if (!props.user) return; // Its a group DM
-                if (Settings.get("ignoreBots", true) && props.user.bot) return;
+                if(!props.user) return; // Its a group DM
+                if(Settings.get("ignoreBots", true) && props.user.bot) return;
 
                 return (
                     <UserContext.Provider value={props.user}>
@@ -46,19 +49,19 @@ export default class PlatformIndicators {
         });
 
         const ChannelWrapperElement = document.querySelector(`h2 + .${ChannelClasses.channel}`);
-        if (ChannelWrapperElement) {
+        if(ChannelWrapperElement) {
             const ChannelWrapperInstance = ReactUtils.getOwnerInstance(ChannelWrapperElement);
-            if (ChannelWrapperInstance) ChannelWrapperInstance.forceUpdate();
+            if(ChannelWrapperInstance) ChannelWrapperInstance.forceUpdate();
         }
 
         Patcher.after(NameWrapper, Key_NW, (_, __, res) => {
-            if (!Settings.get("showInDmsList", true)) return;
+            if(!Settings.get("showInDmsList", true)) return;
 
             const user = React.useContext(UserContext);
-            if (!user) return;
+            if(!user) return;
 
-            const child = Utils.findInTree(res, e => e?.className?.includes("nameAndDecorators"), { walkable: ["children", "props"] });
-            if (!child) return;
+            const child = Utils.findInTree(res, e => e?.className?.includes(nameAndDecoratorsClass), { walkable: ["children", "props"] });
+            if(!child) return;
 
             child.style = { justifyContent: "unset" };
             child.children.push(
@@ -75,13 +78,13 @@ export default class PlatformIndicators {
         const MemberListClasses = Webpack.getByKeys("member", "memberInner");
 
         Patcher.after(MemberItem, key, (_, [props], ret) => {
-            if (ret?.props?.className?.includes("placeholder")) return;
-            if (!Settings.get("showInMemberList", true)) return;
-            if (Settings.get("ignoreBots", true) && props?.user.bot) return;
+            if(ret?.props?.className?.includes("placeholder")) return;
+            if(!Settings.get("showInMemberList", true)) return;
+            if(Settings.get("ignoreBots", true) && props?.user.bot) return;
             const children = ret.props.children();
             const user = findInReactTree(children, e => e?.avatar && e?.name);
             let childs = children?.props?.name?.props?.children;
-            if (user && childs) {
+            if(user && childs) {
                 children.props.name.props.children = [
                     childs,
                     <StatusIndicators
@@ -94,9 +97,9 @@ export default class PlatformIndicators {
         });
 
         const MemberListUserElement = document.querySelector(`.${MemberListClasses.member}`);
-        if (MemberListUserElement) {
+        if(MemberListUserElement) {
             const MemberListUserInstance = ReactUtils.getOwnerInstance(MemberListUserElement);
-            if (MemberListUserInstance) MemberListUserInstance.forceUpdate();
+            if(MemberListUserInstance) MemberListUserInstance.forceUpdate();
         }
     }
 
@@ -105,11 +108,11 @@ export default class PlatformIndicators {
 
         Patcher.before(ChatUsername, key, (_, props) => {
             const mainProps = props[0];
-            if (!Settings.get("showInChat", true)) return;
-            if (Settings.get("ignoreBots", true) && mainProps?.author?.bot) return;
-            if (!mainProps?.decorations) return;
+            if(!Settings.get("showInChat", true)) return;
+            if(Settings.get("ignoreBots", true) && mainProps?.author?.bot) return;
+            if(!mainProps?.decorations) return;
             const target = mainProps.decorations?.[1];
-            if (!Array.isArray(target)) mainProps.decorations[1] = target ? [target] : [];
+            if(!Array.isArray(target)) mainProps.decorations[1] = target ? [target] : [];
             mainProps.decorations[1].unshift(
                 <StatusIndicators
                     userId={mainProps.message.author.id}
@@ -123,9 +126,9 @@ export default class PlatformIndicators {
         const [BadgeList, Key_BL] = Webpack.getWithKey(Webpack.Filters.byStrings("badges", "badgeClassName", ".BADGE"));
 
         Patcher.after(BadgeList, Key_BL, (_, [{ displayProfile }], res) => {
-            if (!Settings.get("showInBadges", true)) return;
-            if (Settings.get("ignoreBots", true) && displayProfile?.application) return;
-            if (!displayProfile?.userId) return;
+            if(!Settings.get("showInBadges", true)) return;
+            if(Settings.get("ignoreBots", true) && displayProfile?.application) return;
+            if(!displayProfile?.userId) return;
             res.props.children.push(
                 <StatusIndicators
                     userId={displayProfile.userId}
@@ -146,7 +149,7 @@ export default class PlatformIndicators {
         `);
 
         Patcher.after(UserInfo, key, (_, __, res) => {
-            if (!Settings.get("showInFriendsList", true)) return;
+            if(!Settings.get("showInFriendsList", true)) return;
             const unpatch = Patcher.after(res.props.children[1].props.children[0], "type", (_, [props], res) => {
                 unpatch();
                 const unpatch_ = Patcher.after(res, "type", (_, __, res) => {
