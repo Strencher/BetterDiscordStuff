@@ -16,6 +16,16 @@
         margin-top: 2px;
         vertical-align: top;
     }
+
+    &.type_FriendList {
+        align-self: center;
+        margin-left: 12px;
+
+        svg {
+            height: 22px;
+            width: 22px;
+        }
+    }
 }
 
 .PI-icon_mobile {

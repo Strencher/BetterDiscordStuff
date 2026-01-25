@@ -1,6 +1,6 @@
 {
   "name": "APlatformIndicators",
-  "version": "1.5.23",
+  "version": "1.5.24",
   "author": "Strencher",
   "authorId": "415849376598982656",
   "description": "Adds indicators for every platform that the user is using.",
@@ -11,13 +11,10 @@
       "title": "Fixed some small issues",
       "type": "fixed",
       "items": [
-        "Fixed DMs not showing indicators",
-        "Fixed strings for multi language",
-        "Fixed \"usePlatformStores\" to automatically update on session store changes",
-        "Fixed user not updating"
+        "Updated the Plugin for the latest Discord Changes"
       ]
     }
   ],
-  "changelogDate": "2026-01-17"
+  "changelogDate": "2026-01-25"
 }
 
