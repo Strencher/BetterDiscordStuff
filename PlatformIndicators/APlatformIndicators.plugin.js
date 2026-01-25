@@ -1,12 +1,12 @@
 /**
  * @name APlatformIndicators
- * @version 1.5.23
+ * @version 1.5.24
  * @author Strencher
  * @authorId 415849376598982656
  * @description Adds indicators for every platform that the user is using.
  * @source https://github.com/Strencher/BetterDiscordStuff/blob/master/PlatformIndicators/APlatformIndicators.plugin.js
  * @invite gvA2ree
- * @changelogDate 2026-01-17
+ * @changelogDate 2026-01-25
  */
 
 'use strict';
@@ -17,7 +17,7 @@ const React = BdApi.React;
 /* @manifest */
 var manifest = {
     "name": "APlatformIndicators",
-    "version": "1.5.23",
+    "version": "1.5.24",
     "author": "Strencher",
     "authorId": "415849376598982656",
     "description": "Adds indicators for every platform that the user is using.",
@@ -27,13 +27,10 @@ var manifest = {
         "title": "Fixed some small issues",
         "type": "fixed",
         "items": [
-            "Fixed DMs not showing indicators",
-            "Fixed strings for multi language",
-            "Fixed \"usePlatformStores\" to automatically update on session store changes",
-            "Fixed user not updating"
+            "Updated the Plugin for the latest Discord Changes"
         ]
     }],
-    "changelogDate": "2026-01-17"
+    "changelogDate": "2026-01-25"
 };
 
 /* @api */
@@ -237,6 +234,14 @@ Styles$2.sheets.push("/* components/indicators.scss */", `.indicatorContainer {
   margin-top: 2px;
   vertical-align: top;
 }
+.indicatorContainer.type_FriendList {
+  align-self: center;
+  margin-left: 12px;
+}
+.indicatorContainer.type_FriendList svg {
+  height: 22px;
+  width: 22px;
+}
 
 .PI-icon_mobile {
   position: relative;
@@ -257,6 +262,7 @@ div[id*=message-reply] .indicatorContainer.type_Chat {
 var Styles$1 = {
     "indicatorContainer": "indicatorContainer",
     "type_Chat": "type_Chat",
+    "type_FriendList": "type_FriendList",
     "PIIcon_mobile": "PI-icon_mobile",
     "badge_separator": "badge_separator"
 };
@@ -663,11 +669,8 @@ class PlatformIndicators {
     patchDMList() {
         const UserContext = React.createContext(null);
         const ChannelWrapper = Webpack.getBySource("activities", "isMultiUserDM", "isMobile");
-        const [NameWrapper, Key_NW] = Webpack.getWithKey(
-            Webpack.Filters.byStrings("MEMBER_LIST", "listitem", "avatar", "decorators")
-        );
+        const NameWrapper = Webpack.getBySource("AvatarWithText").A;
         const ChannelClasses = Webpack.getByKeys("channel", "decorator");
-        const nameAndDecoratorsClass = Webpack.getByKeys("nameAndDecorators").nameAndDecorators;
         Patcher.after(ChannelWrapper, "Ay", (_, __, res) => {
             if (!Settings.get("showInDmsList", true)) return;
             Patcher.after(res, "type", (_2, [props], res2) => {
@@ -683,11 +686,11 @@ class PlatformIndicators {
             const ChannelWrapperInstance = ReactUtils.getOwnerInstance(ChannelWrapperElement);
             if (ChannelWrapperInstance) ChannelWrapperInstance.forceUpdate();
         }
-        Patcher.after(NameWrapper, Key_NW, (_, __, res) => {
+        Patcher.after(NameWrapper, "render", (_, __, res) => {
             if (!Settings.get("showInDmsList", true)) return;
             const user = React.useContext(UserContext);
             if (!user) return;
-            const child = Utils.findInTree(res, (e) => e?.className?.includes(nameAndDecoratorsClass), {
+            const child = Utils.findInTree(res, (e) => e?.className?.includes("nameAndDecorators"), {
                 walkable: ["children", "props"]
             });
             if (!child) return;
@@ -772,26 +775,35 @@ class PlatformIndicators {
         });
     }
     patchFriendList() {
-        const [UserInfo, key] = Webpack.getWithKey(Webpack.Filters.byStrings("user", "subText", "showAccountIdentifier"));
+        const UserInfo = Webpack.getBySource("user", "subText", "showAccountIdentifier").A;
         const FriendListClasses = Webpack.getByKeys("userInfo", "hovered");
+        if (!Settings.get("showInFriendsList", true)) return;
         DOM.addStyle("PlatformIndicators", `
             .${FriendListClasses.discriminator} { display: none; }
             .${FriendListClasses.hovered} .${FriendListClasses.discriminator} { display: unset; }
         `);
-        Patcher.after(UserInfo, key, (_, __, res) => {
-            if (!Settings.get("showInFriendsList", true)) return;
-            const unpatch = Patcher.after(res.props.children[1].props.children[0], "type", (_2, [props], res2) => {
-                unpatch();
-                const unpatch_ = Patcher.after(res2, "type", (_3, __2, res3) => {
-                    unpatch_();
-                    res3.props.children.push(
-                        React.createElement(
-                            StatusIndicators, {
-                                userId: props.user.id,
-                                type: "FriendList"
-                            }
-                        )
-                    );
+        const unpatch = Patcher.after(UserInfo.prototype, "render", (_, __, res) => {
+            unpatch();
+            Patcher.after(res.type.prototype, "render", (_2, __2, res2) => {
+                const unpatch2 = Patcher.after(res2, "type", (_3, __3, res3) => {
+                    unpatch2();
+                    const child = Utils.findInTree(res3, (e) => e?.className?.includes("listItemContents"), {
+                        walkable: ["children", "props"]
+                    });
+                    if (!child) return;
+                    const userId = findInReactTree(res3, (e) => e?.user)?.user?.id;
+                    if (!userId) return;
+                    const unpatch3 = Patcher.after(child.children[0], "type", (_4, __4, res4) => {
+                        unpatch3();
+                        res4.props.children.push(
+                            React.createElement(
+                                StatusIndicators, {
+                                    userId,
+                                    type: "FriendList"
+                                }
+                            )
+                        );
+                    });
                 });
             });
         });
