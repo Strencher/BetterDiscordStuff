@@ -1,12 +1,12 @@
 /**
  * @name Copier
- * @version 1.6.2
+ * @version 1.6.3
  * @author Strencher
  * @authorId 415849376598982656
  * @description Allows you to copy certain stuff with custom options.
  * @source https://github.com/Strencher/BetterDiscordStuff/blob/master/Copier/Copier.plugin.js
  * @invite gvA2ree
- * @changelogDate 2026-01-16
+ * @changelogDate 2026-01-26
  */
 
 'use strict';
@@ -14,20 +14,21 @@
 /* @manifest */
 const manifest = {
     "name": "Copier",
-    "version": "1.6.2",
+    "version": "1.6.3",
     "author": "Strencher",
     "authorId": "415849376598982656",
     "description": "Allows you to copy certain stuff with custom options.",
     "source": "https://github.com/Strencher/BetterDiscordStuff/blob/master/Copier/Copier.plugin.js",
     "invite": "gvA2ree",
     "changelog": [{
-        "type": "fixed",
         "title": "Bug Fixes",
+        "type": "fixed",
         "items": [
-            "The plugin has returned."
+            "Fixed role context menu",
+            "Fixed message context menu"
         ]
     }],
-    "changelogDate": "2026-01-16"
+    "changelogDate": "2026-01-26"
 };
 
 /* @api */
@@ -368,6 +369,7 @@ var Webpack$1 = {
     getBySource
 };
 const ChannelStore = getStore("ChannelStore");
+const GuildRoleStore = getStore("GuildRoleStore");
 const GuildStore = getStore("GuildStore");
 const Tooltip = BdApi.Components.Tooltip;
 
@@ -453,6 +455,22 @@ const fmt = (str, ...strings) => {
     return str.replaceAll("{s}", () => strings[i++]);
 };
 
+function findGroupById(res, id) {
+    if (!res) return null;
+    let children = res?.props?.children;
+    if (!children) return null;
+    if (!Array.isArray(children))
+        children = [children];
+    if (children.some(
+            (child) => child && typeof child === "object" && "props" in child && child.props.id === id
+        )) return res;
+    for (const child of children)
+        if (child && typeof child === "object") {
+            const found = findGroupById(child, id);
+            if (found) return found;
+        }
+}
+
 /* menus/message.js */
 const getMessageLink = (guildId, channelId, messageId, isDM = !!guildId) => isDM ? `https://${GLOBAL_ENV.RELEASE_CHANNEL}.discord.com/channels/@me/${channelId}/${messageId}` : `https://${GLOBAL_ENV.RELEASE_CHANNEL}.discord.com/channels/${guildId}/${channelId}/${messageId}`;
 const MessageCopyOptions = [{
@@ -525,90 +543,91 @@ function message() {
         const {
             message
         } = props;
-        if (!message || !Array.isArray(res?.props?.children)) return res;
-        res.props.children.splice(
-            4,
-            0,
-            ContextMenu.buildMenuChildren([{
-                    type: "separator"
+        if (!message) return res;
+        const menuGroup = (findGroupById(res, "delete") || findGroupById(res, "report"))?.props?.children;
+        const buttonIndex = menuGroup?.findIndex((i) => i?.props?.id === "delete" || i?.props?.id === "report");
+        if (!menuGroup || !buttonIndex) return;
+        menuGroup.splice(buttonIndex + 1, 0, ContextMenu.buildMenuChildren([{
+                type: "separator"
+            },
+            {
+                id: "copy-message",
+                label: "Copy",
+                type: "submenu",
+                action: () => {
+                    copy$1(message.id);
                 },
-                {
-                    id: "copy-message",
-                    label: "Copy",
-                    type: "submenu",
-                    action: () => {
-                        copy$1(message.id);
-                    },
-                    items: [
-                        // embed && {
-                        //     label: "Copy RAW Embed",
-                        //     id: "copy-embed-raw",
-                        //     action: () => {
-                        //         copy(JSON.stringify(embed, null, "\t"));
-                        //         UI.showToast("Copied raw embed.", {type: "success"});
-                        //     }
-                        // },
-                        {
-                            label: "RAW Content",
-                            id: "copy-message-raw",
-                            action: () => {
-                                copy$1(message.content);
-                                UI.showToast("Copied raw message content.", {
-                                    type: "success"
-                                });
-                            }
-                        },
-                        {
-                            label: "Custom Format",
-                            id: "copy-message-custom-format",
-                            action: () => {
-                                copy$1(
-                                    Formatter.formatString(
-                                        Settings$1.get("messageCustom"),
-                                        MessageCopyOptions.reduce((options, option) => {
-                                            options[option.name] = option.getValue({
-                                                message
-                                            });
-                                            return options;
-                                        }, {})
-                                    )
-                                );
-                                UI.showToast("Copied message with custom format.", {
-                                    type: "success"
-                                });
-                            }
-                        },
-                        {
-                            label: "Message Link",
-                            id: "copy-message-link",
-                            action: () => {
-                                const channel = ChannelStore.getChannel(message.channel_id);
-                                if (!channel) {
-                                    console.error("Failed to copy message link!\n", "Message channel cannot be found!");
-                                    return UI.showToast("Failed to copy message link!", {
-                                        type: "error"
-                                    });
-                                }
-                                copy$1(getMessageLink(channel.guild_id, channel.id, message.id));
-                                UI.showToast("Copied message link.", {
-                                    type: "success"
-                                });
-                            }
-                        },
-                        {
-                            label: "MessageId",
-                            id: "copy-message-id",
-                            action: () => {
-                                copy$1(message.id);
-                                UI.showToast("Copied message id.", {
-                                    type: "success"
-                                });
-                            }
+                items: [
+                    message.embeds.length && {
+                        label: "Copy RAW Embed",
+                        id: "copy-embed-raw",
+                        action: () => {
+                            copy$1(JSON.stringify(message.embeds[0], null, "	"));
+                            UI.showToast("Copied raw embed.", {
+                                type: "success"
+                            });
                         }
-                    ].filter(Boolean)
-                }
-            ])
-        );
+                    },
+                    {
+                        label: "RAW Content",
+                        id: "copy-message-raw",
+                        action: () => {
+                            copy$1(message.content);
+                            UI.showToast("Copied raw message content.", {
+                                type: "success"
+                            });
+                        }
+                    },
+                    {
+                        label: "Custom Format",
+                        id: "copy-message-custom-format",
+                        action: () => {
+                            copy$1(
+                                Formatter.formatString(
+                                    Settings$1.get("messageCustom"),
+                                    MessageCopyOptions.reduce((options, option) => {
+                                        options[option.name] = option.getValue({
+                                            message
+                                        });
+                                        return options;
+                                    }, {})
+                                )
+                            );
+                            UI.showToast("Copied message with custom format.", {
+                                type: "success"
+                            });
+                        }
+                    },
+                    {
+                        label: "Message Link",
+                        id: "copy-message-link",
+                        action: () => {
+                            const channel = ChannelStore.getChannel(message.channel_id);
+                            if (!channel) {
+                                console.error("Failed to copy message link!\n", "Message channel cannot be found!");
+                                return UI.showToast("Failed to copy message link!", {
+                                    type: "error"
+                                });
+                            }
+                            copy$1(getMessageLink(channel.guild_id, channel.id, message.id));
+                            UI.showToast("Copied message link.", {
+                                type: "success"
+                            });
+                        }
+                    },
+                    {
+                        label: "MessageId",
+                        id: "copy-message-id",
+                        action: () => {
+                            copy$1(message.id);
+                            UI.showToast("Copied message id.", {
+                                type: "success"
+                            });
+                        }
+                    }
+                ].filter(Boolean)
+            }
+        ]));
     });
 }
 
@@ -1614,7 +1633,7 @@ function dev() {
         const role = props.role || (() => {
             const selectedGuild = SelectedGuildStore.getGuildId();
             if (!GuildStore.getGuild(selectedGuild)) return handleClose();
-            const role2 = GuildStore.getRole(selectedGuild, props.id);
+            const role2 = GuildRoleStore.getRole(selectedGuild, props.id);
             return role2 || handleClose();
         })();
         const colors = {
