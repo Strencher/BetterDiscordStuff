@@ -1,5 +1,5 @@
 import {UI, ContextMenu} from "@api";
-import Webpack, {GuildStore} from "../modules/webpack";
+import Webpack, {GuildRoleStore, GuildStore} from "../modules/webpack";
 import {copy, int2hex, int2rgb} from "../modules/utils";
 import React from "react";
 import Formatter from "../modules/formatter";
@@ -57,7 +57,7 @@ export default function () {
         const role = props.role || (() => {
             const selectedGuild = SelectedGuildStore.getGuildId();
             if (!GuildStore.getGuild(selectedGuild)) return handleClose();
-            const role = GuildStore.getRole(selectedGuild, props.id);
+            const role = GuildRoleStore.getRole(selectedGuild, props.id);
             return role || handleClose();
         })();
 

@@ -2,7 +2,7 @@ import {UI, ContextMenu} from "@api";
 import Formatter from "../modules/formatter";
 import Settings from "../modules/settings";
 import {ChannelStore} from "../modules/webpack";
-import {copy} from "../modules/utils";
+import {copy, findGroupById} from "../modules/utils";
 
 const getMessageLink = (guildId, channelId, messageId, isDM = !!guildId) => 
     isDM
@@ -60,9 +60,13 @@ export const MessageCopyOptions = [
 export default function () {
     return ContextMenu.patch("message", (res, props) => {
         const {message} = props;
-        if (!message || !Array.isArray(res?.props?.children)) return res;
+        if (!message) return res;
+        
+        const menuGroup = (findGroupById(res, "delete") || findGroupById(res, "report"))?.props?.children;
+        const buttonIndex = menuGroup?.findIndex(i => i?.props?.id === "delete" || i?.props?.id === "report");
+        if (!menuGroup || !buttonIndex) return;
 
-        res.props.children.splice(4, 0,
+        menuGroup.splice(buttonIndex + 1, 0, (
             ContextMenu.buildMenuChildren([
                 {type: "separator"},
                 {
@@ -73,14 +77,14 @@ export default function () {
                         copy(message.id);
                     },
                     items: [
-                        // embed && {
-                        //     label: "Copy RAW Embed",
-                        //     id: "copy-embed-raw",
-                        //     action: () => {
-                        //         copy(JSON.stringify(embed, null, "\t"));
-                        //         UI.showToast("Copied raw embed.", {type: "success"});
-                        //     }
-                        // },
+                        message.embeds.length && {
+                            label: "Copy RAW Embed",
+                            id: "copy-embed-raw",
+                            action: () => {
+                                copy(JSON.stringify(message.embeds[0], null, "\t"));
+                                UI.showToast("Copied raw embed.", {type: "success"});
+                            }
+                        },
                         {
                             label: "RAW Content",
                             id: "copy-message-raw",
@@ -130,6 +134,6 @@ export default function () {
                     ].filter(Boolean)
                 }
             ])
-        );
+        ));
     });
 }

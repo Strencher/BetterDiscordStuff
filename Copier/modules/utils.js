@@ -102,3 +102,23 @@ export const fmt = (str, ...strings) => {
     let i = 0;
     return str.replaceAll("{s}", () => strings[i++]);
 };
+
+export function findGroupById(res, id) {
+    if (!res) return null;
+
+    let children = res?.props?.children;
+    if (!children) return null;
+
+    if (!Array.isArray(children))
+        children = [children];
+
+    if (children.some(child =>
+        child && typeof child === "object" && "props" in child && child.props.id === id
+    )) return res;
+
+    for (const child of children)
+        if (child && typeof child === "object") {
+            const found = findGroupById(child, id);
+            if (found) return found;
+        }
+}

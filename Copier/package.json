@@ -1,6 +1,6 @@
 {
     "name": "Copier",
-    "version": "1.6.2",
+    "version": "1.6.3",
     "author": "Strencher",
     "authorId": "415849376598982656",
     "description": "Allows you to copy certain stuff with custom options.",
@@ -8,12 +8,13 @@
     "invite": "gvA2ree",
     "changelog": [
         {
-            "type": "fixed",
             "title": "Bug Fixes",
+            "type": "fixed",
             "items": [
-                "The plugin has returned."
+                "Fixed role context menu",
+                "Fixed message context menu"
             ]
         }
     ],
-    "changelogDate": "2026-01-16"
+    "changelogDate": "2026-01-26"
 }
