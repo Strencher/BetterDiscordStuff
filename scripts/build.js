@@ -12,7 +12,7 @@ const nodeResolve = require("@rollup/plugin-node-resolve");
 const cssom = require("cssom");
 const { js: jsBeautify } = require("js-beautify");
 
-const NO_PLUGIN_FOLDERS = [".github", "common", "scripts", " DISCONTINUED"];
+const NO_PLUGIN_FOLDERS = [".github", "archive", "common", "scripts"];
 
 let argv = parseArgs({
     args: process.argv.slice(2),
