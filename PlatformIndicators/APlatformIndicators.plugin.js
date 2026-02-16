@@ -1,12 +1,12 @@
 /**
  * @name APlatformIndicators
- * @version 1.5.24
+ * @version 1.6.24
  * @author Strencher
  * @authorId 415849376598982656
  * @description Adds indicators for every platform that the user is using.
  * @source https://github.com/Strencher/BetterDiscordStuff/blob/master/PlatformIndicators/APlatformIndicators.plugin.js
  * @invite gvA2ree
- * @changelogDate 2026-01-25
+ * @changelogDate 2026-02-16
  */
 
 'use strict';
@@ -17,20 +17,20 @@ const React = BdApi.React;
 /* @manifest */
 var manifest = {
     "name": "APlatformIndicators",
-    "version": "1.5.24",
+    "version": "1.6.24",
     "author": "Strencher",
     "authorId": "415849376598982656",
     "description": "Adds indicators for every platform that the user is using.",
     "source": "https://github.com/Strencher/BetterDiscordStuff/blob/master/PlatformIndicators/APlatformIndicators.plugin.js",
     "invite": "gvA2ree",
     "changelog": [{
-        "title": "Fixed some small issues",
-        "type": "fixed",
+        "title": "New Indicator",
+        "type": "added",
         "items": [
-            "Updated the Plugin for the latest Discord Changes"
+            "Added support for VR"
         ]
     }],
-    "changelogDate": "2026-01-25"
+    "changelogDate": "2026-02-16"
 };
 
 /* @api */
@@ -164,6 +164,20 @@ function Desktop(props) {
     }));
 }
 
+/* components/icons/embedded.jsx */
+function Embedded(props) {
+    return React.createElement("svg", {
+        class: "PI-icon_embedded",
+        width: "24",
+        height: "24",
+        viewBox: "0 -2.5 28 28",
+        ...props
+    }, React.createElement("path", {
+        fill: "currentColor",
+        d: "M5.79335761,5 L18.2066424,5 C19.7805584,5 21.0868816,6.21634264 21.1990185,7.78625885 L21.8575059,17.0050826 C21.9307825,18.0309548 21.1585512,18.9219909 20.132679,18.9952675 C20.088523,18.9984215 20.0442685,19 20,19 C18.8245863,19 17.8000084,18.2000338 17.5149287,17.059715 L17,15 L7,15 L6.48507125,17.059715 C6.19999155,18.2000338 5.1754137,19 4,19 C2.97151413,19 2.13776159,18.1662475 2.13776159,17.1377616 C2.13776159,17.0934931 2.1393401,17.0492386 2.1424941,17.0050826 L2.80098151,7.78625885 C2.91311838,6.21634264 4.21944161,5 5.79335761,5 Z M14.5,10 C15.3284271,10 16,9.32842712 16,8.5 C16,7.67157288 15.3284271,7 14.5,7 C13.6715729,7 13,7.67157288 13,8.5 C13,9.32842712 13.6715729,10 14.5,10 Z M18.5,13 C19.3284271,13 20,12.3284271 20,11.5 C20,10.6715729 19.3284271,10 18.5,10 C17.6715729,10 17,10.6715729 17,11.5 C17,12.3284271 17.6715729,13 18.5,13 Z M6,9 L4,9 L4,11 L6,11 L6,13 L8,13 L8,11 L10,11 L10,9 L8,9 L8,7 L6,7 L6,9 Z"
+    }));
+}
+
 /* components/icons/mobile.jsx */
 function Mobile(props) {
     return React.createElement("svg", {
@@ -179,17 +193,22 @@ function Mobile(props) {
     }));
 }
 
-/* components/icons/embedded.jsx */
-function Embedded(props) {
+/* components/icons/vr.jsx */
+function VR(props) {
     return React.createElement("svg", {
-        class: "PI-icon_embedded",
+        class: "PI-icon_vr",
         width: "24",
         height: "24",
         viewBox: "0 -2.5 28 28",
         ...props
     }, React.createElement("path", {
         fill: "currentColor",
-        d: "M5.79335761,5 L18.2066424,5 C19.7805584,5 21.0868816,6.21634264 21.1990185,7.78625885 L21.8575059,17.0050826 C21.9307825,18.0309548 21.1585512,18.9219909 20.132679,18.9952675 C20.088523,18.9984215 20.0442685,19 20,19 C18.8245863,19 17.8000084,18.2000338 17.5149287,17.059715 L17,15 L7,15 L6.48507125,17.059715 C6.19999155,18.2000338 5.1754137,19 4,19 C2.97151413,19 2.13776159,18.1662475 2.13776159,17.1377616 C2.13776159,17.0934931 2.1393401,17.0492386 2.1424941,17.0050826 L2.80098151,7.78625885 C2.91311838,6.21634264 4.21944161,5 5.79335761,5 Z M14.5,10 C15.3284271,10 16,9.32842712 16,8.5 C16,7.67157288 15.3284271,7 14.5,7 C13.6715729,7 13,7.67157288 13,8.5 C13,9.32842712 13.6715729,10 14.5,10 Z M18.5,13 C19.3284271,13 20,12.3284271 20,11.5 C20,10.6715729 19.3284271,10 18.5,10 C17.6715729,10 17,10.6715729 17,11.5 C17,12.3284271 17.6715729,13 18.5,13 Z M6,9 L4,9 L4,11 L6,11 L6,13 L8,13 L8,11 L10,11 L10,9 L8,9 L8,7 L6,7 L6,9 Z"
+        d: "M8.46 8.64a1 1 0 0 1 1 1c0 .44-.3.8-.72.92l-.11.07c-.08.06-.2.19-.2.41a.99.99 0 0 1-.98.86h-.06a1 1 0 0 1-.94-1.05l.02-.32c.05-1.06.92-1.9 1.99-1.9Z"
+    }), React.createElement("path", {
+        fill: "currentColor",
+        "fill-rule": "evenodd",
+        "clip-rule": "evenodd",
+        d: "M15.55 5a5.5 5.5 0 0 1 5.15 3.67h.3a2 2 0 0 1 2 2v3.18a2 2 0 0 1-2 1.99h-.2A4.54 4.54 0 0 1 16.55 19a4.45 4.45 0 0 1-3.6-1.83 1.2 1.2 0 0 0-1.9 0 4.44 4.44 0 0 1-3.9 1.82 4.54 4.54 0 0 1-3.94-3.15H3a2 2 0 0 1-2-2v-3.18c0-1.1.9-1.99 2-1.99h.3A5.5 5.5 0 0 1 8.46 5h7.09Zm-7.1 2C6.6 7 5.06 8.5 4.97 10.41l-.02.66v3.18c0 1.43 1.05 2.66 2.34 2.74.85.06 1.63-.32 2.14-1.01a3.2 3.2 0 0 1 2.57-1.3c1 0 1.97.48 2.57 1.3.5.69 1.3 1.08 2.14 1.01 1.3-.08 2.34-1.31 2.34-2.74l-.02-3.84a3.54 3.54 0 0 0-3.49-3.43H8.45Z"
     }));
 }
 
@@ -214,6 +233,7 @@ var Icons = /*#__PURE__*/ Object.freeze({
     desktop: Desktop,
     embedded: Embedded,
     mobile: Mobile,
+    vr: VR,
     web: Web
 });
 
@@ -530,6 +550,11 @@ var SettingsItems = [{
                 id: "embedded",
                 value: true,
                 icon: "embedded"
+            },
+            {
+                id: "vr",
+                value: true,
+                icon: "vr"
             }
         ]
     }
