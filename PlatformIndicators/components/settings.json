@@ -65,6 +65,11 @@
                 "id": "embedded",
                 "value": true,
                 "icon": "embedded"
+            },
+            {
+                "id": "vr",
+                "value": true,
+                "icon": "vr"
             }
         ]
     }

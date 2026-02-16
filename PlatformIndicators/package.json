@@ -1,6 +1,6 @@
 {
   "name": "APlatformIndicators",
-  "version": "1.5.24",
+  "version": "1.6.24",
   "author": "Strencher",
   "authorId": "415849376598982656",
   "description": "Adds indicators for every platform that the user is using.",
@@ -8,13 +8,13 @@
   "invite": "gvA2ree",
   "changelog": [
     {
-      "title": "Fixed some small issues",
-      "type": "fixed",
+      "title": "New Indicator",
+      "type": "added",
       "items": [
-        "Updated the Plugin for the latest Discord Changes"
+        "Added support for VR"
       ]
     }
   ],
-  "changelogDate": "2026-01-25"
+  "changelogDate": "2026-02-16"
 }
 
