@@ -1,6 +1,6 @@
 /**
  * @name APlatformIndicators
- * @version 1.6.24
+ * @version 1.6.0
  * @author Strencher
  * @authorId 415849376598982656
  * @description Adds indicators for every platform that the user is using.
@@ -17,7 +17,7 @@ const React = BdApi.React;
 /* @manifest */
 var manifest = {
     "name": "APlatformIndicators",
-    "version": "1.6.24",
+    "version": "1.6.0",
     "author": "Strencher",
     "authorId": "415849376598982656",
     "description": "Adds indicators for every platform that the user is using.",
