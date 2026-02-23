@@ -71,33 +71,24 @@ export default class PlatformIndicators {
     }
 
     patchMemberList() {
-        const [MemberItem, key] = Webpack.getWithKey(Webpack.Filters.byStrings("location:\"MemberListItem\""));
-        const MemberListClasses = Webpack.getByKeys("member", "memberInner");
+        const [MemberItem, key] = Webpack.getWithKey(Webpack.Filters.byStrings("nameplate:", ".MEMBER_LIST"));
 
         Patcher.after(MemberItem, key, (_, [props], ret) => {
+            const user = props.avatar.props.user
             if (ret?.props?.className?.includes("placeholder")) return;
             if (!Settings.get("showInMemberList", true)) return;
-            if (Settings.get("ignoreBots", true) && props?.user.bot) return;
-            const children = ret.props.children();
-            const user = findInReactTree(children, e => e?.avatar && e?.name);
-            let childs = children?.props?.name?.props?.children;
-            if (user && childs) {
-                children.props.name.props.children = [
-                    childs,
+            if (Settings.get("ignoreBots", true) && user.bot) return;
+            const child = findInReactTree(ret, e => e?.className?.includes("username"));
+            if (user && child) {
+                child.children = [
+                    child.children,
                     <StatusIndicators
-                        userId={props.user.id}
+                        userId={user.id}
                         type="MemberList"
                     />
                 ];
             }
-            ret.props.children = () => children;
         });
-
-        const MemberListUserElement = document.querySelector(`.${MemberListClasses.member}`);
-        if (MemberListUserElement) {
-            const MemberListUserInstance = ReactUtils.getOwnerInstance(MemberListUserElement);
-            if (MemberListUserInstance) MemberListUserInstance.forceUpdate();
-        }
     }
 
     patchChat() {

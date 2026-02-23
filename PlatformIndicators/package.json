@@ -1,12 +1,19 @@
 {
   "name": "APlatformIndicators",
-  "version": "1.6.0",
+  "version": "1.6.1",
   "author": "Strencher",
   "authorId": "415849376598982656",
   "description": "Adds indicators for every platform that the user is using.",
   "source": "https://github.com/Strencher/BetterDiscordStuff/blob/master/PlatformIndicators/APlatformIndicators.plugin.js",
   "invite": "gvA2ree",
   "changelog": [
+    {
+      "title": "Fixed",
+      "type": "fixed",
+      "items": [
+        "Fixed for the latest Discord update"
+      ]
+    },
     {
       "title": "New Indicator",
       "type": "added",
@@ -15,6 +22,6 @@
       ]
     }
   ],
-  "changelogDate": "2026-02-16"
+  "changelogDate": "2026-02-23"
 }
 
