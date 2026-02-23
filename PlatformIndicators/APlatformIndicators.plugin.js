@@ -1,12 +1,12 @@
 /**
  * @name APlatformIndicators
- * @version 1.6.0
+ * @version 1.6.1
  * @author Strencher
  * @authorId 415849376598982656
  * @description Adds indicators for every platform that the user is using.
  * @source https://github.com/Strencher/BetterDiscordStuff/blob/master/PlatformIndicators/APlatformIndicators.plugin.js
  * @invite gvA2ree
- * @changelogDate 2026-02-16
+ * @changelogDate 2026-02-23
  */
 
 'use strict';
@@ -17,20 +17,28 @@ const React = BdApi.React;
 /* @manifest */
 var manifest = {
     "name": "APlatformIndicators",
-    "version": "1.6.0",
+    "version": "1.6.1",
     "author": "Strencher",
     "authorId": "415849376598982656",
     "description": "Adds indicators for every platform that the user is using.",
     "source": "https://github.com/Strencher/BetterDiscordStuff/blob/master/PlatformIndicators/APlatformIndicators.plugin.js",
     "invite": "gvA2ree",
     "changelog": [{
-        "title": "New Indicator",
-        "type": "added",
-        "items": [
-            "Added support for VR"
-        ]
-    }],
-    "changelogDate": "2026-02-16"
+            "title": "Fixed",
+            "type": "fixed",
+            "items": [
+                "Fixed for the latest Discord update"
+            ]
+        },
+        {
+            "title": "New Indicator",
+            "type": "added",
+            "items": [
+                "Added support for VR"
+            ]
+        }
+    ],
+    "changelogDate": "2026-02-23"
 };
 
 /* @api */
@@ -733,33 +741,25 @@ class PlatformIndicators {
         });
     }
     patchMemberList() {
-        const [MemberItem, key] = Webpack.getWithKey(Webpack.Filters.byStrings('location:"MemberListItem"'));
-        const MemberListClasses = Webpack.getByKeys("member", "memberInner");
+        const [MemberItem, key] = Webpack.getWithKey(Webpack.Filters.byStrings("nameplate:", ".MEMBER_LIST"));
         Patcher.after(MemberItem, key, (_, [props], ret) => {
+            const user = props.avatar.props.user;
             if (ret?.props?.className?.includes("placeholder")) return;
             if (!Settings.get("showInMemberList", true)) return;
-            if (Settings.get("ignoreBots", true) && props?.user.bot) return;
-            const children = ret.props.children();
-            const user = findInReactTree(children, (e) => e?.avatar && e?.name);
-            let childs = children?.props?.name?.props?.children;
-            if (user && childs) {
-                children.props.name.props.children = [
-                    childs,
+            if (Settings.get("ignoreBots", true) && user.bot) return;
+            const child = findInReactTree(ret, (e) => e?.className?.includes("username"));
+            if (user && child) {
+                child.children = [
+                    child.children,
                     React.createElement(
                         StatusIndicators, {
-                            userId: props.user.id,
+                            userId: user.id,
                             type: "MemberList"
                         }
                     )
                 ];
             }
-            ret.props.children = () => children;
         });
-        const MemberListUserElement = document.querySelector(`.${MemberListClasses.member}`);
-        if (MemberListUserElement) {
-            const MemberListUserInstance = ReactUtils.getOwnerInstance(MemberListUserElement);
-            if (MemberListUserInstance) MemberListUserInstance.forceUpdate();
-        }
     }
     patchChat() {
         const [ChatUsername, key] = Webpack.getWithKey(Webpack.Filters.byStrings(".guildMemberAvatar&&null!="));
