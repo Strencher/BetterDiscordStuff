@@ -1,6 +1,6 @@
 {
 	"name": "InvisibleTyping",
-	"version": "1.4.5",
+	"version": "1.4.6",
 	"author": "Strencher",
 	"authorId": "415849376598982656",
 	"description": "Enhanced version of silent typing.",
@@ -15,5 +15,5 @@
 			]
 		}
 	],
-	"changelogDate": "2025-08-02"
+	"changelogDate": "2026-03-20"
 }
