@@ -1,12 +1,11 @@
-import React from "react";
 import { Components } from "@api";
-
-import * as Icons from "./icons/Icons";
-import Styles from "./indicators.scss";
+import React from "react";
 
 import { buildClassName } from "../modules/shared";
 import usePlatformStores from "../modules/usePlatformStores";
-import { getStatusText, getStatusColor } from "../modules/utils";
+import { getStatusColor, getStatusText } from "../modules/utils";
+import * as Icons from "./icons/Icons";
+import Styles from "./indicators.scss";
 
 export default function StatusIndicators({ type, userId, size = 18, separator = false }) {
     const state = usePlatformStores(userId, type);

@@ -3,10 +3,10 @@ import { LocalActivityStore, PresenceStore, SessionsStore, UserStore, useStateFr
 
 const isStreaming = () => LocalActivityStore.getActivities().some(e => e.type === 1);
 
-/**@returns {{iconStates: any, shouldShow: boolean, clients: any, user: any}} */
+/** @returns {{iconStates: any, shouldShow: boolean, clients: any, user: any}} */
 export default function usePlatformStores(userId, type) {
     const user = useStateFromStores([UserStore], () => UserStore.getUser(userId));
-    const sessions = useStateFromStores([SessionsStore], () => SessionsStore.getSessions())
+    const sessions = useStateFromStores([SessionsStore], () => SessionsStore.getSessions());
 
     const iconStates = Settings.get("icons", {});
     const shownInArea = Settings.get("showIn" + type, true);

@@ -1,8 +1,9 @@
-import React from "react";
-import {Utils} from "@api";
-import Tick from "../icons/tick";
-
 import "./toggle.scss";
+
+import {Utils} from "@api";
+import React from "react";
+
+import Tick from "../icons/tick";
 
 export default function ToggleItem({name, note, value, onChange}) {
     const [checked, toggle] = React.useReducer(n => !n, value);
@@ -11,7 +12,7 @@ export default function ToggleItem({name, note, value, onChange}) {
         <div className="copier-toggle">
             <div className="copier-header copier-toggle-name">{name}</div>
             <div
-                onClick={(e) => {
+                onClick={e => {
                     onChange(!checked);
                     toggle();
 

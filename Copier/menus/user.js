@@ -1,7 +1,8 @@
 import {ContextMenu, UI} from "@api";
-import {copy} from "../modules/utils";
+
 import Formatter from "../modules/formatter";
 import Settings from "../modules/settings";
+import {copy} from "../modules/utils";
 import {ChannelStore} from "../modules/webpack";
 
 export const UserCopyOptions = [
@@ -37,7 +38,7 @@ export const UserCopyOptions = [
     }
 ];
 
-export default function () {
+export default function() {
     const patches = new Set();
 
     const buildMenu = (user, isDM = false) => ContextMenu.buildMenuChildren([
@@ -47,7 +48,7 @@ export default function () {
             id: "copier",
             label: "Copy",
             action() {
-                copy(user.id);            
+                copy(user.id);
             },
             items: [
                 {
@@ -66,11 +67,11 @@ export default function () {
                             options[option.name] = option.getValue(user);
                             return options;
                         }, {});
-    
+
                         copy(
                             Formatter.formatString(Settings.get("userCustom"), options)
                         );
-    
+
                         UI.showToast("Copied user with custom format.", {type: "success"});
                     }
                 },

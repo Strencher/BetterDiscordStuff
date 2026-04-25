@@ -1,12 +1,11 @@
-import React from "react";
 import { Components } from "@api";
+import React from "react";
 
 import Settings from "../modules/settings";
 import { useStateFromStores } from "../modules/shared";
 import { getStatusColor } from "../modules/utils";
-
-import * as Icons from "./icons/Icons";
 import { Checkbox } from "./icons/checkbox";
+import * as Icons from "./icons/Icons";
 import SettingsItems from "./settings.json";
 import Styles from "./settings.scss";
 
@@ -38,7 +37,7 @@ function SmartDisable(props) {
         Settings.set(props.id, states);
 
         setStates(Object.assign({}, states));
-    }
+    };
 
     return (
         <div className={Styles.PIsettingsSmartDisable}>

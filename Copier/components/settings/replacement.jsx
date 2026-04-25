@@ -1,7 +1,9 @@
-import React from "react";
-import TextBox from "./textbox";
-import Settings from "../../modules/settings";
 import "./replacement.scss";
+
+import React from "react";
+
+import Settings from "../../modules/settings";
+import TextBox from "./textbox";
 
 function Variable({name, description}) {
     return (

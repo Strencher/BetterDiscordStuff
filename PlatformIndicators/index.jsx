@@ -1,10 +1,9 @@
-import React from "react";
-import { DOM, Patcher, ReactUtils, Webpack, Utils } from "@api";
+import { DOM, Patcher, ReactUtils, Utils, Webpack } from "@api";
 import manifest from "@manifest";
 import Styles from "@styles";
+import React from "react";
 
 import showChangelog from "../common/Changelog";
-
 import StatusIndicators from "./components/indicators";
 import SettingsPanel from "./components/settings";
 import Settings from "./modules/settings";
@@ -79,7 +78,7 @@ export default class PlatformIndicators {
         const [MemberItem, key] = Webpack.getWithKey(Webpack.Filters.byStrings("nameplate:", ".MEMBER_LIST"));
 
         Patcher.after(MemberItem, key, (_, [props], ret) => {
-            const user = props.avatar.props.user
+            const user = props.avatar.props.user;
             if (ret?.props?.className?.includes("placeholder")) return;
             if (!Settings.get("showInMemberList", true)) return;
             if (Settings.get("ignoreBots", true) && user.bot) return;
@@ -149,7 +148,7 @@ export default class PlatformIndicators {
 
         const unpatch = Patcher.after(UserInfo.prototype, "render", (_, __, res) => {
             unpatch();
-            Patcher.after(res.type.prototype, "render", (_, __, res) => {    
+            Patcher.after(res.type.prototype, "render", (_, __, res) => {
                 const unpatch2 = Patcher.after(res, "type", (_, __, res) => {
                     unpatch2();
                     const child = Utils.findInTree(res, e => e?.className?.includes("listItemContents"), { walkable: ["children", "props"] });

@@ -1,9 +1,10 @@
 import {ContextMenu, UI} from "@api";
-import Formatter from "../modules/formatter";
-import Webpack, {GuildStore} from "../modules/webpack";
+
 import ChannelTypes from "../data/channeltypes";
-import {copy} from "../modules/utils";
+import Formatter from "../modules/formatter";
 import Settings from "../modules/settings";
+import {copy} from "../modules/utils";
+import Webpack, {GuildStore} from "../modules/webpack";
 
 const SortedVoiceStateStore = Webpack.getStore("SortedVoiceStateStore");
 const GuildChannelStore = Webpack.getStore("GuildChannelStore");
@@ -136,7 +137,7 @@ export const ChannelCategoryCopyOptions = [
     }
 ];
 
-const buildTextChannelMenu = function (channel) {
+const buildTextChannelMenu = function(channel) {
     const guild = GuildStore.getGuild(channel.guild_id);
 
     return ContextMenu.buildMenuChildren([
@@ -194,7 +195,7 @@ const buildTextChannelMenu = function (channel) {
     ]);
 };
 
-const buildVoiceChannelMenu = function (channel) {
+const buildVoiceChannelMenu = function(channel) {
     const guild = GuildStore.getGuild(channel.guild_id);
 
     return ContextMenu.buildMenuChildren([
@@ -252,7 +253,7 @@ const buildVoiceChannelMenu = function (channel) {
     ]);
 };
 
-const buildCategoryMenu = function (channel) {
+const buildCategoryMenu = function(channel) {
     const guild = GuildStore.getGuild(channel.guild_id);
 
     return ContextMenu.buildMenuChildren([
@@ -302,7 +303,7 @@ const buildCategoryMenu = function (channel) {
     ]);
 };
 
-export default function () {
+export default function() {
     const builders = {
         [ChannelTypes.GUILD_STAGE_VOICE]: buildVoiceChannelMenu,
         [ChannelTypes.GUILD_CATEGORY]: buildCategoryMenu,
@@ -314,7 +315,7 @@ export default function () {
         const {channel} = props;
 
         if (!channel || !Array.isArray(res?.props?.children)) return res;
-        
+
         const menu = (builders[channel.type] ?? buildTextChannelMenu)(channel);
         res.props.children.splice(-1, 0, menu);
     });

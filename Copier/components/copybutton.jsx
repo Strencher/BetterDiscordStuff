@@ -1,10 +1,11 @@
+import React from "react";
+
 import {MessageCopyOptions} from "../menus/message";
 import Formatter from "../modules/formatter";
 import Settings from "../modules/settings";
 import {copy, useKeyState, useStateFromStores} from "../modules/utils";
 import Webpack, {Tooltip} from "../modules/webpack";
 import CopyIcon from "./icons/copy";
-import React from "react";
 
 const className = Webpack.getByProps("dangerous", "button")?.button ?? "buttonUndefined";
 
@@ -12,7 +13,7 @@ export default function CopyButton(props) {
     const shouldShow = useStateFromStores([Settings], () => Settings.get("showButton", true));
     const active = useKeyState();
     const {message} = props;
-    
+
     if (!shouldShow) return null;
 
     const handleClick = () => {

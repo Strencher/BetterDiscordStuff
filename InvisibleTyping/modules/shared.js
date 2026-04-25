@@ -1,6 +1,6 @@
 import { Webpack } from "@api";
 
-export const Dispatcher = Webpack.getByKeys('dispatch', 'register', { searchExports: true });
+export const Dispatcher = Webpack.getByKeys("dispatch", "register", { searchExports: true });
 export const Flux = Webpack.getByKeys("Store");
 export const TypingModule = Webpack.getByKeys("startTyping");
 export const useStateFromStores = Webpack.getByStrings("useStateFromStores", { searchExports: true });
@@ -22,4 +22,4 @@ export const buildClassName = (...args) => {
 
         return classNames;
     }, []).join(" ");
-}
+};

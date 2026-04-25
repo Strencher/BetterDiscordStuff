@@ -1,15 +1,14 @@
-import React from "react";
 import { Components, ContextMenu, UI, Webpack } from "@api";
-
-import Keyboard from "./icons/keyboard";
-import styles from "./typingButton.scss";
+import React from "react";
 
 import Settings from "../modules/settings";
 import { buildClassName, TypingModule, useStateFromStores } from "../modules/shared";
+import Keyboard from "./icons/keyboard";
+import styles from "./typingButton.scss";
 
 const ChatButton = Webpack.getBySource("CHAT_INPUT_BUTTON_NOTIFICATION")?.A;
 
-const removeItem = function (array: any[], item: any) {
+const removeItem = function(array: any[], item: any) {
     while (array.includes(item)) {
         array.splice(array.indexOf(item), 1);
     }
@@ -66,7 +65,7 @@ export default function InvisibleTypingButton({ channel, isEmpty }) {
     const handleContextMenu = React.useCallback(event => {
         ContextMenu.open(event, () => {
             return <InvisibleTypingContextMenu />;
-        })
+        });
     }, [enabled]);
 
     return (
@@ -94,7 +93,7 @@ export default function InvisibleTypingButton({ channel, isEmpty }) {
     );
 }
 
-InvisibleTypingButton.getState = function (channelId: string) {
+InvisibleTypingButton.getState = function(channelId: string) {
     const isGlobal = Settings.get<boolean>("autoEnable", true);
     const isExcluded = Settings.get("exclude", []).includes(channelId);
 

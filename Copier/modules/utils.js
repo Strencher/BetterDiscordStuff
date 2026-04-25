@@ -23,8 +23,8 @@ export function findInTree(res, filter) {
 }
 
 export const onceAdded = (selector, callback, signal) => {
-    let directMatch;
-    if (directMatch = document.querySelector(selector)) {
+    const directMatch = document.querySelector(selector);
+    if (directMatch) {
         callback(directMatch);
         return () => null;
     }
@@ -37,7 +37,7 @@ export const onceAdded = (selector, callback, signal) => {
 
             for (const node of change.addedNodes) {
                 if (node.nodeType === Node.TEXT_NODE) continue;
-                
+
                 const match = (node.matches(selector) && node) || node.querySelector(selector);
 
                 if (!match) continue;
@@ -92,7 +92,7 @@ export const useStateFromStores = (stores, factory) => {
             store.addReactChangeListener(listener);
         }
 
-        return () => stores.forEach(store => store.removeReactChangeListener())
+        return () => stores.forEach(store => store.removeReactChangeListener());
     });
 
     return state;

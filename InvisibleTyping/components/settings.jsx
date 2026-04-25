@@ -1,10 +1,9 @@
-import React from "react";
 import { Components } from "@api";
-
-import SettingsItems from "./settings.json";
+import React from "react";
 
 import Settings from "../modules/settings";
 import { useStateFromStores } from "../modules/shared";
+import SettingsItems from "./settings.json";
 
 const { SettingItem, SwitchInput } = Components;
 

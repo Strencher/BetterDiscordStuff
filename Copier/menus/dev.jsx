@@ -1,10 +1,12 @@
-import {UI, ContextMenu} from "@api";
-import Webpack, {GuildRoleStore, GuildStore} from "../modules/webpack";
-import {copy, int2hex, int2rgb} from "../modules/utils";
-import React from "react";
-import Formatter from "../modules/formatter";
-
 import "./label.css";
+
+import {ContextMenu, UI} from "@api";
+import React from "react";
+
+import Formatter from "../modules/formatter";
+import Settings from "../modules/settings";
+import {copy, int2hex, int2rgb} from "../modules/utils";
+import Webpack, {GuildRoleStore, GuildStore} from "../modules/webpack";
 
 const SelectedGuildStore = Webpack.getStore("SelectedGuildStore");
 
@@ -48,12 +50,12 @@ export const RoleCopyOptions = [
     }
 ];
 
-export default function () {
+export default function() {
     const patches = new Set([]);
 
     const patch = (res, props) => {
         const handleClose = () => res?.props?.onClose();
-        
+
         const role = props.role || (() => {
             const selectedGuild = SelectedGuildStore.getGuildId();
             if (!GuildStore.getGuild(selectedGuild)) return handleClose();
@@ -136,7 +138,7 @@ export default function () {
                                     id: "copy-role-color-rgb",
                                     action: () => {
                                         copy(colors.rgb);
-                                        UI.showToast(`Copied role color in RGB format.`, {type: "success"});
+                                        UI.showToast("Copied role color in RGB format.", {type: "success"});
                                     }
                                 },
                                 {
@@ -146,7 +148,7 @@ export default function () {
                                     id: "copy-role-color-hex",
                                     action: () => {
                                         copy(colors.hex);
-                                        UI.showToast(`Copied role color in HEX format.`, {type: "success"});
+                                        UI.showToast("Copied role color in HEX format.", {type: "success"});
                                     }
                                 },
                                 {
@@ -156,7 +158,7 @@ export default function () {
                                     id: "copy-role-color-int",
                                     action: () => {
                                         copy(colors.int.toString());
-                                        UI.showToast(`Copied role color in INT format.`, {type: "success"});
+                                        UI.showToast("Copied role color in INT format.", {type: "success"});
                                     }
                                 }
                             ]
@@ -164,7 +166,7 @@ export default function () {
                     ]
                 }
             ])
-        )
+        );
     };
 
     patches.add(ContextMenu.patch("dev-context", patch));

@@ -1,6 +1,6 @@
 import * as Api from "@api";
 
-const {Webpack, Webpack: {Filters}} = Api;
+const {Components, Webpack, Webpack: {Filters}} = Api;
 
 export const getByProps = (...props) => {
     return Webpack.getModule(Filters.byKeys(...props));
@@ -24,7 +24,7 @@ export const getMangled = function* (filter, target = null) {
 };
 
 export const getBySource = function(sources) {
-    const filters = Filters.combine(...sources.map(x => Filters.bySource(x)))
+    const filters = Filters.combine(...sources.map(x => Filters.bySource(x)));
     return Webpack.getModule(filters);
 };
 
@@ -46,4 +46,4 @@ export {Filters};
 export const ChannelStore = getStore("ChannelStore");
 export const GuildRoleStore = getStore("GuildRoleStore");
 export const GuildStore = getStore("GuildStore");
-export const Tooltip = BdApi.Components.Tooltip
+export const Tooltip = Components.Tooltip;

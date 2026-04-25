@@ -1,5 +1,6 @@
-import React from "react";
 import "./protip.css";
+
+import React from "react";
 
 export default function ProTip() {
     return (

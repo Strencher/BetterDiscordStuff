@@ -26,6 +26,6 @@ const Settings = {
         Data.save("settings", Settings._settings);
         this._listeners.forEach(l => l());
     }
-}
+};
 
 export default Settings;

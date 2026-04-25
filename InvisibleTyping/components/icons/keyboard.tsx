@@ -1,5 +1,6 @@
-import styles from "../typingButton.scss";
 import React from "react";
+
+import styles from "../typingButton.scss";
 
 export default function Keyboard({ disabled, ...props }) {
     return (

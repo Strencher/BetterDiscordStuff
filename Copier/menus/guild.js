@@ -1,8 +1,9 @@
-import {UI, ContextMenu} from "@api";
+import {ContextMenu, UI} from "@api";
+
 import Formatter from "../modules/formatter";
+import Settings from "../modules/settings";
 import {copy} from "../modules/utils";
 import Webpack from "../modules/webpack";
-import Settings from "../modules/settings";
 
 const GuildMemberCountStore = Webpack.getStore("GuildMemberCountStore");
 
@@ -34,7 +35,7 @@ export const GuildCopyOptions = [
     }
 ];
 
-export default function () {
+export default function() {
     return ContextMenu.patch("guild-context", (res, props) => {
         const {guild} = props;
 

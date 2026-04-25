@@ -1,10 +1,11 @@
-import React from "react";
-import {Utils} from "@api";
-
 import "./item.scss";
+
+import {Utils} from "@api";
+import React from "react";
+
 import Tune from "../icons/tune";
 
-export default function SettingsItem({name, note, children, icon, opened = false, onSelect}) {
+export default function SettingsItem({name, note, children, opened = false, onSelect}) {
     return (
         <div className={Utils.className("copier-settings-item", opened && "item-opened")} onClick={onSelect}>
             <div className="copier-settings-item-header">

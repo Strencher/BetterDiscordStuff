@@ -1,4 +1,5 @@
 import React from "react";
+
 import styles from "./caret.scss";
 
 export default function Caret({direction, ...props}) {

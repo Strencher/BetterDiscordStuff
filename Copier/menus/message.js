@@ -1,13 +1,15 @@
-import {UI, ContextMenu} from "@api";
+/* global GLOBAL_ENV */
+import {ContextMenu, UI} from "@api";
+
 import Formatter from "../modules/formatter";
 import Settings from "../modules/settings";
-import {ChannelStore} from "../modules/webpack";
 import {copy, findGroupById} from "../modules/utils";
+import {ChannelStore} from "../modules/webpack";
 
-const getMessageLink = (guildId, channelId, messageId, isDM = !!guildId) => 
+const getMessageLink = (guildId, channelId, messageId, isDM = !!guildId) =>
     isDM
         ? `https://${GLOBAL_ENV.RELEASE_CHANNEL}.discord.com/channels/@me/${channelId}/${messageId}`
-        : `https://${GLOBAL_ENV.RELEASE_CHANNEL}.discord.com/channels/${guildId}/${channelId}/${messageId}`    
+        : `https://${GLOBAL_ENV.RELEASE_CHANNEL}.discord.com/channels/${guildId}/${channelId}/${messageId}`;
 
 export const MessageCopyOptions = [
     {
@@ -57,11 +59,11 @@ export const MessageCopyOptions = [
     }
 ];
 
-export default function () {
+export default function() {
     return ContextMenu.patch("message", (res, props) => {
         const {message} = props;
         if (!message) return res;
-        
+
         const menuGroup = (findGroupById(res, "delete") || findGroupById(res, "report"))?.props?.children;
         const buttonIndex = menuGroup?.findIndex(i => i?.props?.id === "delete" || i?.props?.id === "report");
         if (!menuGroup || !buttonIndex) return;

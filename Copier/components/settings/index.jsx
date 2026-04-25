@@ -1,17 +1,19 @@
-import React from "react";
-import SettingsItem from "./item";
-import ToggleItem from "./toggle";
-import TextBox from "./textbox";
-import ProTip from "../protip";
-import {fmt} from "../../modules/utils";
 import "./index.scss";
-import Replacement from "./replacement";
-import {UserCopyOptions} from "../../menus/user";
-import {MessageCopyOptions} from "../../menus/message";
-import {GuildCopyOptions} from "../../menus/guild";
+
+import React from "react";
+
 import {ChannelCategoryCopyOptions, ChannelCopyOptions, VoiceChannelCopyOptions} from "../../menus/channel";
 import {RoleCopyOptions} from "../../menus/dev";
+import {GuildCopyOptions} from "../../menus/guild";
+import {MessageCopyOptions} from "../../menus/message";
+import {UserCopyOptions} from "../../menus/user";
 import Settings from "../../modules/settings";
+import {fmt} from "../../modules/utils";
+import ProTip from "../protip";
+import SettingsItem from "./item";
+import Replacement from "./replacement";
+import TextBox from "./textbox";
+import ToggleItem from "./toggle";
 
 const Dynamic = ({component: Type, ...props}) => <Type {...props} />;
 

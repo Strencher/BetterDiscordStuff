@@ -1,6 +1,6 @@
-import React from "react";
-
 import "./textbox.scss";
+
+import React from "react";
 
 export default function TextBox({name, note, value, onChange, placeholder}) {
     const [currentValue, setValue] = React.useState(value);

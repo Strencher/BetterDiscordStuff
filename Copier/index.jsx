@@ -1,19 +1,18 @@
 import "./button.css";
 import "./changelog.css";
 
-import React from "react";
-
 import {Patcher, ReactUtils} from "@api";
 import manifest from "@manifest";
 import Styles from "@styles";
+import React from "react";
 
 import showChangelog from "../common/Changelog";
 import CopyButton from "./components/copybutton";
+import CopyIcon from "./components/icons/copy";
 import SettingsPanel from "./components/settings";
 import * as ContextMenus from "./menus";
+import {copy, findInTree, onceAdded} from "./modules/utils";
 import Webpack, { Tooltip } from "./modules/webpack";
-import {findInTree, onceAdded} from "./modules/utils";
-import CopyIcon from "./components/icons/copy";
 
 export default class Copier {
     flush = new Set();
@@ -42,7 +41,7 @@ export default class Copier {
     }
 
     patchAboutMe() {
-        const module = Webpack.getBySource(['animUserProfileSidebarateOnHoverOrFocusOnly','61W33d'])
+        const module = Webpack.getBySource(["animUserProfileSidebarateOnHoverOrFocusOnly", "61W33d"]);
 
         const CopyButton = React.memo(({onClick}) => (
             <Tooltip text="Copy About Me" tooltipClassName="copier-tooltip" position="top">
@@ -53,9 +52,10 @@ export default class Copier {
                 )}
             </Tooltip>
         ));
+        CopyButton.displayName = "CopyButton";
 
         Patcher.after(module, "Z", (_, [{bio}], res) => {
-            console.log(res)
+            console.log(res);
             const title = findInTree(res, e => e?.variant && Array.isArray(e.children));
 
             if (!title) return res;;
@@ -84,7 +84,7 @@ export default class Copier {
                 }
             }, this.controller.signal);
         });
-        
+
         if (!buttonsContainer) return;
 
         const ToolbarButtonPatch = ({__COP_ORIGINAL, ...props}) => {
@@ -117,7 +117,7 @@ export default class Copier {
         Styles.unload();
         Patcher.unpatchAll();
         this.flush.forEach(f => f());
-        this.flush.clear()
+        this.flush.clear();
         this.controller.abort();
     }
 }

@@ -1,12 +1,11 @@
-import React from "react";
 import { Patcher, Webpack } from "@api";
 import manifest from "@manifest";
 import Styles from "@styles";
+import React from "react";
 
 import showChangelog from "../common/Changelog";
-
-import InvisibleTypingButton from "./components/typingButton";
 import SettingsPanel from "./components/settings";
+import InvisibleTypingButton from "./components/typingButton";
 import Settings from "./modules/settings";
 import { TypingModule } from "./modules/shared";
 
@@ -51,11 +50,11 @@ export default class InvisibleTyping {
     }
 
     patchChannelTextArea() {
-        const ChatButtonsGroup = Webpack.getBySource("showAllButtons","promotionsByType")?.A;
+        const ChatButtonsGroup = Webpack.getBySource("showAllButtons", "promotionsByType")?.A;
 
         Patcher.after(ChatButtonsGroup, "type", (_, args, res) => {
             if (args.length == 2 && !args[0].disabled && args[0].type.analyticsName == "normal" && res.props.children && Array.isArray(res.props.children)) {
-                res.props.children.unshift(<InvisibleTypingButton channel={args[0].channel} isEmpty={!Boolean(args[0].textValue)} />);
+                res.props.children.unshift(<InvisibleTypingButton channel={args[0].channel} isEmpty={!args[0].textValue} />);
             }
         });
     }
