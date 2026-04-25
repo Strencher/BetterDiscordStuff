@@ -1,12 +1,12 @@
 /**
  * @name APlatformIndicators
- * @version 1.6.1
+ * @version 1.6.2
  * @author Strencher
  * @authorId 415849376598982656
  * @description Adds indicators for every platform that the user is using.
  * @source https://github.com/Strencher/BetterDiscordStuff/blob/master/PlatformIndicators/APlatformIndicators.plugin.js
  * @invite gvA2ree
- * @changelogDate 2026-02-23
+ * @changelogDate 2026-04-25
  */
 
 'use strict';
@@ -17,7 +17,7 @@ const React = BdApi.React;
 /* @manifest */
 var manifest = {
     "name": "APlatformIndicators",
-    "version": "1.6.1",
+    "version": "1.6.2",
     "author": "Strencher",
     "authorId": "415849376598982656",
     "description": "Adds indicators for every platform that the user is using.",
@@ -27,7 +27,9 @@ var manifest = {
             "title": "Fixed",
             "type": "fixed",
             "items": [
-                "Fixed for the latest Discord update"
+                "Fixed DM list not showing indicators",
+                "Fixed status icons always appearing offline",
+                "Fixed crash on load caused by removed Discord i18n keys",
             ]
         },
         {
@@ -38,7 +40,7 @@ var manifest = {
             ]
         }
     ],
-    "changelogDate": "2026-02-23"
+    "changelogDate": "2026-04-25"
 };
 
 /* @api */
@@ -306,20 +308,34 @@ const {
 const useStateFromStores = BdApi.Hooks.useStateFromStores;
 const Dispatcher = UserStore._dispatcher;
 const Flux = Webpack.getByKeys("Store");
-const StatusTypes = Webpack.getModule((x) => x.DND && x.OFFLINE, {
-    searchExports: true
-});
-const Colors = Webpack.getByKeys("unsafe_rawColors")?.unsafe_rawColors;
 const Intl$1 = Webpack.getModule((x) => x.intl);
-const formatMessage = (key) => Intl$1.intl.formatToMarkdownString(Intl$1.t[key]);
-const Messages = {
-    "STATUS_DND": formatMessage("jaNpQH"),
-    "STATUS_OFFLINE": formatMessage("Vv0abJ"),
-    "STATUS_ONLINE": formatMessage("WbGtnH"),
-    "STATUS_STREAMING": formatMessage("XKYej5"),
-    "STATUS_IDLE": formatMessage("qWbtVU"),
-    "STATUS_MOBILE": formatMessage("5LMZtY")
-};
+const Messages = (() => {
+    if (!Intl$1?.t || !Intl$1?.intl) return {};
+    const candidates = {
+        STATUS_DND:       ["jaNpQH"],
+        STATUS_OFFLINE:   ["Vv0abJ"],
+        STATUS_ONLINE:    ["WbGtnH"],
+        STATUS_STREAMING: ["XKYej5"],
+        STATUS_IDLE:      ["qWbtVU"],
+        STATUS_MOBILE:    ["5LMZtY"]
+    };
+    const registeredKeys = new Set(Reflect.ownKeys(Intl$1.t));
+    const result = {};
+    for (const [msgKey, keys] of Object.entries(candidates)) {
+        const key = keys.find(k => registeredKeys.has(k));
+        if (!key) continue;
+        let stale = false;
+        const origWarn = console.warn;
+        console.warn = () => { stale = true; };
+        try {
+            const formatted = Intl$1.intl.formatToMarkdownString(Intl$1.t[key]);
+            if (!stale && typeof formatted === "string" && formatted.length) result[msgKey] = formatted;
+        } catch { /* formatting failed, skip */ } finally {
+            console.warn = origWarn;
+        }
+    }
+    return result;
+})();
 const buildClassName = (...args) => {
     return args.reduce((classNames, arg) => {
         if (!arg) return classNames;
@@ -375,7 +391,12 @@ function usePlatformStores(userId, type) {
             }
             return {};
         }
-        return PresenceStore.getState().clientStatuses[user?.id] ?? {};
+        const rawClients = PresenceStore.getState()?.clientStatuses?.[user?.id] ?? {};
+        return Object.fromEntries(
+            Object.entries(rawClients).map(([k, v]) =>
+                [k, typeof v === "string" ? v : (v?.status ?? "offline")]
+            )
+        );
     })();
     return {
         iconStates,
@@ -395,24 +416,18 @@ function upperFirst(string) {
 }
 
 function getStatusText(key, status) {
-    return (key === "vr" ? "VR" : upperFirst(key)) + ": " + Messages[`STATUS_${(status === "mobile" ? "mobile_online" : status).toUpperCase()}`];
+    const label = key === "vr" ? "VR" : upperFirst(key);
+    const messageKey = `STATUS_${status.toUpperCase()}`;
+    return label + ": " + (Messages[messageKey] ?? upperFirst(status));
 }
 
 function getStatusColor(status) {
     switch (status) {
-        case StatusTypes.ONLINE:
-            return Colors.GREEN_360;
-        case StatusTypes.IDLE:
-            return Colors.YELLOW_300;
-        case StatusTypes.DND:
-            return Colors.RED_400;
-        case StatusTypes.STREAMING:
-            return Colors.TWITCH;
-        case StatusTypes.INVISIBLE:
-        case StatusTypes.UNKNOWN:
-        case StatusTypes.OFFLINE:
-        default:
-            return Colors.PRIMARY_400;
+        case "online":    return "#23a55a";
+        case "idle":      return "#f0b232";
+        case "dnd":       return "#f23f43";
+        case "streaming": return "#593695";
+        default:          return "#80848e";
     }
 }
 
@@ -436,14 +451,12 @@ function StatusIndicators({
             text: getStatusText(key, status)
         }, (props) => React.createElement(
             Icon, {
+                ...props,
                 text: getStatusText(key, status),
-                style: {
-                    color: getStatusColor(status)
-                },
+                style: { ...(props.style ?? {}), color: getStatusColor(status) },
                 width: size,
                 height: size,
-                "data-status": status,
-                ...props
+                "data-status": status
             }
         ));
     })));
@@ -701,10 +714,14 @@ class PlatformIndicators {
     }
     patchDMList() {
         const UserContext = React.createContext(null);
-        const ChannelWrapper = Webpack.getBySource("activities", "isMultiUserDM", "isMobile");
-        const NameWrapper = Webpack.getBySource("AvatarWithText").A;
+        const [ChannelWrapper, ChannelWrapperKey] = Webpack.getWithKey(Webpack.Filters.byStrings("activities", "isMultiUserDM", "isMobile"));
+        const NameWrapperMod = Webpack.getBySource("AvatarWithText");
+        const NameWrapper = NameWrapperMod
+            ? Object.values(NameWrapperMod).find(v => typeof v?.render === "function")
+            : null;
         const ChannelClasses = Webpack.getByKeys("channel", "decorator");
-        Patcher.after(ChannelWrapper, "Ay", (_, __, res) => {
+        if (!ChannelWrapper || !ChannelWrapperKey) return;
+        Patcher.after(ChannelWrapper, ChannelWrapperKey, (_, __, res) => {
             if (!Settings.get("showInDmsList", true)) return;
             Patcher.after(res, "type", (_2, [props], res2) => {
                 if (!props.user) return;
@@ -719,6 +736,7 @@ class PlatformIndicators {
             const ChannelWrapperInstance = ReactUtils.getOwnerInstance(ChannelWrapperElement);
             if (ChannelWrapperInstance) ChannelWrapperInstance.forceUpdate();
         }
+        if (!NameWrapper) return;
         Patcher.after(NameWrapper, "render", (_, __, res) => {
             if (!Settings.get("showInDmsList", true)) return;
             const user = React.useContext(UserContext);
@@ -800,8 +818,12 @@ class PlatformIndicators {
         });
     }
     patchFriendList() {
-        const UserInfo = Webpack.getBySource("user", "subText", "showAccountIdentifier").A;
+        const UserInfoMod = Webpack.getBySource("user", "subText", "showAccountIdentifier");
+        const UserInfo = UserInfoMod
+            ? Object.values(UserInfoMod).find(v => typeof v?.prototype?.render === "function")
+            : null;
         const FriendListClasses = Webpack.getByKeys("userInfo", "hovered");
+        if (!UserInfo) return;
         if (!Settings.get("showInFriendsList", true)) return;
         DOM.addStyle("PlatformIndicators", `
             .${FriendListClasses.discriminator} { display: none; }
