@@ -26,7 +26,12 @@ export default function usePlatformStores(userId, type) {
             }
             return {};
         }
-        return PresenceStore.getState().clientStatuses[user?.id] ?? {};
+        const rawClients = PresenceStore.getState()?.clientStatuses?.[user?.id] ?? {};
+        return Object.fromEntries(
+            Object.entries(rawClients).map(([k, v]) =>
+                [k, typeof v === "string" ? v : (v?.status ?? "offline")]
+            )
+        );
     })();
 
     return {

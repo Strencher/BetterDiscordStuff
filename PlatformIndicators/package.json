@@ -1,6 +1,6 @@
 {
   "name": "APlatformIndicators",
-  "version": "1.6.1",
+  "version": "1.6.2",
   "author": "Strencher",
   "authorId": "415849376598982656",
   "description": "Adds indicators for every platform that the user is using.",
@@ -11,7 +11,9 @@
       "title": "Fixed",
       "type": "fixed",
       "items": [
-        "Fixed for the latest Discord update"
+        "Fixed DM list not showing indicators",
+        "Fixed status icons always appearing offline",
+        "Fixed crash on load caused by removed Discord i18n keys"
       ]
     },
     {
@@ -22,6 +24,6 @@
       ]
     }
   ],
-  "changelogDate": "2026-02-23"
+  "changelogDate": "2026-04-25"
 }
 

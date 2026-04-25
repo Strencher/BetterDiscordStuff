@@ -27,11 +27,15 @@ export default class PlatformIndicators {
 
     patchDMList() {
         const UserContext = React.createContext(null);
-        const ChannelWrapper = Webpack.getBySource("activities", "isMultiUserDM", "isMobile");
-        const NameWrapper = Webpack.getBySource("AvatarWithText").A;
+        const [ChannelWrapper, ChannelWrapperKey] = Webpack.getWithKey(Webpack.Filters.byStrings("activities", "isMultiUserDM", "isMobile"));
+        const NameWrapperMod = Webpack.getBySource("AvatarWithText");
+        const NameWrapper = NameWrapperMod
+            ? Object.values(NameWrapperMod).find(v => typeof v?.render === "function")
+            : null;
         const ChannelClasses = Webpack.getByKeys("channel", "decorator");
 
-        Patcher.after(ChannelWrapper, "Ay", (_, __, res) => {
+        if (!ChannelWrapper || !ChannelWrapperKey) return;
+        Patcher.after(ChannelWrapper, ChannelWrapperKey, (_, __, res) => {
             if (!Settings.get("showInDmsList", true)) return;
             Patcher.after(res, "type", (_, [props], res) => {
                 if (!props.user) return; // Its a group DM
@@ -51,6 +55,7 @@ export default class PlatformIndicators {
             if (ChannelWrapperInstance) ChannelWrapperInstance.forceUpdate();
         }
 
+        if (!NameWrapper) return;
         Patcher.after(NameWrapper, "render", (_, __, res) => {
             if (!Settings.get("showInDmsList", true)) return;
 
@@ -128,9 +133,13 @@ export default class PlatformIndicators {
     }
 
     patchFriendList() {
-        const UserInfo = Webpack.getBySource("user", "subText", "showAccountIdentifier").A;
+        const UserInfoMod = Webpack.getBySource("user", "subText", "showAccountIdentifier");
+        const UserInfo = UserInfoMod
+            ? Object.values(UserInfoMod).find(v => typeof v?.prototype?.render === "function")
+            : null;
         const FriendListClasses = Webpack.getByKeys("userInfo", "hovered");
-        
+
+        if (!UserInfo) return;
         if (!Settings.get("showInFriendsList", true)) return;
 
         DOM.addStyle("PlatformIndicators", `

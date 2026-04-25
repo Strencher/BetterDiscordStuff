@@ -26,12 +26,12 @@ export default function StatusIndicators({ type, userId, size = 18, separator = 
                             <Components.Tooltip text={getStatusText(key, status)}>
                                 {props => (
                                     <Icon
+                                        {...props}
                                         text={getStatusText(key, status)}
-                                        style={{ color: getStatusColor(status) }}
+                                        style={{ ...(props.style ?? {}), color: getStatusColor(status) }}
                                         width={size}
                                         height={size}
                                         data-status={status}
-                                        {...props}
                                     />
                                 )}
                             </Components.Tooltip>
