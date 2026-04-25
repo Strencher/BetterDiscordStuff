@@ -1,12 +1,12 @@
 /**
  * @name InvisibleTyping
- * @version 1.4.6
+ * @version 1.4.6.1
  * @author Strencher
  * @authorId 415849376598982656
  * @description Enhanced version of silent typing.
  * @source https://github.com/Strencher/BetterDiscordStuff/blob/master/InvisibleTyping/InvisibleTyping.plugin.js
  * @invite gvA2ree
- * @changelogDate 2026-03-20
+ * @changelogDate 2026-04-26
  */
 
 'use strict';
@@ -17,7 +17,7 @@ const React = BdApi.React;
 /* @manifest */
 var manifest = {
     "name": "InvisibleTyping",
-    "version": "1.4.6",
+    "version": "1.4.6.1",
     "author": "Strencher",
     "authorId": "415849376598982656",
     "description": "Enhanced version of silent typing.",
@@ -30,7 +30,7 @@ var manifest = {
             "Fixed for the latest Discord update"
         ]
     }],
-    "changelogDate": "2026-03-20"
+    "changelogDate": "2026-04-26"
 };
 
 /* @api */
@@ -170,6 +170,13 @@ Styles.sheets.push("/* components/typingButton.scss */", `.invisibleTypingButton
 
 .invisibleTypingTooltip {
   display: inline-flex;
+}
+
+.invisibleTypingButton .invisibleTypingKeyboardPath {
+  fill: oklch(0.6 0 0);
+}
+.invisibleTypingButton:hover:not(.disabled) .invisibleTypingKeyboardPath {
+  fill: oklch(0.75 0 0);
 }`);
 var styles = {
     "invisibleTypingButton": "invisibleTypingButton",
@@ -187,7 +194,7 @@ function Keyboard({
         height: "25",
         viewBox: "0 0 576 512"
     }, React.createElement("path", {
-        fill: "currentColor",
+        className: "invisibleTypingKeyboardPath",
         d: "M528 448H48c-26.51 0-48-21.49-48-48V112c0-26.51 21.49-48 48-48h480c26.51 0 48 21.49 48 48v288c0 26.51-21.49 48-48 48zM128 180v-40c0-6.627-5.373-12-12-12H76c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12zm96 0v-40c0-6.627-5.373-12-12-12h-40c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12zm96 0v-40c0-6.627-5.373-12-12-12h-40c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12zm96 0v-40c0-6.627-5.373-12-12-12h-40c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12zm96 0v-40c0-6.627-5.373-12-12-12h-40c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12zm-336 96v-40c0-6.627-5.373-12-12-12h-40c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12zm96 0v-40c0-6.627-5.373-12-12-12h-40c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12zm96 0v-40c0-6.627-5.373-12-12-12h-40c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12zm96 0v-40c0-6.627-5.373-12-12-12h-40c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12zm-336 96v-40c0-6.627-5.373-12-12-12H76c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12zm288 0v-40c0-6.627-5.373-12-12-12H172c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h232c6.627 0 12-5.373 12-12zm96 0v-40c0-6.627-5.373-12-12-12h-40c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12z"
     }), disabled ? React.createElement("rect", {
         className: styles.disabledStrokeThrough,
@@ -242,7 +249,6 @@ const Settings = new class Settings2 extends Flux.Store {
 }();
 
 /* components/typingButton.tsx */
-const ChatButton = Webpack.getBySource("CHAT_INPUT_BUTTON_NOTIFICATION")?.A;
 const removeItem = function(array, item) {
     while (array.includes(item)) {
         array.splice(array.indexOf(item), 1);
@@ -311,23 +317,19 @@ function InvisibleTypingButton({
             ...props,
             onClick: handleClick,
             onContextMenu: handleContextMenu,
+            className: buildClassName(styles.invisibleTypingButton, {
+                enabled,
+                disabled: !enabled
+            }),
             style: {
-                padding: "5px"
+                padding: "5px",
+                display: "flex",
+                alignItems: "center"
             }
         },
-        React.createElement(
-            ChatButton, {
-                className: buildClassName(
-                    styles.invisibleTypingButton, {
-                        enabled,
-                        disabled: !enabled
-                    }
-                )
-            },
-            React.createElement(Keyboard, {
-                disabled: !enabled
-            })
-        )
+        React.createElement(Keyboard, {
+            disabled: !enabled
+        })
     ));
 }
 InvisibleTypingButton.getState = function(channelId) {
