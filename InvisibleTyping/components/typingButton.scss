@@ -1,19 +1,11 @@
-.invisibleTypingButton svg {
-    color: var(--interactive-normal);
-    overflow: visible;
+.invisibleTypingButton {
+    width: 32px;
+    min-width: 32px;
 }
 
-.invisibleTypingButton .disabledStrokeThrough {
+.disabledStrokeThrough {
     position: absolute;
     transform: translateX(-15px) translateY(530px) rotate(-45deg);
-}
-
-.invisibleTypingButton {
-    background: transparent;
-    
-    &:hover:not(.disabled) svg {
-        color: var(--interactive-hover);
-    }
 }
 
 .invisibleTypingTooltip {

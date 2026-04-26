@@ -1,12 +1,13 @@
-import { Components, ContextMenu, UI, Webpack } from "@api";
 import React from "react";
-
-import Settings from "../modules/settings";
-import { buildClassName, TypingModule, useStateFromStores } from "../modules/shared";
-import Keyboard from "./icons/keyboard";
+import { ContextMenu, UI, Webpack } from "@api";
 import styles from "./typingButton.scss";
 
-const ChatButton = Webpack.getBySource("CHAT_INPUT_BUTTON_NOTIFICATION")?.A;
+import Keyboard from "./icons/keyboard";
+
+import Settings from "../modules/settings";
+import { TypingModule, useStateFromStores } from "../modules/shared";
+
+const ChatBarButton = Webpack.getBySource("tooltipText", "renderButtonContents")?.A;
 
 const removeItem = function(array: any[], item: any) {
     while (array.includes(item)) {
@@ -69,27 +70,14 @@ export default function InvisibleTypingButton({ channel, isEmpty }) {
     }, [enabled]);
 
     return (
-        <Components.Tooltip text={enabled ? "Typing Enabled" : "Typing Disabled"}>
-            {props => (
-                <div
-                    {...props}
-                    onClick={handleClick}
-                    onContextMenu={handleContextMenu}
-                    style={{ padding: "5px" }}
-                >
-                    <ChatButton
-                        className={
-                            buildClassName(
-                                styles.invisibleTypingButton,
-                                { enabled, disabled: !enabled }
-                            )
-                        }>
-                        <Keyboard disabled={!enabled} />
-                    </ChatButton>
-                </div>
-
-            )}
-        </Components.Tooltip>
+        <ChatBarButton
+            tooltipText={enabled ? "Typing Enabled" : "Typing Disabled"}
+            active={!enabled}
+            onClick={handleClick}
+            onContextMenu={handleContextMenu}
+            className={styles.invisibleTypingButton}
+            renderButtonContents={() => <Keyboard disabled={!enabled} />}
+        />
     );
 }
 
