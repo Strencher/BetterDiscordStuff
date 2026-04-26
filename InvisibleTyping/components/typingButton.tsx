@@ -1,11 +1,10 @@
-import React from "react";
 import { ContextMenu, UI, Webpack } from "@api";
-import styles from "./typingButton.scss";
-
-import Keyboard from "./icons/keyboard";
+import React from "react";
 
 import Settings from "../modules/settings";
 import { TypingModule, useStateFromStores } from "../modules/shared";
+import Keyboard from "./icons/keyboard";
+import styles from "./typingButton.scss";
 
 const ChatBarButton = Webpack.getBySource("tooltipText", "renderButtonContents")?.A;
 
