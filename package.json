@@ -1,5 +1,6 @@
 {
   "scripts": {
+    "prepare": "husky",
     "build": "node scripts/build.js",
     "lint": "eslint",
     "lint:fix": "eslint --fix"
@@ -21,6 +22,7 @@
     "eslint-plugin-simple-import-sort": "^12.1.1",
     "eslint-plugin-unused-imports": "^4.4.1",
     "globals": "^15.15.0",
+    "husky": "^9.1.7",
     "js-beautify": "^1.15.4",
     "rollup": "^4.60.2",
     "rollup-plugin-esbuild": "^6.2.1",
