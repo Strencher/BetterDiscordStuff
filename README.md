@@ -15,16 +15,24 @@
    cd BetterDiscordStuff
    ```
 
-2. **Install dependencies**
+2. **Enable pnpm via Corepack (required)**
+   ```bash
+   corepack enable
+   corepack prepare pnpm@latest --activate
+   ```
+
+   > This ensures the correct pnpm version defined in `packageManager` is used automatically.
+
+3. **Install dependencies**
 
    ```bash
    pnpm install
    ```
 
-3. **Compile the plugin**
+4. **Compile the plugin**
 
    ```bash
-   pnpm build --watch --install --plugins PlatformIndicator
+   pnpm build --watch --install --plugins PluginName
    ```
 
 #### Available Flags

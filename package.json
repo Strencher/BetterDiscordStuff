@@ -1,32 +1,33 @@
 {
-  "scripts": {
-    "prepare": "husky",
-    "build": "node scripts/build.js",
-    "lint": "eslint && prettier --check .",
-    "lint:fix": "eslint --fix && prettier --write ."
-  },
-  "devDependencies": {
-    "@eslint/eslintrc": "^3.3.5",
-    "@eslint/js": "^9.39.4",
-    "@rollup/plugin-commonjs": "^28.0.9",
-    "@rollup/plugin-json": "^6.1.0",
-    "@rollup/plugin-node-resolve": "^15.3.1",
-    "@types/betterdiscord": "github:zerthox/betterdiscord-types",
-    "@types/node": "^22.19.17",
-    "@types/react": "^19.2.14",
-    "@typescript-eslint/parser": "^8.59.0",
-    "@vencord/discord-types": "^1.0.1",
-    "cssom": "^0.5.0",
-    "eslint": "^9.39.4",
-    "eslint-plugin-react": "^7.37.5",
-    "eslint-plugin-simple-import-sort": "^12.1.1",
-    "eslint-plugin-unused-imports": "^4.4.1",
-    "globals": "^15.15.0",
-    "husky": "^9.1.7",
-    "js-beautify": "^1.15.4",
-    "prettier": "^3.8.3",
-    "rollup": "^4.60.2",
-    "rollup-plugin-esbuild": "^6.2.1",
-    "sass": "^1.99.0"
-  }
+    "packageManager": "pnpm@11.0.9",
+    "scripts": {
+        "prepare": "husky",
+        "build": "node scripts/build.js",
+        "lint": "eslint && prettier --check .",
+        "lint:fix": "eslint --fix && prettier --write ."
+    },
+    "devDependencies": {
+        "@eslint/eslintrc": "^3.3.5",
+        "@eslint/js": "^9.39.4",
+        "@rollup/plugin-commonjs": "^28.0.9",
+        "@rollup/plugin-json": "^6.1.0",
+        "@rollup/plugin-node-resolve": "^15.3.1",
+        "@types/betterdiscord": "github:zerthox/betterdiscord-types",
+        "@types/node": "^22.19.17",
+        "@types/react": "^19.2.14",
+        "@typescript-eslint/parser": "^8.59.0",
+        "@vencord/discord-types": "^1.0.1",
+        "cssom": "^0.5.0",
+        "eslint": "^9.39.4",
+        "eslint-plugin-react": "^7.37.5",
+        "eslint-plugin-simple-import-sort": "^12.1.1",
+        "eslint-plugin-unused-imports": "^4.4.1",
+        "globals": "^15.15.0",
+        "husky": "^9.1.7",
+        "js-beautify": "^1.15.4",
+        "prettier": "^3.8.3",
+        "rollup": "^4.60.2",
+        "rollup-plugin-esbuild": "^6.2.1",
+        "sass": "^1.99.0"
+    }
 }
