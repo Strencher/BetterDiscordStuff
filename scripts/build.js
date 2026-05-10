@@ -12,7 +12,7 @@ const nodeResolve = require("@rollup/plugin-node-resolve");
 const cssom = require("cssom");
 const { js: jsBeautify } = require("js-beautify");
 
-const NO_PLUGIN_FOLDERS = [".github", "archive", "common", "scripts"];
+const NO_PLUGIN_FOLDERS = [".github", ".husky", ".vscode", "archive", "common", "scripts"];
 
 const tsconfigPath = path.resolve(process.cwd(), "tsconfig.json");
 const tsconfig = JSON.parse(fs.readFileSync(tsconfigPath, "utf8"));
