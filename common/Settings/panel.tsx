@@ -6,7 +6,7 @@ import Settings from "./store";
 import type { SettingsItem, SettingsItemForType } from "./types";
 
 const { SettingItem, SwitchInput } = Components;
-const Select: SelectType = Webpack.getByStrings(".selectPositionTop]:\"top\"===", { searchExports: true });
+const Select: SelectType = Webpack.getByStrings('.selectPositionTop]:"top"===', { searchExports: true });
 const Slider: SliderType = Webpack.getByStrings("stickToMarkers");
 
 function DropdownItem(props: SettingsItemForType<"dropdown">) {
@@ -54,7 +54,7 @@ export default function SettingsPanel(props: { items: SettingsItem[] }) {
     const ComponentMap: Record<SettingsItem["type"], React.FC<any>> = {
         dropdown: DropdownItem,
         switch: SwitchItem,
-        slider: SliderItem,
+        slider: SliderItem
     };
 
     return props.items.map(item => {

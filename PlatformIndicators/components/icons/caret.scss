@@ -1,7 +1,7 @@
 .PI-caret {
     color: #ddd;
-    transition: transform .2s linear;
-    
+    transition: transform 0.2s linear;
+
     &.right {
         transform: rotate(-90deg);
     }

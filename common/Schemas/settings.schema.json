@@ -37,12 +37,7 @@
                                 "description": "The default boolean value for the switch"
                             }
                         },
-                        "required": [
-                            "type",
-                            "name",
-                            "id",
-                            "value"
-                        ],
+                        "required": ["type", "name", "id", "value"],
                         "additionalProperties": false
                     },
                     {
@@ -87,10 +82,7 @@
                                                     "description": "Value of the option"
                                                 }
                                             },
-                                            "required": [
-                                                "label",
-                                                "value"
-                                            ],
+                                            "required": ["label", "value"],
                                             "additionalProperties": false
                                         }
                                     },
@@ -104,13 +96,7 @@
                                 ]
                             }
                         },
-                        "required": [
-                            "type",
-                            "name",
-                            "id",
-                            "value",
-                            "options"
-                        ],
+                        "required": ["type", "name", "id", "value", "options"],
                         "additionalProperties": false
                     },
                     {
@@ -161,24 +147,13 @@
                                 "description": "Whether the slider should snap to markers"
                             }
                         },
-                        "required": [
-                            "type",
-                            "name",
-                            "id",
-                            "minValue",
-                            "maxValue"
-                        ],
-                        "anyOf": [
-                            { "required": ["value"] },
-                            { "required": ["defaultValue"] }
-                        ],
+                        "required": ["type", "name", "id", "minValue", "maxValue"],
+                        "anyOf": [{ "required": ["value"] }, { "required": ["defaultValue"] }],
                         "additionalProperties": false
                     }
                 ]
             }
         }
     },
-    "required": [
-        "items"
-    ]
+    "required": ["items"]
 }

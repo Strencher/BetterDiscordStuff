@@ -7,9 +7,11 @@ import { buildClassName, TypingModule } from "../modules/shared";
 import Keyboard from "./icons/keyboard";
 import styles from "./typingButton.scss";
 
-const ChatButton: React.ComponentType<any> = (Webpack.getBySource("CHAT_INPUT_BUTTON_NOTIFICATION", "animated.div") as any)?.A;
+const ChatButton: React.ComponentType<any> = (
+    Webpack.getBySource("CHAT_INPUT_BUTTON_NOTIFICATION", "animated.div") as any
+)?.A;
 
-const removeItem = function(array: any[], item: any) {
+const removeItem = (array: any[], item: any) => {
     while (array.includes(item)) {
         array.splice(array.indexOf(item), 1);
     }
@@ -66,12 +68,16 @@ export default function InvisibleTypingButton(this: any, { channel, isEmpty }: {
                 return <InvisibleTypingContextMenu />;
             });
         },
-        [enabled],
+        [enabled]
     );
 
     return (
         <Components.Tooltip text={enabled ? "Typing Enabled" : "Typing Disabled"}>
-            {(props: React.JSX.IntrinsicAttributes & React.ClassAttributes<HTMLDivElement> & React.HTMLAttributes<HTMLDivElement>) => (
+            {(
+                props: React.JSX.IntrinsicAttributes &
+                    React.ClassAttributes<HTMLDivElement> &
+                    React.HTMLAttributes<HTMLDivElement>
+            ) => (
                 <div {...props} onClick={handleClick} onContextMenu={handleContextMenu}>
                     <ChatButton
                         className={buildClassName(styles.invisibleTypingButton, { enabled, disabled: !enabled })}
@@ -84,7 +90,7 @@ export default function InvisibleTypingButton(this: any, { channel, isEmpty }: {
     );
 }
 
-InvisibleTypingButton.getState = function(channelId: string) {
+InvisibleTypingButton.getState = (channelId: string) => {
     const isGlobal: boolean = Settings.get("autoEnable", true);
     const isExcluded = Settings.get("exclude", []).includes(channelId);
 

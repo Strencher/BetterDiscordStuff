@@ -26,7 +26,7 @@ const ChannelTypes = {
     GUILD_VOICE: 2,
     PRIVATE_THREAD: 12,
     PUBLIC_THREAD: 11,
-    UNKNOWN: 10000,
+    UNKNOWN: 10000
 };
 
 export default ChannelTypes;

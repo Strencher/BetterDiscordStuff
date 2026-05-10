@@ -26,7 +26,9 @@ export default class PlatformIndicators {
 
     async patchDMList() {
         const UserContext = React.createContext(null);
-        const ChannelWrapper = await Webpack.waitForModule(Webpack.Filters.bySource("location:\"PrivateChannel\",", "isMobile"));
+        const ChannelWrapper = await Webpack.waitForModule(
+            Webpack.Filters.bySource('location:"PrivateChannel",', "isMobile")
+        );
         const NameWrapper = (await Webpack.waitForModule(Webpack.Filters.bySource("AvatarWithText"))).A;
         const ChannelClasses = await Webpack.waitForModule(Webpack.Filters.byKeys("channel", "decorator"));
 
@@ -36,11 +38,7 @@ export default class PlatformIndicators {
                 if (!props.user) return; // Its a group DM
                 if (Settings.get("ignoreBots", true) && props.user.bot) return;
 
-                return (
-                    <UserContext.Provider value={props.user}>
-                        {res}
-                    </UserContext.Provider>
-                );
+                return <UserContext.Provider value={props.user}>{res}</UserContext.Provider>;
             });
         });
 
@@ -56,21 +54,20 @@ export default class PlatformIndicators {
             const user = React.useContext(UserContext);
             if (!user) return;
 
-            const child = Utils.findInTree(res, e => e?.className?.includes("nameAndDecorators"), { walkable: ["children", "props"] });
+            const child = Utils.findInTree(res, e => e?.className?.includes("nameAndDecorators"), {
+                walkable: ["children", "props"]
+            });
             if (!child) return;
 
             child.style = { justifyContent: "unset" };
-            child.children.push(
-                <StatusIndicators
-                    userId={user.id}
-                    type="DMs"
-                />
-            );
+            child.children.push(<StatusIndicators userId={user.id} type="DMs" />);
         });
     }
 
     async patchMemberList() {
-        const [MemberItem, key] = Webpack.getWithKey(() => true, { target: await Webpack.waitForModule(Webpack.Filters.bySource("nameplate:", ".MEMBER_LIST", "listitem")) });
+        const [MemberItem, key] = Webpack.getWithKey(() => true, {
+            target: await Webpack.waitForModule(Webpack.Filters.bySource("nameplate:", ".MEMBER_LIST", "listitem"))
+        });
 
         Patcher.after(MemberItem, key, (_, [props], ret) => {
             const user = props.avatar.props.user;
@@ -79,19 +76,15 @@ export default class PlatformIndicators {
             if (Settings.get("ignoreBots", true) && user.bot) return;
             const child = findInReactTree(ret, e => e?.className?.includes("username"));
             if (user && child) {
-                child.children = [
-                    child.children,
-                    <StatusIndicators
-                        userId={user.id}
-                        type="MemberList"
-                    />
-                ];
+                child.children = [child.children, <StatusIndicators userId={user.id} type="MemberList" />];
             }
         });
     }
 
     async patchChat() {
-        const [ChatUsername, key] = Webpack.getWithKey(() => true, { target: await Webpack.waitForModule(Webpack.Filters.bySource(".guildMemberAvatar&&null!=")) });
+        const [ChatUsername, key] = Webpack.getWithKey(() => true, {
+            target: await Webpack.waitForModule(Webpack.Filters.bySource(".guildMemberAvatar&&null!="))
+        });
 
         Patcher.before(ChatUsername, key, (_, props) => {
             const mainProps = props[0];
@@ -100,51 +93,44 @@ export default class PlatformIndicators {
             if (!mainProps?.decorations) return;
             const target = mainProps.decorations?.[1];
             if (!Array.isArray(target)) mainProps.decorations[1] = target ? [target] : [];
-            mainProps.decorations[1].unshift(
-                <StatusIndicators
-                    userId={mainProps.message.author.id}
-                    type="Chat"
-                />
-            );
+            mainProps.decorations[1].unshift(<StatusIndicators userId={mainProps.message.author.id} type="Chat" />);
         });
     }
 
     async patchBadges() {
-        const [BadgeList, Key_BL] = Webpack.getWithKey(() => true, { target: await Webpack.waitForModule(Webpack.Filters.bySource("badges", "badgeClassName", ".BADGE")) });
+        const [BadgeList, Key_BL] = Webpack.getWithKey(() => true, {
+            target: await Webpack.waitForModule(Webpack.Filters.bySource("badges", "badgeClassName", ".BADGE"))
+        });
 
         Patcher.after(BadgeList, Key_BL, (_, [{ displayProfile }], res) => {
             if (!Settings.get("showInBadges", true)) return;
             if (Settings.get("ignoreBots", true) && displayProfile?.application) return;
             if (!displayProfile?.userId) return;
-            res.props.children.push(
-                <StatusIndicators
-                    userId={displayProfile.userId}
-                    type="Badge"
-                    separator
-                />
-            );
+            res.props.children.push(<StatusIndicators userId={displayProfile.userId} type="Badge" separator />);
         });
     }
 
     async patchFriendList() {
-        const [UserInfo, key] = Webpack.getWithKey(() => true, { target: await Webpack.waitForModule(Webpack.Filters.bySource("user", "showAccountIdentifier", "overrideDiscriminator")) });
+        const [UserInfo, key] = Webpack.getWithKey(() => true, {
+            target: await Webpack.waitForModule(
+                Webpack.Filters.bySource("user", "showAccountIdentifier", "overrideDiscriminator")
+            )
+        });
         const FriendListClasses = await Webpack.waitForModule(Webpack.Filters.byKeys("userInfo", "hovered"));
 
         if (!Settings.get("showInFriendsList", true)) return;
 
-        DOM.addStyle("PlatformIndicators", `
+        DOM.addStyle(
+            "PlatformIndicators",
+            `
             .${FriendListClasses.discriminator} { display: none; }
             .${FriendListClasses.hovered} .${FriendListClasses.discriminator} { display: unset; }
-        `);
+        `
+        );
 
         Patcher.after(UserInfo, key, (_, [{ user }], res) => {
             Patcher.after(res, "type", (_, __, res) => {
-                res.props.children.push(
-                    <StatusIndicators
-                        userId={user.id}
-                        type="FriendList"
-                    />
-                );
+                res.props.children.push(<StatusIndicators userId={user.id} type="FriendList" />);
             });
         });
     }

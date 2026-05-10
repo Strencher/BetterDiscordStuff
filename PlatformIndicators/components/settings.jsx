@@ -13,10 +13,7 @@ const { SettingItem, SwitchInput } = Components;
 function SwitchItem(props) {
     const value = Hooks.useStateFromStores([Settings], () => Settings.get(props.id, props.value));
     return (
-        <SettingItem
-            {...props}
-            inline={true}
-        >
+        <SettingItem {...props} inline={true}>
             <SwitchInput
                 value={value}
                 onChange={v => {
@@ -29,7 +26,9 @@ function SwitchItem(props) {
 
 function SmartDisable(props) {
     const iconSize = 26;
-    const [states, setStates] = React.useState(Settings.get(props.id, Object.fromEntries(props.items.map(item => [item.id, item.value]))));
+    const [states, setStates] = React.useState(
+        Settings.get(props.id, Object.fromEntries(props.items.map(item => [item.id, item.value])))
+    );
 
     const handleClick = id => {
         states[id] = !states[id];
@@ -51,7 +50,12 @@ function SmartDisable(props) {
                                 height: iconSize
                             })
                         )}
-                        <Checkbox width={iconSize} height={iconSize} checked={!!states[item.id]} color="var(--brand-500)" />
+                        <Checkbox
+                            width={iconSize}
+                            height={iconSize}
+                            checked={!!states[item.id]}
+                            color="var(--brand-500)"
+                        />
                     </div>
                 ))}
             </div>
@@ -62,9 +66,12 @@ function SmartDisable(props) {
 function renderItems(items) {
     return items.map(item => {
         switch (item.type) {
-            case "switch": return <SwitchItem {...item} />;
-            case "smart-disable": return <SmartDisable {...item} />;
-            default: return null;
+            case "switch":
+                return <SwitchItem {...item} />;
+            case "smart-disable":
+                return <SmartDisable {...item} />;
+            default:
+                return null;
         }
     });
 }

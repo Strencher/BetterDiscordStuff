@@ -14,7 +14,7 @@
     margin-inline: 0;
     min-height: var(--space-32);
     min-width: var(--space-32);
-    
+
     &:hover:not(.disabled) svg {
         color: var(--interactive-hover);
     }

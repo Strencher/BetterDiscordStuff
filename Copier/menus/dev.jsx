@@ -1,18 +1,18 @@
 import "./label.css";
 
-import {ContextMenu, UI} from "@api";
+import { ContextMenu, UI } from "@api";
 import React from "react";
 
 import Formatter from "../modules/formatter";
 import Settings from "../modules/settings";
-import {copy, int2hex, int2rgb} from "../modules/utils";
-import Webpack, {GuildRoleStore, GuildStore} from "../modules/webpack";
+import { copy, int2hex, int2rgb } from "../modules/utils";
+import Webpack, { GuildRoleStore, GuildStore } from "../modules/webpack";
 
 const SelectedGuildStore = Webpack.getStore("SelectedGuildStore");
 
-const RoleColoredLabel = ({color, label}) => (
+const RoleColoredLabel = ({ color, label }) => (
     <div className="copier-roleColoredItem">
-        <span style={{backgroundColor: color}}></span>
+        <span style={{ backgroundColor: color }}></span>
         <div>{label}</div>
     </div>
 );
@@ -50,18 +50,20 @@ export const RoleCopyOptions = [
     }
 ];
 
-export default function() {
+export default function patchDevMenu() {
     const patches = new Set([]);
 
     const patch = (res, props) => {
         const handleClose = () => res?.props?.onClose();
 
-        const role = props.role || (() => {
-            const selectedGuild = SelectedGuildStore.getGuildId();
-            if (!GuildStore.getGuild(selectedGuild)) return handleClose();
-            const role = GuildRoleStore.getRole(selectedGuild, props.id);
-            return role || handleClose();
-        })();
+        const role =
+            props.role ||
+            (() => {
+                const selectedGuild = SelectedGuildStore.getGuildId();
+                if (!GuildStore.getGuild(selectedGuild)) return handleClose();
+                const role = GuildRoleStore.getRole(selectedGuild, props.id);
+                return role || handleClose();
+            })();
 
         const colors = {
             hex: int2hex(role.color),
@@ -90,7 +92,7 @@ export default function() {
                             id: "copy-role-id",
                             action: () => {
                                 copy(role.id);
-                                UI.showToast("Copied role id.", {type: "success"});
+                                UI.showToast("Copied role id.", { type: "success" });
                             }
                         },
                         {
@@ -98,7 +100,7 @@ export default function() {
                             id: "copy-role-name",
                             action: () => {
                                 copy(role.name);
-                                UI.showToast("Copied role name.", {type: "success"});
+                                UI.showToast("Copied role name.", { type: "success" });
                             }
                         },
                         {
@@ -114,7 +116,7 @@ export default function() {
                                         }, {})
                                     )
                                 );
-                                UI.showToast("Copied role with custom format.", {type: "success"});
+                                UI.showToast("Copied role with custom format.", { type: "success" });
                             }
                         },
                         {
@@ -122,7 +124,7 @@ export default function() {
                             id: "copy-role-mention",
                             action: () => {
                                 copy(`<@&${role.id}>`);
-                                UI.showToast("Copied role mention. (<&roleId>)", {type: "success"});
+                                UI.showToast("Copied role mention. (<&roleId>)", { type: "success" });
                             }
                         },
                         {
@@ -132,33 +134,27 @@ export default function() {
                             disabled: !role.color,
                             items: [
                                 {
-                                    label: () => (
-                                        <RoleColoredLabel color={colors.hex} label="RGB" />
-                                    ),
+                                    label: () => <RoleColoredLabel color={colors.hex} label="RGB" />,
                                     id: "copy-role-color-rgb",
                                     action: () => {
                                         copy(colors.rgb);
-                                        UI.showToast("Copied role color in RGB format.", {type: "success"});
+                                        UI.showToast("Copied role color in RGB format.", { type: "success" });
                                     }
                                 },
                                 {
-                                    label: () => (
-                                        <RoleColoredLabel color={colors.hex} label="HEX" />
-                                    ),
+                                    label: () => <RoleColoredLabel color={colors.hex} label="HEX" />,
                                     id: "copy-role-color-hex",
                                     action: () => {
                                         copy(colors.hex);
-                                        UI.showToast("Copied role color in HEX format.", {type: "success"});
+                                        UI.showToast("Copied role color in HEX format.", { type: "success" });
                                     }
                                 },
                                 {
-                                    label: () => (
-                                        <RoleColoredLabel color={colors.hex} label="INT" />
-                                    ),
+                                    label: () => <RoleColoredLabel color={colors.hex} label="INT" />,
                                     id: "copy-role-color-int",
                                     action: () => {
                                         copy(colors.int.toString());
-                                        UI.showToast("Copied role color in INT format.", {type: "success"});
+                                        UI.showToast("Copied role color in INT format.", { type: "success" });
                                     }
                                 }
                             ]

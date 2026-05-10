@@ -1,10 +1,10 @@
 import React from "react";
 
-import {MessageCopyOptions} from "../menus/message";
+import { MessageCopyOptions } from "../menus/message";
 import Formatter from "../modules/formatter";
 import Settings from "../modules/settings";
-import {copy, useKeyState, useStateFromStores} from "../modules/utils";
-import Webpack, {Tooltip} from "../modules/webpack";
+import { copy, useKeyState, useStateFromStores } from "../modules/utils";
+import Webpack, { Tooltip } from "../modules/webpack";
 import CopyIcon from "./icons/copy";
 
 const className = Webpack.getByProps("dangerous", "button")?.button ?? "buttonUndefined";
@@ -12,7 +12,7 @@ const className = Webpack.getByProps("dangerous", "button")?.button ?? "buttonUn
 export default function CopyButton(props) {
     const shouldShow = useStateFromStores([Settings], () => Settings.get("showButton", true));
     const active = useKeyState();
-    const {message} = props;
+    const { message } = props;
 
     if (!shouldShow) return null;
 
@@ -28,7 +28,7 @@ export default function CopyButton(props) {
                     Formatter.formatString(
                         Settings.get("messageCustom"),
                         MessageCopyOptions.reduce((options, option) => {
-                            options[option.name] = option.getValue({message});
+                            options[option.name] = option.getValue({ message });
                             return options;
                         }, {})
                     )

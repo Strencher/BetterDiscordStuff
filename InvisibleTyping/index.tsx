@@ -51,7 +51,9 @@ export default class InvisibleTyping {
     }
 
     patchChannelTextArea() {
-        const ChatButtonsGroup: React.MemoExoticComponent<React.ComponentType<any>> = (Webpack.getBySource("showAllButtons", "promotionsByType") as any)?.A;
+        const ChatButtonsGroup: React.MemoExoticComponent<React.ComponentType<any>> = (
+            Webpack.getBySource("showAllButtons", "promotionsByType") as any
+        )?.A;
 
         Patcher.after(ChatButtonsGroup, "type", (_, methodArgs, res) => {
             const args = methodArgs as ChatButtonsArgs;
@@ -63,13 +65,13 @@ export default class InvisibleTyping {
                 Array.isArray(res.props.children)
             ) {
                 res.props.children.unshift(
-                    <InvisibleTypingButton channel={args[0].channel} isEmpty={!args[0].textValue} />,
+                    <InvisibleTypingButton channel={args[0].channel} isEmpty={!args[0].textValue} />
                 );
             }
         });
     }
 
     getSettingsPanel() {
-        return <SettingsPanel items={SettingsItems.items as SettingsItem[]}/>;
+        return <SettingsPanel items={SettingsItems.items as SettingsItem[]} />;
     }
 }

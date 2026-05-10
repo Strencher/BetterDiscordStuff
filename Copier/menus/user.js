@@ -1,9 +1,9 @@
-import {ContextMenu, UI} from "@api";
+import { ContextMenu, UI } from "@api";
 
 import Formatter from "../modules/formatter";
 import Settings from "../modules/settings";
-import {copy} from "../modules/utils";
-import {ChannelStore} from "../modules/webpack";
+import { copy } from "../modules/utils";
+import { ChannelStore } from "../modules/webpack";
 
 export const UserCopyOptions = [
     {
@@ -38,78 +38,79 @@ export const UserCopyOptions = [
     }
 ];
 
-export default function() {
+export default function patchUserMenu() {
     const patches = new Set();
 
-    const buildMenu = (user, isDM = false) => ContextMenu.buildMenuChildren([
-        {type: "separator"},
-        {
-            type: "submenu",
-            id: "copier",
-            label: "Copy",
-            action() {
-                copy(user.id);
-            },
-            items: [
-                {
-                    label: "Username",
-                    id: "copy-user-name",
-                    action() {
-                        copy(user.username);
-                        UI.showToast("Copied Username.", {type: "success"});
-                    }
+    const buildMenu = (user, isDM = false) =>
+        ContextMenu.buildMenuChildren([
+            { type: "separator" },
+            {
+                type: "submenu",
+                id: "copier",
+                label: "Copy",
+                action() {
+                    copy(user.id);
                 },
-                {
-                    label: "Custom Format",
-                    id: "copy-user-custom",
-                    action() {
-                        const options = UserCopyOptions.reduce((options, option) => {
-                            options[option.name] = option.getValue(user);
-                            return options;
-                        }, {});
+                items: [
+                    {
+                        label: "Username",
+                        id: "copy-user-name",
+                        action() {
+                            copy(user.username);
+                            UI.showToast("Copied Username.", { type: "success" });
+                        }
+                    },
+                    {
+                        label: "Custom Format",
+                        id: "copy-user-custom",
+                        action() {
+                            const options = UserCopyOptions.reduce((options, option) => {
+                                options[option.name] = option.getValue(user);
+                                return options;
+                            }, {});
 
-                        copy(
-                            Formatter.formatString(Settings.get("userCustom"), options)
-                        );
+                            copy(Formatter.formatString(Settings.get("userCustom"), options));
 
-                        UI.showToast("Copied user with custom format.", {type: "success"});
+                            UI.showToast("Copied user with custom format.", { type: "success" });
+                        }
+                    },
+                    {
+                        label: "UserId",
+                        id: "copy-user-id",
+                        action: () => {
+                            copy(user.id);
+                            UI.showToast("Copied user id.", { type: "success" });
+                        }
+                    },
+                    {
+                        label: "Avatar Url",
+                        id: "copy-user-avatar",
+                        action: () => {
+                            copy(user.getAvatarURL("gif"));
+                            UI.showToast("Copied user avatar url.", { type: "success" });
+                        }
+                    },
+                    isDM && {
+                        label: "DM Id",
+                        id: "copy-dm-id",
+                        action: () => {
+                            copy(ChannelStore.getDMFromUserId(user.id));
+                            UI.showToast("Copied dm channelId of user.", { type: "success" });
+                        }
                     }
-                },
-                {
-                    label: "UserId",
-                    id: "copy-user-id",
-                    action: () => {
-                        copy(user.id);
-                        UI.showToast("Copied user id.", {type: "success"});
-                    }
-                },
-                {
-                    label: "Avatar Url",
-                    id: "copy-user-avatar",
-                    action: () => {
-                        copy(user.getAvatarURL("gif"));
-                        UI.showToast("Copied user avatar url.", {type: "success"});
-                    }
-                },
-                isDM && {
-                    label: "DM Id",
-                    id: "copy-dm-id",
-                    action: () => {
-                        copy(ChannelStore.getDMFromUserId(user.id));
-                        UI.showToast("Copied dm channelId of user.", {type: "success"});
-                    }
-                }
-            ].filter(Boolean)
-        }
-    ]);
+                ].filter(Boolean)
+            }
+        ]);
 
-    patches.add(ContextMenu.patch("user-context", (res, props) => {
-        const tree = res?.props?.children;
+    patches.add(
+        ContextMenu.patch("user-context", (res, props) => {
+            const tree = res?.props?.children;
 
-        if (!Array.isArray(tree)) return console.log("Not an array.", tree);
+            if (!Array.isArray(tree)) return console.log("Not an array.", tree);
 
-        tree.splice(-1, 0, buildMenu(props.user, !!props.channel));
-    }));
+            tree.splice(-1, 0, buildMenu(props.user, !!props.channel));
+        })
+    );
 
     return () => patches.forEach(p => p());
 }

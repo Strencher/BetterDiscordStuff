@@ -1,4 +1,4 @@
-import {Utils} from "@api";
+import { Utils } from "@api";
 import React from "react";
 
 export function copy(text) {
@@ -7,9 +7,9 @@ export function copy(text) {
 
 export function int2rgb(int) {
     int >>>= 0;
-    const b = int & 0xFF;
-    const g = (int & 0xFF00) >>> 8;
-    const r = (int & 0xFF0000) >>> 16;
+    const b = int & 0xff;
+    const g = (int & 0xff00) >>> 8;
+    const r = (int & 0xff0000) >>> 16;
 
     return "rgb(" + [r, g, b].join(", ") + ")";
 }
@@ -19,7 +19,7 @@ export function int2hex(int) {
 }
 
 export function findInTree(res, filter) {
-    return Utils.findInTree(res, filter, {walkable: ["props", "children", "type"]});
+    return Utils.findInTree(res, filter, { walkable: ["props", "children", "type"] });
 }
 
 export const onceAdded = (selector, callback, signal) => {
@@ -50,7 +50,7 @@ export const onceAdded = (selector, callback, signal) => {
         }
     });
 
-    observer.observe(document.body, {childList: true, subtree: true});
+    observer.observe(document.body, { childList: true, subtree: true });
 
     signal.addEventListener("abort", cancel);
 };
@@ -59,15 +59,7 @@ export function useKeyState() {
     const [active, setActive] = React.useState("none");
     React.useEffect(() => {
         const handleChange = e => {
-            setActive(
-                e.ctrlKey && e.shiftKey
-                    ? "both"
-                    : e.ctrlKey
-                        ? "ctrl"
-                        : e.shiftKey
-                            ? "shift"
-                            : "none"
-            );
+            setActive(e.ctrlKey && e.shiftKey ? "both" : e.ctrlKey ? "ctrl" : e.shiftKey ? "shift" : "none");
         };
 
         window.addEventListener("keydown", handleChange);
@@ -109,12 +101,10 @@ export function findGroupById(res, id) {
     let children = res?.props?.children;
     if (!children) return null;
 
-    if (!Array.isArray(children))
-        children = [children];
+    if (!Array.isArray(children)) children = [children];
 
-    if (children.some(child =>
-        child && typeof child === "object" && "props" in child && child.props.id === id
-    )) return res;
+    if (children.some(child => child && typeof child === "object" && "props" in child && child.props.id === id))
+        return res;
 
     for (const child of children)
         if (child && typeof child === "object") {

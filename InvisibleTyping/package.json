@@ -1,20 +1,20 @@
 {
-	"$schema": "../common/Schemas/manifest.schema.json",
-	"name": "InvisibleTyping",
-	"version": "1.4.7",
-	"author": "Strencher",
-	"authorId": "415849376598982656",
-	"description": "Enhanced version of silent typing.",
-	"source": "https://github.com/Strencher/BetterDiscordStuff/blob/master/InvisibleTyping/InvisibleTyping.plugin.js",
-	"invite": "gvA2ree",
-	"changelog": [
-		{
-			"title": "It works again!",
-			"type": "fixed",
-			"items": [
-				"Fixed for the latest Discord update"
-			]
-		}
-	],
-	"changelogDate": "2026-04-26"
+    "$schema": "../common/Schemas/manifest.schema.json",
+    "name": "InvisibleTyping",
+    "version": "1.4.7",
+    "author": "Strencher",
+    "authorId": "415849376598982656",
+    "description": "Enhanced version of silent typing.",
+    "source": "https://github.com/Strencher/BetterDiscordStuff/blob/master/InvisibleTyping/InvisibleTyping.plugin.js",
+    "invite": "gvA2ree",
+    "changelog": [
+        {
+            "title": "It works again!",
+            "type": "fixed",
+            "items": [
+                "Fixed for the latest Discord update"
+            ]
+        }
+    ],
+    "changelogDate": "2026-04-26"
 }

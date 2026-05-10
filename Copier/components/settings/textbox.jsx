@@ -2,7 +2,7 @@ import "./textbox.scss";
 
 import React from "react";
 
-export default function TextBox({name, note, value, onChange, placeholder}) {
+export default function TextBox({ name, note, value, onChange, placeholder }) {
     const [currentValue, setValue] = React.useState(value);
 
     return (
@@ -11,7 +11,7 @@ export default function TextBox({name, note, value, onChange, placeholder}) {
             <input
                 className="copier-text-input"
                 defaultValue={currentValue}
-                onInput={({target}) => (onChange(target.value), setValue(target.value))}
+                onInput={({ target }) => (onChange(target.value), setValue(target.value))}
                 placeholder={placeholder}
                 onClick={e => e.stopPropagation()}
             />
