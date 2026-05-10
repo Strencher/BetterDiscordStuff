@@ -22,7 +22,9 @@ export default function showChangelog(manifest: Manifest) {
     const title = (
         <div className="Changelog-Title-Wrapper">
             <h1>What's New - {manifest.name}</h1>
-            <div>{formatter.format(new Date(manifest.changelogDate))} - v{manifest.version}</div>
+            <div>
+                {formatter.format(new Date(manifest.changelogDate))} - v{manifest.version}
+            </div>
         </div>
     );
 
@@ -35,9 +37,7 @@ export default function showChangelog(manifest: Manifest) {
         </div>
     ));
 
-    "changelogImage" in manifest && items.unshift(
-        <img className="Changelog-Banner" src={manifest.changelogImage} />
-    );
+    "changelogImage" in manifest && items.unshift(<img className="Changelog-Banner" src={manifest.changelogImage} />);
 
     UI.alert(title as unknown as string, items);
     Data.save("lastVersion", manifest.version);

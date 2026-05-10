@@ -11,13 +11,13 @@
 }
 
 .item-changelog-added .copier-changelog-header {
-    color: #45BA6A;
+    color: #45ba6a;
 }
 .item-changelog-fixed .copier-changelog-header {
-    color: #EC4245;
+    color: #ec4245;
 }
 .item-changelog-improved .copier-changelog-header {
-    color: #5865F2;
+    color: #5865f2;
 }
 
 .copier-changelog-header::after {

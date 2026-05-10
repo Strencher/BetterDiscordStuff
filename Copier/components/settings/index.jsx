@@ -2,20 +2,20 @@ import "./index.scss";
 
 import React from "react";
 
-import {ChannelCategoryCopyOptions, ChannelCopyOptions, VoiceChannelCopyOptions} from "../../menus/channel";
-import {RoleCopyOptions} from "../../menus/dev";
-import {GuildCopyOptions} from "../../menus/guild";
-import {MessageCopyOptions} from "../../menus/message";
-import {UserCopyOptions} from "../../menus/user";
+import { ChannelCategoryCopyOptions, ChannelCopyOptions, VoiceChannelCopyOptions } from "../../menus/channel";
+import { RoleCopyOptions } from "../../menus/dev";
+import { GuildCopyOptions } from "../../menus/guild";
+import { MessageCopyOptions } from "../../menus/message";
+import { UserCopyOptions } from "../../menus/user";
 import Settings from "../../modules/settings";
-import {fmt} from "../../modules/utils";
+import { fmt } from "../../modules/utils";
 import ProTip from "../protip";
 import SettingsItem from "./item";
 import Replacement from "./replacement";
 import TextBox from "./textbox";
 import ToggleItem from "./toggle";
 
-const Dynamic = ({component: Type, ...props}) => <Type {...props} />;
+const Dynamic = ({ component: Type, ...props }) => <Type {...props} />;
 
 const optionsText = "{s} Options";
 
@@ -30,8 +30,9 @@ const settings = [
         note: (
             <span>
                 Shows a button in the message toolbar to copy a message with two formats.
-                <br/>
-                <ProTip/> Hold <span className="copier-key">Ctrl</span> or <span className="copier-key">Shift</span> to use MessageCustom options.
+                <br />
+                <ProTip /> Hold <span className="copier-key">Ctrl</span> or <span className="copier-key">Shift</span> to
+                use MessageCustom options.
             </span>
         )
     },
@@ -91,7 +92,12 @@ export default function SettingsPanel() {
     return (
         <div className="copier-settings-container">
             {settings.map(p => (
-                <SettingsItem {...p} key={p.id} onSelect={() => setSelected(selected === p.id ? null : p.id)} opened={selected === p.id}>
+                <SettingsItem
+                    {...p}
+                    key={p.id}
+                    onSelect={() => setSelected(selected === p.id ? null : p.id)}
+                    opened={selected === p.id}
+                >
                     <Dynamic
                         component={componentMap[p.type]}
                         {...p}

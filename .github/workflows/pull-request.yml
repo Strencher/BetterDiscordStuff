@@ -1,0 +1,47 @@
+name: Pull Request
+on: 
+    pull_request
+
+jobs:
+  eslint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: pnpm/action-setup@v6
+        with:
+          cache: true
+          run_install: true
+      - name: Run ESLint
+        run: pnpm exec eslint
+
+  prettier:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: pnpm/action-setup@v6
+        with:
+          cache: true
+          run_install: true
+      - name: Run Prettier
+        run: pnpm exec prettier --check .
+  
+  build-plugin:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - uses: pnpm/action-setup@v6
+        with:
+          cache: true
+          run_install: true
+      - name: Get changed files
+        id: changed-files
+        run: |
+          git fetch origin ${{ github.base_ref }}
+          BASE=$(git merge-base origin/${{ github.base_ref }} HEAD)
+          files=$(git diff --name-only --diff-filter=AM $BASE HEAD | tr '\n' ' ')
+          echo "changed_files=$files" >> $GITHUB_OUTPUT
+      - name: Build plugins
+        run: |
+          pnpm build --plugins ${{ steps.changed-files.outputs.changed_files }}

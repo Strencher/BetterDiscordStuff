@@ -1,4 +1,4 @@
-import { Hooks} from "@api";
+import { Hooks } from "@api";
 import { Settings } from "@common/Settings";
 
 import { LocalActivityStore, PresenceStore, SessionsStore, UserStore } from "./shared";

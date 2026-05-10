@@ -35,8 +35,7 @@ export default function StatusIndicators({ type, userId, size = 18, separator = 
                                 )}
                             </Components.Tooltip>
                         );
-                    })
-                }
+                    })}
             </div>
         </React.Fragment>
     );

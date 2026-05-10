@@ -70,13 +70,7 @@ type ChatButtonsProps = {
 
 export type ChatButtonsArgs = [ChatButtonsProps, any];
 
-export type ClassValue =
-    | string
-    | number
-    | null
-    | undefined
-    | ClassDictionary
-    | ClassArray;
+export type ClassValue = string | number | null | undefined | ClassDictionary | ClassArray;
 
 interface ClassDictionary {
     [key: string]: any;

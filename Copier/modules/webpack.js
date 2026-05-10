@@ -1,13 +1,20 @@
 import * as Api from "@api";
 
-const {Components, Webpack, Webpack: {Filters}} = Api;
+const {
+    Components,
+    Webpack,
+    Webpack: { Filters }
+} = Api;
 
 export const getByProps = (...props) => {
     return Webpack.getModule(Filters.byKeys(...props));
 };
 
 export const getBulk = (...queries) => {
-    return Webpack.getBulk.apply(null, queries.map(q => typeof q === "function" ? {filter: q} : q));
+    return Webpack.getBulk.apply(
+        null,
+        queries.map(q => (typeof q === "function" ? { filter: q } : q))
+    );
 };
 
 export const getByPrototypeFields = (...fields) => {
@@ -19,11 +26,11 @@ export const getStore = name => {
 };
 
 export const getMangled = function* (filter, target = null) {
-    yield target = getModule(m => Object.values(m).some(filter), {searchExports: false});
+    yield (target = getModule(m => Object.values(m).some(filter), { searchExports: false }));
     yield target && Object.keys(target).find(k => filter(target[k]));
 };
 
-export const getBySource = function(sources) {
+export const getBySource = sources => {
     const filters = Filters.combine(...sources.map(x => Filters.bySource(x)));
     return Webpack.getModule(filters);
 };
@@ -40,7 +47,7 @@ export default {
     getBySource
 };
 
-export {Filters};
+export { Filters };
 
 // Common Modules
 export const ChannelStore = getStore("ChannelStore");

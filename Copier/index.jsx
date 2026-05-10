@@ -1,7 +1,7 @@
 import "./button.css";
 import "./changelog.css";
 
-import {Patcher, ReactUtils} from "@api";
+import { Patcher, ReactUtils } from "@api";
 import manifest from "@manifest";
 import Styles from "@styles";
 import React from "react";
@@ -11,15 +11,13 @@ import CopyButton from "./components/copybutton";
 import CopyIcon from "./components/icons/copy";
 import SettingsPanel from "./components/settings";
 import * as ContextMenus from "./menus";
-import {copy, findInTree, onceAdded} from "./modules/utils";
+import { copy, findInTree, onceAdded } from "./modules/utils";
 import Webpack, { Tooltip } from "./modules/webpack";
 
 export default class Copier {
     flush = new Set();
     getSettingsPanel() {
-        return (
-            <SettingsPanel />
-        );
+        return <SettingsPanel />;
     }
 
     start() {
@@ -43,7 +41,7 @@ export default class Copier {
     patchAboutMe() {
         const module = Webpack.getBySource(["animUserProfileSidebarateOnHoverOrFocusOnly", "61W33d"]);
 
-        const CopyButton = React.memo(({onClick}) => (
+        const CopyButton = React.memo(({ onClick }) => (
             <Tooltip text="Copy About Me" tooltipClassName="copier-tooltip" position="top">
                 {props => (
                     <button {...props} className="copier-button" onClick={onClick}>
@@ -54,48 +52,48 @@ export default class Copier {
         ));
         CopyButton.displayName = "CopyButton";
 
-        Patcher.after(module, "Z", (_, [{bio}], res) => {
+        Patcher.after(module, "Z", (_, [{ bio }], res) => {
             console.log(res);
             const title = findInTree(res, e => e?.variant && Array.isArray(e.children));
 
-            if (!title) return res;;
+            if (!title) return res;
 
-            title.children.push(
-                <CopyButton onClick={() => copy(bio)} />
-            );
+            title.children.push(<CopyButton onClick={() => copy(bio)} />);
         });
     }
 
     async patchToolbar() {
-        const {buttons} = Webpack.getByProps("messageListItem", "buttons") ?? {};
+        const { buttons } = Webpack.getByProps("messageListItem", "buttons") ?? {};
 
         const buttonsContainer = await new Promise(resolve => {
-            onceAdded("." + buttons, node => {
-                const instance = ReactUtils.getInternalInstance(node);
+            onceAdded(
+                "." + buttons,
+                node => {
+                    const instance = ReactUtils.getInternalInstance(node);
 
-                if (!instance) return;
+                    if (!instance) return;
 
-                for (let curr = instance, max = 100; curr != null && max--; curr = curr?.return) {
-                    max < 5 && console.log(curr);
-                    if ((node = curr?.memoizedProps?.children?.type) && node?.$$typeof) {
-                        resolve(node);
-                        break;
+                    for (let curr = instance, max = 100; curr != null && max--; curr = curr?.return) {
+                        max < 5 && console.log(curr);
+                        if ((node = curr?.memoizedProps?.children?.type) && node?.$$typeof) {
+                            resolve(node);
+                            break;
+                        }
                     }
-                }
-            }, this.controller.signal);
+                },
+                this.controller.signal
+            );
         });
 
         if (!buttonsContainer) return;
 
-        const ToolbarButtonPatch = ({__COP_ORIGINAL, ...props}) => {
+        const ToolbarButtonPatch = ({ __COP_ORIGINAL, ...props }) => {
             if (!__COP_ORIGINAL) return null;
 
             const res = __COP_ORIGINAL.call(null, props);
 
             try {
-                res?.props?.children?.unshift?.(
-                    <CopyButton message={props.message} />
-                );
+                res?.props?.children?.unshift?.(<CopyButton message={props.message} />);
             } catch (error) {
                 console.error("[Copier] Fatal error:", error);
             }

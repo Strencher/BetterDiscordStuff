@@ -1,8 +1,8 @@
-import {ContextMenu, UI} from "@api";
+import { ContextMenu, UI } from "@api";
 
 import Formatter from "../modules/formatter";
 import Settings from "../modules/settings";
-import {copy} from "../modules/utils";
+import { copy } from "../modules/utils";
 import Webpack from "../modules/webpack";
 
 const GuildMemberCountStore = Webpack.getStore("GuildMemberCountStore");
@@ -35,14 +35,14 @@ export const GuildCopyOptions = [
     }
 ];
 
-export default function() {
+export default function patchGuildMenu() {
     return ContextMenu.patch("guild-context", (res, props) => {
-        const {guild} = props;
+        const { guild } = props;
 
         if (!guild || !Array.isArray(res?.props?.children)) return res;
 
         const menu = ContextMenu.buildMenuChildren([
-            {type: "separator"},
+            { type: "separator" },
             {
                 label: "Copy",
                 id: "copy-guild",
@@ -56,7 +56,7 @@ export default function() {
                         id: "copy-guild-name",
                         action: () => {
                             copy(guild.name);
-                            UI.showToast("Copied server name.", {type: "success"});
+                            UI.showToast("Copied server name.", { type: "success" });
                         }
                     },
                     {
@@ -72,7 +72,7 @@ export default function() {
                                     }, {})
                                 )
                             );
-                            UI.showToast("Copied server with custom format.", {type: "success"});
+                            UI.showToast("Copied server with custom format.", { type: "success" });
                         }
                     },
                     {
@@ -80,7 +80,7 @@ export default function() {
                         id: "copy-guild-id",
                         action: () => {
                             copy(guild.id);
-                            UI.showToast("Copied server id.", {type: "success"});
+                            UI.showToast("Copied server id.", { type: "success" });
                         }
                     },
                     {
@@ -88,7 +88,7 @@ export default function() {
                         id: "copy-guild-icon",
                         action: () => {
                             copy(guild.getIconURL());
-                            UI.showToast("Copied server icon url.", {type: "success"});
+                            UI.showToast("Copied server icon url.", { type: "success" });
                         }
                     }
                 ]

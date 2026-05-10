@@ -23,28 +23,24 @@ export default [
     { ignores: ["builds/**", "archive/**"] },
     {
         settings: {
-            react: {
-                version: "19"
-            }
+            react: { version: "19" }
         }
     },
     {
-        files: ["scripts/build.js"],
+        files: ["scripts/**/*.{js,cjs}"],
         languageOptions: {
-            globals: {
-                ...globals.node
-            }
+            globals: { ...globals.node }
         }
     },
     {
-        ignores: ["scripts/build.js"],
+        ignores: ["scripts/**"],
         files: ["**/*.{js,jsx,ts,tsx}"],
         languageOptions: {
             globals: {
                 ...globals.browser,
                 React: true,
                 JSX: true,
-                DiscordNative: true,
+                DiscordNative: true
             },
             parser: tsParser,
             parserOptions: {
@@ -62,51 +58,49 @@ export default [
         },
         rules: {
             "arrow-parens": ["error", "as-needed"],
+            "comma-dangle": ["error", "never"],
             "comma-spacing": "error",
             "comma-style": "error",
             "eol-last": ["error", "always"],
             "func-call-spacing": ["error", "never"],
-            "indent": ["error", 4, {
-                "SwitchCase": 1,
-            }],
+            indent: ["error", 4, { SwitchCase: 1 }],
             "keyword-spacing": "error",
-            "max-nested-callbacks": ["error", {
-                "max": 4,
-            }],
-            "max-statements-per-line": ["error", {
-                "max": 2,
-            }],
+            "max-len": [
+                "error",
+                {
+                    code: 120,
+                    ignoreUrls: true,
+                    ignoreStrings: true,
+                    ignoreComments: true,
+                    ignoreTemplateLiterals: true
+                }
+            ],
+            "max-nested-callbacks": ["error", { max: 4 }],
+            "max-statements-per-line": ["error", { max: 2 }],
             "no-console": "off",
             "no-empty-function": "error",
             "no-mixed-spaces-and-tabs": "error",
-            "no-multiple-empty-lines": ["error", {
-                "max": 2,
-                "maxEOF": 1,
-                "maxBOF": 0,
-            }],
+            "no-multiple-empty-lines": ["error", { max: 2, maxEOF: 1, maxBOF: 0 }],
             "no-trailing-spaces": "error",
             "no-var": "error",
             "no-whitespace-before-property": "error",
+            "object-curly-spacing": ["error", "always"],
             "prefer-const": "error",
-            "quotes": ["error", "double"],
+            quotes: ["error", "double", { avoidEscape: true }],
             "react/jsx-key": "off",
             "react/no-unescaped-entities": "off",
             "react/prop-types": "off",
-            "semi": ["error", "always"],
+            semi: ["error", "always"],
             "space-before-blocks": "error",
-            "space-before-function-paren": ["error", {
-                "anonymous": "never",
-                "named": "never",
-                "asyncArrow": "always",
-            }],
+            "space-before-function-paren": ["error", { anonymous: "never", named: "never", asyncArrow: "always" }],
             "space-in-parens": "error",
             "space-infix-ops": "error",
             "space-unary-ops": "error",
             "spaced-comment": "error",
-            "yoda": "error",
+            yoda: "error",
             "simple-import-sort/imports": "error",
             "simple-import-sort/exports": "error",
-            "unused-imports/no-unused-imports": "error",
-        },
+            "unused-imports/no-unused-imports": "error"
+        }
     }
 ];

@@ -1,11 +1,11 @@
 import "./toggle.scss";
 
-import {Utils} from "@api";
+import { Utils } from "@api";
 import React from "react";
 
 import Tick from "../icons/tick";
 
-export default function ToggleItem({name, note, value, onChange}) {
+export default function ToggleItem({ name, note, value, onChange }) {
     const [checked, toggle] = React.useReducer(n => !n, value);
 
     return (
@@ -18,7 +18,7 @@ export default function ToggleItem({name, note, value, onChange}) {
 
                     e.stopPropagation();
                 }}
-                className={Utils.className("copier-toggle-value", {"copier-checked": checked})}
+                className={Utils.className("copier-toggle-value", { "copier-checked": checked })}
             >
                 {checked && <Tick />}
             </div>

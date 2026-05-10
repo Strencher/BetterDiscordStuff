@@ -18,29 +18,31 @@ export const Intl = Webpack.getModule(x => x.intl);
 const formatMessage = key => Intl.intl.formatToMarkdownString(Intl.t[key]);
 
 export const Messages = {
-    "STATUS_DND": formatMessage("jaNpQH"),
-    "STATUS_OFFLINE": formatMessage("Vv0abJ"),
-    "STATUS_ONLINE": formatMessage("WbGtnH"),
-    "STATUS_STREAMING": formatMessage("XKYej5"),
-    "STATUS_IDLE": formatMessage("qWbtVU"),
-    "STATUS_MOBILE": formatMessage("5LMZtY")
+    STATUS_DND: formatMessage("jaNpQH"),
+    STATUS_OFFLINE: formatMessage("Vv0abJ"),
+    STATUS_ONLINE: formatMessage("WbGtnH"),
+    STATUS_STREAMING: formatMessage("XKYej5"),
+    STATUS_IDLE: formatMessage("qWbtVU"),
+    STATUS_MOBILE: formatMessage("5LMZtY")
 };
 
 export const buildClassName = (...args) => {
-    return args.reduce((classNames, arg) => {
-        if (!arg) return classNames;
+    return args
+        .reduce((classNames, arg) => {
+            if (!arg) return classNames;
 
-        if (typeof arg === "string" || typeof arg === "number") {
-            classNames.push(arg);
-        } else if (Array.isArray(arg)) {
-            const nestedClassNames = buildClassName(...arg);
-            if (nestedClassNames) classNames.push(nestedClassNames);
-        } else if (typeof arg === "object") {
-            Object.keys(arg).forEach(key => {
-                if (arg[key]) classNames.push(key);
-            });
-        }
+            if (typeof arg === "string" || typeof arg === "number") {
+                classNames.push(arg);
+            } else if (Array.isArray(arg)) {
+                const nestedClassNames = buildClassName(...arg);
+                if (nestedClassNames) classNames.push(nestedClassNames);
+            } else if (typeof arg === "object") {
+                Object.keys(arg).forEach(key => {
+                    if (arg[key]) classNames.push(key);
+                });
+            }
 
-        return classNames;
-    }, []).join(" ");
+            return classNames;
+        }, [])
+        .join(" ");
 };

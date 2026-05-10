@@ -4,10 +4,7 @@
         "jsx": "preserve",
         "module": "ESNext",
         "target": "ESNext",
-        "typeRoots": [
-            "./node_modules/@types",
-            "./modules.d.ts"
-        ],
+        "typeRoots": ["./node_modules/@types", "./modules.d.ts"],
         "paths": {
             "@common/*": ["./common/*"]
         }

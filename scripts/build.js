@@ -12,7 +12,7 @@ const nodeResolve = require("@rollup/plugin-node-resolve");
 const cssom = require("cssom");
 const { js: jsBeautify } = require("js-beautify");
 
-const NO_PLUGIN_FOLDERS = [".github", "archive", "common", "scripts"];
+const NO_PLUGIN_FOLDERS = [".github", ".husky", ".vscode", "archive", "common", "scripts"];
 
 const tsconfigPath = path.resolve(process.cwd(), "tsconfig.json");
 const tsconfig = JSON.parse(fs.readFileSync(tsconfigPath, "utf8"));
@@ -43,18 +43,17 @@ let argv = parseArgs({
 });
 argv.values.plugins = [...argv.values.plugins, ...argv.positionals];
 argv = argv.values;
-argv.plugins = [...new Set(
-    argv.plugins
-        .map(p => path.normalize(p).split(path.sep)[0])
-        .filter(p => {
-            if (
-                fs.statSync(p).isDirectory() &&
-                !NO_PLUGIN_FOLDERS.includes(p)
-            ) {
-                return true;
-            }
-        })
-)];
+argv.plugins = [
+    ...new Set(
+        argv.plugins
+            .map(p => path.normalize(p).split(path.sep)[0])
+            .filter(p => {
+                if (fs.statSync(p).isDirectory() && !NO_PLUGIN_FOLDERS.includes(p)) {
+                    return true;
+                }
+            })
+    )
+];
 
 if (!argv.plugins.length) {
     console.error("No Plugins provided!");
@@ -93,13 +92,14 @@ const tsPathAliasResolver = tsPaths => {
 function makeMeta(manifest) {
     manifest.author ??= manifest.authors.map(e => e.name).join(", ");
 
-    return Object.keys(manifest)
-        .filter(e => e !== "authors")
-        .reduce((str, key) =>
-            typeof manifest[key] === "string"
-                ? str + ` * @${key} ${manifest[key]}\n`
-                : str
-        , "/**\n") + " */\n\n";
+    return (
+        Object.keys(manifest)
+            .filter(e => e !== "authors")
+            .reduce(
+                (str, key) => (typeof manifest[key] === "string" ? str + ` * @${key} ${manifest[key]}\n` : str),
+                "/**\n"
+            ) + " */\n\n"
+    );
 }
 
 const styleLoader = `
@@ -117,9 +117,10 @@ export default {
 
 const matchAll = ({ regex, input, parent = false, flat = false }) => {
     const output = [];
-    let matches, lastIndex = 0;
-    // eslint-disable-next-line no-cond-assign
-    while (matches = regex.exec(input.slice(lastIndex))) {
+    let matches,
+        lastIndex = 0;
+
+    while ((matches = regex.exec(input.slice(lastIndex)))) {
         if (!regex.global) lastIndex += matches.index + matches[0].length;
         if (parent) output.push(matches);
         else {
@@ -178,7 +179,10 @@ const buildPlugin = (pluginFolder, makeFolder) => {
     }
 
     const watcher = watch({
-        input: path.resolve(pluginFolder, fs.readdirSync(pluginFolder).find(e => e.indexOf("index") === 0)),
+        input: path.resolve(
+            pluginFolder,
+            fs.readdirSync(pluginFolder).find(e => e.indexOf("index") === 0)
+        ),
         watch: {
             skipWrite: true
         },
@@ -207,13 +211,15 @@ const buildPlugin = (pluginFolder, makeFolder) => {
                 jsx: "transform"
             }),
             virtual({
-                "react": "export default BdApi.React",
+                react: "export default BdApi.React",
                 "react-dom": "export default BdApi.ReactDOM",
                 "@styles": styleLoader,
-                get "@manifest"() { return "export default " + fs.readFileSync(manifestPath, "utf8"); },
+                get "@manifest"() {
+                    return "export default " + fs.readFileSync(manifestPath, "utf8");
+                },
                 "@api":
-                    "import manifest from \"@manifest\";" +
-                    "export const { Commands, Components, ContextMenu, Data, DOM, Hooks, Logger, Net, Patcher, Plugins, ReactUtils, Themes, UI, Utils, Webpack } = new BdApi(manifest.name);",
+                    'import manifest from "@manifest";' +
+                    "export const { Commands, Components, ContextMenu, Data, DOM, Hooks, Logger, Net, Patcher, Plugins, ReactUtils, Themes, UI, Utils, Webpack } = new BdApi(manifest.name);"
             }),
             {
                 name: "StyleSheet Loader",
@@ -222,13 +228,14 @@ const buildPlugin = (pluginFolder, makeFolder) => {
 
                     if (ext !== ".css" && ext !== ".scss") return null;
 
-                    let content; {
+                    let content;
+                    {
                         if (ext === ".scss") {
                             content = (await require("sass").compileAsync(id)).css;
                         } else {
                             content = await fs.promises.readFile(id, "utf8");
                         }
-                    };
+                    }
 
                     const names = cssom.parse(content).cssRules.reduce((classNames, rule) => {
                         const matches = matchAll({
@@ -237,22 +244,23 @@ const buildPlugin = (pluginFolder, makeFolder) => {
                             flat: true
                         });
 
-                        Object.assign(classNames,
-                            Object.fromEntries(matches.map(m => (m = m.slice(1), [toCamelCase(m), m])))
+                        Object.assign(
+                            classNames,
+                            Object.fromEntries(matches.map(m => ((m = m.slice(1)), [toCamelCase(m), m])))
                         );
 
                         return classNames;
                     }, {});
 
-                    const filePath = path.normalize(
-                        path.relative(pluginFolder, id)
-                            .replaceAll("\\", "\\\\")
-                    );
+                    const filePath = path.normalize(path.relative(pluginFolder, id).replaceAll("\\", "\\\\"));
 
-                    return "import Styles from \"@styles\";" +
+                    return (
+                        'import Styles from "@styles";' +
                         `Styles.sheets.push("/* ${filePath} */",` +
                         `\`${content.replaceAll("`", "\\`")}\`);` +
-                        "export default " + JSON.stringify(names, null, 4);
+                        "export default " +
+                        JSON.stringify(names, null, 4)
+                    );
                 }
             },
             {
@@ -264,76 +272,100 @@ const buildPlugin = (pluginFolder, makeFolder) => {
                     return `/* ${relativePath} */\n${code}\n\n\n`;
                 }
             }
-        ],
+        ]
     });
 
     watcher.on("event", async event => {
         switch (event.code) {
-            case "BUNDLE_START": {
-                if (argv.watch) console.clear();
-                console.time(`Build ${path.basename(pluginFolder)} in`);
-            } break;
-
-            case "BUNDLE_END": {
-                const manifest = JSON.parse(await fs.promises.readFile(manifestPath, "utf8"));
-                const bundle = event.result;
-
-                let { output: [{ code }] } = await bundle.generate({ format: "cjs", exports: "auto" });
-
-                code = code.replace(/var (\w+) =/, "const $1 =");
-                code = code.replaceAll("/* @__PURE__ */ ", "");
-                code = jsBeautify(code, {});
-
-                const contents = makeMeta(manifest) + code;
-
-                $ensureBuildsDir: {
-                    const folder = path.resolve(process.cwd(), "builds");
-
-                    if (fs.existsSync(folder)) break $ensureBuildsDir;
-
-                    fs.mkdirSync(folder);
+            case "BUNDLE_START":
+                {
+                    if (argv.watch) console.clear();
+                    console.time(`Build ${path.basename(pluginFolder)} in`);
                 }
+                break;
 
-                const folderName = manifest.name === "APlatformIndicators" ? "PlatformIndicators" : manifest.name;
-                if (makeFolder) {
-                    const folder = path.resolve(process.cwd(), "builds", folderName);
-                    if (!fs.existsSync(folder)) fs.mkdirSync(folder);
-                    if (fs.existsSync(path.resolve(folderName, "README.md")))
-                        fs.copyFileSync(path.resolve(folderName, "README.md"), path.resolve(folder, "README.md"));
-                }
-                const outfile = makeFolder ? path.resolve(process.cwd(), "builds", folderName, `${manifest.name}.plugin.js`) : path.resolve(process.cwd(), "builds", `${manifest.name}.plugin.js`);
+            case "BUNDLE_END":
+                {
+                    const manifest = JSON.parse(await fs.promises.readFile(manifestPath, "utf8"));
+                    const bundle = event.result;
 
-                fs.writeFileSync(outfile, contents, "utf8");
+                    let {
+                        output: [{ code }]
+                    } = await bundle.generate({ format: "cjs", exports: "auto" });
 
-                if (argv.install) {
-                    let bdFolder;
-                    switch (os.platform()) {
-                        case "win32": {
-                            bdFolder = path.resolve(process.env.APPDATA, "BetterDiscord");
-                        } break;
-                        case "darwin": {
-                            bdFolder = path.resolve(process.env.HOME, "Library", "Application Support", "BetterDiscord");
-                        } break;
-                        default: {
-                            bdFolder = path.resolve(process.env.HOME, ".config", "BetterDiscord");
-                        } break;
+                    code = code.replace(/var (\w+) =/, "const $1 =");
+                    code = code.replaceAll("/* @__PURE__ */ ", "");
+                    code = jsBeautify(code, {});
+
+                    const contents = makeMeta(manifest) + code;
+
+                    $ensureBuildsDir: {
+                        const folder = path.resolve(process.cwd(), "builds");
+
+                        if (fs.existsSync(folder)) break $ensureBuildsDir;
+
+                        fs.mkdirSync(folder);
                     }
-                    fs.writeFileSync(path.join(bdFolder, "plugins", `${manifest.name}.plugin.js`), contents, "utf8");
+
+                    const folderName = manifest.name === "APlatformIndicators" ? "PlatformIndicators" : manifest.name;
+                    if (makeFolder) {
+                        const folder = path.resolve(process.cwd(), "builds", folderName);
+                        if (!fs.existsSync(folder)) fs.mkdirSync(folder);
+                        if (fs.existsSync(path.resolve(folderName, "README.md")))
+                            fs.copyFileSync(path.resolve(folderName, "README.md"), path.resolve(folder, "README.md"));
+                    }
+                    const outfile = makeFolder
+                        ? path.resolve(process.cwd(), "builds", folderName, `${manifest.name}.plugin.js`)
+                        : path.resolve(process.cwd(), "builds", `${manifest.name}.plugin.js`);
+
+                    fs.writeFileSync(outfile, contents, "utf8");
+
+                    if (argv.install) {
+                        let bdFolder;
+                        switch (os.platform()) {
+                            case "win32":
+                                {
+                                    bdFolder = path.resolve(process.env.APPDATA, "BetterDiscord");
+                                }
+                                break;
+                            case "darwin":
+                                {
+                                    bdFolder = path.resolve(
+                                        process.env.HOME,
+                                        "Library",
+                                        "Application Support",
+                                        "BetterDiscord"
+                                    );
+                                }
+                                break;
+                            default:
+                                {
+                                    bdFolder = path.resolve(process.env.HOME, ".config", "BetterDiscord");
+                                }
+                                break;
+                        }
+                        fs.writeFileSync(
+                            path.join(bdFolder, "plugins", `${manifest.name}.plugin.js`),
+                            contents,
+                            "utf8"
+                        );
+                    }
+
+                    console.timeEnd(`Build ${path.basename(pluginFolder)} in`);
+
+                    event.result.close();
+                    if (!argv.watch) watcher.close();
                 }
+                break;
 
-                console.timeEnd(`Build ${path.basename(pluginFolder)} in`);
-
-                event.result.close();
-                if (!argv.watch) watcher.close();
-            } break;
-
-            case "ERROR": {
-                console.error(event.error);
-                if (!argv.watch) watcher.close();
-            } break;
+            case "ERROR":
+                {
+                    console.error(event.error);
+                    if (!argv.watch) watcher.close();
+                }
+                break;
         }
     });
 };
 
-argv.plugins
-    .forEach(p => buildPlugin(p, argv.publish));
+argv.plugins.forEach(p => buildPlugin(p, argv.publish));

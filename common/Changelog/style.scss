@@ -31,10 +31,18 @@
         align-items: center;
         margin-bottom: 10px;
 
-        &.added { color: #45BA6A; }
-        &.changed { color: #F0B232; }
-        &.fixed { color: #EC4245; }
-        &.improved { color: #5865F2; }
+        &.added {
+            color: #45ba6a;
+        }
+        &.changed {
+            color: #f0b232;
+        }
+        &.fixed {
+            color: #ec4245;
+        }
+        &.improved {
+            color: #5865f2;
+        }
 
         &::after {
             content: "";
