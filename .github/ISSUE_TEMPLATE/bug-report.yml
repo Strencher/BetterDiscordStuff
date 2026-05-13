@@ -4,11 +4,15 @@ title: "[Bug]: "
 labels:
   - bug
 body:
-  - type: input
+  - type: dropdown
     id: plugin
     attributes:
       label: Plugin
       description: Which plugin is this bug report about?
+      options:
+        - Copier
+        - InvisibleTyping
+        - PlatformIndicators
     validations:
       required: true
 
@@ -39,6 +43,4 @@ body:
         - label: I am using the latest version of the plugin
           required: true
         - label: I have checked existing issues to ensure this issue hasn't been reported before
-          required: true
-        - label: I have reviewed the pinned issue regarding known broken plugins
           required: true
