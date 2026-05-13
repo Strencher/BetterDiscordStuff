@@ -9,35 +9,54 @@
         },
         "name": {
             "type": "string",
-            "description": "The name of the plugin"
+            "description": "The name of the addon. It typically does not contain spaces, but it is allowed."
         },
         "version": {
             "type": "string",
-            "description": "The version of the plugin (semantic versioning)"
+            "description": "Version representing the current update level. Semantic versioning recommended.",
+            "pattern": "^\\d+\\.\\d+\\.\\d+$"
         },
         "description": {
             "type": "string",
-            "description": "A description of what the plugin does"
+            "description": "A basic description of what the addon does."
         },
         "author": {
             "type": "string",
-            "description": "The author of the plugin"
+            "description": "The name of you the developer."
         },
         "authorId": {
             "type": "string",
-            "description": "The Discord user ID of the plugin author"
+            "description": "Discord snowflake ID of the developer. This allows users to get in touch.",
+            "pattern": "^\\d{17,19}$"
+        },
+        "authorLink": {
+            "type": "string",
+            "description": "Link to use for the author's name on the addon pages.",
+            "format": "uri"
         },
         "invite": {
             "type": "string",
-            "description": "A Discord invite code (optional)"
+            "description": "A Discord invite code, useful for directing users to a support server."
         },
         "donate": {
             "type": "string",
-            "description": "A donation link (optional)"
+            "description": "Link to donate to the developer.",
+            "format": "uri"
+        },
+        "patreon": {
+            "type": "string",
+            "description": "Link to the Patreon of the developer.",
+            "format": "uri"
         },
         "source": {
             "type": "string",
-            "description": "The source code repository URL (optional)"
+            "description": "Link to the source on GitHub of the addon.",
+            "format": "uri"
+        },
+        "website": {
+            "type": "string",
+            "description": "Developer's (or addon's) website link.",
+            "format": "uri"
         },
         "changelog": {
             "type": "array",
@@ -67,13 +86,15 @@
         },
         "changelogDate": {
             "type": "string",
-            "description": "The date of the latest changelog (YYYY-MM-DD)"
+            "description": "The date of the latest changelog (YYYY-MM-DD)",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
         },
         "changelogImage": {
             "type": "string",
-            "description": "URL to an image for the changelog (optional)"
+            "description": "URL to an image for the changelog",
+            "format": "uri"
         }
     },
-    "required": ["name", "version", "author", "authorId", "changelog", "changelogDate"],
+    "required": ["name", "version", "description", "author"],
     "additionalProperties": false
 }

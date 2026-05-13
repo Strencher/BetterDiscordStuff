@@ -13,6 +13,19 @@ const cssom = require("cssom");
 const { js: jsBeautify } = require("js-beautify");
 
 const NO_PLUGIN_FOLDERS = [".github", ".husky", ".vscode", "archive", "common", "scripts"];
+const PLUGIN_META_FIELDS = [
+    "name",
+    "author",
+    "description",
+    "version",
+    "invite",
+    "authorId",
+    "authorLink",
+    "donate",
+    "patreon",
+    "website",
+    "source"
+];
 
 const tsconfigPath = path.resolve(process.cwd(), "tsconfig.json");
 const tsconfig = JSON.parse(fs.readFileSync(tsconfigPath, "utf8"));
@@ -94,7 +107,7 @@ function makeMeta(manifest) {
 
     return (
         Object.keys(manifest)
-            .filter(e => e !== "authors")
+            .filter(e => PLUGIN_META_FIELDS.includes(e))
             .reduce(
                 (str, key) => (typeof manifest[key] === "string" ? str + ` * @${key} ${manifest[key]}\n` : str),
                 "/**\n"
@@ -175,7 +188,7 @@ const buildPlugin = (pluginFolder, makeFolder) => {
     const manifest = require(manifestPath);
     if (manifest.dependencies || manifest.devDependencies) {
         console.log(`Installing dependencies for ${pluginFolder}...`);
-        execSync("npm install", { cwd: pluginFolder, stdio: "inherit" });
+        execSync("pnpm install", { cwd: pluginFolder, stdio: "inherit" });
     }
 
     const watcher = watch({
