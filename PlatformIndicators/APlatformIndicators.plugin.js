@@ -1,13 +1,11 @@
 /**
- * @$schema ../common/Schemas/manifest.schema.json
  * @name APlatformIndicators
- * @version 1.6.2
+ * @version 1.6.3
  * @author Strencher
  * @authorId 415849376598982656
  * @description Adds indicators for every platform that the user is using.
  * @source https://github.com/Strencher/BetterDiscordStuff/blob/master/PlatformIndicators/APlatformIndicators.plugin.js
  * @invite gvA2ree
- * @changelogDate 2026-04-27
  */
 
 'use strict';
@@ -16,7 +14,7 @@
 const manifest = {
     "$schema": "../common/Schemas/manifest.schema.json",
     "name": "APlatformIndicators",
-    "version": "1.6.2",
+    "version": "1.6.3",
     "author": "Strencher",
     "authorId": "415849376598982656",
     "description": "Adds indicators for every platform that the user is using.",
@@ -26,10 +24,10 @@ const manifest = {
         "title": "Fixed",
         "type": "fixed",
         "items": [
-            "Fixed for the latest Discord update"
+            "PlatformIndicator will now only show once in the Badge List like it used to"
         ]
     }],
-    "changelogDate": "2026-04-27"
+    "changelogDate": "2026-05-15"
 };
 
 /* @api */
@@ -92,16 +90,16 @@ Styles$2.sheets.push("/* ../common/Changelog/style.scss */", `.Changelog-Title-W
   margin-bottom: 10px;
 }
 .Changelog-Item .Changelog-Header.added {
-  color: #45BA6A;
+  color: #45ba6a;
 }
 .Changelog-Item .Changelog-Header.changed {
-  color: #F0B232;
+  color: #f0b232;
 }
 .Changelog-Item .Changelog-Header.fixed {
-  color: #EC4245;
+  color: #ec4245;
 }
 .Changelog-Item .Changelog-Header.improved {
-  color: #5865F2;
+  color: #5865f2;
 }
 .Changelog-Item .Changelog-Header::after {
   content: "";
@@ -140,12 +138,10 @@ function showChangelog(manifest) {
     }, React.createElement("h4", {
         className: `Changelog-Header ${item.type}`
     }, item.title), item.items.map((item2) => React.createElement("span", null, item2))));
-    "changelogImage" in manifest && items.unshift(
-        React.createElement("img", {
-            className: "Changelog-Banner",
-            src: manifest.changelogImage
-        })
-    );
+    "changelogImage" in manifest && items.unshift(React.createElement("img", {
+        className: "Changelog-Banner",
+        src: manifest.changelogImage
+    }));
     UI.alert(title, items);
     Data.save("lastVersion", manifest.version);
 }
@@ -184,12 +180,12 @@ const Colors = Webpack.getByKeys("unsafe_rawColors")?.unsafe_rawColors;
 const Intl$1 = Webpack.getModule((x) => x.intl);
 const formatMessage = (key) => Intl$1.intl.formatToMarkdownString(Intl$1.t[key]);
 const Messages = {
-    "STATUS_DND": formatMessage("jaNpQH"),
-    "STATUS_OFFLINE": formatMessage("Vv0abJ"),
-    "STATUS_ONLINE": formatMessage("WbGtnH"),
-    "STATUS_STREAMING": formatMessage("XKYej5"),
-    "STATUS_IDLE": formatMessage("qWbtVU"),
-    "STATUS_MOBILE": formatMessage("5LMZtY")
+    STATUS_DND: formatMessage("jaNpQH"),
+    STATUS_OFFLINE: formatMessage("Vv0abJ"),
+    STATUS_ONLINE: formatMessage("WbGtnH"),
+    STATUS_STREAMING: formatMessage("XKYej5"),
+    STATUS_IDLE: formatMessage("qWbtVU"),
+    STATUS_MOBILE: formatMessage("5LMZtY")
 };
 const buildClassName = (...args) => {
     return args.reduce((classNames, arg) => {
@@ -276,10 +272,12 @@ function Desktop(props) {
         height: "24",
         viewBox: "0 -2.5 28 28",
         ...props
-    }, React.createElement("path", {
-        fill: "currentColor",
-        d: "M4 2.5C2.897 2.5 2 3.397 2 4.5V15.5C2 16.604 2.897 17.5 4 17.5H11V19.5H7V21.5H17V19.5H13V17.5H20C21.103 17.5 22 16.604 22 15.5V4.5C22 3.397 21.103 2.5 20 2.5H4ZM20 4.5V13.5H4V4.5H20Z"
-    }));
+    }, React.createElement(
+        "path", {
+            fill: "currentColor",
+            d: "M4 2.5C2.897 2.5 2 3.397 2 4.5V15.5C2 16.604 2.897 17.5 4 17.5H11V19.5H7V21.5H17V19.5H13V17.5H20C21.103 17.5 22 16.604 22 15.5V4.5C22 3.397 21.103 2.5 20 2.5H4ZM20 4.5V13.5H4V4.5H20Z"
+        }
+    ));
 }
 
 /* components/icons/embedded.jsx */
@@ -290,10 +288,12 @@ function Embedded(props) {
         height: "24",
         viewBox: "0 -2.5 28 28",
         ...props
-    }, React.createElement("path", {
-        fill: "currentColor",
-        d: "M5.79335761,5 L18.2066424,5 C19.7805584,5 21.0868816,6.21634264 21.1990185,7.78625885 L21.8575059,17.0050826 C21.9307825,18.0309548 21.1585512,18.9219909 20.132679,18.9952675 C20.088523,18.9984215 20.0442685,19 20,19 C18.8245863,19 17.8000084,18.2000338 17.5149287,17.059715 L17,15 L7,15 L6.48507125,17.059715 C6.19999155,18.2000338 5.1754137,19 4,19 C2.97151413,19 2.13776159,18.1662475 2.13776159,17.1377616 C2.13776159,17.0934931 2.1393401,17.0492386 2.1424941,17.0050826 L2.80098151,7.78625885 C2.91311838,6.21634264 4.21944161,5 5.79335761,5 Z M14.5,10 C15.3284271,10 16,9.32842712 16,8.5 C16,7.67157288 15.3284271,7 14.5,7 C13.6715729,7 13,7.67157288 13,8.5 C13,9.32842712 13.6715729,10 14.5,10 Z M18.5,13 C19.3284271,13 20,12.3284271 20,11.5 C20,10.6715729 19.3284271,10 18.5,10 C17.6715729,10 17,10.6715729 17,11.5 C17,12.3284271 17.6715729,13 18.5,13 Z M6,9 L4,9 L4,11 L6,11 L6,13 L8,13 L8,11 L10,11 L10,9 L8,9 L8,7 L6,7 L6,9 Z"
-    }));
+    }, React.createElement(
+        "path", {
+            fill: "currentColor",
+            d: "M5.79335761,5 L18.2066424,5 C19.7805584,5 21.0868816,6.21634264 21.1990185,7.78625885 L21.8575059,17.0050826 C21.9307825,18.0309548 21.1585512,18.9219909 20.132679,18.9952675 C20.088523,18.9984215 20.0442685,19 20,19 C18.8245863,19 17.8000084,18.2000338 17.5149287,17.059715 L17,15 L7,15 L6.48507125,17.059715 C6.19999155,18.2000338 5.1754137,19 4,19 C2.97151413,19 2.13776159,18.1662475 2.13776159,17.1377616 C2.13776159,17.0934931 2.1393401,17.0492386 2.1424941,17.0050826 L2.80098151,7.78625885 C2.91311838,6.21634264 4.21944161,5 5.79335761,5 Z M14.5,10 C15.3284271,10 16,9.32842712 16,8.5 C16,7.67157288 15.3284271,7 14.5,7 C13.6715729,7 13,7.67157288 13,8.5 C13,9.32842712 13.6715729,10 14.5,10 Z M18.5,13 C19.3284271,13 20,12.3284271 20,11.5 C20,10.6715729 19.3284271,10 18.5,10 C17.6715729,10 17,10.6715729 17,11.5 C17,12.3284271 17.6715729,13 18.5,13 Z M6,9 L4,9 L4,11 L6,11 L6,13 L8,13 L8,11 L10,11 L10,9 L8,9 L8,7 L6,7 L6,9 Z"
+        }
+    ));
 }
 
 /* components/icons/mobile.jsx */
@@ -305,10 +305,12 @@ function Mobile(props) {
         transform: "scale(0.9)",
         viewBox: "0 -2.5 32 44",
         ...props
-    }, React.createElement("path", {
-        fill: "currentColor",
-        d: "M 2.882812 0.246094 C 1.941406 0.550781 0.519531 2.007812 0.230469 2.953125 C 0.0585938 3.542969 0 7.234375 0 17.652344 L 0 31.554688 L 0.5 32.558594 C 1.117188 33.769531 2.152344 34.5625 3.519531 34.847656 C 4.210938 35 7.078125 35.058594 12.597656 35 C 20.441406 34.941406 20.691406 34.925781 21.441406 34.527344 C 22.347656 34.054688 23.078125 33.3125 23.578125 32.386719 C 23.921875 31.761719 23.941406 30.964844 24 18.085938 C 24.039062 8.503906 24 4.167969 23.847656 3.464844 C 23.558594 2.121094 22.75 1.097656 21.519531 0.492188 L 20.5 0 L 12.039062 0.0195312 C 6.402344 0.0390625 3.328125 0.113281 2.882812 0.246094 Z M 20.382812 14.582031 L 20.382812 22.917969 L 3.652344 22.917969 L 3.652344 6.25 L 20.382812 6.25 Z M 13.789062 27.539062 C 14.5 28.296875 14.597656 29.035156 14.132812 29.925781 C 13.308594 31.496094 10.671875 31.421875 9.902344 29.8125 C 9.539062 29.054688 9.539062 28.730469 9.902344 28.011719 C 10.691406 26.535156 12.632812 26.308594 13.789062 27.539062 Z M 13.789062 27.539062 "
-    }));
+    }, React.createElement(
+        "path", {
+            fill: "currentColor",
+            d: "M 2.882812 0.246094 C 1.941406 0.550781 0.519531 2.007812 0.230469 2.953125 C 0.0585938 3.542969 0 7.234375 0 17.652344 L 0 31.554688 L 0.5 32.558594 C 1.117188 33.769531 2.152344 34.5625 3.519531 34.847656 C 4.210938 35 7.078125 35.058594 12.597656 35 C 20.441406 34.941406 20.691406 34.925781 21.441406 34.527344 C 22.347656 34.054688 23.078125 33.3125 23.578125 32.386719 C 23.921875 31.761719 23.941406 30.964844 24 18.085938 C 24.039062 8.503906 24 4.167969 23.847656 3.464844 C 23.558594 2.121094 22.75 1.097656 21.519531 0.492188 L 20.5 0 L 12.039062 0.0195312 C 6.402344 0.0390625 3.328125 0.113281 2.882812 0.246094 Z M 20.382812 14.582031 L 20.382812 22.917969 L 3.652344 22.917969 L 3.652344 6.25 L 20.382812 6.25 Z M 13.789062 27.539062 C 14.5 28.296875 14.597656 29.035156 14.132812 29.925781 C 13.308594 31.496094 10.671875 31.421875 9.902344 29.8125 C 9.539062 29.054688 9.539062 28.730469 9.902344 28.011719 C 10.691406 26.535156 12.632812 26.308594 13.789062 27.539062 Z M 13.789062 27.539062 "
+        }
+    ));
 }
 
 /* components/icons/vr.jsx */
@@ -319,15 +321,19 @@ function VR(props) {
         height: "24",
         viewBox: "0 -2.5 28 28",
         ...props
-    }, React.createElement("path", {
-        fill: "currentColor",
-        d: "M8.46 8.64a1 1 0 0 1 1 1c0 .44-.3.8-.72.92l-.11.07c-.08.06-.2.19-.2.41a.99.99 0 0 1-.98.86h-.06a1 1 0 0 1-.94-1.05l.02-.32c.05-1.06.92-1.9 1.99-1.9Z"
-    }), React.createElement("path", {
-        fill: "currentColor",
-        fillRule: "evenodd",
-        clipRule: "evenodd",
-        d: "M15.55 5a5.5 5.5 0 0 1 5.15 3.67h.3a2 2 0 0 1 2 2v3.18a2 2 0 0 1-2 1.99h-.2A4.54 4.54 0 0 1 16.55 19a4.45 4.45 0 0 1-3.6-1.83 1.2 1.2 0 0 0-1.9 0 4.44 4.44 0 0 1-3.9 1.82 4.54 4.54 0 0 1-3.94-3.15H3a2 2 0 0 1-2-2v-3.18c0-1.1.9-1.99 2-1.99h.3A5.5 5.5 0 0 1 8.46 5h7.09Zm-7.1 2C6.6 7 5.06 8.5 4.97 10.41l-.02.66v3.18c0 1.43 1.05 2.66 2.34 2.74.85.06 1.63-.32 2.14-1.01a3.2 3.2 0 0 1 2.57-1.3c1 0 1.97.48 2.57 1.3.5.69 1.3 1.08 2.14 1.01 1.3-.08 2.34-1.31 2.34-2.74l-.02-3.84a3.54 3.54 0 0 0-3.49-3.43H8.45Z"
-    }));
+    }, React.createElement(
+        "path", {
+            fill: "currentColor",
+            d: "M8.46 8.64a1 1 0 0 1 1 1c0 .44-.3.8-.72.92l-.11.07c-.08.06-.2.19-.2.41a.99.99 0 0 1-.98.86h-.06a1 1 0 0 1-.94-1.05l.02-.32c.05-1.06.92-1.9 1.99-1.9Z"
+        }
+    ), React.createElement(
+        "path", {
+            fill: "currentColor",
+            fillRule: "evenodd",
+            clipRule: "evenodd",
+            d: "M15.55 5a5.5 5.5 0 0 1 5.15 3.67h.3a2 2 0 0 1 2 2v3.18a2 2 0 0 1-2 1.99h-.2A4.54 4.54 0 0 1 16.55 19a4.45 4.45 0 0 1-3.6-1.83 1.2 1.2 0 0 0-1.9 0 4.44 4.44 0 0 1-3.9 1.82 4.54 4.54 0 0 1-3.94-3.15H3a2 2 0 0 1-2-2v-3.18c0-1.1.9-1.99 2-1.99h.3A5.5 5.5 0 0 1 8.46 5h7.09Zm-7.1 2C6.6 7 5.06 8.5 4.97 10.41l-.02.66v3.18c0 1.43 1.05 2.66 2.34 2.74.85.06 1.63-.32 2.14-1.01a3.2 3.2 0 0 1 2.57-1.3c1 0 1.97.48 2.57 1.3.5.69 1.3 1.08 2.14 1.01 1.3-.08 2.34-1.31 2.34-2.74l-.02-3.84a3.54 3.54 0 0 0-3.49-3.43H8.45Z"
+        }
+    ));
 }
 
 /* components/icons/web.jsx */
@@ -338,10 +344,12 @@ function Web(props) {
         height: "24",
         viewBox: "0 -2.5 28 28",
         ...props
-    }, React.createElement("path", {
-        fill: "currentColor",
-        d: "M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM11 19.93C7.05 19.44 4 16.08 4 12C4 11.38 4.08 10.79 4.21 10.21L9 15V16C9 17.1 9.9 18 11 18V19.93ZM17.9 17.39C17.64 16.58 16.9 16 16 16H15V13C15 12.45 14.55 12 14 12H8V10H10C10.55 10 11 9.55 11 9V7H13C14.1 7 15 6.1 15 5V4.59C17.93 5.78 20 8.65 20 12C20 14.08 19.2 15.97 17.9 17.39Z"
-    }));
+    }, React.createElement(
+        "path", {
+            fill: "currentColor",
+            d: "M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM11 19.93C7.05 19.44 4 16.08 4 12C4 11.38 4.08 10.79 4.21 10.21L9 15V16C9 17.1 9.9 18 11 18V19.93ZM17.9 17.39C17.64 16.58 16.9 16 16 16H15V13C15 12.45 14.55 12 14 12H8V10H10C10.55 10 11 9.55 11 9V7H13C14.1 7 15 6.1 15 5V4.59C17.93 5.78 20 8.65 20 12C20 14.08 19.2 15.97 17.9 17.39Z"
+        }
+    ));
 }
 
 /* components/icons/Icons.js */
@@ -445,15 +453,19 @@ function CheckboxEnabled(props) {
         height: "24",
         viewBox: "0 0 24 24",
         ...props
-    }, React.createElement("path", {
-        fillRule: "evenodd",
-        clipRule: "evenodd",
-        fill: props.color ?? "currentColor",
-        d: "M5.37499 3H18.625C19.9197 3 21.0056 4.08803 21 5.375V18.625C21 19.936 19.9359 21 18.625 21H5.37499C4.06518 21 3 19.936 3 18.625V5.375C3 4.06519 4.06518 3 5.37499 3Z"
-    }), React.createElement("path", {
-        fill: "#fff",
-        d: "M9.58473 14.8636L6.04944 11.4051L4.50003 12.9978L9.58473 18L19.5 8.26174L17.9656 6.64795L9.58473 14.8636Z"
-    }));
+    }, React.createElement(
+        "path", {
+            fillRule: "evenodd",
+            clipRule: "evenodd",
+            fill: props.color ?? "currentColor",
+            d: "M5.37499 3H18.625C19.9197 3 21.0056 4.08803 21 5.375V18.625C21 19.936 19.9359 21 18.625 21H5.37499C4.06518 21 3 19.936 3 18.625V5.375C3 4.06519 4.06518 3 5.37499 3Z"
+        }
+    ), React.createElement(
+        "path", {
+            fill: "#fff",
+            d: "M9.58473 14.8636L6.04944 11.4051L4.50003 12.9978L9.58473 18L19.5 8.26174L17.9656 6.64795L9.58473 14.8636Z"
+        }
+    ));
 }
 
 function CheckboxDisabled(props) {
@@ -462,12 +474,14 @@ function CheckboxDisabled(props) {
         height: "24",
         viewBox: "0 0 24 24",
         ...props
-    }, React.createElement("path", {
-        fillRule: "evenodd",
-        clipRule: "evenodd",
-        fill: "currentColor",
-        d: "M18.625 3H5.375C4.06519 3 3 4.06519 3 5.375V18.625C3 19.936 4.06519 21 5.375 21H18.625C19.936 21 21 19.936 21 18.625V5.375C21.0057 4.08803 19.9197 3 18.625 3ZM19 19V5H4.99999V19H19Z"
-    }));
+    }, React.createElement(
+        "path", {
+            fillRule: "evenodd",
+            clipRule: "evenodd",
+            fill: "currentColor",
+            d: "M18.625 3H5.375C4.06519 3 3 4.06519 3 5.375V18.625C3 19.936 4.06519 21 5.375 21H18.625C19.936 21 21 19.936 21 18.625V5.375C21.0057 4.08803 19.9197 3 18.625 3ZM19 19V5H4.99999V19H19Z"
+        }
+    ));
 }
 
 function Checkbox({
@@ -601,25 +615,24 @@ const {
 
 function SwitchItem(props) {
     const value = Hooks.useStateFromStores([Settings], () => Settings.get(props.id, props.value));
-    return React.createElement(
-        SettingItem, {
-            ...props,
-            inline: true
-        },
-        React.createElement(
-            SwitchInput, {
-                value,
-                onChange: (v) => {
-                    Settings.set(props.id, v);
-                }
+    return React.createElement(SettingItem, {
+        ...props,
+        inline: true
+    }, React.createElement(
+        SwitchInput, {
+            value,
+            onChange: (v) => {
+                Settings.set(props.id, v);
             }
-        )
-    );
+        }
+    ));
 }
 
 function SmartDisable(props) {
     const iconSize = 26;
-    const [states, setStates] = React.useState(Settings.get(props.id, Object.fromEntries(props.items.map((item) => [item.id, item.value]))));
+    const [states, setStates] = React.useState(
+        Settings.get(props.id, Object.fromEntries(props.items.map((item) => [item.id, item.value])))
+    );
     const handleClick = (id) => {
         states[id] = !states[id];
         Settings.set(props.id, states);
@@ -643,12 +656,14 @@ function SmartDisable(props) {
             width: iconSize,
             height: iconSize
         })
-    ), React.createElement(Checkbox, {
-        width: iconSize,
-        height: iconSize,
-        checked: !!states[item.id],
-        color: "var(--brand-500)"
-    })))));
+    ), React.createElement(
+        Checkbox, {
+            width: iconSize,
+            height: iconSize,
+            checked: !!states[item.id],
+            color: "var(--brand-500)"
+        }
+    )))));
 }
 
 function renderItems(items) {
@@ -690,7 +705,9 @@ class PlatformIndicators {
     }
     async patchDMList() {
         const UserContext = React.createContext(null);
-        const ChannelWrapper = await Webpack.waitForModule(Webpack.Filters.bySource('location:"PrivateChannel",', "isMobile"));
+        const ChannelWrapper = await Webpack.waitForModule(
+            Webpack.Filters.bySource('location:"PrivateChannel",', "isMobile")
+        );
         const NameWrapper = (await Webpack.waitForModule(Webpack.Filters.bySource("AvatarWithText"))).A;
         const ChannelClasses = await Webpack.waitForModule(Webpack.Filters.byKeys("channel", "decorator"));
         Patcher.after(ChannelWrapper, "Ay", (_, __, res) => {
@@ -719,14 +736,10 @@ class PlatformIndicators {
             child.style = {
                 justifyContent: "unset"
             };
-            child.children.push(
-                React.createElement(
-                    StatusIndicators, {
-                        userId: user.id,
-                        type: "DMs"
-                    }
-                )
-            );
+            child.children.push(React.createElement(StatusIndicators, {
+                userId: user.id,
+                type: "DMs"
+            }));
         });
     }
     async patchMemberList() {
@@ -740,15 +753,10 @@ class PlatformIndicators {
             if (Settings.get("ignoreBots", true) && user.bot) return;
             const child = findInReactTree(ret, (e) => e?.className?.includes("username"));
             if (user && child) {
-                child.children = [
-                    child.children,
-                    React.createElement(
-                        StatusIndicators, {
-                            userId: user.id,
-                            type: "MemberList"
-                        }
-                    )
-                ];
+                child.children = [child.children, React.createElement(StatusIndicators, {
+                    userId: user.id,
+                    type: "MemberList"
+                })];
             }
         });
     }
@@ -763,14 +771,10 @@ class PlatformIndicators {
             if (!mainProps?.decorations) return;
             const target = mainProps.decorations?.[1];
             if (!Array.isArray(target)) mainProps.decorations[1] = target ? [target] : [];
-            mainProps.decorations[1].unshift(
-                React.createElement(
-                    StatusIndicators, {
-                        userId: mainProps.message.author.id,
-                        type: "Chat"
-                    }
-                )
-            );
+            mainProps.decorations[1].unshift(React.createElement(StatusIndicators, {
+                userId: mainProps.message.author.id,
+                type: "Chat"
+            }));
         });
     }
     async patchBadges() {
@@ -783,39 +787,38 @@ class PlatformIndicators {
             if (!Settings.get("showInBadges", true)) return;
             if (Settings.get("ignoreBots", true) && displayProfile?.application) return;
             if (!displayProfile?.userId) return;
-            res.props.children.push(
-                React.createElement(
-                    StatusIndicators, {
-                        userId: displayProfile.userId,
-                        type: "Badge",
-                        separator: true
-                    }
-                )
-            );
+            res.props.children.push(React.createElement(StatusIndicators, {
+                userId: displayProfile.userId,
+                type: "Badge",
+                separator: true
+            }));
         });
     }
     async patchFriendList() {
         const [UserInfo, key] = Webpack.getWithKey(() => true, {
-            target: await Webpack.waitForModule(Webpack.Filters.bySource("user", "showAccountIdentifier", "overrideDiscriminator"))
+            target: await Webpack.waitForModule(
+                Webpack.Filters.bySource("user", "showAccountIdentifier", "overrideDiscriminator")
+            )
         });
         const FriendListClasses = await Webpack.waitForModule(Webpack.Filters.byKeys("userInfo", "hovered"));
         if (!Settings.get("showInFriendsList", true)) return;
-        DOM.addStyle("PlatformIndicators", `
+        DOM.addStyle(
+            "PlatformIndicators",
+            `
             .${FriendListClasses.discriminator} { display: none; }
             .${FriendListClasses.hovered} .${FriendListClasses.discriminator} { display: unset; }
-        `);
+        `
+        );
         Patcher.after(UserInfo, key, (_, [{
+            showAccountIdentifier,
             user
         }], res) => {
+            if (!showAccountIdentifier) return;
             Patcher.after(res, "type", (_2, __, res2) => {
-                res2.props.children.push(
-                    React.createElement(
-                        StatusIndicators, {
-                            userId: user.id,
-                            type: "FriendList"
-                        }
-                    )
-                );
+                res2.props.children.push(React.createElement(StatusIndicators, {
+                    userId: user.id,
+                    type: "FriendList"
+                }));
             });
         });
     }
