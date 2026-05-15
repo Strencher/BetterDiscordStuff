@@ -3,7 +3,7 @@
 ## Development Branch
 
 > [!WARNING]
-> This branch contains the **source code** for BetterDiscord plugins. It is **NOT** the compiled or ready-to-use plugin.
+> This branch contains the **source code** for BetterDiscord plugins. It is **NOT** the compiled or ready-to-use plugin. To **DOWNLOAD** Plugins, go to the [`master` branch](https://github.com/Strencher/BetterDiscordStuff/tree/master)
 
 ## Developer Guide
 
