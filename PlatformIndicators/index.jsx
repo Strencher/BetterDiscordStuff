@@ -128,7 +128,9 @@ export default class PlatformIndicators {
         `
         );
 
-        Patcher.after(UserInfo, key, (_, [{ user }], res) => {
+        Patcher.after(UserInfo, key, (_, [{ showAccountIdentifier, user }], res) => {
+            // Don't ask me why, but this is only true on the friends list
+            if (!showAccountIdentifier) return;
             Patcher.after(res, "type", (_, __, res) => {
                 res.props.children.push(<StatusIndicators userId={user.id} type="FriendList" />);
             });
