@@ -146,6 +146,68 @@ function showChangelog(manifest) {
     Data.save("lastVersion", manifest.version);
 }
 
+/* ../common/ErrorBoundary/style.scss */
+Styles$2.sheets.push("/* ../common/ErrorBoundary/style.scss */", `.errorBoundary {
+  align-items: center;
+  background: #473c41;
+  border: 2px solid #f04747;
+  border-radius: 5px;
+  padding: 5px;
+  margin: 10px;
+  color: #fff;
+  font-size: 16px;
+}
+.errorBoundary .errorText {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}`);
+
+/* ../common/ErrorBoundary/index.tsx */
+const ErrorIcon = (props) => React.createElement("svg", {
+    xmlns: "http://www.w3.org/2000/svg",
+    viewBox: "0 0 24 24",
+    fill: "#ddd",
+    width: "24",
+    height: "24",
+    ...props
+}, React.createElement("path", {
+    d: "M0 0h24v24H0z",
+    fill: "none"
+}), React.createElement("path", {
+    d: "M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"
+}));
+class ErrorBoundary extends React.Component {
+    state = {
+        hasError: false,
+        error: null,
+        info: null
+    };
+    componentDidCatch(error, info) {
+        this.setState({
+            error,
+            info,
+            hasError: true
+        });
+        console.error(
+            `[ErrorBoundary:${this.props.id}] HI OVER HERE!! SHOW THIS SCREENSHOT TO THE DEVELOPER.
+`,
+            error
+        );
+    }
+    render() {
+        if (this.state.hasError) {
+            return this.props.mini ? React.createElement(ErrorIcon, {
+                fill: "#f04747"
+            }) : React.createElement("div", {
+                className: "errorBoundary"
+            }, React.createElement("div", {
+                className: "errorText"
+            }, React.createElement("span", null, "An error has occured while rendering ", this.props.id, "."), React.createElement("span", null, "Open console (", React.createElement("code", null, "CTRL + SHIFT + i / CMD + SHIFT + i"), ') - Select the "Console" tab and screenshot the big red error.')));
+        } else return this.props.children;
+    }
+}
+
 /* ../common/Settings/store.ts */
 const Dispatcher = Webpack.getByKeys("dispatch", "subscribe", {
     searchExports: true
@@ -166,7 +228,96 @@ const Settings = new class Settings2 extends Flux.Store {
     }
 }();
 
-/* modules/shared.js */
+/* ../common/Settings/items/dropdown.tsx */
+const {
+    SettingItem: SettingItem$2
+} = Components;
+const Select = Webpack.getByStrings('selectionMode:"single",onSelectionChange:', "isSelected:", {
+    searchExports: true
+});
+
+function DropdownItem(props) {
+    return React.createElement(ErrorBoundary, {
+        id: props.id
+    }, React.createElement(SettingItem$2, {
+        ...props
+    }, React.createElement(
+        Select, {
+            closeOnSelect: true,
+            options: props.options,
+            serialize: (v) => String(v),
+            select: (v) => Settings.set(props.id, v),
+            isSelected: (v) => Settings.get(props.id, props.value) === v
+        }
+    )));
+}
+
+/* ../common/Settings/items/slider.tsx */
+const {
+    SettingItem: SettingItem$1
+} = Components;
+const Slider = Webpack.getByStrings("stickToMarkers");
+
+function SliderItem(props) {
+    const value = Hooks.useStateFromStores([Settings], () => Settings.get(props.id, props.value));
+    return React.createElement(ErrorBoundary, {
+        id: props.id
+    }, React.createElement(SettingItem$1, {
+        ...props
+    }, React.createElement(
+        Slider, {
+            ...props,
+            handleSize: 10,
+            initialValue: value,
+            defaultValue: props.defaultValue,
+            minValue: props.minValue,
+            maxValue: props.maxValue,
+            onValueChange: (value2) => Settings.set(props.id, Math.round(value2)),
+            onValueRender: (value2) => Math.round(value2)
+        }
+    )));
+}
+
+/* ../common/Settings/items/switch.tsx */
+const {
+    SettingItem,
+    SwitchInput
+} = Components;
+
+function SwitchItem(props) {
+    const value = Hooks.useStateFromStores([Settings], () => Settings.get(props.id, props.value));
+    return React.createElement(ErrorBoundary, {
+        id: props.id
+    }, React.createElement(SettingItem, {
+        ...props,
+        inline: true
+    }, React.createElement(SwitchInput, {
+        value,
+        onChange: (v) => Settings.set(props.id, v)
+    })));
+}
+
+/* ../common/Settings/panel.tsx */
+function SettingsPanel$1({
+    items,
+    components: customComponents
+}) {
+    const ComponentMap = {
+        dropdown: DropdownItem,
+        switch: SwitchItem,
+        slider: SliderItem,
+        ...customComponents
+    };
+    return items.map((item) => {
+        const Component = ComponentMap[item.type];
+        return Component ? React.createElement(Component, {
+            key: item.id,
+            ...item
+        }) : null;
+    });
+}
+
+/* modules/shared.ts */
 const LocalActivityStore = Webpack.getStore("LocalActivityStore");
 const SessionsStore = Webpack.getStore("SessionsStore");
 const UserStore = Webpack.getStore("UserStore");
@@ -191,7 +342,7 @@ const buildClassName = (...args) => {
     return args.reduce((classNames, arg) => {
         if (!arg) return classNames;
         if (typeof arg === "string" || typeof arg === "number") {
-            classNames.push(arg);
+            classNames.push(String(arg));
         } else if (Array.isArray(arg)) {
             const nestedClassNames = buildClassName(...arg);
             if (nestedClassNames) classNames.push(nestedClassNames);
@@ -204,7 +355,7 @@ const buildClassName = (...args) => {
     }, []).join(" ");
 };
 
-/* modules/usePlatformStores.js */
+/* modules/usePlatformStores.ts */
 const isStreaming = () => LocalActivityStore.getActivities().some((e) => e.type === 1);
 
 function usePlatformStores(userId, type) {
@@ -217,12 +368,13 @@ function usePlatformStores(userId, type) {
     const clients = (() => {
         if (user?.id === UserStore.getCurrentUser()?.id) {
             if (sessions) {
-                const clientStatuses = Object.entries(sessions).reduce((acc, [, sessionData]) => {
-                    const client = sessionData.clientInfo.client;
-                    acc[client] = isStreaming() ? "streaming" : sessionData.status;
-                    return acc;
-                }, {});
-                return clientStatuses;
+                return Object.entries(sessions).reduce(
+                    (acc, [, sessionData]) => {
+                        const client = sessionData.clientInfo.client;
+                        acc[client] = isStreaming() ? "streaming" : sessionData.status;
+                        return acc;
+                    }, {}
+                );
             }
             return {};
         }
@@ -236,7 +388,7 @@ function usePlatformStores(userId, type) {
     };
 }
 
-/* modules/utils.js */
+/* modules/utils.ts */
 const findInReactTree = (tree, filter) => Utils.findInTree(tree, filter, {
     walkable: ["props", "children", "type"]
 });
@@ -264,7 +416,7 @@ function getStatusColor(status) {
     }
 }
 
-/* components/icons/desktop.jsx */
+/* components/icons/desktop.tsx */
 function Desktop(props) {
     return React.createElement("svg", {
         className: "PI-icon_desktop",
@@ -280,7 +432,7 @@ function Desktop(props) {
     ));
 }
 
-/* components/icons/embedded.jsx */
+/* components/icons/embedded.tsx */
 function Embedded(props) {
     return React.createElement("svg", {
         className: "PI-icon_embedded",
@@ -296,7 +448,7 @@ function Embedded(props) {
     ));
 }
 
-/* components/icons/mobile.jsx */
+/* components/icons/mobile.tsx */
 function Mobile(props) {
     return React.createElement("svg", {
         className: "PI-icon_mobile",
@@ -313,7 +465,7 @@ function Mobile(props) {
     ));
 }
 
-/* components/icons/vr.jsx */
+/* components/icons/vr.tsx */
 function VR(props) {
     return React.createElement("svg", {
         className: "PI-icon_vr",
@@ -336,7 +488,7 @@ function VR(props) {
     ));
 }
 
-/* components/icons/web.jsx */
+/* components/icons/web.tsx */
 function Web(props) {
     return React.createElement("svg", {
         className: "PI-icon_web",
@@ -352,7 +504,7 @@ function Web(props) {
     ));
 }
 
-/* components/icons/Icons.js */
+/* components/icons/index.ts */
 
 var Icons = /*#__PURE__*/ Object.freeze({
     __proto__: null,
@@ -363,8 +515,8 @@ var Icons = /*#__PURE__*/ Object.freeze({
     web: Web
 });
 
-/* components/indicators.scss */
-Styles$2.sheets.push("/* components/indicators.scss */", `.indicatorContainer {
+/* components/indicators/style.scss */
+Styles$2.sheets.push("/* components/indicators/style.scss */", `.indicatorContainer {
   display: inline-flex;
   vertical-align: bottom;
   margin-left: 5px;
@@ -413,7 +565,7 @@ var Styles$1 = {
     "badge_separator": "badge_separator"
 };
 
-/* components/indicators.jsx */
+/* components/indicators/index.tsx */
 function StatusIndicators({
     type,
     userId,
@@ -430,6 +582,7 @@ function StatusIndicators({
     }, Object.entries(state.clients).filter(([key]) => (state.iconStates[key] ?? true) && key in Icons).map(([key, status]) => {
         const Icon = Icons[key];
         return React.createElement(Components.Tooltip, {
+            key,
             text: getStatusText(key, status)
         }, (props) => React.createElement(
             Icon, {
@@ -446,57 +599,8 @@ function StatusIndicators({
     })));
 }
 
-/* components/icons/checkbox.jsx */
-function CheckboxEnabled(props) {
-    return React.createElement("svg", {
-        width: "24",
-        height: "24",
-        viewBox: "0 0 24 24",
-        ...props
-    }, React.createElement(
-        "path", {
-            fillRule: "evenodd",
-            clipRule: "evenodd",
-            fill: props.color ?? "currentColor",
-            d: "M5.37499 3H18.625C19.9197 3 21.0056 4.08803 21 5.375V18.625C21 19.936 19.9359 21 18.625 21H5.37499C4.06518 21 3 19.936 3 18.625V5.375C3 4.06519 4.06518 3 5.37499 3Z"
-        }
-    ), React.createElement(
-        "path", {
-            fill: "#fff",
-            d: "M9.58473 14.8636L6.04944 11.4051L4.50003 12.9978L9.58473 18L19.5 8.26174L17.9656 6.64795L9.58473 14.8636Z"
-        }
-    ));
-}
-
-function CheckboxDisabled(props) {
-    return React.createElement("svg", {
-        width: "24",
-        height: "24",
-        viewBox: "0 0 24 24",
-        ...props
-    }, React.createElement(
-        "path", {
-            fillRule: "evenodd",
-            clipRule: "evenodd",
-            fill: "currentColor",
-            d: "M18.625 3H5.375C4.06519 3 3 4.06519 3 5.375V18.625C3 19.936 4.06519 21 5.375 21H18.625C19.936 21 21 19.936 21 18.625V5.375C21.0057 4.08803 19.9197 3 18.625 3ZM19 19V5H4.99999V19H19Z"
-        }
-    ));
-}
-
-function Checkbox({
-    checked,
-    ...props
-}) {
-    return checked ? React.createElement(CheckboxEnabled, {
-        ...props
-    }) : React.createElement(CheckboxDisabled, {
-        ...props
-    });
-}
-
-/* components/settings.json */
-var SettingsItems = [{
+/* settings.json */
+var items = [{
         type: "switch",
         name: "Show in Friendslist",
         note: "Shows the platform indicators in the friendslist",
@@ -570,19 +674,79 @@ var SettingsItems = [{
         ]
     }
 ];
+var SettingsItems = {
+    items: items
+};
 
-/* components/settings.scss */
-Styles$2.sheets.push("/* components/settings.scss */", `.PIsettingsSmartDisable {
+/* components/icons/checkbox.tsx */
+function CheckboxEnabled({
+    color,
+    ...props
+}) {
+    return React.createElement("svg", {
+        width: "24",
+        height: "24",
+        viewBox: "0 0 24 24",
+        ...props
+    }, React.createElement(
+        "path", {
+            fillRule: "evenodd",
+            clipRule: "evenodd",
+            fill: color ?? "currentColor",
+            d: "M5.37499 3H18.625C19.9197 3 21.0056 4.08803 21 5.375V18.625C21 19.936 19.9359 21 18.625 21H5.37499C4.06518 21 3 19.936 3 18.625V5.375C3 4.06519 4.06518 3 5.37499 3Z"
+        }
+    ), React.createElement(
+        "path", {
+            fill: "#fff",
+            d: "M9.58473 14.8636L6.04944 11.4051L4.50003 12.9978L9.58473 18L19.5 8.26174L17.9656 6.64795L9.58473 14.8636Z"
+        }
+    ));
+}
+
+function CheckboxDisabled(props) {
+    return React.createElement("svg", {
+        width: "24",
+        height: "24",
+        viewBox: "0 0 24 24",
+        ...props
+    }, React.createElement(
+        "path", {
+            fillRule: "evenodd",
+            clipRule: "evenodd",
+            fill: "currentColor",
+            d: "M18.625 3H5.375C4.06519 3 3 4.06519 3 5.375V18.625C3 19.936 4.06519 21 5.375 21H18.625C19.936 21 21 19.936 21 18.625V5.375C21.0057 4.08803 19.9197 3 18.625 3ZM19 19V5H4.99999V19H19Z"
+        }
+    ));
+}
+
+function Checkbox({
+    checked,
+    ...props
+}) {
+    return checked ? React.createElement(CheckboxEnabled, {
+        ...props
+    }) : React.createElement(CheckboxDisabled, {
+        ...props
+    });
+}
+
+/* components/settings/style.scss */
+Styles$2.sheets.push("/* components/settings/style.scss */", `.SmartDisable {
   color: #fff;
 }
-.PIsettingsSmartDisable .body {
+.SmartDisable .title {
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+.SmartDisable .body {
   display: grid;
   grid-template-columns: 160px 160px 160px;
   grid-template-rows: auto auto auto;
   column-gap: 15px;
   row-gap: 15px;
 }
-.PIsettingsSmartDisable .body .item {
+.SmartDisable .body .item {
   display: flex;
   align-items: center;
   cursor: pointer;
@@ -590,66 +754,44 @@ Styles$2.sheets.push("/* components/settings.scss */", `.PIsettingsSmartDisable 
   background: var(--primary-630);
   padding: 10px 15px;
 }
-.PIsettingsSmartDisable .body .item:hover {
+.SmartDisable .body .item:hover {
   background: var(--primary-500);
-}
-
-.PIsettingsTitle {
-  color: #fff;
-  font-size: 24px;
-  font-weight: 600;
-  margin-bottom: 20px;
 }`);
 var Styles = {
-    "PIsettingsSmartDisable": "PIsettingsSmartDisable",
+    "SmartDisable": "SmartDisable",
+    "title": "title",
     "body": "body",
-    "item": "item",
-    "PIsettingsTitle": "PIsettingsTitle"
+    "item": "item"
 };
 
-/* components/settings.jsx */
-const {
-    SettingItem,
-    SwitchInput
-} = Components;
-
-function SwitchItem(props) {
-    const value = Hooks.useStateFromStores([Settings], () => Settings.get(props.id, props.value));
-    return React.createElement(SettingItem, {
-        ...props,
-        inline: true
-    }, React.createElement(
-        SwitchInput, {
-            value,
-            onChange: (v) => {
-                Settings.set(props.id, v);
-            }
-        }
-    ));
-}
-
-function SmartDisable(props) {
-    const iconSize = 26;
+/* components/settings/index.tsx */
+function SmartDisable({
+    id,
+    name,
+    items
+}) {
+    const iconSize = 25;
     const [states, setStates] = React.useState(
-        Settings.get(props.id, Object.fromEntries(props.items.map((item) => [item.id, item.value])))
+        Settings.get(id, Object.fromEntries(items.map((item) => [item.id, item.value])))
     );
-    const handleClick = (id) => {
-        states[id] = !states[id];
-        Settings.set(props.id, states);
+    const handleClick = (itemId) => {
+        states[itemId] = !states[itemId];
+        Settings.set(id, states);
         setStates(Object.assign({}, states));
     };
     return React.createElement("div", {
-        className: Styles.PIsettingsSmartDisable
+        className: Styles.SmartDisable
     }, React.createElement("h1", {
-        className: Styles.PIsettingsTitle
-    }, props.name), React.createElement("div", {
+        className: Styles.title
+    }, name), React.createElement("div", {
         className: Styles.body
-    }, props.items.map((item) => React.createElement("div", {
+    }, items.map((item) => React.createElement("div", {
         key: item.id,
         className: Styles.item,
         onClick: () => handleClick(item.id)
     }, ["online", "dnd", "idle", "offline"].map(
         (status) => React.createElement(Icons[item.icon], {
+            key: status,
             style: {
                 color: getStatusColor(status)
             },
@@ -666,27 +808,13 @@ function SmartDisable(props) {
     )))));
 }
 
-function renderItems(items) {
-    return items.map((item) => {
-        switch (item.type) {
-            case "switch":
-                return React.createElement(SwitchItem, {
-                    ...item
-                });
-            case "smart-disable":
-                return React.createElement(SmartDisable, {
-                    ...item
-                });
-            default:
-                return null;
+function SettingsPanel() {
+    return React.createElement(SettingsPanel$1, {
+        items: SettingsItems.items,
+        components: {
+            "smart-disable": SmartDisable
         }
     });
-}
-
-function SettingsPanel() {
-    return React.createElement("div", null, React.createElement("h1", {
-        className: Styles.PIsettingsTitle
-    }, "General Settings"), renderItems(SettingsItems));
 }
 
 /* index.jsx */
