@@ -14,6 +14,25 @@
                 "oneOf": [
                     {
                         "type": "object",
+                        "description": "Custom setting type. Requires a component registered in SettingsPanel's `components` prop — if no matching component is found, this item will be silently ignored.",
+                        "properties": {
+                            "type": {
+                                "type": "string",
+                                "not": { "enum": ["switch", "dropdown", "slider"] },
+                                "description": "Custom type identifier. Must be registered via SettingsPanel's `components` prop."
+                            },
+                            "name": { "type": "string", "description": "The display name of the setting" },
+                            "note": {
+                                "type": "string",
+                                "description": "Optional help text or description for the setting"
+                            },
+                            "id": { "type": "string", "description": "Unique identifier for the setting" }
+                        },
+                        "required": ["type", "name", "id"],
+                        "additionalProperties": true
+                    },
+                    {
+                        "type": "object",
                         "description": "A switch/toggle setting",
                         "properties": {
                             "type": {

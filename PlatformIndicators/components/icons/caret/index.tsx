@@ -2,7 +2,11 @@ import React from "react";
 
 import styles from "./caret.scss";
 
-export default function Caret({ direction, ...props }) {
+interface CaretProps extends React.SVGProps<SVGSVGElement> {
+    direction: string;
+}
+
+export default function Caret({ direction, ...props }: CaretProps) {
     return (
         <svg
             className={"PI-caret " + styles[direction.toLowerCase()]}

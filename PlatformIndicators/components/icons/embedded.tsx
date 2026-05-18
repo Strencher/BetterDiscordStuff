@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function Embedded(props) {
+export default function Embedded(props: React.SVGProps<SVGSVGElement>) {
     return (
         <svg className="PI-icon_embedded" width="24" height="24" viewBox="0 -2.5 28 28" {...props}>
             <path

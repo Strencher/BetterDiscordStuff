@@ -1,14 +1,14 @@
 import { Utils } from "@api";
 
-import { Messages } from "./shared";
-import { Colors, StatusTypes } from "./shared";
+import { Colors, Messages, StatusTypes } from "./shared";
 
-export const findInReactTree = (tree, filter) =>
+// eslint-disable-next-line no-unused-vars
+export const findInReactTree = (tree: any, filter: (e: any) => boolean): any =>
     Utils.findInTree(tree, filter, { walkable: ["props", "children", "type"] });
 
-const upperFirst = string => string.charAt(0).toUpperCase() + string.slice(1);
+const upperFirst = (string: string): string => string.charAt(0).toUpperCase() + string.slice(1);
 
-export function getStatusText(key, status) {
+export function getStatusText(key: string, status: string): string {
     return (
         (key === "vr" ? "VR" : upperFirst(key)) +
         ": " +
@@ -16,7 +16,7 @@ export function getStatusText(key, status) {
     );
 }
 
-export function getStatusColor(status) {
+export function getStatusColor(status: string): string {
     switch (status) {
         case StatusTypes.ONLINE:
             return Colors.GREEN_360.css;

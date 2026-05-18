@@ -1,13 +1,20 @@
 import { Components } from "@api";
 import React from "react";
 
-import { buildClassName } from "../modules/shared";
-import usePlatformStores from "../modules/usePlatformStores";
-import { getStatusColor, getStatusText } from "../modules/utils";
-import * as Icons from "./icons/Icons";
-import Styles from "./indicators.scss";
+import { buildClassName } from "../../modules/shared";
+import usePlatformStores from "../../modules/usePlatformStores";
+import { getStatusColor, getStatusText } from "../../modules/utils";
+import * as Icons from "../icons";
+import Styles from "./style.scss";
 
-export default function StatusIndicators({ type, userId, size = 18, separator = false }) {
+interface StatusIndicatorsProps {
+    type: string;
+    userId: string;
+    size?: number;
+    separator?: boolean;
+}
+
+export default function StatusIndicators({ type, userId, size = 18, separator = false }: StatusIndicatorsProps) {
     const state = usePlatformStores(userId, type);
 
     if (!Object.keys(state.clients).length || !state.shouldShow) return null;
@@ -19,11 +26,11 @@ export default function StatusIndicators({ type, userId, size = 18, separator = 
                 {Object.entries(state.clients)
                     .filter(([key]) => (state.iconStates[key] ?? true) && key in Icons)
                     .map(([key, status]) => {
-                        const Icon = Icons[key];
+                        const Icon = Icons[key as keyof typeof Icons];
 
                         return (
-                            <Components.Tooltip text={getStatusText(key, status)}>
-                                {props => (
+                            <Components.Tooltip key={key} text={getStatusText(key, status)}>
+                                {(props: any) => (
                                     <Icon
                                         text={getStatusText(key, status)}
                                         style={{ color: getStatusColor(status) }}

@@ -1,4 +1,4 @@
-interface BasicSettingsItem {
+export interface BasicSettingsItem {
     id: string;
     name: string;
     note?: string;
@@ -27,3 +27,4 @@ export interface SliderSettingsItem extends BasicSettingsItem {
 
 export type SettingsItem = DropdownSettingsItem | SwitchSettingsItem | SliderSettingsItem;
 export type SettingsItemForType<T extends SettingsItem["type"]> = Extract<SettingsItem, { type: T }>;
+export type AnySettingsItem = BasicSettingsItem & { type: string; [key: string]: unknown };

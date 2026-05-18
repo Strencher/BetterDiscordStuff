@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function Mobile(props) {
+export default function Mobile(props: React.SVGProps<SVGSVGElement>) {
     return (
         <svg className="PI-icon_mobile" width="24" height="24" transform="scale(0.9)" viewBox="0 -2.5 32 44" {...props}>
             <path

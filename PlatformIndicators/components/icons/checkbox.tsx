@@ -1,12 +1,14 @@
 import React from "react";
 
-function CheckboxEnabled(props) {
+type CheckboxBaseProps = React.SVGProps<SVGSVGElement> & { color?: string };
+
+function CheckboxEnabled({ color, ...props }: CheckboxBaseProps) {
     return (
         <svg width="24" height="24" viewBox="0 0 24 24" {...props}>
             <path
                 fillRule="evenodd"
                 clipRule="evenodd"
-                fill={props.color ?? "currentColor"}
+                fill={color ?? "currentColor"}
                 d="M5.37499 3H18.625C19.9197 3 21.0056 4.08803 21 5.375V18.625C21 19.936 19.9359 21 18.625 21H5.37499C4.06518 21 3 19.936 3 18.625V5.375C3 4.06519 4.06518 3 5.37499 3Z"
             />
             <path
@@ -17,7 +19,7 @@ function CheckboxEnabled(props) {
     );
 }
 
-function CheckboxDisabled(props) {
+function CheckboxDisabled(props: CheckboxBaseProps) {
     return (
         <svg width="24" height="24" viewBox="0 0 24 24" {...props}>
             <path
@@ -30,6 +32,10 @@ function CheckboxDisabled(props) {
     );
 }
 
-export function Checkbox({ checked, ...props }) {
+export interface CheckboxProps extends CheckboxBaseProps {
+    checked: boolean;
+}
+
+export function Checkbox({ checked, ...props }: CheckboxProps) {
     return checked ? <CheckboxEnabled {...props} /> : <CheckboxDisabled {...props} />;
 }
