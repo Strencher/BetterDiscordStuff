@@ -56,17 +56,13 @@ export default class InvisibleTyping {
         )?.A;
 
         Patcher.after(ChatButtonsGroup, "type", (_, methodArgs, res) => {
-            const args = methodArgs as ChatButtonsArgs;
+            const [args] = methodArgs as ChatButtonsArgs;
             if (
-                args.length == 2 &&
-                !args[0].disabled &&
-                args[0].type.analyticsName == "normal" &&
-                res.props.children &&
-                Array.isArray(res.props.children)
+                !args.disabled &&
+                ["normal", "sidebar"].includes(args.type.analyticsName) &&
+                Array.isArray(res.props?.children)
             ) {
-                res.props.children.unshift(
-                    <InvisibleTypingButton channel={args[0].channel} isEmpty={!args[0].textValue} />
-                );
+                res.props.children.unshift(<InvisibleTypingButton channel={args.channel} isEmpty={!args.textValue} />);
             }
         });
     }
