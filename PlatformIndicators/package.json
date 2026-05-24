@@ -1,7 +1,7 @@
 {
     "$schema": "../common/Schemas/manifest.schema.json",
     "name": "APlatformIndicators",
-    "version": "1.6.3",
+    "version": "1.6.4",
     "author": "Strencher",
     "authorId": "415849376598982656",
     "description": "Adds indicators for every platform that the user is using.",
@@ -9,12 +9,12 @@
     "invite": "gvA2ree",
     "changelog": [
         {
-            "title": "Fixed",
+            "title": "Fixed Crash when streaming to Twitch",
             "type": "fixed",
             "items": [
-                "PlatformIndicator will now only show once in the Badge List like it used to"
+                "PlatformIndicator will no longet crash when you start streaming to Twitch"
             ]
         }
     ],
-    "changelogDate": "2026-05-15"
+    "changelogDate": "2026-05-24"
 }
