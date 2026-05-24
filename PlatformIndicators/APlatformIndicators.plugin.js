@@ -1,6 +1,6 @@
 /**
  * @name APlatformIndicators
- * @version 1.6.3
+ * @version 1.6.4
  * @author Strencher
  * @authorId 415849376598982656
  * @description Adds indicators for every platform that the user is using.
@@ -14,20 +14,20 @@
 const manifest = {
     "$schema": "../common/Schemas/manifest.schema.json",
     "name": "APlatformIndicators",
-    "version": "1.6.3",
+    "version": "1.6.4",
     "author": "Strencher",
     "authorId": "415849376598982656",
     "description": "Adds indicators for every platform that the user is using.",
     "source": "https://github.com/Strencher/BetterDiscordStuff/blob/master/PlatformIndicators/APlatformIndicators.plugin.js",
     "invite": "gvA2ree",
     "changelog": [{
-        "title": "Fixed",
+        "title": "Fixed Crash when streaming to Twitch",
         "type": "fixed",
         "items": [
-            "PlatformIndicator will now only show once in the Badge List like it used to"
+            "PlatformIndicator will no longet crash when you start streaming to Twitch"
         ]
     }],
-    "changelogDate": "2026-05-15"
+    "changelogDate": "2026-05-24"
 };
 
 /* @api */
@@ -401,18 +401,18 @@ function getStatusText(key, status) {
 function getStatusColor(status) {
     switch (status) {
         case StatusTypes.ONLINE:
-            return Colors.GREEN_360.css;
+            return Colors.GREEN_360?.css;
         case StatusTypes.IDLE:
-            return Colors.YELLOW_300.css;
+            return Colors.YELLOW_300?.css;
         case StatusTypes.DND:
-            return Colors.RED_400.css;
+            return Colors.RED_400?.css;
         case StatusTypes.STREAMING:
-            return Colors.TWITCH.css;
+            return Colors.PLATFORM_TWITCH?.css;
         case StatusTypes.INVISIBLE:
         case StatusTypes.UNKNOWN:
         case StatusTypes.OFFLINE:
         default:
-            return Colors.PRIMARY_400.css;
+            return Colors.PRIMARY_400?.css;
     }
 }
 
