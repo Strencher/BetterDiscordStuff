@@ -1,13 +1,11 @@
 /**
- * @$schema ../common/Schemas/manifest.schema.json
  * @name InvisibleTyping
- * @version 1.4.7
+ * @version 1.5.0
  * @author Strencher
  * @authorId 415849376598982656
  * @description Enhanced version of silent typing.
  * @source https://github.com/Strencher/BetterDiscordStuff/blob/master/InvisibleTyping/InvisibleTyping.plugin.js
  * @invite gvA2ree
- * @changelogDate 2026-04-26
  */
 
 'use strict';
@@ -16,20 +14,20 @@
 const manifest = {
     "$schema": "../common/Schemas/manifest.schema.json",
     "name": "InvisibleTyping",
-    "version": "1.4.7",
+    "version": "1.5.0",
     "author": "Strencher",
     "authorId": "415849376598982656",
     "description": "Enhanced version of silent typing.",
     "source": "https://github.com/Strencher/BetterDiscordStuff/blob/master/InvisibleTyping/InvisibleTyping.plugin.js",
     "invite": "gvA2ree",
     "changelog": [{
-        "title": "It works again!",
-        "type": "fixed",
+        "title": "Added support for Voice Channels",
+        "type": "added",
         "items": [
-            "Fixed for the latest Discord update"
+            "Voice Channel Chats show now the Invisible Typing Button as well"
         ]
     }],
-    "changelogDate": "2026-04-26"
+    "changelogDate": "2026-05-24"
 };
 
 /* @api */
@@ -91,16 +89,16 @@ Styles.sheets.push("/* ../common/Changelog/style.scss */", `.Changelog-Title-Wra
   margin-bottom: 10px;
 }
 .Changelog-Item .Changelog-Header.added {
-  color: #45BA6A;
+  color: #45ba6a;
 }
 .Changelog-Item .Changelog-Header.changed {
-  color: #F0B232;
+  color: #f0b232;
 }
 .Changelog-Item .Changelog-Header.fixed {
-  color: #EC4245;
+  color: #ec4245;
 }
 .Changelog-Item .Changelog-Header.improved {
-  color: #5865F2;
+  color: #5865f2;
 }
 .Changelog-Item .Changelog-Header::after {
   content: "";
@@ -139,14 +137,74 @@ function showChangelog(manifest) {
     }, React.createElement("h4", {
         className: `Changelog-Header ${item.type}`
     }, item.title), item.items.map((item2) => React.createElement("span", null, item2))));
-    "changelogImage" in manifest && items.unshift(
-        React.createElement("img", {
-            className: "Changelog-Banner",
-            src: manifest.changelogImage
-        })
-    );
+    "changelogImage" in manifest && items.unshift(React.createElement("img", {
+        className: "Changelog-Banner",
+        src: manifest.changelogImage
+    }));
     UI.alert(title, items);
     Data.save("lastVersion", manifest.version);
+}
+
+/* ../common/ErrorBoundary/style.scss */
+Styles.sheets.push("/* ../common/ErrorBoundary/style.scss */", `.errorBoundary {
+  align-items: center;
+  background: #473c41;
+  border: 2px solid #f04747;
+  border-radius: 5px;
+  padding: 5px;
+  margin: 10px;
+  color: #fff;
+  font-size: 16px;
+}
+.errorBoundary .errorText {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}`);
+
+/* ../common/ErrorBoundary/index.tsx */
+const ErrorIcon = (props) => React.createElement("svg", {
+    xmlns: "http://www.w3.org/2000/svg",
+    viewBox: "0 0 24 24",
+    fill: "#ddd",
+    width: "24",
+    height: "24",
+    ...props
+}, React.createElement("path", {
+    d: "M0 0h24v24H0z",
+    fill: "none"
+}), React.createElement("path", {
+    d: "M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"
+}));
+class ErrorBoundary extends React.Component {
+    state = {
+        hasError: false,
+        error: null,
+        info: null
+    };
+    componentDidCatch(error, info) {
+        this.setState({
+            error,
+            info,
+            hasError: true
+        });
+        console.error(
+            `[ErrorBoundary:${this.props.id}] HI OVER HERE!! SHOW THIS SCREENSHOT TO THE DEVELOPER.
+`,
+            error
+        );
+    }
+    render() {
+        if (this.state.hasError) {
+            return this.props.mini ? React.createElement(ErrorIcon, {
+                fill: "#f04747"
+            }) : React.createElement("div", {
+                className: "errorBoundary"
+            }, React.createElement("div", {
+                className: "errorText"
+            }, React.createElement("span", null, "An error has occured while rendering ", this.props.id, "."), React.createElement("span", null, "Open console (", React.createElement("code", null, "CTRL + SHIFT + i / CMD + SHIFT + i"), ') - Select the "Console" tab and screenshot the big red error.')));
+        } else return this.props.children;
+    }
 }
 
 /* ../common/Settings/store.ts */
@@ -169,18 +227,18 @@ const Settings = new class Settings2 extends Flux.Store {
     }
 }();
 
-/* ../common/Settings/panel.tsx */
+/* ../common/Settings/items/dropdown.tsx */
 const {
-    SettingItem,
-    SwitchInput
+    SettingItem: SettingItem$2
 } = Components;
-const Select = Webpack.getByStrings('.selectPositionTop]:"top"===', {
+const Select = Webpack.getByStrings('selectionMode:"single",onSelectionChange:', "isSelected:", {
     searchExports: true
 });
-const Slider = Webpack.getByStrings("stickToMarkers");
 
 function DropdownItem(props) {
-    return React.createElement(SettingItem, {
+    return React.createElement(ErrorBoundary, {
+        id: props.id
+    }, React.createElement(SettingItem$2, {
         ...props
     }, React.createElement(
         Select, {
@@ -190,23 +248,20 @@ function DropdownItem(props) {
             select: (v) => Settings.set(props.id, v),
             isSelected: (v) => Settings.get(props.id, props.value) === v
         }
-    ));
+    )));
 }
 
-function SwitchItem(props) {
-    const value = Hooks.useStateFromStores([Settings], () => Settings.get(props.id, props.value));
-    return React.createElement(SettingItem, {
-        ...props,
-        inline: true
-    }, React.createElement(SwitchInput, {
-        value,
-        onChange: (v) => Settings.set(props.id, v)
-    }));
-}
+/* ../common/Settings/items/slider.tsx */
+const {
+    SettingItem: SettingItem$1
+} = Components;
+const Slider = Webpack.getByStrings("stickToMarkers");
 
 function SliderItem(props) {
     const value = Hooks.useStateFromStores([Settings], () => Settings.get(props.id, props.value));
-    return React.createElement(SettingItem, {
+    return React.createElement(ErrorBoundary, {
+        id: props.id
+    }, React.createElement(SettingItem$1, {
         ...props
     }, React.createElement(
         Slider, {
@@ -219,18 +274,43 @@ function SliderItem(props) {
             onValueChange: (value2) => Settings.set(props.id, Math.round(value2)),
             onValueRender: (value2) => Math.round(value2)
         }
-    ));
+    )));
 }
 
-function SettingsPanel(props) {
+/* ../common/Settings/items/switch.tsx */
+const {
+    SettingItem,
+    SwitchInput
+} = Components;
+
+function SwitchItem(props) {
+    const value = Hooks.useStateFromStores([Settings], () => Settings.get(props.id, props.value));
+    return React.createElement(ErrorBoundary, {
+        id: props.id
+    }, React.createElement(SettingItem, {
+        ...props,
+        inline: true
+    }, React.createElement(SwitchInput, {
+        value,
+        onChange: (v) => Settings.set(props.id, v)
+    })));
+}
+
+/* ../common/Settings/panel.tsx */
+function SettingsPanel({
+    items,
+    components: customComponents
+}) {
     const ComponentMap = {
         dropdown: DropdownItem,
         switch: SwitchItem,
-        slider: SliderItem
+        slider: SliderItem,
+        ...customComponents
     };
-    return props.items.map((item) => {
+    return items.map((item) => {
         const Component = ComponentMap[item.type];
         return Component ? React.createElement(Component, {
+            key: item.id,
             ...item
         }) : null;
     });
@@ -301,22 +381,26 @@ function Keyboard({
         width: "22.5",
         height: "22.5",
         viewBox: "0 0 576 512"
-    }, React.createElement("path", {
-        fill: "currentColor",
-        d: "M528 448H48c-26.51 0-48-21.49-48-48V112c0-26.51 21.49-48 48-48h480c26.51 0 48 21.49 48 48v288c0 26.51-21.49 48-48 48zM128 180v-40c0-6.627-5.373-12-12-12H76c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12zm96 0v-40c0-6.627-5.373-12-12-12h-40c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12zm96 0v-40c0-6.627-5.373-12-12-12h-40c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12zm96 0v-40c0-6.627-5.373-12-12-12h-40c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12zm96 0v-40c0-6.627-5.373-12-12-12h-40c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12zm-336 96v-40c0-6.627-5.373-12-12-12h-40c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12zm96 0v-40c0-6.627-5.373-12-12-12h-40c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12zm96 0v-40c0-6.627-5.373-12-12-12h-40c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12zm96 0v-40c0-6.627-5.373-12-12-12h-40c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12zm-336 96v-40c0-6.627-5.373-12-12-12H76c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12zm288 0v-40c0-6.627-5.373-12-12-12H172c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h232c6.627 0 12-5.373 12-12zm96 0v-40c0-6.627-5.373-12-12-12h-40c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12z"
-    }), disabled ? React.createElement("rect", {
-        className: styles.disabledStrokeThrough,
-        x: "10",
-        y: "10",
-        width: "600pt",
-        height: "70px",
-        fill: "#f04747"
-    }) : null);
+    }, React.createElement(
+        "path", {
+            fill: "currentColor",
+            d: "M528 448H48c-26.51 0-48-21.49-48-48V112c0-26.51 21.49-48 48-48h480c26.51 0 48 21.49 48 48v288c0 26.51-21.49 48-48 48zM128 180v-40c0-6.627-5.373-12-12-12H76c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12zm96 0v-40c0-6.627-5.373-12-12-12h-40c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12zm96 0v-40c0-6.627-5.373-12-12-12h-40c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12zm96 0v-40c0-6.627-5.373-12-12-12h-40c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12zm96 0v-40c0-6.627-5.373-12-12-12h-40c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12zm-336 96v-40c0-6.627-5.373-12-12-12h-40c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12zm96 0v-40c0-6.627-5.373-12-12-12h-40c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12zm96 0v-40c0-6.627-5.373-12-12-12h-40c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12zm96 0v-40c0-6.627-5.373-12-12-12h-40c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12zm-336 96v-40c0-6.627-5.373-12-12-12H76c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12zm288 0v-40c0-6.627-5.373-12-12-12H172c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h232c6.627 0 12-5.373 12-12zm96 0v-40c0-6.627-5.373-12-12-12h-40c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12z"
+        }
+    ), disabled ? React.createElement(
+        "rect", {
+            className: styles.disabledStrokeThrough,
+            x: "10",
+            y: "10",
+            width: "600pt",
+            height: "70px",
+            fill: "#f04747"
+        }
+    ) : null);
 }
 
 /* components/typingButton.tsx */
 const ChatButton = Webpack.getBySource("CHAT_INPUT_BUTTON_NOTIFICATION", "animated.div")?.A;
-const removeItem = function(array, item) {
+const removeItem = (array, item) => {
     while (array.includes(item)) {
         array.splice(array.indexOf(item), 1);
     }
@@ -394,7 +478,7 @@ function InvisibleTypingButton({
         })
     )));
 }
-InvisibleTypingButton.getState = function(channelId) {
+InvisibleTypingButton.getState = (channelId) => {
     const isGlobal = Settings.get("autoEnable", true);
     const isExcluded = Settings.get("exclude", []).includes(channelId);
     if (isGlobal && isExcluded) return false;
@@ -452,14 +536,12 @@ class InvisibleTyping {
     patchChannelTextArea() {
         const ChatButtonsGroup = Webpack.getBySource("showAllButtons", "promotionsByType")?.A;
         Patcher.after(ChatButtonsGroup, "type", (_, methodArgs, res) => {
-            const args = methodArgs;
-            if (args.length == 2 && !args[0].disabled && args[0].type.analyticsName == "normal" && res.props.children && Array.isArray(res.props.children)) {
-                res.props.children.unshift(
-                    React.createElement(InvisibleTypingButton, {
-                        channel: args[0].channel,
-                        isEmpty: !args[0].textValue
-                    })
-                );
+            const [args] = methodArgs;
+            if (!args.disabled && ["normal", "sidebar"].includes(args.type.analyticsName) && Array.isArray(res.props?.children)) {
+                res.props.children.unshift(React.createElement(InvisibleTypingButton, {
+                    channel: args.channel,
+                    isEmpty: !args.textValue
+                }));
             }
         });
     }
