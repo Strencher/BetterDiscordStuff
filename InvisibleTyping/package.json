@@ -14,6 +14,13 @@
             "items": [
                 "Updated the filter for the latest Discord Update."
             ]
+        },
+        {
+            "title": "New Keyboard Icon",
+            "type": "improved",
+            "items": [
+                "Updated the Keyboard Icon to match with the new Discord design."
+            ]
         }
     ],
     "changelogDate": "2026-07-03"
