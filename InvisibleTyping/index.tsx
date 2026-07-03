@@ -52,7 +52,7 @@ export default class InvisibleTyping {
 
     patchChannelTextArea() {
         const ChatButtonsGroup: React.MemoExoticComponent<React.ComponentType<any>> = (
-            Webpack.getBySource("showAllButtons", "promotionsByType") as any
+            Webpack.getBySource("isSubmitButtonEnabled", ".A.getActiveOption(") as any
         )?.A;
 
         Patcher.after(ChatButtonsGroup, "type", (_, methodArgs, res) => {

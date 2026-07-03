@@ -3,11 +3,6 @@
     overflow: visible;
 }
 
-.invisibleTypingButton .disabledStrokeThrough {
-    position: absolute;
-    transform: translateX(-15px) translateY(530px) rotate(-45deg);
-}
-
 .invisibleTypingButton {
     box-sizing: border-box;
     padding: 0;
