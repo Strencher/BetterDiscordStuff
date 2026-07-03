@@ -1,6 +1,6 @@
 /**
  * @name InvisibleTyping
- * @version 1.5.0
+ * @version 1.5.1
  * @author Strencher
  * @authorId 415849376598982656
  * @description Enhanced version of silent typing.
@@ -14,20 +14,28 @@
 const manifest = {
     "$schema": "../common/Schemas/manifest.schema.json",
     "name": "InvisibleTyping",
-    "version": "1.5.0",
+    "version": "1.5.1",
     "author": "Strencher",
     "authorId": "415849376598982656",
     "description": "Enhanced version of silent typing.",
     "source": "https://github.com/Strencher/BetterDiscordStuff/blob/master/InvisibleTyping/InvisibleTyping.plugin.js",
     "invite": "gvA2ree",
     "changelog": [{
-        "title": "Added support for Voice Channels",
-        "type": "added",
-        "items": [
-            "Voice Channel Chats show now the Invisible Typing Button as well"
-        ]
-    }],
-    "changelogDate": "2026-05-24"
+            "title": "Plugin works again",
+            "type": "fixed",
+            "items": [
+                "Updated the filter for the latest Discord Update."
+            ]
+        },
+        {
+            "title": "New Keyboard Icon",
+            "type": "improved",
+            "items": [
+                "Updated the Keyboard Icon to match with the new Discord design."
+            ]
+        }
+    ],
+    "changelogDate": "2026-07-03"
 };
 
 /* @api */
@@ -341,15 +349,42 @@ const buildClassName = (...args) => {
     }, []).join(" ");
 };
 
+/* components/icons/keyboard.tsx */
+function Keyboard({
+    disabled,
+    ...props
+}) {
+    return React.createElement("svg", {
+        ...props,
+        width: "22.5",
+        height: "22.5",
+        viewBox: "0 0 24 24"
+    }, React.createElement(
+        "path", {
+            mask: disabled ? "url(#invisible-typing-mask)" : void 0,
+            fill: "currentColor",
+            fillRule: "evenodd",
+            d: "M4 4a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h16a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3H4Zm-.5 3a.5.5 0 0 0-.5.5v1c0 .28.22.5.5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1Zm4 0a.5.5 0 0 0-.5.5v1c0 .28.22.5.5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1ZM7 11.5c0-.28.22-.5.5-.5h1c.28 0 .5.22.5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1ZM3.5 11a.5.5 0 0 0-.5.5v1c0 .28.22.5.5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1ZM11 7.5c0-.28.22-.5.5-.5h1c.28 0 .5.22.5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1Zm.5 3.5a.5.5 0 0 0-.5.5v1c0 .28.22.5.5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1ZM15 7.5c0-.28.22-.5.5-.5h1c.28 0 .5.22.5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1Zm.5 3.5a.5.5 0 0 0-.5.5v1c0 .28.22.5.5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1ZM19 7.5c0-.28.22-.5.5-.5h1c.28 0 .5.22.5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1Zm.5 3.5a.5.5 0 0 0-.5.5v1c0 .28.22.5.5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1ZM7 15.5c0-.28.22-.5.5-.5h9c.28 0 .5.22.5.5v1a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5v-1Z"
+        }
+    ), React.createElement("mask", {
+        id: "invisible-typing-mask"
+    }, React.createElement("path", {
+        fill: "#fff",
+        d: "M0 0h24v24H0Z"
+    }), React.createElement("path", {
+        stroke: "#000",
+        strokeWidth: "5.99068",
+        d: "M0 24 24 0"
+    })), disabled ? React.createElement("path", {
+        fill: "currentColor",
+        d: "M22.7 2.7a1 1 0 0 0-1.4-1.4l-20 20a1 1 0 1 0 1.4 1.4Z"
+    }) : null);
+}
+
 /* components/typingButton.scss */
 Styles.sheets.push("/* components/typingButton.scss */", `.invisibleTypingButton svg {
   color: var(--interactive-normal);
   overflow: visible;
-}
-
-.invisibleTypingButton .disabledStrokeThrough {
-  position: absolute;
-  transform: translateX(-15px) translateY(530px) rotate(-45deg);
 }
 
 .invisibleTypingButton {
@@ -367,36 +402,8 @@ Styles.sheets.push("/* components/typingButton.scss */", `.invisibleTypingButton
   display: inline-flex;
 }`);
 var styles = {
-    "invisibleTypingButton": "invisibleTypingButton",
-    "disabledStrokeThrough": "disabledStrokeThrough"
+    "invisibleTypingButton": "invisibleTypingButton"
 };
-
-/* components/icons/keyboard.tsx */
-function Keyboard({
-    disabled,
-    ...props
-}) {
-    return React.createElement("svg", {
-        ...props,
-        width: "22.5",
-        height: "22.5",
-        viewBox: "0 0 576 512"
-    }, React.createElement(
-        "path", {
-            fill: "currentColor",
-            d: "M528 448H48c-26.51 0-48-21.49-48-48V112c0-26.51 21.49-48 48-48h480c26.51 0 48 21.49 48 48v288c0 26.51-21.49 48-48 48zM128 180v-40c0-6.627-5.373-12-12-12H76c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12zm96 0v-40c0-6.627-5.373-12-12-12h-40c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12zm96 0v-40c0-6.627-5.373-12-12-12h-40c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12zm96 0v-40c0-6.627-5.373-12-12-12h-40c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12zm96 0v-40c0-6.627-5.373-12-12-12h-40c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12zm-336 96v-40c0-6.627-5.373-12-12-12h-40c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12zm96 0v-40c0-6.627-5.373-12-12-12h-40c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12zm96 0v-40c0-6.627-5.373-12-12-12h-40c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12zm96 0v-40c0-6.627-5.373-12-12-12h-40c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12zm-336 96v-40c0-6.627-5.373-12-12-12H76c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12zm288 0v-40c0-6.627-5.373-12-12-12H172c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h232c6.627 0 12-5.373 12-12zm96 0v-40c0-6.627-5.373-12-12-12h-40c-6.627 0-12 5.373-12 12v40c0 6.627 5.373 12 12 12h40c6.627 0 12-5.373 12-12z"
-        }
-    ), disabled ? React.createElement(
-        "rect", {
-            className: styles.disabledStrokeThrough,
-            x: "10",
-            y: "10",
-            width: "600pt",
-            height: "70px",
-            fill: "#f04747"
-        }
-    ) : null);
-}
 
 /* components/typingButton.tsx */
 const ChatButton = Webpack.getBySource("CHAT_INPUT_BUTTON_NOTIFICATION", "animated.div")?.A;
@@ -534,7 +541,7 @@ class InvisibleTyping {
         });
     }
     patchChannelTextArea() {
-        const ChatButtonsGroup = Webpack.getBySource("showAllButtons", "promotionsByType")?.A;
+        const ChatButtonsGroup = Webpack.getBySource("isSubmitButtonEnabled", ".A.getActiveOption(")?.A;
         Patcher.after(ChatButtonsGroup, "type", (_, methodArgs, res) => {
             const [args] = methodArgs;
             if (!args.disabled && ["normal", "sidebar"].includes(args.type.analyticsName) && Array.isArray(res.props?.children)) {
