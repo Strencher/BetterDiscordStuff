@@ -27,7 +27,7 @@ export default class PlatformIndicators {
     async patchDMList() {
         const UserContext = React.createContext(null);
         const ChannelWrapper = await Webpack.waitForModule(
-            Webpack.Filters.bySource('location:"PrivateChannel",', "isMobile")
+            Webpack.Filters.bySource("isMobile", 'location:"PrivateChannel"')
         );
         const NameWrapper = (await Webpack.waitForModule(Webpack.Filters.bySource("AvatarWithText"))).A;
         const ChannelClasses = await Webpack.waitForModule(Webpack.Filters.byKeys("channel", "decorator"));
@@ -82,11 +82,9 @@ export default class PlatformIndicators {
     }
 
     async patchChat() {
-        const [ChatUsername, key] = Webpack.getWithKey(() => true, {
-            target: await Webpack.waitForModule(Webpack.Filters.bySource(".guildMemberAvatar&&null!="))
-        });
+        const ChatUsername = await Webpack.waitForModule(Webpack.Filters.bySource(".guildMemberAvatar&&null!="));
 
-        Patcher.before(ChatUsername, key, (_, props) => {
+        Patcher.before(ChatUsername, "A", (_, props) => {
             const mainProps = props[0];
             if (!Settings.get("showInChat", true)) return;
             if (Settings.get("ignoreBots", true) && mainProps?.author?.bot) return;
@@ -106,7 +104,7 @@ export default class PlatformIndicators {
             if (!Settings.get("showInBadges", true)) return;
             if (Settings.get("ignoreBots", true) && displayProfile?.application) return;
             if (!displayProfile?.userId) return;
-            res.props.children.push(<StatusIndicators userId={displayProfile.userId} type="Badge" separator />);
+            res?.props.children.push(<StatusIndicators userId={displayProfile.userId} type="Badge" separator />);
         });
     }
 
