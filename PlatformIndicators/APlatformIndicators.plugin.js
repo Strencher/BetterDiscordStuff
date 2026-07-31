@@ -1,6 +1,6 @@
 /**
  * @name APlatformIndicators
- * @version 1.6.4
+ * @version 1.6.5
  * @author Strencher
  * @authorId 415849376598982656
  * @description Adds indicators for every platform that the user is using.
@@ -14,20 +14,21 @@
 const manifest = {
     "$schema": "../common/Schemas/manifest.schema.json",
     "name": "APlatformIndicators",
-    "version": "1.6.4",
+    "version": "1.6.5",
     "author": "Strencher",
     "authorId": "415849376598982656",
     "description": "Adds indicators for every platform that the user is using.",
     "source": "https://github.com/Strencher/BetterDiscordStuff/blob/master/PlatformIndicators/APlatformIndicators.plugin.js",
     "invite": "gvA2ree",
     "changelog": [{
-        "title": "Fixed Crash when streaming to Twitch",
+        "title": "Fixes, Fixes, Fixes",
         "type": "fixed",
         "items": [
-            "PlatformIndicator will no longet crash when you start streaming to Twitch"
+            "Indicators in chat show up again",
+            "Indicators in DM list show up again"
         ]
     }],
-    "changelogDate": "2026-05-24"
+    "changelogDate": "2026-07-31"
 };
 
 /* @api */
@@ -834,7 +835,7 @@ class PlatformIndicators {
     async patchDMList() {
         const UserContext = React.createContext(null);
         const ChannelWrapper = await Webpack.waitForModule(
-            Webpack.Filters.bySource('location:"PrivateChannel",', "isMobile")
+            Webpack.Filters.bySource("isMobile", 'location:"PrivateChannel"')
         );
         const NameWrapper = (await Webpack.waitForModule(Webpack.Filters.bySource("AvatarWithText"))).A;
         const ChannelClasses = await Webpack.waitForModule(Webpack.Filters.byKeys("channel", "decorator"));
@@ -889,10 +890,8 @@ class PlatformIndicators {
         });
     }
     async patchChat() {
-        const [ChatUsername, key] = Webpack.getWithKey(() => true, {
-            target: await Webpack.waitForModule(Webpack.Filters.bySource(".guildMemberAvatar&&null!="))
-        });
-        Patcher.before(ChatUsername, key, (_, props) => {
+        const ChatUsername = await Webpack.waitForModule(Webpack.Filters.bySource(".guildMemberAvatar&&null!="));
+        Patcher.before(ChatUsername, "A", (_, props) => {
             const mainProps = props[0];
             if (!Settings.get("showInChat", true)) return;
             if (Settings.get("ignoreBots", true) && mainProps?.author?.bot) return;
@@ -915,7 +914,7 @@ class PlatformIndicators {
             if (!Settings.get("showInBadges", true)) return;
             if (Settings.get("ignoreBots", true) && displayProfile?.application) return;
             if (!displayProfile?.userId) return;
-            res.props.children.push(React.createElement(StatusIndicators, {
+            res?.props.children.push(React.createElement(StatusIndicators, {
                 userId: displayProfile.userId,
                 type: "Badge",
                 separator: true
