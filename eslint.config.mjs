@@ -40,7 +40,8 @@ export default [
                 ...globals.browser,
                 React: true,
                 JSX: true,
-                DiscordNative: true
+                DiscordNative: true,
+                BetterDiscord: true
             },
             parser: tsParser,
             parserOptions: {
@@ -96,7 +97,7 @@ export default [
             "space-in-parens": "error",
             "space-infix-ops": "error",
             "space-unary-ops": "error",
-            "spaced-comment": "error",
+            "spaced-comment": ["error", "always", { markers: ["/"] }],
             yoda: "error",
             "simple-import-sort/imports": "error",
             "simple-import-sort/exports": "error",
