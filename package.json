@@ -28,6 +28,7 @@
         "prettier": "^3.9.6",
         "rollup": "^4.63.1",
         "rollup-plugin-esbuild": "^6.2.1",
-        "sass": "^1.104.0"
+        "sass": "^1.104.0",
+        "typescript": "^6.0.3"
     }
 }
