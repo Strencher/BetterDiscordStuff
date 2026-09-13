@@ -20,15 +20,17 @@ const manifest = {
     "description": "Adds indicators for every platform that the user is using.",
     "source": "https://github.com/Strencher/BetterDiscordStuff/blob/master/PlatformIndicators/APlatformIndicators.plugin.js",
     "invite": "gvA2ree",
-    "changelog": [{
-        "title": "Fixes, Fixes, Fixes",
-        "type": "fixed",
-        "items": [
-            "Indicators in chat show up again",
-            "Indicators in DM list show up again"
-        ]
-    }],
-    "changelogDate": "2026-07-31"
+    "changelog": {
+        "date": "2026-07-31",
+        "changes": [{
+            "title": "Fixes, Fixes, Fixes",
+            "type": "fixed",
+            "items": [
+                "Indicators in chat show up again",
+                "Indicators in DM list show up again"
+            ]
+        }]
+    }
 };
 
 /* @api */
@@ -44,6 +46,68 @@ const {
     Webpack
 } = new BdApi(manifest.name);
 
+/* react */
+var React = BdApi.React;
+
+/* ../common/Changelog/footer.tsx */
+const {
+    Text
+} = Components;
+
+function Footer({
+    manifest
+}) {
+    if (!manifest.invite && !manifest.source) return null;
+    let issuesUrl;
+    if (manifest.source) {
+        const url = new URL(manifest.source);
+        const [, owner, repo] = url.pathname.split("/");
+        url.pathname = `/${owner}/${repo}/issues`;
+        issuesUrl = url.toString();
+    }
+    return React.createElement(Text, null, "Need support?", " ", manifest.invite && React.createElement(React.Fragment, null, "Join the", " ", React.createElement("a", {
+        onClick: () => UI.showInviteModal(manifest.invite),
+        style: {
+            textDecoration: "underline"
+        }
+    }, "Discord Server"), manifest.source && " or "), manifest.source && React.createElement(React.Fragment, null, "Check for Issues on", " ", React.createElement("a", {
+        href: issuesUrl,
+        target: "_blank",
+        rel: "noreferrer",
+        style: {
+            textDecoration: "underline"
+        }
+    }, "GitHub")));
+}
+
+/* ../common/Changelog/index.tsx */
+function showChangelog(manifest) {
+    if (Data.load("lastVersion") === manifest.version) return;
+    if (!manifest.changelog) return;
+    const {
+        date,
+        title,
+        subtitle,
+        ...changelog
+    } = manifest.changelog;
+    if (!changelog.changes?.length && !changelog.blurb && !changelog.video && !changelog.banner) return;
+    const i18n = Webpack.getByKeys("getLocale");
+    const formatter = new Intl.DateTimeFormat(i18n.getLocale(), {
+        month: "long",
+        day: "numeric",
+        year: "numeric"
+    });
+    UI.showChangelogModal({
+        title: title ?? `What's New - ${manifest.name}`,
+        subtitle: subtitle ?? `${date ? formatter.format(new Date(date)) + " - " : ""}v${manifest.version}`,
+        ...changelog,
+        onClose: () => Data.save("lastVersion", manifest.version),
+        footer: React.createElement(Footer, {
+            manifest
+        })
+    });
+}
+
 /* @styles */
 
 var Styles$2 = {
@@ -56,96 +120,6 @@ var Styles$2 = {
         DOM.removeStyle();
     }
 };
-
-/* ../common/Changelog/style.scss */
-Styles$2.sheets.push("/* ../common/Changelog/style.scss */", `.Changelog-Title-Wrapper {
-  font-size: 20px;
-  font-weight: 600;
-  font-family: var(--font-display);
-  color: var(--header-primary);
-  line-height: 1.2;
-}
-.Changelog-Title-Wrapper div {
-  font-size: 12px;
-  font-weight: 400;
-  font-family: var(--font-primary);
-  color: var(--primary-300);
-  line-height: 1.3333333333;
-}
-
-.Changelog-Banner {
-  width: 405px;
-  border-radius: 8px;
-  margin-bottom: 20px;
-}
-
-.Changelog-Item {
-  color: #c4c9ce;
-  margin-bottom: 16px;
-}
-.Changelog-Item .Changelog-Header {
-  display: flex;
-  text-transform: uppercase;
-  font-weight: 700;
-  align-items: center;
-  margin-bottom: 10px;
-}
-.Changelog-Item .Changelog-Header.added {
-  color: #45ba6a;
-}
-.Changelog-Item .Changelog-Header.changed {
-  color: #f0b232;
-}
-.Changelog-Item .Changelog-Header.fixed {
-  color: #ec4245;
-}
-.Changelog-Item .Changelog-Header.improved {
-  color: #5865f2;
-}
-.Changelog-Item .Changelog-Header::after {
-  content: "";
-  flex-grow: 1;
-  height: 1px;
-  margin-left: 7px;
-  background: currentColor;
-}
-.Changelog-Item span {
-  display: list-item;
-  list-style: inside;
-  margin-left: 5px;
-}
-.Changelog-Item span::marker {
-  color: var(--background-accent);
-}`);
-
-/* react */
-var React = BdApi.React;
-
-/* ../common/Changelog/index.tsx */
-function showChangelog(manifest) {
-    if (Data.load("lastVersion") === manifest.version) return;
-    if (!manifest.changelog.length) return;
-    const i18n = Webpack.getByKeys("getLocale");
-    const formatter = new Intl.DateTimeFormat(i18n.getLocale(), {
-        month: "long",
-        day: "numeric",
-        year: "numeric"
-    });
-    const title = React.createElement("div", {
-        className: "Changelog-Title-Wrapper"
-    }, React.createElement("h1", null, "What's New - ", manifest.name), React.createElement("div", null, formatter.format(new Date(manifest.changelogDate)), " - v", manifest.version));
-    const items = manifest.changelog.map((item) => React.createElement("div", {
-        className: "Changelog-Item"
-    }, React.createElement("h4", {
-        className: `Changelog-Header ${item.type}`
-    }, item.title), item.items.map((item2) => React.createElement("span", null, item2))));
-    "changelogImage" in manifest && items.unshift(React.createElement("img", {
-        className: "Changelog-Banner",
-        src: manifest.changelogImage
-    }));
-    UI.alert(title, items);
-    Data.save("lastVersion", manifest.version);
-}
 
 /* ../common/ErrorBoundary/style.scss */
 Styles$2.sheets.push("/* ../common/ErrorBoundary/style.scss */", `.errorBoundary {
@@ -219,7 +193,7 @@ const Settings = new class Settings2 extends Flux.Store {
         super(Dispatcher, {});
     }
     _settings = Data.load("settings") ?? {};
-    get(key, def = null) {
+    get(key, def) {
         return this._settings[key] ?? def;
     }
     set(key, value) {
