@@ -1,9 +1,11 @@
 {
+    "exclude": ["archive"],
     "compilerOptions": {
         "esModuleInterop": true,
         "jsx": "preserve",
         "module": "ESNext",
         "target": "ESNext",
+        "types": ["node", "react"],
         "paths": {
             "@common/*": ["./common/*"]
         }

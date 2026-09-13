@@ -51,7 +51,8 @@ export default class InvisibleTyping {
     }
 
     patchChannelTextArea() {
-        const ChatButtonsGroup: React.MemoExoticComponent<React.ComponentType<any>> = (
+        // eslint-disable-next-line no-unused-vars
+        const ChatButtonsGroup: { type: (...args: any[]) => any } = (
             Webpack.getBySource("isSubmitButtonEnabled", ".A.getActiveOption(") as any
         )?.A;
 

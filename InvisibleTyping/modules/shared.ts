@@ -3,9 +3,11 @@ import { Flux as FluxType, FluxDispatcher } from "@vencord/discord-types";
 
 import { ClassValue } from "../types";
 
-export const Dispatcher: FluxDispatcher = Webpack.getByKeys("dispatch", "register", { searchExports: true });
-export const Flux: FluxType = Webpack.getByKeys("Store");
-export const TypingModule: { startTyping: Function; stopTyping: Function } = Webpack.getByKeys("startTyping");
+export const Dispatcher: FluxDispatcher = Webpack.getByKeys("dispatch", "register", { searchExports: true })!;
+export const Flux: FluxType = Webpack.getByKeys("Store")!;
+// eslint-disable-next-line no-unused-vars
+export const TypingModule: { startTyping: (channelId: string) => void; stopTyping: (channelId: string) => void } =
+    Webpack.getByKeys("startTyping")!;
 
 export const buildClassName = (...args: ClassValue[]): string => {
     return args

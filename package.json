@@ -3,8 +3,8 @@
     "scripts": {
         "prepare": "husky",
         "build": "node scripts/build.js",
-        "lint": "eslint && prettier --check .",
-        "lint:fix": "eslint --fix && prettier --write ."
+        "lint": "prettier --check . && eslint && tsc --noEmit -p tsconfig.json",
+        "lint:fix": "prettier --write . && eslint --fix && tsc --noEmit -p tsconfig.json"
     },
     "devDependencies": {
         "@betterdiscord/types": "^1.14.1",

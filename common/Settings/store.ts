@@ -10,8 +10,8 @@ const Settings = new (class Settings extends Flux.Store {
     }
     _settings = Data.load<Record<string, unknown>>("settings") ?? {};
 
-    get(key: string, def: unknown = null) {
-        return this._settings[key] ?? def;
+    get<T>(key: string, def?: T): T {
+        return (this._settings[key] ?? def) as T;
     }
 
     set(key: string, value: unknown) {
