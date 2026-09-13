@@ -63,6 +63,16 @@ const joinLink = function (link: string, path: string) {
     return link + checkSlash(path.startsWith("./") ? path.slice(2) : path);
 }
 
+const isSafeRemoteUrl = function (url: string): boolean {
+    try {
+        const {protocol, hostname} = new URL(url);
+        if (protocol !== "https:") return false;
+        return !/^(localhost|127\.|10\.|172\.(1[6-9]|2\d|3[01])\.|192\.168\.|169\.254\.|0\.0\.0\.0|\[::1?\]?$)/i.test(hostname);
+    } catch {
+        return false;
+    }
+}
+
 const showImageModal = async function (src: string, original = src, width: number, height: number, animated: boolean, children: any, placeholder: any) {
     const bounds = await new Promise(resolve => {
         Object.assign(new Image(), {
@@ -128,6 +138,11 @@ export function useFetchManifest(manifestUrl: string) {
 
     useEffect(() => {
         if (manifest) return;
+
+        if (!isSafeRemoteUrl(manifestUrl)) {
+            console.error(`Refusing to fetch unsafe manifest URL: ${manifestUrl}`);
+            return;
+        }
 
         fetchQueue.add(() => {
             fetch(manifestUrl).then(res => res.json(), console.error).then(res => {
@@ -274,6 +289,11 @@ export default function Card({url}: {url: string}) {
                             const action = {
                                 install: () => {
                                     try {
+                                        if (!isSafeRemoteUrl(link)) {
+                                            Logger.error(`Refusing to fetch unsafe snippet URL: ${link}`);
+                                            return;
+                                        }
+
                                         fetch(link).then(res => res.text(), console.error).then(text => {
                                             SnippetsInjector.add(link, text as string, url);
                                         });
