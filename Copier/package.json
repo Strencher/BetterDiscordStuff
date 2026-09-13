@@ -6,15 +6,24 @@
     "description": "Allows you to copy certain stuff with custom options.",
     "source": "https://github.com/Strencher/BetterDiscordStuff/blob/master/Copier/Copier.plugin.js",
     "invite": "gvA2ree",
-    "changelog": [
-        {
-            "title": "Bug Fixes",
-            "type": "fixed",
-            "items": [
-                "Fixed role context menu",
-                "Fixed message context menu"
-            ]
-        }
-    ],
-    "changelogDate": "2026-01-26"
+    "changelog": {
+        "date": "2026-01-26",
+        "changes": [
+            {
+                "title": "New Features",
+                "type": "added",
+                "items": [
+                    "Added a new option to copy the message link with the timestamp."
+                ]
+            },
+            {
+                "title": "Bug Fixes",
+                "type": "fixed",
+                "items": [
+                    "Fixed role context menu",
+                    "Fixed message context menu"
+                ]
+            }
+        ]
+    }
 }
