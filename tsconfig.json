@@ -1,10 +1,11 @@
 {
+    "exclude": ["archive"],
     "compilerOptions": {
         "esModuleInterop": true,
         "jsx": "preserve",
         "module": "ESNext",
         "target": "ESNext",
-        "typeRoots": ["./node_modules/@types", "./modules.d.ts"],
+        "types": ["node", "react"],
         "paths": {
             "@common/*": ["./common/*"]
         }

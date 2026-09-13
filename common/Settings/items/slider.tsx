@@ -7,10 +7,10 @@ import Settings from "../store";
 import type { SettingsItemForType } from "../types";
 
 const { SettingItem } = Components;
-const Slider: SliderType = Webpack.getByStrings("stickToMarkers");
+const Slider: SliderType = Webpack.getByStrings("stickToMarkers")!;
 
 export function SliderItem(props: SettingsItemForType<"slider">) {
-    const value = Hooks.useStateFromStores([Settings], () => Settings.get(props.id, props.value));
+    const value = Hooks.useStateFromStores([Settings] as any, () => Settings.get(props.id, props.value));
     return (
         <ErrorBoundary id={props.id}>
             <SettingItem {...props}>

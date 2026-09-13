@@ -2,14 +2,14 @@ import { Webpack } from "@api";
 import type { PresenceStore as PresenceStoreType, UserStore as UserStoreType } from "@vencord/discord-types";
 
 // Stores
-export const LocalActivityStore = Webpack.getStore("LocalActivityStore") as {
+export const LocalActivityStore = Webpack.getStore("LocalActivityStore") as unknown as {
     getActivities: () => Array<{ type: number }>;
 };
-export const SessionsStore = Webpack.getStore("SessionsStore") as {
+export const SessionsStore = Webpack.getStore("SessionsStore") as unknown as {
     getSessions: () => Record<string, { clientInfo: { client: string }; status: string }>;
 };
-export const UserStore = Webpack.getStore("UserStore") as UserStoreType;
-export const PresenceStore = Webpack.getStore("PresenceStore") as PresenceStoreType;
+export const UserStore = Webpack.getStore("UserStore") as unknown as UserStoreType;
+export const PresenceStore = Webpack.getStore("PresenceStore") as unknown as PresenceStoreType;
 
 // Other modules
 export const { useSyncExternalStore: useStateFromStoresObject } = Webpack.getByKeys("useSyncExternalStore") as any;
@@ -18,11 +18,11 @@ export const Dispatcher = (UserStore as any)._dispatcher;
 export const Flux = Webpack.getByKeys("Store");
 export const StatusTypes: Record<string, string> = Webpack.getModule((x: any) => x.DND && x.OFFLINE, {
     searchExports: true
-});
+})!;
 export const Colors: Record<string, { css: string }> = (Webpack.getByKeys("unsafe_rawColors") as any)?.unsafe_rawColors;
 // eslint-disable-next-line no-unused-vars
 export const Intl: { intl: { formatToMarkdownString: (key: string) => string }; t: Record<string, string> } =
-    Webpack.getModule((x: any) => x.intl);
+    Webpack.getModule((x: any) => x.intl)!;
 
 const formatMessage = (key: string): string => Intl.intl.formatToMarkdownString(Intl.t[key]);
 

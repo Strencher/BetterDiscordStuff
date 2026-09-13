@@ -1,8 +1,8 @@
-import "./style.scss";
-
 import { Data, UI, Webpack } from "@api";
 import { Manifest } from "@manifest";
 import React from "react";
+
+import Footer from "./footer";
 
 interface I18n {
     getLocale: () => string;
@@ -10,35 +10,23 @@ interface I18n {
 
 export default function showChangelog(manifest: Manifest) {
     if (Data.load("lastVersion") === manifest.version) return;
-    if (!manifest.changelog.length) return;
+    if (!manifest.changelog) return;
 
-    const i18n: I18n = Webpack.getByKeys("getLocale");
+    const { date, title, subtitle, ...changelog } = manifest.changelog;
+    if (!changelog.changes?.length && !changelog.blurb && !changelog.video && !changelog.banner) return;
+
+    const i18n: I18n = Webpack.getByKeys("getLocale")!;
     const formatter = new Intl.DateTimeFormat(i18n.getLocale(), {
         month: "long",
         day: "numeric",
         year: "numeric"
     });
 
-    const title = (
-        <div className="Changelog-Title-Wrapper">
-            <h1>What's New - {manifest.name}</h1>
-            <div>
-                {formatter.format(new Date(manifest.changelogDate))} - v{manifest.version}
-            </div>
-        </div>
-    );
-
-    const items = manifest.changelog.map(item => (
-        <div className="Changelog-Item">
-            <h4 className={`Changelog-Header ${item.type}`}>{item.title}</h4>
-            {item.items.map(item => (
-                <span>{item}</span>
-            ))}
-        </div>
-    ));
-
-    "changelogImage" in manifest && items.unshift(<img className="Changelog-Banner" src={manifest.changelogImage} />);
-
-    UI.alert(title as unknown as string, items);
-    Data.save("lastVersion", manifest.version);
+    UI.showChangelogModal({
+        title: title ?? `What's New - ${manifest.name}`,
+        subtitle: subtitle ?? `${date ? formatter.format(new Date(date)) + " - " : ""}v${manifest.version}`,
+        ...changelog,
+        onClose: () => Data.save("lastVersion", manifest.version),
+        footer: <Footer manifest={manifest} />
+    });
 }

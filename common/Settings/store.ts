@@ -1,17 +1,17 @@
 import { Data, Webpack } from "@api";
 import type { Flux as FluxType, FluxDispatcher } from "@vencord/discord-types";
 
-const Dispatcher: FluxDispatcher = Webpack.getByKeys("dispatch", "subscribe", { searchExports: true });
-const Flux: FluxType = Webpack.getByKeys("Store");
+const Dispatcher: FluxDispatcher = Webpack.getByKeys("dispatch", "subscribe", { searchExports: true })!;
+const Flux: FluxType = Webpack.getByKeys("Store")!;
 
 const Settings = new (class Settings extends Flux.Store {
     constructor() {
         super(Dispatcher, {});
     }
-    _settings = Data.load("settings") ?? {};
+    _settings = Data.load<Record<string, unknown>>("settings") ?? {};
 
-    get(key: string, def: unknown = null) {
-        return this._settings[key] ?? def;
+    get<T>(key: string, def?: T): T {
+        return (this._settings[key] ?? def) as T;
     }
 
     set(key: string, value: unknown) {

@@ -19,11 +19,11 @@ const removeItem = (array: any[], item: any) => {
     return array;
 };
 
-function InvisibleTypingContextMenu() {
-    const enabled = Hooks.useStateFromStores([Settings], () => Settings.get("autoEnable", true));
+function InvisibleTypingContextMenu(props: BetterDiscord.MenuRenderProps) {
+    const enabled = Hooks.useStateFromStores([Settings] as any, () => Settings.get("autoEnable", true));
 
     return (
-        <ContextMenu.Menu navId="invisible-typing-context-menu" onClose={ContextMenu.close}>
+        <ContextMenu.Menu {...props}>
             <ContextMenu.Item
                 id="globally-disable-or-enable-typing"
                 label={enabled ? "Disable Globally" : "Enable Globally"}
@@ -46,7 +46,7 @@ function InvisibleTypingContextMenu() {
 }
 
 export default function InvisibleTypingButton(this: any, { channel, isEmpty }: { channel: Channel; isEmpty: boolean }) {
-    const enabled = Hooks.useStateFromStores([Settings], InvisibleTypingButton.getState.bind(this, channel.id));
+    const enabled = Hooks.useStateFromStores([Settings] as any, InvisibleTypingButton.getState.bind(this, channel.id));
 
     const handleClick = React.useCallback(() => {
         const excludeList: string[] = [...Settings.get("exclude", [])];
@@ -64,9 +64,7 @@ export default function InvisibleTypingButton(this: any, { channel, isEmpty }: {
 
     const handleContextMenu = React.useCallback(
         (event: React.MouseEvent<Element, MouseEvent>) => {
-            ContextMenu.open(event, () => {
-                return <InvisibleTypingContextMenu />;
-            });
+            ContextMenu.open(event.nativeEvent, InvisibleTypingContextMenu);
         },
         [enabled]
     );
@@ -92,7 +90,7 @@ export default function InvisibleTypingButton(this: any, { channel, isEmpty }: {
 
 InvisibleTypingButton.getState = (channelId: string) => {
     const isGlobal: boolean = Settings.get("autoEnable", true);
-    const isExcluded = Settings.get("exclude", []).includes(channelId);
+    const isExcluded = Settings.get<string[]>("exclude", []).includes(channelId);
 
     if (isGlobal && isExcluded) return false;
     if (isExcluded && !isGlobal) return true;

@@ -1,34 +1,21 @@
-declare module "@api" {
-    import {
-        AddonAPI,
-        BoundData,
-        BoundDOM,
-        BoundLogger,
-        BoundPatcher,
-        Components,
-        ContextMenu,
-        Net,
-        Plugin,
-        ReactUtils,
-        UI,
-        Utils,
-        Webpack
-    } from "betterdiscord";
+/// <reference types="@betterdiscord/types" />
 
-    export const Components: Components;
-    export const ContextMenu: ContextMenu;
-    export const Data: BoundData;
-    export const DOM: BoundDOM;
-    export const Hooks: any;
-    export const Logger: BoundLogger;
-    export const Net: Net;
-    export const Patcher: BoundPatcher;
-    export const Plugins: AddonAPI<Plugin>;
-    export const ReactUtils: ReactUtils;
-    export const Themes: AddonAPI<Plugin>; // Has the same methods as Plugins
-    export const UI: UI;
-    export const Utils: Utils;
-    export const Webpack: Webpack;
+declare module "@api" {
+    export const Commands: BetterDiscord.BoundCommandAPI;
+    export const Components: BetterDiscord.Components;
+    export const ContextMenu: BetterDiscord.ContextMenu;
+    export const Data: BetterDiscord.BoundData;
+    export const DOM: BetterDiscord.BoundDOM;
+    export const Hooks: BetterDiscord.BoundHooks;
+    export const Logger: BetterDiscord.BoundLogger;
+    export const Net: BetterDiscord.Net;
+    export const Patcher: BetterDiscord.BoundPatcher;
+    export const Plugins: BetterDiscord.AddonAPI;
+    export const ReactUtils: BetterDiscord.ReactUtils;
+    export const Themes: BetterDiscord.AddonAPI;
+    export const UI: BetterDiscord.UI;
+    export const Utils: BetterDiscord.Utils;
+    export const Webpack: BetterDiscord.Webpack;
 }
 
 declare module "@styles" {
@@ -42,24 +29,22 @@ declare module "@styles" {
 }
 
 declare module "@manifest" {
-    interface ChangelogItem {
-        title: string;
-        type: "added" | "changed" | "fixed" | "improved";
-        items: string[];
-    }
-
     export interface Manifest {
         name: string;
         version: string;
         description?: string;
         author: string;
-        authorId: string;
+        authorId?: string;
+        authorLink?: string;
         invite?: string;
         donate?: string;
+        patreon?: string;
         source?: string;
-        changelog: ChangelogItem[];
-        changelogDate: string;
-        changelogImage?: string;
+        website?: string;
+        changelog?: Omit<BetterDiscord.ChangelogProps, "transitionState" | "footer" | "onClose"> & {
+            /** RFC 3339 full-date (YYYY-MM-DD) of this changelog */
+            date?: `${number}-${number}-${number}`;
+        };
     }
 
     const manifest: Manifest;

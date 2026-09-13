@@ -59,42 +59,74 @@
             "format": "uri"
         },
         "changelog": {
-            "type": "array",
-            "description": "List of changelog entries",
-            "items": {
-                "type": "object",
-                "properties": {
-                    "title": {
-                        "type": "string",
-                        "description": "The title of this changelog entry"
-                    },
-                    "type": {
-                        "enum": ["added", "changed", "fixed", "improved"],
-                        "description": "The type of change"
-                    },
-                    "items": {
-                        "type": "array",
-                        "description": "List of changes",
-                        "items": {
-                            "type": "string"
-                        }
-                    }
+            "type": "object",
+            "description": "Changelog data shown via BetterDiscord's built-in changelog modal",
+            "properties": {
+                "title": {
+                    "type": "string",
+                    "description": "Title to show in the modal header. Defaults to \"What's New - <addon name>\" if omitted."
                 },
-                "required": ["title", "type", "items"],
-                "additionalProperties": false
-            }
-        },
-        "changelogDate": {
-            "type": "string",
-            "description": "The date of the latest changelog (YYYY-MM-DD)",
-            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
-        },
-        "changelogImage": {
-            "type": "string",
-            "description": "URL to an image for the changelog",
-            "format": "uri"
+                "subtitle": {
+                    "type": "string",
+                    "description": "Title to show below the main header. Defaults to the changelog date and version if omitted."
+                },
+                "date": {
+                    "type": "string",
+                    "description": "The date of the latest changelog (YYYY-MM-DD)",
+                    "format": "date"
+                },
+                "video": {
+                    "type": "string",
+                    "description": "YouTube link or URL of a video file to use as the changelog banner"
+                },
+                "poster": {
+                    "type": "string",
+                    "description": "URL to use as the video freeze-frame poster",
+                    "format": "uri"
+                },
+                "banner": {
+                    "type": "string",
+                    "description": "URL to an image to use as the changelog banner",
+                    "format": "uri"
+                },
+                "blurb": {
+                    "type": "string",
+                    "description": "Text to show in the body of the changelog modal before the list of changes"
+                },
+                "changes": {
+                    "type": "array",
+                    "description": "List of changelog entries",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "type": {
+                                "enum": ["added", "fixed", "improved", "progress"],
+                                "description": "The type of change"
+                            },
+                            "blurb": {
+                                "type": "string",
+                                "description": "Text to show below this entry's title"
+                            },
+                            "title": {
+                                "type": "string",
+                                "description": "The title of this changelog entry"
+                            },
+                            "items": {
+                                "type": "array",
+                                "description": "List of changes",
+                                "items": {
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "required": ["type", "title", "items"],
+                        "additionalProperties": false
+                    }
+                }
+            },
+            "additionalProperties": false
         }
     },
-    "required": ["name", "version", "description", "author"],
+    "required": ["name", "version", "author"],
     "additionalProperties": false
 }

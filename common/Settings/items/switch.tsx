@@ -8,7 +8,7 @@ import type { SettingsItemForType } from "../types";
 const { SettingItem, SwitchInput } = Components;
 
 export function SwitchItem(props: SettingsItemForType<"switch">) {
-    const value = Hooks.useStateFromStores([Settings], () => Settings.get(props.id, props.value));
+    const value = Hooks.useStateFromStores([Settings] as any, () => Settings.get(props.id, props.value));
     return (
         <ErrorBoundary id={props.id}>
             <SettingItem {...props} inline={true}>

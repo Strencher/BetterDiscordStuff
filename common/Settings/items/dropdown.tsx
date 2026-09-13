@@ -9,7 +9,7 @@ import type { SettingsItemForType } from "../types";
 const { SettingItem } = Components;
 const Select: SelectType = Webpack.getByStrings('selectionMode:"single",onSelectionChange:', "isSelected:", {
     searchExports: true
-});
+})!;
 
 export function DropdownItem(props: SettingsItemForType<"dropdown">) {
     return (
