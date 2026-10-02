@@ -3,7 +3,7 @@ import { Settings } from "@common/Settings";
 import { Channel } from "@vencord/discord-types";
 import React from "react";
 
-import { buildClassName, TypingModule } from "../modules/shared";
+import { buildClassName, startTyping, stopTyping } from "../modules/shared";
 import Keyboard from "./icons/keyboard";
 import styles from "./typingButton.scss";
 
@@ -53,10 +53,10 @@ export default function InvisibleTypingButton(this: any, { channel, isEmpty }: {
 
         if (excludeList.includes(channel.id)) {
             removeItem(excludeList, channel.id);
-            TypingModule.stopTyping(channel.id);
+            stopTyping(channel.id);
         } else {
             excludeList.push(channel.id);
-            if (!isEmpty) TypingModule.startTyping(channel.id);
+            if (!isEmpty) startTyping(channel.id);
         }
 
         Settings.set("exclude", excludeList);

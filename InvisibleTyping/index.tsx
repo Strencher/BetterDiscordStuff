@@ -6,21 +6,24 @@ import Styles from "@styles";
 import React from "react";
 
 import InvisibleTypingButton from "./components/typingButton";
-import { TypingModule } from "./modules/shared";
+import { stopTyping } from "./modules/shared";
 import SettingsItems from "./settings.json";
 import { ChatButtonsArgs } from "./types";
+
 
 export default class InvisibleTyping {
     start() {
         Styles.load();
         showChangelog(manifest);
-        this.patchTyping();
+        this.removeInterceptor = this.patchTyping();
         this.patchChannelTextArea();
     }
 
     stop() {
         Styles.unload();
         Patcher.unpatchAll();
+        this.removeInterceptor?.();
+		this.removeInterceptor = null;
     }
 
     getState(channelId: string) {
@@ -34,20 +37,26 @@ export default class InvisibleTyping {
             if (!excludeList.includes(channelId)) excludeList.push(channelId);
         } else {
             excludeList.splice(excludeList.indexOf(channelId), 1);
-            TypingModule.stopTyping(channelId);
+            stopTyping(channelId);
         }
         Settings.set("exclude", excludeList);
     }
 
     patchTyping() {
-        Patcher.instead(TypingModule, "startTyping", (_, args, originalMethod) => {
-            const [channelId] = args as [string];
+    	function interceptor({type, channelId}) {
+			if (type !== "TYPING_START_LOCAL") return;
+			
             const globalTypingEnabled = Settings.get("autoEnable", true);
-            const excludeList: string[] = Settings.get("exclude", []);
+            const excludeList = Settings.get("exclude", []);
             const shouldType = globalTypingEnabled ? !excludeList.includes(channelId) : excludeList.includes(channelId);
-            if (!shouldType) return;
-            originalMethod(channelId);
-        });
+			return !shouldType;
+		}
+		
+		Dispatcher.addInterceptor(interceptor);
+		return () => {
+			const index = Dispatcher._interceptors.indexOf(interceptor);
+			Dispatcher._interceptors.splice(index, 1);
+		}
     }
 
     patchChannelTextArea() {
