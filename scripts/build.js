@@ -24,7 +24,8 @@ const PLUGIN_META_FIELDS = [
     "donate",
     "patreon",
     "website",
-    "source"
+    "source",
+    "runAt"
 ];
 
 const tsconfigPath = path.resolve(process.cwd(), "tsconfig.json");

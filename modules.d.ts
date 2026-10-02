@@ -41,6 +41,7 @@ declare module "@manifest" {
         patreon?: string;
         source?: string;
         website?: string;
+        runAt?: "connection" | "idle";
         changelog?: Omit<BetterDiscord.ChangelogProps, "transitionState" | "footer" | "onClose"> & {
             /** RFC 3339 full-date (YYYY-MM-DD) of this changelog */
             date?: `${number}-${number}-${number}`;

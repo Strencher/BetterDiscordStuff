@@ -58,6 +58,21 @@
             "description": "Developer's (or addon's) website link.",
             "format": "uri"
         },
+        "runAt": {
+            "type": "string",
+            "enum": ["connection", "idle"],
+            "description": "When BetterDiscord should start the plugin. \"connection\" (default) runs on gateway connection; \"idle\" defers until the client is idle, to work around issues caused by lazy-loaded modules."
+        },
+        "dependencies": {
+            "type": "object",
+            "description": "npm packages this plugin imports. Installed before build and bundled into the compiled output like any other resolved import.",
+            "additionalProperties": { "type": "string" }
+        },
+        "devDependencies": {
+            "type": "object",
+            "description": "npm packages only needed for development/types, by convention not imported by the plugin. Note: the build does not enforce this — anything imported from here is bundled just like a regular dependency.",
+            "additionalProperties": { "type": "string" }
+        },
         "changelog": {
             "type": "object",
             "description": "Changelog data shown via BetterDiscord's built-in changelog modal",
