@@ -1,11 +1,12 @@
 /**
  * @name InvisibleTyping
- * @version 1.5.1
+ * @version 1.5.2
  * @author Strencher
  * @authorId 415849376598982656
  * @description Enhanced version of silent typing.
  * @source https://github.com/Strencher/BetterDiscordStuff/blob/master/InvisibleTyping/InvisibleTyping.plugin.js
  * @invite gvA2ree
+ * @runAt idle
  */
 
 'use strict';
@@ -14,29 +15,22 @@
 const manifest = {
     "$schema": "../common/Schemas/manifest.schema.json",
     "name": "InvisibleTyping",
-    "version": "1.5.1",
+    "version": "1.5.2",
     "author": "Strencher",
     "authorId": "415849376598982656",
     "description": "Enhanced version of silent typing.",
     "source": "https://github.com/Strencher/BetterDiscordStuff/blob/master/InvisibleTyping/InvisibleTyping.plugin.js",
     "invite": "gvA2ree",
+    "runAt": "idle",
     "changelog": {
-        "date": "2026-07-03",
+        "date": "2026-10-02",
         "changes": [{
-                "title": "Plugin works again",
-                "type": "fixed",
-                "items": [
-                    "Updated the filter for the latest Discord Update."
-                ]
-            },
-            {
-                "title": "New Keyboard Icon",
-                "type": "improved",
-                "items": [
-                    "Updated the Keyboard Icon to match with the new Discord design."
-                ]
-            }
-        ]
+            "title": "Plugin works again",
+            "type": "fixed",
+            "items": [
+                "Updated the filter for the latest Discord Update."
+            ]
+        }]
     }
 };
 
