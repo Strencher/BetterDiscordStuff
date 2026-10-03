@@ -26,7 +26,7 @@ export default function showChangelog(manifest: Manifest) {
         title: title ?? `What's New - ${manifest.name}`,
         subtitle: subtitle ?? `${date ? formatter.format(new Date(date)) + " - " : ""}v${manifest.version}`,
         ...changelog,
-        onClose: () => Data.save("lastVersion", manifest.version),
         footer: <Footer manifest={manifest} />
     });
+    Data.save("lastVersion", manifest.version);
 }
