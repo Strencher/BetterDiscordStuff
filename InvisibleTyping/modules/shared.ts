@@ -5,9 +5,6 @@ import { ClassValue } from "../types";
 
 export const Dispatcher: FluxDispatcher = Webpack.getByKeys("dispatch", "register", { searchExports: true })!;
 export const Flux: FluxType = Webpack.getByKeys("Store")!;
-// eslint-disable-next-line no-unused-vars
-export const TypingModule: { startTyping: (channelId: string) => void; stopTyping: (channelId: string) => void } =
-    Webpack.getByKeys("startTyping")!;
 
 export const buildClassName = (...args: ClassValue[]): string => {
     return args
@@ -26,8 +23,10 @@ export const buildClassName = (...args: ClassValue[]): string => {
                     }
                 }
             }
-
             return classNames;
         }, [])
         .join(" ");
 };
+
+export const stopTyping = (channelId: string) => Dispatcher.dispatch({ type: "TYPING_STOP_LOCAL", channelId });
+export const startTyping = (channelId: string) => Dispatcher.dispatch({ type: "TYPING_START_LOCAL", channelId });
