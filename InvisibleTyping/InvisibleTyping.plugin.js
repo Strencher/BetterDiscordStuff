@@ -1,12 +1,11 @@
 /**
  * @name InvisibleTyping
- * @version 1.5.2
+ * @version 1.5.3
  * @author Strencher
  * @authorId 415849376598982656
  * @description Enhanced version of silent typing.
  * @source https://github.com/Strencher/BetterDiscordStuff/blob/master/InvisibleTyping/InvisibleTyping.plugin.js
  * @invite gvA2ree
- * @runAt idle
  */
 
 'use strict';
@@ -15,20 +14,20 @@
 const manifest = {
     "$schema": "../common/Schemas/manifest.schema.json",
     "name": "InvisibleTyping",
-    "version": "1.5.2",
+    "version": "1.5.3",
     "author": "Strencher",
     "authorId": "415849376598982656",
     "description": "Enhanced version of silent typing.",
     "source": "https://github.com/Strencher/BetterDiscordStuff/blob/master/InvisibleTyping/InvisibleTyping.plugin.js",
     "invite": "gvA2ree",
-    "runAt": "idle",
     "changelog": {
-        "date": "2026-10-02",
+        "date": "2026-10-03",
         "changes": [{
-            "title": "Plugin works again",
-            "type": "fixed",
+            "title": "Better stability against Discord updates",
+            "type": "improved",
+            "blurb": "Thanks to [Skamt](https://betterdiscord.app/developers/Skamt) and [Arven](https://betterdiscord.app/developers/Arven)",
             "items": [
-                "Updated the filter for the latest Discord Update."
+                "The plugin has been updated to be more resilient against changes in Discord's internal code, reducing the likelihood of breaking with future updates"
             ]
         }]
     }
@@ -101,11 +100,11 @@ function showChangelog(manifest) {
         title: title ?? `What's New - ${manifest.name}`,
         subtitle: subtitle ?? `${date ? formatter.format(new Date(date)) + " - " : ""}v${manifest.version}`,
         ...changelog,
-        onClose: () => Data.save("lastVersion", manifest.version),
         footer: React.createElement(Footer, {
             manifest
         })
     });
+    Data.save("lastVersion", manifest.version);
 }
 
 /* @styles */
@@ -184,13 +183,13 @@ class ErrorBoundary extends React.Component {
 }
 
 /* ../common/Settings/store.ts */
-const Dispatcher = Webpack.getByKeys("dispatch", "subscribe", {
+const Dispatcher$1 = Webpack.getByKeys("dispatch", "subscribe", {
     searchExports: true
 });
 const Flux = Webpack.getByKeys("Store");
 const Settings = new class Settings2 extends Flux.Store {
     constructor() {
-        super(Dispatcher, {});
+        super(Dispatcher$1, {});
     }
     _settings = Data.load("settings") ?? {};
     get(key, def) {
@@ -293,11 +292,10 @@ function SettingsPanel({
 }
 
 /* modules/shared.ts */
-Webpack.getByKeys("dispatch", "register", {
+const Dispatcher = Webpack.getByKeys("dispatch", "register", {
     searchExports: true
 });
 Webpack.getByKeys("Store");
-const TypingModule = Webpack.getByKeys("startTyping");
 const buildClassName = (...args) => {
     return args.reduce((classNames, arg) => {
         if (!arg) return classNames;
@@ -316,6 +314,14 @@ const buildClassName = (...args) => {
         return classNames;
     }, []).join(" ");
 };
+const stopTyping = (channelId) => Dispatcher.dispatch({
+    type: "TYPING_STOP_LOCAL",
+    channelId
+});
+const startTyping = (channelId) => Dispatcher.dispatch({
+    type: "TYPING_START_LOCAL",
+    channelId
+});
 
 /* components/icons/keyboard.tsx */
 function Keyboard({
@@ -375,15 +381,13 @@ var styles = {
 
 /* components/typingButton.tsx */
 const ChatButton = Webpack.getBySource("CHAT_INPUT_BUTTON_NOTIFICATION", "animated.div")?.A;
-const removeItem = (array, item) => {
-    while (array.includes(item)) {
-        array.splice(array.indexOf(item), 1);
-    }
-    return array;
-};
 
 function InvisibleTypingContextMenu(props) {
     const enabled = Hooks.useStateFromStores([Settings], () => Settings.get("autoEnable", true));
+    const hasExcluded = Hooks.useStateFromStores(
+        [Settings],
+        () => Settings.get("exclude", []).length > 0
+    );
     return React.createElement(ContextMenu.Menu, {
         ...props
     }, React.createElement(
@@ -398,7 +402,7 @@ function InvisibleTypingContextMenu(props) {
         ContextMenu.Item, {
             color: "danger",
             label: "Reset Config",
-            disabled: !Settings.get("exclude", []).length,
+            disabled: !hasExcluded,
             id: "reset-config",
             action: () => {
                 Settings.set("exclude", []);
@@ -414,24 +418,19 @@ function InvisibleTypingButton({
     channel,
     isEmpty
 }) {
-    const enabled = Hooks.useStateFromStores([Settings], InvisibleTypingButton.getState.bind(this, channel.id));
+    const enabled = Hooks.useStateFromStores([Settings], () => InvisibleTypingButton.getState(channel.id));
     const handleClick = React.useCallback(() => {
-        const excludeList = [...Settings.get("exclude", [])];
-        if (excludeList.includes(channel.id)) {
-            removeItem(excludeList, channel.id);
-            TypingModule.stopTyping(channel.id);
-        } else {
-            excludeList.push(channel.id);
-            if (!isEmpty) TypingModule.startTyping(channel.id);
-        }
-        Settings.set("exclude", excludeList);
-    }, [enabled]);
-    const handleContextMenu = React.useCallback(
-        (event) => {
-            ContextMenu.open(event.nativeEvent, InvisibleTypingContextMenu);
-        },
-        [enabled]
-    );
+        const excludeList = Settings.get("exclude", []);
+        Settings.set(
+            "exclude",
+            excludeList.includes(channel.id) ? excludeList.filter((id) => id !== channel.id) : [...excludeList, channel.id]
+        );
+        if (!enabled && !isEmpty) startTyping(channel.id);
+        else stopTyping(channel.id);
+    }, [enabled, channel.id, isEmpty]);
+    const handleContextMenu = React.useCallback((event) => {
+        ContextMenu.open(event.nativeEvent, InvisibleTypingContextMenu);
+    }, []);
     return React.createElement(Components.Tooltip, {
         text: enabled ? "Typing Enabled" : "Typing Disabled"
     }, (props) => React.createElement("div", {
@@ -453,9 +452,7 @@ function InvisibleTypingButton({
 InvisibleTypingButton.getState = (channelId) => {
     const isGlobal = Settings.get("autoEnable", true);
     const isExcluded = Settings.get("exclude", []).includes(channelId);
-    if (isGlobal && isExcluded) return false;
-    if (isExcluded && !isGlobal) return true;
-    return isGlobal;
+    return isGlobal !== isExcluded;
 };
 
 /* settings.json */
@@ -472,38 +469,42 @@ var SettingsItems = {
 
 /* index.tsx */
 class InvisibleTyping {
+    removeInterceptor = null;
     start() {
         Styles.load();
         showChangelog(manifest);
-        this.patchTyping();
+        this.removeInterceptor = this.patchTyping();
         this.patchChannelTextArea();
     }
     stop() {
         Styles.unload();
         Patcher.unpatchAll();
+        this.removeInterceptor?.();
+        this.removeInterceptor = null;
     }
     getState(channelId) {
         return InvisibleTypingButton.getState(channelId);
     }
     setState(channelId, value) {
-        const excludeList = [...Settings.get("exclude", [])];
-        if (value) {
-            if (!excludeList.includes(channelId)) excludeList.push(channelId);
-        } else {
-            excludeList.splice(excludeList.indexOf(channelId), 1);
-            TypingModule.stopTyping(channelId);
-        }
+        const isGlobal = Settings.get("autoEnable", true);
+        const excludeList = Settings.get("exclude", []).filter((id) => id !== channelId);
+        if (value !== isGlobal) excludeList.push(channelId);
         Settings.set("exclude", excludeList);
+        if (!value) stopTyping(channelId);
     }
     patchTyping() {
-        Patcher.instead(TypingModule, "startTyping", (_, args, originalMethod) => {
-            const [channelId] = args;
-            const globalTypingEnabled = Settings.get("autoEnable", true);
-            const excludeList = Settings.get("exclude", []);
-            const shouldType = globalTypingEnabled ? !excludeList.includes(channelId) : excludeList.includes(channelId);
-            if (!shouldType) return;
-            originalMethod(channelId);
-        });
+        function interceptor({
+            type,
+            channelId
+        }) {
+            if (type !== "TYPING_START_LOCAL") return;
+            return !InvisibleTypingButton.getState(channelId);
+        }
+        Dispatcher.addInterceptor(interceptor);
+        return () => {
+            const index = Dispatcher._interceptors.indexOf(interceptor);
+            if (index !== -1) Dispatcher._interceptors.splice(index, 1);
+        };
     }
     patchChannelTextArea() {
         const ChatButtonsGroup = Webpack.getBySource("isSubmitButtonEnabled", ".A.getActiveOption(")?.A;
