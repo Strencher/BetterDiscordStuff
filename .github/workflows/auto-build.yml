@@ -36,6 +36,18 @@ jobs:
         run: |
           set -e
 
+          get_all_plugins() {
+            find . -mindepth 1 -maxdepth 1 -type d \
+              ! -name ".git" \
+              ! -name ".github" \
+              ! -name ".husky" \
+              ! -name ".vscode" \
+              ! -name "archive" \
+              ! -name "node_modules" \
+              ! -name "scripts" \
+              | tr '\n' ' '
+          }
+
           EVENT="${GITHUB_EVENT_NAME}"
 
           if [ "$EVENT" = "workflow_dispatch" ]; then
@@ -46,23 +58,18 @@ jobs:
               exit 0
             fi
 
-            files=$(find . -mindepth 1 -maxdepth 1 -type d \
-              ! -name ".git" \
-              ! -name ".github" \
-              ! -name ".husky" \
-              ! -name ".vscode" \
-              ! -name "archive" \
-              ! -name "node_modules" \
-              ! -name "scripts" \
-              | tr '\n' ' ')
-
-            echo "changed_files=$files" >> $GITHUB_OUTPUT
+            echo "changed_files=$(get_all_plugins)" >> $GITHUB_OUTPUT
             exit 0
           fi
 
           BASE="${{ github.event.before }}"
           files=$(git diff --name-only --diff-filter=AM $BASE HEAD | tr '\n' ' ')
-          echo "changed_files=$files" >> $GITHUB_OUTPUT
+
+          if echo "$files" | tr ' ' '\n' | grep -q '^common/'; then
+            echo "changed_files=$(get_all_plugins)" >> $GITHUB_OUTPUT
+          else
+            echo "changed_files=$files" >> $GITHUB_OUTPUT
+          fi
 
       - name: Build plugins
         run: >-

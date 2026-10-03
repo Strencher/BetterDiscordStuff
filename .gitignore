@@ -2,3 +2,7 @@
 package-lock.json
 node_modules/
 builds/
+
+# Claude Code: personal/local-only, not shared config
+.claude/settings.local.json
+.claude/.cc-writes/
