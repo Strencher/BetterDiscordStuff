@@ -101,11 +101,11 @@ function showChangelog(manifest) {
         title: title ?? `What's New - ${manifest.name}`,
         subtitle: subtitle ?? `${date ? formatter.format(new Date(date)) + " - " : ""}v${manifest.version}`,
         ...changelog,
-        onClose: () => Data.save("lastVersion", manifest.version),
         footer: React.createElement(Footer, {
             manifest
         })
     });
+    Data.save("lastVersion", manifest.version);
 }
 
 /* @styles */
