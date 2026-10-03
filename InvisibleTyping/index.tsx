@@ -6,12 +6,13 @@ import Styles from "@styles";
 import React from "react";
 
 import InvisibleTypingButton from "./components/typingButton";
-import { stopTyping } from "./modules/shared";
+import { Dispatcher, stopTyping } from "./modules/shared";
 import SettingsItems from "./settings.json";
 import { ChatButtonsArgs } from "./types";
 
-
 export default class InvisibleTyping {
+    removeInterceptor: (() => void) | null = null;
+
     start() {
         Styles.load();
         showChangelog(manifest);
@@ -23,7 +24,7 @@ export default class InvisibleTyping {
         Styles.unload();
         Patcher.unpatchAll();
         this.removeInterceptor?.();
-		this.removeInterceptor = null;
+        this.removeInterceptor = null;
     }
 
     getState(channelId: string) {
@@ -31,32 +32,27 @@ export default class InvisibleTyping {
     }
 
     setState(channelId: string, value: boolean) {
-        const excludeList: string[] = [...Settings.get("exclude", [])];
+        const isGlobal = Settings.get("autoEnable", true);
+        const excludeList = Settings.get<string[]>("exclude", []).filter(id => id !== channelId);
 
-        if (value) {
-            if (!excludeList.includes(channelId)) excludeList.push(channelId);
-        } else {
-            excludeList.splice(excludeList.indexOf(channelId), 1);
-            stopTyping(channelId);
-        }
+        if (value !== isGlobal) excludeList.push(channelId);
         Settings.set("exclude", excludeList);
+
+        if (!value) stopTyping(channelId);
     }
 
     patchTyping() {
-    	function interceptor({type, channelId}) {
-			if (type !== "TYPING_START_LOCAL") return;
-			
-            const globalTypingEnabled = Settings.get("autoEnable", true);
-            const excludeList = Settings.get("exclude", []);
-            const shouldType = globalTypingEnabled ? !excludeList.includes(channelId) : excludeList.includes(channelId);
-			return !shouldType;
-		}
-		
-		Dispatcher.addInterceptor(interceptor);
-		return () => {
-			const index = Dispatcher._interceptors.indexOf(interceptor);
-			Dispatcher._interceptors.splice(index, 1);
-		}
+        function interceptor({ type, channelId }: { type: string; channelId: string }) {
+            if (type !== "TYPING_START_LOCAL") return;
+            return !InvisibleTypingButton.getState(channelId);
+        }
+
+        Dispatcher.addInterceptor(interceptor);
+
+        return () => {
+            const index = Dispatcher._interceptors.indexOf(interceptor);
+            if (index !== -1) Dispatcher._interceptors.splice(index, 1);
+        };
     }
 
     patchChannelTextArea() {

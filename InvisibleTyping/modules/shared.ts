@@ -28,5 +28,5 @@ export const buildClassName = (...args: ClassValue[]): string => {
         .join(" ");
 };
 
-export const stopTyping = (channelId) => Dispatcher.dispatch({ type: "TYPING_STOP_LOCAL", channelId });
-export const startTyping = (channelId) => Dispatcher.dispatch({ type: "TYPING_START_LOCAL", channelId });
+export const stopTyping = (channelId: string) => Dispatcher.dispatch({ type: "TYPING_STOP_LOCAL", channelId });
+export const startTyping = (channelId: string) => Dispatcher.dispatch({ type: "TYPING_START_LOCAL", channelId });

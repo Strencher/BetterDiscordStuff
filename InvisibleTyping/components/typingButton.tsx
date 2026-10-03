@@ -11,16 +11,12 @@ const ChatButton: React.ComponentType<any> = (
     Webpack.getBySource("CHAT_INPUT_BUTTON_NOTIFICATION", "animated.div") as any
 )?.A;
 
-const removeItem = (array: any[], item: any) => {
-    while (array.includes(item)) {
-        array.splice(array.indexOf(item), 1);
-    }
-
-    return array;
-};
-
 function InvisibleTypingContextMenu(props: BetterDiscord.MenuRenderProps) {
     const enabled = Hooks.useStateFromStores([Settings] as any, () => Settings.get("autoEnable", true));
+    const hasExcluded = Hooks.useStateFromStores(
+        [Settings] as any,
+        () => Settings.get<string[]>("exclude", []).length > 0
+    );
 
     return (
         <ContextMenu.Menu {...props}>
@@ -34,7 +30,7 @@ function InvisibleTypingContextMenu(props: BetterDiscord.MenuRenderProps) {
             <ContextMenu.Item
                 color="danger"
                 label="Reset Config"
-                disabled={!Settings.get("exclude", []).length}
+                disabled={!hasExcluded}
                 id="reset-config"
                 action={() => {
                     Settings.set("exclude", []);
@@ -45,29 +41,26 @@ function InvisibleTypingContextMenu(props: BetterDiscord.MenuRenderProps) {
     );
 }
 
-export default function InvisibleTypingButton(this: any, { channel, isEmpty }: { channel: Channel; isEmpty: boolean }) {
-    const enabled = Hooks.useStateFromStores([Settings] as any, InvisibleTypingButton.getState.bind(this, channel.id));
+export default function InvisibleTypingButton({ channel, isEmpty }: { channel: Channel; isEmpty: boolean }) {
+    const enabled = Hooks.useStateFromStores([Settings] as any, () => InvisibleTypingButton.getState(channel.id));
 
     const handleClick = React.useCallback(() => {
-        const excludeList: string[] = [...Settings.get("exclude", [])];
+        const excludeList = Settings.get<string[]>("exclude", []);
 
-        if (excludeList.includes(channel.id)) {
-            removeItem(excludeList, channel.id);
-            stopTyping(channel.id);
-        } else {
-            excludeList.push(channel.id);
-            if (!isEmpty) startTyping(channel.id);
-        }
+        Settings.set(
+            "exclude",
+            excludeList.includes(channel.id)
+                ? excludeList.filter(id => id !== channel.id)
+                : [...excludeList, channel.id]
+        );
 
-        Settings.set("exclude", excludeList);
-    }, [enabled]);
+        if (!enabled && !isEmpty) startTyping(channel.id);
+        else stopTyping(channel.id);
+    }, [enabled, channel.id, isEmpty]);
 
-    const handleContextMenu = React.useCallback(
-        (event: React.MouseEvent<Element, MouseEvent>) => {
-            ContextMenu.open(event.nativeEvent, InvisibleTypingContextMenu);
-        },
-        [enabled]
-    );
+    const handleContextMenu = React.useCallback((event: React.MouseEvent<Element, MouseEvent>) => {
+        ContextMenu.open(event.nativeEvent, InvisibleTypingContextMenu);
+    }, []);
 
     return (
         <Components.Tooltip text={enabled ? "Typing Enabled" : "Typing Disabled"}>
@@ -92,8 +85,5 @@ InvisibleTypingButton.getState = (channelId: string) => {
     const isGlobal: boolean = Settings.get("autoEnable", true);
     const isExcluded = Settings.get<string[]>("exclude", []).includes(channelId);
 
-    if (isGlobal && isExcluded) return false;
-    if (isExcluded && !isGlobal) return true;
-
-    return isGlobal;
+    return isGlobal !== isExcluded;
 };
