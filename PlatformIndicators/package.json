@@ -1,21 +1,27 @@
 {
     "$schema": "../common/Schemas/manifest.schema.json",
     "name": "APlatformIndicators",
-    "version": "1.6.5",
+    "version": "1.6.6",
     "author": "Strencher",
     "authorId": "415849376598982656",
     "description": "Adds indicators for every platform that the user is using.",
     "source": "https://github.com/Strencher/BetterDiscordStuff/blob/master/PlatformIndicators/APlatformIndicators.plugin.js",
     "invite": "gvA2ree",
     "changelog": {
-        "date": "2026-07-31",
+        "date": "2026-10-09",
         "changes": [
             {
-                "title": "Fixes, Fixes, Fixes",
+                "title": "Back in the DMs",
                 "type": "fixed",
                 "items": [
-                    "Indicators in chat show up again",
-                    "Indicators in DM list show up again"
+                    "Indicators in the DM list show up again"
+                ]
+            },
+            {
+                "title": "Harder to break",
+                "type": "improved",
+                "items": [
+                    "The plugin now finds Discord's components more precisely, so future Discord updates are less likely to make indicators vanish"
                 ]
             }
         ]

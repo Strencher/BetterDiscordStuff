@@ -26,13 +26,15 @@ export default class PlatformIndicators {
 
     async patchDMList() {
         const UserContext = React.createContext(null);
-        const ChannelWrapper = await Webpack.waitForModule(
-            Webpack.Filters.bySource("isMobile", 'location:"PrivateChannel"')
-        );
-        const NameWrapper = (await Webpack.waitForModule(Webpack.Filters.bySource("AvatarWithText"))).A;
+        const ChannelWrapper = Webpack.getWithKey(Webpack.Filters.byStrings("isMobileOnline", "getAnyStreamForUser"), {
+            target: await Webpack.waitForModule(Webpack.Filters.bySource("isMobile", 'location:"PrivateChannel"'))
+        });
+        const NameWrapper = Webpack.getWithKey(m => m?.displayName === "AvatarWithText", {
+            target: await Webpack.waitForModule(Webpack.Filters.bySource("AvatarWithText"))
+        });
         const ChannelClasses = await Webpack.waitForModule(Webpack.Filters.byKeys("channel", "decorator"));
 
-        Patcher.after(ChannelWrapper, "Ay", (_, __, res) => {
+        Patcher.after(...ChannelWrapper, (_, __, res) => {
             if (!Settings.get("showInDmsList", true)) return;
             Patcher.after(res, "type", (_, [props], res) => {
                 if (!props.user) return; // Its a group DM
@@ -48,7 +50,7 @@ export default class PlatformIndicators {
             if (ChannelWrapperInstance) ChannelWrapperInstance.forceUpdate();
         }
 
-        Patcher.after(NameWrapper, "render", (_, __, res) => {
+        Patcher.after(...NameWrapper, (_, __, res) => {
             if (!Settings.get("showInDmsList", true)) return;
 
             const user = React.useContext(UserContext);
@@ -65,11 +67,11 @@ export default class PlatformIndicators {
     }
 
     async patchMemberList() {
-        const [MemberItem, key] = Webpack.getWithKey(() => true, {
+        const MemberItem = Webpack.getWithKey(Webpack.Filters.byStrings("selectedClassName", "listitem"), {
             target: await Webpack.waitForModule(Webpack.Filters.bySource("nameplate:", ".MEMBER_LIST", "listitem"))
         });
 
-        Patcher.after(MemberItem, key, (_, [props], ret) => {
+        Patcher.after(...MemberItem, (_, [props], ret) => {
             const user = props.avatar.props.user;
             if (ret?.props?.className?.includes("placeholder")) return;
             if (!Settings.get("showInMemberList", true)) return;
@@ -82,9 +84,11 @@ export default class PlatformIndicators {
     }
 
     async patchChat() {
-        const ChatUsername = await Webpack.waitForModule(Webpack.Filters.bySource(".guildMemberAvatar&&null!="));
+        const ChatUsername = Webpack.getWithKey(Webpack.Filters.byStrings("decorations", "withMentionPrefix"), {
+            target: await Webpack.waitForModule(Webpack.Filters.bySource(".guildMemberAvatar&&null!="))
+        });
 
-        Patcher.before(ChatUsername, "A", (_, props) => {
+        Patcher.before(...ChatUsername, (_, props) => {
             const mainProps = props[0];
             if (!Settings.get("showInChat", true)) return;
             if (Settings.get("ignoreBots", true) && mainProps?.author?.bot) return;
@@ -96,11 +100,11 @@ export default class PlatformIndicators {
     }
 
     async patchBadges() {
-        const [BadgeList, Key_BL] = Webpack.getWithKey(() => true, {
+        const BadgeList = Webpack.getWithKey(Webpack.Filters.byStrings("displayProfile", "UserProfileBadgeListRows"), {
             target: await Webpack.waitForModule(Webpack.Filters.bySource("badges", "badgeClassName", ".BADGE"))
         });
 
-        Patcher.after(BadgeList, Key_BL, (_, [{ displayProfile }], res) => {
+        Patcher.after(...BadgeList, (_, [{ displayProfile }], res) => {
             if (!Settings.get("showInBadges", true)) return;
             if (Settings.get("ignoreBots", true) && displayProfile?.application) return;
             if (!displayProfile?.userId) return;
@@ -109,11 +113,14 @@ export default class PlatformIndicators {
     }
 
     async patchFriendList() {
-        const [UserInfo, key] = Webpack.getWithKey(() => true, {
-            target: await Webpack.waitForModule(
-                Webpack.Filters.bySource("user", "showAccountIdentifier", "overrideDiscriminator")
-            )
-        });
+        const UserInfo = Webpack.getWithKey(
+            Webpack.Filters.byStrings("showAccountIdentifier", "overrideDiscriminator"),
+            {
+                target: await Webpack.waitForModule(
+                    Webpack.Filters.bySource("user", "showAccountIdentifier", "overrideDiscriminator")
+                )
+            }
+        );
         const FriendListClasses = await Webpack.waitForModule(Webpack.Filters.byKeys("userInfo", "hovered"));
 
         if (!Settings.get("showInFriendsList", true)) return;
@@ -126,7 +133,7 @@ export default class PlatformIndicators {
         `
         );
 
-        Patcher.after(UserInfo, key, (_, [{ showAccountIdentifier, user }], res) => {
+        Patcher.after(...UserInfo, (_, [{ showAccountIdentifier, user }], res) => {
             // Don't ask me why, but this is only true on the friends list
             if (!showAccountIdentifier) return;
             Patcher.after(res, "type", (_, __, res) => {

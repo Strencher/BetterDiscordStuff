@@ -34,9 +34,8 @@
 }
 
 .badge_separator {
-    margin-right: 2px;
     padding-right: 2px;
-    border-right: thin solid var(--background-modifier-hover);
+    border-right: 2px solid var(--interactive-background-hover);
     height: 14px;
 }
 
