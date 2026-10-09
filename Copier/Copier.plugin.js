@@ -1500,7 +1500,7 @@ Styles.sheets.push("/* components/settings/item.scss */", `.copier-settings-item
   background: var(--background-tertiary);
   cursor: pointer;
   color: #fff;
-  border: thin solid var(--background-modifier-hover);
+  border: thin solid var(--interactive-background-hover);
 }
 .copier-settings-item .copier-settings-item-header .copier-settings-name {
   display: flex;
@@ -1592,7 +1592,7 @@ Styles.sheets.push("/* components/settings/textbox.scss */", `.copier-textbox .c
 }
 .copier-textbox .copier-text-input {
   background: var(--background-secondary-alt);
-  border: thin solid var(--background-modifier-hover);
+  border: thin solid var(--interactive-background-hover);
   border-radius: 4px;
   width: -webkit-fill-available;
   margin: 8px 0;
