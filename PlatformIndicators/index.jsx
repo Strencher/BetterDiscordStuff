@@ -34,14 +34,20 @@ export default class PlatformIndicators {
         });
         const ChannelClasses = await Webpack.waitForModule(Webpack.Filters.byKeys("channel", "decorator"));
 
+        let patchedChannelWrapper;
         Patcher.after(...ChannelWrapper, (_, __, res) => {
-            if (!Settings.get("showInDmsList", true)) return;
-            Patcher.after(res, "type", (_, [props], res) => {
-                if (!props.user) return; // Its a group DM
-                if (Settings.get("ignoreBots", true) && props.user.bot) return;
+            if (!patchedChannelWrapper) {
+                const originalChannelWrapper = res.type;
+                patchedChannelWrapper = function PlatformIndicatorsChannelWrapper(props) {
+                    const ret = originalChannelWrapper(props);
+                    if (!Settings.get("showInDmsList", true)) return ret;
+                    if (!props.user) return ret; // Its a group DM
+                    if (Settings.get("ignoreBots", true) && props.user.bot) return ret;
 
-                return <UserContext.Provider value={props.user}>{res}</UserContext.Provider>;
-            });
+                    return <UserContext.Provider value={props.user}>{ret}</UserContext.Provider>;
+                };
+            }
+            res.type = patchedChannelWrapper;
         });
 
         const ChannelWrapperElement = document.querySelector(`h2 + .${ChannelClasses.channel}`);
@@ -61,7 +67,7 @@ export default class PlatformIndicators {
             });
             if (!child) return;
 
-            child.style = { justifyContent: "unset" };
+            child.style = { width: "fit-content" };
             child.children.push(<StatusIndicators userId={user.id} type="DMs" />);
         });
     }

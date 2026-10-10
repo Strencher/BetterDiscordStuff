@@ -1,20 +1,20 @@
 {
     "$schema": "../common/Schemas/manifest.schema.json",
     "name": "APlatformIndicators",
-    "version": "1.6.6",
+    "version": "1.6.7",
     "author": "Strencher",
     "authorId": "415849376598982656",
     "description": "Adds indicators for every platform that the user is using.",
     "source": "https://github.com/Strencher/BetterDiscordStuff/blob/master/PlatformIndicators/APlatformIndicators.plugin.js",
     "invite": "gvA2ree",
     "changelog": {
-        "date": "2026-10-09",
+        "date": "2026-10-11",
         "changes": [
             {
-                "title": "Back in the DMs",
+                "title": "No more jumping",
                 "type": "fixed",
                 "items": [
-                    "Indicators in the DM list show up again"
+                    "When clicking a DM, the list no longer jumps to the top"
                 ]
             },
             {
