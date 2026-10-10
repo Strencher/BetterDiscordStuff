@@ -18,6 +18,7 @@ export default class PlatformIndicators {
         Styles.load();
         showChangelog(manifest);
         this.patchDMList();
+        this.patchFavorites();
         this.patchMemberList();
         this.patchChat();
         this.patchBadges();
@@ -69,6 +70,32 @@ export default class PlatformIndicators {
 
             child.style = { width: "fit-content" };
             child.children.push(<StatusIndicators userId={user.id} type="DMs" />);
+        });
+    }
+
+    async patchFavorites() {
+        const ChannelItem = Webpack.getWithKey(
+            Webpack.Filters.byStrings("channelTypeOverride", "isFavoriteSuggestion"),
+            {
+                target: await Webpack.waitForModule(
+                    Webpack.Filters.bySource("channelTypeOverride", "isFavoriteSuggestion", "channel_item")
+                )
+            }
+        );
+
+        const isNameElement = e => e?.props?.children?.props?.channel && "name" in e.props.children.props;
+
+        Patcher.after(...ChannelItem, (_, [{ channel }], res) => {
+            if (!Settings.get("showInFavorites", true)) return;
+            if (!channel.isDM()) return;
+
+            const name = Utils.findInTree(res, isNameElement, { walkable: ["children", "props"] });
+            if (!name) return;
+
+            name.props.children = [
+                name.props.children,
+                <StatusIndicators userId={channel.getRecipientId()} type="Favorites" />
+            ];
         });
     }
 

@@ -1,7 +1,7 @@
 {
     "$schema": "../common/Schemas/manifest.schema.json",
     "name": "APlatformIndicators",
-    "version": "1.6.7",
+    "version": "1.7.0",
     "author": "Strencher",
     "authorId": "415849376598982656",
     "description": "Adds indicators for every platform that the user is using.",
@@ -10,6 +10,13 @@
     "changelog": {
         "date": "2026-10-11",
         "changes": [
+            {
+                "title": "New Stuff",
+                "type": "added",
+                "items": [
+                    "Indicators can now be shown in the favorites list (beta)."
+                ]
+            },
             {
                 "title": "No more jumping",
                 "type": "fixed",

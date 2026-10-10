@@ -31,6 +31,14 @@
         },
         {
             "type": "switch",
+            "name": "Show in Favorites",
+            "note": "Shows the platform indicators in favorites.",
+            "id": "showInFavorites",
+            "isBeta": true,
+            "value": true
+        },
+        {
+            "type": "switch",
             "name": "Show in Discord Badges",
             "note": "Shows the platform indicators right next to the discord badges.",
             "id": "showInBadges",

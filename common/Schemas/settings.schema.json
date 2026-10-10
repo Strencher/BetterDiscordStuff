@@ -54,6 +54,11 @@
                             "value": {
                                 "type": "boolean",
                                 "description": "The default boolean value for the switch"
+                            },
+                            "isBeta": {
+                                "type": "boolean",
+                                "default": false,
+                                "description": "Shows a BETA tag next to the name of the setting"
                             }
                         },
                         "required": ["type", "name", "id", "value"],
