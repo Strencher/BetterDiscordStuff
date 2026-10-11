@@ -17,7 +17,7 @@ const ICON_BOUNDS: Record<Platform, [x: number, y: number, width: number, height
 const ICON_HEIGHT: Record<Platform, number> = {
     desktop: 1.2,
     web: 1.2,
-    embedded: 1.2,
+    embedded: 1,
     mobile: 1.5,
     vr: 1.1
 };
