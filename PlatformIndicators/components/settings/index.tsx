@@ -1,18 +1,15 @@
 import { Settings, SettingsPanel as _SettingsPanel } from "@common/Settings";
 import React from "react";
 
-import { getStatusColor } from "../../modules/utils";
 import SettingsItems from "../../settings.json";
-import * as Icons from "../icons";
 import { Checkbox } from "../icons/checkbox";
+import PlatformIcon, { Platform } from "../platformIcon";
 import Styles from "./style.scss";
-
-type IconKey = keyof typeof Icons;
 
 interface SmartDisableItem {
     id: string;
     value: boolean;
-    icon: IconKey;
+    icon: Platform;
 }
 
 interface SmartDisableProps {
@@ -39,14 +36,15 @@ function SmartDisable({ id, name, items }: SmartDisableProps) {
             <div className={Styles.body}>
                 {items.map(item => (
                     <div key={item.id} className={Styles.item} onClick={() => handleClick(item.id)}>
-                        {(["online", "dnd", "idle", "offline"] as const).map(status =>
-                            React.createElement(Icons[item.icon], {
-                                key: status,
-                                style: { color: getStatusColor(status) },
-                                width: iconSize,
-                                height: iconSize
-                            })
-                        )}
+                        {(["online", "dnd", "idle", "offline"] as const).map(status => (
+                            <PlatformIcon
+                                key={status}
+                                platform={item.icon}
+                                status={status}
+                                width={iconSize}
+                                height={iconSize}
+                            />
+                        ))}
                         <Checkbox
                             width={iconSize}
                             height={iconSize}

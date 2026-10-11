@@ -4,8 +4,7 @@ import React from "react";
 import { UserStore } from "../modules/shared";
 import usePlatformStores from "../modules/usePlatformStores";
 import * as Icons from "./icons";
-
-type Platform = keyof typeof Icons;
+import PlatformIcon, { Platform } from "./platformIcon";
 
 const ICON_BOUNDS: Record<Platform, [x: number, y: number, width: number, height: number]> = {
     desktop: [2, 2, 20, 20],
@@ -32,12 +31,12 @@ export function getUserIdFromAvatar(props: { "aria-label"?: unknown }): string |
     return typeof props["aria-label"] === "string" ? UserStore.findByTag(props["aria-label"])?.id : undefined;
 }
 
-interface StatusIndicatorProps {
+interface AvatarIndicatorProps {
     userId: string;
     svg: React.ReactElement<any>;
 }
 
-export default function StatusIndicator({ userId, svg }: StatusIndicatorProps) {
+export default function AvatarIndicator({ userId, svg }: AvatarIndicatorProps) {
     const maskId = React.useId();
     const { clients, iconStates, shouldShow } = usePlatformStores(userId, "Avatar");
     const platform = Object.keys(clients).find(key => (iconStates[key] ?? true) && key in Icons) as Platform;
@@ -52,7 +51,7 @@ export default function StatusIndicator({ userId, svg }: StatusIndicatorProps) {
     if (!avatar || !statusGroup) return svg;
 
     const index = statusGroup.children.findIndex(isStatusRect);
-    const { x, y, width: dotWidth, height: dotHeight, fill, className } = statusGroup.children[index].props;
+    const { x, y, width: dotWidth, height: dotHeight, className } = statusGroup.children[index].props;
 
     const dotSize = Math.min(dotWidth, dotHeight);
     const [viewX, viewY, viewWidth, viewHeight] = ICON_BOUNDS[platform];
@@ -95,9 +94,10 @@ export default function StatusIndicator({ userId, svg }: StatusIndicatorProps) {
         )
     );
 
-    const Icon = Icons[platform];
     statusGroup.children[index] = (
-        <Icon
+        <PlatformIcon
+            platform={platform}
+            status={clients[platform]}
             x={iconX}
             y={iconY}
             width={width}
@@ -105,7 +105,7 @@ export default function StatusIndicator({ userId, svg }: StatusIndicatorProps) {
             viewBox={`${viewX} ${viewY} ${viewWidth} ${viewHeight}`}
             transform={undefined}
             className={className}
-            style={{ color: fill }}
+            data-location="avatar"
         />
     );
 
