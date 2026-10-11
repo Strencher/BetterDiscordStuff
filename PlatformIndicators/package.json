@@ -14,7 +14,8 @@
                 "title": "New Stuff",
                 "type": "added",
                 "items": [
-                    "Indicators can now be shown in the favorites list (beta)."
+                    "Indicators can now be shown in the favorites list (Beta).",
+                    "The Status on Avatars can now be replaced by the Platform Indicator (Beta)."
                 ]
             },
             {

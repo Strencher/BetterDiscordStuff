@@ -4,27 +4,27 @@
         {
             "type": "switch",
             "name": "Show in Friendslist",
-            "note": "Shows the platform indicators in the friendslist",
+            "note": "Shows the platform indicators in the friendslist.",
             "id": "showInFriendsList",
             "value": true
         },
         {
             "type": "switch",
             "name": "Show in Memberlist",
-            "note": "Shows the platform indicators in the memberlist",
+            "note": "Shows the platform indicators in the memberlist.",
             "id": "showInMemberList",
             "value": true
         },
         {
             "type": "switch",
-            "name": "Show next to username",
+            "name": "Show in Chat",
             "note": "Shows the platform indicators next the username in messages.",
             "id": "showInChat",
             "value": true
         },
         {
             "type": "switch",
-            "name": "Show in DMs list",
+            "name": "Show in DMs",
             "note": "Shows the platform indicators in the dm list.",
             "id": "showInDmsList",
             "value": true
@@ -34,6 +34,14 @@
             "name": "Show in Favorites",
             "note": "Shows the platform indicators in favorites.",
             "id": "showInFavorites",
+            "isBeta": true,
+            "value": true
+        },
+        {
+            "type": "switch",
+            "name": "Show on Avatars",
+            "note": "Replaces the status dot on avatars with the platform icon.",
+            "id": "showOnAvatars",
             "isBeta": true,
             "value": true
         },
