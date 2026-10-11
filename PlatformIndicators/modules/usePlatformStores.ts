@@ -12,12 +12,12 @@ interface PlatformStoreState {
 
 const isStreaming = (): boolean => LocalActivityStore.getActivities().some((e: { type: number }) => e.type === 1);
 
-export default function usePlatformStores(userId: string, type: string): PlatformStoreState {
+export default function usePlatformStores(userId: string, location: string): PlatformStoreState {
     const user = Hooks.useStateFromStores([UserStore] as any, () => UserStore.getUser(userId));
     const sessions = Hooks.useStateFromStores([SessionsStore] as any, () => SessionsStore.getSessions());
 
     const iconStates: Record<string, boolean> = Settings.get("icons", {});
-    const shownInArea: boolean = Settings.get("showIn" + type, true);
+    const shownInArea: boolean = Settings.get("showIn" + location, true);
     const ignoreBots: boolean = Settings.get("ignoreBots", true) && (user?.bot ?? false);
 
     const shouldShow = shownInArea && !ignoreBots;

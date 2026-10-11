@@ -43,7 +43,7 @@ pnpm lint:fix   # same, but prettier --write and eslint --fix
   - `@api` → a bound `BdApi(manifest.name)` instance, destructured into individual exports (`Data`, `DOM`, `Patcher`, `UI`, `Webpack`, etc.). For the current, authoritative list of exported names, check the `virtual(...)` block in `scripts/build.js` or the `declare module "@api"` block in `modules.d.ts` — don't rely on any list written here going stale.
   - `react` / `react-dom` → `BdApi.React` / `BdApi.ReactDOM`
   - `@manifest` → the plugin's own `package.json` contents
-  - `@styles` → a loader backed by `DOM.addStyle`/`removeStyle`; `.scss`/`.css` imports are compiled and exposed as class-name maps
+  - `@styles` → a loader backed by `DOM.addStyle`/`removeStyle` that also injects into Discord popout windows (via `PopoutWindowStore`); `.scss`/`.css` imports are compiled and exposed as class-name maps
   - Ambient types for all of the above live in `modules.d.ts`.
 
 ## Plugin manifest & changelog format

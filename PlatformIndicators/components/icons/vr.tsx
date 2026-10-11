@@ -1,8 +1,16 @@
 import React from "react";
 
+import { buildClassName } from "../../modules/shared";
+
 export default function VR(props: React.SVGProps<SVGSVGElement>) {
     return (
-        <svg className="PI-icon_vr" width="24" height="24" viewBox="0 -2.5 28 28" {...props}>
+        <svg
+            width="24"
+            height="24"
+            viewBox="0 -2.5 28 28"
+            {...props}
+            className={buildClassName("PlatformIndicator-Icon", props.className)}
+        >
             <path
                 fill="currentColor"
                 d="M8.46 8.64a1 1 0 0 1 1 1c0 .44-.3.8-.72.92l-.11.07c-.08.06-.2.19-.2.41a.99.99 0 0 1-.98.86h-.06a1 1 0 0 1-.94-1.05l.02-.32c.05-1.06.92-1.9 1.99-1.9Z"

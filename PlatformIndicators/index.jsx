@@ -6,9 +6,9 @@ import manifest from "@manifest";
 import Styles from "@styles";
 import React from "react";
 
-import StatusIndicators from "./components/indicators";
+import AvatarIndicator, { getUserIdFromAvatar } from "./components/avatarIndicator";
+import PlatformIndicator from "./components/platformIndicator";
 import SettingsPanel from "./components/settings";
-import StatusIndicator, { getUserIdFromAvatar } from "./components/statusIndicator";
 import { findInReactTree } from "./modules/utils";
 
 export default class PlatformIndicators {
@@ -21,7 +21,7 @@ export default class PlatformIndicators {
         showChangelog(manifest);
         this.patchDMList();
         this.patchFavorites();
-        this.patchStatusIndicator();
+        this.patchAvatarIndicator();
         this.patchMemberList();
         this.patchChat();
         this.patchBadges();
@@ -72,7 +72,7 @@ export default class PlatformIndicators {
             if (!child) return;
 
             child.style = { width: "fit-content" };
-            child.children.push(<StatusIndicators userId={user.id} type="DMs" />);
+            child.children.push(<PlatformIndicator userId={user.id} location="DMs" />);
         });
     }
 
@@ -97,12 +97,12 @@ export default class PlatformIndicators {
 
             name.props.children = [
                 name.props.children,
-                <StatusIndicators userId={channel.getRecipientId()} type="Favorites" />
+                <PlatformIndicator userId={channel.getRecipientId()} location="Favorites" />
             ];
         });
     }
 
-    async patchStatusIndicator() {
+    async patchAvatarIndicator() {
         const AvatarModule = await Webpack.waitForModule(Webpack.Filters.bySource("AvatarImg", "getMaskId()"));
         const staticAvatarFilter = Webpack.Filters.byStrings("getMaskId()", "statusBackdropColor");
         const StaticAvatar = Object.values(AvatarModule).find(staticAvatarFilter);
@@ -119,8 +119,8 @@ export default class PlatformIndicators {
             if (!userId) return;
 
             res.props.children = (
-                <ErrorBoundary id="StatusIndicator" mini>
-                    <StatusIndicator userId={userId} svg={res.props.children} />
+                <ErrorBoundary id="AvatarIndicator" mini>
+                    <AvatarIndicator userId={userId} svg={res.props.children} />
                 </ErrorBoundary>
             );
         };
@@ -161,7 +161,7 @@ export default class PlatformIndicators {
             if (Settings.get("ignoreBots", true) && user.bot) return;
             const child = findInReactTree(ret, e => e?.className?.includes("username"));
             if (user && child) {
-                child.children = [child.children, <StatusIndicators userId={user.id} type="MemberList" />];
+                child.children = [child.children, <PlatformIndicator userId={user.id} location="MemberList" />];
             }
         });
     }
@@ -178,7 +178,9 @@ export default class PlatformIndicators {
             if (!mainProps?.decorations) return;
             const target = mainProps.decorations?.[1];
             if (!Array.isArray(target)) mainProps.decorations[1] = target ? [target] : [];
-            mainProps.decorations[1].unshift(<StatusIndicators userId={mainProps.message.author.id} type="Chat" />);
+            mainProps.decorations[1].unshift(
+                <PlatformIndicator userId={mainProps.message.author.id} location="Chat" />
+            );
         });
     }
 
@@ -191,7 +193,7 @@ export default class PlatformIndicators {
             if (!Settings.get("showInBadges", true)) return;
             if (Settings.get("ignoreBots", true) && displayProfile?.application) return;
             if (!displayProfile?.userId) return;
-            res?.props.children.push(<StatusIndicators userId={displayProfile.userId} type="Badge" separator />);
+            res?.props.children.push(<PlatformIndicator userId={displayProfile.userId} location="Badge" separator />);
         });
     }
 
@@ -220,7 +222,7 @@ export default class PlatformIndicators {
             // Don't ask me why, but this is only true on the friends list
             if (!showAccountIdentifier) return;
             Patcher.after(res, "type", (_, __, res) => {
-                res.props.children.push(<StatusIndicators userId={user.id} type="FriendList" />);
+                res.props.children.push(<PlatformIndicator userId={user.id} location="FriendList" />);
             });
         });
     }

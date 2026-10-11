@@ -1,4 +1,4 @@
-.indicatorContainer {
+.platform-indicator {
     display: inline-flex;
     vertical-align: bottom;
     margin-left: 5px;
@@ -11,17 +11,17 @@
         margin-left: 2px;
     }
 
-    &.type_Chat {
+    &[data-location="chat"] {
         margin-right: -6px;
         margin-top: 2px;
         vertical-align: top;
     }
 
-    &.type_Favorites {
+    &[data-location="favorites"] {
         vertical-align: middle;
     }
 
-    &.type_FriendList {
+    &[data-location="friendlist"] {
         align-self: center;
         margin-left: 12px;
 
@@ -32,7 +32,7 @@
     }
 }
 
-.PI-icon_mobile {
+.PlatformIndicator-Icon[data-platform="mobile"] {
     position: relative;
     top: 1px;
 }
@@ -43,7 +43,7 @@
     height: 14px;
 }
 
-div[id*="message-reply"] .indicatorContainer.type_Chat {
+div[id*="message-reply"] .platform-indicator[data-location="chat"] {
     margin-left: 0;
     margin-right: 2px;
 }
