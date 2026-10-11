@@ -9,7 +9,6 @@
 
 <div align="center">
     <img src="https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/development/PlatformIndicators/assets/Profile.png" alt="Profile" width="430">
-    <p><sub>The platform right on the avatar and next to the badges</sub></p>
     <table>
         <tr>
             <td align="center">
