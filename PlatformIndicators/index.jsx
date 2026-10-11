@@ -1,5 +1,6 @@
 import { DOM, Patcher, ReactUtils, Utils, Webpack } from "@api";
 import showChangelog from "@common/Changelog";
+import ErrorBoundary from "@common/ErrorBoundary";
 import { Settings } from "@common/Settings";
 import manifest from "@manifest";
 import Styles from "@styles";
@@ -7,6 +8,7 @@ import React from "react";
 
 import StatusIndicators from "./components/indicators";
 import SettingsPanel from "./components/settings";
+import StatusIndicator, { getUserIdFromAvatar } from "./components/statusIndicator";
 import { findInReactTree } from "./modules/utils";
 
 export default class PlatformIndicators {
@@ -18,6 +20,8 @@ export default class PlatformIndicators {
         Styles.load();
         showChangelog(manifest);
         this.patchDMList();
+        this.patchFavorites();
+        this.patchStatusIndicator();
         this.patchMemberList();
         this.patchChat();
         this.patchBadges();
@@ -34,14 +38,20 @@ export default class PlatformIndicators {
         });
         const ChannelClasses = await Webpack.waitForModule(Webpack.Filters.byKeys("channel", "decorator"));
 
+        let patchedChannelWrapper;
         Patcher.after(...ChannelWrapper, (_, __, res) => {
-            if (!Settings.get("showInDmsList", true)) return;
-            Patcher.after(res, "type", (_, [props], res) => {
-                if (!props.user) return; // Its a group DM
-                if (Settings.get("ignoreBots", true) && props.user.bot) return;
+            if (!patchedChannelWrapper) {
+                const originalChannelWrapper = res.type;
+                patchedChannelWrapper = function PlatformIndicatorsChannelWrapper(props) {
+                    const ret = originalChannelWrapper(props);
+                    if (!Settings.get("showInDmsList", true)) return ret;
+                    if (!props.user) return ret; // Its a group DM
+                    if (Settings.get("ignoreBots", true) && props.user.bot) return ret;
 
-                return <UserContext.Provider value={props.user}>{res}</UserContext.Provider>;
-            });
+                    return <UserContext.Provider value={props.user}>{ret}</UserContext.Provider>;
+                };
+            }
+            res.type = patchedChannelWrapper;
         });
 
         const ChannelWrapperElement = document.querySelector(`h2 + .${ChannelClasses.channel}`);
@@ -61,8 +71,81 @@ export default class PlatformIndicators {
             });
             if (!child) return;
 
-            child.style = { justifyContent: "unset" };
+            child.style = { width: "fit-content" };
             child.children.push(<StatusIndicators userId={user.id} type="DMs" />);
+        });
+    }
+
+    async patchFavorites() {
+        const ChannelItem = Webpack.getWithKey(
+            Webpack.Filters.byStrings("channelTypeOverride", "isFavoriteSuggestion"),
+            {
+                target: await Webpack.waitForModule(
+                    Webpack.Filters.bySource("channelTypeOverride", "isFavoriteSuggestion", "channel_item")
+                )
+            }
+        );
+
+        const isNameElement = e => e?.props?.children?.props?.channel && "name" in e.props.children.props;
+
+        Patcher.after(...ChannelItem, (_, [{ channel }], res) => {
+            if (!Settings.get("showInFavorites", true)) return;
+            if (!channel.isDM()) return;
+
+            const name = Utils.findInTree(res, isNameElement, { walkable: ["children", "props"] });
+            if (!name) return;
+
+            name.props.children = [
+                name.props.children,
+                <StatusIndicators userId={channel.getRecipientId()} type="Favorites" />
+            ];
+        });
+    }
+
+    async patchStatusIndicator() {
+        const AvatarModule = await Webpack.waitForModule(Webpack.Filters.bySource("AvatarImg", "getMaskId()"));
+        const staticAvatarFilter = Webpack.Filters.byStrings("getMaskId()", "statusBackdropColor");
+        const StaticAvatar = Object.values(AvatarModule).find(staticAvatarFilter);
+        const AnimatedAvatar = Object.values(AvatarModule).find(m =>
+            Webpack.Filters.byStrings("fromIsMobile")(m?.type)
+        );
+
+        const replaceStatus = (props, res) => {
+            if (!Settings.get("showOnAvatars", true)) return;
+            if (props.isTyping) return;
+            if (res?.props?.children?.type !== "svg") return;
+
+            const userId = getUserIdFromAvatar(props);
+            if (!userId) return;
+
+            res.props.children = (
+                <ErrorBoundary id="StatusIndicator" mini>
+                    <StatusIndicator userId={userId} svg={res.props.children} />
+                </ErrorBoundary>
+            );
+        };
+
+        const AvatarWithStatus = function PlatformIndicatorsAvatarWithStatus(props) {
+            const res = StaticAvatar(props);
+            replaceStatus(props, res);
+            return res;
+        };
+
+        const PatchedAvatar = function PlatformIndicatorsAvatar(props) {
+            return (
+                <ErrorBoundary id="PatchedAvatar" mini>
+                    <AvatarWithStatus {...props} />
+                </ErrorBoundary>
+            );
+        };
+
+        Patcher.after(...Webpack.getWithKey(staticAvatarFilter, { target: AvatarModule }), (_, [props], res) =>
+            replaceStatus(props, res)
+        );
+
+        Patcher.after(AnimatedAvatar, "type", (_, __, res) => {
+            if (!Settings.get("showOnAvatars", true)) return;
+            res.type = PatchedAvatar;
         });
     }
 

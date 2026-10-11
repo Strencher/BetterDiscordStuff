@@ -13,6 +13,7 @@ export interface DropdownSettingsItem extends BasicSettingsItem {
 export interface SwitchSettingsItem extends BasicSettingsItem {
     type: "switch";
     value: boolean;
+    isBeta?: boolean;
 }
 
 export interface SliderSettingsItem extends BasicSettingsItem {
