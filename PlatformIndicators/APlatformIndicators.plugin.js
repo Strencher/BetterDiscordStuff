@@ -1,6 +1,6 @@
 /**
  * @name APlatformIndicators
- * @version 1.6.6
+ * @version 1.7.0
  * @author Strencher
  * @authorId 415849376598982656
  * @description Adds indicators for every platform that the user is using.
@@ -14,19 +14,27 @@
 const manifest = {
     "$schema": "../common/Schemas/manifest.schema.json",
     "name": "APlatformIndicators",
-    "version": "1.6.6",
+    "version": "1.7.0",
     "author": "Strencher",
     "authorId": "415849376598982656",
     "description": "Adds indicators for every platform that the user is using.",
     "source": "https://github.com/Strencher/BetterDiscordStuff/blob/master/PlatformIndicators/APlatformIndicators.plugin.js",
     "invite": "gvA2ree",
     "changelog": {
-        "date": "2026-10-09",
+        "date": "2026-10-11",
         "changes": [{
-                "title": "Back in the DMs",
+                "title": "New Stuff",
+                "type": "added",
+                "items": [
+                    "Indicators can now be shown in the favorites list (Beta).",
+                    "The Status on Avatars can now be replaced by the Platform Indicator (Beta)."
+                ]
+            },
+            {
+                "title": "No more jumping",
                 "type": "fixed",
                 "items": [
-                    "Indicators in the DM list show up again"
+                    "When clicking a DM, the list no longer jumps to the top"
                 ]
             },
             {
@@ -266,12 +274,37 @@ const {
     SwitchInput
 } = Components;
 
-function SwitchItem(props) {
+function BetaTag() {
+    return React.createElement(
+        "span", {
+            style: {
+                marginLeft: 8,
+                padding: "0 6px",
+                borderRadius: 16,
+                background: "var(--brand-500, #5865f2)",
+                color: "#fff",
+                fontSize: 12,
+                fontWeight: 700,
+                lineHeight: "16px",
+                textTransform: "uppercase",
+                verticalAlign: "middle"
+            }
+        },
+        "Beta"
+    );
+}
+
+function SwitchItem({
+    isBeta = false,
+    ...props
+}) {
     const value = Hooks.useStateFromStores([Settings], () => Settings.get(props.id, props.value));
+    const name = isBeta ? React.createElement(React.Fragment, null, props.name, React.createElement(BetaTag, null)) : props.name;
     return React.createElement(ErrorBoundary, {
         id: props.id
     }, React.createElement(SettingItem, {
         ...props,
+        name,
         inline: true
     }, React.createElement(SwitchInput, {
         value,
@@ -514,6 +547,9 @@ Styles$2.sheets.push("/* components/indicators/style.scss */", `.indicatorContai
   margin-top: 2px;
   vertical-align: top;
 }
+.indicatorContainer.type_Favorites {
+  vertical-align: middle;
+}
 .indicatorContainer.type_FriendList {
   align-self: center;
   margin-left: 12px;
@@ -541,6 +577,7 @@ div[id*=message-reply] .indicatorContainer.type_Chat {
 var Styles$1 = {
     "indicatorContainer": "indicatorContainer",
     "type_Chat": "type_Chat",
+    "type_Favorites": "type_Favorites",
     "type_FriendList": "type_FriendList",
     "PIIcon_mobile": "PI-icon_mobile",
     "badge_separator": "badge_separator"
@@ -584,29 +621,45 @@ function StatusIndicators({
 var items = [{
         type: "switch",
         name: "Show in Friendslist",
-        note: "Shows the platform indicators in the friendslist",
+        note: "Shows the platform indicators in the friendslist.",
         id: "showInFriendsList",
         value: true
     },
     {
         type: "switch",
         name: "Show in Memberlist",
-        note: "Shows the platform indicators in the memberlist",
+        note: "Shows the platform indicators in the memberlist.",
         id: "showInMemberList",
         value: true
     },
     {
         type: "switch",
-        name: "Show next to username",
+        name: "Show in Chat",
         note: "Shows the platform indicators next the username in messages.",
         id: "showInChat",
         value: true
     },
     {
         type: "switch",
-        name: "Show in DMs list",
+        name: "Show in DMs",
         note: "Shows the platform indicators in the dm list.",
         id: "showInDmsList",
+        value: true
+    },
+    {
+        type: "switch",
+        name: "Show in Favorites",
+        note: "Shows the platform indicators in favorites.",
+        id: "showInFavorites",
+        isBeta: true,
+        value: true
+    },
+    {
+        type: "switch",
+        name: "Show on Avatars",
+        note: "Replaces the status dot on avatars with the platform icon.",
+        id: "showOnAvatars",
+        isBeta: true,
         value: true
     },
     {
@@ -798,6 +851,123 @@ function SettingsPanel() {
     });
 }
 
+/* components/statusIndicator.tsx */
+const ICON_BOUNDS = {
+    desktop: [2, 2, 20, 20],
+    web: [2, 2, 20, 20],
+    vr: [1, 4, 22, 16],
+    embedded: [2, 5, 20, 14],
+    mobile: [0, 0, 24, 35]
+};
+const ICON_HEIGHT = {
+    desktop: 1.2,
+    web: 1.2,
+    embedded: 1.2,
+    mobile: 1.5,
+    vr: 1.1
+};
+const CUTOUT_STROKE = 0.3;
+const walkable = {
+    walkable: ["props", "children"]
+};
+const isStatusRect = (e) => e?.type === "rect" && typeof e.props?.mask === "string";
+const isBackdrop = (e) => (e?.type === "circle" || e?.type === "rect") && e.props?.mask == null;
+
+function getUserIdFromAvatar(props) {
+    return typeof props["aria-label"] === "string" ? UserStore.findByTag(props["aria-label"])?.id : void 0;
+}
+
+function StatusIndicator({
+    userId,
+    svg
+}) {
+    const maskId = React.useId();
+    const {
+        clients,
+        iconStates,
+        shouldShow
+    } = usePlatformStores(userId, "Avatar");
+    const platform = Object.keys(clients).find((key) => (iconStates[key] ?? true) && key in Icons);
+    if (!shouldShow || !platform) return svg;
+    const avatar = Utils.findInTree(svg, (e) => e?.type === "foreignObject", walkable);
+    const statusGroup = Utils.findInTree(
+        svg,
+        (e) => Array.isArray(e?.children) && e.children.some(isStatusRect),
+        walkable
+    );
+    if (!avatar || !statusGroup) return svg;
+    const index = statusGroup.children.findIndex(isStatusRect);
+    const {
+        x,
+        y,
+        width: dotWidth,
+        height: dotHeight,
+        fill,
+        className
+    } = statusGroup.children[index].props;
+    const dotSize = Math.min(dotWidth, dotHeight);
+    const [viewX, viewY, viewWidth, viewHeight] = ICON_BOUNDS[platform];
+    const height = dotSize * ICON_HEIGHT[platform];
+    const width = height * (viewWidth / viewHeight);
+    const iconX = x + dotWidth - width;
+    const iconY = y + dotHeight - height;
+    const stroke = dotSize * CUTOUT_STROKE;
+    const cutout = {
+        x: iconX - stroke,
+        y: iconY - stroke,
+        width: width + stroke * 2,
+        height: height + stroke * 2,
+        rx: stroke
+    };
+    const size = avatar.props.width;
+    const mask = React.createElement(
+        "mask", {
+            key: "platform-indicators-mask",
+            id: maskId,
+            maskUnits: "userSpaceOnUse",
+            x: 0,
+            y: 0,
+            width: size,
+            height: size
+        },
+        React.createElement("circle", {
+            cx: size / 2,
+            cy: size / 2,
+            r: size / 2,
+            fill: "white"
+        }),
+        React.createElement("rect", {
+            ...cutout,
+            fill: "black"
+        })
+    );
+    avatar.props.mask = `url(#${maskId})`;
+    svg.props.children = [mask, ...svg.props.children].map(
+        (child) => isBackdrop(child) ? React.createElement("rect", {
+            key: "platform-indicators-backdrop",
+            ...cutout,
+            fill: child.props.fill,
+            style: child.props.style
+        }) : child
+    );
+    const Icon = Icons[platform];
+    statusGroup.children[index] = React.createElement(
+        Icon, {
+            x: iconX,
+            y: iconY,
+            width,
+            height,
+            viewBox: `${viewX} ${viewY} ${viewWidth} ${viewHeight}`,
+            transform: void 0,
+            className,
+            style: {
+                color: fill
+            }
+        }
+    );
+    return svg;
+}
+
 /* index.jsx */
 class PlatformIndicators {
     getSettingsPanel() {
@@ -807,6 +977,8 @@ class PlatformIndicators {
         Styles$2.load();
         showChangelog(manifest);
         this.patchDMList();
+        this.patchFavorites();
+        this.patchStatusIndicator();
         this.patchMemberList();
         this.patchChat();
         this.patchBadges();
@@ -821,15 +993,21 @@ class PlatformIndicators {
             target: await Webpack.waitForModule(Webpack.Filters.bySource("AvatarWithText"))
         });
         const ChannelClasses = await Webpack.waitForModule(Webpack.Filters.byKeys("channel", "decorator"));
+        let patchedChannelWrapper;
         Patcher.after(...ChannelWrapper, (_, __, res) => {
-            if (!Settings.get("showInDmsList", true)) return;
-            Patcher.after(res, "type", (_2, [props], res2) => {
-                if (!props.user) return;
-                if (Settings.get("ignoreBots", true) && props.user.bot) return;
-                return React.createElement(UserContext.Provider, {
-                    value: props.user
-                }, res2);
-            });
+            if (!patchedChannelWrapper) {
+                const originalChannelWrapper = res.type;
+                patchedChannelWrapper = function PlatformIndicatorsChannelWrapper(props) {
+                    const ret = originalChannelWrapper(props);
+                    if (!Settings.get("showInDmsList", true)) return ret;
+                    if (!props.user) return ret;
+                    if (Settings.get("ignoreBots", true) && props.user.bot) return ret;
+                    return React.createElement(UserContext.Provider, {
+                        value: props.user
+                    }, ret);
+                };
+            }
+            res.type = patchedChannelWrapper;
         });
         const ChannelWrapperElement = document.querySelector(`h2 + .${ChannelClasses.channel}`);
         if (ChannelWrapperElement) {
@@ -845,12 +1023,84 @@ class PlatformIndicators {
             });
             if (!child) return;
             child.style = {
-                justifyContent: "unset"
+                width: "fit-content"
             };
             child.children.push(React.createElement(StatusIndicators, {
                 userId: user.id,
                 type: "DMs"
             }));
+        });
+    }
+    async patchFavorites() {
+        const ChannelItem = Webpack.getWithKey(
+            Webpack.Filters.byStrings("channelTypeOverride", "isFavoriteSuggestion"), {
+                target: await Webpack.waitForModule(
+                    Webpack.Filters.bySource("channelTypeOverride", "isFavoriteSuggestion", "channel_item")
+                )
+            }
+        );
+        const isNameElement = (e) => e?.props?.children?.props?.channel && "name" in e.props.children.props;
+        Patcher.after(...ChannelItem, (_, [{
+            channel
+        }], res) => {
+            if (!Settings.get("showInFavorites", true)) return;
+            if (!channel.isDM()) return;
+            const name = Utils.findInTree(res, isNameElement, {
+                walkable: ["children", "props"]
+            });
+            if (!name) return;
+            name.props.children = [
+                name.props.children,
+                React.createElement(StatusIndicators, {
+                    userId: channel.getRecipientId(),
+                    type: "Favorites"
+                })
+            ];
+        });
+    }
+    async patchStatusIndicator() {
+        const AvatarModule = await Webpack.waitForModule(Webpack.Filters.bySource("AvatarImg", "getMaskId()"));
+        const staticAvatarFilter = Webpack.Filters.byStrings("getMaskId()", "statusBackdropColor");
+        const StaticAvatar = Object.values(AvatarModule).find(staticAvatarFilter);
+        const AnimatedAvatar = Object.values(AvatarModule).find(
+            (m) => Webpack.Filters.byStrings("fromIsMobile")(m?.type)
+        );
+        const replaceStatus = (props, res) => {
+            if (!Settings.get("showOnAvatars", true)) return;
+            if (props.isTyping) return;
+            if (res?.props?.children?.type !== "svg") return;
+            const userId = getUserIdFromAvatar(props);
+            if (!userId) return;
+            res.props.children = React.createElement(ErrorBoundary, {
+                id: "StatusIndicator",
+                mini: true
+            }, React.createElement(StatusIndicator, {
+                userId,
+                svg: res.props.children
+            }));
+        };
+        const AvatarWithStatus = function PlatformIndicatorsAvatarWithStatus(props) {
+            const res = StaticAvatar(props);
+            replaceStatus(props, res);
+            return res;
+        };
+        const PatchedAvatar = function PlatformIndicatorsAvatar(props) {
+            return React.createElement(ErrorBoundary, {
+                id: "PatchedAvatar",
+                mini: true
+            }, React.createElement(AvatarWithStatus, {
+                ...props
+            }));
+        };
+        Patcher.after(
+            ...Webpack.getWithKey(staticAvatarFilter, {
+                target: AvatarModule
+            }),
+            (_, [props], res) => replaceStatus(props, res)
+        );
+        Patcher.after(AnimatedAvatar, "type", (_, __, res) => {
+            if (!Settings.get("showOnAvatars", true)) return;
+            res.type = PatchedAvatar;
         });
     }
     async patchMemberList() {

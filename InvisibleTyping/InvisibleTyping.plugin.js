@@ -258,12 +258,37 @@ const {
     SwitchInput
 } = Components;
 
-function SwitchItem(props) {
+function BetaTag() {
+    return React.createElement(
+        "span", {
+            style: {
+                marginLeft: 8,
+                padding: "0 6px",
+                borderRadius: 16,
+                background: "var(--brand-500, #5865f2)",
+                color: "#fff",
+                fontSize: 12,
+                fontWeight: 700,
+                lineHeight: "16px",
+                textTransform: "uppercase",
+                verticalAlign: "middle"
+            }
+        },
+        "Beta"
+    );
+}
+
+function SwitchItem({
+    isBeta = false,
+    ...props
+}) {
     const value = Hooks.useStateFromStores([Settings], () => Settings.get(props.id, props.value));
+    const name = isBeta ? React.createElement(React.Fragment, null, props.name, React.createElement(BetaTag, null)) : props.name;
     return React.createElement(ErrorBoundary, {
         id: props.id
     }, React.createElement(SettingItem, {
         ...props,
+        name,
         inline: true
     }, React.createElement(SwitchInput, {
         value,
