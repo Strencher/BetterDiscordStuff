@@ -1,6 +1,6 @@
 /**
  * @name APlatformIndicators
- * @version 1.7.0
+ * @version 1.7.1
  * @author Strencher
  * @authorId 415849376598982656
  * @description Adds indicators for every platform that the user is using.
@@ -14,7 +14,7 @@
 const manifest = {
     "$schema": "../common/Schemas/manifest.schema.json",
     "name": "APlatformIndicators",
-    "version": "1.7.0",
+    "version": "1.7.1",
     "author": "Strencher",
     "authorId": "415849376598982656",
     "description": "Adds indicators for every platform that the user is using.",
@@ -31,17 +31,21 @@ const manifest = {
                 ]
             },
             {
-                "title": "No more jumping",
+                "title": "Some Bugs squashed",
                 "type": "fixed",
                 "items": [
-                    "When clicking a DM, the list no longer jumps to the top"
+                    "When clicking a DM, the list no longer jumps to the top",
+                    "Indicators in popout windows (e.g. a popped out voice channel chat) are no longer shown on their own line"
                 ]
             },
             {
-                "title": "Harder to break",
+                "title": "Some Improvements",
                 "type": "improved",
                 "items": [
-                    "The plugin now finds Discord's components more precisely, so future Discord updates are less likely to make indicators vanish"
+                    "The plugin now finds Discord's components more precisely, so future Discord updates are less likely to make indicators vanish",
+                    "Indicators now use Discord's own status colors and are easier to style with themes or custom CSS",
+                    "The Platform Indicator on Avatars now cuts out the shape of the icon instead of a square",
+                    "The console icon on Avatars is a bit smaller"
                 ]
             }
         ]
@@ -125,14 +129,46 @@ function showChangelog(manifest) {
 
 /* @styles */
 
+
+const STYLE_ID = manifest.name + "-popout-styles";
+
 var Styles$2 = {
     sheets: [],
     _element: null,
+    _listener: null,
+    get _store() {
+        return Webpack.getStore("PopoutWindowStore");
+    },
+    _forEachPopout(cb) {
+        if (!this._store) return;
+        for (const key of this._store.getWindowKeys()) {
+            const doc = this._store.getWindow(key)?.document;
+            if (doc) cb(doc);
+        }
+    },
+    _injectPopouts() {
+        const css = this.sheets.join("\n");
+        this._forEachPopout(doc => {
+            if (doc.getElementById(STYLE_ID)) return;
+            DOM.createElement("style", {
+                id: STYLE_ID,
+                target: doc.body
+            }, css);
+        });
+    },
     load() {
         DOM.addStyle(this.sheets.join("\n"));
+        if (!this._store) return;
+        this._listener = () => this._injectPopouts();
+        this._store.addChangeListener(this._listener);
+        this._injectPopouts();
     },
     unload() {
         DOM.removeStyle();
+        if (!this._store) return;
+        if (this._listener) this._store.removeChangeListener(this._listener);
+        this._listener = null;
+        this._forEachPopout(doc => doc.getElementById(STYLE_ID)?.remove());
     }
 };
 
@@ -339,10 +375,12 @@ const UserStore = Webpack.getStore("UserStore");
 const PresenceStore = Webpack.getStore("PresenceStore");
 Webpack.getByKeys("useSyncExternalStore");
 Webpack.getByKeys("Store");
-const StatusTypes = Webpack.getModule((x) => x.DND && x.OFFLINE, {
-    searchExports: true
+const {
+    useStatusFillColor
+} = Webpack.getMangled(["STATUS_ONLINE_MOBILE", ".hex"], {
+    useStatusFillColor: Webpack.Filters.byStrings(".hex")
+    // eslint-disable-next-line no-unused-vars
 });
-const Colors = Webpack.getByKeys("unsafe_rawColors")?.unsafe_rawColors;
 const Intl$1 = Webpack.getModule((x) => x.intl);
 const formatMessage = (key) => Intl$1.intl.formatToMarkdownString(Intl$1.t[key]);
 const Messages = {
@@ -373,11 +411,11 @@ const buildClassName = (...args) => {
 /* modules/usePlatformStores.ts */
 const isStreaming = () => LocalActivityStore.getActivities().some((e) => e.type === 1);
 
-function usePlatformStores(userId, type) {
+function usePlatformStores(userId, location) {
     const user = Hooks.useStateFromStores([UserStore], () => UserStore.getUser(userId));
     const sessions = Hooks.useStateFromStores([SessionsStore], () => SessionsStore.getSessions());
     const iconStates = Settings.get("icons", {});
-    const shownInArea = Settings.get("showIn" + type, true);
+    const shownInArea = Settings.get("showIn" + location, true);
     const ignoreBots = Settings.get("ignoreBots", true) && (user?.bot ?? false);
     const shouldShow = shownInArea && !ignoreBots;
     const clients = (() => {
@@ -403,120 +441,108 @@ function usePlatformStores(userId, type) {
     };
 }
 
-/* modules/utils.ts */
-const findInReactTree = (tree, filter) => Utils.findInTree(tree, filter, {
-    walkable: ["props", "children", "type"]
-});
-const upperFirst = (string) => string.charAt(0).toUpperCase() + string.slice(1);
-
-function getStatusText(key, status) {
-    return (key === "vr" ? "VR" : upperFirst(key)) + ": " + Messages[`STATUS_${(status === "mobile" ? "mobile_online" : status).toUpperCase()}`];
-}
-
-function getStatusColor(status) {
-    switch (status) {
-        case StatusTypes.ONLINE:
-            return Colors.GREEN_360?.css;
-        case StatusTypes.IDLE:
-            return Colors.YELLOW_300?.css;
-        case StatusTypes.DND:
-            return Colors.RED_400?.css;
-        case StatusTypes.STREAMING:
-            return Colors.PLATFORM_TWITCH?.css;
-        case StatusTypes.INVISIBLE:
-        case StatusTypes.UNKNOWN:
-        case StatusTypes.OFFLINE:
-        default:
-            return Colors.PRIMARY_400?.css;
-    }
-}
-
 /* components/icons/desktop.tsx */
 function Desktop(props) {
-    return React.createElement("svg", {
-        className: "PI-icon_desktop",
-        width: "24",
-        height: "24",
-        viewBox: "0 -2.5 28 28",
-        ...props
-    }, React.createElement(
-        "path", {
-            fill: "currentColor",
-            d: "M4 2.5C2.897 2.5 2 3.397 2 4.5V15.5C2 16.604 2.897 17.5 4 17.5H11V19.5H7V21.5H17V19.5H13V17.5H20C21.103 17.5 22 16.604 22 15.5V4.5C22 3.397 21.103 2.5 20 2.5H4ZM20 4.5V13.5H4V4.5H20Z"
-        }
-    ));
+    return React.createElement(
+        "svg", {
+            width: "24",
+            height: "24",
+            viewBox: "0 -2.5 28 28",
+            ...props,
+            className: buildClassName("PlatformIndicator-Icon", props.className)
+        },
+        React.createElement(
+            "path", {
+                fill: "currentColor",
+                d: "M4 2.5C2.897 2.5 2 3.397 2 4.5V15.5C2 16.604 2.897 17.5 4 17.5H11V19.5H7V21.5H17V19.5H13V17.5H20C21.103 17.5 22 16.604 22 15.5V4.5C22 3.397 21.103 2.5 20 2.5H4ZM20 4.5V13.5H4V4.5H20Z"
+            }
+        )
+    );
 }
 
 /* components/icons/embedded.tsx */
 function Embedded(props) {
-    return React.createElement("svg", {
-        className: "PI-icon_embedded",
-        width: "24",
-        height: "24",
-        viewBox: "0 -2.5 28 28",
-        ...props
-    }, React.createElement(
-        "path", {
-            fill: "currentColor",
-            d: "M5.79335761,5 L18.2066424,5 C19.7805584,5 21.0868816,6.21634264 21.1990185,7.78625885 L21.8575059,17.0050826 C21.9307825,18.0309548 21.1585512,18.9219909 20.132679,18.9952675 C20.088523,18.9984215 20.0442685,19 20,19 C18.8245863,19 17.8000084,18.2000338 17.5149287,17.059715 L17,15 L7,15 L6.48507125,17.059715 C6.19999155,18.2000338 5.1754137,19 4,19 C2.97151413,19 2.13776159,18.1662475 2.13776159,17.1377616 C2.13776159,17.0934931 2.1393401,17.0492386 2.1424941,17.0050826 L2.80098151,7.78625885 C2.91311838,6.21634264 4.21944161,5 5.79335761,5 Z M14.5,10 C15.3284271,10 16,9.32842712 16,8.5 C16,7.67157288 15.3284271,7 14.5,7 C13.6715729,7 13,7.67157288 13,8.5 C13,9.32842712 13.6715729,10 14.5,10 Z M18.5,13 C19.3284271,13 20,12.3284271 20,11.5 C20,10.6715729 19.3284271,10 18.5,10 C17.6715729,10 17,10.6715729 17,11.5 C17,12.3284271 17.6715729,13 18.5,13 Z M6,9 L4,9 L4,11 L6,11 L6,13 L8,13 L8,11 L10,11 L10,9 L8,9 L8,7 L6,7 L6,9 Z"
-        }
-    ));
+    return React.createElement(
+        "svg", {
+            width: "24",
+            height: "24",
+            viewBox: "0 -2.5 28 28",
+            ...props,
+            className: buildClassName("PlatformIndicator-Icon", props.className)
+        },
+        React.createElement(
+            "path", {
+                fill: "currentColor",
+                d: "M5.79335761,5 L18.2066424,5 C19.7805584,5 21.0868816,6.21634264 21.1990185,7.78625885 L21.8575059,17.0050826 C21.9307825,18.0309548 21.1585512,18.9219909 20.132679,18.9952675 C20.088523,18.9984215 20.0442685,19 20,19 C18.8245863,19 17.8000084,18.2000338 17.5149287,17.059715 L17,15 L7,15 L6.48507125,17.059715 C6.19999155,18.2000338 5.1754137,19 4,19 C2.97151413,19 2.13776159,18.1662475 2.13776159,17.1377616 C2.13776159,17.0934931 2.1393401,17.0492386 2.1424941,17.0050826 L2.80098151,7.78625885 C2.91311838,6.21634264 4.21944161,5 5.79335761,5 Z M14.5,10 C15.3284271,10 16,9.32842712 16,8.5 C16,7.67157288 15.3284271,7 14.5,7 C13.6715729,7 13,7.67157288 13,8.5 C13,9.32842712 13.6715729,10 14.5,10 Z M18.5,13 C19.3284271,13 20,12.3284271 20,11.5 C20,10.6715729 19.3284271,10 18.5,10 C17.6715729,10 17,10.6715729 17,11.5 C17,12.3284271 17.6715729,13 18.5,13 Z M6,9 L4,9 L4,11 L6,11 L6,13 L8,13 L8,11 L10,11 L10,9 L8,9 L8,7 L6,7 L6,9 Z"
+            }
+        )
+    );
 }
 
 /* components/icons/mobile.tsx */
 function Mobile(props) {
-    return React.createElement("svg", {
-        className: "PI-icon_mobile",
-        width: "24",
-        height: "24",
-        transform: "scale(0.9)",
-        viewBox: "0 -2.5 32 44",
-        ...props
-    }, React.createElement(
-        "path", {
-            fill: "currentColor",
-            d: "M 2.882812 0.246094 C 1.941406 0.550781 0.519531 2.007812 0.230469 2.953125 C 0.0585938 3.542969 0 7.234375 0 17.652344 L 0 31.554688 L 0.5 32.558594 C 1.117188 33.769531 2.152344 34.5625 3.519531 34.847656 C 4.210938 35 7.078125 35.058594 12.597656 35 C 20.441406 34.941406 20.691406 34.925781 21.441406 34.527344 C 22.347656 34.054688 23.078125 33.3125 23.578125 32.386719 C 23.921875 31.761719 23.941406 30.964844 24 18.085938 C 24.039062 8.503906 24 4.167969 23.847656 3.464844 C 23.558594 2.121094 22.75 1.097656 21.519531 0.492188 L 20.5 0 L 12.039062 0.0195312 C 6.402344 0.0390625 3.328125 0.113281 2.882812 0.246094 Z M 20.382812 14.582031 L 20.382812 22.917969 L 3.652344 22.917969 L 3.652344 6.25 L 20.382812 6.25 Z M 13.789062 27.539062 C 14.5 28.296875 14.597656 29.035156 14.132812 29.925781 C 13.308594 31.496094 10.671875 31.421875 9.902344 29.8125 C 9.539062 29.054688 9.539062 28.730469 9.902344 28.011719 C 10.691406 26.535156 12.632812 26.308594 13.789062 27.539062 Z M 13.789062 27.539062 "
-        }
-    ));
+    return React.createElement(
+        "svg", {
+            width: "24",
+            height: "24",
+            transform: "scale(0.9)",
+            viewBox: "0 -2.5 32 44",
+            ...props,
+            className: buildClassName("PlatformIndicator-Icon", props.className)
+        },
+        React.createElement(
+            "path", {
+                fill: "currentColor",
+                d: "M 2.882812 0.246094 C 1.941406 0.550781 0.519531 2.007812 0.230469 2.953125 C 0.0585938 3.542969 0 7.234375 0 17.652344 L 0 31.554688 L 0.5 32.558594 C 1.117188 33.769531 2.152344 34.5625 3.519531 34.847656 C 4.210938 35 7.078125 35.058594 12.597656 35 C 20.441406 34.941406 20.691406 34.925781 21.441406 34.527344 C 22.347656 34.054688 23.078125 33.3125 23.578125 32.386719 C 23.921875 31.761719 23.941406 30.964844 24 18.085938 C 24.039062 8.503906 24 4.167969 23.847656 3.464844 C 23.558594 2.121094 22.75 1.097656 21.519531 0.492188 L 20.5 0 L 12.039062 0.0195312 C 6.402344 0.0390625 3.328125 0.113281 2.882812 0.246094 Z M 20.382812 14.582031 L 20.382812 22.917969 L 3.652344 22.917969 L 3.652344 6.25 L 20.382812 6.25 Z M 13.789062 27.539062 C 14.5 28.296875 14.597656 29.035156 14.132812 29.925781 C 13.308594 31.496094 10.671875 31.421875 9.902344 29.8125 C 9.539062 29.054688 9.539062 28.730469 9.902344 28.011719 C 10.691406 26.535156 12.632812 26.308594 13.789062 27.539062 Z M 13.789062 27.539062 "
+            }
+        )
+    );
 }
 
 /* components/icons/vr.tsx */
 function VR(props) {
-    return React.createElement("svg", {
-        className: "PI-icon_vr",
-        width: "24",
-        height: "24",
-        viewBox: "0 -2.5 28 28",
-        ...props
-    }, React.createElement(
-        "path", {
-            fill: "currentColor",
-            d: "M8.46 8.64a1 1 0 0 1 1 1c0 .44-.3.8-.72.92l-.11.07c-.08.06-.2.19-.2.41a.99.99 0 0 1-.98.86h-.06a1 1 0 0 1-.94-1.05l.02-.32c.05-1.06.92-1.9 1.99-1.9Z"
-        }
-    ), React.createElement(
-        "path", {
-            fill: "currentColor",
-            fillRule: "evenodd",
-            clipRule: "evenodd",
-            d: "M15.55 5a5.5 5.5 0 0 1 5.15 3.67h.3a2 2 0 0 1 2 2v3.18a2 2 0 0 1-2 1.99h-.2A4.54 4.54 0 0 1 16.55 19a4.45 4.45 0 0 1-3.6-1.83 1.2 1.2 0 0 0-1.9 0 4.44 4.44 0 0 1-3.9 1.82 4.54 4.54 0 0 1-3.94-3.15H3a2 2 0 0 1-2-2v-3.18c0-1.1.9-1.99 2-1.99h.3A5.5 5.5 0 0 1 8.46 5h7.09Zm-7.1 2C6.6 7 5.06 8.5 4.97 10.41l-.02.66v3.18c0 1.43 1.05 2.66 2.34 2.74.85.06 1.63-.32 2.14-1.01a3.2 3.2 0 0 1 2.57-1.3c1 0 1.97.48 2.57 1.3.5.69 1.3 1.08 2.14 1.01 1.3-.08 2.34-1.31 2.34-2.74l-.02-3.84a3.54 3.54 0 0 0-3.49-3.43H8.45Z"
-        }
-    ));
+    return React.createElement(
+        "svg", {
+            width: "24",
+            height: "24",
+            viewBox: "0 -2.5 28 28",
+            ...props,
+            className: buildClassName("PlatformIndicator-Icon", props.className)
+        },
+        React.createElement(
+            "path", {
+                fill: "currentColor",
+                d: "M8.46 8.64a1 1 0 0 1 1 1c0 .44-.3.8-.72.92l-.11.07c-.08.06-.2.19-.2.41a.99.99 0 0 1-.98.86h-.06a1 1 0 0 1-.94-1.05l.02-.32c.05-1.06.92-1.9 1.99-1.9Z"
+            }
+        ),
+        React.createElement(
+            "path", {
+                fill: "currentColor",
+                fillRule: "evenodd",
+                clipRule: "evenodd",
+                d: "M15.55 5a5.5 5.5 0 0 1 5.15 3.67h.3a2 2 0 0 1 2 2v3.18a2 2 0 0 1-2 1.99h-.2A4.54 4.54 0 0 1 16.55 19a4.45 4.45 0 0 1-3.6-1.83 1.2 1.2 0 0 0-1.9 0 4.44 4.44 0 0 1-3.9 1.82 4.54 4.54 0 0 1-3.94-3.15H3a2 2 0 0 1-2-2v-3.18c0-1.1.9-1.99 2-1.99h.3A5.5 5.5 0 0 1 8.46 5h7.09Zm-7.1 2C6.6 7 5.06 8.5 4.97 10.41l-.02.66v3.18c0 1.43 1.05 2.66 2.34 2.74.85.06 1.63-.32 2.14-1.01a3.2 3.2 0 0 1 2.57-1.3c1 0 1.97.48 2.57 1.3.5.69 1.3 1.08 2.14 1.01 1.3-.08 2.34-1.31 2.34-2.74l-.02-3.84a3.54 3.54 0 0 0-3.49-3.43H8.45Z"
+            }
+        )
+    );
 }
 
 /* components/icons/web.tsx */
 function Web(props) {
-    return React.createElement("svg", {
-        className: "PI-icon_web",
-        width: "24",
-        height: "24",
-        viewBox: "0 -2.5 28 28",
-        ...props
-    }, React.createElement(
-        "path", {
-            fill: "currentColor",
-            d: "M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM11 19.93C7.05 19.44 4 16.08 4 12C4 11.38 4.08 10.79 4.21 10.21L9 15V16C9 17.1 9.9 18 11 18V19.93ZM17.9 17.39C17.64 16.58 16.9 16 16 16H15V13C15 12.45 14.55 12 14 12H8V10H10C10.55 10 11 9.55 11 9V7H13C14.1 7 15 6.1 15 5V4.59C17.93 5.78 20 8.65 20 12C20 14.08 19.2 15.97 17.9 17.39Z"
-        }
-    ));
+    return React.createElement(
+        "svg", {
+            width: "24",
+            height: "24",
+            viewBox: "0 -2.5 28 28",
+            ...props,
+            className: buildClassName("PlatformIndicator-Icon", props.className)
+        },
+        React.createElement(
+            "path", {
+                fill: "currentColor",
+                d: "M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM11 19.93C7.05 19.44 4 16.08 4 12C4 11.38 4.08 10.79 4.21 10.21L9 15V16C9 17.1 9.9 18 11 18V19.93ZM17.9 17.39C17.64 16.58 16.9 16 16 16H15V13C15 12.45 14.55 12 14 12H8V10H10C10.55 10 11 9.55 11 9V7H13C14.1 7 15 6.1 15 5V4.59C17.93 5.78 20 8.65 20 12C20 14.08 19.2 15.97 17.9 17.39Z"
+            }
+        )
+    );
 }
 
 /* components/icons/index.ts */
@@ -530,36 +556,191 @@ var Icons = /*#__PURE__*/ Object.freeze({
     web: Web
 });
 
-/* components/indicators/style.scss */
-Styles$2.sheets.push("/* components/indicators/style.scss */", `.indicatorContainer {
+/* components/platformIcon.tsx */
+function PlatformIcon({
+    platform,
+    status,
+    style,
+    ...props
+}) {
+    const Icon = Icons[platform];
+    const color = useStatusFillColor(status);
+    return React.createElement(Icon, {
+        ...props,
+        style: {
+            color,
+            ...style
+        },
+        "data-status": status,
+        "data-platform": platform
+    });
+}
+
+/* components/avatarIndicator.tsx */
+const ICON_BOUNDS = {
+    desktop: [2, 2, 20, 20],
+    web: [2, 2, 20, 20],
+    vr: [1, 4, 22, 16],
+    embedded: [2, 5, 20, 14],
+    mobile: [0, 0, 24, 35]
+};
+const ICON_HEIGHT = {
+    desktop: 1.2,
+    web: 1.2,
+    embedded: 1,
+    mobile: 1.5,
+    vr: 1.1
+};
+const ICON_OUTLINES = {
+    desktop: "M4 2.5C2.897 2.5 2 3.397 2 4.5V15.5C2 16.604 2.897 17.5 4 17.5H11V19.5H7V21.5H17V19.5H13V17.5H20C21.103 17.5 22 16.604 22 15.5V4.5C22 3.397 21.103 2.5 20 2.5H4Z",
+    web: "M12 2a10 10 0 1 0 0 20a10 10 0 1 0 0-20Z",
+    mobile: "M 2.882812 0.246094 C 1.941406 0.550781 0.519531 2.007812 0.230469 2.953125 C 0.0585938 3.542969 0 7.234375 0 17.652344 L 0 31.554688 L 0.5 32.558594 C 1.117188 33.769531 2.152344 34.5625 3.519531 34.847656 C 4.210938 35 7.078125 35.058594 12.597656 35 C 20.441406 34.941406 20.691406 34.925781 21.441406 34.527344 C 22.347656 34.054688 23.078125 33.3125 23.578125 32.386719 C 23.921875 31.761719 23.941406 30.964844 24 18.085938 C 24.039062 8.503906 24 4.167969 23.847656 3.464844 C 23.558594 2.121094 22.75 1.097656 21.519531 0.492188 L 20.5 0 L 12.039062 0.0195312 C 6.402344 0.0390625 3.328125 0.113281 2.882812 0.246094 Z",
+    vr: "M15.55 5a5.5 5.5 0 0 1 5.15 3.67h.3a2 2 0 0 1 2 2v3.18a2 2 0 0 1-2 1.99h-.2A4.54 4.54 0 0 1 16.55 19a4.45 4.45 0 0 1-3.6-1.83 1.2 1.2 0 0 0-1.9 0 4.44 4.44 0 0 1-3.9 1.82 4.54 4.54 0 0 1-3.94-3.15H3a2 2 0 0 1-2-2v-3.18c0-1.1.9-1.99 2-1.99h.3A5.5 5.5 0 0 1 8.46 5h7.09Z",
+    embedded: "M5.79335761,5 L18.2066424,5 C19.7805584,5 21.0868816,6.21634264 21.1990185,7.78625885 L21.8575059,17.0050826 C21.9307825,18.0309548 21.1585512,18.9219909 20.132679,18.9952675 C20.088523,18.9984215 20.0442685,19 20,19 C18.8245863,19 17.8000084,18.2000338 17.5149287,17.059715 L17,15 L7,15 L6.48507125,17.059715 C6.19999155,18.2000338 5.1754137,19 4,19 C2.97151413,19 2.13776159,18.1662475 2.13776159,17.1377616 C2.13776159,17.0934931 2.1393401,17.0492386 2.1424941,17.0050826 L2.80098151,7.78625885 C2.91311838,6.21634264 4.21944161,5 5.79335761,5 Z"
+};
+const CUTOUT_STROKE = 0.3;
+const walkable = {
+    walkable: ["props", "children"]
+};
+const isStatusRect = (e) => e?.type === "rect" && typeof e.props?.mask === "string";
+const isBackdrop = (e) => (e?.type === "circle" || e?.type === "rect") && e.props?.mask == null;
+
+function getUserIdFromAvatar(props) {
+    return typeof props["aria-label"] === "string" ? UserStore.findByTag(props["aria-label"])?.id : void 0;
+}
+
+function AvatarIndicator({
+    userId,
+    svg
+}) {
+    const maskId = React.useId();
+    const {
+        clients,
+        iconStates,
+        shouldShow
+    } = usePlatformStores(userId, "Avatar");
+    const platform = Object.keys(clients).find((key) => (iconStates[key] ?? true) && key in Icons);
+    if (!shouldShow || !platform) return svg;
+    const avatar = Utils.findInTree(svg, (e) => e?.type === "foreignObject", walkable);
+    const statusGroup = Utils.findInTree(
+        svg,
+        (e) => Array.isArray(e?.children) && e.children.some(isStatusRect),
+        walkable
+    );
+    if (!avatar || !statusGroup) return svg;
+    const index = statusGroup.children.findIndex(isStatusRect);
+    const {
+        x,
+        y,
+        width: dotWidth,
+        height: dotHeight,
+        className
+    } = statusGroup.children[index].props;
+    const dotSize = Math.min(dotWidth, dotHeight);
+    const [viewX, viewY, viewWidth, viewHeight] = ICON_BOUNDS[platform];
+    const height = dotSize * ICON_HEIGHT[platform];
+    const width = height * (viewWidth / viewHeight);
+    const iconX = x + dotWidth - width;
+    const iconY = y + dotHeight - height;
+    const scale = width / viewWidth;
+    const outline = {
+        d: ICON_OUTLINES[platform],
+        transform: `translate(${iconX - viewX * scale} ${iconY - viewY * scale}) scale(${scale})`,
+        strokeWidth: dotSize * CUTOUT_STROKE * 2 / scale,
+        strokeLinejoin: "round"
+    };
+    const size = avatar.props.width;
+    const mask = React.createElement(
+        "mask", {
+            key: "platform-indicators-mask",
+            id: maskId,
+            maskUnits: "userSpaceOnUse",
+            x: 0,
+            y: 0,
+            width: size,
+            height: size
+        },
+        React.createElement("circle", {
+            cx: size / 2,
+            cy: size / 2,
+            r: size / 2,
+            fill: "white"
+        }),
+        React.createElement("path", {
+            ...outline,
+            fill: "black",
+            stroke: "black"
+        })
+    );
+    avatar.props.mask = `url(#${maskId})`;
+    svg.props.children = [mask, ...svg.props.children].map(
+        (child) => isBackdrop(child) ? React.createElement(
+            "path", {
+                key: "platform-indicators-backdrop",
+                ...outline,
+                fill: child.props.fill,
+                stroke: child.props.fill,
+                style: child.props.style
+            }
+        ) : child
+    );
+    statusGroup.children[index] = React.createElement(
+        PlatformIcon, {
+            platform,
+            status: clients[platform],
+            x: iconX,
+            y: iconY,
+            width,
+            height,
+            viewBox: `${viewX} ${viewY} ${viewWidth} ${viewHeight}`,
+            transform: void 0,
+            className,
+            "data-location": "avatar"
+        }
+    );
+    return svg;
+}
+
+/* modules/utils.ts */
+const findInReactTree = (tree, filter) => Utils.findInTree(tree, filter, {
+    walkable: ["props", "children", "type"]
+});
+const upperFirst = (string) => string.charAt(0).toUpperCase() + string.slice(1);
+
+function getStatusText(key, status) {
+    return (key === "vr" ? "VR" : upperFirst(key)) + ": " + Messages[`STATUS_${(status === "mobile" ? "mobile_online" : status).toUpperCase()}`];
+}
+
+/* components/platformIndicator/style.scss */
+Styles$2.sheets.push("/* components/platformIndicator/style.scss */", `.platform-indicator {
   display: inline-flex;
   vertical-align: bottom;
   margin-left: 5px;
 }
-.indicatorContainer svg {
+.platform-indicator svg {
   margin-left: -2px;
 }
-.indicatorContainer div:first-child svg {
+.platform-indicator div:first-child svg {
   margin-left: 2px;
 }
-.indicatorContainer.type_Chat {
+.platform-indicator[data-location=chat] {
   margin-right: -6px;
   margin-top: 2px;
   vertical-align: top;
 }
-.indicatorContainer.type_Favorites {
+.platform-indicator[data-location=favorites] {
   vertical-align: middle;
 }
-.indicatorContainer.type_FriendList {
+.platform-indicator[data-location=friendlist] {
   align-self: center;
   margin-left: 12px;
 }
-.indicatorContainer.type_FriendList svg {
+.platform-indicator[data-location=friendlist] svg {
   height: 22px;
   width: 22px;
 }
 
-.PI-icon_mobile {
+.PlatformIndicator-Icon[data-platform=mobile] {
   position: relative;
   top: 1px;
 }
@@ -570,51 +751,44 @@ Styles$2.sheets.push("/* components/indicators/style.scss */", `.indicatorContai
   height: 14px;
 }
 
-div[id*=message-reply] .indicatorContainer.type_Chat {
+div[id*=message-reply] .platform-indicator[data-location=chat] {
   margin-left: 0;
   margin-right: 2px;
 }`);
 var Styles$1 = {
-    "indicatorContainer": "indicatorContainer",
-    "type_Chat": "type_Chat",
-    "type_Favorites": "type_Favorites",
-    "type_FriendList": "type_FriendList",
-    "PIIcon_mobile": "PI-icon_mobile",
+    "platformIndicator": "platform-indicator",
     "badge_separator": "badge_separator"
 };
 
-/* components/indicators/index.tsx */
-function StatusIndicators({
-    type,
+/* components/platformIndicator/index.tsx */
+function PlatformIndicator({
+    location,
     userId,
     size = 18,
     separator = false
 }) {
-    const state = usePlatformStores(userId, type);
+    const state = usePlatformStores(userId, location);
     if (!Object.keys(state.clients).length || !state.shouldShow) return null;
     return React.createElement(React.Fragment, null, separator && React.createElement("span", {
         className: Styles$1.badge_separator
     }), React.createElement("div", {
-        className: buildClassName(Styles$1.indicatorContainer, Styles$1["type_" + type]),
+        className: Styles$1.platformIndicator,
+        "data-location": location.toLowerCase(),
         "data-id": userId
-    }, Object.entries(state.clients).filter(([key]) => (state.iconStates[key] ?? true) && key in Icons).map(([key, status]) => {
-        const Icon = Icons[key];
-        return React.createElement(Components.Tooltip, {
-            key,
-            text: getStatusText(key, status)
-        }, (props) => React.createElement(
-            Icon, {
-                text: getStatusText(key, status),
-                style: {
-                    color: getStatusColor(status)
-                },
-                width: size,
-                height: size,
-                "data-status": status,
-                ...props
-            }
-        ));
-    })));
+    }, Object.entries(state.clients).filter(([key]) => (state.iconStates[key] ?? true) && key in Icons).map(([key, status]) => React.createElement(Components.Tooltip, {
+        key,
+        text: getStatusText(key, status)
+    }, (props) => React.createElement(
+        PlatformIcon, {
+            platform: key,
+            status,
+            text: getStatusText(key, status),
+            "data-location": location.toLowerCase(),
+            width: size,
+            height: size,
+            ...props
+        }
+    )))));
 }
 
 /* settings.json */
@@ -823,16 +997,15 @@ function SmartDisable({
         key: item.id,
         className: Styles.item,
         onClick: () => handleClick(item.id)
-    }, ["online", "dnd", "idle", "offline"].map(
-        (status) => React.createElement(Icons[item.icon], {
+    }, ["online", "dnd", "idle", "offline"].map((status) => React.createElement(
+        PlatformIcon, {
             key: status,
-            style: {
-                color: getStatusColor(status)
-            },
+            platform: item.icon,
+            status,
             width: iconSize,
             height: iconSize
-        })
-    ), React.createElement(
+        }
+    )), React.createElement(
         Checkbox, {
             width: iconSize,
             height: iconSize,
@@ -851,123 +1024,6 @@ function SettingsPanel() {
     });
 }
 
-/* components/statusIndicator.tsx */
-const ICON_BOUNDS = {
-    desktop: [2, 2, 20, 20],
-    web: [2, 2, 20, 20],
-    vr: [1, 4, 22, 16],
-    embedded: [2, 5, 20, 14],
-    mobile: [0, 0, 24, 35]
-};
-const ICON_HEIGHT = {
-    desktop: 1.2,
-    web: 1.2,
-    embedded: 1.2,
-    mobile: 1.5,
-    vr: 1.1
-};
-const CUTOUT_STROKE = 0.3;
-const walkable = {
-    walkable: ["props", "children"]
-};
-const isStatusRect = (e) => e?.type === "rect" && typeof e.props?.mask === "string";
-const isBackdrop = (e) => (e?.type === "circle" || e?.type === "rect") && e.props?.mask == null;
-
-function getUserIdFromAvatar(props) {
-    return typeof props["aria-label"] === "string" ? UserStore.findByTag(props["aria-label"])?.id : void 0;
-}
-
-function StatusIndicator({
-    userId,
-    svg
-}) {
-    const maskId = React.useId();
-    const {
-        clients,
-        iconStates,
-        shouldShow
-    } = usePlatformStores(userId, "Avatar");
-    const platform = Object.keys(clients).find((key) => (iconStates[key] ?? true) && key in Icons);
-    if (!shouldShow || !platform) return svg;
-    const avatar = Utils.findInTree(svg, (e) => e?.type === "foreignObject", walkable);
-    const statusGroup = Utils.findInTree(
-        svg,
-        (e) => Array.isArray(e?.children) && e.children.some(isStatusRect),
-        walkable
-    );
-    if (!avatar || !statusGroup) return svg;
-    const index = statusGroup.children.findIndex(isStatusRect);
-    const {
-        x,
-        y,
-        width: dotWidth,
-        height: dotHeight,
-        fill,
-        className
-    } = statusGroup.children[index].props;
-    const dotSize = Math.min(dotWidth, dotHeight);
-    const [viewX, viewY, viewWidth, viewHeight] = ICON_BOUNDS[platform];
-    const height = dotSize * ICON_HEIGHT[platform];
-    const width = height * (viewWidth / viewHeight);
-    const iconX = x + dotWidth - width;
-    const iconY = y + dotHeight - height;
-    const stroke = dotSize * CUTOUT_STROKE;
-    const cutout = {
-        x: iconX - stroke,
-        y: iconY - stroke,
-        width: width + stroke * 2,
-        height: height + stroke * 2,
-        rx: stroke
-    };
-    const size = avatar.props.width;
-    const mask = React.createElement(
-        "mask", {
-            key: "platform-indicators-mask",
-            id: maskId,
-            maskUnits: "userSpaceOnUse",
-            x: 0,
-            y: 0,
-            width: size,
-            height: size
-        },
-        React.createElement("circle", {
-            cx: size / 2,
-            cy: size / 2,
-            r: size / 2,
-            fill: "white"
-        }),
-        React.createElement("rect", {
-            ...cutout,
-            fill: "black"
-        })
-    );
-    avatar.props.mask = `url(#${maskId})`;
-    svg.props.children = [mask, ...svg.props.children].map(
-        (child) => isBackdrop(child) ? React.createElement("rect", {
-            key: "platform-indicators-backdrop",
-            ...cutout,
-            fill: child.props.fill,
-            style: child.props.style
-        }) : child
-    );
-    const Icon = Icons[platform];
-    statusGroup.children[index] = React.createElement(
-        Icon, {
-            x: iconX,
-            y: iconY,
-            width,
-            height,
-            viewBox: `${viewX} ${viewY} ${viewWidth} ${viewHeight}`,
-            transform: void 0,
-            className,
-            style: {
-                color: fill
-            }
-        }
-    );
-    return svg;
-}
-
 /* index.jsx */
 class PlatformIndicators {
     getSettingsPanel() {
@@ -978,7 +1034,7 @@ class PlatformIndicators {
         showChangelog(manifest);
         this.patchDMList();
         this.patchFavorites();
-        this.patchStatusIndicator();
+        this.patchAvatarIndicator();
         this.patchMemberList();
         this.patchChat();
         this.patchBadges();
@@ -1025,9 +1081,9 @@ class PlatformIndicators {
             child.style = {
                 width: "fit-content"
             };
-            child.children.push(React.createElement(StatusIndicators, {
+            child.children.push(React.createElement(PlatformIndicator, {
                 userId: user.id,
-                type: "DMs"
+                location: "DMs"
             }));
         });
     }
@@ -1051,14 +1107,14 @@ class PlatformIndicators {
             if (!name) return;
             name.props.children = [
                 name.props.children,
-                React.createElement(StatusIndicators, {
+                React.createElement(PlatformIndicator, {
                     userId: channel.getRecipientId(),
-                    type: "Favorites"
+                    location: "Favorites"
                 })
             ];
         });
     }
-    async patchStatusIndicator() {
+    async patchAvatarIndicator() {
         const AvatarModule = await Webpack.waitForModule(Webpack.Filters.bySource("AvatarImg", "getMaskId()"));
         const staticAvatarFilter = Webpack.Filters.byStrings("getMaskId()", "statusBackdropColor");
         const StaticAvatar = Object.values(AvatarModule).find(staticAvatarFilter);
@@ -1072,9 +1128,9 @@ class PlatformIndicators {
             const userId = getUserIdFromAvatar(props);
             if (!userId) return;
             res.props.children = React.createElement(ErrorBoundary, {
-                id: "StatusIndicator",
+                id: "AvatarIndicator",
                 mini: true
-            }, React.createElement(StatusIndicator, {
+            }, React.createElement(AvatarIndicator, {
                 userId,
                 svg: res.props.children
             }));
@@ -1114,9 +1170,9 @@ class PlatformIndicators {
             if (Settings.get("ignoreBots", true) && user.bot) return;
             const child = findInReactTree(ret, (e) => e?.className?.includes("username"));
             if (user && child) {
-                child.children = [child.children, React.createElement(StatusIndicators, {
+                child.children = [child.children, React.createElement(PlatformIndicator, {
                     userId: user.id,
-                    type: "MemberList"
+                    location: "MemberList"
                 })];
             }
         });
@@ -1132,10 +1188,12 @@ class PlatformIndicators {
             if (!mainProps?.decorations) return;
             const target = mainProps.decorations?.[1];
             if (!Array.isArray(target)) mainProps.decorations[1] = target ? [target] : [];
-            mainProps.decorations[1].unshift(React.createElement(StatusIndicators, {
-                userId: mainProps.message.author.id,
-                type: "Chat"
-            }));
+            mainProps.decorations[1].unshift(
+                React.createElement(PlatformIndicator, {
+                    userId: mainProps.message.author.id,
+                    location: "Chat"
+                })
+            );
         });
     }
     async patchBadges() {
@@ -1148,9 +1206,9 @@ class PlatformIndicators {
             if (!Settings.get("showInBadges", true)) return;
             if (Settings.get("ignoreBots", true) && displayProfile?.application) return;
             if (!displayProfile?.userId) return;
-            res?.props.children.push(React.createElement(StatusIndicators, {
+            res?.props.children.push(React.createElement(PlatformIndicator, {
                 userId: displayProfile.userId,
-                type: "Badge",
+                location: "Badge",
                 separator: true
             }));
         });
@@ -1178,9 +1236,9 @@ class PlatformIndicators {
         }], res) => {
             if (!showAccountIdentifier) return;
             Patcher.after(res, "type", (_2, __, res2) => {
-                res2.props.children.push(React.createElement(StatusIndicators, {
+                res2.props.children.push(React.createElement(PlatformIndicator, {
                     userId: user.id,
-                    type: "FriendList"
+                    location: "FriendList"
                 }));
             });
         });
