@@ -1,5 +1,6 @@
 import "./style.scss";
 
+import { Logger } from "@api";
 import React from "react";
 
 interface ErrorBoundaryProps {
@@ -26,10 +27,7 @@ export default class ErrorBoundary extends React.Component<ErrorBoundaryProps, E
 
     componentDidCatch(error: Error, info: React.ErrorInfo) {
         this.setState({ error, info, hasError: true });
-        console.error(
-            `[ErrorBoundary:${this.props.id}] HI OVER HERE!! SHOW THIS SCREENSHOT TO THE DEVELOPER.\n`,
-            error
-        );
+        Logger.error(`[ErrorBoundary:${this.props.id}] HI OVER HERE!! SHOW THIS SCREENSHOT TO THE DEVELOPER.\n`, error);
     }
 
     render() {
