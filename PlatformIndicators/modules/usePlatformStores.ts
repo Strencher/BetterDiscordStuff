@@ -23,20 +23,14 @@ export default function usePlatformStores(userId: string, location: string): Pla
     const shouldShow = shownInArea && !ignoreBots;
 
     const clients = ((): Record<string, string> => {
-        if (user?.id === UserStore.getCurrentUser()?.id) {
-            if (sessions) {
-                return Object.entries(sessions).reduce<Record<string, string>>(
-                    (acc, [, sessionData]: [string, any]) => {
-                        const client = sessionData.clientInfo.client;
-                        acc[client] = isStreaming() ? "streaming" : sessionData.status;
-                        return acc;
-                    },
-                    {}
-                );
-            }
-            return {};
-        }
-        return PresenceStore.getState().clientStatuses[user?.id] ?? {};
+        if (user?.id !== UserStore.getCurrentUser()?.id) return PresenceStore.getState().clientStatuses[user?.id] ?? {};
+        if (!sessions) return {};
+
+        return Object.entries(sessions).reduce<Record<string, string>>((acc, [, sessionData]: [string, any]) => {
+            const client = sessionData.clientInfo.client;
+            acc[client] = isStreaming() ? "streaming" : sessionData.status;
+            return acc;
+        }, {});
     })();
 
     return { iconStates, shouldShow, clients, user };

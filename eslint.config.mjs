@@ -1,35 +1,28 @@
-import path from "node:path";
-import { fileURLToPath } from "node:url";
-
-import { FlatCompat } from "@eslint/eslintrc";
 import js from "@eslint/js";
-import tsParser from "@typescript-eslint/parser";
+import { defineConfig } from "eslint/config";
 import react from "eslint-plugin-react";
 import simpleImportSort from "eslint-plugin-simple-import-sort";
 import unusedImports from "eslint-plugin-unused-imports";
 import globals from "globals";
+import tseslint from "typescript-eslint";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const compat = new FlatCompat({
-    baseDirectory: __dirname,
-    recommendedConfig: js.configs.recommended,
-    allConfig: js.configs.all
-});
-
-export default [
-    ...compat.extends("eslint:recommended"),
-    ...compat.extends("plugin:react/recommended"),
+export default defineConfig([
+    js.configs.recommended,
+    react.configs.flat.recommended,
+    tseslint.configs.recommended,
     { ignores: ["builds/**", "archive/**"] },
     {
         settings: {
-            react: { version: "19" }
+            react: { version: "19.2" }
         }
     },
     {
         files: ["scripts/**/*.{js,cjs}"],
         languageOptions: {
             globals: { ...globals.node }
+        },
+        rules: {
+            "@typescript-eslint/no-require-imports": "off"
         }
     },
     {
@@ -43,7 +36,7 @@ export default [
                 DiscordNative: true,
                 BetterDiscord: true
             },
-            parser: tsParser,
+            parser: tseslint.parser,
             parserOptions: {
                 ecmaFeatures: {
                     jsx: true
@@ -97,6 +90,7 @@ export default [
             "space-in-parens": "error",
             "space-infix-ops": "error",
             "space-unary-ops": "error",
+            "@typescript-eslint/no-explicit-any": "off",
             "spaced-comment": ["error", "always", { markers: ["/"] }],
             yoda: "error",
             "simple-import-sort/imports": "error",
@@ -104,4 +98,4 @@ export default [
             "unused-imports/no-unused-imports": "error"
         }
     }
-];
+]);

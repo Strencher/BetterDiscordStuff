@@ -1,7 +1,7 @@
 import "./button.css";
 import "./changelog.css";
 
-import { Patcher, ReactUtils } from "@api";
+import { Logger, Patcher, ReactUtils } from "@api";
 import manifest from "@manifest";
 import Styles from "@styles";
 import React from "react";
@@ -30,7 +30,7 @@ export default class Copier {
                 const unpatch = ContextMenus[id]();
                 this.flush.add(unpatch);
             } catch (error) {
-                console.error("[Copier] Could not initialize patch for", id, ":", error);
+                Logger.error("Could not initialize patch for", id, ":", error);
             }
         }
 
@@ -53,7 +53,6 @@ export default class Copier {
         CopyButton.displayName = "CopyButton";
 
         Patcher.after(module, "Z", (_, [{ bio }], res) => {
-            console.log(res);
             const title = findInTree(res, e => e?.variant && Array.isArray(e.children));
 
             if (!title) return res;
@@ -74,7 +73,6 @@ export default class Copier {
                     if (!instance) return;
 
                     for (let curr = instance, max = 100; curr != null && max--; curr = curr?.return) {
-                        max < 5 && console.log(curr);
                         if ((node = curr?.memoizedProps?.children?.type) && node?.$$typeof) {
                             resolve(node);
                             break;
@@ -95,7 +93,7 @@ export default class Copier {
             try {
                 res?.props?.children?.unshift?.(<CopyButton message={props.message} />);
             } catch (error) {
-                console.error("[Copier] Fatal error:", error);
+                Logger.error("Fatal error:", error);
             }
 
             return res;

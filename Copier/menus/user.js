@@ -106,7 +106,7 @@ export default function patchUserMenu() {
         ContextMenu.patch("user-context", (res, props) => {
             const tree = res?.props?.children;
 
-            if (!Array.isArray(tree)) return console.log("Not an array.", tree);
+            if (!Array.isArray(tree)) return;
 
             tree.splice(-1, 0, buildMenu(props.user, !!props.channel));
         })
