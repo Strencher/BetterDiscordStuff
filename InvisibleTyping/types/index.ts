@@ -76,4 +76,4 @@ interface ClassDictionary {
     [key: string]: any;
 }
 
-interface ClassArray extends Array<ClassValue> {}
+type ClassArray = ClassValue[];

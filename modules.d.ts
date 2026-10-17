@@ -10,9 +10,9 @@ declare module "@api" {
     export const Logger: BetterDiscord.BoundLogger;
     export const Net: BetterDiscord.Net;
     export const Patcher: BetterDiscord.BoundPatcher;
-    export const Plugins: BetterDiscord.AddonAPI;
+    export const Plugins: BetterDiscord.AddonAPI<BetterDiscord.Plugin>;
     export const ReactUtils: BetterDiscord.ReactUtils;
-    export const Themes: BetterDiscord.AddonAPI;
+    export const Themes: BetterDiscord.AddonAPI<BetterDiscord.Theme>;
     export const UI: BetterDiscord.UI;
     export const Utils: BetterDiscord.Utils;
     export const Webpack: BetterDiscord.Webpack;
