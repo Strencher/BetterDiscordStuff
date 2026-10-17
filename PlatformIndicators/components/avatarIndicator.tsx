@@ -37,7 +37,12 @@ const walkable = { walkable: ["props", "children"] };
 const isStatusRect = (e: any) => e?.type === "rect" && typeof e.props?.mask === "string";
 const isBackdrop = (e: any) => (e?.type === "circle" || e?.type === "rect") && e.props?.mask == null;
 
-export function getUserIdFromAvatar(props: { "aria-label"?: unknown }): string | undefined {
+const AVATAR_USER_ID = /\/(?:users|avatars)\/(\d+)\//;
+
+export function getUserIdFromAvatar(props: { src?: unknown; "aria-label"?: unknown }): string | undefined {
+    const avatarUserId = typeof props.src === "string" ? props.src.match(AVATAR_USER_ID)?.[1] : undefined;
+    if (avatarUserId) return avatarUserId;
+
     return typeof props["aria-label"] === "string" ? UserStore.findByTag(props["aria-label"])?.id : undefined;
 }
 
