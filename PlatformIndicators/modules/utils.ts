@@ -2,7 +2,6 @@ import { Utils } from "@api";
 
 import { Messages } from "./shared";
 
-// eslint-disable-next-line no-unused-vars
 export const findInReactTree = (tree: any, filter: (e: any) => boolean): any =>
     Utils.findInTree(tree, filter, { walkable: ["props", "children", "type"] });
 

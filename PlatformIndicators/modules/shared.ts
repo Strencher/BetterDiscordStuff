@@ -19,10 +19,8 @@ export const Flux = Webpack.getByKeys("Store");
 
 export const { useStatusFillColor } = Webpack.getMangled(["STATUS_ONLINE_MOBILE", ".hex"], {
     useStatusFillColor: Webpack.Filters.byStrings(".hex")
-    // eslint-disable-next-line no-unused-vars
 }) as { useStatusFillColor: (status: string) => string };
 
-// eslint-disable-next-line no-unused-vars
 export const Intl: { intl: { formatToMarkdownString: (key: string) => string }; t: Record<string, string> } =
     Webpack.getModule((x: any) => x.intl)!;
 

@@ -1,5 +1,5 @@
 /* global GLOBAL_ENV */
-import { ContextMenu, UI } from "@api";
+import { ContextMenu, Logger, UI } from "@api";
 
 import Formatter from "../modules/formatter";
 import Settings from "../modules/settings";
@@ -119,7 +119,7 @@ export default function patchMessageMenu() {
                             action: () => {
                                 const channel = ChannelStore.getChannel(message.channel_id);
                                 if (!channel) {
-                                    console.error("Failed to copy message link!\n", "Message channel cannot be found!");
+                                    Logger.error("Failed to copy message link!\n", "Message channel cannot be found!");
                                     return UI.showToast("Failed to copy message link!", { type: "error" });
                                 }
 
