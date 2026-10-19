@@ -5,16 +5,17 @@ import React from "react";
 
 import Settings from "../store";
 import type { SettingsItemForType } from "../types";
+import { getItemLabels } from "./shared";
 
 const { SettingItem } = Components;
 const Select: SelectType = Webpack.getByStrings('selectionMode:"single",onSelectionChange:', "isSelected:", {
     searchExports: true
 })!;
 
-export function DropdownItem(props: SettingsItemForType<"dropdown">) {
+export function DropdownItem({ isBeta, warning, ...props }: SettingsItemForType<"dropdown">) {
     return (
         <ErrorBoundary id={props.id}>
-            <SettingItem {...props}>
+            <SettingItem {...props} {...getItemLabels({ ...props, isBeta, warning })}>
                 <Select
                     closeOnSelect={true}
                     options={props.options as SelectOption[]}

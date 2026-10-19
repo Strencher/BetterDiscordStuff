@@ -59,6 +59,10 @@
                                 "type": "boolean",
                                 "default": false,
                                 "description": "Shows a BETA tag next to the name of the setting"
+                            },
+                            "warning": {
+                                "type": "string",
+                                "description": "Shows a warning banner below the note of the setting"
                             }
                         },
                         "required": ["type", "name", "id", "value"],
@@ -118,6 +122,15 @@
                                         }
                                     }
                                 ]
+                            },
+                            "isBeta": {
+                                "type": "boolean",
+                                "default": false,
+                                "description": "Shows a BETA tag next to the name of the setting"
+                            },
+                            "warning": {
+                                "type": "string",
+                                "description": "Shows a warning banner below the note of the setting"
                             }
                         },
                         "required": ["type", "name", "id", "value", "options"],
@@ -169,6 +182,15 @@
                             "stickToMarkers": {
                                 "type": "boolean",
                                 "description": "Whether the slider should snap to markers"
+                            },
+                            "isBeta": {
+                                "type": "boolean",
+                                "default": false,
+                                "description": "Shows a BETA tag next to the name of the setting"
+                            },
+                            "warning": {
+                                "type": "string",
+                                "description": "Shows a warning banner below the note of the setting"
                             }
                         },
                         "required": ["type", "name", "id", "minValue", "maxValue"],

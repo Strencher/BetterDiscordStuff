@@ -5,15 +5,16 @@ import React from "react";
 
 import Settings from "../store";
 import type { SettingsItemForType } from "../types";
+import { getItemLabels } from "./shared";
 
 const { SettingItem } = Components;
 const Slider: SliderType = Webpack.getByStrings("stickToMarkers")!;
 
-export function SliderItem(props: SettingsItemForType<"slider">) {
+export function SliderItem({ isBeta, warning, ...props }: SettingsItemForType<"slider">) {
     const value = Hooks.useStateFromStores([Settings] as any, () => Settings.get(props.id, props.value));
     return (
         <ErrorBoundary id={props.id}>
-            <SettingItem {...props}>
+            <SettingItem {...props} {...getItemLabels({ ...props, isBeta, warning })}>
                 <Slider
                     {...props}
                     handleSize={10}
