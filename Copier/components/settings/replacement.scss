@@ -4,7 +4,7 @@
     margin-top: 5px;
 
     .copier-variable-name {
-        background: var(--primary-dark-560);
+        background: var(--background-mod-normal);
         font-weight: 700;
         padding: 3px;
         border-radius: 4px;
@@ -12,6 +12,6 @@
     }
 
     .copier-variable-description {
-        color: var(--header-secondary);
+        color: var(--text-subtle);
     }
 }

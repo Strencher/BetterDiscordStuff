@@ -42,7 +42,7 @@ export default class Copier {
         const module = Webpack.getBySource(["animUserProfileSidebarateOnHoverOrFocusOnly", "61W33d"]);
 
         const CopyButton = React.memo(({ onClick }) => (
-            <Tooltip text="Copy About Me" tooltipClassName="copier-tooltip" position="top">
+            <Tooltip text="Copy About Me" position="top">
                 {props => (
                     <button {...props} className="copier-button" onClick={onClick}>
                         <CopyIcon width="14" height="14" />

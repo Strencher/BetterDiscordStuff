@@ -1,5 +1,5 @@
 .invisibleTypingButton svg {
-    color: var(--interactive-normal);
+    color: var(--interactive-icon-default);
     overflow: visible;
 }
 
@@ -11,7 +11,7 @@
     min-width: var(--space-32);
 
     &:hover:not(.disabled) svg {
-        color: var(--interactive-hover);
+        color: var(--interactive-icon-hover);
     }
 }
 

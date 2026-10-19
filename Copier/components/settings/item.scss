@@ -1,7 +1,7 @@
 .copier-settings-item {
     padding: 15px;
     border-radius: 8px;
-    background: var(--background-tertiary);
+    background: var(--background-base-lower);
     cursor: pointer;
     color: #fff;
     border: thin solid var(--interactive-background-hover);
@@ -12,17 +12,17 @@
             align-items: center;
             font-weight: 500;
             font-size: 20px;
-            color: var(--header-primary);
+            color: var(--text-strong);
 
             .copier-settings-icon-box {
-                color: vaR(--header-secondary);
+                color: var(--text-subtle);
                 margin-right: 5px;
             }
         }
     }
 
     &.item-opened .copier-settings-item-header {
-        border-bottom: thin solid var(--background-modifier-accent);
+        border-bottom: thin solid var(--border-subtle);
         margin-bottom: 7px;
         padding-bottom: 7px;
     }
@@ -32,7 +32,7 @@
     }
 
     .copier-settings-note {
-        color: var(--header-secondary);
+        color: var(--text-subtle);
     }
 
     &.item-opened .copier-settings-children {
