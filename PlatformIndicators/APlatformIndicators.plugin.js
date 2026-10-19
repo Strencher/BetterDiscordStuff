@@ -347,7 +347,10 @@ function SliderItem({
     warning,
     ...props
 }) {
-    const value = Hooks.useStateFromStores([Settings], () => Settings.get(props.id, props.value));
+    const value = Hooks.useStateFromStores(
+        [Settings],
+        () => Settings.get(props.id, props.value ?? props.defaultValue)
+    );
     return React.createElement(ErrorBoundary, {
         id: props.id
     }, React.createElement(SettingItem$2, {
