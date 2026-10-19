@@ -131,10 +131,9 @@ var Styles = {
         const css = this.sheets.join("\n");
         this._forEachPopout(doc => {
             if (doc.getElementById(STYLE_ID)) return;
-            DOM.createElement("style", {
-                id: STYLE_ID,
-                target: doc.body
-            }, css);
+            doc.head.append(DOM.createElement("style", {
+                id: STYLE_ID
+            }, css));
         });
     },
     load() {
@@ -232,42 +231,130 @@ const Settings = new class Settings2 extends Flux.Store {
     }
 }();
 
+/* ../common/Settings/items/shared.tsx */
+function BetaTag() {
+    return React.createElement(
+        "span", {
+            style: {
+                display: "inline-flex",
+                alignItems: "center",
+                height: 16,
+                marginLeft: "var(--space-4)",
+                padding: "0 var(--space-8)",
+                borderRadius: "var(--radius-round)",
+                background: "var(--badge-primary-background)",
+                color: "var(--badge-primary-text)",
+                fontSize: 12,
+                fontWeight: 600,
+                lineHeight: "16px",
+                textTransform: "uppercase"
+            }
+        },
+        "Beta"
+    );
+}
+
+function Warning({
+    children
+}) {
+    return React.createElement(
+        "div", {
+            style: {
+                marginTop: 8,
+                padding: "6px 10px",
+                borderRadius: 4,
+                border: "1px solid var(--border-feedback-warning)",
+                background: "var(--background-feedback-warning)",
+                color: "var(--text-default)",
+                fontSize: 14,
+                lineHeight: "18px"
+            }
+        },
+        children
+    );
+}
+
+function getItemLabels({
+    name,
+    note,
+    isBeta,
+    warning
+}) {
+    return {
+        name: isBeta ? React.createElement(React.Fragment, null, name, React.createElement(BetaTag, null)) : name,
+        note: warning ? React.createElement(React.Fragment, null, note, React.createElement(Warning, null, warning)) : note
+    };
+}
+
 /* ../common/Settings/items/dropdown.tsx */
 const {
     SettingItem: SettingItem$2
 } = Components;
-const Select = Webpack.getByStrings('selectionMode:"single",onSelectionChange:', "isSelected:", {
+const Select = Webpack.getByStrings('selectionMode:"single",onSelectionChange:', "clear:()=>", {
     searchExports: true
 });
 
-function DropdownItem(props) {
+function DropdownItem({
+    isBeta,
+    warning,
+    ...props
+}) {
+    const value = Hooks.useStateFromStores([Settings], () => Settings.get(props.id, props.value));
+    const options = props.options.map(
+        (option) => typeof option === "string" ? {
+            label: option,
+            value: option
+        } : option
+    );
     return React.createElement(ErrorBoundary, {
         id: props.id
     }, React.createElement(SettingItem$2, {
-        ...props
+        ...props,
+        ...getItemLabels({
+            ...props,
+            isBeta,
+            warning
+        }),
+        inline: true
+    }, React.createElement("div", {
+        style: {
+            width: 200,
+            flexShrink: 0
+        }
     }, React.createElement(
         Select, {
             closeOnSelect: true,
-            options: props.options,
-            serialize: (v) => String(v),
-            select: (v) => Settings.set(props.id, v),
-            isSelected: (v) => Settings.get(props.id, props.value) === v
+            options,
+            value,
+            onChange: (v) => Settings.set(props.id, v),
+            renderOptionLabel: (option) => option.label
         }
-    )));
+    ))));
 }
 
 /* ../common/Settings/items/slider.tsx */
 const {
     SettingItem: SettingItem$1
 } = Components;
-const Slider = Webpack.getByStrings("stickToMarkers");
+const Slider = Webpack.getByStrings("stickToMarkers", "moveStaggered", {
+    searchExports: true
+});
 
-function SliderItem(props) {
+function SliderItem({
+    isBeta,
+    warning,
+    ...props
+}) {
     const value = Hooks.useStateFromStores([Settings], () => Settings.get(props.id, props.value));
     return React.createElement(ErrorBoundary, {
         id: props.id
     }, React.createElement(SettingItem$1, {
-        ...props
+        ...props,
+        ...getItemLabels({
+            ...props,
+            isBeta,
+            warning
+        })
     }, React.createElement(
         Slider, {
             ...props,
@@ -288,40 +375,27 @@ const {
     SwitchInput
 } = Components;
 
-function BetaTag() {
-    return React.createElement(
-        "span", {
-            style: {
-                marginLeft: 8,
-                padding: "0 6px",
-                borderRadius: 16,
-                background: "var(--brand-500, #5865f2)",
-                color: "#fff",
-                fontSize: 12,
-                fontWeight: 700,
-                lineHeight: "16px",
-                textTransform: "uppercase",
-                verticalAlign: "middle"
-            }
-        },
-        "Beta"
-    );
-}
-
 function SwitchItem({
     isBeta = false,
+    disabled = false,
+    warning,
     ...props
 }) {
-    const value = Hooks.useStateFromStores([Settings], () => Settings.get(props.id, props.value));
-    const name = isBeta ? React.createElement(React.Fragment, null, props.name, React.createElement(BetaTag, null)) : props.name;
+    const stored = Hooks.useStateFromStores([Settings], () => Settings.get(props.id, props.value));
+    const value = disabled ? false : stored;
     return React.createElement(ErrorBoundary, {
         id: props.id
     }, React.createElement(SettingItem, {
         ...props,
-        name,
+        ...getItemLabels({
+            ...props,
+            isBeta,
+            warning
+        }),
         inline: true
     }, React.createElement(SwitchInput, {
         value,
+        disabled,
         onChange: (v) => Settings.set(props.id, v)
     })));
 }
@@ -412,7 +486,7 @@ function Keyboard({
 
 /* components/typingButton.scss */
 Styles.sheets.push("/* components/typingButton.scss */", `.invisibleTypingButton svg {
-  color: var(--interactive-normal);
+  color: var(--interactive-icon-default);
   overflow: visible;
 }
 
@@ -424,7 +498,7 @@ Styles.sheets.push("/* components/typingButton.scss */", `.invisibleTypingButton
   min-width: var(--space-32);
 }
 .invisibleTypingButton:hover:not(.disabled) svg {
-  color: var(--interactive-hover);
+  color: var(--interactive-icon-hover);
 }
 
 .invisibleTypingTooltip {

@@ -91,10 +91,9 @@ var Styles = {
         const css = this.sheets.join("\n");
         this._forEachPopout(doc => {
             if (doc.getElementById(STYLE_ID)) return;
-            DOM.createElement("style", {
-                id: STYLE_ID,
-                target: doc.body
-            }, css);
+            doc.head.append(DOM.createElement("style", {
+                id: STYLE_ID
+            }, css));
         });
     },
     load() {
@@ -123,10 +122,6 @@ Styles.sheets.push("/* button.css */", `.copier-button {
     align-items: center;
     display: flex;
     color: #0870f3;
-}
-
-.copier-tooltip {
-    --background-floating: var(--background-secondary);
 }
 `);
 
@@ -709,10 +704,10 @@ Styles.sheets.push("/* components/settings/index.scss */", `.copier-settings-con
 }
 
 .copier-key {
-  box-shadow: inset 0 -4px 0 var(--primary-dark-660);
-  color: var(--primary-dark-100);
+  box-shadow: inset 0 -4px 0 var(--background-mod-muted);
+  color: var(--interactive-text-active);
   background-color: var(--background-accent);
-  border: 1px solid var(--background-primary);
+  border: 1px solid var(--border-subtle);
   display: inline-flex;
   padding: 3px 6px 4px;
   border-radius: 4px;
@@ -727,7 +722,7 @@ Styles.sheets.push("/* components/settings/index.scss */", `.copier-settings-con
 .copier-header {
   font-weight: 500;
   font-size: 18px;
-  font-family: var(--font-display);
+  font-family: var(--font-primary);
 }`);
 
 /* menus/channel.js */
@@ -1513,7 +1508,7 @@ function patchUserMenu() {
 
 /* components/protip.css */
 Styles.sheets.push("/* components/protip.css */", `.copier-pro-tip {
-    color: var(--text-positive);
+    color: var(--text-feedback-positive);
     font-weight: 700;
     font-size: 12px;
     display: inline;
@@ -1531,7 +1526,7 @@ function ProTip() {
 Styles.sheets.push("/* components/settings/item.scss */", `.copier-settings-item {
   padding: 15px;
   border-radius: 8px;
-  background: var(--background-tertiary);
+  background: var(--background-base-lower);
   cursor: pointer;
   color: #fff;
   border: thin solid var(--interactive-background-hover);
@@ -1541,14 +1536,14 @@ Styles.sheets.push("/* components/settings/item.scss */", `.copier-settings-item
   align-items: center;
   font-weight: 500;
   font-size: 20px;
-  color: var(--header-primary);
+  color: var(--text-strong);
 }
 .copier-settings-item .copier-settings-item-header .copier-settings-name .copier-settings-icon-box {
-  color: vaR(--header-secondary);
+  color: var(--text-subtle);
   margin-right: 5px;
 }
 .copier-settings-item.item-opened .copier-settings-item-header {
-  border-bottom: thin solid var(--background-modifier-accent);
+  border-bottom: thin solid var(--border-subtle);
   margin-bottom: 7px;
   padding-bottom: 7px;
 }
@@ -1556,7 +1551,7 @@ Styles.sheets.push("/* components/settings/item.scss */", `.copier-settings-item
   margin-top: 10px;
 }
 .copier-settings-item .copier-settings-note {
-  color: var(--header-secondary);
+  color: var(--text-subtle);
 }
 .copier-settings-item.item-opened .copier-settings-children {
   margin-top: 10px;
@@ -1609,14 +1604,14 @@ Styles.sheets.push("/* components/settings/replacement.scss */", `.copier-variab
   margin-top: 5px;
 }
 .copier-variable .copier-variable-name {
-  background: var(--primary-dark-560);
+  background: var(--background-mod-normal);
   font-weight: 700;
   padding: 3px;
   border-radius: 4px;
   margin-right: 5px;
 }
 .copier-variable .copier-variable-description {
-  color: var(--header-secondary);
+  color: var(--text-subtle);
 }`);
 
 /* components/settings/textbox.scss */
@@ -1635,7 +1630,7 @@ Styles.sheets.push("/* components/settings/textbox.scss */", `.copier-textbox .c
   padding: 8px;
 }
 .copier-textbox .copier-text-input:focus {
-  border-color: var(--brand-experiment);
+  border-color: var(--input-border-active);
 }`);
 
 /* components/settings/textbox.jsx */
@@ -1716,7 +1711,7 @@ Styles.sheets.push("/* components/settings/toggle.scss */", `.copier-toggle {
   width: 30px;
   height: 30px;
   border-radius: 100px;
-  border: thin solid var(--background-modifier-accent);
+  border: thin solid var(--border-subtle);
 }
 .copier-toggle .copier-toggle-value svg {
   fill: #fff;
@@ -1902,7 +1897,6 @@ class Copier {
             onClick
         }) => React.createElement(Tooltip, {
             text: "Copy About Me",
-            tooltipClassName: "copier-tooltip",
             position: "top"
         }, (props) => React.createElement("button", {
             ...props,

@@ -42,6 +42,7 @@ const {
     Logger,
     Patcher,
     ReactUtils,
+    Themes,
     UI,
     Utils,
     Webpack
@@ -132,10 +133,9 @@ var Styles$2 = {
         const css = this.sheets.join("\n");
         this._forEachPopout(doc => {
             if (doc.getElementById(STYLE_ID)) return;
-            DOM.createElement("style", {
-                id: STYLE_ID,
-                target: doc.body
-            }, css);
+            doc.head.append(DOM.createElement("style", {
+                id: STYLE_ID
+            }, css));
         });
     },
     load() {
@@ -233,42 +233,130 @@ const Settings = new class Settings2 extends Flux.Store {
     }
 }();
 
+/* ../common/Settings/items/shared.tsx */
+function BetaTag() {
+    return React.createElement(
+        "span", {
+            style: {
+                display: "inline-flex",
+                alignItems: "center",
+                height: 16,
+                marginLeft: "var(--space-4)",
+                padding: "0 var(--space-8)",
+                borderRadius: "var(--radius-round)",
+                background: "var(--badge-primary-background)",
+                color: "var(--badge-primary-text)",
+                fontSize: 12,
+                fontWeight: 600,
+                lineHeight: "16px",
+                textTransform: "uppercase"
+            }
+        },
+        "Beta"
+    );
+}
+
+function Warning({
+    children
+}) {
+    return React.createElement(
+        "div", {
+            style: {
+                marginTop: 8,
+                padding: "6px 10px",
+                borderRadius: 4,
+                border: "1px solid var(--border-feedback-warning)",
+                background: "var(--background-feedback-warning)",
+                color: "var(--text-default)",
+                fontSize: 14,
+                lineHeight: "18px"
+            }
+        },
+        children
+    );
+}
+
+function getItemLabels({
+    name,
+    note,
+    isBeta,
+    warning
+}) {
+    return {
+        name: isBeta ? React.createElement(React.Fragment, null, name, React.createElement(BetaTag, null)) : name,
+        note: warning ? React.createElement(React.Fragment, null, note, React.createElement(Warning, null, warning)) : note
+    };
+}
+
 /* ../common/Settings/items/dropdown.tsx */
 const {
     SettingItem: SettingItem$3
 } = Components;
-const Select = Webpack.getByStrings('selectionMode:"single",onSelectionChange:', "isSelected:", {
+const Select = Webpack.getByStrings('selectionMode:"single",onSelectionChange:', "clear:()=>", {
     searchExports: true
 });
 
-function DropdownItem(props) {
+function DropdownItem({
+    isBeta,
+    warning,
+    ...props
+}) {
+    const value = Hooks.useStateFromStores([Settings], () => Settings.get(props.id, props.value));
+    const options = props.options.map(
+        (option) => typeof option === "string" ? {
+            label: option,
+            value: option
+        } : option
+    );
     return React.createElement(ErrorBoundary, {
         id: props.id
     }, React.createElement(SettingItem$3, {
-        ...props
+        ...props,
+        ...getItemLabels({
+            ...props,
+            isBeta,
+            warning
+        }),
+        inline: true
+    }, React.createElement("div", {
+        style: {
+            width: 200,
+            flexShrink: 0
+        }
     }, React.createElement(
         Select, {
             closeOnSelect: true,
-            options: props.options,
-            serialize: (v) => String(v),
-            select: (v) => Settings.set(props.id, v),
-            isSelected: (v) => Settings.get(props.id, props.value) === v
+            options,
+            value,
+            onChange: (v) => Settings.set(props.id, v),
+            renderOptionLabel: (option) => option.label
         }
-    )));
+    ))));
 }
 
 /* ../common/Settings/items/slider.tsx */
 const {
     SettingItem: SettingItem$2
 } = Components;
-const Slider = Webpack.getByStrings("stickToMarkers");
+const Slider = Webpack.getByStrings("stickToMarkers", "moveStaggered", {
+    searchExports: true
+});
 
-function SliderItem(props) {
+function SliderItem({
+    isBeta,
+    warning,
+    ...props
+}) {
     const value = Hooks.useStateFromStores([Settings], () => Settings.get(props.id, props.value));
     return React.createElement(ErrorBoundary, {
         id: props.id
     }, React.createElement(SettingItem$2, {
-        ...props
+        ...props,
+        ...getItemLabels({
+            ...props,
+            isBeta,
+            warning
+        })
     }, React.createElement(
         Slider, {
             ...props,
@@ -289,40 +377,27 @@ const {
     SwitchInput
 } = Components;
 
-function BetaTag() {
-    return React.createElement(
-        "span", {
-            style: {
-                marginLeft: 8,
-                padding: "0 6px",
-                borderRadius: 16,
-                background: "var(--brand-500, #5865f2)",
-                color: "#fff",
-                fontSize: 12,
-                fontWeight: 700,
-                lineHeight: "16px",
-                textTransform: "uppercase",
-                verticalAlign: "middle"
-            }
-        },
-        "Beta"
-    );
-}
-
 function SwitchItem({
     isBeta = false,
+    disabled = false,
+    warning,
     ...props
 }) {
-    const value = Hooks.useStateFromStores([Settings], () => Settings.get(props.id, props.value));
-    const name = isBeta ? React.createElement(React.Fragment, null, props.name, React.createElement(BetaTag, null)) : props.name;
+    const stored = Hooks.useStateFromStores([Settings], () => Settings.get(props.id, props.value));
+    const value = disabled ? false : stored;
     return React.createElement(ErrorBoundary, {
         id: props.id
     }, React.createElement(SettingItem$1, {
         ...props,
-        name,
+        ...getItemLabels({
+            ...props,
+            isBeta,
+            warning
+        }),
         inline: true
     }, React.createElement(SwitchInput, {
         value,
+        disabled,
         onChange: (v) => Settings.set(props.id, v)
     })));
 }
@@ -352,6 +427,7 @@ const LocalActivityStore = Webpack.getStore("LocalActivityStore");
 const SessionsStore = Webpack.getStore("SessionsStore");
 const UserStore = Webpack.getStore("UserStore");
 const PresenceStore = Webpack.getStore("PresenceStore");
+const isRadialStatusEnabled = () => !!Themes.isEnabled("RadialStatus");
 Webpack.getByKeys("useSyncExternalStore");
 Webpack.getByKeys("Store");
 const {
@@ -420,7 +496,7 @@ function usePlatformStores(userId, location) {
         void 0,
         true
     );
-    const shouldShow = shownInArea && !(ignoreBots && user?.bot);
+    const shouldShow = shownInArea && !(ignoreBots && user?.bot) && !(location === "Avatar" && isRadialStatusEnabled());
     const clients = (() => {
         if (user?.id !== UserStore.getCurrentUser()?.id) return PresenceStore.getState().clientStatuses[user?.id] ?? {};
         if (!sessions) return {};
@@ -985,7 +1061,7 @@ Styles$2.sheets.push("/* components/settings/style.scss */", `.platform-indicato
 }
 
 .platform-indicator-checkbox-input:focus-visible + .platform-indicator-checkbox-box {
-  outline: 2px solid var(--focus-primary, var(--bd-brand));
+  outline: 2px solid var(--border-focus);
   outline-offset: 2px;
 }
 
@@ -1036,6 +1112,8 @@ const NO_OVERRIDES = Object.freeze({});
 const TILE_VIEWBOX = {
     mobile: "-8 -2.5 40 40"
 };
+const RADIAL_STATUS_SETTING = "showOnAvatars";
+const RADIAL_STATUS_WARNING = "Disabled while the RadialStatus theme is enabled, as it replaces the status on avatars.";
 
 function PlatformIcons({
     id,
@@ -1053,7 +1131,9 @@ function PlatformIcons({
     );
     const enabled = Hooks.useStateFromStores(
         [Settings],
-        () => columns.map((column) => !column.enableWith || Settings.get(column.enableWith, true)),
+        () => columns.map(
+            (column) => !column.enableWith || Settings.get(column.enableWith, true) && !(column.enableWith === RADIAL_STATUS_SETTING && isRadialStatusEnabled())
+        ),
         void 0,
         true
     );
@@ -1177,8 +1257,16 @@ function PlatformIcons({
 }
 
 function SettingsPanel() {
+    const radialStatus = isRadialStatusEnabled();
+    const items = SettingsItems.items.map(
+        (item) => radialStatus && item.id === RADIAL_STATUS_SETTING ? {
+            ...item,
+            disabled: true,
+            warning: RADIAL_STATUS_WARNING
+        } : item
+    );
     return React.createElement(SettingsPanel$1, {
-        items: SettingsItems.items,
+        items,
         components: {
             "platform-icons": PlatformIcons
         }
