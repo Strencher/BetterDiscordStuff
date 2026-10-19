@@ -18,6 +18,9 @@ export default class PlatformIndicators {
 
     start() {
         Styles.load();
+        for (const key of ["avatarIcons", "badgeIcons"]) {
+            if (Settings.get(key) == null) Settings.set(key, { ...Settings.get("icons", {}) });
+        }
         showChangelog(manifest);
         this.patchDMList();
         this.patchFavorites();
