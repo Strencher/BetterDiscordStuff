@@ -1,6 +1,6 @@
 /**
  * @name APlatformIndicators
- * @version 1.7.1
+ * @version 1.7.2
  * @author Strencher
  * @authorId 415849376598982656
  * @description Adds indicators for every platform that the user is using.
@@ -14,41 +14,22 @@
 const manifest = {
     "$schema": "../common/Schemas/manifest.schema.json",
     "name": "APlatformIndicators",
-    "version": "1.7.1",
+    "version": "1.7.2",
     "author": "Strencher",
     "authorId": "415849376598982656",
     "description": "Adds indicators for every platform that the user is using.",
     "source": "https://github.com/Strencher/BetterDiscordStuff/blob/master/PlatformIndicators/APlatformIndicators.plugin.js",
     "invite": "gvA2ree",
     "changelog": {
-        "date": "2026-10-11",
+        "date": "2026-10-19",
         "changes": [{
-                "title": "New Stuff",
-                "type": "added",
-                "items": [
-                    "Indicators can now be shown in the favorites list (Beta).",
-                    "The Status on Avatars can now be replaced by the Platform Indicator (Beta)."
-                ]
-            },
-            {
-                "title": "Some Bugs squashed",
-                "type": "fixed",
-                "items": [
-                    "When clicking a DM, the list no longer jumps to the top",
-                    "Indicators in popout windows (e.g. a popped out voice channel chat) are no longer shown on their own line"
-                ]
-            },
-            {
-                "title": "Some Improvements",
-                "type": "improved",
-                "items": [
-                    "The plugin now finds Discord's components more precisely, so future Discord updates are less likely to make indicators vanish",
-                    "Indicators now use Discord's own status colors and are easier to style with themes or custom CSS",
-                    "The Platform Indicator on Avatars now cuts out the shape of the icon instead of a square",
-                    "The console icon on Avatars is a bit smaller"
-                ]
-            }
-        ]
+            "title": "Some Improvements",
+            "type": "improved",
+            "items": [
+                "You can now choose which platforms are shown next to names, next to badges and on avatars",
+                "Changes to the platform icon settings now apply right away"
+            ]
+        }]
     }
 };
 
@@ -71,7 +52,7 @@ var React = BdApi.React;
 
 /* ../common/Changelog/footer.tsx */
 const {
-    Text
+    Text: Text$1
 } = Components;
 
 function Footer({
@@ -85,7 +66,7 @@ function Footer({
         url.pathname = `/${owner}/${repo}/issues`;
         issuesUrl = url.toString();
     }
-    return React.createElement(Text, null, "Need support?", " ", manifest.invite && React.createElement(React.Fragment, null, "Join the", " ", React.createElement("a", {
+    return React.createElement(Text$1, null, "Need support?", " ", manifest.invite && React.createElement(React.Fragment, null, "Join the", " ", React.createElement("a", {
         onClick: () => UI.showInviteModal(manifest.invite),
         style: {
             textDecoration: "underline"
@@ -254,7 +235,7 @@ const Settings = new class Settings2 extends Flux.Store {
 
 /* ../common/Settings/items/dropdown.tsx */
 const {
-    SettingItem: SettingItem$2
+    SettingItem: SettingItem$3
 } = Components;
 const Select = Webpack.getByStrings('selectionMode:"single",onSelectionChange:', "isSelected:", {
     searchExports: true
@@ -263,7 +244,7 @@ const Select = Webpack.getByStrings('selectionMode:"single",onSelectionChange:',
 function DropdownItem(props) {
     return React.createElement(ErrorBoundary, {
         id: props.id
-    }, React.createElement(SettingItem$2, {
+    }, React.createElement(SettingItem$3, {
         ...props
     }, React.createElement(
         Select, {
@@ -278,7 +259,7 @@ function DropdownItem(props) {
 
 /* ../common/Settings/items/slider.tsx */
 const {
-    SettingItem: SettingItem$1
+    SettingItem: SettingItem$2
 } = Components;
 const Slider = Webpack.getByStrings("stickToMarkers");
 
@@ -286,7 +267,7 @@ function SliderItem(props) {
     const value = Hooks.useStateFromStores([Settings], () => Settings.get(props.id, props.value));
     return React.createElement(ErrorBoundary, {
         id: props.id
-    }, React.createElement(SettingItem$1, {
+    }, React.createElement(SettingItem$2, {
         ...props
     }, React.createElement(
         Slider, {
@@ -304,7 +285,7 @@ function SliderItem(props) {
 
 /* ../common/Settings/items/switch.tsx */
 const {
-    SettingItem,
+    SettingItem: SettingItem$1,
     SwitchInput
 } = Components;
 
@@ -336,7 +317,7 @@ function SwitchItem({
     const name = isBeta ? React.createElement(React.Fragment, null, props.name, React.createElement(BetaTag, null)) : props.name;
     return React.createElement(ErrorBoundary, {
         id: props.id
-    }, React.createElement(SettingItem, {
+    }, React.createElement(SettingItem$1, {
         ...props,
         name,
         inline: true
@@ -406,29 +387,48 @@ const buildClassName = (...args) => {
 };
 
 /* modules/usePlatformStores.ts */
+const NO_OVERRIDES$1 = Object.freeze({});
+const ICON_SETTINGS = {
+    Avatar: "avatarIcons",
+    Badge: "badgeIcons"
+};
+const LOCATION_SETTINGS = {
+    Avatar: "showOnAvatars",
+    Badge: "showInBadges",
+    Chat: "showInChat",
+    DMs: "showInDmsList",
+    Favorites: "showInFavorites",
+    FriendList: "showInFriendsList",
+    MemberList: "showInMemberList"
+};
 const isStreaming = () => LocalActivityStore.getActivities().some((e) => e.type === 1);
 
 function usePlatformStores(userId, location) {
     const user = Hooks.useStateFromStores([UserStore], () => UserStore.getUser(userId));
     const sessions = Hooks.useStateFromStores([SessionsStore], () => SessionsStore.getSessions());
-    const iconStates = Settings.get("icons", {});
-    const shownInArea = Settings.get("showIn" + location, true);
-    const ignoreBots = Settings.get("ignoreBots", true) && (user?.bot ?? false);
-    const shouldShow = shownInArea && !ignoreBots;
+    const {
+        iconStates,
+        shownInArea,
+        ignoreBots
+    } = Hooks.useStateFromStores(
+        [Settings],
+        () => ({
+            iconStates: Settings.get(ICON_SETTINGS[location] ?? "icons", NO_OVERRIDES$1),
+            shownInArea: Settings.get(LOCATION_SETTINGS[location], true),
+            ignoreBots: Settings.get("ignoreBots", true)
+        }),
+        void 0,
+        true
+    );
+    const shouldShow = shownInArea && !(ignoreBots && user?.bot);
     const clients = (() => {
-        if (user?.id === UserStore.getCurrentUser()?.id) {
-            if (sessions) {
-                return Object.entries(sessions).reduce(
-                    (acc, [, sessionData]) => {
-                        const client = sessionData.clientInfo.client;
-                        acc[client] = isStreaming() ? "streaming" : sessionData.status;
-                        return acc;
-                    }, {}
-                );
-            }
-            return {};
-        }
-        return PresenceStore.getState().clientStatuses[user?.id] ?? {};
+        if (user?.id !== UserStore.getCurrentUser()?.id) return PresenceStore.getState().clientStatuses[user?.id] ?? {};
+        if (!sessions) return {};
+        return Object.entries(sessions).reduce((acc, [, sessionData]) => {
+            const client = sessionData.clientInfo.client;
+            acc[client] = isStreaming() ? "streaming" : sessionData.status;
+            return acc;
+        }, {});
     })();
     return {
         iconStates,
@@ -601,8 +601,29 @@ const walkable = {
 };
 const isStatusRect = (e) => e?.type === "rect" && typeof e.props?.mask === "string";
 const isBackdrop = (e) => (e?.type === "circle" || e?.type === "rect") && e.props?.mask == null;
+const isAvatar = (e) => e?.type === "foreignObject";
+const isStatusGroup = (e) => React.isValidElement(e) && Array.isArray(e.props.children) && e.props.children.some(isStatusRect);
+
+function updateInTree(node, predicate, update) {
+    if (predicate(node)) return update(node);
+    if (Array.isArray(node)) {
+        for (let i = 0; i < node.length; i++) {
+            const child = updateInTree(node[i], predicate, update);
+            if (child !== node[i]) return node.with(i, child);
+        }
+        return node;
+    }
+    if (!React.isValidElement(node) || node.props.children == null) return node;
+    const children = updateInTree(node.props.children, predicate, update);
+    return children === node.props.children ? node : React.cloneElement(node, {
+        children
+    });
+}
+const AVATAR_USER_ID = /\/(?:users|avatars)\/(\d+)\//;
 
 function getUserIdFromAvatar(props) {
+    const avatarUserId = typeof props.src === "string" ? props.src.match(AVATAR_USER_ID)?.[1] : void 0;
+    if (avatarUserId) return avatarUserId;
     return typeof props["aria-label"] === "string" ? UserStore.findByTag(props["aria-label"])?.id : void 0;
 }
 
@@ -618,21 +639,17 @@ function AvatarIndicator({
     } = usePlatformStores(userId, "Avatar");
     const platform = Object.keys(clients).find((key) => (iconStates[key] ?? true) && key in Icons);
     if (!shouldShow || !platform) return svg;
-    const avatar = Utils.findInTree(svg, (e) => e?.type === "foreignObject", walkable);
-    const statusGroup = Utils.findInTree(
-        svg,
-        (e) => Array.isArray(e?.children) && e.children.some(isStatusRect),
-        walkable
-    );
+    const avatar = Utils.findInTree(svg, isAvatar, walkable);
+    const statusGroup = Utils.findInTree(svg, isStatusGroup, walkable);
     if (!avatar || !statusGroup) return svg;
-    const index = statusGroup.children.findIndex(isStatusRect);
+    const index = statusGroup.props.children.findIndex(isStatusRect);
     const {
         x,
         y,
         width: dotWidth,
         height: dotHeight,
         className
-    } = statusGroup.children[index].props;
+    } = statusGroup.props.children[index].props;
     const dotSize = Math.min(dotWidth, dotHeight);
     const [viewX, viewY, viewWidth, viewHeight] = ICON_BOUNDS[platform];
     const height = dotSize * ICON_HEIGHT[platform];
@@ -669,33 +686,45 @@ function AvatarIndicator({
             stroke: "black"
         })
     );
-    avatar.props.mask = `url(#${maskId})`;
-    svg.props.children = [mask, ...svg.props.children].map(
-        (child) => isBackdrop(child) ? React.createElement(
-            "path", {
-                key: "platform-indicators-backdrop",
-                ...outline,
-                fill: child.props.fill,
-                stroke: child.props.fill,
-                style: child.props.style
-            }
-        ) : child
+    let tree = updateInTree(svg, isAvatar, (e) => React.cloneElement(e, {
+        mask: `url(#${maskId})`
+    }));
+    tree = updateInTree(
+        tree,
+        isStatusGroup,
+        (e) => React.cloneElement(e, {
+            children: e.props.children.with(
+                index,
+                React.createElement(
+                    PlatformIcon, {
+                        platform,
+                        status: clients[platform],
+                        x: iconX,
+                        y: iconY,
+                        width,
+                        height,
+                        viewBox: `${viewX} ${viewY} ${viewWidth} ${viewHeight}`,
+                        transform: void 0,
+                        className,
+                        "data-location": "avatar"
+                    }
+                )
+            )
+        })
     );
-    statusGroup.children[index] = React.createElement(
-        PlatformIcon, {
-            platform,
-            status: clients[platform],
-            x: iconX,
-            y: iconY,
-            width,
-            height,
-            viewBox: `${viewX} ${viewY} ${viewWidth} ${viewHeight}`,
-            transform: void 0,
-            className,
-            "data-location": "avatar"
-        }
-    );
-    return svg;
+    return React.cloneElement(tree, {
+        children: [mask, ...tree.props.children].map(
+            (child) => isBackdrop(child) ? React.createElement(
+                "path", {
+                    key: "platform-indicators-backdrop",
+                    ...outline,
+                    fill: child.props.fill,
+                    stroke: child.props.fill,
+                    style: child.props.style
+                }
+            ) : child
+        )
+    });
 }
 
 /* modules/utils.ts */
@@ -765,14 +794,15 @@ function PlatformIndicator({
     separator = false
 }) {
     const state = usePlatformStores(userId, location);
-    if (!Object.keys(state.clients).length || !state.shouldShow) return null;
+    const clients = Object.entries(state.clients).filter(([key]) => (state.iconStates[key] ?? true) && key in Icons);
+    if (!clients.length || !state.shouldShow) return null;
     return React.createElement(React.Fragment, null, separator && React.createElement("span", {
         className: Styles$1.badge_separator
     }), React.createElement("div", {
         className: Styles$1.platformIndicator,
         "data-location": location.toLowerCase(),
         "data-id": userId
-    }, Object.entries(state.clients).filter(([key]) => (state.iconStates[key] ?? true) && key in Icons).map(([key, status]) => React.createElement(Components.Tooltip, {
+    }, clients.map(([key, status]) => React.createElement(Components.Tooltip, {
         key,
         text: getStatusText(key, status)
     }, (props) => React.createElement(
@@ -843,38 +873,49 @@ var items = [{
     {
         type: "switch",
         name: "Ignore Bots",
-        note: "Ignores the status of bots which is always web anyways.",
+        note: "Ignores the status of bots, which is usually web anyway.",
         id: "ignoreBots",
         value: true
     },
     {
-        type: "smart-disable",
-        name: "Disable individual icons",
-        id: "icons",
-        items: [{
-                id: "web",
-                value: true,
-                icon: "web"
-            },
-            {
+        type: "platform-icons",
+        name: "Platform Icons",
+        note: "Choose which platform indicators are shown next to names and badges, and which ones replace the status dot on avatars.",
+        id: "platformIcons",
+        platforms: [{
                 id: "desktop",
-                value: true,
-                icon: "desktop"
+                name: "Desktop"
             },
             {
                 id: "mobile",
-                value: true,
-                icon: "mobile"
+                name: "Mobile"
+            },
+            {
+                id: "web",
+                name: "Web"
             },
             {
                 id: "embedded",
-                value: true,
-                icon: "embedded"
+                name: "Console"
             },
             {
                 id: "vr",
-                value: true,
-                icon: "vr"
+                name: "VR"
+            }
+        ],
+        columns: [{
+                id: "icons",
+                name: "Next to names"
+            },
+            {
+                id: "badgeIcons",
+                name: "Next to badges",
+                enableWith: "showInBadges"
+            },
+            {
+                id: "avatarIcons",
+                name: "On avatars",
+                enableWith: "showOnAvatars"
             }
         ]
     }
@@ -883,140 +924,263 @@ var SettingsItems = {
     items: items
 };
 
-/* components/icons/checkbox.tsx */
-function CheckboxEnabled({
-    color,
-    ...props
-}) {
-    return React.createElement("svg", {
-        width: "24",
-        height: "24",
-        viewBox: "0 0 24 24",
-        ...props
-    }, React.createElement(
-        "path", {
-            fillRule: "evenodd",
-            clipRule: "evenodd",
-            fill: color ?? "currentColor",
-            d: "M5.37499 3H18.625C19.9197 3 21.0056 4.08803 21 5.375V18.625C21 19.936 19.9359 21 18.625 21H5.37499C4.06518 21 3 19.936 3 18.625V5.375C3 4.06519 4.06518 3 5.37499 3Z"
-        }
-    ), React.createElement(
-        "path", {
-            fill: "#fff",
-            d: "M9.58473 14.8636L6.04944 11.4051L4.50003 12.9978L9.58473 18L19.5 8.26174L17.9656 6.64795L9.58473 14.8636Z"
-        }
-    ));
-}
-
-function CheckboxDisabled(props) {
-    return React.createElement("svg", {
-        width: "24",
-        height: "24",
-        viewBox: "0 0 24 24",
-        ...props
-    }, React.createElement(
-        "path", {
-            fillRule: "evenodd",
-            clipRule: "evenodd",
-            fill: "currentColor",
-            d: "M18.625 3H5.375C4.06519 3 3 4.06519 3 5.375V18.625C3 19.936 4.06519 21 5.375 21H18.625C19.936 21 21 19.936 21 18.625V5.375C21.0057 4.08803 19.9197 3 18.625 3ZM19 19V5H4.99999V19H19Z"
-        }
-    ));
-}
-
-function Checkbox({
-    checked,
-    ...props
-}) {
-    return checked ? React.createElement(CheckboxEnabled, {
-        ...props
-    }) : React.createElement(CheckboxDisabled, {
-        ...props
-    });
-}
-
 /* components/settings/style.scss */
-Styles$2.sheets.push("/* components/settings/style.scss */", `.SmartDisable {
-  color: #fff;
+Styles$2.sheets.push("/* components/settings/style.scss */", `.platform-indicator-table {
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm, 8px);
+  background: var(--background-mod-subtle);
 }
-.SmartDisable .title {
-  font-size: 24px;
-  font-weight: 600;
-  margin-bottom: 20px;
-}
-.SmartDisable .body {
+
+.platform-indicator-row {
   display: grid;
-  grid-template-columns: 160px 160px 160px;
-  grid-template-rows: auto auto auto;
-  column-gap: 15px;
-  row-gap: 15px;
+  grid-template-columns: minmax(0, 1fr);
+  grid-auto-columns: 120px;
+  grid-auto-flow: column;
+  align-items: center;
+  min-height: 48px;
+  padding: 0 4px 0 12px;
 }
-.SmartDisable .body .item {
+.platform-indicator-row + .platform-indicator-row {
+  border-top: 1px solid var(--border-subtle);
+}
+
+.platform-indicator-head {
+  min-height: 32px;
+  padding-block: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.platform-indicator-platform {
   display: flex;
   align-items: center;
-  cursor: pointer;
-  border-radius: 8px;
-  background: var(--primary-630);
-  padding: 10px 15px;
+  gap: 12px;
+  min-width: 0;
 }
-.SmartDisable .body .item:hover {
-  background: var(--primary-500);
+
+.platform-indicator-icon {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--background-mod-normal, var(--interactive-background-hover));
+  color: var(--interactive-text-default);
+}
+
+.platform-indicator-cell {
+  display: grid;
+  place-items: center;
+  text-align: center;
+}
+
+.platform-indicator-checkbox::after {
+  content: "";
+  position: absolute;
+  inset: -12px;
+}
+.platform-indicator-checkbox:not(.bd-checkbox-disabled):hover .platform-indicator-checkbox-input:not(:checked) + .platform-indicator-checkbox-box {
+  border-color: var(--interactive-text-hover);
+}
+
+.platform-indicator-checkbox-input:focus-visible + .platform-indicator-checkbox-box {
+  outline: 2px solid var(--focus-primary, var(--bd-brand));
+  outline-offset: 2px;
+}
+
+.platform-indicator-disabled {
+  opacity: 0.6;
+}
+
+.platform-indicator-locked {
+  cursor: not-allowed;
+}
+
+.platform-indicator-cell-content {
+  display: contents;
+}
+
+.platform-indicator-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }`);
 var Styles = {
-    "SmartDisable": "SmartDisable",
-    "title": "title",
-    "body": "body",
-    "item": "item"
+    "platformIndicatorTable": "platform-indicator-table",
+    "platformIndicatorRow": "platform-indicator-row",
+    "platformIndicatorHead": "platform-indicator-head",
+    "platformIndicatorPlatform": "platform-indicator-platform",
+    "platformIndicatorIcon": "platform-indicator-icon",
+    "platformIndicatorCell": "platform-indicator-cell",
+    "platformIndicatorCheckbox": "platform-indicator-checkbox",
+    "platformIndicatorCheckboxInput": "platform-indicator-checkbox-input",
+    "platformIndicatorCheckboxBox": "platform-indicator-checkbox-box",
+    "platformIndicatorDisabled": "platform-indicator-disabled",
+    "platformIndicatorLocked": "platform-indicator-locked",
+    "platformIndicatorCellContent": "platform-indicator-cell-content",
+    "platformIndicatorSrOnly": "platform-indicator-sr-only"
 };
 
 /* components/settings/index.tsx */
-function SmartDisable({
+const {
+    Checkbox,
+    SettingItem,
+    Text,
+    Tooltip
+} = Components;
+const NO_OVERRIDES = Object.freeze({});
+const TILE_VIEWBOX = {
+    mobile: "-8 -2.5 40 40"
+};
+
+function PlatformIcons({
     id,
     name,
-    items
+    note,
+    platforms,
+    columns
 }) {
-    const iconSize = 25;
-    const [states, setStates] = React.useState(
-        Settings.get(id, Object.fromEntries(items.map((item) => [item.id, item.value])))
+    const uid = React.useId();
+    const states = Hooks.useStateFromStores(
+        [Settings],
+        () => columns.map((column) => Settings.get(column.id, NO_OVERRIDES)),
+        void 0,
+        true
     );
-    const handleClick = (itemId) => {
-        states[itemId] = !states[itemId];
-        Settings.set(id, states);
-        setStates(Object.assign({}, states));
+    const enabled = Hooks.useStateFromStores(
+        [Settings],
+        () => columns.map((column) => !column.enableWith || Settings.get(column.enableWith, true)),
+        void 0,
+        true
+    );
+    const hints = columns.map((column) => {
+        const dependency = SettingsItems.items.find((item) => item.id === column.enableWith);
+        return `Requires "${dependency?.name ?? column.enableWith}" to be enabled.`;
+    });
+    const toggle = (column, platform, shown) => {
+        Settings.set(column.id, {
+            ...Settings.get(column.id, NO_OVERRIDES),
+            [platform]: shown
+        });
     };
-    return React.createElement("div", {
-        className: Styles.SmartDisable
-    }, React.createElement("h1", {
-        className: Styles.title
-    }, name), React.createElement("div", {
-        className: Styles.body
-    }, items.map((item) => React.createElement("div", {
-        key: item.id,
-        className: Styles.item,
-        onClick: () => handleClick(item.id)
-    }, ["online", "dnd", "idle", "offline"].map((status) => React.createElement(
-        PlatformIcon, {
-            key: status,
-            platform: item.icon,
-            status,
-            width: iconSize,
-            height: iconSize
-        }
-    )), React.createElement(
-        Checkbox, {
-            width: iconSize,
-            height: iconSize,
-            checked: !!states[item.id],
-            color: "var(--brand-500)"
-        }
-    )))));
+    return React.createElement(ErrorBoundary, {
+        id
+    }, React.createElement(SettingItem, {
+        id,
+        name,
+        note,
+        divider: false
+    }, React.createElement("div", {
+        className: Styles.platformIndicatorTable,
+        role: "table",
+        "aria-label": name
+    }, React.createElement(
+        "div", {
+            className: buildClassName(Styles.platformIndicatorRow, Styles.platformIndicatorHead),
+            role: "row"
+        },
+        React.createElement(Text, {
+            tag: "span",
+            role: "columnheader",
+            size: Text.Sizes.SIZE_12,
+            color: Text.Colors.MUTED,
+            strong: true
+        }, "Platform"),
+        columns.map((column, index) => React.createElement(Tooltip, {
+            key: column.id,
+            text: hints[index],
+            shouldShow: !enabled[index]
+        }, (props) => React.createElement(
+            "div", {
+                ...props,
+                role: "columnheader",
+                className: buildClassName(
+                    Styles.platformIndicatorCell,
+                    !enabled[index] && Styles.platformIndicatorDisabled
+                )
+            },
+            React.createElement(Text, {
+                tag: "span",
+                size: Text.Sizes.SIZE_12,
+                color: Text.Colors.MUTED,
+                strong: true
+            }, column.name)
+        )))
+    ), platforms.map((platform) => {
+        const Icon = Icons[platform.id];
+        return React.createElement("div", {
+            key: platform.id,
+            className: Styles.platformIndicatorRow,
+            role: "row"
+        }, React.createElement("div", {
+            className: Styles.platformIndicatorPlatform,
+            role: "rowheader"
+        }, React.createElement("span", {
+            className: Styles.platformIndicatorIcon
+        }, React.createElement(
+            Icon, {
+                width: 20,
+                height: 20,
+                viewBox: TILE_VIEWBOX[platform.id] ?? "0 0 24 24",
+                transform: void 0,
+                "aria-hidden": true
+            }
+        )), React.createElement(Text, {
+            tag: "span",
+            size: Text.Sizes.SIZE_16
+        }, platform.name)), columns.map((column, index) => {
+            const inputId = `${uid}-${column.id}-${platform.id}`;
+            return React.createElement(Tooltip, {
+                key: column.id,
+                text: hints[index],
+                shouldShow: !enabled[index]
+            }, (props) => React.createElement(
+                "div", {
+                    ...props,
+                    role: "cell",
+                    className: buildClassName(
+                        Styles.platformIndicatorCell,
+                        !enabled[index] && Styles.platformIndicatorLocked
+                    )
+                },
+                React.createElement(
+                    "div", {
+                        className: Styles.platformIndicatorCellContent,
+                        inert: !enabled[index]
+                    },
+                    React.createElement(
+                        "label", {
+                            htmlFor: inputId,
+                            className: Styles.platformIndicatorSrOnly
+                        },
+                        `${platform.name}: ${column.name}`
+                    ),
+                    React.createElement(
+                        Checkbox, {
+                            id: inputId,
+                            value: states[index][platform.id] ?? true,
+                            disabled: !enabled[index],
+                            onChange: (shown) => toggle(column, platform.id, shown),
+                            className: Styles.platformIndicatorCheckbox,
+                            inputClassName: Styles.platformIndicatorCheckboxInput,
+                            iconClassName: Styles.platformIndicatorCheckboxBox
+                        }
+                    )
+                )
+            ));
+        }));
+    }))));
 }
 
 function SettingsPanel() {
     return React.createElement(SettingsPanel$1, {
         items: SettingsItems.items,
         components: {
-            "smart-disable": SmartDisable
+            "platform-icons": PlatformIcons
         }
     });
 }
@@ -1028,6 +1192,11 @@ class PlatformIndicators {
     }
     start() {
         Styles$2.load();
+        for (const key of ["avatarIcons", "badgeIcons"]) {
+            if (Settings.get(key) == null) Settings.set(key, {
+                ...Settings.get("icons", {})
+            });
+        }
         showChangelog(manifest);
         this.patchDMList();
         this.patchFavorites();
@@ -1052,9 +1221,7 @@ class PlatformIndicators {
                 const originalChannelWrapper = res.type;
                 patchedChannelWrapper = function PlatformIndicatorsChannelWrapper(props) {
                     const ret = originalChannelWrapper(props);
-                    if (!Settings.get("showInDmsList", true)) return ret;
                     if (!props.user) return ret;
-                    if (Settings.get("ignoreBots", true) && props.user.bot) return ret;
                     return React.createElement(UserContext.Provider, {
                         value: props.user
                     }, ret);
@@ -1068,7 +1235,6 @@ class PlatformIndicators {
             if (ChannelWrapperInstance) ChannelWrapperInstance.forceUpdate();
         }
         Patcher.after(...NameWrapper, (_, __, res) => {
-            if (!Settings.get("showInDmsList", true)) return;
             const user = React.useContext(UserContext);
             if (!user) return;
             const child = Utils.findInTree(res, (e) => e?.className?.includes("nameAndDecorators"), {
@@ -1096,7 +1262,6 @@ class PlatformIndicators {
         Patcher.after(...ChannelItem, (_, [{
             channel
         }], res) => {
-            if (!Settings.get("showInFavorites", true)) return;
             if (!channel.isDM()) return;
             const name = Utils.findInTree(res, isNameElement, {
                 walkable: ["children", "props"]
@@ -1119,7 +1284,6 @@ class PlatformIndicators {
             (m) => Webpack.Filters.byStrings("fromIsMobile")(m?.type)
         );
         const replaceStatus = (props, res) => {
-            if (!Settings.get("showOnAvatars", true)) return;
             if (props.isTyping) return;
             if (res?.props?.children?.type !== "svg") return;
             const userId = getUserIdFromAvatar(props);
@@ -1152,7 +1316,6 @@ class PlatformIndicators {
             (_, [props], res) => replaceStatus(props, res)
         );
         Patcher.after(AnimatedAvatar, "type", (_, __, res) => {
-            if (!Settings.get("showOnAvatars", true)) return;
             res.type = PatchedAvatar;
         });
     }
@@ -1163,8 +1326,6 @@ class PlatformIndicators {
         Patcher.after(...MemberItem, (_, [props], ret) => {
             const user = props.avatar.props.user;
             if (ret?.props?.className?.includes("placeholder")) return;
-            if (!Settings.get("showInMemberList", true)) return;
-            if (Settings.get("ignoreBots", true) && user.bot) return;
             const child = findInReactTree(ret, (e) => e?.className?.includes("username"));
             if (user && child) {
                 child.children = [child.children, React.createElement(PlatformIndicator, {
@@ -1180,8 +1341,6 @@ class PlatformIndicators {
         });
         Patcher.before(...ChatUsername, (_, props) => {
             const mainProps = props[0];
-            if (!Settings.get("showInChat", true)) return;
-            if (Settings.get("ignoreBots", true) && mainProps?.author?.bot) return;
             if (!mainProps?.decorations) return;
             const target = mainProps.decorations?.[1];
             if (!Array.isArray(target)) mainProps.decorations[1] = target ? [target] : [];
@@ -1200,8 +1359,6 @@ class PlatformIndicators {
         Patcher.after(...BadgeList, (_, [{
             displayProfile
         }], res) => {
-            if (!Settings.get("showInBadges", true)) return;
-            if (Settings.get("ignoreBots", true) && displayProfile?.application) return;
             if (!displayProfile?.userId) return;
             res?.props.children.push(React.createElement(PlatformIndicator, {
                 userId: displayProfile.userId,
@@ -1219,14 +1376,18 @@ class PlatformIndicators {
             }
         );
         const FriendListClasses = await Webpack.waitForModule(Webpack.Filters.byKeys("userInfo", "hovered"));
-        if (!Settings.get("showInFriendsList", true)) return;
-        DOM.addStyle(
-            "PlatformIndicators",
+        this.updateFriendListStyle = () => {
+            if (!Settings.get("showInFriendsList", true)) return DOM.removeStyle("PlatformIndicators");
+            DOM.addStyle(
+                "PlatformIndicators",
+                `
+                .${FriendListClasses.discriminator} { display: none; }
+                .${FriendListClasses.hovered} .${FriendListClasses.discriminator} { display: unset; }
             `
-            .${FriendListClasses.discriminator} { display: none; }
-            .${FriendListClasses.hovered} .${FriendListClasses.discriminator} { display: unset; }
-        `
-        );
+            );
+        };
+        this.updateFriendListStyle();
+        Settings.addChangeListener(this.updateFriendListStyle);
         Patcher.after(...UserInfo, (_, [{
             showAccountIdentifier,
             user
@@ -1241,6 +1402,7 @@ class PlatformIndicators {
         });
     }
     stop() {
+        if (this.updateFriendListStyle) Settings.removeChangeListener(this.updateFriendListStyle);
         Patcher.unpatchAll();
         DOM.removeStyle("PlatformIndicators");
         Styles$2.unload();
