@@ -10,33 +10,46 @@ interface PlatformStoreState {
     user: any;
 }
 
+const NO_OVERRIDES: Record<string, boolean> = Object.freeze({});
+const ICON_SETTINGS: Record<string, string> = { Avatar: "avatarIcons", Badge: "badgeIcons" };
+const LOCATION_SETTINGS: Record<string, string> = {
+    Avatar: "showOnAvatars",
+    Badge: "showInBadges",
+    Chat: "showInChat",
+    DMs: "showInDmsList",
+    Favorites: "showInFavorites",
+    FriendList: "showInFriendsList",
+    MemberList: "showInMemberList"
+};
+
 const isStreaming = (): boolean => LocalActivityStore.getActivities().some((e: { type: number }) => e.type === 1);
 
 export default function usePlatformStores(userId: string, location: string): PlatformStoreState {
     const user = Hooks.useStateFromStores([UserStore] as any, () => UserStore.getUser(userId));
     const sessions = Hooks.useStateFromStores([SessionsStore] as any, () => SessionsStore.getSessions());
 
-    const iconStates: Record<string, boolean> = Settings.get("icons", {});
-    const shownInArea: boolean = Settings.get("showIn" + location, true);
-    const ignoreBots: boolean = Settings.get("ignoreBots", true) && (user?.bot ?? false);
+    const { iconStates, shownInArea, ignoreBots } = Hooks.useStateFromStores(
+        [Settings] as any,
+        () => ({
+            iconStates: Settings.get(ICON_SETTINGS[location] ?? "icons", NO_OVERRIDES),
+            shownInArea: Settings.get(LOCATION_SETTINGS[location], true),
+            ignoreBots: Settings.get("ignoreBots", true)
+        }),
+        undefined,
+        true
+    );
 
-    const shouldShow = shownInArea && !ignoreBots;
+    const shouldShow = shownInArea && !(ignoreBots && user?.bot);
 
     const clients = ((): Record<string, string> => {
-        if (user?.id === UserStore.getCurrentUser()?.id) {
-            if (sessions) {
-                return Object.entries(sessions).reduce<Record<string, string>>(
-                    (acc, [, sessionData]: [string, any]) => {
-                        const client = sessionData.clientInfo.client;
-                        acc[client] = isStreaming() ? "streaming" : sessionData.status;
-                        return acc;
-                    },
-                    {}
-                );
-            }
-            return {};
-        }
-        return PresenceStore.getState().clientStatuses[user?.id] ?? {};
+        if (user?.id !== UserStore.getCurrentUser()?.id) return PresenceStore.getState().clientStatuses[user?.id] ?? {};
+        if (!sessions) return {};
+
+        return Object.entries(sessions).reduce<Record<string, string>>((acc, [, sessionData]: [string, any]) => {
+            const client = sessionData.clientInfo.client;
+            acc[client] = isStreaming() ? "streaming" : sessionData.status;
+            return acc;
+        }, {});
     })();
 
     return { iconStates, shouldShow, clients, user };

@@ -1,30 +1,90 @@
-.SmartDisable {
-    color: #fff;
+.platform-indicator-table {
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-sm, 8px);
+    background: var(--background-mod-subtle);
+}
 
-    .title {
-        font-size: 24px;
-        font-weight: 600;
-        margin-bottom: 20px;
+.platform-indicator-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    grid-auto-columns: 120px;
+    grid-auto-flow: column;
+    align-items: center;
+    min-height: 48px;
+    padding: 0 4px 0 12px;
+
+    & + & {
+        border-top: 1px solid var(--border-subtle);
+    }
+}
+
+.platform-indicator-head {
+    min-height: 32px;
+    padding-block: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+}
+
+.platform-indicator-platform {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+}
+
+.platform-indicator-icon {
+    display: grid;
+    flex: none;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--background-mod-normal, var(--interactive-background-hover));
+    color: var(--interactive-text-default);
+}
+
+.platform-indicator-cell {
+    display: grid;
+    place-items: center;
+    text-align: center;
+}
+
+.platform-indicator-checkbox {
+    &::after {
+        content: "";
+        position: absolute;
+        inset: -12px;
     }
 
-    .body {
-        display: grid;
-        grid-template-columns: 160px 160px 160px;
-        grid-template-rows: auto auto auto;
-        column-gap: 15px;
-        row-gap: 15px;
-
-        .item {
-            display: flex;
-            align-items: center;
-            cursor: pointer;
-            border-radius: 8px;
-            background: var(--primary-630);
-            padding: 10px 15px;
-
-            &:hover {
-                background: var(--primary-500);
-            }
-        }
+    &:not(.bd-checkbox-disabled):hover
+        .platform-indicator-checkbox-input:not(:checked)
+        + .platform-indicator-checkbox-box {
+        border-color: var(--interactive-text-hover);
     }
+}
+
+.platform-indicator-checkbox-input:focus-visible + .platform-indicator-checkbox-box {
+    outline: 2px solid var(--focus-primary, var(--bd-brand));
+    outline-offset: 2px;
+}
+
+.platform-indicator-disabled {
+    opacity: 0.6;
+}
+
+.platform-indicator-locked {
+    cursor: not-allowed;
+}
+
+.platform-indicator-cell-content {
+    display: contents;
+}
+
+.platform-indicator-sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
 }

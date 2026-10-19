@@ -36,8 +36,33 @@ const CUTOUT_STROKE = 0.3;
 const walkable = { walkable: ["props", "children"] };
 const isStatusRect = (e: any) => e?.type === "rect" && typeof e.props?.mask === "string";
 const isBackdrop = (e: any) => (e?.type === "circle" || e?.type === "rect") && e.props?.mask == null;
+const isAvatar = (e: any) => e?.type === "foreignObject";
+const isStatusGroup = (e: any) =>
+    React.isValidElement<any>(e) && Array.isArray(e.props.children) && e.props.children.some(isStatusRect);
 
-export function getUserIdFromAvatar(props: { "aria-label"?: unknown }): string | undefined {
+function updateInTree(node: any, predicate: (e: any) => boolean, update: (e: React.ReactElement<any>) => any): any {
+    if (predicate(node)) return update(node);
+
+    if (Array.isArray(node)) {
+        for (let i = 0; i < node.length; i++) {
+            const child = updateInTree(node[i], predicate, update);
+            if (child !== node[i]) return node.with(i, child);
+        }
+        return node;
+    }
+
+    if (!React.isValidElement<any>(node) || node.props.children == null) return node;
+
+    const children = updateInTree(node.props.children, predicate, update);
+    return children === node.props.children ? node : React.cloneElement(node, { children });
+}
+
+const AVATAR_USER_ID = /\/(?:users|avatars)\/(\d+)\//;
+
+export function getUserIdFromAvatar(props: { src?: unknown; "aria-label"?: unknown }): string | undefined {
+    const avatarUserId = typeof props.src === "string" ? props.src.match(AVATAR_USER_ID)?.[1] : undefined;
+    if (avatarUserId) return avatarUserId;
+
     return typeof props["aria-label"] === "string" ? UserStore.findByTag(props["aria-label"])?.id : undefined;
 }
 
@@ -52,16 +77,12 @@ export default function AvatarIndicator({ userId, svg }: AvatarIndicatorProps) {
     const platform = Object.keys(clients).find(key => (iconStates[key] ?? true) && key in Icons) as Platform;
     if (!shouldShow || !platform) return svg;
 
-    const avatar = Utils.findInTree(svg, (e: any) => e?.type === "foreignObject", walkable);
-    const statusGroup = Utils.findInTree(
-        svg,
-        (e: any) => Array.isArray(e?.children) && e.children.some(isStatusRect),
-        walkable
-    );
+    const avatar = Utils.findInTree(svg, isAvatar, walkable);
+    const statusGroup = Utils.findInTree(svg, isStatusGroup, walkable);
     if (!avatar || !statusGroup) return svg;
 
-    const index = statusGroup.children.findIndex(isStatusRect);
-    const { x, y, width: dotWidth, height: dotHeight, className } = statusGroup.children[index].props;
+    const index = statusGroup.props.children.findIndex(isStatusRect);
+    const { x, y, width: dotWidth, height: dotHeight, className } = statusGroup.props.children[index].props;
 
     const dotSize = Math.min(dotWidth, dotHeight);
     const [viewX, viewY, viewWidth, viewHeight] = ICON_BOUNDS[platform];
@@ -93,36 +114,41 @@ export default function AvatarIndicator({ userId, svg }: AvatarIndicatorProps) {
             <path {...outline} fill="black" stroke="black" />
         </mask>
     );
-    avatar.props.mask = `url(#${maskId})`;
 
-    svg.props.children = [mask, ...svg.props.children].map(child =>
-        isBackdrop(child) ? (
-            <path
-                key="platform-indicators-backdrop"
-                {...outline}
-                fill={child.props.fill}
-                stroke={child.props.fill}
-                style={child.props.style}
-            />
-        ) : (
-            child
+    let tree = updateInTree(svg, isAvatar, e => React.cloneElement(e, { mask: `url(#${maskId})` }));
+    tree = updateInTree(tree, isStatusGroup, e =>
+        React.cloneElement(e, {
+            children: e.props.children.with(
+                index,
+                <PlatformIcon
+                    platform={platform}
+                    status={clients[platform]}
+                    x={iconX}
+                    y={iconY}
+                    width={width}
+                    height={height}
+                    viewBox={`${viewX} ${viewY} ${viewWidth} ${viewHeight}`}
+                    transform={undefined}
+                    className={className}
+                    data-location="avatar"
+                />
+            )
+        })
+    );
+
+    return React.cloneElement(tree, {
+        children: [mask, ...tree.props.children].map(child =>
+            isBackdrop(child) ? (
+                <path
+                    key="platform-indicators-backdrop"
+                    {...outline}
+                    fill={child.props.fill}
+                    stroke={child.props.fill}
+                    style={child.props.style}
+                />
+            ) : (
+                child
+            )
         )
-    );
-
-    statusGroup.children[index] = (
-        <PlatformIcon
-            platform={platform}
-            status={clients[platform]}
-            x={iconX}
-            y={iconY}
-            width={width}
-            height={height}
-            viewBox={`${viewX} ${viewY} ${viewWidth} ${viewHeight}`}
-            transform={undefined}
-            className={className}
-            data-location="avatar"
-        />
-    );
-
-    return svg;
+    });
 }

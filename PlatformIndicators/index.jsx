@@ -18,6 +18,9 @@ export default class PlatformIndicators {
 
     start() {
         Styles.load();
+        for (const key of ["avatarIcons", "badgeIcons"]) {
+            if (Settings.get(key) == null) Settings.set(key, { ...Settings.get("icons", {}) });
+        }
         showChangelog(manifest);
         this.patchDMList();
         this.patchFavorites();
@@ -44,9 +47,7 @@ export default class PlatformIndicators {
                 const originalChannelWrapper = res.type;
                 patchedChannelWrapper = function PlatformIndicatorsChannelWrapper(props) {
                     const ret = originalChannelWrapper(props);
-                    if (!Settings.get("showInDmsList", true)) return ret;
                     if (!props.user) return ret; // Its a group DM
-                    if (Settings.get("ignoreBots", true) && props.user.bot) return ret;
 
                     return <UserContext.Provider value={props.user}>{ret}</UserContext.Provider>;
                 };
@@ -61,8 +62,6 @@ export default class PlatformIndicators {
         }
 
         Patcher.after(...NameWrapper, (_, __, res) => {
-            if (!Settings.get("showInDmsList", true)) return;
-
             const user = React.useContext(UserContext);
             if (!user) return;
 
@@ -89,7 +88,6 @@ export default class PlatformIndicators {
         const isNameElement = e => e?.props?.children?.props?.channel && "name" in e.props.children.props;
 
         Patcher.after(...ChannelItem, (_, [{ channel }], res) => {
-            if (!Settings.get("showInFavorites", true)) return;
             if (!channel.isDM()) return;
 
             const name = Utils.findInTree(res, isNameElement, { walkable: ["children", "props"] });
@@ -111,7 +109,6 @@ export default class PlatformIndicators {
         );
 
         const replaceStatus = (props, res) => {
-            if (!Settings.get("showOnAvatars", true)) return;
             if (props.isTyping) return;
             if (res?.props?.children?.type !== "svg") return;
 
@@ -144,7 +141,6 @@ export default class PlatformIndicators {
         );
 
         Patcher.after(AnimatedAvatar, "type", (_, __, res) => {
-            if (!Settings.get("showOnAvatars", true)) return;
             res.type = PatchedAvatar;
         });
     }
@@ -157,8 +153,6 @@ export default class PlatformIndicators {
         Patcher.after(...MemberItem, (_, [props], ret) => {
             const user = props.avatar.props.user;
             if (ret?.props?.className?.includes("placeholder")) return;
-            if (!Settings.get("showInMemberList", true)) return;
-            if (Settings.get("ignoreBots", true) && user.bot) return;
             const child = findInReactTree(ret, e => e?.className?.includes("username"));
             if (user && child) {
                 child.children = [child.children, <PlatformIndicator userId={user.id} location="MemberList" />];
@@ -173,8 +167,6 @@ export default class PlatformIndicators {
 
         Patcher.before(...ChatUsername, (_, props) => {
             const mainProps = props[0];
-            if (!Settings.get("showInChat", true)) return;
-            if (Settings.get("ignoreBots", true) && mainProps?.author?.bot) return;
             if (!mainProps?.decorations) return;
             const target = mainProps.decorations?.[1];
             if (!Array.isArray(target)) mainProps.decorations[1] = target ? [target] : [];
@@ -190,8 +182,6 @@ export default class PlatformIndicators {
         });
 
         Patcher.after(...BadgeList, (_, [{ displayProfile }], res) => {
-            if (!Settings.get("showInBadges", true)) return;
-            if (Settings.get("ignoreBots", true) && displayProfile?.application) return;
             if (!displayProfile?.userId) return;
             res?.props.children.push(<PlatformIndicator userId={displayProfile.userId} location="Badge" separator />);
         });
@@ -208,15 +198,19 @@ export default class PlatformIndicators {
         );
         const FriendListClasses = await Webpack.waitForModule(Webpack.Filters.byKeys("userInfo", "hovered"));
 
-        if (!Settings.get("showInFriendsList", true)) return;
+        this.updateFriendListStyle = () => {
+            if (!Settings.get("showInFriendsList", true)) return DOM.removeStyle("PlatformIndicators");
 
-        DOM.addStyle(
-            "PlatformIndicators",
+            DOM.addStyle(
+                "PlatformIndicators",
+                `
+                .${FriendListClasses.discriminator} { display: none; }
+                .${FriendListClasses.hovered} .${FriendListClasses.discriminator} { display: unset; }
             `
-            .${FriendListClasses.discriminator} { display: none; }
-            .${FriendListClasses.hovered} .${FriendListClasses.discriminator} { display: unset; }
-        `
-        );
+            );
+        };
+        this.updateFriendListStyle();
+        Settings.addChangeListener(this.updateFriendListStyle);
 
         Patcher.after(...UserInfo, (_, [{ showAccountIdentifier, user }], res) => {
             // Don't ask me why, but this is only true on the friends list
@@ -228,6 +222,7 @@ export default class PlatformIndicators {
     }
 
     stop() {
+        if (this.updateFriendListStyle) Settings.removeChangeListener(this.updateFriendListStyle);
         Patcher.unpatchAll();
         DOM.removeStyle("PlatformIndicators");
         Styles.unload();
