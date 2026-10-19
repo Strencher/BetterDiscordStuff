@@ -1,7 +1,7 @@
 import { Hooks } from "@api";
 import { Settings } from "@common/Settings";
 
-import { LocalActivityStore, PresenceStore, SessionsStore, UserStore } from "./shared";
+import { isRadialStatusEnabled, LocalActivityStore, PresenceStore, SessionsStore, UserStore } from "./shared";
 
 interface PlatformStoreState {
     iconStates: Record<string, boolean>;
@@ -39,7 +39,7 @@ export default function usePlatformStores(userId: string, location: string): Pla
         true
     );
 
-    const shouldShow = shownInArea && !(ignoreBots && user?.bot);
+    const shouldShow = shownInArea && !(ignoreBots && user?.bot) && !(location === "Avatar" && isRadialStatusEnabled());
 
     const clients = ((): Record<string, string> => {
         if (user?.id !== UserStore.getCurrentUser()?.id) return PresenceStore.getState().clientStatuses[user?.id] ?? {};

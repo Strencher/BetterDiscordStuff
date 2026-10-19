@@ -1,4 +1,4 @@
-import { Webpack } from "@api";
+import { Themes, Webpack } from "@api";
 import type { PresenceStore as PresenceStoreType, UserStore as UserStoreType } from "@vencord/discord-types";
 
 // Stores
@@ -10,6 +10,8 @@ export const SessionsStore = Webpack.getStore("SessionsStore") as unknown as {
 };
 export const UserStore = Webpack.getStore("UserStore") as unknown as UserStoreType;
 export const PresenceStore = Webpack.getStore("PresenceStore") as unknown as PresenceStoreType;
+
+export const isRadialStatusEnabled = (): boolean => !!Themes.isEnabled("RadialStatus");
 
 // Other modules
 export const { useSyncExternalStore: useStateFromStoresObject } = Webpack.getByKeys("useSyncExternalStore") as any;

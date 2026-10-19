@@ -3,7 +3,7 @@ import ErrorBoundary from "@common/ErrorBoundary";
 import { Settings, SettingsPanel as _SettingsPanel } from "@common/Settings";
 import React from "react";
 
-import { buildClassName } from "../../modules/shared";
+import { buildClassName, isRadialStatusEnabled } from "../../modules/shared";
 import SettingsItems from "../../settings.json";
 import * as Icons from "../icons";
 import { Platform } from "../platformIcon";
@@ -13,6 +13,8 @@ const { Checkbox, SettingItem, Text, Tooltip } = Components;
 
 const NO_OVERRIDES: Record<string, boolean> = Object.freeze({});
 const TILE_VIEWBOX: Partial<Record<Platform, string>> = { mobile: "-8 -2.5 40 40" };
+const RADIAL_STATUS_SETTING = "showOnAvatars";
+const RADIAL_STATUS_WARNING = "Disabled while the RadialStatus theme is enabled, as it replaces the status on avatars.";
 
 interface PlatformIconsColumn {
     id: string;
@@ -38,7 +40,13 @@ function PlatformIcons({ id, name, note, platforms, columns }: PlatformIconsProp
     );
     const enabled = Hooks.useStateFromStores(
         [Settings] as any,
-        () => columns.map(column => !column.enableWith || Settings.get(column.enableWith, true)),
+        () =>
+            columns.map(
+                column =>
+                    !column.enableWith ||
+                    (Settings.get(column.enableWith, true) &&
+                        !(column.enableWith === RADIAL_STATUS_SETTING && isRadialStatusEnabled()))
+            ),
         undefined,
         true
     );
@@ -150,5 +158,12 @@ function PlatformIcons({ id, name, note, platforms, columns }: PlatformIconsProp
 }
 
 export default function SettingsPanel() {
-    return <_SettingsPanel items={SettingsItems.items} components={{ "platform-icons": PlatformIcons }} />;
+    const radialStatus = isRadialStatusEnabled();
+    const items = SettingsItems.items.map(item =>
+        radialStatus && item.id === RADIAL_STATUS_SETTING
+            ? { ...item, disabled: true, warning: RADIAL_STATUS_WARNING }
+            : item
+    );
+
+    return <_SettingsPanel items={items} components={{ "platform-icons": PlatformIcons }} />;
 }
