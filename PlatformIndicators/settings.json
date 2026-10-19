@@ -55,7 +55,7 @@
         {
             "type": "switch",
             "name": "Ignore Bots",
-            "note": "Ignores the status of bots which is always web anyways.",
+            "note": "Ignores the status of bots, which is usually web anyway.",
             "id": "ignoreBots",
             "value": true
         },
