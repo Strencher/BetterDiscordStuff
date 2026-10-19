@@ -46,6 +46,7 @@ const {
     ContextMenu,
     Data,
     DOM,
+    Logger,
     Patcher,
     ReactUtils,
     UI,
@@ -59,6 +60,7 @@ var Api = /*#__PURE__*/ Object.freeze({
     ContextMenu: ContextMenu,
     DOM: DOM,
     Data: Data,
+    Logger: Logger,
     Patcher: Patcher,
     ReactUtils: ReactUtils,
     UI: UI,
@@ -68,14 +70,46 @@ var Api = /*#__PURE__*/ Object.freeze({
 
 /* @styles */
 
+
+const STYLE_ID = manifest.name + "-popout-styles";
+
 var Styles = {
     sheets: [],
     _element: null,
+    _listener: null,
+    get _store() {
+        return Webpack$2.getStore("PopoutWindowStore");
+    },
+    _forEachPopout(cb) {
+        if (!this._store) return;
+        for (const key of this._store.getWindowKeys()) {
+            const doc = this._store.getWindow(key)?.document;
+            if (doc) cb(doc);
+        }
+    },
+    _injectPopouts() {
+        const css = this.sheets.join("\n");
+        this._forEachPopout(doc => {
+            if (doc.getElementById(STYLE_ID)) return;
+            DOM.createElement("style", {
+                id: STYLE_ID,
+                target: doc.body
+            }, css);
+        });
+    },
     load() {
         DOM.addStyle(this.sheets.join("\n"));
+        if (!this._store) return;
+        this._listener = () => this._injectPopouts();
+        this._store.addChangeListener(this._listener);
+        this._injectPopouts();
     },
     unload() {
         DOM.removeStyle();
+        if (!this._store) return;
+        if (this._listener) this._store.removeChangeListener(this._listener);
+        this._listener = null;
+        this._forEachPopout(doc => doc.getElementById(STYLE_ID)?.remove());
     }
 };
 
@@ -582,7 +616,7 @@ function patchMessageMenu() {
                             action: () => {
                                 const channel = ChannelStore.getChannel(message.channel_id);
                                 if (!channel) {
-                                    console.error("Failed to copy message link!\n", "Message channel cannot be found!");
+                                    Logger.error("Failed to copy message link!\n", "Message channel cannot be found!");
                                     return UI.showToast("Failed to copy message link!", {
                                         type: "error"
                                     });
@@ -1470,7 +1504,7 @@ function patchUserMenu() {
     patches.add(
         ContextMenu.patch("user-context", (res, props) => {
             const tree = res?.props?.children;
-            if (!Array.isArray(tree)) return console.log("Not an array.", tree);
+            if (!Array.isArray(tree)) return;
             tree.splice(-1, 0, buildMenu(props.user, !!props.channel));
         })
     );
@@ -1857,7 +1891,7 @@ class Copier {
                 const unpatch = ContextMenus[id]();
                 this.flush.add(unpatch);
             } catch (error) {
-                console.error("[Copier] Could not initialize patch for", id, ":", error);
+                Logger.error("Could not initialize patch for", id, ":", error);
             }
         }
         this.patchToolbar();
@@ -1882,7 +1916,6 @@ class Copier {
         Patcher.after(module, "Z", (_, [{
             bio
         }], res) => {
-            console.log(res);
             const title = findInTree(res, (e) => e?.variant && Array.isArray(e.children));
             if (!title) return res;
             title.children.push(React.createElement(CopyButton2, {
@@ -1901,7 +1934,6 @@ class Copier {
                     const instance = ReactUtils.getInternalInstance(node);
                     if (!instance) return;
                     for (let curr = instance, max = 100; curr != null && max--; curr = curr?.return) {
-                        max < 5 && console.log(curr);
                         if ((node = curr?.memoizedProps?.children?.type) && node?.$$typeof) {
                             resolve(node);
                             break;
@@ -1923,7 +1955,7 @@ class Copier {
                     message: props.message
                 }));
             } catch (error) {
-                console.error("[Copier] Fatal error:", error);
+                Logger.error("Fatal error:", error);
             }
             return res;
         };

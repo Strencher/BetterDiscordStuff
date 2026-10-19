@@ -58,6 +58,7 @@ const {
     Data,
     DOM,
     Hooks,
+    Logger,
     Patcher,
     ReactUtils,
     UI,
@@ -215,11 +216,8 @@ class ErrorBoundary extends React.Component {
             info,
             hasError: true
         });
-        console.error(
-            `[ErrorBoundary:${this.props.id}] HI OVER HERE!! SHOW THIS SCREENSHOT TO THE DEVELOPER.
-`,
-            error
-        );
+        Logger.error(`[ErrorBoundary:${this.props.id}] HI OVER HERE!! SHOW THIS SCREENSHOT TO THE DEVELOPER.
+`, error);
     }
     render() {
         if (this.state.hasError) {
@@ -379,7 +377,6 @@ const {
     useStatusFillColor
 } = Webpack.getMangled(["STATUS_ONLINE_MOBILE", ".hex"], {
     useStatusFillColor: Webpack.Filters.byStrings(".hex")
-    // eslint-disable-next-line no-unused-vars
 });
 const Intl$1 = Webpack.getModule((x) => x.intl);
 const formatMessage = (key) => Intl$1.intl.formatToMarkdownString(Intl$1.t[key]);
