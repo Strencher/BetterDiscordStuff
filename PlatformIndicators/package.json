@@ -1,39 +1,21 @@
 {
     "$schema": "../common/Schemas/manifest.schema.json",
     "name": "APlatformIndicators",
-    "version": "1.7.1",
+    "version": "1.7.2",
     "author": "Strencher",
     "authorId": "415849376598982656",
     "description": "Adds indicators for every platform that the user is using.",
     "source": "https://github.com/Strencher/BetterDiscordStuff/blob/master/PlatformIndicators/APlatformIndicators.plugin.js",
     "invite": "gvA2ree",
     "changelog": {
-        "date": "2026-10-11",
+        "date": "2026-10-19",
         "changes": [
-            {
-                "title": "New Stuff",
-                "type": "added",
-                "items": [
-                    "Indicators can now be shown in the favorites list (Beta).",
-                    "The Status on Avatars can now be replaced by the Platform Indicator (Beta)."
-                ]
-            },
-            {
-                "title": "Some Bugs squashed",
-                "type": "fixed",
-                "items": [
-                    "When clicking a DM, the list no longer jumps to the top",
-                    "Indicators in popout windows (e.g. a popped out voice channel chat) are no longer shown on their own line"
-                ]
-            },
             {
                 "title": "Some Improvements",
                 "type": "improved",
                 "items": [
-                    "The plugin now finds Discord's components more precisely, so future Discord updates are less likely to make indicators vanish",
-                    "Indicators now use Discord's own status colors and are easier to style with themes or custom CSS",
-                    "The Platform Indicator on Avatars now cuts out the shape of the icon instead of a square",
-                    "The console icon on Avatars is a bit smaller"
+                    "You can now choose which platforms are shown next to names, next to badges and on avatars",
+                    "Changes to the platform icon settings now apply right away"
                 ]
             }
         ]
