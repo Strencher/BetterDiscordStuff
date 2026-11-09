@@ -9,7 +9,7 @@ import React from "react";
 import AvatarIndicator, { getUserIdFromAvatar } from "./components/avatarIndicator";
 import PlatformIndicator from "./components/platformIndicator";
 import SettingsPanel from "./components/settings";
-import { findInReactTree } from "./modules/utils";
+import { findInReactTree, getClasses } from "./modules/utils";
 
 export default class PlatformIndicators {
     getSettingsPanel() {
@@ -39,7 +39,7 @@ export default class PlatformIndicators {
         const NameWrapper = Webpack.getWithKey(m => m?.displayName === "AvatarWithText", {
             target: await Webpack.waitForModule(Webpack.Filters.bySource("AvatarWithText"))
         });
-        const ChannelClasses = await Webpack.waitForModule(Webpack.Filters.byKeys("channel", "decorator"));
+        const ChannelClasses = getClasses("channel", "decorator");
 
         let patchedChannelWrapper;
         Patcher.after(...ChannelWrapper, (_, __, res) => {
@@ -55,7 +55,7 @@ export default class PlatformIndicators {
             res.type = patchedChannelWrapper;
         });
 
-        const ChannelWrapperElement = document.querySelector(`h2 + .${ChannelClasses.channel}`);
+        const ChannelWrapperElement = ChannelClasses && document.querySelector(`h2 + .${ChannelClasses.channel}`);
         if (ChannelWrapperElement) {
             const ChannelWrapperInstance = ReactUtils.getOwnerInstance(ChannelWrapperElement);
             if (ChannelWrapperInstance) ChannelWrapperInstance.forceUpdate();
@@ -196,9 +196,10 @@ export default class PlatformIndicators {
                 )
             }
         );
-        const FriendListClasses = await Webpack.waitForModule(Webpack.Filters.byKeys("userInfo", "hovered"));
+        const FriendListClasses = getClasses("userInfo", "hovered", "discriminator");
 
         this.updateFriendListStyle = () => {
+            if (!FriendListClasses) return;
             if (!Settings.get("showInFriendsList", true)) return DOM.removeStyle("PlatformIndicators");
 
             DOM.addStyle(
