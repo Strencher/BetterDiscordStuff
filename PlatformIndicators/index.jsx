@@ -9,7 +9,7 @@ import React from "react";
 import AvatarIndicator, { getUserIdFromAvatar } from "./components/avatarIndicator";
 import PlatformIndicator from "./components/platformIndicator";
 import SettingsPanel from "./components/settings";
-import { findInReactTree } from "./modules/utils";
+import { findInReactTree, innerByStringsFilter } from "./modules/utils";
 
 export default class PlatformIndicators {
     getSettingsPanel() {
@@ -39,7 +39,12 @@ export default class PlatformIndicators {
         const NameWrapper = Webpack.getWithKey(m => m?.displayName === "AvatarWithText", {
             target: await Webpack.waitForModule(Webpack.Filters.bySource("AvatarWithText"))
         });
-        const ChannelClasses = await Webpack.waitForModule(Webpack.Filters.byKeys("channel", "decorator"));
+
+        const ChannelClasses = await Webpack.waitForModule(Webpack.Filters.bySource("channel", "decorator"), {
+            map: {
+                channel: innerByStringsFilter("channel")
+            }
+        });
 
         let patchedChannelWrapper;
         Patcher.after(...ChannelWrapper, (_, __, res) => {
@@ -196,7 +201,12 @@ export default class PlatformIndicators {
                 )
             }
         );
-        const FriendListClasses = await Webpack.waitForModule(Webpack.Filters.byKeys("userInfo", "hovered"));
+        const FriendListClasses = await Webpack.waitForModule(Webpack.Filters.bySource("userInfo", "hovered"), {
+            map: {
+                hovered: innerByStringsFilter("hovered"),
+                discriminator: innerByStringsFilter("discriminator")
+            }
+        });
 
         this.updateFriendListStyle = () => {
             if (!Settings.get("showInFriendsList", true)) return DOM.removeStyle("PlatformIndicators");
