@@ -14,3 +14,7 @@ export function getStatusText(key: string, status: string): string {
         Messages[`STATUS_${(status === "mobile" ? "mobile_online" : status).toUpperCase()}`]
     );
 }
+
+// innerByStringsFilter is a filthy method to just stringify the object which contains
+// classes, as `byStrings` will not match those values
+export const innerByStringsFilter = (name: string) => (m: any) => m?.toString()?.includes(name);
