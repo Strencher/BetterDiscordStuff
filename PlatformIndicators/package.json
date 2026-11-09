@@ -13,6 +13,7 @@
             {
                 "title": "Bug Fixes",
                 "type": "fixed",
+                "blurb": "Make sure to update your BetterDiscord to the latest by rerunning the installer.",
                 "items": [
                     "indicators display in the DM list, again",
                     "indicators display in the friends list, again..."
