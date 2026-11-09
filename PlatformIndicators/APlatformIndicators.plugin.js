@@ -1,6 +1,6 @@
 /**
  * @name APlatformIndicators
- * @version 1.7.2
+ * @version 1.7.3
  * @author Strencher
  * @authorId 415849376598982656
  * @description Adds indicators for every platform that the user is using.
@@ -14,22 +14,30 @@
 const manifest = {
     "$schema": "../common/Schemas/manifest.schema.json",
     "name": "APlatformIndicators",
-    "version": "1.7.2",
+    "version": "1.7.3",
     "author": "Strencher",
     "authorId": "415849376598982656",
     "description": "Adds indicators for every platform that the user is using.",
     "source": "https://github.com/Strencher/BetterDiscordStuff/blob/master/PlatformIndicators/APlatformIndicators.plugin.js",
     "invite": "gvA2ree",
     "changelog": {
-        "date": "2026-10-19",
+        "date": "2026-11-09",
         "changes": [{
-            "title": "Some Improvements",
-            "type": "improved",
-            "items": [
-                "You can now choose which platforms are shown next to names, next to badges and on avatars",
-                "Changes to the platform icon settings now apply right away"
-            ]
-        }]
+                "type": "progress",
+                "title": "Latest BetterDiscord required!!!!!",
+                "items": [
+                    "Make sure to update your BetterDiscord to the latest by rerunning the installer."
+                ]
+            },
+            {
+                "title": "Bug Fixes",
+                "type": "fixed",
+                "items": [
+                    "indicators display in the DM list, again",
+                    "indicators display in the friends list, again..."
+                ]
+            }
+        ]
     }
 };
 
@@ -815,6 +823,7 @@ const upperFirst = (string) => string.charAt(0).toUpperCase() + string.slice(1);
 function getStatusText(key, status) {
     return (key === "vr" ? "VR" : upperFirst(key)) + ": " + Messages[`STATUS_${(status === "mobile" ? "mobile_online" : status).toUpperCase()}`];
 }
+const innerByStringsFilter = (name) => (m) => m?.toString()?.includes(name);
 
 /* components/platformIndicator/style.scss */
 Styles$2.sheets.push("/* components/platformIndicator/style.scss */", `.platform-indicator {
@@ -1305,7 +1314,11 @@ class PlatformIndicators {
         const NameWrapper = Webpack.getWithKey((m) => m?.displayName === "AvatarWithText", {
             target: await Webpack.waitForModule(Webpack.Filters.bySource("AvatarWithText"))
         });
-        const ChannelClasses = await Webpack.waitForModule(Webpack.Filters.byKeys("channel", "decorator"));
+        const ChannelClasses = await Webpack.waitForModule(Webpack.Filters.bySource("channel", "decorator"), {
+            map: {
+                channel: innerByStringsFilter("channel")
+            }
+        });
         let patchedChannelWrapper;
         Patcher.after(...ChannelWrapper, (_, __, res) => {
             if (!patchedChannelWrapper) {
@@ -1466,7 +1479,12 @@ class PlatformIndicators {
                 )
             }
         );
-        const FriendListClasses = await Webpack.waitForModule(Webpack.Filters.byKeys("userInfo", "hovered"));
+        const FriendListClasses = await Webpack.waitForModule(Webpack.Filters.bySource("userInfo", "hovered"), {
+            map: {
+                hovered: innerByStringsFilter("hovered"),
+                discriminator: innerByStringsFilter("discriminator")
+            }
+        });
         this.updateFriendListStyle = () => {
             if (!Settings.get("showInFriendsList", true)) return DOM.removeStyle("PlatformIndicators");
             DOM.addStyle(
